@@ -39,8 +39,8 @@ Copyright (c) 2016 Nippon HTTP Kenkyujo(NHK)
 ## License
 -----------------------------------
 
-zlib : 
-  zlib 1.2.3 : Copyright (C) 1995-2005 Jean-loup Gailly and Mark Adler
+zlib 1.2.3 :   
+  Copyright (C) 1995-2005 Jean-loup Gailly and Mark Adler  
 
   Permission is granted to anyone to use this software for any purpose,
   including commercial applications, and to alter it and redistribute it
@@ -54,13 +54,13 @@ zlib :
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 
-  [NOTE]
+  [NOTE]  
   libZnk use zlib as statically sub-object.
   zlib in here, its source code itself is not at all modified from its original version,
   but accessory of example and document files are deleted except for the license terms
   (README) to avoid redundancy.
 
-Otherwise all the code :
+Otherwise all the code :  
   Licensed under the NYSL( see http://www.kmonos.net/nysl for detail ).
 
 
