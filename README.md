@@ -4,10 +4,10 @@
 ## Overview
 -----------------------------------
 
-"znk_project" is a repository of free and open source applications and libraries by based on libZnk.
+"znk_project" is a repository of free and open source applications and libraries by based on libZnk
 developed for Windows or Linux. 
 
-his repository have following :  
+This repository have following :  
 * libZnk : Basically C/C++library 
 * moai : Yet another Local proxy engine.
 * Virtual USERS : Virtualize notice board users on moai engine.
