@@ -18,7 +18,6 @@ These applications and librarys source codes are written and developed for VC(Ve
 MinGW, gcc(on linux) and so on. 
 
 Download & Support site:  
-Nippon HTTP Kenkyujo(NHK)
 https://github.com/mr-moai-2016/znk_project
 
 ## Copyrights
