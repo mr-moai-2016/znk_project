@@ -1,0 +1,91 @@
+#ifndef INCLUDE_GUARD__Znk_htp_rar_h__
+#define INCLUDE_GUARD__Znk_htp_rar_h__
+
+#include <Znk_bfr.h>
+#include <Znk_varp_dary.h>
+#include <Znk_socket.h>
+#include <Znk_htp_hdrs.h>
+
+Znk_EXTERN_C_BEGIN
+
+#if 0
+ZnkVarp
+ZnkHtpRAR_parseHeaderLine( const char* hdr_line, size_t hdr_line_leng, ZnkVarpDAry hdrs );
+void
+ZnkHtpRAR_appendHdrsToBfr( ZnkBfr ans, ZnkStr first_line, ZnkVarpDAry hdrs, bool is_terminate_hdrs_rn );
+#endif
+
+/***
+ * recvされたdataをどうするかを規定する関数.
+ */
+typedef int (*ZnkHtpOnRecvFunc)( void* param, const uint8_t* data, size_t data_size );
+typedef struct {
+	ZnkHtpOnRecvFunc func_;
+	void* arg_;
+} ZnkHtpOnRecvFuncArg;
+
+void
+ZnkHtpRAR_getHostnameAndPort( const char* url,
+		char* hostname_buf, size_t hostname_buf_size, uint16_t* port );
+
+/**
+ * @brief
+ *  HTTP Requestをsendし、Responseをrecvする.
+ *
+ * @param cnct_hostname:
+ * @param cnct_port:
+ *  ソケットにより接続するホストとポート.
+ *  cnct_hostnameとsend_hdrs内のHostフィールドの値が異なる場合は
+ *  cnct_hostname、cnct_port はProxyのホスト名とポート番号であるとみなす.
+ *  cnct_hostname に hostname:portという形式を指定することはできない.
+ *
+ * @param send_hdrs:
+ *  sendするHTTPのRequestヘッダをZnkVarpDAryですべてここに格納しておく必要がある.
+ *  現状ではこの指定は必須であり、NULLは指定できない.
+ *
+ * @param send_hdrs:
+ *  sendするHTTPのボディを指定する.
+ *  ただしこの情報が不要な場合はNULLを指定することもでき、その場合は
+ *  ボディの存在しないRequestとなる.
+ *
+ * @param recv_state_line:
+ *  recvしたHTTPのState Lineがここに格納される.
+ *  現状ではこの指定は必須であり、NULLは指定できない.
+ *
+ * @param recv_hdrs:
+ *  recvしたHTTPのResponseヘッダがZnkVarpDAryですべてここに格納される.
+ *  現状ではこの指定は必須であり、NULLは指定できない.
+ *
+ * @param cookie:
+ *  recvレシーブしたHTTPのSet-Cookieフィールドよりcookie情報を取得し、これに格納する.
+ *  ただしこの情報が不要な場合はNULLを指定することもできる.
+ *
+ * @param is_proxy:
+ *  Proxyサーバを介してsendAndRecvを行いたい場合:
+ *    is_proxyをtrueにする.
+ *    この場合、引数として与えるcnct_hostnameとcnct_portはproxyサーバのものである必要がある.
+ *    尚、req_uriがホスト名から始まっていない場合はその前にホスト名が自動的に追加される.
+ *  Proxyサーバを介さずsendAndRecvを行いたい場合:
+ *    is_proxyをfalseにする.
+ *    この場合、引数として与えるcnct_hostnameとcnct_portはダイレクトな接続先である.
+ *    尚、このときはreq_uriはホスト名から始まっていてはならない.
+ *
+ * @param try_connect_num:
+ *  サーバへの接続の最大試行回数を指定する.
+ *
+ * @param wk_bfr
+ *  これは内部作業用の一時バッファとして使われる.
+ *  NULLを指定することもできるが、その場合はこの関数が呼ばれる度に内部で確保/解放が行われる.
+ *  この関数を何度も呼び出す場合は予め確保したwk_bfrをここで与えた方が無駄が省け、
+ *  処理効率はよくなる.
+ */
+bool
+ZnkHtpRAR_sendAndRecv( const char* cnct_hostname, uint16_t cnct_port,
+		ZnkHtpHdrs send_hdrs, ZnkBfr send_body,
+		ZnkHtpHdrs recv_hdrs, ZnkHtpOnRecvFuncArg recv_fnca,
+		ZnkVarpDAry cookie,
+		size_t try_connect_num, bool is_proxy, ZnkBfr wk_bfr );
+
+Znk_EXTERN_C_END
+
+#endif /* INCLUDE_GUARD */

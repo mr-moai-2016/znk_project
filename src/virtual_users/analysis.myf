@@ -1,0 +1,20 @@
+@def_quote [' ']
+
+# 以下にはPOST時に確認モードを表示したいホストを記述する.
+@@L confirm_hosts
+may.2chan.net
+jun.2chan.net
+dec.2chan.net
+img.2chan.net
+cgi.2chan.net
+dat.2chan.net
+zip.2chan.net
+@@.
+
+# 以下は解析用である
+@@L interest_uri
+/bin/cachemt7.php
+/b/futaba.php?guid=on
+/59/futaba.php?mode=cat&sort=2
+/b/futaba.php?mode=cat
+@@.

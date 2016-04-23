@@ -1,0 +1,12 @@
+@def_quote [' ']
+
+# 以下にはPOST時に確認モードを表示したいホストを記述する.
+@@L confirm_hosts
+hanabi.2ch.net
+echo.2ch.net
+@@.
+
+# 以下は解析用である
+@@L interest_uri
+/test/read.cgi
+@@.

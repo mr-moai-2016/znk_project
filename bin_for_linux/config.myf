@@ -1,0 +1,43 @@
+@def_quote [' ']
+
+# 以下には接続をBlockしたいホストを記述する.
+@@L ignore_hosts
+free2.jp
+api.digiket.com
+js.ad-stir.com
+aladdin.genieesspv.jp
+adgen.socdm.com
+ssl.socdm.com
+j.microad.net
+@@.
+
+@@V config
+master_confirm = ['on']
+moai_port = ['8123']
+proxy_indicating_mode = ['plus']
+enable_log_file = ['on']
+@@.
+
+# 以下にはmoaiと接続先ホストをさらに別の外部proxyで仲介したい場合に
+# その外部proxyのhostnameとportをhostname:portというフォーマットで記述する.
+@@L next_proxys
+52.69.13.187:3128
+106.186.22.65:8888
+@@.
+
+# 減算的な指定方法.
+# 基本的にすべてのホストに対して外部proxyを使うが
+# 以下のホストに接続する場合は外部proxyを使わない.
+@@L proxy_minus
+127.0.0.1
+localhost
+@@.
+
+# 加算的な指定方法.
+# 基本的にすべてのホストに対して外部proxyを使わないが
+# 以下のホストに接続する場合のみ外部proxyを使う.
+@@L proxy_plus
+may.2chan.net
+jun.2chan.net
+@@.
+
