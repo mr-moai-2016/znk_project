@@ -18,12 +18,6 @@ proxy_indicating_mode = ['plus']
 enable_log_file = ['on']
 @@.
 
-# 以下にはmoaiと接続先ホストをさらに別の外部proxyで仲介したい場合に
-# その外部proxyのhostnameとportをhostname:portというフォーマットで記述する.
-@@L next_proxys
-52.69.13.187:3128
-106.186.22.65:8888
-@@.
 
 # 減算的な指定方法.
 # 基本的にすべてのホストに対して外部proxyを使うが
@@ -39,5 +33,11 @@ localhost
 @@L proxy_plus
 may.2chan.net
 jun.2chan.net
+dec.2chan.net
+img.2chan.net
+cgi.2chan.net
+nov.2chan.net
+dat.2chan.net
+zip.2chan.net
 @@.
 
