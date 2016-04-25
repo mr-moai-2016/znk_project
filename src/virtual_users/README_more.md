@@ -12,7 +12,7 @@
 -----------------------------------
 Virtual USERSでは、HTTPにおけるGETにて受信されるHTMLやJavascriptやCSSにおいて
 その受信文字列を自由に置換(replace)できるフィルター機能を備えている.  
-これを指定しているのが、filters/<target_name>_recv.myf になる.
+これを指定しているのが、filters/*target_name*_recv.myf になる.
 このファイル内の html_filter、js_filter、css_filterという部分で
 それぞれHTML、Javascript、CSSにおける文字列の置換を行うことができる.
 この部分にはfiltersコマンドと呼ばれる命令列を記述する.
@@ -23,7 +23,7 @@ Virtual USERSでは、HTTPにおけるGETにて受信されるHTMLやJavascriptやCSSにおいて
 ~~~
 
 これは「前者を後者で置換(replace)せよ」という命令になる.
-これをhtml_filter内で書いておけば、<target_name>で指定されたホストにおいて
+これをhtml_filter内で書いておけば、*target_name*で指定されたホストにおいて
 拡張子がHTMLのファイルのすべての行に対し、この文字列置換が行われる.
 js_filter、css_filterについても同様である.
 
