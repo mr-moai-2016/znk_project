@@ -9,8 +9,8 @@ developed for Windows or Linux.
 
 This repository have following :  
 * libZnk : Basically C/C++ library 
-* moai : Yet another Local proxy engine.
-* Virtual USERS : Virtualize notice board users on moai engine.
+* [moai][3] : Yet another Local proxy engine.
+* [Virtual USERS][1] : Virtualize notice board users on moai engine.
 * http_decorator : Simple http client.
 ...etc  
 
@@ -55,8 +55,6 @@ In no event will the authors be held liable for any damages arising
 from the use of this software.
 
 
-
-
-
-
-
+[1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/virtual_users/README.md
+[2]: https://github.com/mr-moai-2016/znk_project/blob/master/src/virtual_users/README_more.md
+[3]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/README.md

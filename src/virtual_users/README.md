@@ -255,7 +255,7 @@
 
   Virtual USERSに関するさらなる詳細な使い方と付随情報を [README_more.txt][1] に記載しておいたので
   興味がある方は参照されるとよい.  
-  moaiに関しての詳細を知りたい方は、src/moaiにあるREADME_jp.txtを参照して戴きたい.
+  moaiに関しての詳細を知りたい方は、src/moaiにある[README_jp.txt][2]を参照して戴きたい.
   ただしこれの説明はここにあるものより技術的な解説であり、少し難しいかもしれない.
 
 
@@ -304,3 +304,4 @@
 
 
 [1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/virtual_users/README_more.md
+[2]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/README.md
