@@ -181,8 +181,15 @@
   Virtual USERSが起動していない場合は、このような指定は本来「サーバへの接続を確立できませんでした」といった
   エラーメッセージをブラウザが出すはずであるが、Virtual USERSが起動している場合、Welcome to Moai Web Server
   といったようなページが表示されるはずである.   ここからdoc_rootにあるファイルにアクセスしたり、
-  簡易config画面などを出すことができる.   現状非常に貧相なものだが、将来のバージョンアップで
-  このあたりの機能の充実を図るかもしれない.  
+  簡易config画面などを出すことができる.  
+
+  topページ
+  ![screenshot](src/moai/doc_root/screenshot_top.png)
+
+  config画面
+  ![screenshot](src/moai/doc_root/screenshot_config.png)
+
+  現状非常に貧相なものだが、将来のバージョンアップでこのあたりの機能の充実を図るかもしれない.  
 
 
 ## <a name="pos6">プロキシ設定ダイアログって何ぞ？
