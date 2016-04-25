@@ -183,10 +183,10 @@
   といったようなページが表示されるはずである.   ここからdoc_rootにあるファイルにアクセスしたり、
   簡易config画面などを出すことができる.  
 
-  topページ
+  topページ  
   ![screenshot](../moai/doc_root/screenshot_top.png)
 
-  config画面
+  config画面  
   ![screenshot](../moai/doc_root/screenshot_config.png)
 
   現状非常に貧相なものだが、将来のバージョンアップでこのあたりの機能の充実を図るかもしれない.  
