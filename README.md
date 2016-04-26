@@ -18,6 +18,7 @@ This repository have following :
 
 These applications and librarys source codes are written and developed for VC(Ver6.0-Ver12.0),
 MinGW, gcc(on linux) and so on. 
+Japanese HowToCompile Document is [here][4].
 
 Download & Support site:  
 https://github.com/mr-moai-2016/znk_project
@@ -60,3 +61,4 @@ from the use of this software.
 [1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/virtual_users/README.md
 [2]: https://github.com/mr-moai-2016/znk_project/blob/master/src/virtual_users/README_more.md
 [3]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/README.md
+[4]: https://github.com/mr-moai-2016/znk_project/blob/master/src/HowToCompile.md
