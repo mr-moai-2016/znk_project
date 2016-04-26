@@ -222,7 +222,8 @@
 ~~~
 
   整えなければならない環境変数は、PATHである. 
-  PATHに関しては以下のコマンドが存在するフォルダのパスを ; 区切りで追加する.
+
+  環境変数PATHに関しては、以下のコマンドが存在するフォルダのパスを ; 区切りで追加する.
 ~~~
     gcc.exe  ld.exe  ar.exe  ranlib.exe  mingw32-make.exe
 ~~~
@@ -263,7 +264,8 @@
 
   整えなければならない環境変数は、PATH, INCLUDE, LIBである.  
   これらに関する詳細はググッた方が早いかもしれないが、一応説明する.  
-  PATHに関しては以下のコマンドが存在するフォルダのパスを ; 区切りで追加する.
+
+  環境変数PATHに関しては、以下のコマンドが存在するフォルダのパスを ; 区切りで追加する.
 ~~~
     cl.exe  link.exe  lib.exe  nmake.exe
 ~~~
@@ -295,7 +297,7 @@
     call my_set_path.bat
 ~~~
 
-  INCLUDEはヘッダの存在するフォルダのパスをPATH環境変数と同様に設定する.
+  環境変数INCLUDEに関しては、ヘッダの存在するフォルダのパスを環境変数PATHと同様の形式で設定する.
   さしあたって必要なのは標準Cライブラリのヘッダ(stdio.hなど)の存在するフォルダと
   WindowsAPI(これは一般にPlatformSDKと呼ばれる)のヘッダ(windows.hなど)の存在するフォルダ
   の２つである. 例えば以下のようになる.
@@ -305,7 +307,7 @@
     set INCLUDE=C:\Program Files\Microsoft Visual Studio 8\VC\PlatformSDK\include;%INCLUDE%
 ~~~
 
-  LIBはライブラリ(拡張子lib)の存在するフォルダのパスをPATH環境変数と同様に設定する.
+  環境変数LIBに関しては、ライブラリ(拡張子lib)の存在するフォルダのパスを環境変数PATHと同様の形式で設定する.
   さしあたって必要なのは標準Cライブラリ(libcmt.libなど)の存在するフォルダと
   WindowsAPI(これは一般にPlatformSDKと呼ばれる)のライブラリ(Kernel32.libなど)の存在するフォルダ
   の２つである. 例えば以下のようになる.
@@ -315,7 +317,7 @@
     set LIB=C:\Program Files\Microsoft Visual Studio 8\VC\PlatformSDK\lib;%LIB%
 ~~~
 
-  ところで通常はこれらを手動で全部設定するのではなく、VCのインストールディレクトリ配下に
+  ところで通常はこれらを我々が手動で全部設定する必要はなく、VCのインストールディレクトリ配下に
   これらを自動設定するためのbatファイルが存在するのでそれを使う. 
   これはVCのバージョンによって中身が異なるがVC6.0を除き、vsvars32.bat という名前になっている.
   尚、VC7.0以降、VCがインストールされた場合は VS??COMNTOOLS (??にはバージョン番号が入る)という
