@@ -210,7 +210,7 @@
   これ以降は中級者の方向けの内容となっております.
 
 
-  ** [参考]compile_by_mingw.bat が内部で行っていること**
+  ** 【参考】compile_by_mingw.bat が内部で行っていること**
 
   ここではcompile_by_mingw.bat を使わずに設定する方法を述べる.
   換言すればcompile_by_mingw.bat が内部で行っていることの解説でもある.
@@ -244,7 +244,7 @@
   out_dir内に目的のexeファイルやdllが生成されるはずである.
 
 
-  **[参考]compile_by_vc.bat が内部で行っていること**
+  **【参考】compile_by_vc.bat が内部で行っていること**
 
   ここではcompile_by_vc.bat を使わずに設定する方法を述べる.
   換言すればcompile_by_vc.bat が内部で行っていることの解説でもある.
