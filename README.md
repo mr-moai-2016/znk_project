@@ -9,8 +9,10 @@ developed for Windows or Linux.
 
 This repository have following :  
 * libZnk : Basically C/C++ library 
-* [moai][3] : Yet another Local proxy engine.
-* [Virtual USERS][1] : Virtualize notice board users on moai engine.
+* moai: Yet another Local proxy engine.  
+  Japanese Document is [here][3].
+* Virtual USERS : Virtualize notice board users on moai engine.
+  Japanese Document is [here][1].
 * http_decorator : Simple http client.
 ...etc  
 
