@@ -190,7 +190,7 @@
   これをテキストエディタ(メモ帳など)で開き、以下の行を必要に応じて適切に修正する.
 
 ~~~
-  set ZNK_MINGW_DIR=C:\MinGW
+    set ZNK_MINGW_DIR=C:\MinGW
 ~~~
 
   C:\MinGWの部分をあなたがインストールしたMinGWのフォルダのパスに修正するだけである.
