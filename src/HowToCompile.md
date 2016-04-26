@@ -215,9 +215,11 @@
   ここではcompile_by_mingw.bat を使わずに設定する方法を述べる.
   換言すればcompile_by_mingw.bat が内部で行っていることの解説でもある.
 
-  基本的にはコマンドプロンプトを開き、gcc.exe, ld.exe, ar.exe, ranlib.exe mingw32-make.exeが
-  実行できるように環境変数を整えた上で mingw32-make -f Makefile_mingw.mak を実行すると
-  ビルド可能である.
+  基本的にはコマンドプロンプトを開き、gcc.exe  ld.exe  ar.exe  ranlib.exe  mingw32-make.exe が
+  実行できるように環境変数を整えた上で、以下を実行するとビルド可能である.
+~~~
+    mingw32-make -f Makefile_mingw.mak
+~~~
 
   整えなければならない環境変数は、PATHである. 
   PATHに関してはcl.exe link.exe nmake.exeの存在するフォルダのパスを ; 区切りで追加する.
@@ -239,7 +241,7 @@
 -----------------------------------
   これを使われているような方は既にある程度わかっておられる方だとは思うが...
 
-  ソースコードのあるフォルダにcompile_by_vc.bat というファイルもあるはずである.
+  srcフォルダにある compile_by_vc.batをクリックして実行しよう.
   VCが適切にインストールされているならば、すべてのコンパイルが自動で行われ、
   out_dir内に目的のexeファイルやdllが生成されるはずである.
 
@@ -249,8 +251,12 @@
   ここではcompile_by_vc.bat を使わずに設定する方法を述べる.
   換言すればcompile_by_vc.bat が内部で行っていることの解説でもある.
 
-  基本的にはコマンドプロンプトを開き、cl.exe, link.exe, lib.exe nmake.exeが実行できるように
-  環境変数を整えた上で nmake -f Makefile_vc.mak を実行するとビルド可能なはずである.
+  基本的にはコマンドプロンプトを開き、cl.exe  link.exe  lib.exe  nmake.exe が実行できるように
+  環境変数を整えた上で、以下を実行するとビルド可能である.
+
+~~~
+    nmake -f Makefile_vc.mak
+~~~
 
   整えなければならない環境変数は、PATH, INCLUDE, LIBである. これらに関する詳細はググッた
   方が早いが、PATHに関してはcl.exe link.exe nmake.exeの存在するフォルダのパスを ; 区切りで
