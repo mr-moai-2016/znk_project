@@ -11,7 +11,7 @@ This repository have following :
 * libZnk : Basically C/C++ library 
 * moai: Yet another Local proxy engine.  
   Japanese Document is [here][3].
-* Virtual USERS : Virtualize notice board users on moai engine.
+* Virtual USERS : Virtualize notice board users on moai engine.  
   Japanese Document is [here][1].
 * http_decorator : Simple http client.
 ...etc  
