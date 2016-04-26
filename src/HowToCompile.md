@@ -215,15 +215,18 @@
   ここではcompile_by_mingw.bat を使わずに設定する方法を述べる.
   換言すればcompile_by_mingw.bat が内部で行っていることの解説でもある.
 
-  基本的にはコマンドプロンプトを開き、gcc.exe  ld.exe  ar.exe  ranlib.exe  mingw32-make.exe が
-  実行できるように環境変数を整えた上で、以下を実行するとビルド可能である.
+  基本的にはコマンドプロンプトを開き、mingw32-make.exe が実行できるように環境変数を整えた上で、
+  以下を実行するとビルド可能である.
 ~~~
     mingw32-make -f Makefile_mingw.mak
 ~~~
 
   整えなければならない環境変数は、PATHである. 
-  PATHに関してはcl.exe link.exe nmake.exeの存在するフォルダのパスを ; 区切りで追加する.
-  例えば これが C:\MinGW\bin内にあるならば、コマンドプロンプト上で以下のように入力して
+  PATHに関しては以下のコマンドが存在するフォルダのパスを ; 区切りで追加する.
+~~~
+    gcc.exe  ld.exe  ar.exe  ranlib.exe  mingw32-make.exe
+~~~
+  例えば これらが C:\MinGW\bin内にあるならば、コマンドプロンプト上で以下のように入力して
   Enterキーを押す.
 
 ~~~
@@ -251,16 +254,21 @@
   ここではcompile_by_vc.bat を使わずに設定する方法を述べる.
   換言すればcompile_by_vc.bat が内部で行っていることの解説でもある.
 
-  基本的にはコマンドプロンプトを開き、cl.exe  link.exe  lib.exe  nmake.exe が実行できるように
-  環境変数を整えた上で、以下を実行するとビルド可能である.
+  基本的にはコマンドプロンプトを開き、環境変数を整えた上で、以下を実行すると
+  ビルド可能である.
 
 ~~~
     nmake -f Makefile_vc.mak
 ~~~
 
-  整えなければならない環境変数は、PATH, INCLUDE, LIBである. これらに関する詳細はググッた
-  方が早いが、PATHに関してはcl.exe link.exe nmake.exeの存在するフォルダのパスを ; 区切りで
-  追加する. しかしこれだけでは実は不十分でさらにこれらのコマンドが依存するdllの存在する
+  整えなければならない環境変数は、PATH, INCLUDE, LIBである.  
+  これらに関する詳細はググッた方が早いかもしれないが、一応説明する.  
+  PATHに関しては以下のコマンドが存在するフォルダのパスを ; 区切りで追加する.
+~~~
+    cl.exe  link.exe  lib.exe  nmake.exe
+~~~
+  
+  しかしこれだけでは実は不十分でさらにこれらのコマンドが依存するdllの存在する
   フォルダも同様に追加しなければならない. 厄介なことにそのフォルダはこれらのコマンドの置いて
   あるフォルダとは別(大抵はCommon7配下のどこか)であったりする.
 
@@ -274,7 +282,7 @@
     set PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\Tools\Bin;%PATH%
 ~~~
 
-  これで上で挙げた cl.exe link.exeなどがフルパスを指定することなく単にcl.exe(clでもよい)と
+  これで上で挙げた cl.exe などがフルパスを指定することなく単にcl.exe(clでもよい)と
   入力するだけで実行可能となる. 実際にclと入力してEnterキーを押してみよう.
   「Microsoft.. Optimize Compiler...うんたらかんたら」と出たら成功である.
 
