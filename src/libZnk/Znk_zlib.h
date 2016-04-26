@@ -13,11 +13,6 @@ ZnkZlib_initiate( void );
 void
 ZnkZlib_finalize( void );
 
-#if 0
-bool
-ZnkZlib_uncompress( ZnkBfr body );
-#endif
-
 typedef struct ZnkZStreamImpl* ZnkZStream;
 
 ZnkZStream

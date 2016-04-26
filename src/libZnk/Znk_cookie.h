@@ -1,7 +1,6 @@
 #ifndef INCLUDE_GUARD__Znk_cookie_h__
 #define INCLUDE_GUARD__Znk_cookie_h__
 
-//#include <Znk_sspair_list.h>
 #include <Znk_varp_dary.h>
 
 Znk_EXTERN_C_BEGIN

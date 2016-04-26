@@ -8,13 +8,6 @@
 
 Znk_EXTERN_C_BEGIN
 
-#if 0
-ZnkVarp
-ZnkHtpRAR_parseHeaderLine( const char* hdr_line, size_t hdr_line_leng, ZnkVarpDAry hdrs );
-void
-ZnkHtpRAR_appendHdrsToBfr( ZnkBfr ans, ZnkStr first_line, ZnkVarpDAry hdrs, bool is_terminate_hdrs_rn );
-#endif
-
 /***
  * recv‚³‚ê‚½data‚ğ‚Ç‚¤‚·‚é‚©‚ğ‹K’è‚·‚éŠÖ”.
  */

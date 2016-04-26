@@ -599,13 +599,13 @@ int main(int argc, char **argv)
 	ZnkF_printf_e( "USERS : Starting Moai.\n\n" );
 	{
 		char cmd[ 4096 ];
-		const char sep = st_is_dos_path ? '\\' : '/';
+		const char* app = st_is_dos_path ? ".\\moai" : "./moai";
 		if( !ZnkS_empty( proxy_port ) ){
-			Znk_snprintf( cmd, sizeof(cmd), ".%cmoai %s %s", sep, proxy_hostname, proxy_port );
+			Znk_snprintf( cmd, sizeof(cmd), "%s %s %s", app, proxy_hostname, proxy_port );
 		} else if( !ZnkS_empty( proxy_hostname ) ){
-			Znk_snprintf( cmd, sizeof(cmd), ".%cmoai %s", sep, proxy_hostname );
+			Znk_snprintf( cmd, sizeof(cmd), "%s %s", app, proxy_hostname );
 		} else {
-			Znk_snprintf( cmd, sizeof(cmd), ".%cmoai", sep );
+			Znk_snprintf( cmd, sizeof(cmd), "%s", app );
 		}
 		result = system( cmd );
 		if( result == EXIT_FAILURE ){

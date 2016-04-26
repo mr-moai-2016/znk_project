@@ -78,37 +78,6 @@ ZnkPrim_get_deleter( ZnkPrim* prim )
 }
 
 Znk_INLINE void
-ZnkPrim_dispose( ZnkPrim* prim );
-
-Znk_INLINE void
-ZnkPrim_compose( ZnkPrim* prim, ZnkPrimType type )
-{
-	const bool elem_responsibility = true;
-	ZnkPrim_dispose( prim );
-
-	prim->type__.u64_ = (uint64_t)type;
-	switch( type ){
-	case ZnkPrim_e_Bfr:
-		prim->u_.bfr_ = ZnkBfr_create_null();
-		break;
-	case ZnkPrim_e_BfrDAry:
-		prim->u_.bda_ = ZnkBfrDAry_create( elem_responsibility );
-		break;
-	case ZnkPrim_e_Str:
-		prim->u_.str_ = ZnkStr_new( "" );
-		break;
-	case ZnkPrim_e_StrDAry:
-		prim->u_.sda_ = ZnkStrDAry_create( elem_responsibility );
-		break;
-	case ZnkPrim_e_PrimDAry:
-		//ZnkPrimDAry_create();
-		break;
-	default:
-		/* none */
-		break;
-	}
-}
-Znk_INLINE void
 ZnkPrim_dispose( ZnkPrim* prim )
 {
 	ZnkPrimType type = ZnkPrim_type( prim );
@@ -141,6 +110,35 @@ ZnkPrim_dispose( ZnkPrim* prim )
 		break;
 	}
 	ZnkPrim_set_null( prim );
+}
+
+Znk_INLINE void
+ZnkPrim_compose( ZnkPrim* prim, ZnkPrimType type )
+{
+	const bool elem_responsibility = true;
+	ZnkPrim_dispose( prim );
+
+	prim->type__.u64_ = (uint64_t)type;
+	switch( type ){
+	case ZnkPrim_e_Bfr:
+		prim->u_.bfr_ = ZnkBfr_create_null();
+		break;
+	case ZnkPrim_e_BfrDAry:
+		prim->u_.bda_ = ZnkBfrDAry_create( elem_responsibility );
+		break;
+	case ZnkPrim_e_Str:
+		prim->u_.str_ = ZnkStr_new( "" );
+		break;
+	case ZnkPrim_e_StrDAry:
+		prim->u_.sda_ = ZnkStrDAry_create( elem_responsibility );
+		break;
+	case ZnkPrim_e_PrimDAry:
+		//ZnkPrimDAry_create();
+		break;
+	default:
+		/* none */
+		break;
+	}
 }
 
 Znk_EXTERN_C_END
