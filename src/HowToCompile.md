@@ -6,9 +6,9 @@
 -----------------------------------
 
   まずスタートメニューからコマンドプロンプトを開く方法からである.
-  (そこからかよッ！って方はこの項はスルーして[次へ](#windows_next)進むこと)
+  (**そこからかよッ！**って方はこの項はスルーして[次へ](#windows_next)進むこと)
 
-  「スタートメニュー？なんですかそれは？」な方は画面一番左下にあるWindowsのロゴが
+  「スタートメニュー？**なんですかそれは？**」な方は画面一番左下にあるWindowsのロゴが
   入ったボタンがそれである.「そんなものは見当たらない…」な方は…やむを得まい.
   「コマンドプロンプト Windows8」をキーワードにしてググって欲しい.
 
@@ -26,7 +26,7 @@
   普通にウィンドウ右上にある x ボタンを押す.
 
   以上がコマンドプロンプトを開く方法だ！
-  全くの初心者の方は10回くらい開けて閉じてを繰り返し、確実にマスターしておくことォ！
+  全くの初心者の方は**10回くらい開けて閉じてを繰り返し**、確実にマスターしておくことォ！
 
 
 ## <a name="windows_next">Windowsな方へ、次に…
@@ -62,8 +62,8 @@
   次の手順で行う.
 
 ~~~
-  1. 多分最初に**アホな**Windowsが「セキュリティの警告」を表示してくるかもしれないが
-     **MinGWにその種の問題があろうはずもない**ので「実行」.
+  1. 多分最初に<B>アホな</B>Windowsが「セキュリティの警告」を表示してくるかもしれないが
+     <B>MinGWにその種の問題があろうはずもない</B>ので「実行」.
 
   2. 「MinGW Installation Manager Setup Tool」ウィンドウが表示されるので「Install」を押す.
 
@@ -92,12 +92,32 @@
     四角形のところにオレンジ色の矢印マークが表示されれば選択された状態になったことを意味する.
     mingw32-g++についても同様にして選択状態にしておこう.
 
-    繰り返すがこれら以外はいらない. 必要最小限こそ我々のモットーである(※1).
+    繰り返すがこれら以外はいらない. 必要最小限こそ我々のモットーである[(※1)](#note1).
     しかし万が一その他が必要になることもあるかもしれないし…これだけで本当に大丈夫なのか？
 
     安心してください！
     後でもう一度C:\MinGW\bin\mingw-get.exeを実行すればいつでも追加インストールできますよ."
 
+
+  6. さて、準備は整ったのでいよいよ実際のパッケージ本体をダウンロードおよびインストールする.
+    一番左上にある「Installation」メニューを開き、「Apply Changes」を選ぶ.
+    「Schedule of Pending Actions」というウィンドウが現れるので「Apply」ボタンを押せば実際に
+    パッケージ群がダウンロードおよびインストールされる.
+
+    パッケージは勿論圧縮されてあるのでダウンロードは大して時間は掛からない.
+    ネットワークが特別混雑していないなら、筆者の貧弱な回線でも３分ほどで終る分量である.
+    またインストールといってもC:\MinGW配下に必要な圧縮ファイルが解凍されるだけのことである.
+    上でも述べた通り、mingw32-baseだけの場合、展開後は合計150MBほどになる.
+
+  7. 「Applying Scaduled Changes」というウィンドウが出て「All changes were applied successfully;」
+    などと書いてあれば成功である. 「Close」ボタンを押そう.
+    「MinGW Installation Manager」ウィンドウがまだ表示されていると思うがこれも右上のxボタンで
+    閉じてよい. これにて一件落着インストール完了である.
+
+  「[WindowsでMinGWを使う場合](#use_mingw_on_windows)」の項へと進もう.
+~~~
+  <a name="note1">
+~~~
     (※1) プログラマな方へ :
       mingw32-baseによりインストールされるのはコンパイラgcc(Cのみ)、リンカld、ライブラリアン
       arおよびranlib、makeコマンド(注:MinGWではmingw32-make.exeという名前である)、デバッガgdb、
@@ -121,25 +141,6 @@
 
       もしもこれが表示されたなら mingw32-g++をインストールし忘れているか、失敗しているかしている
       のでもう一度mingw-get.exeを起動してこれを再インストールしよう.
-
-
-
-  6. さて、準備は整ったのでいよいよ実際のパッケージ本体をダウンロードおよびインストールする.
-    一番左上にある「Installation」メニューを開き、「Apply Changes」を選ぶ.
-    「Schedule of Pending Actions」というウィンドウが現れるので「Apply」ボタンを押せば実際に
-    パッケージ群がダウンロードおよびインストールされる.
-
-    パッケージは勿論圧縮されてあるのでダウンロードは大して時間は掛からない.
-    ネットワークが特別混雑していないなら、筆者の貧弱な回線でも３分ほどで終る分量である.
-    またインストールといってもC:\MinGW配下に必要な圧縮ファイルが解凍されるだけのことである.
-    上でも述べた通り、mingw32-baseだけの場合、展開後は合計150MBほどになる.
-
-  7. 「Applying Scaduled Changes」というウィンドウが出て「All changes were applied successfully;」
-    などと書いてあれば成功である. 「Close」ボタンを押そう.
-    「MinGW Installation Manager」ウィンドウがまだ表示されていると思うがこれも右上のxボタンで
-    閉じてよい. これにて一件落着インストール完了である.
-
-  「[WindowsでMinGWを使う場合](#use_mingw_on_windows)」の項へと進もう.
 ~~~
 
   **【補足事項】**
@@ -304,49 +305,49 @@
   ヒントを示しておくので興味がある奇特な方は各自makefileを作成して欲しい.
 
   **BCC5.5**  
-    objを作る場合の指定方法:
+  objを作る場合の指定方法:
 ~~~
-      bcc32 -w -RT -c -oYourFile.obj YouFile.c
-~~~
-
-    exeを作る場合の指定方法(OBJSは+記号で各objファイルを連結したものを指定するという変態仕様である):
-~~~
-      ilink32 -w -Gn -C -Tpe -ap c0x32.obj $(OBJS) $(LFLAGS),YourApplication.exe,,import32.lib cw32mt.lib,,YourResource.res
+    bcc32 -w -RT -c -oYourFile.obj YouFile.c
 ~~~
 
-    静的ライブラリ(lib)を作る場合の指定方法:
+  exeを作る場合の指定方法(OBJSは+記号で各objファイルを連結したものを指定するという変態仕様である):
 ~~~
-      tlib YourStaticLib.lib /P4096 $(OBJS)
+    ilink32 -w -Gn -C -Tpe -ap c0x32.obj $(OBJS) $(LFLAGS),YourApplication.exe,,import32.lib cw32mt.lib,,YourResource.res
 ~~~
 
-    dllおよびそれに対応するインポートライブラリを作る場合の指定方法(この方法は__stdcallには対応しない):
+  静的ライブラリ(lib)を作る場合の指定方法:
 ~~~
-      ilink32 -w -Gn -C -Tpd c0d32x.obj $(OBJS) $(LFLAGS),YourDLL.dll,,import32.lib cw32mt.lib,YourDLL.def
-      implib -f -a YourDLL.lib YourDLL.dll
-      または
-      implib -f -a YourDLL.lib YourDLL.def
+    tlib YourStaticLib.lib /P4096 $(OBJS)
+~~~
+
+  dllおよびそれに対応するインポートライブラリを作る場合の指定方法(この方法は__stdcallには対応しない):
+~~~
+    ilink32 -w -Gn -C -Tpd c0d32x.obj $(OBJS) $(LFLAGS),YourDLL.dll,,import32.lib cw32mt.lib,YourDLL.def
+    implib -f -a YourDLL.lib YourDLL.dll
+    または
+    implib -f -a YourDLL.lib YourDLL.def
 ~~~
 
   **DMC(最新バージョンのみ)**  
-    objを作る場合の指定方法:
+  objを作る場合の指定方法:
 ~~~
-      dmc -HP99 -Bj -j0 -Ab -Ae -Ar -w6 -c -oYourFile.obj YouFile.c
-~~~
-
-    exeを作る場合の指定方法:
-~~~
-      LINK -EXET:NT $(OBJS),YourApplication.exe,,ws2_32.lib user32.lib kernel32.lib,,YourResource.res
+    dmc -HP99 -Bj -j0 -Ab -Ae -Ar -w6 -c -oYourFile.obj YouFile.c
 ~~~
 
-    静的ライブラリ(lib)を作る場合の指定方法:
+  exeを作る場合の指定方法:
 ~~~
-      lib -c -p4096 YourStaticLib.lib $(OBJS)
+    LINK -EXET:NT $(OBJS),YourApplication.exe,,ws2_32.lib user32.lib kernel32.lib,,YourResource.res
 ~~~
 
-    dllおよびそれに対応するインポートライブラリを作る場合の指定方法:
+  静的ライブラリ(lib)を作る場合の指定方法:
 ~~~
-      LINK -EXET:NT $(OBJS),YourDLL.dll,,ws2_32.lib user32.lib kernel32.lib,YourDLL.def
-      implib /system YourDLL.lib YourDLL.dll
+    lib -c -p4096 YourStaticLib.lib $(OBJS)
+~~~
+
+  dllおよびそれに対応するインポートライブラリを作る場合の指定方法:
+~~~
+    LINK -EXET:NT $(OBJS),YourDLL.dll,,ws2_32.lib user32.lib kernel32.lib,YourDLL.def
+    implib /system YourDLL.lib YourDLL.dll
 ~~~
 
 
