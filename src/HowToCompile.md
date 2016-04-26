@@ -227,7 +227,7 @@
   Enterキーを押す.
 
 ~~~
-  set PATH=C:\MinGW\bin;%PATH%
+    set PATH=C:\MinGW\bin;%PATH%
 ~~~
 
   これで上で挙げた gcc.exe ld.exeなどがフルパスを指定することなく単にgcc.exe(gccでもよい)と
@@ -268,10 +268,10 @@
   コマンドプロンプト上で以下のように入力する(行の最後毎にEnterキーを押すこと).
 
 ~~~
-  set PATH=C:\Program Files\Microsoft Visual Studio 8\VC\bin;%PATH%
-  set PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\IDE;%PATH%
-  set PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\Tools%PATH%
-  set PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\Tools\Bin;%PATH%
+    set PATH=C:\Program Files\Microsoft Visual Studio 8\VC\bin;%PATH%
+    set PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\IDE;%PATH%
+    set PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\Tools%PATH%
+    set PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\Tools\Bin;%PATH%
 ~~~
 
   これで上で挙げた cl.exe link.exeなどがフルパスを指定することなく単にcl.exe(clでもよい)と
@@ -284,8 +284,8 @@
   の２つである. 例えば以下のようになる.
 
 ~~~
-  set INCLUDE=C:\Program Files\Microsoft Visual Studio 8\VC\include;%INCLUDE%
-  set INCLUDE=C:\Program Files\Microsoft Visual Studio 8\VC\PlatformSDK\include;%INCLUDE%
+    set INCLUDE=C:\Program Files\Microsoft Visual Studio 8\VC\include;%INCLUDE%
+    set INCLUDE=C:\Program Files\Microsoft Visual Studio 8\VC\PlatformSDK\include;%INCLUDE%
 ~~~
 
   LIBはライブラリ(拡張子lib)の存在するフォルダのパスをPATH環境変数と同様に設定する.
@@ -294,8 +294,8 @@
   の２つである. 例えば以下のようになる.
 
 ~~~
-  set LIB=C:\Program Files\Microsoft Visual Studio 8\VC\lib;%LIB%
-  set LIB=C:\Program Files\Microsoft Visual Studio 8\VC\PlatformSDK\lib;%LIB%
+    set LIB=C:\Program Files\Microsoft Visual Studio 8\VC\lib;%LIB%
+    set LIB=C:\Program Files\Microsoft Visual Studio 8\VC\PlatformSDK\lib;%LIB%
 ~~~
 
   ところで通常はこれらを手動で全部設定するのではなく、VCのインストールディレクトリ配下に
