@@ -112,7 +112,7 @@
     などと書いてあれば成功である. 「Close」ボタンを押そう.
     「MinGW Installation Manager」ウィンドウがまだ表示されていると思うがこれも右上のxボタンで閉じてよい.
 
-  これにて一件落着インストール完了である.
+これにて一件落着インストール完了である.
   「[WindowsでMinGWを使う場合](#use_mingw_on_windows)」の項へと進もう.
 
   <a name="note1">
