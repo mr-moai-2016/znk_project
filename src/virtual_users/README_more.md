@@ -69,7 +69,7 @@ replace ['{background:rgb(239,239,239)}'] ['{background:rgb(240,224,214); color:
 ファイルが作成できたら、Virtual USERSを起動(再起動)し、この状態で普通に「２ちゃんねる」へとアクセスする.
 以下はその表示結果である.  
 
-![screenshot](../moai/doc_root/screenshot_recv.png)
+![screenshot](../imgs/screenshot_recv.png)
 
 HTMLの内容が加工されて、名前欄の文字列が変更されていることがわかる.
 またCSSの内容が加工されて、背景色と文字色も変更されている.  

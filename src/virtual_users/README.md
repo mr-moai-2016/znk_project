@@ -184,10 +184,10 @@
   簡易config画面などを出すことができる.  
 
   topページ  
-  ![screenshot](../moai/doc_root/screenshot_top.png)
+  ![screenshot](../imgs/screenshot_top.png)
 
   config画面  
-  ![screenshot](../moai/doc_root/screenshot_config.png)
+  ![screenshot](../imgs/screenshot_config.png)
 
   現状非常に貧相なものだが、将来のバージョンアップでこのあたりの機能の充実を図るかもしれない.  
 
