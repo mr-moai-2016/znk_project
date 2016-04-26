@@ -3,7 +3,7 @@
 ＠Windowsな方へ、はじめに…
 
   まずスタートメニューからコマンドプロンプトを開く方法からである.
-  (そこからかよッ！って方はこの項はスルーすること)
+  (そこからかよッ！って方はこの項はスルーして次へ進むこと)
 
   「スタートメニュー？なんですかそれは？」な方は画面一番左下にあるWindowsのロゴが
   入ったボタンがそれである.「そんなものは見当たらない…」な方は…やむを得まい.
@@ -37,7 +37,7 @@
   「MinGWの入手方法」の項へと進もう.
   (既にインストールしてある方はこの項はスルーすること)
 
-  MinGWではなくVCを使うという方は「WindowsでVCを使う場合」を参照していただきたい.
+  尚、MinGWではなくVCを使いたいという方は「WindowsでVCを使う場合」を参照していただきたい.
 
 
 ＠MinGWの入手方法:
@@ -52,18 +52,18 @@
   その中に保存しておくとよいだろう(これのファイルサイズは85KBと極めて小さい).
 
   次にmingw-get-setup.exe を実行する.
-  このプログラムはMinGWのインストーラを自動でダウンロードするといういわばインストーラを
-  インストールするインストーラである(わかりにくい言い回しだが).
+  このプログラムはMinGWのインストーラを自動でダウンロードするといういわば
+  インストーラをインストールするインストーラである(わかりにくい言い回しだが).
   次の手順で行う.
 
   1. 多分最初にアホなWindowsが「セキュリティの警告」を表示してくるかもしれないが
-     MinGWに問題があろうはずもないので「実行」.
+     MinGWにその種の問題があろうはずもないので「実行」.
 
   2. 「MinGW Installation Manager Setup Tool」ウィンドウが表示されるので「Install」を押す.
 
   3. 次の画面でインストール先を指定できる. デフォルトでは C:\MinGWとなっているが「Change」で
-    これを変えることもできる(その場合は以下の説明でC:\MinGWとなっている部分をそのディレクトリで
-    読み替えて欲しい). 最終的に150MB程度必要であるので、万一余裕がなければ他のドライブに変える
+    これを変えることもできる(その場合は以下の説明でC:\MinGWとなっている部分をそのフォルダで
+    読み替えて欲しい). 最終的に180MB程度必要であるので、万一余裕がなければ他のドライブに変える
     などすること. その他特に弄る必要はないのでこれを設定し終えたら「Continue」を押す.
 
   4. するとC:\MinGW配下へファイル群が自動でダウンロードされる. ここでダウンロードされるのは
@@ -86,37 +86,13 @@
     四角形のところにオレンジ色の矢印マークが表示されれば選択された状態になったことを意味する.
     mingw32-g++についても同様にして選択状態にしておこう.
 
-    繰り返すがこれら以外はいらない. 必要最小限こそ我々のモットーである(※1).
+    繰り返すがこれら以外はいらない. 必要最小限こそ我々のモットーである.
     しかし万が一その他が必要になることもあるかもしれないし…これだけで本当に大丈夫なのか？
 
     安心してください！
-    後でもう一度C:\MinGW\bin\mingw-get.exeを実行すればいつでも追加インストールできますよ."
+    後でもう一度C:\MinGW\bin\mingw-get.exeを実行すればいつでも追加インストールできますよ.
 
-    (※1) プログラマな方へ :
-      mingw32-baseによりインストールされるのはコンパイラgcc(Cのみ)、リンカld、ライブラリアン
-      arおよびranlib、makeコマンド(注:MinGWではmingw32-make.exeという名前である)、デバッガgdb、
-      標準Cライブラリ(このとき動的リンクされるのはデフォルトではmsvcrt.dllである)、MinGW用の
-      WindowAPI SDK、リソースコンパイラwindres、プロファイラgprof、その他若干のGNUユーティリティ
-      である.  一方、mingw32-g++によりインストールされるのはコンパイラgcc(C++用の内部コマンドg++)、
-      標準C++ライブラリ(libstdc++)である.
-
-      よってもしC++は全く扱わず、つまり本当にC言語だけしか扱わないのであれば、実のところ
-      mingw32-baseだけで十分であり、つまりmingw32-g++は不要である(mingw32-baseだけの場合、
-      30MBほど節約できて全部で合計150MB程度になる). 実際には C++ のコードも C と一緒くたになって
-      巷に多く溢れかえっており、これがコンパイルできないようでは困るので今回はこれも必須項目
-      とした.
-
-      尚、gccは様々な言語のフロントエンドになっており、C++をコンパイルする際もコマンドとしては
-      gccコマンドを使えばよい(gccは拡張子によってCかC++かを自動的に判断する).
-      もしmingw32-g++をインストールしていない状態でC++をコンパイルしようとするとgccは以下の
-      非常にわかりにくいエラーメッセージを出す. 
-
-      gcc: error: CreateProcess: No such file or directory
-
-      もしもこれが表示されたなら mingw32-g++をインストールし忘れているか、失敗しているかしている
-      のでもう一度mingw-get.exeを起動してこれを再インストールしよう.
-
-
+	このあたりに関して心配なプログラマの方は下記の補足事項1も参照されたい.
 
   6. さて、準備は整ったのでいよいよ実際のパッケージ本体をダウンロードおよびインストールする.
     一番左上にある「Installation」メニューを開き、「Apply Changes」を選ぶ.
@@ -130,73 +106,128 @@
 
   7. 「Applying Scaduled Changes」というウィンドウが出て「All changes were applied successfully;」
     などと書いてあれば成功である. 「Close」ボタンを押そう.
-    「MinGW Installation Manager」ウィンドウがまだ表示されていると思うがこれも右上のxボタンで
-    閉じてよい. これにて一件落着インストール完了である.
+    「MinGW Installation Manager」ウィンドウがまだ表示されていると思うがこれも右上のxボタンで閉じてよい.
 
+  これにて一件落着インストール完了である.
   「WindowsでMinGWを使う場合」の項へと進もう.
 
-  【補足事項】
-  mingw32-base はクリーンかつハンディである.
-  これのインストールにおいてはレジストリなどの書き込みなどは行われない.
-  従ってアンインストールしたい場合は単にC:\MinGWをそのフォルダ毎削除すればよい.
 
-  またインストールした後、そのフォルダを丸ごと別の場所へ移動してもかまわない.
-  あるいはあなたの２台目のマシンに、そのフォルダをコピーするだけでそのマシンでも
-  使うことができる. つまり２台目のマシン上で再び上記の手順でインストールする必要は
-  ないということである(してもよいけれども).
+  **【補足事項1】プログラマな方へ**
+~~~
+    mingw32-baseによりインストールされるのは以下である.
 
-  そしてバックアップについても同様に行える. 例えばMinGWが用済みになってしばらく使う
-  予定がないので今はPCから削除したいが、今度また使うこともあるかもしれないと思われる
-  なら、MinGWフォルダ全体を一枚のCDに焼くなどしてとっておくとよい. 次回必要になった時
-  そのフォルダをそのまま丸ごとPCへコピーすれば即座に復元できるからである.
+    * コンパイラgcc(Cのみ)
+    * リンカld
+    * ライブラリアンarおよびranlib、
+    * makeコマンド(MinGWではmingw32-make.exeという名前である)
+    * デバッガgdb
+    * 標準Cライブラリ(このとき動的リンクされるのはデフォルトではmsvcrt.dllである)
+    * MinGW用のWindowAPI SDK
+    * リソースコンパイラwindres(iconなどの設定に利用)
+    * プロファイラgprof
+    * その他若干のGNUユーティリティ
 
-  ダウンロードされたアーカイブは、C:\MinGW\var\cache\mingw-get\packages内に一時保存
-  されているので、気になるならそちらも確認されるとよい. インストールが完全に終った後
-  であれば、このフォルダ内のアーカイブファイル(拡張子がxz、lzmaとなっているもの)は
-  削除してもよい. また万一、通信の過程でこれらのアーカイブが壊れているかダウンロードが
-  不完全であった場合は、再ダウンロードが必要となるが、その場合もこのフォルダ内の該当
-  アーカイブを手動で消す必要がある. さらにはその場合はデフォルトでお使いのブラウザの
-  キャッシュも消去しておく必要がある( mingw-get.exeはダウンロード時、お使いのブラウザの
-  機能を内部で利用しているためである ).
+    一方、mingw32-g++によりインストールされるのは以下である.
+
+    * コンパイラgcc(C++用の内部コマンドg++)
+    * 標準C++ライブラリ(libstdc++)
+ 
+    よってもしC++は全く扱わず、つまり本当にC言語だけしか扱わないのであれば、
+    実のところmingw32-baseだけで十分であり、つまりmingw32-g++は不要である.
+    (mingw32-baseだけの場合、30MBほど節約できて全部で合計150MB程度になる). 
+    とはいえ、実際には C++ のコードも C と一緒くたになって巷に多く溢れかえっており、
+    これがコンパイルできないようでは困るので今回はこれも必須項目とした.
+
+    尚、gccは様々な言語のフロントエンドになっており、C++をコンパイルする際も
+    コマンドとしてはgccコマンドを使えばよい(gccは拡張子によってCかC++かを自動的に判断する).
+    もしmingw32-g++をインストールしていない状態でC++をコンパイルしようとすると
+    gccは以下の非常にわかりにくいエラーメッセージを出すので注意が必要だ. 
+
+    gcc: error: CreateProcess: No such file or directory
+
+    もしもこれが表示されたなら mingw32-g++をインストールし忘れているか、
+    失敗しているかしているのでもう一度mingw-get.exeを起動してこれを再インストールしよう.
+~~~
+
+
+  **【補足事項2】MinGWのアンインストール、移動、バックアップについて**
+~~~
+    mingw32-base および mingw32-g++ はクリーンかつハンディである.
+    これのインストールにおいてはレジストリなどの書き込みなどは行われない.
+    従ってアンインストールしたい場合は単にC:\MinGWをそのフォルダ毎削除すればよい.
+    
+    またインストールした後、そのフォルダを丸ごと別の場所へ移動してもかまわない.
+    あるいはあなたの２台目のマシンに、そのフォルダをコピーするだけでそのマシンでも
+    使うことができる. つまり２台目のマシン上で再び上記の手順でインストールする必要は
+    ないということである(してもよいけれども).
+    
+    そしてバックアップについても同様に行える. 例えばMinGWが用済みになってしばらく使う
+    予定がないので今はPCから削除したいが、今度また使うこともあるかもしれないと思われるなら、
+    MinGWフォルダ全体を一枚のCDに焼くなどしてとっておくとよい. 次回必要になった時
+    そのフォルダをそのまま丸ごとPCへコピーすれば即座に復元できるからである.
+    
+    ダウンロードされたアーカイブは、C:\MinGW\var\cache\mingw-get\packages内に一時保存
+    されているので、気になるならそちらも確認されるとよい. インストールが完全に終った後であれば、
+    このフォルダ内のアーカイブファイル(拡張子がxz、lzmaとなっているもの)は削除してもよい.
+    また万一、通信の過程でこれらのアーカイブが壊れているかダウンロードが不完全であった場合は、
+    再ダウンロードが必要となるが、その場合もこのフォルダ内の該当アーカイブを手動で消す必要がある.
+    さらにはその場合はデフォルトでお使いのブラウザのキャッシュも消去しておく必要がある
+    ( mingw-get.exeはダウンロード時、お使いのブラウザの機能を内部で利用しているためである ).
+~~~
+
 
 
 ＠WindowsでMinGWを使う場合
 
-  ソースコードのあるフォルダにcompile_by_mingw.bat というファイルもあるはずである.
+  src/bat_utils フォルダにsetenv_mingw.bat というファイルがある.
   これをテキストエディタ(メモ帳など)で開き、以下の行を必要に応じて適切に修正する.
 
-  set ZNK_MINGW_DIR=C:\MinGW
+~~~
+    set ZNK_MINGW_DIR=C:\MinGW
+~~~
 
   C:\MinGWの部分をあなたがインストールしたMinGWのフォルダのパスに修正するだけである.
-  (C:\MinGWにインストールされている場合は修正の必要は全くない)
-  修正し終ったらこれを上書き保存し、このcompile_by_mingw.batをクリックして実行しよう.
+  (C:\MinGWにインストールされている場合は修正の必要はない)
+  修正し終ったらこれを上書き保存し、srcフォルダにある compile_by_mingw.batを
+  クリックして実行しよう.
 
   MinGWが適切にインストールされているならば、すべてのコンパイルが自動で行われ、
-  out_dir内に目的のexeファイルやdllが生成されるはずである.
+  それぞれのプロジェクトのフォルダ内にout_dirというフォルダも自動的に生成され、
+  その中に目的のexeファイルやdllが生成されているはずである.
 
-  後はこれらを一つ上にあるfor_win32フォルダへとコピーするとインストールまで完了するのだが、
+  後はこれらをsrcフォルダの一つ上にあるbin_for_win32フォルダへとコピーするだけなのだが
+  面倒なら srcフォルダにある install_bin_for_win32.bat を実行すればこのコピーまで自動的に
+  行ってくれるので活用するとよい.
 
   ハイ！初心者の方はここまでッ！
   これ以降は中級者の方向けの内容となっております.
 
 
-＠[参考]compile_by_mingw.bat が内部で行っていること
+  **【参考】compile_by_mingw.bat が内部で行っていること**
 
   ここではcompile_by_mingw.bat を使わずに設定する方法を述べる.
   換言すればcompile_by_mingw.bat が内部で行っていることの解説でもある.
 
-  基本的にはコマンドプロンプトを開き、gcc.exe, ld.exe, ar.exe, ranlib.exe mingw32-make.exeが
-  実行できるように環境変数を整えた上で mingw32-make -f Makefile_mingw.mak を実行すると
-  ビルド可能である.
+  基本的にはコマンドプロンプトを開き、mingw32-make.exe が実行できるように環境変数を整えた上で、
+  以下を実行するとビルド可能である.
+~~~
+    mingw32-make -f Makefile_mingw.mak
+~~~
 
   整えなければならない環境変数は、PATHである. 
-  PATHに関してはcl.exe link.exe nmake.exeの存在するフォルダのパスを ; 区切りで追加する.
-  例えば これが C:\MinGW\bin内にあるならば、コマンドプロンプト上で以下のように入力して
+
+  環境変数PATHに関しては、以下のコマンドが存在するフォルダのパスを ; 区切りで追加する.
+~~~
+    gcc.exe  ld.exe  ar.exe  ranlib.exe  mingw32-make.exe
+~~~
+  例えば これらが C:\MinGW\bin内にあるならば、コマンドプロンプト上で以下のように入力して
   Enterキーを押す.
 
-  set PATH=C:\MinGW\bin;%PATH%
+~~~
+    set PATH=C:\MinGW\bin;%PATH%
+~~~
 
-  これで上で挙げた gcc.exe ld.exeなどがフルパスを指定することなく単にgcc.exe(gccでもよい)と
+  これで上で挙げた gcc.exe などがフルパスを指定することなく単にgcc.exe(gccでもよい)と
   入力するだけで実行可能となる. 次に実際にgccと入力してEnterキーを押してみよう.
   「gcc: fatal error: no input files」と出たら成功である.
   一方、「gccは内部コマンドまたは外部コマンド～なんたらかんたら～として認識されていません」
@@ -206,57 +237,82 @@
 ＠WindowsでVCを使う場合
   これを使われているような方は既にある程度わかっておられる方だとは思うが...
 
-  ソースコードのあるフォルダにcompile_by_vc.bat というファイルもあるはずである.
+  srcフォルダにある compile_by_vc.batをクリックして実行しよう.
   VCが適切にインストールされているならば、すべてのコンパイルが自動で行われ、
   out_dir内に目的のexeファイルやdllが生成されるはずである.
 
 
-＠[参考]compile_by_vc.bat が内部で行っていること
+  **【参考】compile_by_vc.bat が内部で行っていること**
 
   ここではcompile_by_vc.bat を使わずに設定する方法を述べる.
   換言すればcompile_by_vc.bat が内部で行っていることの解説でもある.
 
-  基本的にはコマンドプロンプトを開き、cl.exe, link.exe, lib.exe nmake.exeが実行できるように
-  環境変数を整えた上で nmake -f Makefile_vc.mak を実行するとビルド可能なはずである.
+  基本的にはコマンドプロンプトを開き、環境変数を整えた上で、以下を実行すると
+  ビルド可能である.
 
-  整えなければならない環境変数は、PATH, INCLUDE, LIBである. これらに関する詳細はググッた
-  方が早いが、PATHに関してはcl.exe link.exe nmake.exeの存在するフォルダのパスを ; 区切りで
-  追加する. しかしこれだけでは実は不十分でさらにこれらのコマンドが依存するdllの存在する
-  フォルダも同様に追加しなければならない. 厄介なことにそのフォルダはこれらのコマンドの置いて
+~~~
+    nmake -f Makefile_vc.mak
+~~~
+
+  整えなければならない環境変数は、PATH, INCLUDE, LIBである.  
+  これらに関する詳細はググッた方が早いかもしれないが、一応説明する.  
+
+  環境変数PATHに関しては、以下のコマンドが存在するフォルダのパスを ; 区切りで追加する.
+~~~
+    cl.exe  link.exe  lib.exe  nmake.exe
+~~~
+  
+  しかしこれだけでは実は不十分でさらにこれらのコマンドが依存するdllが含まれるフォルダも
+  同様に追加しなければならない. 厄介なことにそのフォルダはこれらのコマンドの置いて
   あるフォルダとは別(大抵はCommon7配下のどこか)であったりする.
 
   例えば 上記のコマンドが C:\Program Files\Microsoft Visual Studio 8\VC\bin 内にあるならば
   コマンドプロンプト上で以下のように入力する(行の最後毎にEnterキーを押すこと).
 
-  set PATH=C:\Program Files\Microsoft Visual Studio 8\VC\bin;%PATH%
-  set PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\IDE;%PATH%
-  set PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\Tools%PATH%
-  set PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\Tools\Bin;%PATH%
+~~~
+    set PATH=C:\Program Files\Microsoft Visual Studio 8\VC\bin;%PATH%
+    set PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\IDE;%PATH%
+    set PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\Tools%PATH%
+    set PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\Tools\Bin;%PATH%
+~~~
 
-  これで上で挙げた cl.exe link.exeなどがフルパスを指定することなく単にcl.exe(clでもよい)と
+  これで上で挙げた cl.exe などがフルパスを指定することなく単にcl.exe(clでもよい)と
   入力するだけで実行可能となる. 実際にclと入力してEnterキーを押してみよう.
   「Microsoft.. Optimize Compiler...うんたらかんたら」と出たら成功である.
 
-  INCLUDEはヘッダの存在するフォルダのパスをPATH環境変数と同様に設定する.
+  しかし、上記はかなり長い…  
+  こんなもの毎回入力してはいられないので、ここで一つテクニックを紹介しよう.
+  テキストエディタ(メモ帳など)を開き、上記のコマンドをコピペして、例えばmy_set_path.bat
+  という名前でこれを保存する.
+  あとはコマンドプロンプト上から以下を入力すれば、上記のコマンド群を一括して実行できる.
+~~~
+    call my_set_path.bat
+~~~
+
+  環境変数INCLUDEに関しては、ヘッダの存在するフォルダのパスを環境変数PATHと同様の形式で設定する.
   さしあたって必要なのは標準Cライブラリのヘッダ(stdio.hなど)の存在するフォルダと
   WindowsAPI(これは一般にPlatformSDKと呼ばれる)のヘッダ(windows.hなど)の存在するフォルダ
   の２つである. 例えば以下のようになる.
 
-  set INCLUDE=C:\Program Files\Microsoft Visual Studio 8\VC\include;%INCLUDE%
-  set INCLUDE=C:\Program Files\Microsoft Visual Studio 8\VC\PlatformSDK\include;%INCLUDE%
+~~~
+    set INCLUDE=C:\Program Files\Microsoft Visual Studio 8\VC\include;%INCLUDE%
+    set INCLUDE=C:\Program Files\Microsoft Visual Studio 8\VC\PlatformSDK\include;%INCLUDE%
+~~~
 
-  LIBはライブラリ(拡張子lib)の存在するフォルダのパスをPATH環境変数と同様に設定する.
+  環境変数LIBに関しては、ライブラリ(拡張子lib)の存在するフォルダのパスを環境変数PATHと同様の形式で設定する.
   さしあたって必要なのは標準Cライブラリ(libcmt.libなど)の存在するフォルダと
   WindowsAPI(これは一般にPlatformSDKと呼ばれる)のライブラリ(Kernel32.libなど)の存在するフォルダ
   の２つである. 例えば以下のようになる.
 
-  set LIB=C:\Program Files\Microsoft Visual Studio 8\VC\lib;%LIB%
-  set LIB=C:\Program Files\Microsoft Visual Studio 8\VC\PlatformSDK\lib;%LIB%
+~~~
+    set LIB=C:\Program Files\Microsoft Visual Studio 8\VC\lib;%LIB%
+    set LIB=C:\Program Files\Microsoft Visual Studio 8\VC\PlatformSDK\lib;%LIB%
+~~~
 
-  ところで通常はこれらを手動で全部設定するのではなく、VCのインストールディレクトリ配下に
+  ところで通常はこれらを我々が手動で全部設定する必要はなく、VCのインストールディレクトリ配下に
   これらを自動設定するためのbatファイルが存在するのでそれを使う. 
   これはVCのバージョンによって中身が異なるがVC6.0を除き、vsvars32.bat という名前になっている.
-  尚、VC7.0以降、VCがインストールされた場合は VS**COMNTOOLS (**にはバージョン番号が入る)という
+  尚、VC7.0以降、VCがインストールされた場合は VS??COMNTOOLS (??にはバージョン番号が入る)という
   形式の環境変数が設定される. これを利用してvsvars32.batの場所を特定することができる.
   同梱してあるスクリプト setenv_vc.batはこれを実現するものである.
   そしてcompile_by_vc.batは内部でこれを呼び出す.
@@ -274,41 +330,57 @@
 
 
 ＠WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使う場合(おまけ)
-  あなたがMinGWでもVCでもなくあえてこれらを選ぶというなら、もはや何も言うまい.
+  あなたがMinGWでもVCでもなくあえてこれらを選ぶというなら、もはや我々は何も言うまい.
 
   これ用のmakefileは、かさばるので同梱していないが、実のところソースコード自体は
-  これらでもビルドできるように移植性に配慮してある.
+  これらでもビルドできるように移植性に一応配慮してある.
   ヒントを示しておくので興味がある奇特な方は各自makefileを作成して欲しい.
 
-  BCC5.5
-    objを作る場合の指定方法:
-      bcc32 -w -RT -c -oYourFile.obj YouFile.c
+  **BCC5.5**  
+  objを作る場合の指定方法:
+~~~
+    bcc32 -w -RT -c -oYourFile.obj YouFile.c
+~~~
 
-    exeを作る場合の指定方法(OBJSは+記号で各objファイルを連結したものを指定するという変態仕様である):
-      ilink32 -w -Gn -C -Tpe -ap c0x32.obj $(OBJS) $(LFLAGS),YourApplication.exe,,import32.lib cw32mt.lib,,YourResource.res
+  exeを作る場合の指定方法(OBJSは+記号で各objファイルを連結したものを指定するという変態仕様である):
+~~~
+    ilink32 -w -Gn -C -Tpe -ap c0x32.obj $(OBJS) $(LFLAGS),YourApplication.exe,,import32.lib cw32mt.lib,,YourResource.res
+~~~
 
-    静的ライブラリ(lib)を作る場合の指定方法:
-      tlib YourStaticLib.lib /P4096 $(OBJS)
+  静的ライブラリ(lib)を作る場合の指定方法:
+~~~
+    tlib YourStaticLib.lib /P4096 $(OBJS)
+~~~
 
-    dllおよびそれに対応するインポートライブラリを作る場合の指定方法(この方法は__stdcallには対応しない):
-      ilink32 -w -Gn -C -Tpd c0d32x.obj $(OBJS) $(LFLAGS),YourDLL.dll,,import32.lib cw32mt.lib,YourDLL.def
-      implib -f -a YourDLL.lib YourDLL.dll
-      または
-      implib -f -a YourDLL.lib YourDLL.def
+  dllおよびそれに対応するインポートライブラリを作る場合の指定方法(この方法は__stdcallには対応しない):
+~~~
+    ilink32 -w -Gn -C -Tpd c0d32x.obj $(OBJS) $(LFLAGS),YourDLL.dll,,import32.lib cw32mt.lib,YourDLL.def
+    implib -f -a YourDLL.lib YourDLL.dll
+    または
+    implib -f -a YourDLL.lib YourDLL.def
+~~~
 
-  DMC(最新バージョンのみ)
-    objを作る場合の指定方法:
-      dmc -HP99 -Bj -j0 -Ab -Ae -Ar -w6 -c -oYourFile.obj YouFile.c
+  **DMC(最新バージョンのみ)**  
+  objを作る場合の指定方法:
+~~~
+    dmc -HP99 -Bj -j0 -Ab -Ae -Ar -w6 -c -oYourFile.obj YouFile.c
+~~~
 
-    exeを作る場合の指定方法:
-      LINK -EXET:NT $(OBJS),YourApplication.exe,,ws2_32.lib user32.lib kernel32.lib,,YourResource.res
+  exeを作る場合の指定方法:
+~~~
+    LINK -EXET:NT $(OBJS),YourApplication.exe,,ws2_32.lib user32.lib kernel32.lib,,YourResource.res
+~~~
 
-    静的ライブラリ(lib)を作る場合の指定方法:
-      lib -c -p4096 YourStaticLib.lib $(OBJS)
+  静的ライブラリ(lib)を作る場合の指定方法:
+~~~
+    lib -c -p4096 YourStaticLib.lib $(OBJS)
+~~~
 
-    dllおよびそれに対応するインポートライブラリを作る場合の指定方法:
-      LINK -EXET:NT $(OBJS),YourDLL.dll,,ws2_32.lib user32.lib kernel32.lib,YourDLL.def
-      implib /system YourDLL.lib YourDLL.dll
+  dllおよびそれに対応するインポートライブラリを作る場合の指定方法:
+~~~
+    LINK -EXET:NT $(OBJS),YourDLL.dll,,ws2_32.lib user32.lib kernel32.lib,YourDLL.def
+    implib /system YourDLL.lib YourDLL.dll
+~~~
 
 
 ＠MacOSの場合:
@@ -319,4 +391,11 @@
   (ダイナミックリンクライブラリの拡張子はsoではなくdylibやtbdといったものになるようである.
   その他リンカldのオプションもおそらくMacOS独自のものを指定しなければならないだろう)
 
+
+## Androidの場合:
+-----------------------------------
+  基本的にLinuxなのであるが、現状では未サポートである.
+  仮にコンパイルを試みるなら(未確認であるが)Android NDKを使うことになると思う.
+  また、仮にコンパイルに成功しても携帯端末を想定していない部分もあるため、
+  もくろみどおり動作するかどうかは未知数な部分がある.
 
