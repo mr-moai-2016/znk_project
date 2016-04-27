@@ -8,7 +8,7 @@ Znk_EXTERN_C_BEGIN
 typedef struct ZnkServerImpl* ZnkServer;
 
 ZnkServer
-ZnkServer_create( const char* host, int port );
+ZnkServer_create( const char* acceptable_host, int port );
 
 void
 ZnkServer_destroy( ZnkServer server );

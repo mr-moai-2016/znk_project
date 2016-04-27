@@ -4,6 +4,7 @@ set ROOT_DIR_=%1
 if "%ROOT_DIR_%" == "" set ROOT_DIR_=..
 
 set CP_=xcopy /H /C /Y
+set CP_COMFIRM_=xcopy /H /C
 set INST_DIR_=%ROOT_DIR_%\bin_for_win32
 
 if not exist %INST_DIR_% mkdir %INST_DIR_%
@@ -37,17 +38,19 @@ REM
 REM setup virtual_users
 REM
 %CP_% virtual_users\out_dir\virtual_users.exe %INST_DIR_%\
-call bat_utils\install_if_not_exist.bat user_agent.txt  virtual_users %INST_DIR_%
-call bat_utils\install_if_not_exist.bat screen_size.txt virtual_users %INST_DIR_%
+call bat_utils\install_one.bat /C user_agent.txt  virtual_users         %INST_DIR_%
+call bat_utils\install_one.bat /C screen_size.txt virtual_users         %INST_DIR_%
 if not exist %INST_DIR_%\filters mkdir %INST_DIR_%\filters
-call bat_utils\install_if_not_exist.bat futaba_recv.myf virtual_users\filters %INST_DIR_%\filters
-call bat_utils\install_if_not_exist.bat futaba_send.myf virtual_users\filters %INST_DIR_%\filters
-call bat_utils\install_if_not_exist.bat 2ch_recv.myf    virtual_users\filters %INST_DIR_%\filters
-call bat_utils\install_if_not_exist.bat config.myf      virtual_users %INST_DIR_%
-call bat_utils\install_if_not_exist.bat analysis.myf    virtual_users %INST_DIR_%
-call bat_utils\install_if_not_exist.bat target.myf      virtual_users %INST_DIR_%
+call bat_utils\install_one.bat /C futaba_recv.myf virtual_users\filters %INST_DIR_%\filters
+call bat_utils\install_one.bat /C futaba_send.myf virtual_users\filters %INST_DIR_%\filters
+call bat_utils\install_one.bat /C 2ch_recv.myf    virtual_users\filters %INST_DIR_%\filters
+call bat_utils\install_one.bat /C config.myf      virtual_users         %INST_DIR_%
+call bat_utils\install_one.bat /C analysis.myf    virtual_users         %INST_DIR_%
+call bat_utils\install_one.bat /C target.myf      virtual_users         %INST_DIR_%
 %CP_% virtual_users\README.txt      %INST_DIR_%\
 %CP_% virtual_users\README_more.txt %INST_DIR_%\
+%CP_% virtual_users\README.md       %INST_DIR_%\
+%CP_% virtual_users\README_more.md  %INST_DIR_%\
 
 REM
 REM setup plugin_futaba

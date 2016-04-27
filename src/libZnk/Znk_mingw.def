@@ -159,6 +159,8 @@ EXPORTS
   ZnkNetBase_getErrMsg            
   ZnkNetBase_getLastErrCode       
   ZnkNetBase_initiate             
+  ZnkNetIP_getPrivateIP           
+  ZnkNetIP_printTest              
   ZnkObjDAry_at                   
   ZnkObjDAry_clear                
   ZnkObjDAry_create               

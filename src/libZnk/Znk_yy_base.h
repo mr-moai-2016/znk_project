@@ -32,11 +32,11 @@ void   ZnkYYInfo_reset_line_idx( void );
 void   ZnkYYInfo_update_line_idx( void );
 size_t ZnkYYInfo_the_line_idx( void );
 void   ZnkYYInfo_print_error( const char* msg, const char* near_text );
-Znk_INLINE void ZnkYYInfo_set_yyin( FILE* fp )
-{
-	extern FILE* yyin;
-	yyin = fp;
-}
+
+#define ZnkYYInfo_set_yyin( fp ) do { \
+	extern FILE* yyin; \
+	yyin = fp; \
+} while( 0 )
 
 Znk_EXTERN_C_END
 

@@ -24,12 +24,12 @@ struct ZnkServerImpl {
 	int	               port_;
 	ZnkSocket          listen_sock_;
 	time_t             start_time_;
-	char*              host_;
+	char*              acceptable_host_;
 	struct sockaddr_in addr_;
 };
 
 ZnkServer
-ZnkServer_create( const char* host, int port )
+ZnkServer_create( const char* acceptable_host, int port )
 {
 	ZnkServer server;
 	ZnkSocket sock;
@@ -40,7 +40,7 @@ ZnkServer_create( const char* host, int port )
 
 	memset(server, 0, sizeof(struct ZnkServerImpl));
 	server->port_ = port;
-	server->host_ = ( host == NULL ) ? NULL : strdup(host);
+	server->acceptable_host_ = ( acceptable_host == NULL ) ? NULL : strdup(acceptable_host);
 
 	sock = ZnkSocket_open();
 	if( sock < 0 ){
@@ -54,10 +54,10 @@ ZnkServer_create( const char* host, int port )
 	server->listen_sock_ = sock;
 	memset(&server->addr_, 0, sizeof(server->addr_));
 	server->addr_.sin_family = AF_INET;
-	if( server->host_ == NULL ){
+	if( server->acceptable_host_ == NULL ){
 		server->addr_.sin_addr.s_addr = htonl(INADDR_ANY);
 	} else {
-		server->addr_.sin_addr.s_addr = inet_addr(server->host_);
+		server->addr_.sin_addr.s_addr = inet_addr(server->acceptable_host_);
 	}
 	server->addr_.sin_port = htons((u_short)server->port_);
 	if( bind(sock, (struct sockaddr *)&server->addr_, sizeof(server->addr_)) < 0 ){
@@ -74,8 +74,8 @@ void
 ZnkServer_destroy( ZnkServer server )
 {
 	if( server ){
-		if( server->host_ ){
-			Znk_free(server->host_);
+		if( server->acceptable_host_ ){
+			Znk_free(server->acceptable_host_);
 		}
 		Znk_free(server);
 	}

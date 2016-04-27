@@ -8,6 +8,7 @@ EXPORTS
   ZnkAry_rfind_32                 
   ZnkAry_rfind_64                 
   ZnkAry_rfind_sz                 
+  ZnkBfrDAry_create               
   ZnkBfr_append_dfr               
   ZnkBfr_capacity                 
   ZnkBfr_clear_and_minimize       
@@ -41,12 +42,26 @@ EXPORTS
   ZnkBfr_slide_hole               
   ZnkBfr_swap                     
   ZnkBfr_transfer                 
+  ZnkCookie_extend_toCookieStatement
   ZnkCookie_load                  
   ZnkCookie_regist_byAssignmentStatement
+  ZnkCookie_regist_byCookieStatement
   ZnkCookie_save                  
   ZnkDLink_close                  
   ZnkDLink_getFunc                
   ZnkDLink_open                   
+  ZnkDir_changeCurrentDir         
+  ZnkDir_closeDir                 
+  ZnkDir_copyFile_byForce         
+  ZnkDir_deleteFile_byForce       
+  ZnkDir_getCurrentDir            
+  ZnkDir_getFileByteSize          
+  ZnkDir_mkdirPath                
+  ZnkDir_openDirEx                
+  ZnkDir_readDir                  
+  ZnkDir_rename                   
+  ZnkDir_rewindDir                
+  ZnkDir_rmdir                    
   ZnkEnvVar_free                  
   ZnkEnvVar_get                   
   ZnkEnvVar_set                   
@@ -72,15 +87,34 @@ EXPORTS
   ZnkF_fwrite                     
   ZnkF_printf                     
   ZnkF_printf_e                   
+  ZnkF_vfprintf                   
+  ZnkFdSet_FD_SETSIZE             
+  ZnkFdSet_clr                    
+  ZnkFdSet_copy                   
+  ZnkFdSet_create                 
+  ZnkFdSet_destroy                
+  ZnkFdSet_getMaxOfSocket         
+  ZnkFdSet_getSocketDAry          
+  ZnkFdSet_isset                  
+  ZnkFdSet_print                  
+  ZnkFdSet_select                 
+  ZnkFdSet_set                    
+  ZnkFdSet_zero                   
   ZnkGlobalMutex_delete           
   ZnkGlobalMutex_init             
   ZnkGlobalMutex_lock             
   ZnkGlobalMutex_unlock           
-  ZnkHttpBlder_addUrlEncoded      
-  ZnkHttpBlder_appendBinaryFileImage
-  ZnkHttpBlder_getContentDisposition
-  ZnkHttpCnct_getHostnameAndUnderpath_fromURL
-  ZnkHttpCnct_sendAndRecv         
+  ZnkHtpHdrs_copyVars             
+  ZnkHtpHdrs_erase                
+  ZnkHtpHdrs_extendToStream       
+  ZnkHtpHdrs_regist               
+  ZnkHtpHdrs_registCookie         
+  ZnkHtpHdrs_registHdr1st         
+  ZnkHtpHdrs_regist_byLine        
+  ZnkHtpHdrs_scanContentType      
+  ZnkHtpRAR_getHostnameAndPort    
+  ZnkHtpRAR_getHostnameAndUnderpath_fromURL
+  ZnkHtpRAR_sendAndRecv           
   ZnkMD5_final                    
   ZnkMD5_init                     
   ZnkMD5_update                   
@@ -101,17 +135,32 @@ EXPORTS
   ZnkMem_rfind_8                  
   ZnkMem_rfind_data_BF            
   ZnkMem_rfind_data_BMS           
-  ZnkMissingUnix_readv            
-  ZnkMissingUnix_writev           
   ZnkMutex_create                 
   ZnkMutex_destroy                
   ZnkMutex_lock                   
   ZnkMutex_unlock                 
+  ZnkMyfSection_lines             
+  ZnkMyfSection_name              
+  ZnkMyfSection_vars              
+  ZnkMyf_atSection                
+  ZnkMyf_create                   
+  ZnkMyf_destroy                  
+  ZnkMyf_find_lines               
+  ZnkMyf_find_vars                
+  ZnkMyf_load                     
+  ZnkMyf_numOfSection             
+  ZnkMyf_quote_begin              
+  ZnkMyf_quote_end                
+  ZnkMyf_refVar                   
+  ZnkMyf_registSection            
+  ZnkMyf_save                     
   ZnkNetBase_finalize             
   ZnkNetBase_getErrKey            
   ZnkNetBase_getErrMsg            
   ZnkNetBase_getLastErrCode       
   ZnkNetBase_initiate             
+  ZnkNetIP_getPrivateIP           
+  ZnkNetIP_printTest              
   ZnkObjDAry_at                   
   ZnkObjDAry_clear                
   ZnkObjDAry_create               
@@ -133,23 +182,12 @@ EXPORTS
   ZnkSAtomDB_destroy              
   ZnkSAtomDB_intern               
   ZnkSAtomDB_swap                 
-  ZnkSSPairList_at                
-  ZnkSSPairList_clear             
-  ZnkSSPairList_create            
-  ZnkSSPairList_destroy           
-  ZnkSSPairList_findRecode        
-  ZnkSSPairList_regist            
-  ZnkSSPairList_size              
-  ZnkSSPairList_unregist          
-  ZnkSSPair_get_val               
-  ZnkSSPair_get_val_leng          
-  ZnkSSPair_key                   
-  ZnkSSPair_key_leng              
-  ZnkSSPair_set_val               
+  ZnkS_compareBegin               
+  ZnkS_compareContain             
+  ZnkS_compareEnd                 
   ZnkS_concat                     
   ZnkS_concatEx                   
   ZnkS_copy                       
-  ZnkS_eq                         
   ZnkS_find_key_and_val           
   ZnkS_getBool                    
   ZnkS_getI16D                    
@@ -175,8 +213,9 @@ EXPORTS
   ZnkS_isBegin                    
   ZnkS_isBeginEx                  
   ZnkS_isCaseBegin                
+  ZnkS_isCaseBeginEx              
   ZnkS_isCaseEnd                  
-  ZnkS_isContainEx                
+  ZnkS_isCaseEndEx                
   ZnkS_isEnd                      
   ZnkS_isEndEx                    
   ZnkS_isMatchBegin               
@@ -190,27 +229,39 @@ EXPORTS
   ZnkS_rfind_one_of               
   ZnkS_snprintf_sys               
   ZnkS_strcasecmp                 
-  ZnkS_strlen                     
   ZnkS_strncasecmp                
+  ZnkS_strnlen                    
   ZnkS_vsnprintf_sys              
+  ZnkServer_create                
+  ZnkServer_destroy               
+  ZnkServer_getListenSocket       
+  ZnkSocket_accept                
   ZnkSocket_close                 
   ZnkSocket_connectToServer       
+  ZnkSocket_forward               
   ZnkSocket_getPort_byTCPName     
   ZnkSocket_open                  
   ZnkSocket_recv                  
   ZnkSocket_send                  
   ZnkSocket_set_blocking_mode     
+  ZnkStockBIO_clear               
+  ZnkStockBIO_create              
+  ZnkStockBIO_destroy             
+  ZnkStockBIO_getReadedSize       
+  ZnkStockBIO_getRecverResult     
+  ZnkStockBIO_read                
+  ZnkStockBIO_readLineCRLF        
   ZnkStrDAry_create               
   ZnkStrDAry_find                 
   ZnkStrDAry_push_bk_cstr         
   ZnkStrDAry_push_bk_snprintf     
   ZnkStrEx_addEmbededStr          
-  ZnkStrEx_addJoin_fromVStr       
-  ZnkStrEx_addQuotedTokens_toVStr 
+  ZnkStrEx_addJoin                
+  ZnkStrEx_addQuotedTokens        
   ZnkStrEx_addRepeatC             
-  ZnkStrEx_addSplitCSet_toVStr    
-  ZnkStrEx_addSplitC_toVStr       
-  ZnkStrEx_addSplitStr_toVStr     
+  ZnkStrEx_addSplitC              
+  ZnkStrEx_addSplitCSet           
+  ZnkStrEx_addSplitStr            
   ZnkStrEx_chompStr               
   ZnkStrEx_getBack_byPattern      
   ZnkStrEx_getFront_byPattern     
@@ -220,6 +271,9 @@ EXPORTS
   ZnkStrEx_replace_BF             
   ZnkStrEx_replace_BMS            
   ZnkStrFIO_fgets                 
+  ZnkStrPtn_getBetween            
+  ZnkStrPtn_replace               
+  ZnkStrPtn_replaceBetween        
   ZnkStr_add_c                    
   ZnkStr_addf                     
   ZnkStr_assign                   
@@ -235,8 +289,10 @@ EXPORTS
   ZnkStr_last                     
   ZnkStr_normalize                
   ZnkStr_releng                   
+  ZnkStr_setf                     
   ZnkStr_snprintf                 
   ZnkStr_sprintf                  
+  ZnkStr_swap                     
   ZnkStr_terminate_null           
   ZnkStr_vsnprintf                
   ZnkSysErrno_errno               
@@ -250,48 +306,46 @@ EXPORTS
   ZnkThread_terminateForce        
   ZnkThread_waitEnd               
   ZnkThread_waitEndAll            
-  ZnkWinux_accept                 
-  ZnkWinux_close_socket           
-  ZnkWinux_closedir               
-  ZnkWinux_connect                
-  ZnkWinux_getpeername            
-  ZnkWinux_gettimeofday           
-  ZnkWinux_inet_aton              
-  ZnkWinux_opendir                
-  ZnkWinux_poll                   
-  ZnkWinux_read_socket            
-  ZnkWinux_readdir                
-  ZnkWinux_rewinddir              
-  ZnkWinux_setnonblocking         
-  ZnkWinux_shutdown               
-  ZnkWinux_sleep                  
-  ZnkWinux_socket                 
-  ZnkWinux_stat                   
-  ZnkWinux_write_socket           
+  ZnkTxtFilterAry_at              
+  ZnkTxtFilterAry_create          
+  ZnkTxtFilterAry_destroy         
+  ZnkTxtFilterAry_exec            
+  ZnkTxtFilterAry_regist_byCommand
+  ZnkTxtFilterAry_size            
+  ZnkVarpDAry_create              
+  ZnkVarpDAry_find_byName         
+  ZnkVarp_create                  
+  ZnkVarp_destroy                 
   ZnkYYInfo_print_error           
   ZnkYYInfo_reset_line_idx        
   ZnkYYInfo_the_line_idx          
   ZnkYYInfo_update_line_idx       
+  ZnkZStream_create               
+  ZnkZStream_destroy              
+  ZnkZStream_inflate              
+  ZnkZStream_inflate2             
+  ZnkZStream_inflateEnd           
+  ZnkZStream_inflateInit          
   ZnkZlib_finalize                
   ZnkZlib_initiate                
-  ZnkZlib_uncompress              
   Znk_Internal_getStdFP           
   Znk_Internal_setMode            
   Znk_alloc0                      
   Znk_calloc                      
   Znk_free                        
-  Znk_fts_close                   
-  Znk_fts_open                    
-  Znk_fts_read                    
   Znk_getenv                      
   Znk_malloc                      
+  Znk_memchr                      
   Znk_memcmp                      
   Znk_memcpy                      
+  Znk_memmem                      
   Znk_memmove                     
   Znk_memrchr                     
   Znk_memset                      
   Znk_realloc                     
   Znk_snprintf                    
+  Znk_strcmp                      
   Znk_strdup                      
   Znk_strlen                      
+  Znk_strncmp                     
   Znk_vsnprintf                   

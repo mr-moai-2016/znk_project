@@ -28,6 +28,7 @@ OBJS = \
 	$O\Znk_mutex.obj \
 	$O\Znk_myf.obj \
 	$O\Znk_net_base.obj \
+	$O\Znk_net_ip.obj \
 	$O\Znk_obj_dary.obj \
 	$O\Znk_prim.obj \
 	$O\Znk_server.obj \

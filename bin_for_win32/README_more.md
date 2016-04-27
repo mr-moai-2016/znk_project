@@ -171,29 +171,29 @@ HTMLの内容が加工されて、名前欄の文字列が変更されていることがわかる.
 
 #####  ※ POST変数を手動で修正する方法
 ~~~html
-     Step1.
-       まずスレのHTMLを保存する
+  Step1.
+    まずスレのHTMLを保存する
 
-     Step2.
-       次に保存したスレのHTMLをテキストエディタ(メモ帳など)で開き、
-       その中身を直接書き換えて修正する
-       <script type="text/javascript" src="/bin/base4.js?4"></script> などと書かれた部分があるはずである
-       ぶっちゃげこのbase4.jsが邪悪の元凶であり、コイツが忌々しい数々の変数の値を設定している.
-       そしてこのままでは base4.js を実行してしまうので、これが実行されないよう、この部分を削除する.
+  Step2.
+    次に保存したスレのHTMLをテキストエディタ(メモ帳など)で開き、
+    その中身を直接書き換えて修正する
+    <script type="text/javascript" src="/bin/base4.js?4"></script> などと書かれた部分があるはずである
+    ぶっちゃげこのbase4.jsが邪悪の元凶であり、コイツが忌々しい数々の変数の値を設定している.
+    そしてこのままでは base4.js を実行してしまうので、これが実行されないよう、この部分を削除する.
 
-     Step3.
-       後は <input type=hidden…> などと書かれている部分を好き放題変えればよいのだが、
-       例えばflrvならば、
+  Step3.
+    後は <input type=hidden…> などと書かれている部分を好き放題変えればよいのだが、
+    例えばflrvならば、
 
-          <input type=hidden id="flrv" name="flrv" value="">
+       <input type=hidden id="flrv" name="flrv" value="">
 
-       などと書かれてあるが、この部分を
+    などと書かれてあるが、この部分を
 
-          <input type=hidden id="flrv" name="flrv" value="77777777"> 
+       <input type=hidden id="flrv" name="flrv" value="77777777"> 
 
-       とすれば晴れてflrvの値を77777777に偽装できる.
+    とすれば晴れてflrvの値を77777777に偽装できる.
 
-     後は修正したHTMLをダブルクリックして、表示される投稿フォームから投稿すれば
-     上において偽装された値が送信されることだろう.
+  後は修正したHTMLをダブルクリックして、表示される投稿フォームから投稿すれば
+  上において偽装された値が送信されることだろう.
 ~~~
 

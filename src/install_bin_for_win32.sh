@@ -7,24 +7,24 @@ fi
 
 CP_="install -p"
 CP_COMFIRM_="cp -i"
-INST_DIR_=$ROOT_DIR_/bin_for_linux
+INST_DIR_=$ROOT_DIR_/bin_for_win32
 
 mkdir -p "$INST_DIR_"
 
 #
-# copy libZnk so
+# copy libZnk dll
 #
 if test -e libZnk ; then
 	SRC_DIR=libZnk
 fi
 
-DL_VER_SFX=
-$CP_ $SRC_DIR/out_dir/libZnk$DL_VER_SFX.so $INST_DIR_/
+DL_VER_SFX=-0.8
+$CP_ $SRC_DIR/out_dir/Znk$DL_VER_SFX.dll $INST_DIR_/
 
 #
 # setup moai
 #
-$CP_ moai/out_dir/moai $INST_DIR_/
+$CP_ moai/out_dir/moai.exe $INST_DIR_/
 mkdir -p "$INST_DIR_/doc_root"
 LIST=`ls moai/doc_root`
 for i in $LIST
@@ -35,7 +35,7 @@ done
 #
 # setup http_decorator
 #
-$CP_ http_decorator/out_dir/http_decorator $INST_DIR_/
+$CP_ http_decorator/out_dir/http_decorator.exe $INST_DIR_/
 
 #
 # setup virtual_users
@@ -54,10 +54,9 @@ install_one()
 		fi
 	elif test "$if_dst_exist" = "-c" ; then
 		$CP_COMFIRM_ $src_dir/$file $dst_dir/
-	else
 	fi
 }
-$CP_ virtual_users/out_dir/virtual_users $INST_DIR_/
+$CP_ virtual_users/out_dir/virtual_users.exe $INST_DIR_/
 install_one -c user_agent.txt  virtual_users $INST_DIR_
 install_one -c screen_size.txt virtual_users $INST_DIR_
 mkdir -p $INST_DIR_/filters
@@ -78,6 +77,6 @@ install_one -c README_more.md  virtual_users $INST_DIR_
 # setup plugin_futaba
 #
 mkdir -p "$INST_DIR_/plugins"
-$CP_ plugin_futaba/out_dir/futaba.so $INST_DIR_/plugins/
+$CP_ plugin_futaba/out_dir/futaba.dll $INST_DIR_/plugins/
 
 echo "All files installed to $INST_DIR_ successfully."

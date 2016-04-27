@@ -29,6 +29,7 @@
 #include <Znk_dlink.h>
 #include <Znk_cookie.h>
 #include <Znk_txt_filter.h>
+#include <Znk_net_ip.h>
 
 #include <stdio.h>
 #include <assert.h>
@@ -39,6 +40,8 @@
 static bool        st_master_confirm = true;
 static uint16_t    st_moai_port = 8123;
 static bool        st_enable_log_file = true;
+static char        st_acceptable_host[ 256 ] = "";
+static char        st_server_name[ 256 ] = "";
 
 
 Znk_INLINE double
@@ -717,7 +720,6 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection htcn, ZnkSocket sock, ZnkFdSet fd
 		{
 			MoaiBodyInfo* body_info = &ctx->body_info_;
 			const char* req_method = ZnkHtpReqMethod_getCStr( htcn->req_method_ );
-			//MoaiIO_addAnalyzeLabel( ctx->msgs_, sock, ctx->result_size_ );
 			ZnkStr_addf( ctx->msgs_, "  Http Response [%s][%s](from[%s] for[%s]).\n",
 					arg_tkns[ 1 ], arg_tkns[ 2 ], htcn->hostname_, req_method );
 			MoaiLog_printf( "%s", ZnkStr_cstr( ctx->msgs_ ) );
@@ -1166,6 +1168,9 @@ doLocalProxy( MoaiContext ctx, ZnkSocket I_sock, MoaiConnection htcn,
 	return true;
 }
 
+
+
+
 static int
 printConfig( ZnkSocket sock )
 {
@@ -1173,18 +1178,50 @@ printConfig( ZnkSocket sock )
 	char proxy[ 1024 ] = "";
 	const char* parent_proxy_hostname = NULL;
 	ZnkStr html = ZnkStr_new( "" );
-	ZnkStr_add( html, "<p><b><img src=\"moai.png\"> Moai WebServer : Config</b></p>\n" );
-	ZnkStr_addf( html, "<form action=\"http://127.0.0.1:%d/config\" method=\"POST\" enctype=\"multipart/form-data\">\n", st_moai_port );
+	ZnkStr_add( html, "<p><b><img src=\"moai.png\"> Moai : Status and Configration</b></p>\n" );
+	ZnkStr_addf( html, "<form action=\"http://%s:%d/config\" method=\"POST\" enctype=\"multipart/form-data\">\n",
+			st_server_name, st_moai_port );
 	parent_proxy_hostname = MoaiParentProxy_getHostname();
 	if( parent_proxy_hostname ){
 		Znk_snprintf( proxy, sizeof(proxy), "%s:%d",
 				parent_proxy_hostname, MoaiParentProxy_getPort() );
 	}
-	ZnkStr_addf( html, "Parent Proxy : <input type=text name=proxy size=\"28\" value=\"%s\" readonly disabled=true><br>\n", proxy );
-	ZnkStr_addf( html, "<input type=checkbox name=master_confirm value=\"on\" %s>Master Confirm ",
-			st_master_confirm ? "checked" : "" );
-	ZnkStr_add( html, " : This is enable/disable switch of Confirm Mode at HTTP posting.\n<br>" );
-	ZnkStr_add( html, "<input type=submit value=\"更新\">\n" );
+
+	ZnkStr_add( html, "<table>\n" );
+	ZnkStr_add( html, "<tbody>\n" );
+	ZnkStr_add( html, "<style type=\"text/css\">\n" );
+	ZnkStr_add( html, "#configlist tbody tr.evn td { background-color: #F0E0D6; }\n" );
+	ZnkStr_add( html, "#configlist tbody tr.odd td { background-color: #FFFFFF; }\n" );
+	ZnkStr_add( html, "</style>\n" );
+	ZnkStr_add( html, "<table id=configlist>\n" );
+	ZnkStr_add( html, "<thead>\n" );
+	ZnkStr_add( html, "<tr><th>variable name</th><th>current value</th><th>new value</th><th>description</th>\n" );
+	ZnkStr_add( html, "</thead><tbody>\n" );
+
+	ZnkStr_addf( html, "<tr class=\"evn\"><td>%s</td><td>%s</td><td><input type=text name=%s value=\"%s\" readonly disabled=true></td><td>%s</td></tr>\n",
+			"parent_proxy", proxy, "parent_proxy", proxy, "Parent Proxy(host:port)." );
+
+	ZnkStr_addf( html, "<tr class=\"odd\"><td>%s</td><td>%s</td><td><input type=text name=%s value=\"%s\" readonly disabled=true></td><td>%s</td></tr>\n",
+			"acceptable_host", st_acceptable_host, "acceptable_host", st_acceptable_host, "Acceptable Host( ANY or LOOPBACK )." );
+
+	ZnkStr_addf( html, "<tr class=\"evn\"><td>%s</td><td>%s</td><td><input type=checkbox name=%s value=\"on\" %s></td><td>%s</td></tr>\n",
+			"master_confirm", st_master_confirm ? "on" : "off" , "master_confirm", st_master_confirm ? "checked" : "",
+			"This is enable/disable switch of Confirm Mode at HTTP posting." );
+
+	ZnkStr_addf( html, "<tr class=\"odd\"><td>%s</td><td>%s</td><td><input type=text name=%s value=\"%s\" readonly disabled=true></td><td>%s</td></tr>\n",
+			"server_name", st_server_name, "server_name", st_server_name, "SeverName(Use this config POST destination)." );
+
+	ZnkStr_addf( html, "<tr class=\"evn\"><td>%s</td><td>%d</td><td><input type=text name=%s value=\"%d\" readonly disabled=true></td><td>%s</td></tr>\n",
+			"moai_port", st_moai_port, "moai_port", st_moai_port, "The TCP port on which moai listens." );
+
+	ZnkStr_addf( html, "<tr class=\"odd\"><td>%s</td><td>%s</td><td><input type=checkbox name=%s value=\"on\" %s readonly disabled></td><td>%s</td></tr>\n",
+			"enable_log_file", st_enable_log_file ? "on" : "off" , "enable_log_file", st_enable_log_file ? "checked" : "",
+			"Writing to log file mode(enable/disable)." );
+
+	ZnkStr_add( html, "</tbody>\n" );
+	ZnkStr_add( html, "</table>\n" );
+
+	ZnkStr_add( html, "<input type=submit value=\"Update\">\n" );
 	ZnkStr_add( html, "</form>\n" );
 	ret = MoaiIO_sendTxtf( sock, "text/html", ZnkStr_cstr(html) );
 	ZnkStr_delete( html );
@@ -1330,7 +1367,7 @@ MoaiServer_main( int argc, char **argv )
 	int sel_ret;
 	MoaiFdSet mfds = NULL;
 
-	const char* host = "127.0.0.1";
+	const char* acceptable_host = "127.0.0.1";
 	ZnkServer     srver       = NULL;
 	ZnkSocket     listen_sock = ZnkSocket_INVALID;
 	MoaiFdSetFuncArg_Report   fnca_report    = { report_observe, NULL };
@@ -1362,6 +1399,8 @@ MoaiServer_main( int argc, char **argv )
 
 	MoaiModuleAry_loadAllModules( ctx->mod_ary_, ctx->target_myf_ );
 
+
+
 	/***
 	 * parse config
 	 */
@@ -1369,14 +1408,17 @@ MoaiServer_main( int argc, char **argv )
 		ZnkVarpDAry vars = ZnkMyf_find_vars( ctx->config_, "config" );
 		if( vars ){
 			ZnkVarp var = NULL;
+
 			var = ZnkVarpDAry_find_byName_literal( vars, "master_confirm", false );
 			if( var ){
 				st_master_confirm = ZnkS_eq( ZnkVar_cstr(var), "on" );
 			}
+
 			var = ZnkVarpDAry_find_byName_literal( vars, "moai_port", false );
 			if( var ){
 				sscanf( ZnkVar_cstr( var ), "%hu", &st_moai_port );
 			}
+
 			var = ZnkVarpDAry_find_byName_literal( vars, "proxy_indicating_mode", false );
 			if( var ){
 				if( ZnkS_eq( ZnkVar_cstr(var), "minus" ) ){
@@ -1387,9 +1429,40 @@ MoaiServer_main( int argc, char **argv )
 					MoaiParentProxy_setIndicatingMode( 0 );
 				}
 			}
+
 			var = ZnkVarpDAry_find_byName_literal( vars, "enable_log_file", false );
 			if( var ){
 				st_enable_log_file = ZnkS_eq( ZnkVar_cstr(var), "on" );
+			}
+			var = ZnkVarpDAry_find_byName_literal( vars, "acceptable_host", false );
+			if( var ){
+				const char* var_str = ZnkVar_cstr(var);
+				ZnkS_copy( st_acceptable_host, sizeof(st_acceptable_host), var_str, Znk_NPOS );
+				if( ZnkS_eq( var_str, "ANY" ) ){
+					/***
+					 * localhost以外からの接続もすべて受け付ける.
+					 * 現状のMoaiではいわゆるIPアドレスやドメインに応じたForbidden機能などが
+					 * 実装されていないので、これを指定した場合はNIC(ルータなど)やOSのファイア
+					 * ウォール機能などで接続可能なIPをLANからのもののみにするなど適切に制限すること.
+					 */
+					acceptable_host = NULL;
+				} else if( ZnkS_eq( var_str, "LOOPBACK" ) || ZnkS_empty( var_str ) ){
+					/***
+					 * この場合、localhostからの接続(loopback)のみを受け付ける.
+					 * 純粋にローカルプロキシとしてのみの使用ならばこの指定が一番安全である.
+					 */
+					acceptable_host = "127.0.0.1";
+				} else {
+					/***
+					 * この場合、acceptable_hostにおいて指定したIPからの接続のみを受け付ける.
+					 * 試験用である.
+					 */
+					acceptable_host = var_str;
+				}
+			}
+			var = ZnkVarpDAry_find_byName_literal( vars, "server_name", false );
+			if( var ){
+				ZnkS_copy( st_server_name, sizeof(st_server_name), ZnkVar_cstr(var), Znk_NPOS );
 			}
 		}
 	}
@@ -1405,6 +1478,28 @@ MoaiServer_main( int argc, char **argv )
 
 	ZnkNetBase_initiate( false );
 
+	//ZnkNetIP_printTest();
+	if( acceptable_host == NULL || !ZnkS_eq(acceptable_host,"127.0.0.1") ){
+		/***
+		 * LOOPBACK以外もサポートする場合、即ち localhost以外のLAN上のマシンからの接続や、
+		 * 192.168.*.* などのPrivateIPの形式でlocalhostを指定した場合も受け付ける場合である.
+		 * (WANからの接続というのも理論上は有り得るが、セキュリティ上はシステムにおいて
+		 * 許可してはならない)
+		 *
+		 * この場合、server_nameをLAN上からアクセスできる名前としなければならないが
+		 * server_nameを空値に設定した場合はPrivateIPの自動取得を試み、それを設定するものとする.
+		 * この自動取得に失敗した場合は 127.0.0.1 がセットされる.
+		 * ( このとき、MoaiのWeb Configrationにおいて localhost以外からの設定は不可となる )
+		 */
+		if( ZnkS_empty( st_server_name ) ){
+			if( ZnkNetIP_getPrivateIP( st_server_name, sizeof(st_server_name) ) ){
+				MoaiLog_printf( "Moai : AutoGet PrivateIP=[%s].\n", st_server_name );
+			} else {
+				ZnkS_copy( st_server_name, sizeof(st_server_name), "127.0.0.1", Znk_NPOS );
+			}
+		}
+	}
+
 	if( argc > 1 ){
 		const char* parent_proxy_hostname = argv[ 1 ];
 		uint16_t    parent_proxy_port = 0;
@@ -1418,7 +1513,7 @@ MoaiServer_main( int argc, char **argv )
 	MoaiConnection_clearAll();
 	MoaiPost_initiate();
 	                              
-	srver = ZnkServer_create( host, st_moai_port );
+	srver = ZnkServer_create( acceptable_host, st_moai_port );
 	if( srver == NULL ){
 		MoaiLog_printf( "Moai : Cannot create server. May be port %d is already used.\n", st_moai_port );
 		goto FUNC_END;

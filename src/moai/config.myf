@@ -16,6 +16,8 @@ master_confirm = ['on']
 moai_port = ['8123']
 proxy_indicating_mode = ['minus']
 enable_log_file = ['on']
+acceptable_host = ['LOOPBACK']
+server_name = ['localhost']
 @@.
 
 

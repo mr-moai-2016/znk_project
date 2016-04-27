@@ -4,6 +4,9 @@
 #include "Znk_stdc.h"
 
 #if defined(Znk_TARGET_WINDOWS)
+/***
+ * winsock2ÇÕWindows98/NT4.0à»ç~Ç™ïKê{Ç≈Ç†ÇÈ
+ */
 #  include <winsock2.h>
 #else
 #  include <signal.h>

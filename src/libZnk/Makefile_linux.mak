@@ -32,6 +32,7 @@ OBJS = \
 	$O/Znk_mutex.o \
 	$O/Znk_myf.o \
 	$O/Znk_net_base.o \
+	$O/Znk_net_ip.o \
 	$O/Znk_obj_dary.o \
 	$O/Znk_prim.o \
 	$O/Znk_server.o \
