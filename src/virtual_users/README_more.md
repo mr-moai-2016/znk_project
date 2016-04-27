@@ -3,12 +3,18 @@
 
 ## –ÚŽŸ
 -----------------------------------
-* [ƒtƒBƒ‹ƒ^ƒ^[ƒQƒbƒg‚Æ‚ÍH](#target)
+* [ƒ^[ƒQƒbƒg‚Æ‚ÍH](#target)
 * [ŽóMƒtƒBƒ‹ƒ^‚É‚Â‚¢‚Ä](#filter_recv)
 * [‘—MƒtƒBƒ‹ƒ^‚É‚Â‚¢‚Ä](#filter_send)
+* [–³—p‚ÈƒzƒXƒg‚Ö‚ÌÚ‘±‚ðƒuƒƒbƒN‚·‚é(ignored_host‹@”\)](#ignored_host) 
+* [POSTŽž‚ÌŠm”FƒƒbƒZ[ƒW•\Ž¦(post_confirm‹@”\)](#post_confirm)
+* [LAN“à‚É‚¨‚¯‚é‘¼‚Ìƒ}ƒVƒ“‚©‚ç‚ÌÚ‘±‚ð‹–‰Â/§ŒÀ‚·‚é](#accept_from_others)
 * [ŠO•”ƒvƒƒLƒV‚ðŽg‚¢‚½‚¢ê‡‚Ç‚¤‚·‚é‚Ì‚©H](#proxy1)
-* [‚»‚Ì‘¼‚Ìƒ[ƒJƒ‹ƒvƒƒLƒV‚Éƒ`ƒF[ƒ“‚·‚éê‡](#proxy2)
-* [Žè“®‚Å‹U‘•‚ðs‚Á‚½ê‡(ŽQl)](#note1)
+* [ŠO•”ƒvƒƒLƒV‚ðƒS[ƒ‹‚Æ‚È‚éƒzƒXƒg‚É‰ž‚¶‚Ä‘I‘ð“I‚É“K—p‚·‚é•û–@](#proxy2)
+* [‚»‚Ì‘¼‚Ìƒ[ƒJƒ‹ƒvƒƒLƒV‚Éƒ`ƒF[ƒ“‚·‚éê‡](#proxy3)
+* [ƒvƒ‰ƒOƒCƒ“‹@”\‚É‚Â‚¢‚Ä](#plugin)
+* [futabaƒvƒ‰ƒOƒCƒ“ : user_agent.txt‚Æscreen_size.txt‚É‚Â‚¢‚Ä](#futaba_plugin1)
+* [futabaƒvƒ‰ƒOƒCƒ“ : Žè“®‚Å‹U‘•‚ðs‚Á‚½ê‡(ŽQl)](#futaba_note)
 
 
 ## <a name="target">ƒ^[ƒQƒbƒg‚Æ‚ÍH
@@ -73,11 +79,11 @@ js_filterAcss_filter‚É‚Â‚¢‚Ä‚à“¯—l‚Å‚ ‚é.
 ‘å’ï‚Ì—p“r‚Å‚ÍA‚±‚ÌƒNƒH[ƒeƒBƒ“ƒO‹L†‚Å–â‘è‚Í‹N‚±‚ç‚È‚¢‚ÆŽv‚í‚ê‚é‚ªA
 ’uŠ·‘ÎÛ•¶Žš—ñ“à‚É‚±‚Ì‹L†‚ªŠÜ‚Ü‚ê‚é‚È‚Ç‚ÅA‚±‚Ì‹L†‚¾‚Æ“s‡‚ªˆ«‚¢ê‡‚ÍA
 ƒtƒ@ƒCƒ‹‚ÌÅ‰‚Ìs‚É‚ ‚é @def_quote ƒfƒBƒŒƒNƒeƒBƒu‚Å‚±‚Ì‹L†‚ðŽ©—R‚É•ÏX‚·‚é‚±‚Æ‚à‚Å‚«‚é.
-—á‚¦‚Î [' ‚Æ '] ‚Ì‘Ö‚í‚è‚É ([ ‚Æ ]) ‚ðŽg‚¢‚½‚¢‚Æ‚¢‚Á‚½ê‡‚ÍAmyfƒtƒ@ƒCƒ‹‚Ìˆê”ÔÅ‰‚Ìs‚É
+—á‚¦‚Î [' ‚Æ '] ‚Ì‘Ö‚í‚è‚É -[ ‚Æ ]- ‚ðŽg‚¢‚½‚¢‚Æ‚¢‚Á‚½ê‡‚ÍAmyfƒtƒ@ƒCƒ‹‚Ìˆê”ÔÅ‰‚Ìs‚É
 ~~~
-    @def_quote ([ ])
+    @def_quote -[ ]-
 ~~~
-‚Æ‘‚¢‚Ä‚¨‚­.
+‚Æ‘‚¢‚Ä‚¨‚­( -[ ‚Æ ]- ‚ÌŠÔ‚É‚Í•K‚¸ƒXƒy[ƒX‚ð“ü‚ê‚é‚±‚Æ ).
 
 
 **y—áz**  
@@ -122,10 +128,10 @@ Virtual USERS‚Å‚ÍAHTTP‚É‚¨‚¯‚éPOST‚É‚Ä‘—M‚³‚ê‚éƒwƒbƒ_‚âPOST•Ï”AƒNƒbƒL[‚Ì’l‚
     varname = ['’uŠ·Œã‚Ì’l']
 ~~~
 
-‚±‚Ìƒtƒ@ƒCƒ‹“à‚É‚¨‚¢‚Ä varname ‚ªŽw’è‚³‚ê‚Ä‚¢‚È‚¢•Ï”‚ÉŠÖ‚µ‚Ä‚Í–Ü˜_‰½‚à‰ÁHC³‚Í‚³‚ê‚È‚¢.
-‚Ü‚½‰E•Ó‚Ì’uŠ·Œã‚Ì’l‚ª‹ó’l‚Ì‚Æ‚«‚ÍA‹ó’l‚Ö‚Æ’uŠ·‚³‚ê‚é.
+‚±‚Ìƒtƒ@ƒCƒ‹“à‚É‚¨‚¢‚ÄŽw’è‚³‚ê‚Ä‚¢‚È‚¢•Ï”‚ÉŠÖ‚µ‚Ä‚Í‰½‚à‰ÁHC³‚Í‚³‚ê‚¸A’P‚É‚»‚Ì‚Ü‚Ü‘—‚ç‚ê‚é.
+‚Ü‚½‰E•Ó‚Ì’uŠ·Œã‚Ì’l‚ª‹ó’l‚Ì‚Æ‚«‚ÍA•¶Žš’Ê‚è‹ó’l‚Ö‚Æ’uŠ·‚³‚ê‚é.
 ‚Ü‚½’†ŠÔˆ—‚Ì‚½‚ßAŽÀÛ‚É‘—M‚³‚ê‚éPOST•Ï”‚É‘¶Ý‚µ‚È‚¢•Ï”‚È‚Ç‚ð‹Lq‚µ‚Ä‚¨‚­‚±‚Æ‚à‚Å‚«‚é.
-‚»‚Ìê‡‚ÍƒtƒBƒ‹ƒ^ˆ—‚É‚¨‚¢‚Ä‚Í‚»‚Ì•Ï”‚Í’P‚É–³Ž‹‚³‚ê‚é.
+‚±‚Ìê‡AƒtƒBƒ‹ƒ^ˆ—‚É‚¨‚¢‚Ä‚»‚Ì•Ï”‚Í’P‚É–³Ž‹‚³‚ê‚é.
 
 **y—áz**  
 —á‚¦‚ÎŒfŽ¦”Âu‚Ó‚½‚Î‚¿‚á‚ñ‚Ë‚év‚ð‘ÎÛ‚Æ‚µ‚ÄA‚»‚Ì‘—Mƒwƒbƒ_‚ÆPOST•Ï”‚ÆCookie‚Ì’l‚ð‰ÁH‚µ‚½‚¢‚Æ‚µ‚æ‚¤.
@@ -143,7 +149,7 @@ email = ['moge']
 @@.
 
 @@V cookie_vars
-cxyl = ['8x16x2x0x2']
+cxyl = ['5x3x2x0x2']
 namec = ['']
 @@.
 
@@ -169,7 +175,21 @@ namec = ['']
 ‚±‚±‚Å‚Í‚±‚ê‚ð‹­§“I‚É‹ó’l‚Ö‚ÆƒŠƒZƒbƒg‚µ‚Ä‚¢‚é.
 
 
-[1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/libZnk/myf_spec.md
+## <a name="ignored_host">–³—p‚ÈƒzƒXƒg‚Ö‚ÌÚ‘±‚ðƒuƒƒbƒN‚·‚é(ignored_host‹@”\) 
+-----------------------------------
+ì¬’†.
+
+
+## <a name="master_confirm">POSTŽž‚ÌŠm”FƒƒbƒZ[ƒW•\Ž¦(post_confirm‹@”\) 
+-----------------------------------
+ì¬’†.
+
+
+## <a name="accept_from_others">LAN“à‚É‚¨‚¯‚é‘¼‚Ìƒ}ƒVƒ“‚©‚ç‚ÌÚ‘±‚ð‹–‰Â/§ŒÀ‚·‚é
+-----------------------------------
+ì¬’†.
+
+
 ## <a name="proxy1">ŠO•”ƒvƒƒLƒV‚ðŽg‚¢‚½‚¢ê‡‚Ç‚¤‚·‚é‚Ì‚©H
 -----------------------------------
 
@@ -190,8 +210,12 @@ namec = ['']
   “Á‚ÉƒvƒƒLƒV‚É‚æ‚Á‚Ä‚Í’ÊM‚ª•sˆÀ’è‚É‚È‚éê‡‚à‚ ‚é. ‚Æ‚¢‚¤‚í‚¯‚Å‚±‚Ì‹@”\‚ðŽg‚¤‚Ì‚Í
   ‰SŽÒ‚É‚Í‚¨Š©‚ß‚µ‚È‚¢.
 
+## <a name="proxy2">ŠO•”ƒvƒƒLƒV‚ðƒS[ƒ‹‚Æ‚È‚éƒzƒXƒg‚É‰ž‚¶‚Ä‘I‘ð“I‚É“K—p‚·‚é•û–@
+-----------------------------------
+ì¬’†.
 
-## <a name="proxy2">‚»‚Ì‘¼‚Ìƒ[ƒJƒ‹ƒvƒƒLƒV‚Éƒ`ƒF[ƒ“‚·‚éê‡
+
+## <a name="proxy3">‚»‚Ì‘¼‚Ìƒ[ƒJƒ‹ƒvƒƒLƒV‚Éƒ`ƒF[ƒ“‚·‚éê‡
 -----------------------------------
 
   Virtual USERS‚Í‚»‚Ì‘¼‚Ìƒ[ƒJƒ‹ƒvƒƒLƒV‚Æ•¹—p‚·‚é‚±‚Æ‚à‚Å‚«‚é.
@@ -210,8 +234,15 @@ namec = ['']
   •ÏX‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢. —á‚¦‚ÎPolipo‚Ìƒ|[ƒg‚ÍƒfƒtƒHƒ‹ƒg‚Ì8123‚Ì‚Ü‚Ü‚Æ‚µ‚ÄA
   Virtual USERS‚ÌŽg—pƒ|[ƒg‚ð8122‚É•Ï‚¦‚é‚È‚Ç‚·‚é(config.myf “à‚Ìmoai_port‚Ì’l‚ð•Ï‚¦‚ê‚Î‚æ‚¢).
 
+## <a name="plugin">ƒvƒ‰ƒOƒCƒ“‹@”\‚É‚Â‚¢‚Ä
+-----------------------------------
+ì¬’†.
 
-## <a name="note1">Žè“®‚Å‹U‘•‚ðs‚Á‚½ê‡(ŽQl)
+## <a name="futaba_plugin1">futabaƒvƒ‰ƒOƒCƒ“ : user_agent.txt‚Æscreen_size.txt‚É‚Â‚¢‚Ä
+-----------------------------------
+ì¬’†.
+
+## <a name="futaba_note">futabaƒvƒ‰ƒOƒCƒ“ : Žè“®‚Å‹U‘•‚ðs‚Á‚½ê‡(ŽQl)
 -----------------------------------
 
   ŽQl‚Ì‚½‚ßAVirtual USERS‚Ì‚æ‚¤‚Èƒc[ƒ‹‚ðŽg‚í‚¸AŽè“®‚Å‹U‘•‚·‚é•û–@‚à‹LÚ‚µ‚Ä‚¨‚¢‚½.
@@ -290,3 +321,4 @@ namec = ['']
   ã‚É‚¨‚¢‚Ä‹U‘•‚³‚ê‚½’l‚ª‘—M‚³‚ê‚é‚±‚Æ‚¾‚ë‚¤.
 ~~~
 
+[1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/libZnk/myf_spec.md
