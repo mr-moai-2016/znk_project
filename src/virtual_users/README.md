@@ -157,7 +157,7 @@
   その設定を確認してみよう.  
 
   Windows XP以降の場合、次のようなダイアログが表示される場合がある.
-  ![screenshot](../imgs/screenshot_warn_on_win32.png)
+  ![screenshot](../imgs/screenshot_warning_on_win32.png)
   ここで「ブロックする」を選んでも、ローカルプロキシとして使う分には特に問題ない.  
   ただ、他のLAN上のマシンからのVirtual USERSの接続をしたい場合は、このブロックを解除する必要がある.
 
