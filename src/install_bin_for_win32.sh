@@ -30,6 +30,7 @@ LIST=`ls moai/doc_root`
 for i in $LIST
 do
 	$CP_ moai/doc_root/$i $INST_DIR_/doc_root/
+	echo "$CP_ moai/doc_root/$i $INST_DIR_/doc_root/"
 done
 
 #

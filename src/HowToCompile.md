@@ -1,8 +1,19 @@
-# コンパイル手順(超初心者向け!)
+# ソースコードのコンパイル手順
 -----------------------------------
 
+## 目次
+-----------------------------------
+* [Windowsな方へ、はじめてのコマンドプロンプト](#windows_first)
+* [Windowsな方へ、はじめてのMinGW](#windows_next)
+* [MinGWの入手方法](#get_mingw)
+* [WindowsでMinGWを使う場合](#use_mingw_on_windows)
+* [WindowsでVCを使う場合](#use_vc_on_windows)
+* [Linux/Cygwin/MSYS1.0の場合](#compile_on_linux)
+* [WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使う場合(おまけ)](#use_others_on_windows)
+* [MacOSについて](#about_macos)
+* [Androidについて](#about_android)
 
-## <a name="windows_first">Windowsな方へ、はじめに…
+## <a name="windows_first">Windowsな方へ、はじめのコマンドプロンプト
 -----------------------------------
 
   まずスタートメニューからコマンドプロンプトを開く方法からである.
@@ -29,7 +40,7 @@
   全くの初心者の方は**10回くらい開けて閉じてを繰り返し**、確実にマスターしておくことォ！
 
 
-## <a name="windows_next">Windowsな方へ、次に…
+## <a name="windows_next">Windowsな方へ、はじめてのMinGW
 -----------------------------------
 
   コマンドプロンプトを開けるようになったであろうか？
@@ -326,7 +337,7 @@
   そしてcompile_by_vc.batは内部でこれを呼び出す.
 
 
-## Linux/Cygwin/MSYS1.0の場合:
+## <a name="compile_on_linux">Linux/Cygwin/MSYS1.0の場合:
 -----------------------------------
   これを使われているような方は既にある程度わかっておられる方だとは思うが...
 
@@ -338,7 +349,7 @@
   ここでは記載しない. 最初からインストールされている可能性も高い.
 
 
-## WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使う場合(おまけ)
+## <a name="use_others_on_windows">WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使う場合(おまけ)
 -----------------------------------
   あなたがMinGWでもVCでもなくあえてこれらを選ぶというなら、もはや我々は何も言うまい.
 
@@ -393,7 +404,7 @@
 ~~~
 
 
-## MacOSの場合:
+## <a name="about_macos">MacOSについて:
 -----------------------------------
   現状では未サポートである.
   仮にコンパイルを試みるなら(手元にないので未確認であるが)Darwinを使うことになると思う.
@@ -403,7 +414,7 @@
   その他リンカldのオプションもおそらくMacOS独自のものを指定しなければならないだろう)
 
 
-## Androidの場合:
+## <a name="about_android">Androidについて:
 -----------------------------------
   基本的にLinuxなのであるが、現状では未サポートである.
   仮にコンパイルを試みるなら(未確認であるが)Android NDKを使うことになると思う.
