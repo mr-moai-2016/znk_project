@@ -71,8 +71,6 @@ install_one -c analysis.myf    virtual_users $INST_DIR_
 install_one -c target.myf      virtual_users $INST_DIR_
 install_one -c README.txt      virtual_users $INST_DIR_
 install_one -c README_more.txt virtual_users $INST_DIR_
-install_one -c README.md       virtual_users $INST_DIR_
-install_one -c README_more.md  virtual_users $INST_DIR_
 
 #
 # setup plugin_futaba

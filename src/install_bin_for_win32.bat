@@ -49,8 +49,6 @@ call bat_utils\install_one.bat /C analysis.myf    virtual_users         %INST_DI
 call bat_utils\install_one.bat /C target.myf      virtual_users         %INST_DIR_%
 %CP_% virtual_users\README.txt      %INST_DIR_%\
 %CP_% virtual_users\README_more.txt %INST_DIR_%\
-%CP_% virtual_users\README.md       %INST_DIR_%\
-%CP_% virtual_users\README_more.md  %INST_DIR_%\
 
 REM
 REM setup plugin_futaba
