@@ -11,9 +11,9 @@ Release Note 最終更新: 2016/04/29
 ~~~
     * デフォルト名が強制的に「モア!!モア!!モアーイ」になってしまう不具合を修正(失敬ｗ.
     * デフォルトポートを8123から8124へ変更(やはりPolipoと被ると不便なので)
-    * config.myfにあったproxy_nextという項目は削除し、これをparent_proxysという名前に変更.
+    * config.myfにあったproxy_nextという項目は削除し、これをparent_proxy_listという名前に変更.
 	* コマンドライン引数から外部proxyのIPアドレスとポート番号を指定する方式を廃止.
-      (替わりにconfig.myfのparent_proxys指定を使うこと)
+      (替わりにconfig.myfのparent_proxy_list指定を使うこと)
     * config.myfにあったmaster_confirmという項目を削除し、これをpost_confirmという名前に変更.
     * analysis.myfにあったconfirm_hostsという項目を削除し、これをconfig.myf内に移動.
 	  さらに post_confirm_hosts という名前に変更.
