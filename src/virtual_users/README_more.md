@@ -186,6 +186,7 @@ Virtual USERSでは、config.myf 内の ignore_hosts において記載されているホストへブ
 
 以下に例を示す.
 
+~~~
 @@L ignore_hosts
 free2.jp
 api.digiket.com
@@ -195,14 +196,14 @@ adgen.socdm.com
 ssl.socdm.com
 j.microad.net
 @@.
+~~~
 
 configファイル中に例えばこのように記述しておくと、あなたがいつも見ているサイトのページ中に
 上記の外部サイトへアクセスしようとする部分がある場合、それらの外部サイトへの接続を未然に防止する.
 そして替わりにその部分には以下のようなメッセージが表示される.
 
-~~~
-    Moai : Ignored Host Blocking[**blocked_hostname**] sock=[1234].
-~~~
+  Moai : Ignored Host Blocking[**blocked_hostname**] sock=[1234].
+
 **blocked_hostname**の部分には、どのホストへのアクセスをブロックしたかが表示される.  
 つまり上記で指定したホストのいずれかが表示されるはずである.  
 sockの部分は気にする必要はないが、接続の際に使ったソケットの番号を示している.
