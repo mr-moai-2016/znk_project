@@ -17,6 +17,7 @@
 struct MoaiModuleImpl {
 	char              target_name_[ 256 ];
 	ZnkDLinkHandler   plg_handle_;
+	MoaiOnInitFunc    plg_on_init_;
 	MoaiOnPostFunc    plg_on_post_before_;
 	MoaiOnResponseHdr plg_on_response_hdr_;
 	ZnkMyf            ftr_send_;
@@ -107,9 +108,11 @@ MoaiModule_load( MoaiModule mod, const char* target_name )
 	MoaiLog_printf( "Moai : Plugin Loading [%s]\n", filename );
 	mod->plg_handle_ = ZnkDLink_open( filename );
 	if( mod->plg_handle_ ){
+		mod->plg_on_init_         = (MoaiOnInitFunc)ZnkDLink_getFunc( mod->plg_handle_, "on_init" );
 		mod->plg_on_post_before_  = (MoaiOnPostFunc)ZnkDLink_getFunc( mod->plg_handle_, "on_post_before" );
 		mod->plg_on_response_hdr_ = (MoaiOnResponseHdr)ZnkDLink_getFunc( mod->plg_handle_, "on_response_hdr" );
 	} else {
+		mod->plg_on_init_         = NULL;
 		mod->plg_on_post_before_  = NULL;
 		mod->plg_on_response_hdr_ = NULL;
 	}
@@ -180,6 +183,14 @@ ZnkTxtFilterAry
 MoaiModule_ftrCSS( const MoaiModule mod )
 {
 	return mod->ftr_css_;
+}
+bool
+MoaiModule_invokeOnInit( const MoaiModule mod, const char* parent_proxy_hostname, const char* parent_proxy_port )
+{
+	if( mod->plg_on_init_ ){
+		return mod->plg_on_init_( mod->ftr_send_, parent_proxy_hostname, parent_proxy_port );
+	}
+	return false;
 }
 bool
 MoaiModule_invokeOnPostBefore( const MoaiModule mod )

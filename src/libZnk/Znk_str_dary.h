@@ -78,6 +78,10 @@ Znk_INLINE void
 ZnkStrDAry_set( ZnkStrDAry dary, size_t idx, ZnkStr obj ){
 	ZnkObjDAry_M_SET( dary, idx, obj );
 }
+Znk_INLINE void
+ZnkStrDAry_swap( ZnkStrDAry dary1, ZnkStrDAry dary2 ){
+	ZnkObjDAry_M_SWAP( dary1, dary2 );
+}
 
 int
 ZnkStrDAry_push_bk_snprintf( ZnkStrDAry dary, size_t size, const char* fmt, ... );

@@ -11,6 +11,7 @@ BASENAME=futaba
 OBJS = \
 	$O\dll_main.o \
 	$O\main.o \
+	$O\init.o \
 
 DLIB_FILE=$O\$(BASENAME).dll
 ILIB_FILE=$O\$(BASENAME).dll.a
@@ -23,7 +24,7 @@ $O:
 	if not exist $O mkdir $O
 
 $(DLIB_FILE): $(OBJS)
-	gcc -g -Wl,--disable-stdcall-fixup,--kill-at -shared -o $(DLIB_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\Znk-0.8.dll.a $(SUB_LIBS) -lws2_32 $(DEF_FILE)
+	gcc -g -Wl,--disable-stdcall-fixup,--kill-at -shared -o $(DLIB_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\Znk-0.9.dll.a $(SUB_LIBS) -lws2_32 $(DEF_FILE)
 	dlltool --kill-at --dllname futaba.dll -d $(DEF_FILE) -l $(ILIB_FILE)
 
 ##

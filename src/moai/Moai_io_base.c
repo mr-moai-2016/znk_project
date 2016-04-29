@@ -419,6 +419,30 @@ MoaiIO_closeSocket( const char* label, ZnkSocket sock, ZnkFdSet fdst_observe )
 	ZnkFdSet_clr( fdst_observe, sock );
 }
 
+/***
+ * listening sockを除き、fdst_observe内の全sockをクローズ.
+ */
+void
+MoaiIO_closeSocketAll( const char* label, ZnkFdSet fdst_observe )
+{
+	size_t    i;
+	size_t    sock_dary_size;
+	ZnkSocket sock;
+	ZnkSocketDAry sock_dary = ZnkSocketDAry_create();
+	MoaiConnection cinfo;
+
+	ZnkFdSet_getSocketDAry( fdst_observe, sock_dary );
+	sock_dary_size = ZnkSocketDAry_size( sock_dary );
+
+	for( i=0; i<sock_dary_size; ++i ){
+		sock = ZnkSocketDAry_at( sock_dary, i );
+		cinfo = MoaiConnection_find( sock );
+		if( cinfo && cinfo->sock_type_ != MoaiSockType_e_Listen ){
+			MoaiIO_closeSocket( label, sock, fdst_observe );
+		}
+	}
+	ZnkSocketDAry_destroy( sock_dary );
+}
 
 
 bool

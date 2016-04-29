@@ -23,6 +23,8 @@ MoaiIO_procExile( ZnkSocketDAry sock_dary, ZnkFdSet fdst );
 
 void
 MoaiIO_closeSocket( const char* label, ZnkSocket sock, ZnkFdSet fdst_observe );
+void
+MoaiIO_closeSocketAll( const char* label, ZnkFdSet fdst_observe );
 
 bool
 MoaiIO_recvInPtn( ZnkBfr stream, ZnkSocket sock, ZnkFdSet fdst_observe, const char* ptn, size_t* result_size );

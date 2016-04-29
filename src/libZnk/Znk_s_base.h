@@ -51,6 +51,9 @@ ZnkS_concat( char* buf, size_t buf_size, const char* cstr );
 void
 ZnkS_copy( char* buf, size_t buf_size, const char* cstr, size_t cstr_leng );
 
+#define ZnkS_copy_literal( buf, buf_size, literal_str ) \
+	ZnkS_copy( (buf), (buf_size), literal_str, Znk_strlen_literal(literal_str) )
+
 /**
  * @brief
  *   ‚¢‚í‚ä‚évsnprintf‚Æsnprintf

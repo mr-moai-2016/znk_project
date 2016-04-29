@@ -20,7 +20,7 @@ $O:
 	if not exist $O mkdir $O
 
 $(EXE_FILE): $(OBJS) $(RES_FILE)
-	$(LINKER) -o $(EXE_FILE) $(RES_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\Znk-0.8.dll.a -Wl,-dn,-lstdc++
+	$(LINKER) -o $(EXE_FILE) $(RES_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\Znk-0.9.dll.a -Wl,-dn,-lstdc++
 
 ##
 # Sub-Directoryに格納されたファイルなどにも柔軟に対応するため、

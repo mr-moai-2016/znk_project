@@ -1,4 +1,5 @@
 LIBRARY "futaba.dll"
 EXPORTS
+  on_init
   on_post_before
   on_response_hdr

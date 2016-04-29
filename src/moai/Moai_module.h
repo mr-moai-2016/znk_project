@@ -9,6 +9,7 @@ Znk_EXTERN_C_BEGIN
 
 typedef struct MoaiModuleImpl* MoaiModule;
 
+typedef bool (*MoaiOnInitFunc)( ZnkMyf myf, const char* proxy_hostname, const char* proxy_port );
 typedef bool (*MoaiOnPostFunc)( ZnkMyf ftr_send );
 typedef bool (*MoaiOnResponseHdr)( ZnkMyf ftr_send, ZnkVarpDAry hdr_vars );
 
@@ -34,6 +35,8 @@ MoaiModule_ftrJS( const MoaiModule mod );
 ZnkTxtFilterAry
 MoaiModule_ftrCSS( const MoaiModule mod );
 
+bool
+MoaiModule_invokeOnInit( const MoaiModule mod, const char* parent_proxy_hostname, const char* parent_proxy_port );
 bool
 MoaiModule_invokeOnPostBefore( const MoaiModule mod );
 bool

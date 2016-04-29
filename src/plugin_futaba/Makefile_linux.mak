@@ -10,6 +10,7 @@ INCLUDE_FLAG+=  \
 BASENAME=futaba
 OBJS = \
 	$O/main.o \
+	$O/init.o \
 
 DLIB_FILE=$O/$(BASENAME).so
 DLIB_NAME_ALIAS=$(BASENAME).so

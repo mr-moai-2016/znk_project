@@ -148,13 +148,14 @@ adoptReserveSocks( ZnkFdSet fdst_observe, ZnkSocketDAry reserve_socks, ZnkSocket
  * ZnkSocketDAryを使うバージョン.
  * Windows/Unixの双方で使用可能である.
  */
-void
+MoaiRASResult
 MoaiFdSet_process( MoaiFdSet mfds,
 		MoaiFdSetFuncArg_OnAccept* fnca_on_accept, MoaiFdSetFuncArg_RAS* fnca_ras )
 {
 	ZnkFdSet fdst_read    = mfds->fdst_read_;
 	ZnkFdSet fdst_observe = mfds->fdst_observe_;
 	ZnkSocketDAry wk_sock_dary = mfds->wk_sock_dary_;
+	MoaiRASResult ras_result = MoaiRASResult_e_Ignored;
 
 	if( ZnkFdSet_isset( fdst_read, mfds->listen_sock_ ) ){
 		/***
@@ -205,7 +206,14 @@ MoaiFdSet_process( MoaiFdSet mfds,
 		for( i=0; i<sock_dary_size; ++i ){
 			ZnkSocket  sock = ZnkSocketDAry_at( wk_sock_dary, i );
 			if( fnca_ras ){
-				fnca_ras->func_( mfds, sock, fnca_ras->arg_ );
+				ras_result = fnca_ras->func_( mfds, sock, fnca_ras->arg_ );
+				switch( ras_result ){
+				case MoaiRASResult_e_CriticalError:
+				case MoaiRASResult_e_RestartServer:
+					return ras_result;
+				default:
+					break;
+				}
 			}
 		}
 	}
@@ -216,4 +224,5 @@ MoaiFdSet_process( MoaiFdSet mfds,
 	 */
 	adoptReserveSocks( mfds->fdst_observe_, mfds->reserve_accept_socks_, mfds->wk_sock_dary_ );
 	adoptReserveSocks( mfds->fdst_observe_, mfds->reserve_connect_socks_, mfds->wk_sock_dary_ );
+	return ras_result;
 }

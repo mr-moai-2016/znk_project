@@ -1,8 +1,10 @@
 #include "Moai_server.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "Moai_parent_proxy.h"
 #include <Znk_zlib.h>
 #include <Znk_stdc.h>
+#include <Znk_s_base.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #if defined(Znk_TARGET_WINDOWS)
 #  include <windows.h>
@@ -11,6 +13,9 @@
 int main(int argc, char **argv)
 {
 	int result = EXIT_FAILURE;
+	MoaiRASResult ras_result = MoaiRASResult_e_Ignored;
+	bool enable_init = true;
+	bool enable_parent_proxy = true;
 
 	/***
 	 * TODO:
@@ -37,7 +42,25 @@ int main(int argc, char **argv)
 		result = EXIT_FAILURE;
 		goto FUNC_END;
 	}
-	result = MoaiServer_main( argc, argv );
+
+	if( argc > 1 ){
+		const char* option = argv[ 1 ];
+		if( ZnkS_eq( option, "--disable_init" ) ){
+			enable_init = false;
+		} else if( ZnkS_eq( option, "--disable_parent_proxy" ) ){
+			enable_parent_proxy = false;
+		}
+	}
+
+	while( true ){
+		ras_result = MoaiServer_main( enable_init, enable_parent_proxy );
+		if( ras_result != MoaiRASResult_e_RestartServer ){
+			break;
+		}
+	}
+	if( ras_result != MoaiRASResult_e_CriticalError ){
+		result = EXIT_SUCCESS;
+	}
 
 FUNC_END:
 #if defined(Znk_TARGET_WINDOWS)

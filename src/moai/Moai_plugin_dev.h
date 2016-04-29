@@ -6,6 +6,7 @@
 
 Znk_EXTERN_C_BEGIN
 
+bool on_init( ZnkMyf myf, const char* proxy_hostname, const char* proxy_port );
 bool on_post_before( ZnkMyf myf );
 bool on_response_hdr( ZnkMyf myf, ZnkVarpDAry hdr_vars );
 

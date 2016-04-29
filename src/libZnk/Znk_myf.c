@@ -37,19 +37,31 @@ ZnkMyfSection_name( const ZnkMyfSection sec )
 static void
 makeUnionData( union Data_tag* u, ZnkMyfSectionType type )
 {
-	if( type == ZnkMyfSection_e_Lines ){
+	switch( type ){
+	case ZnkMyfSection_e_Lines:
+	case ZnkMyfSection_e_OutOfSection:
 		u->lines_ = ZnkStrDAry_create( true );
-	} else if( type == ZnkMyfSection_e_Vars ){
+		break;
+	case ZnkMyfSection_e_Vars:
 		u->vars_ = ZnkVarpDAry_create( true );
+		break;
+	default:
+		break;
 	}
 }
 static void
 deleteUnionData( union Data_tag* u, ZnkMyfSectionType type )
 {
-	if( type == ZnkMyfSection_e_Lines ){
+	switch( type ){
+	case ZnkMyfSection_e_Lines:
+	case ZnkMyfSection_e_OutOfSection:
 		ZnkStrDAry_destroy( u->lines_ );
-	} else if( type == ZnkMyfSection_e_Vars ){
+		break;
+	case ZnkMyfSection_e_Vars:
 		ZnkVarpDAry_destroy( u->vars_ );
+		break;
+	default:
+		break;
 	}
 }
 
@@ -59,11 +71,7 @@ makeMyfSection( const char* name, ZnkMyfSectionType type )
 	ZnkMyfSection sec = (ZnkMyfSection)Znk_alloc0( sizeof( struct ZnkMyfSectionImpl ) );
 	sec->name_ = ZnkStr_new( "" );
 	sec->type_ = type;
-	if( sec->type_ == ZnkMyfSection_e_Lines ){
-		sec->u_.lines_ = ZnkStrDAry_create( true );
-	} else if( sec->type_ == ZnkMyfSection_e_Vars ){
-		sec->u_.vars_ = ZnkVarpDAry_create( true );
-	}
+	makeUnionData( &sec->u_, type );
 	return sec;
 }
 static void
@@ -72,11 +80,7 @@ deleteMyfSection( void* elem )
 	ZnkMyfSection sec = (ZnkMyfSection)elem;
 	if( sec ){
 		ZnkStr_delete( sec->name_ );
-		if( sec->type_ == ZnkMyfSection_e_Lines ){
-			ZnkStrDAry_destroy( sec->u_.lines_ );
-		} else if( sec->type_ == ZnkMyfSection_e_Vars ){
-			ZnkVarpDAry_destroy( sec->u_.vars_ );
-		}
+		deleteUnionData( &sec->u_, sec->type_ );
 		sec->type_ = ZnkMyfSection_e_None;
 		Znk_free( sec );
 	}
@@ -85,7 +89,23 @@ deleteMyfSection( void* elem )
 struct ZnkMyfImpl {
 	char       quote_begin_[ 32 ];
 	char       quote_end_[ 32 ];
+	char       nl_[ 32 ];
+	/***
+	 * MyfSection格納および寿命管理用
+	 */
 	ZnkObjDAry sec_ary_;
+	/***
+	 * OutOfSection格納および寿命管理用.
+	 * OutOfSectionも内部的にはZnkMyfSectionとして扱う.
+	 */
+	ZnkObjDAry oos_ary_;
+	/***
+	 * ここでの順序記録はZnkMyfSectionの参照の配列として、
+	 * MyfSectionおよびOutOfSectionの記載されている順序を保存する.
+	 * これはload => saveの際にこれらの元の構造と順番が失われないようにするためである.
+	 * この配列では参照のみを保持し、各要素の寿命は管理しない.
+	 */
+	ZnkObjDAry order_;
 };
 
 ZnkMyf
@@ -94,7 +114,13 @@ ZnkMyf_create( void )
 	ZnkMyf myf = Znk_alloc0( sizeof( struct ZnkMyfImpl ) );
 	myf->quote_begin_[ 0 ] = '\0';
 	myf->quote_end_[ 0 ]   = '\0';
+	ZnkS_copy_literal( myf->nl_, sizeof(myf->nl_), "\n" );
 	myf->sec_ary_ = ZnkObjDAry_create( deleteMyfSection );
+	myf->oos_ary_ = ZnkObjDAry_create( deleteMyfSection );
+	/***
+	 * order_ではZnkMyfSectionの参照のみを管理(寿命は管理しない).
+	 */
+	myf->order_   = ZnkObjDAry_create( NULL );
 	return myf;
 }
 
@@ -103,6 +129,8 @@ ZnkMyf_destroy( ZnkMyf myf )
 {
 	if( myf ){
 		ZnkObjDAry_destroy( myf->sec_ary_ );
+		ZnkObjDAry_destroy( myf->oos_ary_ );
+		ZnkObjDAry_destroy( myf->order_ );
 		Znk_free( myf );
 	}
 }
@@ -153,7 +181,12 @@ ZnkMyf_registSection( ZnkMyf myf, const char* name, ZnkMyfSectionType type )
 	switch( type ){
 	case ZnkMyfSection_e_Lines:
 	case ZnkMyfSection_e_Vars:
+		/***
+		 * 中身が空の新規Sectionを登録する.
+		 */
 		sec = makeMyfSection( name, type );
+		ZnkObjDAry_push_bk( myf->sec_ary_, (ZnkObj)sec );
+		ZnkObjDAry_push_bk( myf->order_, (ZnkObj)sec );
 		break;
 	default:
 		sec = NULL;
@@ -240,9 +273,14 @@ parseSectionLines( ZnkMyf myf, const char* p, size_t p_leng,
 {
 	size_t pos = 0;
 	size_t arg_leng = 0;
-	ZnkMyfSection sec = makeMyfSection( "", ZnkMyfSection_e_Lines );
+	ZnkMyfSection sec;
 
+	/***
+	 * sec_ary_およびorder_への登録.
+	 */
+	sec = makeMyfSection( "", ZnkMyfSection_e_Lines );
 	ZnkObjDAry_push_bk( myf->sec_ary_, (ZnkObj)sec );
+	ZnkObjDAry_push_bk( myf->order_, (ZnkObj)sec );
 
 	/* 1th arg */
 	pos = ZnkS_lfind_arg( p+pos, 0, p_leng-pos, 0, &arg_leng, " \t", 2 ) + pos;
@@ -289,13 +327,19 @@ parseSectionVars( ZnkMyf myf, const char* p, size_t p_leng,
 	const size_t quote_begin_leng = strlen( quote_begin );
 	ZnkVarp varp = NULL;
 	const char* nl = "\n";
-	ZnkMyfSection sec = makeMyfSection( "", ZnkMyfSection_e_Vars );
+	ZnkMyfSection sec;
 
+	/***
+	 * sec_ary_およびorder_への登録.
+	 */
+	sec = makeMyfSection( "", ZnkMyfSection_e_Vars );
 	ZnkObjDAry_push_bk( myf->sec_ary_, (ZnkObj)sec );
+	ZnkObjDAry_push_bk( myf->order_, (ZnkObj)sec );
 
 	/* 1th arg */
 	pos = ZnkS_lfind_arg( p+pos, 0, p_leng-pos, 0, &arg_leng, " \t", 2 ) + pos;
 	ZnkStr_assign( sec->name_, 0, p+pos, arg_leng );
+
 
 	while( true ){
 		if( !ZnkStrFIO_fgets( line, 0, 4096, fp ) ){
@@ -367,6 +411,26 @@ parseSectionVars( ZnkMyf myf, const char* p, size_t p_leng,
 	return true;
 }
 
+static void
+registOutOfSection( ZnkMyf myf, ZnkStrDAry text )
+{
+	ZnkMyfSection sec;
+
+	/***
+	 * oos_ary_およびorder_への登録.
+	 */
+	sec = makeMyfSection( "", ZnkMyfSection_e_OutOfSection );
+	ZnkObjDAry_push_bk( myf->oos_ary_, (ZnkObj)sec );
+	ZnkObjDAry_push_bk( myf->order_, (ZnkObj)sec );
+
+	/***
+	 * swapにより結果的にtextの内容をlines_へ移動する形となる.
+	 * (textの方はクリアされる形になる)
+	 */
+	ZnkStrDAry_swap( sec->u_.lines_, text );
+
+}
+
 bool
 ZnkMyf_load( ZnkMyf myf, const char* filename )
 {
@@ -375,8 +439,53 @@ ZnkMyf_load( ZnkMyf myf, const char* filename )
 	if( fp ){
 		ZnkStr line = ZnkStr_new( "" );
 		size_t count = 0;
-		ZnkStrDAry command_ary = ZnkStrDAry_create( true );
-	
+		/***
+		 * OutOfSectionにおけるTextを記録する.
+		 */
+		ZnkStrDAry oos_text = ZnkStrDAry_create( true );
+		bool is_outof_section = true;
+
+		if( !ZnkStrFIO_fgets( line, 0, 4096, fp ) ){
+			/* eof */
+			ZnkF_printf_e( "ZnkMyf_load : Syntax Error : line:%u\n", count );
+			ZnkF_printf_e( "  File is empty.\n");
+			goto FUNC_END;
+		}
+		++count;
+
+		/***
+		 * 改行コードがどうなっているのかをまず解析.
+		 */
+		{
+			if( ZnkStr_isEnd( line, "\r\n" ) ){
+				ZnkS_copy_literal( myf->nl_, sizeof(myf->nl_), "\r\n" );
+			} else if( ZnkStr_last( line ) == '\n' ){
+				ZnkS_copy_literal( myf->nl_, sizeof(myf->nl_), "\n" );
+			} else if( ZnkStr_last( line ) == '\r' ){
+				ZnkS_copy_literal( myf->nl_, sizeof(myf->nl_), "\r" );
+			} else {
+				/* defaultを採用 */
+			}
+		}
+		ZnkStr_chompNL( line );
+
+		/***
+		 * 開始行における@def_quote指定は必須とする.
+		 * (その方が使用するクォート記号列がmyfファイル内でも明示化され
+		 * メンテナンスする場合でも望ましいと思う)
+		 */
+		if( ZnkStr_isBegin( line, "@def_quote" ) ){
+			const char*  p      = ZnkStr_cstr( line ) + 1;
+			const size_t p_leng = ZnkStr_leng( line ) - 1;
+			if( !parseDefQuote( myf, p, p_leng, count, "def_quote" ) ){
+				goto FUNC_END;
+			}
+		} else {
+			ZnkF_printf_e( "ZnkMyf_load : Syntax Error : line:%u\n", count );
+			ZnkF_printf_e( "  @def_quote is not found.\n");
+			goto FUNC_END;
+		}
+
 		while( true ){
 			if( !ZnkStrFIO_fgets( line, 0, 4096, fp ) ){
 				/* eof */
@@ -385,57 +494,43 @@ ZnkMyf_load( ZnkMyf myf, const char* filename )
 			++count;
 			ZnkStr_chompNL( line );
 
-			if( ZnkStr_empty( line ) ){
-				continue;
-			}
-			if( ZnkStr_first( line ) == '#' ){
-				/* treat as comment out */
-				continue;
-			}
-
-			if( ZnkStr_isBegin( line, "@def_quote" ) ){
-				const char*  p      = ZnkStr_cstr( line ) + 1;
-				const size_t p_leng = ZnkStr_leng( line ) - 1;
-				if( !parseDefQuote( myf, p, p_leng, count, "def_quote" ) ){
-					goto FUNC_END;
-				}
-			}
-
 			if( ZnkStr_isBegin( line, "@@" ) ){
 				const char*  p      = ZnkStr_cstr( line ) + 3;
 				const size_t p_leng = ZnkStr_leng( line ) - 3;
 				char sec_type_ch = *(p-1);
 				switch( sec_type_ch ){
 				case 'V':
+					registOutOfSection( myf, oos_text );
 					if( !parseSectionVars( myf, p, p_leng, fp, &count, line ) ){
 						goto FUNC_END;
 					}
+					is_outof_section = false;
 					break;
 				case 'L':
+					registOutOfSection( myf, oos_text );
 					if( !parseSectionLines( myf, p, p_leng, fp, &count, line ) ){
 						goto FUNC_END;
 					}
-					break;
-				case '^':
-					/* OutOfSectionにある 特殊空文字 */
-					/* これは単に無視することにする */
-					break;
-				case '.':
-					/* OutOfSectionにある endof section 記号 */
-					/* これは単に無視することにする */
+					is_outof_section = false;
 					break;
 				default:
-					ZnkF_printf_e( "ZnkMyf_load : Syntax Error : line:%u\n", count );
-					ZnkF_printf_e( "  Unrecognize Section begin line=[%s]\n", ZnkStr_cstr(line) );
-					goto FUNC_END;
+					/* それ以外の文字が来た場合はOutOfSectionのテキストのままとして扱う */
+					break;
 				}
+			}
+
+			if( is_outof_section ){
+				ZnkStrDAry_push_bk_cstr( oos_text, ZnkStr_cstr(line), Znk_NPOS );
+			} else {
+				/* OutOfSectionの再開 */
+				is_outof_section = true;
 			}
 		}
 		result = true;
 FUNC_END:
 		ZnkStr_delete( line );
 		ZnkF_fclose( fp );
-		ZnkStrDAry_destroy( command_ary );
+		ZnkStrDAry_destroy( oos_text );
 	}
 	return result;
 }
@@ -445,19 +540,18 @@ ZnkMyf_save( ZnkMyf myf, const char* filename )
 {
 	ZnkFile fp = ZnkF_fopen( filename, "wb" );
 	if( fp ){
-		const char* nl = "\n";
-		size_t sec_size;
-		size_t sec_idx;
+		const char* nl = myf->nl_;
+		size_t order_size;
+		size_t order_idx;
 		size_t size;
 		size_t idx;
 		ZnkVarp varp = NULL;
 	
 		ZnkF_fprintf( fp, "@def_quote %s %s%s", myf->quote_begin_, myf->quote_end_, nl );
-		ZnkF_fputs( nl, fp );
 
-		sec_size = ZnkObjDAry_size( myf->sec_ary_ );
-		for( sec_idx=0; sec_idx<sec_size; ++sec_idx ){
-			ZnkMyfSection sec = (ZnkMyfSection)ZnkObjDAry_at( myf->sec_ary_, sec_idx );
+		order_size = ZnkObjDAry_size( myf->order_ );
+		for( order_idx=0; order_idx<order_size; ++order_idx ){
+			ZnkMyfSection sec = (ZnkMyfSection)ZnkObjDAry_at( myf->order_, order_idx );
 			switch( sec->type_ ){
 			case ZnkMyfSection_e_Lines:
 				ZnkF_fprintf( fp, "@@L %s%s", ZnkStr_cstr(sec->name_),  nl );
@@ -465,6 +559,7 @@ ZnkMyf_save( ZnkMyf myf, const char* filename )
 				for( idx=0; idx<size; ++idx ){
 					ZnkF_fprintf( fp, "%s%s", ZnkStrDAry_at_cstr( sec->u_.lines_, idx ), nl );
 				}
+				ZnkF_fprintf( fp, "@@.%s", nl );
 				break;
 			case ZnkMyfSection_e_Vars:
 				ZnkF_fprintf( fp, "@@V %s%s", ZnkStr_cstr(sec->name_),  nl );
@@ -476,12 +571,17 @@ ZnkMyf_save( ZnkMyf myf, const char* filename )
 							myf->quote_begin_, ZnkVar_cstr( varp ), myf->quote_end_,
 							nl );
 				}
+				ZnkF_fprintf( fp, "@@.%s", nl );
+				break;
+			case ZnkMyfSection_e_OutOfSection:
+				size = ZnkStrDAry_size( sec->u_.lines_ );
+				for( idx=0; idx<size; ++idx ){
+					ZnkF_fprintf( fp, "%s%s", ZnkStrDAry_at_cstr( sec->u_.lines_, idx ), nl );
+				}
 				break;
 			default:
 				break;
 			}
-			ZnkF_fprintf( fp, "@@.%s", nl );
-			ZnkF_fputs( nl, fp );
 		}
 	
 		ZnkF_fclose( fp );

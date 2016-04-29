@@ -1,11 +1,9 @@
-/***
- * Virtual USERS : Virtual User-agent Screen-size and Everything Randomize System 
- */
-#include <Znk_zlib.h>
+#include <Moai_plugin_dev.h>
 #include <Znk_stdc.h>
+#include <Znk_def_util.h>
+#include <Znk_zlib.h>
 #include <Znk_missing_libc.h>
 #include <Znk_net_base.h>
-#include <Znk_auto_ptr.hpp>
 #include <Znk_s_base.h>
 #include <Znk_str.h>
 #include <Znk_str_fio.h>
@@ -20,9 +18,6 @@
 #include <limits.h>
 #include <time.h>
 
-static bool st_is_dos_path = false;
-
-#if 0
 
 typedef enum {
 	 FtbSrvType_e_Unknown=0
@@ -33,6 +28,7 @@ typedef enum {
 	,FtbSrvType_e_cgi
 } SrvType;
 
+static bool st_is_dos_path = false;
 
 static unsigned int
 getRandomUInt( void )
@@ -112,9 +108,9 @@ getCatalog( const char* srv_name, const char* board_id,
 		system( cmd );
 	}
 	{
-		Znk_AUTO_PTR( ZnkFile, fp, ZnkF_fopen( "catalog.htm", "rb" ), ZnkF_fclose );
+		ZnkFile fp = ZnkF_fopen( "catalog.htm", "rb" );
 		if( fp ){
-			Znk_AUTO_PTR( ZnkStr, line, ZnkStr_new( "" ), ZnkStr_delete );
+			ZnkStr line = ZnkStr_new( "" );
 			while( true ){
 				if( !ZnkStrFIO_fgets( line, 0, 4096, fp ) ){
 					/* eof */
@@ -130,6 +126,8 @@ getCatalog( const char* srv_name, const char* board_id,
 					}
 				}
 			}
+			ZnkStr_delete( line );
+			ZnkF_fclose( fp );
 		} else {
 			return false;
 		}
@@ -176,12 +174,14 @@ getCaco( const char* srv_name, ZnkStr caco, const char* ua, ZnkVarpDAry cookie, 
 	}
 
 	{
-		Znk_AUTO_PTR( ZnkFile, fp, ZnkF_fopen( "caco.txt", "rb" ), ZnkF_fclose );
+		ZnkFile fp = ZnkF_fopen( "caco.txt", "rb" );
 		if( fp ){
-			Znk_AUTO_PTR( ZnkStr, line, ZnkStr_new( "" ), ZnkStr_delete );
+			ZnkStr line = ZnkStr_new( "" );
 			ZnkStrFIO_fgets( line, 0, 4096, fp );
 			ZnkStrPtn_getBetween( caco, (uint8_t*)ZnkStr_cstr(line), ZnkStr_leng(line), "\"", "\"" );
 			result = true;
+			ZnkStr_delete( line );
+			ZnkF_fclose( fp );
 		}
 	}
 	return result;
@@ -191,9 +191,9 @@ getCaco( const char* srv_name, ZnkStr caco, const char* ua, ZnkVarpDAry cookie, 
 static bool
 loadLineAryData( ZnkStrDAry line_ary, const char* filename )
 {
-	Znk_AUTO_PTR( ZnkFile, fp, ZnkF_fopen( filename, "rb" ), ZnkF_fclose );
+	ZnkFile fp = ZnkF_fopen( filename, "rb" );
 	if( fp ){
-		Znk_AUTO_PTR( ZnkStr, line, ZnkStr_new( "" ), ZnkStr_delete );
+		ZnkStr line = ZnkStr_new( "" );
 		ZnkStrDAry_clear( line_ary );
 
 		while( true ){
@@ -216,6 +216,8 @@ loadLineAryData( ZnkStrDAry line_ary, const char* filename )
 			/* この行を一つの値として文字列配列へと追加 */
 			ZnkStrDAry_push_bk_cstr( line_ary, ZnkStr_cstr(line), ZnkStr_leng(line) );
 		}
+		ZnkStr_delete( line );
+		ZnkF_fclose( fp );
 		return true;
 	}
 	return false;
@@ -538,8 +540,8 @@ FUNC_END:
 	return result;
 }
 
-static bool
-initiallyShuffle( const char* proxy_hostname, const char* proxy_port )
+bool
+on_init( ZnkMyf myf, const char* proxy_hostname, const char* proxy_port )
 {
 	/***
 	 * 最初に参照するサーバ名と板ID名を指定.
@@ -548,12 +550,12 @@ initiallyShuffle( const char* proxy_hostname, const char* proxy_port )
 	const char* srv_name = "may";
 	const char* board_id = "b";
 
-	Znk_AUTO_PTR( ZnkMyf, myf, ZnkMyf_create(), ZnkMyf_destroy );
+#if defined(Znk_TARGET_WINDOWS)
+	st_is_dos_path = true;
+#else
+	st_is_dos_path = false;
+#endif
 
-	if( !ZnkMyf_load( myf, "filters/futaba_send.myf" ) ){
-		ZnkF_printf_e( "gen_filter : Error : Cannot load futaba_send.myf.\n" );
-		return false;
-	}
 	if( !shuffleMyfFilter( myf, srv_name, board_id, proxy_hostname, proxy_port ) ){
 		ZnkF_printf_e( "gen_filter : Error : fail to process filter\n" );
 		return false;
@@ -565,63 +567,3 @@ initiallyShuffle( const char* proxy_hostname, const char* proxy_port )
 	return true;
 }
 
-#endif
-
-int main(int argc, char **argv)
-{
-	int result;
-	//const char* proxy_hostname = "";
-	//const char* proxy_port = "";
-
-#if defined(Znk_TARGET_WINDOWS)
-	st_is_dos_path = true;
-#else
-	st_is_dos_path = false;
-#endif
-
-#if 0
-	if( argc > 2 ){
-		proxy_hostname = argv[ 1 ];
-		proxy_port     = argv[ 2 ];
-	} else if( argc == 2 ){
-		proxy_hostname = argv[ 1 ];
-	}
-
-	/***
-	 * Initially shuffleを実行.
-	 */
-	ZnkF_printf_e( "\n" );
-	ZnkF_printf_e( "USERS : Starting Initially shuffle.\n\n" );
-	ZnkF_printf_e( "  proxy_hostname=[%s] proxy_port=[%s]\n", proxy_hostname, proxy_port );
-	if( !initiallyShuffle( proxy_hostname, proxy_port ) ){
-		return EXIT_FAILURE;
-	}
-#endif
-
-	/***
-	 * ローカルプロキシMoaiを起動.
-	 */
-	ZnkF_printf_e( "\n" );
-	ZnkF_printf_e( "USERS : Starting Moai.\n\n" );
-	{
-		char cmd[ 4096 ];
-		const char* app = st_is_dos_path ? ".\\moai" : "./moai";
-#if 0
-		if( !ZnkS_empty( proxy_port ) ){
-			Znk_snprintf( cmd, sizeof(cmd), "%s %s %s", app, proxy_hostname, proxy_port );
-		} else if( !ZnkS_empty( proxy_hostname ) ){
-			Znk_snprintf( cmd, sizeof(cmd), "%s %s", app, proxy_hostname );
-		} else {
-			Znk_snprintf( cmd, sizeof(cmd), "%s", app );
-		}
-#endif
-		Znk_snprintf( cmd, sizeof(cmd), "%s", app );
-		result = system( cmd );
-		if( result == EXIT_FAILURE ){
-			ZnkF_printf_e( "USERS : moai exit failure.\n\n" );
-			getchar();
-		}
-	}
-
-	return EXIT_SUCCESS;
-}

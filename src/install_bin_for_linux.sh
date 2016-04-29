@@ -54,7 +54,6 @@ install_one()
 		fi
 	elif test "$if_dst_exist" = "-c" ; then
 		$CP_COMFIRM_ $src_dir/$file $dst_dir/
-	else
 	fi
 }
 $CP_ virtual_users/out_dir/virtual_users $INST_DIR_/

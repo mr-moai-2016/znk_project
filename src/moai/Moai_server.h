@@ -1,11 +1,11 @@
 #ifndef INCLUDE_GUARD__Moai_server_h__
 #define INCLUDE_GUARD__Moai_server_h__
 
-#include <Znk_base.h>
+#include <Moai_type.h>
 
 Znk_EXTERN_C_BEGIN
 
-int MoaiServer_main( int argc, char **argv );
+MoaiRASResult MoaiServer_main( bool enable_init, bool enable_parent_proxy );
 
 Znk_EXTERN_C_END
 

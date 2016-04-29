@@ -11,15 +11,66 @@ ssl.socdm.com
 j.microad.net
 @@.
 
-@@V config
-master_confirm = ['on']
-moai_port = ['8123']
-proxy_indicating_mode = ['plus']
-enable_log_file = ['on']
-acceptable_host = ['ANY']
-server_name = ['']
+# 以下にはPOST時に確認モードを表示したいホストを記述する.
+@@L post_confirm_hosts
+hanabi.2ch.net
+echo.2ch.net
+may.2chan.net
+jun.2chan.net
+dec.2chan.net
+img.2chan.net
+cgi.2chan.net
+dat.2chan.net
+zip.2chan.net
 @@.
 
+# 以下にはparent_proxyの候補となるプロキシ名を列挙する.
+@@L parent_proxy_list
+118.103.111.152:8080
+106.184.2.142:8080
+104.156.239.154:3128
+localhost:8123
+@@.
+
+# post_confirm:
+#   HTTP POST時において確認画面を出すか否か.
+#   これが on の場合、post_confirm_hosts によって指定されたホストにおいては
+#   POST時に確認画面が出る
+#   offの場合はいかなるホストにおいても確認画面を出さない.
+#
+# moai_port:
+#   ローカルプロキシエンジンMoaiがリッスンするポート番号を指定する.
+#
+# enable_log_file:
+#   これが on の場合、moai_log.log ファイルにすべてのログ情報を記録していく.
+#   off の場合、初期起動時の最低限のメッセージを除いては moai_log.log ファイルにログ情報を記録しない.
+#   動画サイトなど、ログ情報が膨大なサイトを閲覧する場合は、ログファイルも大きくなりがちだが、
+#   これが気になる場合などにoffにしておくとよい.
+#
+# acceptable_host:
+#   値として ANY または LOOPBACK を指定する.
+#   ANYを指定した場合、Moaiが起動している自マシン以外からの接続も許可する.
+#   LOOPBACKを指定した場合、それを許可せずMoaiが起動している自マシンからの自分自身への接続
+#   (Loopback接続)のみを許可する.
+#
+# server_name:
+#   acceptable_hostとして ANY を指定した場合において
+#   外部マシンからMoaiのWebサーバへアクセスする際にHTML内等で公開されるserver_nameとして使用される.
+#   例えばMoaiのWeb Configuration画面などではMoaiの起動しているサーバへのPOSTの必要があるが、
+#   その際に送信先情報として使われる.
+#
+# proxy_indicating_mode:
+#   proxy_minus によって指定したい場合は minusを
+#   proxy_plus によって指定したい場合はplusを指定する.
+@@V config
+parent_proxy = ['NONE']
+post_confirm = ['on']
+moai_port = ['8124']
+enable_log_file = ['on']
+acceptable_host = ['LOOPBACK']
+server_name = ['']
+proxy_indicating_mode = ['plus']
+@@.
 
 # 減算的な指定方法.
 # 基本的にすべてのホストに対して外部proxyを使うが
@@ -36,4 +87,3 @@ localhost
 may.2chan.net
 jun.2chan.net
 @@.
-

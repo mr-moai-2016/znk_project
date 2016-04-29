@@ -18,7 +18,7 @@ if test -e libZnk ; then
 	SRC_DIR=libZnk
 fi
 
-DL_VER_SFX=-0.8
+DL_VER_SFX=-0.9
 $CP_ $SRC_DIR/out_dir/Znk$DL_VER_SFX.dll $INST_DIR_/
 
 #

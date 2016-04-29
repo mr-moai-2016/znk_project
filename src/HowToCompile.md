@@ -13,7 +13,7 @@
 * [MacOSについて](#about_macos)
 * [Androidについて](#about_android)
 
-## <a name="windows_first">Windowsな方へ、はじめのコマンドプロンプト
+## <a name="windows_first">Windowsな方へ、はじめてのコマンドプロンプト
 -----------------------------------
 
   まずスタートメニューからコマンドプロンプトを開く方法からである.

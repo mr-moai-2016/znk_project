@@ -9,12 +9,19 @@ bool
 MoaiParentProxy_isUse( const ZnkMyf config, const char* goal_hostname, size_t goal_hostname_leng );
 void
 MoaiParentProxy_set( const char* parent_proxy_hostname, uint16_t parent_proxy_port );
+bool
+MoaiParentProxy_set_byAuthority( const char* parent_proxy_autority );
 const char*
 MoaiParentProxy_getHostname( void );
 uint16_t
 MoaiParentProxy_getPort( void );
 void
 MoaiParentProxy_setIndicatingMode( int indicating_mode );
+
+void
+MoaiParentProxy_setParentProxys( ZnkStrDAry parent_proxys );
+ZnkStrDAry
+MoaiParentProxy_getParentProxys( void );
 
 Znk_EXTERN_C_END
 

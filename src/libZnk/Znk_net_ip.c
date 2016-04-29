@@ -1,21 +1,11 @@
 #include <Znk_net_ip.h>
 #include <Znk_stdc.h>
+#include <Znk_s_base.h>
 
 #if defined(Znk_TARGET_WINDOWS)
-/***
- * for Windows.
- * How to get the local network addresses
- * 1. enumerate local network adapters
- * 2. get local IPv4 address
- * 3. get local IPv6 address (requires WinXP later)
- */
+
 #  include <winsock2.h>
 #  include <ws2tcpip.h>
-/***
- * これらはDMCでは存在しない.
- */
-//#  include <iptypes.h>
-//#  include <iphlpapi.h>
 
 #else
 /***
@@ -37,12 +27,12 @@
 
 #if 0
 /***
- * Do almost the same task as ipconfig /all
- * GetAdaptersInfoがDMCでは提供されていないため、
- * この方法は却下とする.
+ * DMCでは iptypes.h や iphlpapi.h が提供されていない.
+ * 従ってGetAdaptersInfoも提供されていないため、この方法は却下とする.
+ * (関数を動的ロードすれば実現できるが、時間がないため今はそこまでしない)
  */
 static void
-enum_local_nic( void )
+getInfoOfNIC( void )
 {
 	IP_ADAPTER_INFO  adapterInfo;
 	PIP_ADAPTER_INFO pAdapterInfo = &adapterInfo;
@@ -68,17 +58,17 @@ enum_local_nic( void )
 			ZnkF_printf_e( "Description=[%s]\n", pAdapter->Description );
 #if 0
 			{
-				char *physic = Znk_malloc(3 * pAdapter->AddressLength);
-				char *pt = physic;
-				UINT i;
-				sprintf(pt, "%02X", pAdapter->Address[0]);
-				pt += 2;
-				for (i = 1; i < pAdapter->AddressLength; i++) {
-					sprintf(pt, "-%02X", pAdapter->Address[i]);
-					pt += 3;
+				char* mac_addr = Znk_malloc(3 * pAdapter->AddressLength);
+				char* p = mac_addr;
+				size_t i;
+				sprintf(p, "%02X", pAdapter->Address[0]);
+				p += 2;
+				for( i=1; i<pAdapter->AddressLength; ++i ){
+					sprintf( p, "-%02X", pAdapter->Address[ i ] );
+					p += 3;
 				}
-				ZnkF_printf_e("physical address: %s\n", physic);
-				Znk_free( physic );
+				ZnkF_printf_e( "MacAddress=[%s]\n", mac_addr );
+				Znk_free( mac_addr );
 			}
 #endif
 		}
@@ -135,6 +125,7 @@ ZnkNetIP_getPrivateIP( char* ipaddr, size_t ipaddr_size )
 	num_if = ret_bytes / sizeof(INTERFACE_INFO);
 	
 	/* output for debug */
+#if 0
 	ZnkF_printf_e("IFF_UP=[%08x]\n", IFF_UP );
 	ZnkF_printf_e("IFF_LOOPBACK=[%08x]\n", IFF_LOOPBACK );
 	for( n = 0; n < num_if; ++n ){
@@ -144,6 +135,7 @@ ZnkNetIP_getPrivateIP( char* ipaddr, size_t ipaddr_size )
 			ZnkF_printf_e("Debug : address=[%s] iiFlags=[%08x]\n", addr_str, if_list[n].iiFlags);
 		}
 	}
+#endif
 	
 	/* select better address */
 	for (n = 0; n < num_if; ++n) {
@@ -163,8 +155,10 @@ ZnkNetIP_getPrivateIP( char* ipaddr, size_t ipaddr_size )
 		}
 		switch (sa->sin_family) {
 		case AF_INET:
+#if 0
 			ZnkF_printf_e( "IpAddress=[%s]\n", inet_ntoa(sa->sin_addr) );
 			ZnkF_printf_e( "IpMask=[%s]\n", inet_ntoa(((struct sockaddr_in*)&if_list[n].iiNetmask)->sin_addr) );
+#endif
 			ZnkS_copy( ipaddr, ipaddr_size, inet_ntoa(sa->sin_addr), Znk_NPOS );
 			ret = true;
 			goto FUNC_END;
@@ -178,6 +172,9 @@ FUNC_END:
 }
 
 #if 0
+/***
+ * This method requires WinXP later.
+ */
 static int
 get_local_address_v6( void )
 {
@@ -225,10 +222,13 @@ ZnkNetIP_printTest( void )
 }
 
 #else
+/***
+ * for Linux 
+ */
 
 #define MAX_NUMOF_IFR 20
 
-static void
+static bool
 getIfName( char* ifname, size_t ifname_size )
 {
 	struct ifreq ifr[ MAX_NUMOF_IFR ];
@@ -250,18 +250,20 @@ getIfName( char* ifname, size_t ifname_size )
 	/* kernelから帰ってきた数を計算 */
 	numof_ifr = ifc.ifc_len / sizeof(struct ifreq);
 	
-	/* 全てのインターフェース名を表示 */
-	for( i=0; i<numof_ifr; i++ ){
-		ZnkF_printf_e( "%s\n", ifr[i].ifr_name );
-	}
-	/***
-	 * とりあえず最初のものを採用.
-	 */
-	if( numof_ifr ){
-		ZnkS_copy( ifname, ifname_size, ifr[0].ifr_name, Znk_NPOS );
-	}
-	
 	close(fd);
+	
+	/* 全てのインターフェース名を調べ. とりあえずloでない最初のものを採用. */
+	for( i=0; i<numof_ifr; i++ ){
+		//ZnkF_printf_e( "getIfName ifr_name=[%s]\n", ifr[i].ifr_name );
+		if( !ZnkS_eq( ifr[i].ifr_name, "lo" ) ){
+			/* found */
+			ZnkS_copy( ifname, ifname_size, ifr[i].ifr_name, Znk_NPOS );
+			return true;
+		}
+	}
+	/* not found */
+	ZnkS_copy( ifname, ifname_size, "lo", Znk_NPOS );
+	return false;
 }
 
 void
@@ -299,11 +301,13 @@ ZnkNetIP_getPrivateIP( char* ipaddr, size_t ipaddr_size )
 	int sock = socket( AF_INET, SOCK_DGRAM, 0 );
 
 	getIfName( ifname, sizeof(ifname) );
+	ZnkF_printf_e( "ZnkNetIP_getPrivateIP : ifname=[%s]\n", ifname );
 	strcpy(ifr.ifr_name, ifname);
 	ifr.ifr_addr.sa_family = AF_INET;
 	if( ioctl(sock, SIOCGIFADDR, &ifr) == 0 ){
 		sin = (struct sockaddr_in*)&ifr.ifr_addr;
-		ZnkS_copy( ipaddr, ipaddr_size, inet_ntoa(sa->sin_addr), Znk_NPOS );
+		ZnkS_copy( ipaddr, ipaddr_size, inet_ntoa(sin->sin_addr), Znk_NPOS );
+		ZnkF_printf_e( "ZnkNetIP_getPrivateIP : ipaddr=[%s]\n", ipaddr );
 		return true;
 	}
 	return false;

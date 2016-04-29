@@ -406,22 +406,22 @@ MoaiPost_parsePostVars( ZnkSocket sock, ZnkFdSet fdst_observe,
 void
 MoaiPost_proc( ZnkSocket sock, ZnkFdSet fdst_observe,
 		const char* dst_hostname, MoaiInfo* info, MoaiBodyInfo* body_info,
-		bool as_local_proxy, bool master_confirm,
-		MoaiModuleAry mod_ary, ZnkMyf mtgt, ZnkMyf analysis, const char* req_urp )
+		bool as_local_proxy, bool post_confirm,
+		MoaiModuleAry mod_ary, ZnkMyf mtgt, ZnkMyf config, const char* req_urp )
 {
 	ZnkStr      str = ZnkStr_new( "" );
-	MoaiInfo*    new_info = NULL;
+	MoaiInfo*   new_info = NULL;
 	const bool  is_print_stream = false;
 	bool        is_realy_send = false;
-	MoaiInfo*    target = NULL;
+	MoaiInfo*   target = NULL;
 	const char* content_type = NULL;
 	PostMode    post_mode = PostMode_e_SendDirect;
-	ZnkStrDAry  confirm_hosts = ZnkMyf_find_lines( analysis, "confirm_hosts" );
+	ZnkStrDAry  post_confirm_hosts = ZnkMyf_find_lines( config, "post_confirm_hosts" );
 
-	if( confirm_hosts && ZnkStrDAry_find( confirm_hosts, 0, dst_hostname, Znk_NPOS ) != Znk_NPOS ){
+	if( post_confirm_hosts && ZnkStrDAry_find( post_confirm_hosts, 0, dst_hostname, Znk_NPOS ) != Znk_NPOS ){
 		post_mode = PostMode_e_Confirm;
 	}
-	if( !master_confirm ){
+	if( !post_confirm ){
 		post_mode = PostMode_e_SendDirect;
 	}
 

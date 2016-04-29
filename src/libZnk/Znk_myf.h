@@ -14,6 +14,7 @@ typedef enum {
 	 ZnkMyfSection_e_None = 0
 	,ZnkMyfSection_e_Lines
 	,ZnkMyfSection_e_Vars
+	,ZnkMyfSection_e_OutOfSection
 } ZnkMyfSectionType;
 
 ZnkStrDAry
