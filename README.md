@@ -9,6 +9,7 @@ developed for Windows or Linux.
 
 This repository have following :  
 * libZnk : Basically C/C++ library 
+  Japanese Document is [here][6].
 * moai: Yet another Local proxy engine.  
   Japanese Document is [here][3].
 * Virtual USERS : Virtualize notice board users on moai engine.  
@@ -66,3 +67,4 @@ from the use of this software.
 [3]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/README.md
 [4]: https://github.com/mr-moai-2016/znk_project/blob/master/src/HowToCompile.md
 [5]: https://github.com/mr-moai-2016/znk_project/blob/master/src/ReleaseNote.md
+[6]: https://github.com/mr-moai-2016/znk_project/blob/master/src/libZnk/README.md
