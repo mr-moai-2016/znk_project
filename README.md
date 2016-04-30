@@ -8,7 +8,7 @@
 developed for Windows or Linux. 
 
 This repository have following :  
-* libZnk : Basically C/C++ library 
+* libZnk : Basically C/C++ library.  
   Japanese Document is [here][6].
 * moai: Yet another Local proxy engine.  
   Japanese Document is [here][3].
