@@ -123,8 +123,9 @@
   SectionLinesとSectionVars以外の領域においては、myfパーサは基本的に無視する.
   この部分をOutOfSectionと呼ぶ.
   従って、この部分にはコメントなどを記述しておくこともできる.
-  ただしこのようなコメントは transientである.
-  つまり一度myfをloadしてそれを同ファイルへsaveするようなプログラムでは跡形もなく消去される.
+  このOutOfSectionについては、ZnkMyf_loadを行ったときに内容が記録され、
+  これをZnkMyf_saveで保存したときにその内容もそのまま書き出される.
+  (load => saveといった流れでこの部分の内容は失われない)
 
   OutOfSection領域であっても、**@def_quote**で始まる最初の行は特別な意味を持つ.
   これについては、上で述べたとおりである.

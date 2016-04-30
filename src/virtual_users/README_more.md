@@ -12,6 +12,7 @@
 * [外部プロキシを使いたい場合どうするのか？](#proxy1)
 * [外部プロキシをゴールとなるホストに応じて選択的に適用する方法](#proxy2)
 * [その他のローカルプロキシにチェーンする場合](#proxy3)
+* [Moai Web Configuration](#web_config)
 * [プラグイン機能について](#plugin)
 * [futabaプラグイン : user_agent.txtとscreen_size.txtについて](#futaba_plugin1)
 * [futabaプラグイン : 手動で偽装を行った場合(参考)](#futaba_note)
@@ -362,6 +363,22 @@ parent_proxyからそれを選べばよい.
 
 この場合はPolipo側の設定ファイルを変更し、Virtual USERS(ポート8124)へ接続するようにしなければならない.
 すなわちPolipoのconfig.cfgにおいて parentProxyをlocalhost:8124とする形になるだろう.
+
+
+## <a name="web_config">Moai Web Configuration
+-----------------------------------
+  ブラウザのURL指定欄に http://localhost:8124/configと指定することで表示させることができる.
+これまでに述べたconfig.myf内の変数をWeb上から確認および設定できるというものである.
+
+  ![screenshot](../imgs/screenshot_config.png)
+
+  また上記でも述べたが、parent_proxy のメニューではconfig.myf内のparent_proxy_listの内容が表示され、
+  現在使用するプロキシを選んで「Update」を押せば使用する外部プロキシの切り替えができる.  
+
+  このConfiguration画面の下半分にある「Delicate Configuration」はMoaiの通信システムの基本に
+  関わる部分であり、設定を変更される場合は細心の注意が必要である. またこの設定変更はMoaiが
+  起動しているマシン上からしか行えないようになっている(外部マシンからリモートでは行えないということ).
+  「Restart Moai」ボタンを押すことでMoaiサーバが再起動され設定が反映される形となる.
 
 
 ## <a name="plugin">プラグイン機能について
