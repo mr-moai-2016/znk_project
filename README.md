@@ -17,11 +17,11 @@ This repository have following :
 * http_decorator : Simple http client.
 ...etc  
 
-Current version is 0.9.
+Current version is 0.9.  
 Japanese Release Note is [here][5]
 
 These applications and librarys source codes are written and developed for VC(Ver6.0-Ver12.0),
-MinGW, gcc(on linux) and so on. 
+MinGW, gcc(on linux) and so on.  
 Japanese HowToCompile Document is [here][4].
 
 Download & Support site:  
