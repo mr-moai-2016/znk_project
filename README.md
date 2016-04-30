@@ -16,6 +16,9 @@ This repository have following :
 * http_decorator : Simple http client.
 ...etc  
 
+Current version is 0.9.
+Japanese Release Note is [here][5]
+
 These applications and librarys source codes are written and developed for VC(Ver6.0-Ver12.0),
 MinGW, gcc(on linux) and so on. 
 Japanese HowToCompile Document is [here][4].
@@ -62,3 +65,4 @@ from the use of this software.
 [2]: https://github.com/mr-moai-2016/znk_project/blob/master/src/virtual_users/README_more.md
 [3]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/README.md
 [4]: https://github.com/mr-moai-2016/znk_project/blob/master/src/HowToCompile.md
+[5]: https://github.com/mr-moai-2016/znk_project/blob/master/src/ReleaseNote.md
