@@ -1,30 +1,20 @@
-＠Moai/Virtual USERSとは？(超簡易版)
+＠MoaiのVirtual USERS機能とは？(超簡易版)
 -----------------------------------
 
-  Virtual User-agent Screen-size and Everything Randomize Systemの略.
+  Virtual USERSとはVirtual User-agent Screen-size and Everything Randomize Systemの略である.
+  Virtual USERS機能はIPを除くすべてのあなたのマシンの情報をランダムに仮想化する.
+  これに踏まえ、ルーカチ(ルータリセット)などによりIPを変えることで、掲示板などにおいて
+  完全に別のユーザに生まれ変わることができるというものである.
 
+  具体的な手順は以下である.
 
-  まず初めてMoai/Virtual USERSを使う場合は、以下の手順でサイトへアクセスできるかを確認しよう.
+  1. IPを変えるためルーカチする.
+     (あるいは同目的で外部プロキシを変えるなどしてもよい)
 
-  1. virtual_users(Windowsならvirtual_users.exe)を起動する.
+  2. moai(Windowsならmoai.exe)を起動し、
+     ブラウザからhttp://127.0.0.1:8124へアクセスする.
 
-  2. ブラウザのプロキシ設定ダイアログでプロキシサーバとして localhost:8124 を指定する.
-    (これでうまくいかない場合は 127.0.0.1:8124 で試してみよう!) 
-    これは一般にループバック接続と呼ばれ、自分自身への接続を意味する.
-
-  3. ブラウザから目的のサイトへアクセス！
-
-  これで目的のサイトが無事表示されれば成功である.
-
-
-  さて、ルーカチ(ルータリセット)により別人に生まれ変わるには次のようにする.
-
-  1. ルーカチする(IPを変える).  
-
-  2. virtual_users(Windowsならvirtual_users.exe)を起動し、
-     ブラウザからhttp://localhost:8124/configへアクセスする.
-
-  3. Web Configuration画面より「Initiate Targets」ボタンを押す.
+  3. Moai Web Configuration画面を開き、「Virtual USERS Initiation」ボタンを押す.
     「Initiate futaba : Success : Virtual USERS done. Your futaba_send.myf is randomized successfully.」
      と表示されれば成功である. 
 
