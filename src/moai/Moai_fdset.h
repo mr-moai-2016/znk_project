@@ -36,6 +36,11 @@ typedef struct {
 } MoaiFdSetFuncArg_RAS;
 
 
+/***
+ * AccessAllowIPÇ©î€Ç©ÇÃîªíËópä÷êî.
+ */
+typedef bool (*MoaiFdSetFuncT_IsAccessAllowIP)( ZnkSocket, uint32_t* ipaddr_ans );
+
 MoaiFdSet
 MoaiFdSet_create( ZnkSocket listen_sock, struct ZnkTimeval* waitval );
 
@@ -43,20 +48,33 @@ void
 MoaiFdSet_destroy( MoaiFdSet mfds );
 
 ZnkFdSet
-MoaiFdSet_fdst_observe( MoaiFdSet mfds );
+MoaiFdSet_fdst_observe_r( MoaiFdSet mfds );
+ZnkFdSet
+MoaiFdSet_fdst_observe_w( MoaiFdSet mfds );
 
-ZnkSocketDAry
-MoaiFdSet_wk_sock_dary( MoaiFdSet mfds );
+ZnkSocketAry
+MoaiFdSet_wk_sock_ary( MoaiFdSet mfds );
 
 void
 MoaiFdSet_reserveConnectSock( MoaiFdSet mfds, ZnkSocket sock );
+void
+MoaiFdSet_addConnectingSock( MoaiFdSet mfds, ZnkSocket sock );
+void
+MoaiFdSet_removeConnectingSock( MoaiFdSet mfds, ZnkSocket sock );
+void
+MoaiFdSet_procConnectionTimeout( MoaiFdSet mfds );
 
 int
 MoaiFdSet_select( MoaiFdSet mfds, bool* req_before_report, MoaiFdSetFuncArg_Report* fnca_report );
 
 MoaiRASResult
 MoaiFdSet_process( MoaiFdSet mfds,
-		MoaiFdSetFuncArg_OnAccept* fnca_on_accept, MoaiFdSetFuncArg_RAS* fnca_ras );
+		MoaiFdSetFuncArg_OnAccept* fnca_on_accept,
+		MoaiFdSetFuncArg_RAS* fnca_ras,
+		MoaiFdSetFuncT_IsAccessAllowIP is_access_allow_ip );
+
+void
+MoaiFdSet_printf_fdst_read( MoaiFdSet mfds );
 
 Znk_EXTERN_C_END
 

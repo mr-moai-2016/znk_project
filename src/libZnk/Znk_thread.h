@@ -9,6 +9,9 @@ typedef void*  (*ZnkThreadFunc)( void* );
 
 Znk_DECLARE_HANDLE( ZnkThreadHandle )
 
+void
+ZnkThread_sleep( size_t msec );
+
 void ZnkThreadList_initiate( size_t list_num );
 void ZnkThreadList_finalize( void );
 

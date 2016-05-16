@@ -57,9 +57,9 @@ install_one()
 		$CP_COMFIRM_ $src_dir/$file $dst_dir/
 	fi
 }
-$CP_ virtual_users/out_dir/virtual_users.exe $INST_DIR_/
-install_one -c user_agent.txt  virtual_users $INST_DIR_
-install_one -c screen_size.txt virtual_users $INST_DIR_
+install_one -c user_agent.txt   virtual_users $INST_DIR_
+install_one -c screen_size.txt  virtual_users $INST_DIR_
+install_one -c parent_proxy.txt virtual_users $INST_DIR_
 mkdir -p $INST_DIR_/filters
 LIST=`ls virtual_users/filters`
 for i in $LIST

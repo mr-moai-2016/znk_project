@@ -11,7 +11,7 @@ BASENAME=Znk
 OBJS = \
 	$O\dll_main.obj \
 	$O\Znk_bfr.obj \
-	$O\Znk_bfr_dary.obj \
+	$O\Znk_bfr_ary.obj \
 	$O\Znk_cookie.obj \
 	$O\Znk_dir.obj \
 	$O\Znk_dirent.obj \
@@ -29,14 +29,14 @@ OBJS = \
 	$O\Znk_myf.obj \
 	$O\Znk_net_base.obj \
 	$O\Znk_net_ip.obj \
-	$O\Znk_obj_dary.obj \
+	$O\Znk_obj_ary.obj \
 	$O\Znk_prim.obj \
 	$O\Znk_server.obj \
 	$O\Znk_socket.obj \
 	$O\Znk_stdc.obj \
 	$O\Znk_stock_bio.obj \
 	$O\Znk_str.obj \
-	$O\Znk_str_dary.obj \
+	$O\Znk_str_ary.obj \
 	$O\Znk_str_ex.obj \
 	$O\Znk_str_fio.obj \
 	$O\Znk_str_ptn.obj \
@@ -47,7 +47,7 @@ OBJS = \
 	$O\Znk_thread.obj \
 	$O\Znk_txt_filter.obj \
 	$O\Znk_var.obj \
-	$O\Znk_varp_dary.obj \
+	$O\Znk_varp_ary.obj \
 	$O\Znk_yy_base.obj \
 	$O\Znk_zlib.obj \
 

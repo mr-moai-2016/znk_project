@@ -1,10 +1,10 @@
 #include "Znk_htp_hdrs.h"
 #include "Znk_s_base.h"
-#include "Znk_varp_dary.h"
+#include "Znk_varp_ary.h"
 #include <string.h>
 
 void
-ZnkHtpHdrs_registHdr1st( const ZnkStrDAry hdr1st, const char* first_line, size_t first_line_leng )
+ZnkHtpHdrs_registHdr1st( const ZnkStrAry hdr1st, const char* first_line, size_t first_line_leng )
 {
 	size_t arg_leng = 0;
 	size_t arg_pos = 0;
@@ -12,48 +12,48 @@ ZnkHtpHdrs_registHdr1st( const ZnkStrDAry hdr1st, const char* first_line, size_t
 	const char* q = NULL;
 	const char* end = first_line + first_line_leng;
 
-	ZnkStrDAry_resize( hdr1st, 3 );
-	ZnkStrDAry_set( hdr1st, 0, ZnkStr_new("") );
-	ZnkStrDAry_set( hdr1st, 1, ZnkStr_new("") );
-	ZnkStrDAry_set( hdr1st, 2, ZnkStr_new("") );
+	ZnkStrAry_resize( hdr1st, 3 );
+	ZnkStrAry_set( hdr1st, 0, ZnkStr_new("") );
+	ZnkStrAry_set( hdr1st, 1, ZnkStr_new("") );
+	ZnkStrAry_set( hdr1st, 2, ZnkStr_new("") );
 
 	arg_pos = ZnkS_lfind_arg( p, 0, (size_t)(end-p), 0, &arg_leng, " \t\r\n", 4 );
 	p += arg_pos;
-	ZnkStr_assign( ZnkStrDAry_at( hdr1st, 0 ), 0, p, arg_leng );
+	ZnkStr_assign( ZnkStrAry_at( hdr1st, 0 ), 0, p, arg_leng );
 	p += arg_leng;
 
 	arg_pos = ZnkS_lfind_arg( p, 0, (size_t)(end-p), 0, &arg_leng, " \t\r\n", 4 );
 	p += arg_pos;
-	ZnkStr_assign( ZnkStrDAry_at( hdr1st, 1 ), 0, p, arg_leng );
+	ZnkStr_assign( ZnkStrAry_at( hdr1st, 1 ), 0, p, arg_leng );
 	p += arg_leng;
 
 	arg_pos = ZnkS_lfind_arg( p, 0, (size_t)(end-p), 0, &arg_leng, " \t\r\n", 4 );
 	p += arg_pos;
 	q = strchr( p, '\r' );
 	if( q ){ end = q; }
-	ZnkStr_assign( ZnkStrDAry_at( hdr1st, 2 ), 0, p, (size_t)(end-p) );
+	ZnkStr_assign( ZnkStrAry_at( hdr1st, 2 ), 0, p, (size_t)(end-p) );
 }
 ZnkVarp
-ZnkHtpHdrs_regist( ZnkVarpDAry vars,
+ZnkHtpHdrs_regist( ZnkVarpAry vars,
 		const char* key, size_t key_leng,
 		const char* val, size_t val_leng )
 {
 	/***
 	 * SetCookie: などのように複数指定可能なDirectiveも存在する.
-	 * 変数の値をZnkStrDAryとすることによって一つのkey(例えばSetCookie)に対して
+	 * 変数の値をZnkStrAryとすることによって一つのkey(例えばSetCookie)に対して
 	 * 複数の値を保持できるようにする.
 	 */
 	ZnkVarp varp = ZnkHtpHdrs_find( vars, key, key_leng );
 	if( varp == NULL ){
-		varp = ZnkVarp_create( "", "", 0, ZnkPrim_e_StrDAry );
+		varp = ZnkVarp_create( "", "", 0, ZnkPrim_e_StrAry );
 		ZnkStr_assign( varp->name_, 0, key, key_leng );
-		ZnkVarpDAry_push_bk( vars, varp );
+		ZnkVarpAry_push_bk( vars, varp );
 	}
-	ZnkStrDAry_push_bk_cstr( varp->prim_.u_.sda_, val, val_leng );
+	ZnkStrAry_push_bk_cstr( varp->prim_.u_.sda_, val, val_leng );
 	return varp;
 }
 ZnkVarp
-ZnkHtpHdrs_regist_byLine( ZnkVarpDAry vars, const char* hdr_line, size_t hdr_line_leng )
+ZnkHtpHdrs_regist_byLine( ZnkVarpAry vars, const char* hdr_line, size_t hdr_line_leng )
 {
 	static const bool use_eqCase = true;
 	size_t key_begin; size_t key_end;
@@ -70,20 +70,20 @@ ZnkHtpHdrs_regist_byLine( ZnkVarpDAry vars, const char* hdr_line, size_t hdr_lin
 		return NULL;
 	}
 
-	varp = ZnkVarpDAry_find_byName( vars,
+	varp = ZnkVarpAry_find_byName( vars,
 			hdr_line+key_begin, key_end-key_begin, use_eqCase );
 	if( varp == NULL ){
 		/* 新規追加 */
-		varp = ZnkVarp_create( "", "", 0, ZnkPrim_e_StrDAry );
+		varp = ZnkVarp_create( "", "", 0, ZnkPrim_e_StrAry );
 		ZnkStr_assign( varp->name_, 0, hdr_line+key_begin, key_end-key_begin );
-		ZnkVarpDAry_push_bk( vars, varp );
+		ZnkVarpAry_push_bk( vars, varp );
 	}
-	ZnkStrDAry_push_bk_cstr( varp->prim_.u_.sda_,
+	ZnkStrAry_push_bk_cstr( varp->prim_.u_.sda_,
 			hdr_line+val_begin, val_end-val_begin );
 	return varp;
 }
 ZnkVarp
-ZnkHtpHdrs_registCookie( ZnkVarpDAry vars, const ZnkVarpDAry cookie )
+ZnkHtpHdrs_registCookie( ZnkVarpAry vars, const ZnkVarpAry cookie )
 {
 	ZnkVarp varp = NULL;
 	ZnkStr str = ZnkStr_new( "" );
@@ -93,9 +93,9 @@ ZnkHtpHdrs_registCookie( ZnkVarpDAry vars, const ZnkVarpDAry cookie )
 	const char* key = "";
 	const char* val = "";
 
-	size = ZnkVarpDAry_size( cookie );
+	size = ZnkVarpAry_size( cookie );
 	for( idx=0; idx<size; ++idx ){
-		varp = ZnkVarpDAry_at( cookie, idx );
+		varp = ZnkVarpAry_at( cookie, idx );
 		key = ZnkStr_cstr( varp->name_ );
 		val = ZnkVar_cstr( varp );
 		ZnkStr_addf( str, "%s=%s", key, val );
@@ -112,45 +112,45 @@ ZnkHtpHdrs_registCookie( ZnkVarpDAry vars, const ZnkVarpDAry cookie )
 	return varp;
 }
 bool
-ZnkHtpHdrs_erase( const ZnkVarpDAry vars, const char* query_key )
+ZnkHtpHdrs_erase( const ZnkVarpAry vars, const char* query_key )
 {
-	const size_t size = ZnkVarpDAry_size( vars );
+	const size_t size = ZnkVarpAry_size( vars );
 	size_t idx;
 	ZnkVarp varp;
 	for( idx=0; idx<size; ++idx ){
-		varp = ZnkVarpDAry_at( vars, idx );
+		varp = ZnkVarpAry_at( vars, idx );
 		/***
 		 * 例えば、Content-Type や Content-typeなどとなっているサイトもある.
 		 * これに対応するため、ここではCase系文字列比較関数を用いなければならない.
 		 */
 		if( ZnkS_eqCase( ZnkStr_cstr(varp->name_), query_key ) ){
 			/* found */
-			ZnkVarpDAry_erase_byIdx( vars, idx );
+			ZnkVarpAry_erase_byIdx( vars, idx );
 			return true;
 		}
 	}
 	return false;
 }
 void
-ZnkHtpHdrs_copyVars( ZnkVarpDAry dst_vars, const ZnkVarpDAry src_vars )
+ZnkHtpHdrs_copyVars( ZnkVarpAry dst_vars, const ZnkVarpAry src_vars )
 {
-	const size_t size = ZnkVarpDAry_size( src_vars );
+	const size_t size = ZnkVarpAry_size( src_vars );
 	size_t idx;
 	ZnkVarp src_var;
 	ZnkVarp dst_var;
-	ZnkVarpDAry_clear( dst_vars );
+	ZnkVarpAry_clear( dst_vars );
 	for( idx=0; idx<size; ++idx ){
-		src_var = ZnkVarpDAry_at( src_vars, idx );
+		src_var = ZnkVarpAry_at( src_vars, idx );
 		dst_var = ZnkVarp_create( 
 				ZnkStr_cstr( src_var->name_ ), ZnkStr_cstr( src_var->filename_ ),
-				(int)src_var->type_, ZnkPrim_e_StrDAry );
-		ZnkStrDAry_copy( dst_var->prim_.u_.sda_, src_var->prim_.u_.sda_ );
-		ZnkVarpDAry_push_bk( dst_vars, dst_var );
+				(int)src_var->type_, ZnkPrim_e_StrAry );
+		ZnkStrAry_copy( dst_var->prim_.u_.sda_, src_var->prim_.u_.sda_ );
+		ZnkVarpAry_push_bk( dst_vars, dst_var );
 	}
 }
 
 const char*
-ZnkHtpHdrs_scanContentType( const ZnkVarpDAry vars, ZnkStr boundary_ans )
+ZnkHtpHdrs_scanContentType( const ZnkVarpAry vars, ZnkStr boundary_ans )
 {
 	ZnkVarp varp = ZnkHtpHdrs_find_literal( vars, "Content-Type" );
 	if( varp ){
@@ -182,22 +182,22 @@ appendBfr_byCStr( ZnkBfr bfr, const char* cstr )
 	ZnkBfr_append_dfr( bfr, (uint8_t*)cstr_literal, Znk_strlen_literal(cstr_literal) )
 
 void
-ZnkHtpHdrs_extendToStream( const ZnkStrDAry hdr1st, const ZnkVarpDAry vars,
+ZnkHtpHdrs_extendToStream( const ZnkStrAry hdr1st, const ZnkVarpAry vars,
 		ZnkBfr bfr, bool is_terminate_hdrs_rn )
 {
 	/* First Line(Request or Status Line) */
 	if( hdr1st ){
-		appendBfr_byCStr( bfr, ZnkStrDAry_at_cstr( hdr1st, 0 ) );
+		appendBfr_byCStr( bfr, ZnkStrAry_at_cstr( hdr1st, 0 ) );
 		appendBfr_byCStr_literal( bfr, " " );
-		appendBfr_byCStr( bfr, ZnkStrDAry_at_cstr( hdr1st, 1 ) );
+		appendBfr_byCStr( bfr, ZnkStrAry_at_cstr( hdr1st, 1 ) );
 		appendBfr_byCStr_literal( bfr, " " );
-		appendBfr_byCStr( bfr, ZnkStrDAry_at_cstr( hdr1st, 2 ) );
+		appendBfr_byCStr( bfr, ZnkStrAry_at_cstr( hdr1st, 2 ) );
 		appendBfr_byCStr_literal( bfr, "\r\n" );
 	}
 
 	/* Header Variables */
 	if( vars ){
-		const size_t size = ZnkVarpDAry_size( vars );
+		const size_t size = ZnkVarpAry_size( vars );
 		size_t idx;
 		const char* key;
 		const char* val;
@@ -205,7 +205,7 @@ ZnkHtpHdrs_extendToStream( const ZnkStrDAry hdr1st, const ZnkVarpDAry vars,
 		size_t val_idx;
 		ZnkVarp var;
 		for( idx=0; idx<size; ++idx ){
-			var = ZnkVarpDAry_at( vars, idx );
+			var = ZnkVarpAry_at( vars, idx );
 			key = ZnkHtpHdrs_key_cstr( var );
 			val_size = ZnkHtpHdrs_val_size( var );
 			for( val_idx=0; val_idx<val_size; ++val_idx ){

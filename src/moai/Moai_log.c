@@ -9,13 +9,16 @@ static ZnkFile st_fp = NULL;
 void
 MoaiLog_open( const char* filename, bool keep_open )
 {
-	ZnkFile fp = ZnkF_fopen( filename, "wb" );
-	if( fp ){
-		st_filename = filename;
-		if( keep_open ){
-			st_fp = fp;
-		} else {
-			ZnkF_fclose( fp );
+	/* ëΩèdopenñhé~ */
+	if( st_fp == NULL ){
+		ZnkFile fp = ZnkF_fopen( filename, "wb" );
+		if( fp ){
+			st_filename = filename;
+			if( keep_open ){
+				st_fp = fp;
+			} else {
+				ZnkF_fclose( fp );
+			}
 		}
 	}
 }

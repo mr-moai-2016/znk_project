@@ -1,28 +1,28 @@
 #include <Znk_myf.h>
 #include <Znk_str.h>
 #include <Znk_str_fio.h>
-#include <Znk_str_dary.h>
+#include <Znk_str_ary.h>
 #include <Znk_stdc.h>
 #include <Znk_s_base.h>
-#include <Znk_varp_dary.h>
+#include <Znk_varp_ary.h>
 #include <string.h>
 
 struct ZnkMyfSectionImpl {
 	ZnkStr            name_;
 	ZnkMyfSectionType type_;
 	union Data_tag {
-		ZnkStrDAry  lines_;
-		ZnkVarpDAry vars_;
+		ZnkStrAry  lines_;
+		ZnkVarpAry vars_;
 	} u_;
 };
 
-ZnkStrDAry
+ZnkStrAry
 ZnkMyfSection_lines( const ZnkMyfSection sec )
 {
 	assert( sec->type_ == ZnkMyfSection_e_Lines );
 	return sec->u_.lines_;
 }
-ZnkVarpDAry
+ZnkVarpAry
 ZnkMyfSection_vars( const ZnkMyfSection sec )
 {
 	assert( sec->type_ == ZnkMyfSection_e_Vars );
@@ -40,10 +40,10 @@ makeUnionData( union Data_tag* u, ZnkMyfSectionType type )
 	switch( type ){
 	case ZnkMyfSection_e_Lines:
 	case ZnkMyfSection_e_OutOfSection:
-		u->lines_ = ZnkStrDAry_create( true );
+		u->lines_ = ZnkStrAry_create( true );
 		break;
 	case ZnkMyfSection_e_Vars:
-		u->vars_ = ZnkVarpDAry_create( true );
+		u->vars_ = ZnkVarpAry_create( true );
 		break;
 	default:
 		break;
@@ -55,10 +55,10 @@ deleteUnionData( union Data_tag* u, ZnkMyfSectionType type )
 	switch( type ){
 	case ZnkMyfSection_e_Lines:
 	case ZnkMyfSection_e_OutOfSection:
-		ZnkStrDAry_destroy( u->lines_ );
+		ZnkStrAry_destroy( u->lines_ );
 		break;
 	case ZnkMyfSection_e_Vars:
-		ZnkVarpDAry_destroy( u->vars_ );
+		ZnkVarpAry_destroy( u->vars_ );
 		break;
 	default:
 		break;
@@ -93,19 +93,19 @@ struct ZnkMyfImpl {
 	/***
 	 * MyfSectionŠi”[‚¨‚æ‚ÑŽõ–½ŠÇ——p
 	 */
-	ZnkObjDAry sec_ary_;
+	ZnkObjAry sec_ary_;
 	/***
 	 * OutOfSectionŠi”[‚¨‚æ‚ÑŽõ–½ŠÇ——p.
 	 * OutOfSection‚à“à•”“I‚É‚ÍZnkMyfSection‚Æ‚µ‚Äˆµ‚¤.
 	 */
-	ZnkObjDAry oos_ary_;
+	ZnkObjAry oos_ary_;
 	/***
 	 * ‚±‚±‚Å‚Ì‡˜‹L˜^‚ÍZnkMyfSection‚ÌŽQÆ‚Ì”z—ñ‚Æ‚µ‚ÄA
 	 * MyfSection‚¨‚æ‚ÑOutOfSection‚Ì‹LÚ‚³‚ê‚Ä‚¢‚é‡˜‚ð•Û‘¶‚·‚é.
 	 * ‚±‚ê‚Íload => save‚ÌÛ‚É‚±‚ê‚ç‚ÌŒ³‚Ì\‘¢‚Æ‡”Ô‚ªŽ¸‚í‚ê‚È‚¢‚æ‚¤‚É‚·‚é‚½‚ß‚Å‚ ‚é.
 	 * ‚±‚Ì”z—ñ‚Å‚ÍŽQÆ‚Ì‚Ý‚ð•ÛŽ‚µAŠe—v‘f‚ÌŽõ–½‚ÍŠÇ—‚µ‚È‚¢.
 	 */
-	ZnkObjDAry order_;
+	ZnkObjAry order_;
 };
 
 ZnkMyf
@@ -115,12 +115,12 @@ ZnkMyf_create( void )
 	myf->quote_begin_[ 0 ] = '\0';
 	myf->quote_end_[ 0 ]   = '\0';
 	ZnkS_copy_literal( myf->nl_, sizeof(myf->nl_), "\n" );
-	myf->sec_ary_ = ZnkObjDAry_create( deleteMyfSection );
-	myf->oos_ary_ = ZnkObjDAry_create( deleteMyfSection );
+	myf->sec_ary_ = ZnkObjAry_create( deleteMyfSection );
+	myf->oos_ary_ = ZnkObjAry_create( deleteMyfSection );
 	/***
 	 * order_‚Å‚ÍZnkMyfSection‚ÌŽQÆ‚Ì‚Ý‚ðŠÇ—(Žõ–½‚ÍŠÇ—‚µ‚È‚¢).
 	 */
-	myf->order_   = ZnkObjDAry_create( NULL );
+	myf->order_   = ZnkObjAry_create( NULL );
 	return myf;
 }
 
@@ -128,10 +128,19 @@ void
 ZnkMyf_destroy( ZnkMyf myf )
 {
 	if( myf ){
-		ZnkObjDAry_destroy( myf->sec_ary_ );
-		ZnkObjDAry_destroy( myf->oos_ary_ );
-		ZnkObjDAry_destroy( myf->order_ );
+		ZnkObjAry_destroy( myf->sec_ary_ );
+		ZnkObjAry_destroy( myf->oos_ary_ );
+		ZnkObjAry_destroy( myf->order_ );
 		Znk_free( myf );
+	}
+}
+void
+ZnkMyf_clear( ZnkMyf myf )
+{
+	if( myf ){
+		ZnkObjAry_clear( myf->sec_ary_ );
+		ZnkObjAry_clear( myf->oos_ary_ );
+		ZnkObjAry_clear( myf->order_ );
 	}
 }
 
@@ -149,11 +158,11 @@ ZnkMyf_quote_end( const ZnkMyf myf )
 ZnkMyfSection
 ZnkMyf_registSection( ZnkMyf myf, const char* name, ZnkMyfSectionType type )
 {
-	size_t size = ZnkObjDAry_size( myf->sec_ary_ );
+	size_t size = ZnkObjAry_size( myf->sec_ary_ );
 	size_t idx;
 	ZnkMyfSection sec = NULL;
 	for( idx=0; idx<size; ++idx ){
-		sec = (ZnkMyfSection)ZnkObjDAry_at( myf->sec_ary_, idx );
+		sec = (ZnkMyfSection)ZnkObjAry_at( myf->sec_ary_, idx );
 		if( ZnkStr_eq( sec->name_, name ) ){
 			/* already exist */
 			switch( type ){
@@ -185,8 +194,8 @@ ZnkMyf_registSection( ZnkMyf myf, const char* name, ZnkMyfSectionType type )
 		 * ’†g‚ª‹ó‚ÌV‹KSection‚ð“o˜^‚·‚é.
 		 */
 		sec = makeMyfSection( name, type );
-		ZnkObjDAry_push_bk( myf->sec_ary_, (ZnkObj)sec );
-		ZnkObjDAry_push_bk( myf->order_, (ZnkObj)sec );
+		ZnkObjAry_push_bk( myf->sec_ary_, (ZnkObj)sec );
+		ZnkObjAry_push_bk( myf->order_, (ZnkObj)sec );
 		break;
 	default:
 		sec = NULL;
@@ -198,12 +207,12 @@ ZnkMyf_registSection( ZnkMyf myf, const char* name, ZnkMyfSectionType type )
 size_t
 ZnkMyf_numOfSection( const ZnkMyf myf )
 {
-	return ZnkObjDAry_size( myf->sec_ary_ );
+	return ZnkObjAry_size( myf->sec_ary_ );
 }
 ZnkMyfSection
 ZnkMyf_atSection( const ZnkMyf myf, size_t sec_idx )
 {
-	return (ZnkMyfSection)ZnkObjDAry_at( myf->sec_ary_, sec_idx );
+	return (ZnkMyfSection)ZnkObjAry_at( myf->sec_ary_, sec_idx );
 }
 
 static bool
@@ -242,7 +251,7 @@ FUNC_ERROR:
 }
 
 static ZnkVarp
-parseVarDirective( ZnkVarpDAry vars, const char* p, size_t p_leng )
+parseVarDirective( ZnkVarpAry vars, const char* p, size_t p_leng )
 {
 	size_t key_begin; size_t key_end;
 	size_t val_begin; size_t val_end;
@@ -262,7 +271,7 @@ parseVarDirective( ZnkVarpDAry vars, const char* p, size_t p_leng )
 	 */
 	varp = ZnkVarp_create( "", "", 0, ZnkPrim_e_None );
 	ZnkVar_set_val_Str( varp, p+val_begin, val_end-val_begin );
-	ZnkVarpDAry_push_bk( vars, varp );
+	ZnkVarpAry_push_bk( vars, varp );
 	ZnkStr_assign( varp->name_, 0, p+key_begin, key_end-key_begin );
 	return varp;
 }
@@ -279,8 +288,8 @@ parseSectionLines( ZnkMyf myf, const char* p, size_t p_leng,
 	 * sec_ary_‚¨‚æ‚Ñorder_‚Ö‚Ì“o˜^.
 	 */
 	sec = makeMyfSection( "", ZnkMyfSection_e_Lines );
-	ZnkObjDAry_push_bk( myf->sec_ary_, (ZnkObj)sec );
-	ZnkObjDAry_push_bk( myf->order_, (ZnkObj)sec );
+	ZnkObjAry_push_bk( myf->sec_ary_, (ZnkObj)sec );
+	ZnkObjAry_push_bk( myf->order_, (ZnkObj)sec );
 
 	/* 1th arg */
 	pos = ZnkS_lfind_arg( p+pos, 0, p_leng-pos, 0, &arg_leng, " \t", 2 ) + pos;
@@ -312,7 +321,7 @@ parseSectionLines( ZnkMyf myf, const char* p, size_t p_leng,
 			ZnkStr_cut_front( line, 3 );
 			break;
 		}
-		ZnkStrDAry_push_bk_cstr( sec->u_.lines_, ZnkStr_cstr(line), Znk_NPOS );
+		ZnkStrAry_push_bk_cstr( sec->u_.lines_, ZnkStr_cstr(line), Znk_NPOS );
 	}
 	return true;
 }
@@ -333,8 +342,8 @@ parseSectionVars( ZnkMyf myf, const char* p, size_t p_leng,
 	 * sec_ary_‚¨‚æ‚Ñorder_‚Ö‚Ì“o˜^.
 	 */
 	sec = makeMyfSection( "", ZnkMyfSection_e_Vars );
-	ZnkObjDAry_push_bk( myf->sec_ary_, (ZnkObj)sec );
-	ZnkObjDAry_push_bk( myf->order_, (ZnkObj)sec );
+	ZnkObjAry_push_bk( myf->sec_ary_, (ZnkObj)sec );
+	ZnkObjAry_push_bk( myf->order_, (ZnkObj)sec );
 
 	/* 1th arg */
 	pos = ZnkS_lfind_arg( p+pos, 0, p_leng-pos, 0, &arg_leng, " \t", 2 ) + pos;
@@ -412,7 +421,7 @@ parseSectionVars( ZnkMyf myf, const char* p, size_t p_leng,
 }
 
 static void
-registOutOfSection( ZnkMyf myf, ZnkStrDAry text )
+registOutOfSection( ZnkMyf myf, ZnkStrAry text )
 {
 	ZnkMyfSection sec;
 
@@ -420,14 +429,14 @@ registOutOfSection( ZnkMyf myf, ZnkStrDAry text )
 	 * oos_ary_‚¨‚æ‚Ñorder_‚Ö‚Ì“o˜^.
 	 */
 	sec = makeMyfSection( "", ZnkMyfSection_e_OutOfSection );
-	ZnkObjDAry_push_bk( myf->oos_ary_, (ZnkObj)sec );
-	ZnkObjDAry_push_bk( myf->order_, (ZnkObj)sec );
+	ZnkObjAry_push_bk( myf->oos_ary_, (ZnkObj)sec );
+	ZnkObjAry_push_bk( myf->order_, (ZnkObj)sec );
 
 	/***
 	 * swap‚É‚æ‚èŒ‹‰Ê“I‚Étext‚Ì“à—e‚ðlines_‚ÖˆÚ“®‚·‚éŒ`‚Æ‚È‚é.
 	 * (text‚Ì•û‚ÍƒNƒŠƒA‚³‚ê‚éŒ`‚É‚È‚é)
 	 */
-	ZnkStrDAry_swap( sec->u_.lines_, text );
+	ZnkStrAry_swap( sec->u_.lines_, text );
 
 }
 
@@ -442,8 +451,10 @@ ZnkMyf_load( ZnkMyf myf, const char* filename )
 		/***
 		 * OutOfSection‚É‚¨‚¯‚éText‚ð‹L˜^‚·‚é.
 		 */
-		ZnkStrDAry oos_text = ZnkStrDAry_create( true );
+		ZnkStrAry oos_text = ZnkStrAry_create( true );
 		bool is_outof_section = true;
+
+		ZnkMyf_clear( myf );
 
 		if( !ZnkStrFIO_fgets( line, 0, 4096, fp ) ){
 			/* eof */
@@ -520,7 +531,7 @@ ZnkMyf_load( ZnkMyf myf, const char* filename )
 			}
 
 			if( is_outof_section ){
-				ZnkStrDAry_push_bk_cstr( oos_text, ZnkStr_cstr(line), Znk_NPOS );
+				ZnkStrAry_push_bk_cstr( oos_text, ZnkStr_cstr(line), Znk_NPOS );
 			} else {
 				/* OutOfSection‚ÌÄŠJ */
 				is_outof_section = true;
@@ -530,7 +541,7 @@ ZnkMyf_load( ZnkMyf myf, const char* filename )
 FUNC_END:
 		ZnkStr_delete( line );
 		ZnkF_fclose( fp );
-		ZnkStrDAry_destroy( oos_text );
+		ZnkStrAry_destroy( oos_text );
 	}
 	return result;
 }
@@ -549,23 +560,23 @@ ZnkMyf_save( ZnkMyf myf, const char* filename )
 	
 		ZnkF_fprintf( fp, "@def_quote %s %s%s", myf->quote_begin_, myf->quote_end_, nl );
 
-		order_size = ZnkObjDAry_size( myf->order_ );
+		order_size = ZnkObjAry_size( myf->order_ );
 		for( order_idx=0; order_idx<order_size; ++order_idx ){
-			ZnkMyfSection sec = (ZnkMyfSection)ZnkObjDAry_at( myf->order_, order_idx );
+			ZnkMyfSection sec = (ZnkMyfSection)ZnkObjAry_at( myf->order_, order_idx );
 			switch( sec->type_ ){
 			case ZnkMyfSection_e_Lines:
 				ZnkF_fprintf( fp, "@@L %s%s", ZnkStr_cstr(sec->name_),  nl );
-				size = ZnkStrDAry_size( sec->u_.lines_ );
+				size = ZnkStrAry_size( sec->u_.lines_ );
 				for( idx=0; idx<size; ++idx ){
-					ZnkF_fprintf( fp, "%s%s", ZnkStrDAry_at_cstr( sec->u_.lines_, idx ), nl );
+					ZnkF_fprintf( fp, "%s%s", ZnkStrAry_at_cstr( sec->u_.lines_, idx ), nl );
 				}
 				ZnkF_fprintf( fp, "@@.%s", nl );
 				break;
 			case ZnkMyfSection_e_Vars:
 				ZnkF_fprintf( fp, "@@V %s%s", ZnkStr_cstr(sec->name_),  nl );
-				size = ZnkVarpDAry_size( sec->u_.vars_ );
+				size = ZnkVarpAry_size( sec->u_.vars_ );
 				for( idx=0; idx<size; ++idx ){
-					varp = ZnkVarpDAry_at( sec->u_.vars_, idx );
+					varp = ZnkVarpAry_at( sec->u_.vars_, idx );
 					ZnkF_fprintf( fp, "%s = %s%s%s%s",
 							ZnkStr_cstr( varp->name_ ),
 							myf->quote_begin_, ZnkVar_cstr( varp ), myf->quote_end_,
@@ -574,9 +585,9 @@ ZnkMyf_save( ZnkMyf myf, const char* filename )
 				ZnkF_fprintf( fp, "@@.%s", nl );
 				break;
 			case ZnkMyfSection_e_OutOfSection:
-				size = ZnkStrDAry_size( sec->u_.lines_ );
+				size = ZnkStrAry_size( sec->u_.lines_ );
 				for( idx=0; idx<size; ++idx ){
-					ZnkF_fprintf( fp, "%s%s", ZnkStrDAry_at_cstr( sec->u_.lines_, idx ), nl );
+					ZnkF_fprintf( fp, "%s%s", ZnkStrAry_at_cstr( sec->u_.lines_, idx ), nl );
 				}
 				break;
 			default:
@@ -589,14 +600,14 @@ ZnkMyf_save( ZnkMyf myf, const char* filename )
 	}
 	return false;
 }
-ZnkVarpDAry
+ZnkVarpAry
 ZnkMyf_find_vars( const ZnkMyf myf, const char* section_name )
 {
-	const size_t sec_size = ZnkObjDAry_size( myf->sec_ary_ );
+	const size_t sec_size = ZnkObjAry_size( myf->sec_ary_ );
 	size_t sec_idx;
 	ZnkMyfSection sec;
 	for( sec_idx=0; sec_idx<sec_size; ++sec_idx ){
-		sec = (ZnkMyfSection)ZnkObjDAry_at( myf->sec_ary_, sec_idx );
+		sec = (ZnkMyfSection)ZnkObjAry_at( myf->sec_ary_, sec_idx );
 		if( sec->type_ == ZnkMyfSection_e_Vars && ZnkStr_eq( sec->name_, section_name ) ){
 			/* found */
 			return sec->u_.vars_;
@@ -604,14 +615,14 @@ ZnkMyf_find_vars( const ZnkMyf myf, const char* section_name )
 	}
 	return NULL;
 }
-ZnkStrDAry
+ZnkStrAry
 ZnkMyf_find_lines( const ZnkMyf myf, const char* section_name )
 {
-	const size_t sec_size = ZnkObjDAry_size( myf->sec_ary_ );
+	const size_t sec_size = ZnkObjAry_size( myf->sec_ary_ );
 	size_t sec_idx;
 	ZnkMyfSection sec;
 	for( sec_idx=0; sec_idx<sec_size; ++sec_idx ){
-		sec = (ZnkMyfSection)ZnkObjDAry_at( myf->sec_ary_, sec_idx );
+		sec = (ZnkMyfSection)ZnkObjAry_at( myf->sec_ary_, sec_idx );
 		if( sec->type_ == ZnkMyfSection_e_Lines && ZnkStr_eq( sec->name_, section_name ) ){
 			/* found */
 			return sec->u_.lines_;
@@ -623,13 +634,13 @@ ZnkMyf_find_lines( const ZnkMyf myf, const char* section_name )
 ZnkVarp
 ZnkMyf_refVar( ZnkMyf myf, const char* section_name, const char* var_name )
 {
-	ZnkVarpDAry vars = ZnkMyf_find_vars( myf, section_name );
+	ZnkVarpAry vars = ZnkMyf_find_vars( myf, section_name );
 	if( vars ){
-		size_t size = ZnkVarpDAry_size( vars );
+		size_t size = ZnkVarpAry_size( vars );
 		size_t idx;
 		ZnkVarp varp;
 		for( idx=0; idx<size; ++idx ){
-			varp = ZnkVarpDAry_at( vars, idx );
+			varp = ZnkVarpAry_at( vars, idx );
 			if( ZnkStr_eq( varp->name_, var_name ) ){
 				return varp;
 			}

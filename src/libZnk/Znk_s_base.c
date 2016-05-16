@@ -5,6 +5,7 @@
 #include "Znk_s_posix.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
 
@@ -169,7 +170,17 @@ ZnkS_getI32D( int32_t* ans, const char* str )
 bool
 ZnkS_getI64D( int64_t* ans, const char* str )
 {
-#if defined(__GNUC__)
+#if defined(__MINGW32__)
+	/***
+	 * MinGWでのscanfは標準ライブラリをstatic-linkした場合はLinux系相当の ll
+	 * msvcrt.dllを動的リンクした場合はWindows相当の I64 の指定となり
+	 * Znk_PFMD_64すら使えず厄介である. よってこの場合はstrtoll/strtoull系を使う.
+	 * (...というか全環境でこれでもよい気もするがとりあえず)
+	 */
+	char* end = NULL;
+	*ans = strtoll( str, &end, 10 );
+	return (bool)( str != end );
+#elif defined(__GNUC__)
 	/* for -Wformat warning */
 	Znk_LongLong lld;
 	if( sscanf( str, "%" Znk_PFMD_64 "d", &lld ) == 1 ){
@@ -195,7 +206,17 @@ ZnkS_getU32U( uint32_t* ans, const char* str )
 bool
 ZnkS_getU64U( uint64_t* ans, const char* str )
 {
-#if defined(__GNUC__)
+#if defined(__MINGW32__)
+	/***
+	 * MinGWでのscanfは標準ライブラリをstatic-linkした場合はLinux系相当の ll
+	 * msvcrt.dllを動的リンクした場合はWindows相当の I64 の指定となり
+	 * Znk_PFMD_64すら使えず厄介である. よってこの場合はstrtoll/strtoull系を使う.
+	 * (...というか全環境でこれでもよい気もするがとりあえず)
+	 */
+	char* end = NULL;
+	*ans = strtoull( str, &end, 10 );
+	return (bool)( str != end );
+#elif defined(__GNUC__)
 	/* for -Wformat warning */
 	Znk_LongLong llu;
 	if( sscanf( str, "%" Znk_PFMD_64 "u", &llu ) == 1 ){
@@ -221,7 +242,17 @@ ZnkS_getU32X( uint32_t* ans, const char* str )
 bool
 ZnkS_getU64X( uint64_t* ans, const char* str )
 {
-#if defined(__GNUC__)
+#if defined(__MINGW32__)
+	/***
+	 * MinGWでのscanfは標準ライブラリをstatic-linkした場合はLinux系相当の ll
+	 * msvcrt.dllを動的リンクした場合はWindows相当の I64 の指定となり
+	 * Znk_PFMD_64すら使えず厄介である. よってこの場合はstrtoll/strtoull系を使う.
+	 * (...というか全環境でこれでもよい気もするがとりあえず)
+	 */
+	char* end = NULL;
+	*ans = strtoull( str, &end, 16 );
+	return (bool)( str != end );
+#elif defined(__GNUC__)
 	/* for -Wformat warning */
 	Znk_LongLong llx;
 	if( sscanf( str, "%" Znk_PFMD_64 "x", &llx ) == 1 ){
@@ -512,6 +543,55 @@ ZnkS_isMatchBegin( const char* str, const char* ptn, const char* keychars )
 			&iskeychar_funcarg,
 			NULL );
 }
+bool
+ZnkS_isMatchSWC( const char* ptn, size_t ptn_leng,
+		const char* query, size_t query_leng )
+{
+	Znk_setStrLen_ifNPos( &ptn_leng, ptn );
+	Znk_setStrLen_ifNPos( &query_leng, query );
+
+	if( ptn_leng == 1 ){
+		if( ptn[ 0 ] == '*' ){
+			return true;
+		}
+		if( query_leng == 1 ){
+			return (bool)( ptn[ 0 ] == query[ 0 ] );
+		} 
+		return false;
+	}
+
+	if( ptn[ 0 ] == '*' ){
+		/* *ABC : ABCで終るかどうか */
+		if( ZnkS_isEndEx( query, query_leng, ptn+1, ptn_leng-1 ) ){
+			/* found */
+			return true;
+		}
+	} else if( ptn[ ptn_leng-1 ] == '*' ){
+		/* ABC* : ABCで始まるかどうか */
+		if( ZnkS_isBeginEx( query, query_leng, ptn, ptn_leng-1 ) ){
+			/* found */
+			return true;
+		}
+	} else {
+		const char* p = (char*)Znk_memchr( ptn, '*', ptn_leng );
+		if( p ){
+			/* AB*CD : ABで始まりCDで終るかどうか */
+			const size_t prev_leng = p - ptn;
+			if(  ZnkS_isBeginEx( query, query_leng, ptn, prev_leng )
+			  && ZnkS_isEndEx( query+prev_leng, query_leng-prev_leng, ptn+prev_leng+1, ptn_leng-prev_leng-1 ) )
+			{
+				/* found */
+				return true;
+			}
+		} else if( ZnkS_eqEx( query, ptn, query_leng ) ){
+			/* found */
+			return true;
+		}
+	}
+	/* not found */
+	return false;
+}
+
 
 
 uint32_t

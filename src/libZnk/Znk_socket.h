@@ -20,11 +20,11 @@ ZnkSocket_close( ZnkSocket sock );
 ZnkSocket
 ZnkSocket_accept( ZnkSocket listen_sock );
 
-void
-ZnkSocket_set_blocking_mode( ZnkSocket sock, bool is_blocking_mode );
+bool
+ZnkSocket_setBlockingMode( ZnkSocket sock, bool is_blocking_mode );
 
 bool
-ZnkSocket_connectToServer( ZnkSocket sock, const char* hostname, uint16_t port, ZnkErr* zkerr );
+ZnkSocket_connectToServer( ZnkSocket sock, const char* hostname, uint16_t port, ZnkErr* zkerr, bool* is_inprogress );
 uint16_t
 ZnkSocket_getPort_byTCPName( const char* service_name );
 
@@ -41,8 +41,8 @@ ZnkSocket_send_ZnkStr( ZnkSocket sock, const ZnkStr zkstr ){
 int
 ZnkSocket_recv( ZnkSocket sock, uint8_t* buf, size_t buf_size );
 
-int
-ZnkSocket_forward( ZnkSocket src_sock, ZnkSocket dst_sock, uint8_t* buf, size_t buf_size );
+bool
+ZnkSocket_getPeerIPandPort( ZnkSocket sock, uint32_t* ipaddr, uint16_t* port );
 
 Znk_EXTERN_C_END
 

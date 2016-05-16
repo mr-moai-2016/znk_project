@@ -1,6 +1,7 @@
 #include <Znk_net_ip.h>
 #include <Znk_stdc.h>
 #include <Znk_s_base.h>
+#include <Znk_missing_libc.h>
 
 #if defined(Znk_TARGET_WINDOWS)
 
@@ -101,7 +102,7 @@ isUnavailAddr( const struct sockaddr_in *sa )
  * This need to call WSAStartup() previously.
  */
 bool
-ZnkNetIP_getPrivateIP( char* ipaddr, size_t ipaddr_size )
+ZnkNetIP_getPrivateIP32( uint32_t* ipaddr )
 {
 	INTERFACE_INFO if_list[ 20 ];
 	unsigned long ret_bytes;
@@ -159,7 +160,8 @@ ZnkNetIP_getPrivateIP( char* ipaddr, size_t ipaddr_size )
 			ZnkF_printf_e( "IpAddress=[%s]\n", inet_ntoa(sa->sin_addr) );
 			ZnkF_printf_e( "IpMask=[%s]\n", inet_ntoa(((struct sockaddr_in*)&if_list[n].iiNetmask)->sin_addr) );
 #endif
-			ZnkS_copy( ipaddr, ipaddr_size, inet_ntoa(sa->sin_addr), Znk_NPOS );
+			//ZnkS_copy( ipaddr, ipaddr_size, inet_ntoa(sa->sin_addr), Znk_NPOS );
+			*ipaddr = (uint32_t)sa->sin_addr.S_un.S_addr;
 			ret = true;
 			goto FUNC_END;
 		case AF_INET6:
@@ -293,7 +295,7 @@ ZnkNetIP_printTest( void )
 	close(sock);
 } 
 bool
-ZnkNetIP_getPrivateIP( char* ipaddr, size_t ipaddr_size )
+ZnkNetIP_getPrivateIP32( uint32_t* ipaddr )
 {
 	struct ifreq ifr;
 	char ifname[ 256 ] = "eth0";
@@ -306,11 +308,21 @@ ZnkNetIP_getPrivateIP( char* ipaddr, size_t ipaddr_size )
 	ifr.ifr_addr.sa_family = AF_INET;
 	if( ioctl(sock, SIOCGIFADDR, &ifr) == 0 ){
 		sin = (struct sockaddr_in*)&ifr.ifr_addr;
-		ZnkS_copy( ipaddr, ipaddr_size, inet_ntoa(sin->sin_addr), Znk_NPOS );
-		ZnkF_printf_e( "ZnkNetIP_getPrivateIP : ipaddr=[%s]\n", ipaddr );
+		//ZnkS_copy( ipaddr, ipaddr_size, inet_ntoa(sin->sin_addr), Znk_NPOS );
+		*ipaddr = (uint32_t)sin->sin_addr.s_addr;
 		return true;
 	}
 	return false;
 }
 
 #endif
+
+void
+ZnkNetIP_getIPStr_fromU32( uint32_t ipaddr, char* ipstr, size_t ipstr_size )
+{
+	unsigned int u0 = (ipaddr     )  & 0xff;
+	unsigned int u1 = (ipaddr >> 8)  & 0xff;
+	unsigned int u2 = (ipaddr >> 16) & 0xff;
+	unsigned int u3 = (ipaddr >> 24) & 0xff;
+	Znk_snprintf( ipstr, ipstr_size, "%u.%u.%u.%u", u0, u1, u2, u3 );
+}

@@ -1,4 +1,4 @@
-LIBRARY "Znk-0.9.dll"
+LIBRARY "Znk-1.0.dll"
 EXPORTS
   ZnkAry_lfind_16                  = _ZnkAry_lfind_16                 @88
   ZnkAry_lfind_32                  = _ZnkAry_lfind_32                 @90
@@ -8,7 +8,7 @@ EXPORTS
   ZnkAry_rfind_32                  = _ZnkAry_rfind_32                 @91
   ZnkAry_rfind_64                  = _ZnkAry_rfind_64                 @93
   ZnkAry_rfind_sz                  = _ZnkAry_rfind_sz                 @95
-  ZnkBfrDAry_create                = _ZnkBfrDAry_create               @34
+  ZnkBfrAry_create                 = _ZnkBfrAry_create                @418
   ZnkBfr_append_dfr                = _ZnkBfr_append_dfr               @6
   ZnkBfr_capacity                  = _ZnkBfr_capacity                 @14
   ZnkBfr_clear_and_minimize        = _ZnkBfr_clear_and_minimize       @9
@@ -94,7 +94,7 @@ EXPORTS
   ZnkFdSet_create                  = _ZnkFdSet_create                 @59
   ZnkFdSet_destroy                 = _ZnkFdSet_destroy                @60
   ZnkFdSet_getMaxOfSocket          = _ZnkFdSet_getMaxOfSocket         @68
-  ZnkFdSet_getSocketDAry           = _ZnkFdSet_getSocketDAry          @67
+  ZnkFdSet_getSocketAry            = _ZnkFdSet_getSocketAry           @421
   ZnkFdSet_isset                   = _ZnkFdSet_isset                  @62
   ZnkFdSet_print                   = _ZnkFdSet_print                  @65
   ZnkFdSet_select                  = _ZnkFdSet_select                 @70
@@ -143,6 +143,7 @@ EXPORTS
   ZnkMyfSection_name               = _ZnkMyfSection_name              @124
   ZnkMyfSection_vars               = _ZnkMyfSection_vars              @123
   ZnkMyf_atSection                 = _ZnkMyf_atSection                @131
+  ZnkMyf_clear                     = _ZnkMyf_clear                    @420
   ZnkMyf_create                    = _ZnkMyf_create                   @125
   ZnkMyf_destroy                   = _ZnkMyf_destroy                  @126
   ZnkMyf_find_lines                = _ZnkMyf_find_lines               @135
@@ -159,24 +160,25 @@ EXPORTS
   ZnkNetBase_getErrMsg             = _ZnkNetBase_getErrMsg            @141
   ZnkNetBase_getLastErrCode        = _ZnkNetBase_getLastErrCode       @139
   ZnkNetBase_initiate              = _ZnkNetBase_initiate             @137
-  ZnkNetIP_getPrivateIP            = _ZnkNetIP_getPrivateIP           @142
+  ZnkNetIP_getIPStr_fromU32        = _ZnkNetIP_getIPStr_fromU32       @446
+  ZnkNetIP_getPrivateIP32          = _ZnkNetIP_getPrivateIP32         @447
   ZnkNetIP_printTest               = _ZnkNetIP_printTest              @143
-  ZnkObjDAry_at                    = _ZnkObjDAry_at                   @148
-  ZnkObjDAry_clear                 = _ZnkObjDAry_clear                @146
-  ZnkObjDAry_create                = _ZnkObjDAry_create               @144
-  ZnkObjDAry_dary_ptr              = _ZnkObjDAry_dary_ptr             @149
-  ZnkObjDAry_destroy               = _ZnkObjDAry_destroy              @145
-  ZnkObjDAry_erase                 = _ZnkObjDAry_erase                @151
-  ZnkObjDAry_erase_byIdx           = _ZnkObjDAry_erase_byIdx          @152
-  ZnkObjDAry_erase_withQuery       = _ZnkObjDAry_erase_withQuery      @153
-  ZnkObjDAry_getElemDeleter        = _ZnkObjDAry_getElemDeleter       @150
-  ZnkObjDAry_intern                = _ZnkObjDAry_intern               @159
-  ZnkObjDAry_pop_bk                = _ZnkObjDAry_pop_bk               @154
-  ZnkObjDAry_push_bk               = _ZnkObjDAry_push_bk              @156
-  ZnkObjDAry_resize                = _ZnkObjDAry_resize               @155
-  ZnkObjDAry_set                   = _ZnkObjDAry_set                  @157
-  ZnkObjDAry_size                  = _ZnkObjDAry_size                 @147
-  ZnkObjDAry_swap                  = _ZnkObjDAry_swap                 @158
+  ZnkObjAry_ary_ptr                = _ZnkObjAry_ary_ptr               @427
+  ZnkObjAry_at                     = _ZnkObjAry_at                    @426
+  ZnkObjAry_clear                  = _ZnkObjAry_clear                 @424
+  ZnkObjAry_create                 = _ZnkObjAry_create                @422
+  ZnkObjAry_destroy                = _ZnkObjAry_destroy               @423
+  ZnkObjAry_erase                  = _ZnkObjAry_erase                 @429
+  ZnkObjAry_erase_byIdx            = _ZnkObjAry_erase_byIdx           @430
+  ZnkObjAry_erase_withQuery        = _ZnkObjAry_erase_withQuery       @431
+  ZnkObjAry_getElemDeleter         = _ZnkObjAry_getElemDeleter        @428
+  ZnkObjAry_intern                 = _ZnkObjAry_intern                @437
+  ZnkObjAry_pop_bk                 = _ZnkObjAry_pop_bk                @432
+  ZnkObjAry_push_bk                = _ZnkObjAry_push_bk               @434
+  ZnkObjAry_resize                 = _ZnkObjAry_resize                @433
+  ZnkObjAry_set                    = _ZnkObjAry_set                   @435
+  ZnkObjAry_size                   = _ZnkObjAry_size                  @425
+  ZnkObjAry_swap                   = _ZnkObjAry_swap                  @436
   ZnkSAtomDB_create                = _ZnkSAtomDB_create               @262
   ZnkSAtomDB_cstr                  = _ZnkSAtomDB_cstr                 @261
   ZnkSAtomDB_destroy               = _ZnkSAtomDB_destroy              @263
@@ -220,6 +222,7 @@ EXPORTS
   ZnkS_isEndEx                     = _ZnkS_isEndEx                    @297
   ZnkS_isMatchBegin                = _ZnkS_isMatchBegin               @303
   ZnkS_isMatchBeginEx              = _ZnkS_isMatchBeginEx             @302
+  ZnkS_isMatchSWC                  = _ZnkS_isMatchSWC                 @419
   ZnkS_lfind_arg                   = _ZnkS_lfind_arg                  @310
   ZnkS_lfind_one_not_of            = _ZnkS_lfind_one_not_of           @265
   ZnkS_lfind_one_of                = _ZnkS_lfind_one_of               @307
@@ -238,12 +241,12 @@ EXPORTS
   ZnkSocket_accept                 = _ZnkSocket_accept                @166
   ZnkSocket_close                  = _ZnkSocket_close                 @165
   ZnkSocket_connectToServer        = _ZnkSocket_connectToServer       @168
-  ZnkSocket_forward                = _ZnkSocket_forward               @171
+  ZnkSocket_getPeerIPandPort       = _ZnkSocket_getPeerIPandPort      @438
   ZnkSocket_getPort_byTCPName      = _ZnkSocket_getPort_byTCPName     @169
   ZnkSocket_open                   = _ZnkSocket_open                  @164
   ZnkSocket_recv                   = _ZnkSocket_recv                  @170
   ZnkSocket_send                   = _ZnkSocket_send                  @163
-  ZnkSocket_set_blocking_mode      = _ZnkSocket_set_blocking_mode     @167
+  ZnkSocket_setBlockingMode        = _ZnkSocket_setBlockingMode       @417
   ZnkStockBIO_clear                = _ZnkStockBIO_clear               @209
   ZnkStockBIO_create               = _ZnkStockBIO_create              @207
   ZnkStockBIO_destroy              = _ZnkStockBIO_destroy             @208
@@ -251,10 +254,11 @@ EXPORTS
   ZnkStockBIO_getRecverResult      = _ZnkStockBIO_getRecverResult     @211
   ZnkStockBIO_read                 = _ZnkStockBIO_read                @213
   ZnkStockBIO_readLineCRLF         = _ZnkStockBIO_readLineCRLF        @212
-  ZnkStrDAry_create                = _ZnkStrDAry_create               @236
-  ZnkStrDAry_find                  = _ZnkStrDAry_find                 @238
-  ZnkStrDAry_push_bk_cstr          = _ZnkStrDAry_push_bk_cstr         @235
-  ZnkStrDAry_push_bk_snprintf      = _ZnkStrDAry_push_bk_snprintf     @237
+  ZnkStrAry_create                 = _ZnkStrAry_create                @439
+  ZnkStrAry_find                   = _ZnkStrAry_find                  @442
+  ZnkStrAry_find_isMatch           = _ZnkStrAry_find_isMatch          @443
+  ZnkStrAry_push_bk_cstr           = _ZnkStrAry_push_bk_cstr          @441
+  ZnkStrAry_push_bk_snprintf       = _ZnkStrAry_push_bk_snprintf      @440
   ZnkStrEx_addEmbededStr           = _ZnkStrEx_addEmbededStr          @251
   ZnkStrEx_addJoin                 = _ZnkStrEx_addJoin                @246
   ZnkStrEx_addQuotedTokens         = _ZnkStrEx_addQuotedTokens        @247
@@ -312,8 +316,8 @@ EXPORTS
   ZnkTxtFilterAry_exec             = _ZnkTxtFilterAry_exec            @329
   ZnkTxtFilterAry_regist_byCommand = _ZnkTxtFilterAry_regist_byCommand @324
   ZnkTxtFilterAry_size             = _ZnkTxtFilterAry_size            @328
-  ZnkVarpDAry_create               = _ZnkVarpDAry_create              @332
-  ZnkVarpDAry_find_byName          = _ZnkVarpDAry_find_byName         @333
+  ZnkVarpAry_create                = _ZnkVarpAry_create               @444
+  ZnkVarpAry_find_byName           = _ZnkVarpAry_find_byName          @445
   ZnkVarp_create                   = _ZnkVarp_create                  @330
   ZnkVarp_destroy                  = _ZnkVarp_destroy                 @331
   ZnkYYInfo_print_error            = _ZnkYYInfo_print_error           @337

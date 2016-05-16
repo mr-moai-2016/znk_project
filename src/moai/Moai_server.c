@@ -11,9 +11,10 @@
 #include "Moai_log.h"
 #include "Moai_fdset.h"
 #include "Moai_parent_proxy.h"
+#include "Moai_myf.h"
 
 #include <Znk_server.h>
-#include <Znk_socket_dary.h>
+#include <Znk_socket_ary.h>
 #include <Znk_fdset.h>
 #include <Znk_err.h>
 #include <Znk_net_base.h>
@@ -21,7 +22,7 @@
 #include <Znk_sys_errno.h>
 #include <Znk_s_base.h>
 #include <Znk_missing_libc.h>
-#include <Znk_str_dary.h>
+#include <Znk_str_ary.h>
 #include <Znk_str_fio.h>
 #include <Znk_zlib.h>
 #include <Znk_def_util.h>
@@ -37,15 +38,17 @@
 #include <string.h>
 #include <stdlib.h>
 
-static bool        st_post_confirm = true;
 static uint16_t    st_moai_port = 8124;
 static bool        st_enable_log_file = true;
 static char        st_acceptable_host[ 256 ] = "";
+static char        st_acceptable_host_prev[ 256 ] = "";
 static char        st_server_name[ 256 ] = "";
+static uint32_t    st_private_ip = 0;
+static MoaiModuleAry st_mod_ary = NULL;
+static bool        st_you_need_to_restart_moai = false;
+static ZnkStrAry   st_access_allow_ips = NULL;
+static ZnkStrAry   st_access_deny_ips  = NULL;
 
-
-Znk_INLINE double
-getCurrentSec( void ){ return ( 1.0 / CLOCKS_PER_SEC ) * clock(); }
 
 
 static bool
@@ -104,13 +107,6 @@ typedef enum {
 	,HtpScan_e_HostBloking
 } HtpScanType;
 
-typedef enum {
-	 HtpType_e_None=0
-	,HtpType_e_Request
-	,HtpType_e_Response
-	,HtpType_e_NotHttpStart
-} HtpType;
-
 
 typedef struct {
 	const uint8_t* src_;
@@ -137,11 +133,11 @@ demandSrc( uint8_t* src_buf, size_t src_size, void* arg )
 }
 
 static void
-processResponse( ZnkSocket O_sock, MoaiContext ctx, ZnkFdSet fdst_observe,
+processResponse( ZnkSocket O_sock, MoaiContext ctx, MoaiFdSet mfds,
 		size_t* content_length_remain )
 {
 	bool is_direct_download = false;
-	MoaiInfo*     info      = &ctx->hi_;
+	MoaiInfo*     info      = ctx->draft_info_;
 	MoaiBodyInfo* body_info = &ctx->body_info_;
 
 	/***
@@ -164,8 +160,7 @@ processResponse( ZnkSocket O_sock, MoaiContext ctx, ZnkFdSet fdst_observe,
 				chunk_size_cstr_begin = (char*)ZnkBfr_data( info->stream_ ) + chunk_begin;
 				chunk_size_cstr_end   = Znk_memmem( chunk_size_cstr_begin, dbfr_size-chunk_begin, "\r\n", 2 );
 				if( chunk_size_cstr_end == NULL ){
-					MoaiIO_recvByPtn( ctx->hi_.stream_, O_sock, fdst_observe, "\r\n", &result_size );
-					MoaiLog_printf( "MoaiIO_recvByPtn : result_size=[%u]\n", result_size );
+					MoaiIO_recvByPtn( info->stream_, O_sock, mfds, "\r\n", &result_size );
 					/* for realloc */
 					dbfr_size = ZnkBfr_size( info->stream_ );
 					chunk_size_cstr_begin = (char*)ZnkBfr_data( info->stream_ ) + chunk_begin;
@@ -188,7 +183,7 @@ processResponse( ZnkSocket O_sock, MoaiContext ctx, ZnkFdSet fdst_observe,
 						assert( 0 );
 					}
 				} else {
-					MoaiLog_printf( "chunk_size=[%u]\n", chunk_size );
+					//MoaiLog_printf( "chunk_size=[%u]\n", chunk_size );
 				}
 				/***
 				 * dbfrにおけるchunk_size_cstrの領域を削る.
@@ -201,7 +196,7 @@ processResponse( ZnkSocket O_sock, MoaiContext ctx, ZnkFdSet fdst_observe,
 					chunk_remain = 0;
 				}
 				if( chunk_remain ){
-					if( !MoaiIO_recvBySize( ctx->hi_.stream_, O_sock, fdst_observe, chunk_remain, &result_size ) ){
+					if( !MoaiIO_recvBySize( info->stream_, O_sock, mfds, chunk_remain, &result_size ) ){
 						MoaiLog_printf( "MoaiIO_recvBySize : error[%s]\n", ZnkStr_cstr(ctx->msgs_) );
 					}
 				}
@@ -217,12 +212,12 @@ processResponse( ZnkSocket O_sock, MoaiContext ctx, ZnkFdSet fdst_observe,
 				chunk_begin += chunk_size;
 			}
 		} else if( ctx->body_info_.is_unlimited_ ){
-			MoaiLog_printf( "MoaiIO_recvByZero Mode Begin\n" );
-			MoaiIO_recvByZero( ctx->hi_.stream_, O_sock, fdst_observe, &result_size );
-			MoaiLog_printf( "MoaiIO_recvByZero Mode End\n" );
+			MoaiLog_printf( "  MoaiIO_recvByZero Mode Begin\n" );
+			MoaiIO_recvByZero( info->stream_, O_sock, mfds, &result_size );
+			MoaiLog_printf( "  MoaiIO_recvByZero Mode End\n" );
 		} else {
 			while( *content_length_remain ){
-				MoaiIO_recvBySize( ctx->hi_.stream_, O_sock, fdst_observe, *content_length_remain, &result_size );
+				MoaiIO_recvBySize( info->stream_, O_sock, mfds, *content_length_remain, &result_size );
 				if( *content_length_remain >= result_size ){
 					*content_length_remain -= result_size;
 				} else {
@@ -285,15 +280,15 @@ processResponse( ZnkSocket O_sock, MoaiContext ctx, ZnkFdSet fdst_observe,
 			}
 
 			{
-				MoaiConnection htcn = MoaiConnection_find( O_sock );
+				MoaiConnection mcn = MoaiConnection_find_byOSock( O_sock );
 				/***
 				 * これがNULLになる場合があり得る.
 				 */
-				if( htcn ){
-					const char* hostname = htcn->hostname_;
+				if( mcn ){
+					const char* hostname = ZnkStr_cstr( mcn->hostname_ );
 					MoaiModule mod = NULL;
 
-					mod = MoaiModuleAry_find_byHostname( ctx->mod_ary_, ctx->target_myf_, hostname );
+					mod = MoaiModuleAry_find_byHostname( st_mod_ary, hostname );
 					if( mod ){
 						ZnkTxtFilterAry txt_ftr = NULL;
 						switch( body_info->txt_type_ ){
@@ -313,7 +308,6 @@ processResponse( ZnkSocket O_sock, MoaiContext ctx, ZnkFdSet fdst_observe,
 							ZnkTxtFilterAry_exec( txt_ftr, ctx->text_ );
 						}
 					}
-					htcn->waiting_ = 0;
 				}
 			}
 
@@ -388,7 +382,7 @@ processResponse( ZnkSocket O_sock, MoaiContext ctx, ZnkFdSet fdst_observe,
 		 * これに伴い、HeaderにおけるContent-Lengthの値を修正する.
 		 */
 		{
-			ZnkHtpHdrs hdrs = &ctx->hi_.hdrs_;
+			ZnkHtpHdrs hdrs = &info->hdrs_;
 			const char* key;
 			bool exist_content_length = false;
 			size_t size;
@@ -397,9 +391,9 @@ processResponse( ZnkSocket O_sock, MoaiContext ctx, ZnkFdSet fdst_observe,
 	
 			ZnkHtpHdrs_erase( hdrs->vars_, "Transfer-Encoding" );
 
-			size = ZnkVarpDAry_size( hdrs->vars_ );
+			size = ZnkVarpAry_size( hdrs->vars_ );
 			for( idx=0; idx<size; ++idx ){
-				varp = ZnkVarpDAry_at( hdrs->vars_, idx );
+				varp = ZnkVarpAry_at( hdrs->vars_, idx );
 				key = ZnkHtpHdrs_key_cstr( varp );
 
 				if( ZnkS_eqCase( key, "Content-Length" ) ){
@@ -427,7 +421,7 @@ processResponse( ZnkSocket O_sock, MoaiContext ctx, ZnkFdSet fdst_observe,
 	}
 }
 static void
-sendHdrs( ZnkSocket sock, ZnkStrDAry hdr1st, const ZnkVarpDAry vars )
+sendHdrs( ZnkSocket sock, ZnkStrAry hdr1st, const ZnkVarpAry vars )
 {
 	ZnkBfr bfr = ZnkBfr_create_null();
 	ZnkHtpHdrs_extendToStream( hdr1st, vars, bfr, true );
@@ -435,15 +429,15 @@ sendHdrs( ZnkSocket sock, ZnkStrDAry hdr1st, const ZnkVarpDAry vars )
 }
 
 static void
-debugHdrVars( const ZnkVarpDAry vars, const char* prefix_tab )
+debugHdrVars( const ZnkVarpAry vars, const char* prefix_tab )
 {
-	const size_t size = ZnkVarpDAry_size( vars );
+	const size_t size = ZnkVarpAry_size( vars );
 	size_t  idx;
 	size_t  val_idx;
 	size_t  val_size;
 	ZnkVarp varp = NULL;
 	for( idx=0; idx<size; ++idx ){
-		varp = ZnkVarpDAry_at( vars, idx );
+		varp = ZnkVarpAry_at( vars, idx );
 		val_size = ZnkHtpHdrs_val_size( varp );
 		MoaiLog_printf( "%s", prefix_tab );
 		MoaiLog_printf( "[%s]: ", ZnkHtpHdrs_key_cstr(varp) );
@@ -455,12 +449,7 @@ debugHdrVars( const ZnkVarpDAry vars, const char* prefix_tab )
 }
 
 
-
 /***
- * I側からのrequestを、O側へ送り、O側からのresponseを、I側へ送るという
- * request/responseの基本単位をここではRAR(Request And Response)と呼称することにする.
- *
- * 一つのRARの制御としては以下となる.
  * socket I と O があったとして、まず I から O へのforward し、
  * それが終ったら O から I へのforwardを行う.
  *
@@ -471,7 +460,7 @@ debugHdrVars( const ZnkVarpDAry vars, const char* prefix_tab )
  * select Iの読み込み可を検出.
  * forward : recv(from I) => send(to O)
  *
- * ここでcからのrecvが終了. しかしおそらくcはまだ接続を維持しcloseをしない.
+ * ここで I からのrecvが終了. しかしおそらく I はまだ接続を維持しcloseをしない.
  * つまりrecv(from I)が0か否かでこのタイミングを判定することはできないし、
  * そんなことをすれば、recv(from I)から制御が永遠に帰ってこなくなる.
  * そのため、ここでは select へ戻ってその判定を行わねばならない.
@@ -485,35 +474,32 @@ debugHdrVars( const ZnkVarpDAry vars, const char* prefix_tab )
  *
  * recv(from O) が 0 を返すことで O側がcloseしたことを検出.
  * あるいはrecv(from I) が 0 を返すことで I側がcloseしたことを検出.
- * 一つのRARが終了となる.
+ * これで一つのやり取りが終了となる.
  */
 static HtpScanType
-scanHttpFirst( MoaiContext ctx, MoaiConnection htcn, ZnkSocket sock, ZnkFdSet fdst_observe )
+scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
+		ZnkSocket sock, MoaiSockType sock_type, ZnkFdSet fdst_observe_r, MoaiFdSet mfds )
 {
-	/***
-	 * ここでは自動検出をふまえた特殊なforwardを行う.
-	 * この場合にもし自動検出試行がなされた場合は後続のforward2を実行してはならない.
-	 * (すでにZnkSocket_recvが一回呼び出されており、selectに戻さなくてはならない)
-	 */
-	HtpType htp_type = HtpType_e_None;
-	MoaiInfo* info = &ctx->hi_;
+	MoaiHtpType htp_type = MoaiHtpType_e_None;
+	MoaiInfo* info = ctx->draft_info_;
 	char sock_str[ 4096 ];
+	ZnkHtpReqMethod prev_req_method = MoaiConnection_getPrevRequestMethod( mcn, Znk_NPOS );
 
-	ctx->hostname_ = "";
-	ctx->port_ = 80;
-	ctx->hostname_buf_[0] = '\0';
 	ctx->buf_[0] = '\0';
 	ctx->result_size_ = 0;
 	ctx->recv_executed_ = false;
 	ctx->req_method_ = ZnkHtpReqMethod_e_Unknown;
+	ZnkSocket_getPeerIPandPort( sock, &ctx->peer_ipaddr_, NULL );
+
 	MoaiBodyInfo_clear( &ctx->body_info_  );
 	ZnkStr_clear( ctx->msgs_ );
 	ZnkStr_clear( ctx->text_ );
-	ZnkStr_clear( ctx->req_urp_ );
 	MoaiInfo_clear( info );
 
-	MoaiLog_printf( "== Begin scanHttpFirst sock=%d[%s] ==\n",
-			sock,
+	//MoaiInfoID_getStr( mcn->info_id__, &info_id_str );
+
+	MoaiLog_printf( "Moai : scanHttpFirst[%s] %s\n",
+			sock_type == MoaiSockType_e_Inner ? "Inner" : sock_type == MoaiSockType_e_Outer ? "Outer" : "None",
 			MoaiIO_makeSockStr( sock_str, sizeof(sock_str), sock, true ) );
 	{
 		size_t arg_pos[ 3 ];
@@ -524,40 +510,28 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection htcn, ZnkSocket sock, ZnkFdSet fd
 
 		ctx->result_size_ = ZnkSocket_recv( sock, ctx->buf_, sizeof(ctx->buf_) );
 		if( ctx->result_size_ <= 0 ){
-			char errmsg_buf[ 4096 ];
-			int  err_code = ZnkNetBase_getLastErrCode();
-			if( err_code != 0 ){
+			MoaiIO_addAnalyzeLabel( ctx->msgs_, sock, ctx->result_size_, "scanHttpFirst:first_recv" );
+			/***
+			 * 特にCONNECTの場合、RecvZeroを検出したのがI側であれ、O側であれ、
+			 * CONNECT通信の終了を意味し、その相手側も閉じなければならないことに注意するkj.
+			 */
+			MoaiConnection_erase( mcn, mfds );
+			if( ctx->result_size_ == 0 ){
+				ZnkStr_addf( ctx->msgs_, "RecvZero.\n" );
+			} else {
+				char errmsg_buf[ 4096 ];
+				int  err_code = ZnkNetBase_getLastErrCode();
 				ZnkNetBase_getErrMsg( errmsg_buf, sizeof(errmsg_buf), err_code );
-				MoaiIO_addAnalyzeLabel( ctx->msgs_, sock, ctx->result_size_ );
 				ZnkStr_addf( ctx->msgs_, "RecvError.\n" );
 				ZnkStr_addf( ctx->msgs_, "  errmsg=[%s]\n", errmsg_buf );
-				MoaiLog_printf( "%s", ZnkStr_cstr( ctx->msgs_ ) );
-				MoaiIO_closeSocket( "  RecvError", sock, fdst_observe );
-			} else {
-				if( htcn->req_method_ == ZnkHtpReqMethod_e_CONNECT ){
-					/* この場合、RecvZeroを検出したのがI側であれ、O側であれ、
-					 * CONNECT通信の終了を意味し、その相手側も閉じなければならない. */
-					ZnkSocket dst_sock = htcn->dst_sock_;
-					MoaiIO_closeSocket( "  RecvZero(EndOf CONNECT)", sock, fdst_observe );
-					MoaiIO_closeSocket( "  RecvZero(EndOf CONNECT)", dst_sock, fdst_observe );
-				} else {
-					MoaiIO_closeSocket( "  RecvZero", sock, fdst_observe );
-#if 0
-					/* 試験的. w3mではこれがないとうまくいかないのでは? */
-					{
-						ZnkSocket dst_sock = htcn->dst_sock_;
-						HtpIO_closeSocket( "  RecvZero", dst_sock, fdst_observe );
-					}
-#endif
-				}
 			}
-			htcn->waiting_ = 0;
-			return err_code == 0 ? HtpScan_e_RecvZero : HtpScan_e_RecvError;
+			MoaiLog_printf( "%s", ZnkStr_cstr( ctx->msgs_ ) );
+			return ctx->result_size_ == 0 ? HtpScan_e_RecvZero : HtpScan_e_RecvError;
 		}
 		ZnkBfr_append_dfr( info->stream_, ctx->buf_, ctx->result_size_ );
 		ctx->recv_executed_ = true;
 
-		if( htcn->req_method_ == ZnkHtpReqMethod_e_CONNECT ){
+		if( prev_req_method == ZnkHtpReqMethod_e_CONNECT ){
 			/***
 			 * これはCONNECTによるUnknownな通信である.
 			 * この場合ただちにNotHttpStartとしてよい.
@@ -584,11 +558,11 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection htcn, ZnkSocket sock, ZnkFdSet fd
 		 * これらをまとめて処理するため、Content-Lengthが指定されている場合もchunk_size_として
 		 * 扱う.
 		 */
-		if( htcn->content_length_remain_ ){
-			if( htcn->content_length_remain_ >= (size_t)ctx->result_size_ ){
-				htcn->content_length_remain_ -= ctx->result_size_;
+		if( mcn->content_length_remain_ ){
+			if( mcn->content_length_remain_ >= (size_t)ctx->result_size_ ){
+				mcn->content_length_remain_ -= ctx->result_size_;
 				ZnkStr_addf( ctx->msgs_, "  NotHttpStart (remain=[%u] result_size=[%d]).\n",
-						htcn->content_length_remain_, ctx->result_size_ );
+						mcn->content_length_remain_, ctx->result_size_ );
 				MoaiLog_printf( "%s", ZnkStr_cstr( ctx->msgs_ ) );
 				return HtpScan_e_NotHttpStart;
 			} else {
@@ -599,11 +573,11 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection htcn, ZnkSocket sock, ZnkFdSet fd
 				 * 試みるべきである.
 				 */
 				/* for debugger print */
-				const size_t extra_size = ctx->result_size_ - htcn->content_length_remain_;
+				const size_t extra_size = ctx->result_size_ - mcn->content_length_remain_;
 				ZnkStr_addf( ctx->msgs_, "  Invalid content_length_remain : (remain=[%u] result_size=[%d] extra_size=[%u]).\n",
-						htcn->content_length_remain_, ctx->result_size_, extra_size );
+						mcn->content_length_remain_, ctx->result_size_, extra_size );
 				MoaiLog_printf( "%s", ZnkStr_cstr( ctx->msgs_ ) );
-				htcn->content_length_remain_ = 0;
+				mcn->content_length_remain_ = 0;
 			}
 		}
 
@@ -611,7 +585,8 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection htcn, ZnkSocket sock, ZnkFdSet fd
 		 * buf内に行の終了パターンが含まれるかどうかを調べ、
 		 * 最初の行を全取得するまでrecvを繰り返す.
 		 */
-		if( !MoaiIO_recvInPtn( info->stream_, sock, fdst_observe, "\r\n", NULL ) ){
+		MoaiLog_printf( "  Try to recv First Line.\n" );
+		if( !MoaiIO_recvInPtn( info->stream_, sock, mfds, "\r\n", NULL ) ){
 			MoaiLog_printf( "  First Line Recv Error.\n" );
 			return HtpScan_e_RecvError;
 		}
@@ -647,24 +622,24 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection htcn, ZnkSocket sock, ZnkFdSet fd
 		if( ZnkS_eqCase( arg_tkns[ 2 ], "HTTP/1.1" ) ){
 			/* HTTP request */
 			http_version = 11;
-			htp_type = HtpType_e_Request;
+			htp_type = MoaiHtpType_e_Request;
 		} else if( ZnkS_eqCase( arg_tkns[ 2 ], "HTTP/1.0" ) ){
 			/* HTTP request */
 			http_version = 10;
-			htp_type = HtpType_e_Request;
+			htp_type = MoaiHtpType_e_Request;
 		} else if( ZnkS_eqCase( arg_tkns[ 0 ], "HTTP/1.1" ) ){
 			/* HTTP response */
 			http_version = 11;
-			htp_type = HtpType_e_Response;
+			htp_type = MoaiHtpType_e_Response;
 		} else if( ZnkS_eqCase( arg_tkns[ 0 ], "HTTP/1.0" ) ){
 			/* HTTP response */
 			http_version = 10;
-			htp_type = HtpType_e_Response;
+			htp_type = MoaiHtpType_e_Response;
 		} else {
-			MoaiIO_addAnalyzeLabel( ctx->msgs_, sock, ctx->result_size_ );
+			MoaiIO_addAnalyzeLabel( ctx->msgs_, sock, ctx->result_size_, "scanHttpFirst:NotHttpStart" );
 			ZnkStr_addf( ctx->msgs_, "NotHttpStart.\n" );
 			MoaiLog_printf( "%s", ZnkStr_cstr( ctx->msgs_ ) );
-			htp_type = HtpType_e_NotHttpStart;
+			htp_type = MoaiHtpType_e_NotHttpStart;
 			return HtpScan_e_NotHttpStart;
 		}
 
@@ -691,7 +666,7 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection htcn, ZnkSocket sock, ZnkFdSet fd
 		 * buf内にヘッダの終了パターンが含まれるかどうかを調べ、
 		 * ヘッダ部を全取得するまでrecvを繰り返す.
 		 */
-		if( !MoaiIO_recvInPtn( info->stream_, sock, fdst_observe, "\r\n\r\n", &info->hdr_size_ ) ){
+		if( !MoaiIO_recvInPtn( info->stream_, sock, mfds, "\r\n\r\n", &info->hdr_size_ ) ){
 			MoaiLog_printf( "  Hdr Recv Error.\n" );
 			return HtpScan_e_RecvError;
 		}
@@ -717,20 +692,19 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection htcn, ZnkSocket sock, ZnkFdSet fd
 
 		ZnkHtpHdrs_clear( &info->hdrs_ );
 		MoaiInfo_parseHdr( info, &ctx->body_info_,
-				ctx->config_, &htcn->as_local_proxy_, st_moai_port,
-				(bool)(htp_type == HtpType_e_Request), htcn->hostname_,
-				ctx->mod_ary_, ctx->target_myf_, ctx->req_urp_ );
-		MoaiLog_printf( "ctx->req_urp_=[%s]\n", ZnkStr_cstr( ctx->req_urp_ ) );
+				&ctx->as_local_proxy_, st_moai_port, (bool)(htp_type == MoaiHtpType_e_Request),
+				ZnkStr_cstr(mcn->hostname_), st_mod_ary, st_server_name );
 
 		switch( htp_type ){
-		case HtpType_e_Response:
+		case MoaiHtpType_e_Response:
 		{
 			MoaiBodyInfo* body_info = &ctx->body_info_;
-			const char* req_method = ZnkHtpReqMethod_getCStr( htcn->req_method_ );
+			char prev_req_method_str[ 1024 ] = "";
+			MoaiConnection_getPrevRequestMethodStr( mcn, prev_req_method_str, sizeof(prev_req_method_str) );
 			ZnkStr_addf( ctx->msgs_, "  Http Response [%s][%s](from[%s] for[%s]).\n",
-					arg_tkns[ 1 ], arg_tkns[ 2 ], htcn->hostname_, req_method );
+					arg_tkns[ 1 ], arg_tkns[ 2 ], MoaiConnection_hostname(mcn), prev_req_method_str );
 			MoaiLog_printf( "%s", ZnkStr_cstr( ctx->msgs_ ) );
-			switch( htcn->req_method_ ){
+			switch( prev_req_method ){
 			case ZnkHtpReqMethod_e_GET:
 			case ZnkHtpReqMethod_e_POST:
 			case ZnkHtpReqMethod_e_HEAD:
@@ -744,9 +718,11 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection htcn, ZnkSocket sock, ZnkFdSet fd
 			}
 			break;
 		}
-		case HtpType_e_Request:
+		case MoaiHtpType_e_Request:
 		{
 			const char* method = "";
+			char hostname_buf[ 4096 ] = "";
+			uint16_t port = 0;
 
 			if( ZnkS_isCaseBegin( arg_tkns[ 1 ], "http://" ) ){
 				/* Request-URIにおいてホスト名が記載されているとみなす.
@@ -754,14 +730,14 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection htcn, ZnkSocket sock, ZnkFdSet fd
 				 * さらに外部のproxyへ渡す場合、このままでよいが、
 				 * そうではない場合、urpの形に修正しなければならない.
 				 */
-				ZnkS_copy( ctx->hostname_buf_, sizeof(ctx->hostname_buf_), arg_tkns[ 1 ]+7, arg_leng[ 1 ]-7 );
+				ZnkS_copy( hostname_buf, sizeof(hostname_buf), arg_tkns[ 1 ]+7, arg_leng[ 1 ]-7 );
 			} else if( ZnkS_isCaseBegin( arg_tkns[ 1 ], "/" ) ){
 				check_Host = true;
 			} else if( ZnkS_isCaseBegin( arg_tkns[ 1 ], "*" ) ){
 				check_Host = true;
 			} else {
 				/* Request-URIにおいてホスト名が記載されているとみなす */
-				ZnkS_copy( ctx->hostname_buf_, sizeof(ctx->hostname_buf_), arg_tkns[ 1 ], arg_leng[ 1 ] );
+				ZnkS_copy( hostname_buf, sizeof(hostname_buf), arg_tkns[ 1 ], arg_leng[ 1 ] );
 			}
 
 			/***
@@ -786,42 +762,75 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection htcn, ZnkSocket sock, ZnkFdSet fd
 				ctx->req_method_ =   ZnkHtpReqMethod_e_TRACE;
 			} else {
 				/* not support */
-				MoaiIO_addAnalyzeLabel( ctx->msgs_, sock, ctx->result_size_ );
+				MoaiIO_addAnalyzeLabel( ctx->msgs_, sock, ctx->result_size_, "scanHttpFirst:Request" );
 				ZnkStr_addf( ctx->msgs_, "UnknownMethod.\n" );
 				MoaiLog_printf( "%s", ZnkStr_cstr( ctx->msgs_ ) );
-				MoaiIO_closeSocket( "  UnknownMethod", sock, fdst_observe );
+				MoaiIO_close_ISock( "  UnknownMethod", sock, mfds );
 				return HtpScan_e_UnknownMethod;
 			}
 			method = arg_tkns[ 0 ];
 
-			//MoaiIO_addAnalyzeLabel( ctx->msgs_, sock, ctx->result_size_ );
 			ZnkStr_addf( ctx->msgs_, "  Http Request [%s][%s].\n", method, arg_tkns[1] );
 			MoaiLog_printf( "%s", ZnkStr_cstr( ctx->msgs_ ) );
 
 			if( check_Host ){
 				const uint8_t* hdr_data = ZnkBfr_data( info->stream_ );
 				const size_t   hdr_size = info->hdr_size_;
-				if( !scanHeaderVar( "Host", hdr_data, hdr_size, ctx->hostname_buf_, sizeof(ctx->hostname_buf_) ) ){
-					MoaiIO_closeSocket( "  CannotGetHost", sock, fdst_observe );
+				if( !scanHeaderVar( "Host", hdr_data, hdr_size, hostname_buf, sizeof(hostname_buf) ) ){
+					MoaiIO_close_ISock( "  CannotGetHost", sock, mfds );
 					return HtpScan_e_CannotGetHost;
 				}
 			}
-			if( !ZnkS_empty(ctx->hostname_buf_) ){
+			if( !ZnkS_empty(hostname_buf) ){
 				char* colon;
 				char* slash;
-				colon = strchr( ctx->hostname_buf_, ':' );
+				colon = strchr( hostname_buf, ':' );
+				slash = strchr( hostname_buf, '/' );
 				if( colon ){
-					*colon = '\0';
-					sscanf( colon+1, "%hd", &ctx->port_ );
+					if( slash && slash < colon ){
+						/***
+						 * オーソリティ部より後ろにはURLエンコーディングなどにより
+						 * :が含まれる可能性がある. もしcolonがslashより後ろのときは
+						 * このケースであると考えられるため、このcolonは無視する必要がある.
+						 */
+						port = 80;
+					} else {
+						/***
+						 * slashがないかまたはcolonがslashよりも前である場合は
+						 * hostnameとport番号を区切る : である.
+						 */
+						*colon = '\0';
+						sscanf( colon+1, "%hd", &port );
+					}
 				} else {
-					ctx->port_ = 80;
+					port = 80;
 				}
-				slash = strchr( ctx->hostname_buf_, '/' );
 				if( slash ){
 					*slash = '\0';
 				}
-				ctx->hostname_ = ctx->hostname_buf_;
 			}
+			if( !ZnkStr_eq( mcn->hostname_, hostname_buf ) ||  mcn->port_ != port ){
+				/***
+				 * この場合、mcn->O_sock_との旧RASは完了した後、ブラウザはmcn->I_sock_の接続を
+				 * そのまま維持しつつリサイクルして、新たなるHTTPで接続していると思われる.
+				 * しかし、新たな接続先ホストが以前のそれと同じとは限らない.  
+				 * それをチェックするため、上の比較を行い、ホスト名またはportが以前のそれとは
+				 * 異なる場合、旧mcn->O_sock_をcloseし、新たな接続を作ってこれを新しいmcn->O_sock_とする.
+				 *
+				 * このとき、mcn->I_sock_はリサイクルされ、mcn->O_sock_のみが作りなおされることになる.
+				 * ブラウザによってはこのようなことが有り得る.
+				 * 例えばFirefoxでwww.google.co.jpに接続し、直後に別のサイトへ接続する場合などである.
+				 */
+				//MoaiIO_closeSocket( "  SrcRecycle", mcn->O_sock_, fdst_observe_r );
+				//ZnkSocket_close( mcn->O_sock_ );
+				//ZnkFdSet_clr( fdst_observe_r, mcn->O_sock_ );
+				//mcn->O_sock_ = ZnkSocket_INVALID;
+				MoaiIO_close_OSock( "  SrcRecycle", mcn->O_sock_, mfds );
+			}
+			/* 更新 */
+			MoaiLog_printf( "  hostname_buf=[%s]\n", hostname_buf );
+			ZnkStr_set( mcn->hostname_, hostname_buf );
+			mcn->port_ = port;
 			break;
 		}
 		default:
@@ -834,9 +843,9 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection htcn, ZnkSocket sock, ZnkFdSet fd
 	 * content_length_remain_の初期化.
 	 */
 	if( ctx->req_method_ == ZnkHtpReqMethod_e_HEAD ){
-		htcn->content_length_remain_ = 0;
+		mcn->content_length_remain_ = 0;
 	} else {
-		htcn->content_length_remain_ = ctx->body_info_.content_length_;
+		mcn->content_length_remain_ = ctx->body_info_.content_length_;
 		MoaiLog_printf( "  body_info_.content_length_=[%u]\n", ctx->body_info_.content_length_ );
 	}
 
@@ -845,57 +854,53 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection htcn, ZnkSocket sock, ZnkFdSet fd
 	 */
 	{
 		ZnkVarp varp = ZnkHtpHdrs_find( info->hdrs_.vars_, "Connection", Znk_NPOS );
-		htcn->is_keep_alive_ = true;
+		mcn->I_is_keep_alive_ = true;
 		if( varp ){
 			const char* val  = ZnkHtpHdrs_val_cstr( varp, 0 );
-			htcn->is_keep_alive_ = ZnkS_eqCase( val, "keep-alive" );
+			mcn->I_is_keep_alive_ = ZnkS_eqCase( val, "keep-alive" );
 		}
 	}
 
-	if( htcn->content_length_remain_ ){
+	if( mcn->content_length_remain_ ){
 		size_t recved_content_length = ZnkBfr_size( info->stream_ ) - info->hdr_size_;
-		if( htcn->content_length_remain_ < recved_content_length ){
-			htcn->content_length_remain_ = 0;
+		if( mcn->content_length_remain_ < recved_content_length ){
+			mcn->content_length_remain_ = 0;
 		} else {
-			htcn->content_length_remain_ -= recved_content_length;
+			mcn->content_length_remain_ -= recved_content_length;
 		}
 	}
 
 
-	//MoaiLog_printf( "  content_length_remain=[%u]\n", htcn->content_length_remain_ );
-	//MoaiLog_printf( "  hdr_size=[%u]\n", info->hdr_size_ );
-	if( htp_type == HtpType_e_Response ){
-
-		MoaiConnection htcn = MoaiConnection_find( sock );
-		const char* hostname = htcn->hostname_;
-		MoaiModule mod = MoaiModuleAry_find_byHostname( ctx->mod_ary_, ctx->target_myf_, hostname );
+	if( htp_type == MoaiHtpType_e_Response ){
+		MoaiConnection mcn      = MoaiConnection_find_byOSock( sock );
+		const char*    hostname = MoaiConnection_hostname( mcn );
+		MoaiModule     mod      = MoaiModuleAry_find_byHostname( st_mod_ary, hostname );
 		if( mod ){
 			MoaiModule_invokeOnResponseHdr( mod, info->hdrs_.vars_ );
 		}
-		MoaiLog_printf( "  Response htcn=[%p]\n", htcn );
-		MoaiLog_printf( "  Response hostname=[%s]\n", htcn->hostname_ );
+		MoaiLog_printf( "  Response hostname=[%s]\n", hostname );
 
 		/***
 		 * HEADの場合はConnect-Lengthが非ゼロであるにも関わらずそのデータ部がない
 		 */
-		if( htcn->req_method_ != ZnkHtpReqMethod_e_HEAD ){
-			processResponse( sock, ctx, fdst_observe, &htcn->content_length_remain_ );
+		if( prev_req_method != ZnkHtpReqMethod_e_HEAD ){
+			processResponse( sock, ctx, mfds, &mcn->content_length_remain_ );
 		}
 		return HtpScan_e_Response;
 	}
-	MoaiLog_printf( "  New Destination : hostname=[%s] port=[%d]\n", ctx->hostname_, ctx->port_ );
-	if( !ZnkS_empty( htcn->hostname_ ) ){
-		MoaiLog_printf( "  Old Destination : hostname=[%s] port=[%d]\n", htcn->hostname_, htcn->port_ );
-	}
-
 	{
-		ZnkStrDAry ignore_hosts = ZnkMyf_find_lines( ctx->config_, "ignore_hosts" );
-		if( ignore_hosts && ZnkStrDAry_find( ignore_hosts, 0, ctx->hostname_, Znk_NPOS ) != Znk_NPOS ){
+		const char* hostname     = MoaiConnection_hostname( mcn );
+		uint16_t    port         = MoaiConnection_port( mcn );
+		ZnkMyf      config       = MoaiMyf_theConfig();
+		ZnkStrAry   ignore_hosts = ZnkMyf_find_lines( config, "ignore_hosts" );
+
+		MoaiLog_printf( "  New Destination : [%s:%d]\n", hostname, port );
+		if( ZnkStrAry_find_isMatch( ignore_hosts, 0, hostname, Znk_NPOS, ZnkS_isMatchSWC ) != Znk_NPOS ){
 			int ret = MoaiIO_sendTxtf( sock, "text/html", "Moai : Ignored Host Blocking[%s] sock=[%d].\n",
-					ctx->hostname_, sock );
-			MoaiLog_printf( "  Ignored hostname=[%s]\n", ctx->hostname_ );
-			if( ret < 0 || !htcn->is_keep_alive_ || ctx->req_method_ == ZnkHtpReqMethod_e_CONNECT ){
-				MoaiIO_closeSocket( "  IgnoreBlocking", sock, fdst_observe );
+					hostname, sock );
+			MoaiLog_printf( "  Ignored hostname=[%s]\n", hostname );
+			if( ret < 0 || !mcn->I_is_keep_alive_ || ctx->req_method_ == ZnkHtpReqMethod_e_CONNECT ){
+				MoaiIO_close_ISock( "  IgnoreBlocking", sock, mfds );
 			}
 			return HtpScan_e_HostBloking;
 		}
@@ -906,17 +911,19 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection htcn, ZnkSocket sock, ZnkFdSet fd
 
 
 static void
-debugInterestURP( const MoaiInfo* info, const MoaiConnection htcn, HtpScanType scan_type, ZnkMyf analysis )
+debugInterestURP( const MoaiInfo* info, const MoaiConnection mcn, HtpScanType scan_type, ZnkMyf analysis )
 {
-	const char* req_urp    = ZnkStr_cstr( htcn->req_urp_ );
-	const char* req_method = ZnkHtpReqMethod_getCStr( htcn->req_method_ );
-	ZnkStrDAry interest_urp = ZnkMyf_find_lines( analysis, "interest_urp" );
-	if( interest_urp && ZnkStrDAry_find( interest_urp, 0, req_urp, Znk_NPOS ) != Znk_NPOS ){
-		if( ZnkStrDAry_size(info->hdrs_.hdr1st_) > 1 ){
+	const char*     req_urp         = ZnkStr_cstr( info->req_urp_ );
+	ZnkStrAry      interest_urp    = ZnkMyf_find_lines( analysis, "interest_urp" );
+	//if( interest_urp && ZnkStrAry_find( interest_urp, 0, req_urp, Znk_NPOS ) != Znk_NPOS ){
+	if( ZnkStrAry_find_isMatch( interest_urp, 0, req_urp, Znk_NPOS, ZnkS_isMatchSWC ) != Znk_NPOS ){
+		if( ZnkStrAry_size(info->hdrs_.hdr1st_) > 1 ){
+			char prev_req_method_str[ 1024 ] = "";
+			MoaiConnection_getPrevRequestMethodStr( mcn, prev_req_method_str, sizeof(prev_req_method_str) );
 			MoaiLog_printf( "  Moai %s %s%s : InterestURP=[%s]\n",
-					req_method,
+					prev_req_method_str,
 					( scan_type == HtpScan_e_Request ) ? "Request" : "Response ",
-					( scan_type == HtpScan_e_Request ) ? "" : ZnkStrDAry_at_cstr(info->hdrs_.hdr1st_,1),
+					( scan_type == HtpScan_e_Request ) ? "" : ZnkStrAry_at_cstr(info->hdrs_.hdr1st_,1),
 					req_urp );
 		}
 		debugHdrVars( info->hdrs_.vars_, "    " );
@@ -924,257 +931,366 @@ debugInterestURP( const MoaiInfo* info, const MoaiConnection htcn, HtpScanType s
 }
 
 static int
-sendToDst( ZnkSocket dst_sock, MoaiInfo* info, MoaiBodyInfo* body_info, ZnkStr htm1, HtpScanType scan_type )
+sendToDst( ZnkSocket dst_sock, MoaiInfo* info, MoaiTextType txt_type, ZnkStr text, bool with_header )
 {
 	int result_size = 0;
-	switch( scan_type ){
-	case HtpScan_e_Request:
-	case HtpScan_e_Response:
+	if( with_header ){
 		/* HTTPヘッダを送信 */
 		sendHdrs( dst_sock, info->hdrs_.hdr1st_, info->hdrs_.vars_ ); 
-		if( body_info->txt_type_ != MoaiText_e_Binary ){
+		if( txt_type != MoaiText_e_Binary ){
 			result_size = ZnkSocket_send( dst_sock,
-					(uint8_t*)ZnkStr_cstr(htm1), ZnkStr_leng(htm1) );
+					(uint8_t*)ZnkStr_cstr(text), ZnkStr_leng(text) );
 		} else {
 			/* データを送信 */
 			result_size = ZnkSocket_send( dst_sock,
 					ZnkBfr_data(info->stream_)+info->hdr_size_, ZnkBfr_size(info->stream_)-info->hdr_size_ );
 		}
-		break;
-	default:
+	} else {
 		/* データを送信 */
 		result_size = ZnkSocket_send( dst_sock, ZnkBfr_data(info->stream_), ZnkBfr_size(info->stream_) );
-		break;
 	}
 	return result_size;
 }
 
 static MoaiRASResult
-doLocalProxy( MoaiContext ctx, ZnkSocket I_sock, MoaiConnection htcn,
-		MoaiFdSet mfds,
-		MoaiInfo* info, HtpScanType scan_type )
+requestOnConnectCompleted_CONNECT( ZnkSocket O_sock,
+		const char* hostname, MoaiInfoID info_id, MoaiFdSet mfds )
 {
 	ZnkErr_D( err );
-	ZnkFdSet fdst_observe = MoaiFdSet_fdst_observe( mfds );
+	MoaiConnection mcn            = MoaiConnection_find_byOSock( O_sock );
+	ZnkSocket      I_sock         = MoaiConnection_I_sock( mcn );
+	//ZnkFdSet       fdst_observe_r = MoaiFdSet_fdst_observe_r( mfds );
+	MoaiInfo*      info           = MoaiInfo_find( info_id );
+	ZnkMyf         config         = MoaiMyf_theConfig();
+	const bool     is_proxy_use   = MoaiParentProxy_isAppliedHost( config, hostname, Znk_NPOS );
+	bool           connection_established = true;
 
-	if( htcn->dst_sock_ == ZnkSocket_INVALID ){
-		ZnkSocket dst_sock = ZnkSocket_open();
-		{
-			MoaiConnection htcn_r = MoaiConnection_intern( dst_sock, MoaiSockType_e_Outer );
-			if( htcn_r ){
-				htcn_r->dst_sock_     = I_sock;
-				htcn_r->port_         = ctx->port_;
-				ZnkS_copy( htcn_r->hostname_, sizeof(htcn_r->hostname_), ctx->hostname_, Znk_NPOS );
-			} else {
-				MoaiLog_printf( "  doLocalProxy : MoaiConnection_intern failure.\n" );
-				MoaiIO_sendTxtf( I_sock, "text/html", "<p><b>Moai : Tunnel : MoaiConnection_intern Error.</b></p>\n" );
-				MoaiIO_closeSocket( "  MoaiConnection_intern", I_sock, fdst_observe );
-				MoaiIO_closeSocket( "  MoaiConnection_intern", dst_sock, fdst_observe );
-				return MoaiRASResult_e_Ignored;
-			}
+	if( is_proxy_use ){
+		/***
+		 * この場合はO側(外部proxy)にもCONNECTヘッダを送り、
+		 * その応答内容が200であるか否かを確認する必要がある.
+		 */
+		ZnkBfr bfr = ZnkBfr_create_null();
+		ZnkHtpHdrs_extendToStream( info->hdrs_.hdr1st_, info->hdrs_.vars_, bfr, true );
+		ZnkSocket_send( O_sock, ZnkBfr_data(bfr), ZnkBfr_size(bfr) );
+
+		MoaiInfo_clear( info );
+		ZnkBfr_clear( bfr );
+		MoaiLog_printf( "  Try to recv CONNECT request return from proxy.\n" );
+		if( !MoaiIO_recvInPtn( bfr, O_sock, mfds, "\r\n\r\n", &info->hdr_size_ ) ){
+			MoaiLog_printf( "  Hdr Recv Error.\n" );
+			ZnkBfr_destroy( bfr );
+			return MoaiRASResult_e_Ignored;
 		}
-		htcn->dst_sock_     = dst_sock;
-		htcn->port_         = ctx->port_;
-		ZnkS_copy( htcn->hostname_, sizeof(htcn->hostname_), ctx->hostname_, Znk_NPOS );
-		MoaiLog_printf( "  Connecting... dst_sock=[%d]\n", dst_sock );
 
+		/***
+		 * 外部proxyからの応答内容を検証.
+		 * statusが200ならCONNECT可とする.
+		 */
+		connection_established = false;
 		{
-			const char* cnct_hostname = ctx->hostname_;
-			uint16_t    cnct_port     = ctx->port_;
-
-			if( MoaiParentProxy_isUse( ctx->config_, cnct_hostname, Znk_NPOS ) ){
-				/***
-				 * この場合物理的に接続する先はparent_proxyである.
-				 */
-				cnct_hostname = MoaiParentProxy_getHostname();
-				cnct_port     = MoaiParentProxy_getPort();
-			}
-			if( !ZnkSocket_connectToServer( dst_sock, cnct_hostname, cnct_port, &err ) ){
-				int ret = MoaiIO_sendTxtf( I_sock, "text/html",
-						"<p><b>Moai : Tunnel : connectToServer Error.</b></p>I_sock=[%d] hostname=[%s] port=[%d]<br>%s\n",
-						dst_sock, cnct_hostname, cnct_port, ZnkErr_cstr(err) );
-				if( ret < 0 || !htcn->is_keep_alive_ ){
-					MoaiIO_closeSocket( "  ConnectToServer", I_sock, fdst_observe );
-					MoaiIO_closeSocket( "  ConnectToServer", dst_sock, fdst_observe );
+			const char* p = (char*)ZnkBfr_data(bfr);
+			const char* q = strstr( p, "\r\n" );
+			if( q ){
+				ZnkHtpHdrs_registHdr1st( info->hdrs_.hdr1st_, p, q - p );
+				MoaiLog_printf( "Recving status [%s]\n", ZnkStrAry_at_cstr( info->hdrs_.hdr1st_, 1 ) );
+				if( ZnkS_eq( ZnkStrAry_at_cstr( info->hdrs_.hdr1st_, 1 ), "200" ) ){
+					connection_established = true;
 				}
-				return MoaiRASResult_e_Ignored;
 			}
-			htcn->exile_time_ = 0;
 		}
-
-		MoaiLog_printf( "  Connected : port=[%d] sock=[I:%d <=> O:%d]\n", ctx->port_, I_sock, dst_sock );
-		if( !ZnkFdSet_set( fdst_observe, dst_sock ) ){
-			MoaiLog_printf( "  ZnkFdSet_set failure. sock(by connect)=[%d]\n", dst_sock );
-			MoaiFdSet_reserveConnectSock( mfds, dst_sock );
+		ZnkBfr_destroy( bfr );
+	}
+	if( connection_established ){
+		/***
+		 * まだO側に何も送らない.
+		 * I側へ単に HTTP/1.0 200 connection established を返し、改めてI側からのrecvをselectにより待つ.
+		 * このとき、(Unknownな)通信の開始となるI_sockは、最初にCONNECTメソッドを送ってきたI_sockと
+		 * 同じである(そうでなければならない).
+		 * よって、そのような通信の開始や途中であるか否かはreq_method_値によって簡単に識別できる.
+		 * また、そのような通信の終了は、そのいずれかの側の接続が閉じられたと検出した時である.
+		 * その場合、閉じられた側からの残りのデータをすべて送信し、その後両方の接続を閉じ、
+		 * 残ったデータがあれば捨てる、という処理を試みなければならないとある.
+		 *
+		 * RFC7231: CONNECT
+		 * A tunnel is closed when a tunnel intermediary detects that either side
+		 * has closed its connection: the intermediary MUST attempt to send any
+		 * outstanding data that came from the closed side to the other side,
+		 * close both connections, and then discard any remaining data left undelivered.
+		 */
+		const char* msg = "HTTP/1.0 200 Connection established. \r\n\r\n";
+		int result_size = ZnkSocket_send( I_sock, (uint8_t*)msg, strlen(msg) );
+		if( result_size == -1 ){
+			ZnkSysErrnoInfo* err_info = ZnkSysErrno_getInfo( ZnkSysErrno_errno() );
+			ZnkErr_internf( &err,
+					"  ZnkSocket_send : Failure : SysErr=[%s:%s]",
+					err_info->sys_errno_key_, err_info->sys_errno_msg_ );
+			MoaiConnection_erase( mcn, mfds );
+			return MoaiRASResult_e_Ignored;
+		}
+		MoaiLog_printf( "  CONNECT established I[%d] => O[%d].\n", I_sock, O_sock );
+	} else {
+		ZnkBfr bfr = ZnkBfr_create_null();
+		int result_size;
+		ZnkHtpHdrs_extendToStream( info->hdrs_.hdr1st_, info->hdrs_.vars_, bfr, true );
+		result_size = ZnkSocket_send( I_sock, ZnkBfr_data(bfr), ZnkBfr_size(bfr) );
+		ZnkBfr_destroy( bfr );
+		if( result_size == -1 ){
+			ZnkSysErrnoInfo* err_info = ZnkSysErrno_getInfo( ZnkSysErrno_errno() );
+			ZnkErr_internf( &err,
+					"  ZnkSocket_send : Failure : SysErr=[%s:%s]",
+					err_info->sys_errno_key_, err_info->sys_errno_msg_ );
+			MoaiConnection_erase( mcn, mfds );
+			return MoaiRASResult_e_Ignored;
 		}
 	}
 
-	if( htcn->dst_sock_ != ZnkSocket_INVALID ){
-		ZnkSocket dst_sock = htcn->dst_sock_;
-		if( !ctx->recv_executed_ ){
-			MoaiLog_printf( "  recv_executed is false\n" );
-		} else {
-			if( scan_type == HtpScan_e_Request ){
-				MoaiConnection htcn_r = MoaiConnection_find( dst_sock );
-				htcn->req_method_   = ctx->req_method_;
-				htcn_r->req_method_ = ctx->req_method_;
-				htcn_r->exile_time_ = 0;
-			}
-			if( ctx->req_method_ == ZnkHtpReqMethod_e_CONNECT ){
-				bool connection_established = true;
-				if( MoaiParentProxy_isUse( ctx->config_, htcn->hostname_, Znk_NPOS ) ){
-					/***
-					 * この場合はO側にもCONNECTヘッダを送り、
-					 * その応答内容が200であるか否かを確認する必要がある.
-					 */
-					ZnkBfr bfr = ZnkBfr_create_null();
-					ZnkHtpHdrs_extendToStream( info->hdrs_.hdr1st_, info->hdrs_.vars_, bfr, true );
-					ZnkSocket_send( dst_sock, ZnkBfr_data(bfr), ZnkBfr_size(bfr) );
+	return MoaiRASResult_e_OK;
+}
 
-					MoaiInfo_clear( info );
-					if( !MoaiIO_recvInPtn( info->stream_, dst_sock, fdst_observe, "\r\n\r\n", &info->hdr_size_ ) ){
-						MoaiLog_printf( "  Hdr Recv Error.\n" );
-						return MoaiRASResult_e_Ignored;
-					}
+static MoaiRASResult
+requestOnConnectCompleted_GET( ZnkSocket O_sock,
+		const char* hostname, MoaiInfoID info_id, MoaiFdSet mfds )
+{
+	ZnkErr_D( err );
+	MoaiConnection  mcn        = MoaiConnection_find_byOSock( O_sock );
+	//ZnkSocket       I_sock     = MoaiConnection_I_sock( mcn );
+	MoaiInfo*       info       = MoaiInfo_find( info_id );
+	//ZnkFdSet        fdst_observe_r = MoaiFdSet_fdst_observe_r( mfds );
 
-					ZnkBfr_destroy( bfr );
-					connection_established = false;
-					{
-						const char* q = strstr( (char*)ctx->buf_, "\r\n" );
-						if( q ){
-							ZnkHtpHdrs_registHdr1st( info->hdrs_.hdr1st_, (char*)ctx->buf_, (uint8_t*)q - ctx->buf_ );
-							MoaiLog_printf( "Recving status [%s]\n", ZnkStrDAry_at_cstr( info->hdrs_.hdr1st_, 1 ) );
-							if( ZnkS_eq( ZnkStrDAry_at_cstr( info->hdrs_.hdr1st_, 1 ), "200" ) ){
-								connection_established = true;
-							}
-						}
-					}
-				}
-				if( connection_established ){
-					/***
-					 * この場合はまだO側に何も送らない.
-					 * I側へ単に HTTP/1.0 200 connection established を返し、
-					 * 改めてI側からのrecvをselectにより待つ.
-					 * このとき、(Unknownな)通信の開始となるI_sockは、最初にCONNECTメソッドを
-					 * 送ってきたI_sockと同じである(そうでなければならない).
-					 * よって、そのような通信の開始や途中であるか否かはreq_method_値によって
-					 * 簡単に識別できる.
-					 * また、そのような通信の終了は、そのいずれかの側の接続が閉じられたと検出した時である.
-					 * その場合、閉じられた側からの残りのデータをすべて送信し、その後両方の接続を閉じ、
-					 * 残ったデータがあれば捨てる、という処理を試みなければならないとある.
-					 *
-					 * RFC7231: CONNECT
-					 * A tunnel is closed when a tunnel intermediary detects that either side
-					 * has closed its connection: the intermediary MUST attempt to send any
-					 * outstanding data that came from the closed side to the other side,
-					 * close both connections, and then discard any remaining data left undelivered.
-					 */
-					const char* msg = "HTTP/1.0 200 Connection established. \r\n\r\n";
-					ctx->result_size_ = ZnkSocket_send( I_sock, (uint8_t*)msg, strlen(msg) );
-					if( ctx->result_size_ == -1 ){
-						ZnkSysErrnoInfo* err_info = ZnkSysErrno_getInfo( ZnkSysErrno_errno() );
-						ZnkErr_internf( &err,
-								"  ZnkSocket_send : Failure : SysErr=[%s:%s]",
-								err_info->sys_errno_key_, err_info->sys_errno_msg_ );
-						MoaiIO_closeSocket( "  CONNECT", I_sock, fdst_observe );
-						MoaiIO_closeSocket( "  CONNECT", dst_sock, fdst_observe );
-						return MoaiRASResult_e_Ignored;
-					}
-					MoaiLog_printf( "  CONNECT established I=[%d] O=[%d].\n", I_sock, htcn->dst_sock_ );
-				} else {
-					ZnkBfr bfr = ZnkBfr_create_null();
-					ZnkHtpHdrs_extendToStream( info->hdrs_.hdr1st_, info->hdrs_.vars_, bfr, true );
-					ctx->result_size_ = ZnkSocket_send( I_sock, ZnkBfr_data(bfr), ZnkBfr_size(bfr) );
-					ZnkBfr_destroy( bfr );
-					if( ctx->result_size_ == -1 ){
-						ZnkSysErrnoInfo* err_info = ZnkSysErrno_getInfo( ZnkSysErrno_errno() );
-						ZnkErr_internf( &err,
-								"  ZnkSocket_send : Failure : SysErr=[%s:%s]",
-								err_info->sys_errno_key_, err_info->sys_errno_msg_ );
-						MoaiIO_closeSocket( "  CONNECT", I_sock, fdst_observe );
-						MoaiIO_closeSocket( "  CONNECT", dst_sock, fdst_observe );
-						return MoaiRASResult_e_Ignored;
-					}
-				}
+	/***
+	 * とりあえずこのsendは失敗しないと仮定.
+	 */
+	int result_size = 0;
 
-				htcn->as_local_proxy_ = true;
-				{
-					MoaiConnection htcn_r = MoaiConnection_find( dst_sock );
-					htcn_r->as_local_proxy_ = true;
-				}
-			} else {
+	sendHdrs( O_sock, info->hdrs_.hdr1st_, info->hdrs_.vars_ ); 
 
-				/* Set req_urp */
-				if( scan_type == HtpScan_e_Request ){
-					switch( htcn->req_method_ ){
-					case ZnkHtpReqMethod_e_GET:
-					case ZnkHtpReqMethod_e_POST:
-					case ZnkHtpReqMethod_e_HEAD:
-					{
-						MoaiConnection htcn_r = MoaiConnection_find( dst_sock );
-						ZnkStr_set( htcn_r->req_urp_, ZnkStr_cstr( ctx->req_urp_ ) );
-						ZnkStr_set( htcn->req_urp_,   ZnkStr_cstr( ctx->req_urp_ ) );
-						break;
-					}
-					default:
-						break;
-					}
-				}
+	/* データを送信 */
+	result_size = ZnkSocket_send( O_sock,
+			ZnkBfr_data(info->stream_)+info->hdr_size_, ZnkBfr_size(info->stream_)-info->hdr_size_ );
 
-				/* Cookie filtering */
-				if( scan_type == HtpScan_e_Request ){
-					switch( htcn->req_method_ ){
-					case ZnkHtpReqMethod_e_GET:
-					case ZnkHtpReqMethod_e_POST:
-					case ZnkHtpReqMethod_e_HEAD:
-					{
-						const MoaiModule mod = MoaiModuleAry_find_byHostname(
-								ctx->mod_ary_, ctx->target_myf_, ctx->hostname_ );
-						if( mod ){
-							MoaiModule_filtCookieVars( mod, info->hdrs_.vars_ );
-						}
-						break;
-					}
-					default:
-						break;
-					}
-				}
-
-				debugInterestURP( info, htcn, scan_type, ctx->analysis_ );
-
-				if( htcn->req_method_ == ZnkHtpReqMethod_e_POST && scan_type == HtpScan_e_Request ){
-					info->proxy_hostname_ = MoaiParentProxy_getHostname();
-					info->proxy_port_     = MoaiParentProxy_getPort();
-					MoaiPost_proc( I_sock, fdst_observe,
-							ctx->hostname_, info, &ctx->body_info_,
-							htcn->as_local_proxy_, st_post_confirm,
-							ctx->mod_ary_, ctx->target_myf_, ctx->config_, ZnkStr_cstr(ctx->req_urp_) );
-				} else {
-
-					/***
-					 * とりあえずこのsendは失敗しないと仮定.
-					 */
-					ctx->result_size_ = sendToDst( dst_sock, info, &ctx->body_info_, ctx->text_, scan_type );
-
-					if( ctx->result_size_ == -1 ){
-						ZnkSysErrnoInfo* err_info = ZnkSysErrno_getInfo( ZnkSysErrno_errno() );
-						ZnkErr_internf( &err,
-								"  ZnkSocket_send : Failure : SysErr=[%s:%s]",
-								err_info->sys_errno_key_, err_info->sys_errno_msg_ );
-						MoaiIO_closeSocket( "  SendToOuter", I_sock, fdst_observe );
-						MoaiIO_closeSocket( "  SendToOuter", dst_sock, fdst_observe );
-						return MoaiRASResult_e_Ignored;
-					}
-					{
-						MoaiConnection htcn_r = MoaiConnection_find( dst_sock );
-						htcn_r->waiting_ = (uint64_t)getCurrentSec();
-					}
-				}
-			}
-			return MoaiRASResult_e_OK;
-		}
+	if( result_size == -1 ){
+		ZnkSysErrnoInfo* err_info = ZnkSysErrno_getInfo( ZnkSysErrno_errno() );
+		ZnkErr_internf( &err,
+				"  ZnkSocket_send : Failure : SysErr=[%s:%s]",
+				err_info->sys_errno_key_, err_info->sys_errno_msg_ );
+		MoaiConnection_erase( mcn, mfds );
+		return MoaiRASResult_e_Ignored;
 	}
 	return MoaiRASResult_e_OK;
+}
+
+static void
+sendOnConnected_CONNECT( MoaiConnection mcn, MoaiFdSet mfds, MoaiInfoID info_id )
+{
+	ZnkSocket   O_sock   = MoaiConnection_O_sock( mcn );
+	//MoaiInfoID  info_id  = MoaiConnection_infoID( mcn );
+	const char* hostname = MoaiConnection_hostname( mcn );
+
+	requestOnConnectCompleted_CONNECT( O_sock, hostname, info_id, mfds );
+	{
+		ZnkFdSet fdst_observe = MoaiFdSet_fdst_observe_r( mfds );
+		if( !ZnkFdSet_set( fdst_observe, O_sock ) ){
+			MoaiFdSet_reserveConnectSock( mfds, O_sock );
+		}
+	}
+}
+
+static void
+sendOnConnected_POST( MoaiConnection mcn, MoaiFdSet mfds, MoaiInfoID info_id )
+{
+	ZnkSocket   O_sock       = MoaiConnection_O_sock( mcn );
+	ZnkFdSet    fdst_observe = MoaiFdSet_fdst_observe_r( mfds );
+
+	MoaiPost_sendRealy( info_id, true, O_sock, mfds );
+	if( !ZnkFdSet_set( fdst_observe, O_sock ) ){
+		MoaiFdSet_reserveConnectSock( mfds, O_sock );
+	}
+}
+
+static void
+sendOnConnected_GET( MoaiConnection mcn, MoaiFdSet mfds, MoaiInfoID info_id )
+{
+	ZnkSocket   O_sock   = MoaiConnection_O_sock( mcn );
+	//MoaiInfoID  info_id  = MoaiConnection_infoID( mcn );
+	const char* hostname = MoaiConnection_hostname( mcn );
+
+	requestOnConnectCompleted_GET( O_sock, hostname, info_id, mfds );
+	{
+		ZnkFdSet fdst_observe = MoaiFdSet_fdst_observe_r( mfds );
+		if( !ZnkFdSet_set( fdst_observe, O_sock ) ){
+			MoaiFdSet_reserveConnectSock( mfds, O_sock );
+		}
+	}
+}
+
+
+static MoaiRASResult
+doLocalProxy( MoaiContext ctx, MoaiConnection mcn, MoaiFdSet mfds, MoaiHtpType htp_type, MoaiSockType sock_type )
+{
+	ZnkErr_D( err );
+	//ZnkFdSet fdst_observe_r = MoaiFdSet_fdst_observe_r( mfds );
+	MoaiInfo* info = NULL;
+	ZnkSocket I_sock = MoaiConnection_I_sock( mcn );
+	ZnkSocket O_sock = MoaiConnection_O_sock( mcn );
+	const char* hostname = MoaiConnection_hostname( mcn );
+	uint16_t    port     = MoaiConnection_port( mcn );
+
+	ZnkMyf config     = MoaiMyf_theConfig();
+	ZnkMyf analysis   = MoaiMyf_theAnalysis();
+
+	const bool is_proxy_use = MoaiParentProxy_isAppliedHost( config, hostname, Znk_NPOS );
+	MoaiConnectedCallback cb_func = NULL;
+
+
+	if( htp_type == MoaiHtpType_e_Request ){
+		MoaiInfoID info_id = MoaiInfo_regist( ctx->draft_info_ );
+		info = MoaiInfo_find( info_id );
+		info->req_method_ = ctx->req_method_;
+
+		switch( info->req_method_ ){
+		case ZnkHtpReqMethod_e_CONNECT:
+			cb_func = sendOnConnected_CONNECT;
+			break;
+		case ZnkHtpReqMethod_e_POST:
+		{
+			ZnkStr str = ZnkStr_new( "" );
+			const MoaiModuleAry mod_ary  = st_mod_ary;
+			const MoaiModule mod = MoaiModuleAry_find_byHostname( mod_ary, hostname );
+			MoaiPostMode post_mode = MoaiPost_decidePostMode( config, hostname );
+			ZnkVarp varp = NULL;
+
+			{
+				/* Cookie filtering */
+				if( mod ){
+					MoaiModule_filtCookieVars( mod, info->hdrs_.vars_ );
+				}
+
+				/* PostVar filtering */
+				MoaiPost_parsePostVars3( I_sock, mfds,
+						str,
+						info->hdr_size_, info->hdrs_.hdr1st_, info->hdrs_.vars_,
+						ctx->body_info_.content_length_, info->stream_,
+						info->vars_,
+						mod );
+			}
+
+			varp = ZnkVarpAry_find_byName( info->vars_, "Moai_PostInfoID", Znk_NPOS, false );
+			if( varp ){
+				MoaiInfoIDStr id_str = {{ 0 }};
+				const char* moai_post_info_id = ZnkVar_cstr( varp );
+				post_mode = MoaiPostMode_e_SendAfterConfirm;
+				Znk_snprintf( id_str.buf_, sizeof(id_str.buf_), "%s", moai_post_info_id );
+				info_id = MoaiInfoID_scanIDStr( &id_str );
+			}
+			{
+				MoaiInfoIDStr id_str = {{ 0 }};
+				MoaiInfoID_getStr( info_id, &id_str );
+				MoaiLog_printf( "doLocalProxy : ZnkHtpReqMethod_e_POST id=[%s] mod=[%p]\n", id_str.buf_, mod );
+			}
+			if( post_mode == MoaiPostMode_e_Confirm ){
+				const char* req_urp = ZnkStr_cstr( info->req_urp_ );
+				MoaiInfoIDStr id_str = {{ 0 }};
+				MoaiInfoID_getStr( info_id, &id_str );
+				ZnkStr_addf( str, "<p><b>Moai : POST to %s%s.</b></p>", hostname, req_urp );
+				ZnkStr_addf( str, "<form action=\"http://%s%s\" method=\"POST\" enctype=\"multipart/form-data\">",
+						hostname, req_urp );
+				ZnkStr_addf( str, "<input type=hidden name=Moai_PostInfoID value=\"%s\">", id_str.buf_ );
+				ZnkStr_addf( str, "<input type=submit value=\"Send\"> " );
+				ZnkStr_addf( str, "</form>\n" );
+				MoaiIO_sendTxtf( I_sock, "text/html", "<pre>%s</pre>", ZnkStr_cstr(str) );
+				cb_func = NULL;
+			} else {
+				cb_func = sendOnConnected_POST;
+			}
+			ZnkStr_delete( str );
+			break;
+		}
+		case ZnkHtpReqMethod_e_GET:
+		default:
+			MoaiLog_printf( "  doLocalProxy : Request info->req_method_=[%s]\n", ZnkHtpReqMethod_getCStr(info->req_method_) );
+			cb_func = sendOnConnected_GET;
+			break;
+		}
+		if( !MoaiConnection_connectFromISock( hostname, port, I_sock, "doLocalProxy",
+				info_id, mfds, is_proxy_use, cb_func ) )
+		{
+			//O_sock = MoaiConnection_O_sock( mcn );
+			MoaiLog_printf( "  doLocalProxy : makeConnectionFromISock failure.\n" );
+			MoaiIO_sendTxtf( I_sock, "text/html", "<p><b>Moai : doLocalProxy : makeConnectionFromISock Error.</b></p>\n" );
+			MoaiIO_close_ISock( "  doLocalProxy", I_sock, mfds );
+			//MoaiIO_close_OSock( "  doLocalProxy", O_sock, mfds );
+			return MoaiRASResult_e_Ignored;
+		}
+		I_sock = MoaiConnection_I_sock( mcn );
+		O_sock = MoaiConnection_O_sock( mcn );
+	}
+	if( htp_type == MoaiHtpType_e_Response ){
+		info = ctx->draft_info_;
+	}
+	if( htp_type == MoaiHtpType_e_NotHttpStart ){
+		info = ctx->draft_info_;
+	}
+
+	if( ctx->recv_executed_ && O_sock != ZnkSocket_INVALID ){
+
+		switch( htp_type ){
+		case MoaiHtpType_e_Request:
+		{
+			debugInterestURP( info, mcn, htp_type, analysis );
+
+			switch( info->req_method_ ){
+			case ZnkHtpReqMethod_e_GET:
+			case ZnkHtpReqMethod_e_POST:
+			case ZnkHtpReqMethod_e_HEAD:
+			{
+				break;
+			}
+			default:
+				break;
+			}
+			break;
+		}
+		case MoaiHtpType_e_Response:
+		default:
+		{
+			/* Response or NotHttpStart */
+			/***
+			 * とりあえずこのsendは失敗しないと仮定.
+			 */
+			const bool with_header = (bool)( htp_type == MoaiHtpType_e_Response );
+			int result_size = 0;
+
+			/***
+			 * sock_typeは送信元であるから、送信先であるsockはその逆となる.
+			 */
+			ZnkSocket sock = ( sock_type == MoaiSockType_e_Inner ) ? O_sock 
+				: ( sock_type == MoaiSockType_e_Outer ) ? I_sock
+				: ZnkSocket_INVALID;
+
+			debugInterestURP( info, mcn, htp_type, analysis );
+			if( sock == ZnkSocket_INVALID ){
+				MoaiLog_printf( "  sock=[%d] is invalid\n", sock );
+				return MoaiRASResult_e_Ignored;
+			}
+			//MoaiLog_printf( "  doLocalProxy htp_type=[%d] sending to sock[%d]...\n", htp_type, sock );
+			sendToDst( sock, info, ctx->body_info_.txt_type_, ctx->text_, with_header );
+			if( result_size == -1 ){
+				ZnkSysErrnoInfo* err_info = ZnkSysErrno_getInfo( ZnkSysErrno_errno() );
+				ZnkErr_internf( &err,
+						"  ZnkSocket_send : Failure : SysErr=[%s:%s]",
+						err_info->sys_errno_key_, err_info->sys_errno_msg_ );
+				MoaiConnection_erase( mcn, mfds );
+				return MoaiRASResult_e_Ignored;
+			}
+
+			break;
+		}
+		}
+
+	}
+	return MoaiRASResult_e_OK;
+
 }
 
 /***
@@ -1191,6 +1307,16 @@ doLocalProxy( MoaiContext ctx, ZnkSocket I_sock, MoaiConnection htcn,
 static void
 autosetServerName( void )
 {
+	char private_ipstr[ 64 ] = "";
+	/***
+	 * 最新のPrivateIPを自動取得する.
+	 */
+	st_private_ip = 0;
+	if( ZnkNetIP_getPrivateIP32( &st_private_ip ) ){
+		ZnkNetIP_getIPStr_fromU32( st_private_ip, private_ipstr, sizeof(private_ipstr) );
+		MoaiLog_printf( "Moai : AutoGet PrivateIP=[%s].\n", private_ipstr );
+	}
+
 	if(  ZnkS_empty( st_acceptable_host )
 	  || ZnkS_eq( st_acceptable_host, "127.0.0.1" )
 	  || ZnkS_eq( st_acceptable_host, "LOOPBACK" )
@@ -1198,15 +1324,18 @@ autosetServerName( void )
 		/* LOOPBACKの場合 */
 		ZnkS_copy( st_server_name, sizeof(st_server_name), "127.0.0.1", Znk_NPOS );
 		return;
-	} else if( ZnkS_empty( st_server_name ) ){
+	} else if( ZnkS_empty( st_server_name ) || ZnkS_eq( st_server_name, "127.0.0.1" ) ){
 		/***
-		 * ANYの場合かつst_server_nameが空のとき PrivateIPの自動取得を試みる.
+		 * ANYの場合かつst_server_nameが空or127.0.0.1のとき、st_server_nameの値をPrivateIPで置き換える.
 		 */
-		if( ZnkNetIP_getPrivateIP( st_server_name, sizeof(st_server_name) ) ){
-			MoaiLog_printf( "Moai : AutoGet PrivateIP=[%s].\n", st_server_name );
-		} else {
-			/* 失敗. とりあえずLOOPBACK用の値を指定しておく. */
+		if( st_private_ip == 0 ){
+			/***
+			 * PrivateIPの自動取得に失敗するなどでst_private_ipが空のとき.
+			 * とりあえずLOOPBACK用の値を指定しておく.
+			 */
 			ZnkS_copy( st_server_name, sizeof(st_server_name), "127.0.0.1", Znk_NPOS );
+		} else {
+			ZnkS_copy( st_server_name, sizeof(st_server_name), private_ipstr, Znk_NPOS );
 		}
 	}
 }
@@ -1255,26 +1384,15 @@ printInputUI_Int( ZnkStr html,
 }
 
 
-/*
-<tr class=even><td>censorReferer<br/><i>tristate</i></td><td>maybe</td><td>
-<form method=POST action="config?">
-<select name=censorReferer >
-<option>false</option>
-<option selected>maybe</option>
-<option>true</option>
-</select>
-<input type="submit" value="set">
-</form>
-*/
 static void
 printInputUI_SelectBox( ZnkStr html,
 		const char* varname, const char* current_val, const char* new_val, bool is_enable,
-		ZnkStrDAry str_list,
+		ZnkStrAry str_list,
 		const char* destination )
 {
 	const char* class_name = ( st_input_ui_idx % 2 ) ? "odd" : "evn";
 	const char* readonly_str = is_enable ? "" : "disabled=true";
-	const size_t size = ZnkStrDAry_size( str_list );
+	const size_t size = ZnkStrAry_size( str_list );
 	size_t idx;
 	bool is_selected = false;
 	const char* val = "";
@@ -1285,7 +1403,7 @@ printInputUI_SelectBox( ZnkStr html,
 			varname, current_val, varname, readonly_str );
 
 	for( idx=0; idx<size; ++idx ){
-		val = ZnkStrDAry_at_cstr( str_list, idx );
+		val = ZnkStrAry_at_cstr( str_list, idx );
 		is_selected = ZnkS_eq( val, current_val );
 		ZnkStr_addf( html, "<option%s>%s</option>", is_selected ? " selected" : "", val );
 	}
@@ -1295,28 +1413,56 @@ printInputUI_SelectBox( ZnkStr html,
 }
 
 static int
-printConfig( ZnkSocket sock )
+printConfig( ZnkSocket sock, ZnkStrAry result_msgs, uint32_t peer_ipaddr )
 {
 	int ret;
 	char proxy[ 1024 ] = "";
 	const char* parent_proxy_hostname = NULL;
+	bool sys_config_enable = true;
 	ZnkStr html = ZnkStr_new( "" );
-	ZnkStrDAry str_list = ZnkStrDAry_create( true );
-	ZnkStr_add( html, "<p><b><img src=\"moai.png\"> Moai : Web Configuration</b></p>\n" );
+	ZnkStrAry str_list = ZnkStrAry_create( true );
 
+	ZnkStr_add( html, "<html><body>\n" );
+	ZnkStr_add( html, "<p><b><img src=\"moai.png\"> Moai : Web Configuration Version 1.0</b></p>\n" );
 
 	ZnkStr_add( html, "<style type=\"text/css\">\n" );
-	ZnkStr_add( html, "#config_lightweight tbody tr.evn td { background-color: #D6E0F0; }\n" );
-	ZnkStr_add( html, "#config_lightweight tbody tr.odd td { background-color: #FFFFFF; }\n" );
+	ZnkStr_add( html, "#config_filters tbody tr.evn td { background-color: #E0F0D6; }\n" );
+	ZnkStr_add( html, "#config_filters tbody tr.odd td { background-color: #FFFFFF; }\n" );
 	ZnkStr_add( html, "</style>\n" );
 
 	ZnkStr_add( html, "<style type=\"text/css\">\n" );
-	ZnkStr_add( html, "#config_delicate tbody tr.evn td { background-color: #F0E0D6; }\n" );
-	ZnkStr_add( html, "#config_delicate tbody tr.odd td { background-color: #FFFFFF; }\n" );
+	ZnkStr_add( html, "#config_functional tbody tr.evn td { background-color: #D6E0F0; }\n" );
+	ZnkStr_add( html, "#config_functional tbody tr.odd td { background-color: #FFFFFF; }\n" );
 	ZnkStr_add( html, "</style>\n" );
+
+	ZnkStr_add( html, "<style type=\"text/css\">\n" );
+	ZnkStr_add( html, "#config_system tbody tr.evn td { background-color: #F0E0D6; }\n" );
+	ZnkStr_add( html, "#config_system tbody tr.odd td { background-color: #FFFFFF; }\n" );
+	ZnkStr_add( html, "</style>\n" );
+
+
+	/* ==== Filters and Plugins Initiation ==== */
+	ZnkStr_add( html, "<b>Filters and Plugins</b><br>\n" );
+	st_input_ui_idx = 0;
+	ZnkStr_addf( html, "<form action=\"http://%s:%d/config\" method=\"POST\" enctype=\"multipart/form-data\">\n",
+			st_server_name, st_moai_port );
+
+	ZnkStr_add( html, "<input type=hidden name=Moai_Initiate value=\"initiate\">\n" );
+	ZnkStr_add( html, "<input type=submit value=\"Virtual USERS Initiation\">\n" );
+	ZnkStr_add( html, "</form>\n" );
+
+	if( result_msgs ){
+		size_t idx;
+		const size_t size = ZnkStrAry_size( result_msgs );
+		for( idx=0; idx<size; ++idx ){
+			ZnkStr_addf( html, "%s<br>\n", ZnkStrAry_at_cstr( result_msgs, idx ) );
+		}
+	}
+
+	ZnkStr_add( html, "<hr>\n" );
 
 	/* ==== Instantly Updatable variables ==== */
-	ZnkStr_add( html, "<b>Lightweight Configuration</b><br>\n" );
+	ZnkStr_add( html, "<b>Functional Configuration</b><br>\n" );
 	st_input_ui_idx = 0;
 	ZnkStr_addf( html, "<form action=\"http://%s:%d/config\" method=\"POST\" enctype=\"multipart/form-data\">\n",
 			st_server_name, st_moai_port );
@@ -1328,118 +1474,427 @@ printConfig( ZnkSocket sock )
 				parent_proxy_hostname, MoaiParentProxy_getPort() );
 	}
 
-	ZnkStr_add( html, "<tbody>\n" );
-	ZnkStr_add( html, "<table id=config_lightweight>\n" );
+	ZnkStr_add( html, "<table id=config_functional>\n" );
 	ZnkStr_add( html, "<thead>\n" );
 	ZnkStr_add( html, "<tr><th>variable name</th><th>current value</th><th>new value</th><th>description</th>\n" );
-	ZnkStr_add( html, "</thead><tbody>\n" );
+	ZnkStr_add( html, "</thead>\n" );
+	ZnkStr_add( html, "<tbody>\n" );
 
 	{
-		ZnkStrDAry parent_proxys = MoaiParentProxy_getParentProxys();
+		ZnkStrAry parent_proxys = MoaiParentProxy_getParentProxys();
 		printInputUI_SelectBox( html,
 				"parent_proxy", proxy, proxy, true,
 				parent_proxys,
-				"Parent Proxy selection in config parent_proxy_list." );
+				"Parent Proxy candidate selection in parent_proxy.txt." );
 	}
 
 	printInputUI_CheckBox( html,
-			"post_confirm", st_post_confirm, st_post_confirm, true,
+			"post_confirm", MoaiPost_isPostConfirm(), MoaiPost_isPostConfirm(), true,
 			"Show confirming message at HTTP posting." );
 
 	printInputUI_CheckBox( html,
 			"enable_log_file", st_enable_log_file, st_enable_log_file, true,
-			"Writing to log file mode(enable/disable)." );
+			"Writing to log file mode(on/off)." );
+
+	printInputUI_CheckBox( html,
+			"blocking_mode", MoaiConnection_isBlockingMode(), MoaiConnection_isBlockingMode(), true,
+			"Connection Blocking Mode(on/off)." );
 
 	ZnkStr_add( html, "</tbody>\n" );
 	ZnkStr_add( html, "</table>\n" );
 
+	ZnkStr_add( html, "<input type=hidden name=Moai_Update value=\"update\">\n" );
 	ZnkStr_add( html, "<input type=submit value=\"Update\">\n" );
 	ZnkStr_add( html, "</form>\n" );
 
 	ZnkStr_add( html, "<hr>\n" );
 
-	/* ==== Required Restart variables( 外部マシンからの更新は不可とする ) ==== */
-	ZnkStr_add( html, "<font color=#ff0000><b>Delicate Configuration( only via loopback )</b><br>\n" );
+	/* ==== System Configuration( 外部マシンからの更新は不可とする ) ==== */
+	if( peer_ipaddr == 0x0100007f || peer_ipaddr == st_private_ip ){
+		/* Loopback接続 */
+		sys_config_enable = true;
+	} else {
+		/* 他のマシンからの接続 */
+		sys_config_enable = false;
+	}
+	ZnkStr_add( html, "<font color=#ff0000><b>System Configuration( You can set this from localhost only )</b><br>\n" );
 	st_input_ui_idx = 0;
 	ZnkStr_addf( html, "<form action=\"http://127.0.0.1:%d/config\" method=\"POST\" enctype=\"multipart/form-data\">\n",
 			st_moai_port );
 
-	ZnkStr_add( html, "<table>\n" );
-	ZnkStr_add( html, "<tbody>\n" );
-	ZnkStr_add( html, "<table id=config_delicate>\n" );
+	ZnkStr_add( html, "<table id=config_system>\n" );
 	ZnkStr_add( html, "<thead>\n" );
 	ZnkStr_add( html, "<tr><th>variable name</th><th>current value</th><th>new value</th><th>description</th>\n" );
-	ZnkStr_add( html, "</thead><tbody>\n" );
+	ZnkStr_add( html, "</thead>\n" );
+	ZnkStr_add( html, "<tbody>\n" );
 
 	{
-		ZnkStrDAry_clear( str_list );
-		ZnkStrDAry_push_bk_cstr( str_list, "LOOPBACK", Znk_NPOS );
-		ZnkStrDAry_push_bk_cstr( str_list, "ANY", Znk_NPOS );
+		ZnkStrAry_clear( str_list );
+		ZnkStrAry_push_bk_cstr( str_list, "LOOPBACK", Znk_NPOS );
+		ZnkStrAry_push_bk_cstr( str_list, "ANY", Znk_NPOS );
 		printInputUI_SelectBox( html,
-				"acceptable_host", st_acceptable_host, st_acceptable_host, true,
+				"acceptable_host", st_acceptable_host, st_acceptable_host, sys_config_enable,
 				str_list,
 				"Acceptable Host( ANY or LOOPBACK )." );
 	}
 
-	printInputUI_Text( html, "server_name", st_server_name, st_server_name, true,
+	printInputUI_Text( html, "server_name", st_server_name, st_server_name, sys_config_enable,
 			"SeverName(Use this config POST destination)." );
 
-	printInputUI_Int( html, "moai_port", st_moai_port, st_moai_port, true,
+	printInputUI_Int( html, "moai_port", st_moai_port, st_moai_port, sys_config_enable,
 			"The TCP port on which moai listens." );
 
 
 	ZnkStr_add( html, "</tbody>\n" );
 	ZnkStr_add( html, "</table>\n" );
 
+	if( sys_config_enable ){
+		ZnkStr_add( html, "<input type=hidden name=Moai_UpdateSys value=\"update_sys\">\n" );
+		ZnkStr_add( html, "<input type=submit value=\"Update System\">\n" );
+	}
+	ZnkStr_add( html, "</form>\n" );
+
+
+	ZnkStr_add( html, "<hr>\n" );
+
+	/* ==== Restart ==== */
+	if( st_you_need_to_restart_moai ){
+		ZnkStr_add( html, "<font color=#ff0000><b>You need to restart Moai for adapting to system configuration.</b><br>\n" );
+		if( !ZnkS_eq( st_acceptable_host_prev, "ANY" ) ){
+			/***
+			 * st_acceptable_hostは既に新しい値に更新されてはいるが、
+			 * 現時点でまだ実際の状態はLOOPBACKであると思われる. よってまだpost先を127.0.0.1にしておかなければならない.
+			 */
+			ZnkStr_addf( html, "<form action=\"http://127.0.0.1:%d/config\" method=\"POST\" enctype=\"multipart/form-data\">\n",
+					st_moai_port );
+		} else {
+			ZnkStr_addf( html, "<form action=\"http://%s:%d/config\" method=\"POST\" enctype=\"multipart/form-data\">\n",
+					st_server_name, st_moai_port );
+		}
+	} else {
+		if( ZnkS_eq( st_acceptable_host, "ANY" ) ){
+			ZnkStr_addf( html, "<form action=\"http://%s:%d/config\" method=\"POST\" enctype=\"multipart/form-data\">\n",
+					st_server_name, st_moai_port );
+		} else {
+			/***
+			 * LOOPBACKの場合は、post先を127.0.0.1にしておかなければならない.
+			 * またこの場合は外部マシンからのRestartは認められない.
+			 */
+			ZnkStr_addf( html, "<form action=\"http://127.0.0.1:%d/config\" method=\"POST\" enctype=\"multipart/form-data\">\n",
+					st_moai_port );
+		}
+	}
 	ZnkStr_add( html, "<input type=hidden name=Moai_RestartServer value=\"reboot\">\n" );
 	ZnkStr_add( html, "<input type=submit value=\"Restart Moai\">\n" );
 	ZnkStr_add( html, "</form>\n" );
 
+	ZnkStr_addf( html, "<a href=\"http://%s:%d\">Back to Top</a>\n", st_server_name, st_moai_port );
+	ZnkStr_add( html, "</body></html>\n" );
 
 	ret = MoaiIO_sendTxtf( sock, "text/html", ZnkStr_cstr(html) );
 	ZnkStr_delete( html );
-	ZnkStrDAry_destroy( str_list );
+	ZnkStrAry_destroy( str_list );
 	return ret;
 }
 
-static MoaiRASResult
-recvAndSendCore( MoaiContext ctx, ZnkSocket sock, MoaiConnection htcn, MoaiFdSet mfds )
+static void
+initiateFilters( MoaiModuleAry mod_ary, ZnkStrAry result_msgs )
 {
-	MoaiInfo* info = &ctx->hi_;
-	ZnkFdSet fdst_observe = MoaiFdSet_fdst_observe( mfds );
+	const size_t mod_size = MoaiModuleAry_size( mod_ary );
+	size_t       mod_idx;
+	MoaiModule   mod;
+	const char*  parent_proxy_hostname   = MoaiParentProxy_getHostname();
+	uint16_t     port                    = MoaiParentProxy_getPort();
+	char         parent_proxy[ 4096 ] = "NONE";
+	char         result_msg[ 4096 ] = "";
+	const char*  target_name = NULL;
+	bool result = false;
 
-	HtpScanType scan_type = HtpScan_e_None;
-	if( htcn == NULL ){
-		MoaiIO_closeSocket( "  SendToOuter", sock, fdst_observe );
-		return MoaiRASResult_e_Ignored;
+	if( !ZnkS_empty( parent_proxy_hostname ) && !ZnkS_eq( parent_proxy_hostname, "NONE" ) ){
+		Znk_snprintf( parent_proxy, sizeof(parent_proxy), "%s:%hd", parent_proxy_hostname, port );
+	}
+	for( mod_idx=0; mod_idx<mod_size; ++mod_idx ){
+		mod = MoaiModuleAry_at( mod_ary, mod_idx );
+		if( mod ){
+			MoaiLog_printf( "Moai : invokeInitiate [%s]\n", parent_proxy );
+			target_name = MoaiModule_targe_name( mod );
+			ZnkS_copy( result_msg, sizeof(result_msg), "Cannot call plugin function", Znk_NPOS );
+			result = MoaiModule_invokeInitiate( mod, parent_proxy, result_msg, sizeof(result_msg) );
+
+			if( result_msgs ){
+				ZnkStrAry_push_bk_snprintf( result_msgs, Znk_NPOS,
+						"Initiate %s : %s : %s",
+						target_name, result ? "Success" : "Failure", result_msg );
+			}
+			MoaiLog_printf( "Moai : Initiate %s : %s : %s\n",
+					target_name, result ? "Success" : "Failure", result_msg );
+		}
+	}
+}
+
+static void
+doConfigUpdate( const MoaiInfo* info, bool* is_proxy_updated )
+{
+	ZnkVarp var;
+
+	var = ZnkVarpAry_find_byName_literal( info->vars_, "parent_proxy", false );
+	if( var ){
+		if( MoaiParentProxy_set_byAuthority( ZnkVar_cstr(var) ) ){
+			*is_proxy_updated = true;
+		}
+	}
+	var = ZnkVarpAry_find_byName_literal( info->vars_, "post_confirm", false );
+	MoaiPost_setPostConfirm( var ? true : false );
+
+	var = ZnkVarpAry_find_byName_literal( info->vars_, "enable_log_file", false );
+	st_enable_log_file = var ? true : false;
+
+	var = ZnkVarpAry_find_byName_literal( info->vars_, "blocking_mode", false );
+	MoaiConnection_setBlockingMode( var ? true : false );
+
+	{
+		ZnkMyf config = MoaiMyf_theConfig();
+		ZnkVarpAry vars = ZnkMyf_find_vars( config, "config" );
+		if( vars ){
+			ZnkVarp var = NULL;
+
+			var = ZnkVarpAry_find_byName_literal( vars, "parent_proxy", false );
+			if( var ){
+				const char*    hostname = MoaiParentProxy_getHostname();
+				const uint16_t port     = MoaiParentProxy_getPort();
+				char data[ 512 ];
+				Znk_snprintf( data, sizeof(data), "%s:%d", hostname, port );
+				ZnkVar_set_val_Str( var, data, Znk_strlen(data) );
+			}
+
+			var = ZnkVarpAry_find_byName_literal( vars, "post_confirm", false );
+			if( var ){
+				const char* data = MoaiPost_isPostConfirm() ? "on" : "off";
+				ZnkVar_set_val_Str( var, data, Znk_strlen(data) );
+			}
+
+			var = ZnkVarpAry_find_byName_literal( vars, "enable_log_file", false );
+			if( var ){
+				const char* data = st_enable_log_file ? "on" : "off";
+				ZnkVar_set_val_Str( var, data, Znk_strlen(data) );
+			}
+
+			var = ZnkVarpAry_find_byName_literal( vars, "blocking_mode", false );
+			if( var ){
+				const char* data = MoaiConnection_isBlockingMode() ? "on" : "off";
+				ZnkVar_set_val_Str( var, data, Znk_strlen(data) );
+			}
+			ZnkMyf_save( config, "config.myf" );
+		}
+	}
+}
+static void
+doConfigUpdateSys( const MoaiInfo* info )
+{
+	ZnkVarp var;
+
+	var = ZnkVarpAry_find_byName_literal( info->vars_, "acceptable_host", false );
+	if( var ){
+		ZnkS_copy( st_acceptable_host_prev, sizeof(st_acceptable_host_prev), st_acceptable_host, Znk_NPOS );
+		ZnkS_copy( st_acceptable_host, sizeof(st_acceptable_host), ZnkVar_cstr(var), Znk_NPOS );
 	}
 
-	scan_type = scanHttpFirst( ctx, htcn, sock, fdst_observe );
+	var = ZnkVarpAry_find_byName_literal( info->vars_, "server_name", false );
+	if( var ){
+		ZnkS_copy( st_server_name, sizeof(st_server_name), ZnkVar_cstr(var), Znk_NPOS );
+	}
+	autosetServerName();
+
+	var = ZnkVarpAry_find_byName_literal( info->vars_, "moai_port", false );
+	if( var ){
+		ZnkS_getU16U( &st_moai_port, ZnkVar_cstr(var) );
+	}
+	{
+		ZnkMyf config = MoaiMyf_theConfig();
+		ZnkVarpAry vars = ZnkMyf_find_vars( config, "config" );
+		if( vars ){
+			ZnkVarp var = NULL;
+
+			var = ZnkVarpAry_find_byName_literal( vars, "acceptable_host", false );
+			if( var ){
+				const char* data = st_acceptable_host;
+				ZnkVar_set_val_Str( var, data, Znk_strlen(data) );
+			}
+
+			var = ZnkVarpAry_find_byName_literal( vars, "moai_port", false );
+			if( var ){
+				char data[ 256 ] = "0";
+				Znk_snprintf( data, sizeof(data), "%hd", st_moai_port );
+				ZnkVar_set_val_Str( var, data, Znk_strlen(data) );
+			}
+
+			var = ZnkVarpAry_find_byName_literal( vars, "server_name", false );
+			if( var ){
+				const char* data = st_server_name;
+				ZnkVar_set_val_Str( var, data, Znk_strlen(data) );
+			}
+
+			ZnkMyf_save( config, "config.myf" );
+		}
+	}
+}
+
+static MoaiRASResult
+doWebServer( const MoaiContext ctx, ZnkSocket sock, MoaiConnection mcn, MoaiFdSet mfds )
+{
+	MoaiRASResult ras_result = MoaiRASResult_e_OK;
+	int ret = 0;
+	ZnkFdSet fdst_observe_r = MoaiFdSet_fdst_observe_r( mfds );
+
+	/* WebServerとして処理 */
+	switch( ctx->req_method_ ){
+	case ZnkHtpReqMethod_e_GET:
+	{
+		MoaiInfo* info = ctx->draft_info_;
+		ZnkStr str1 = info->req_urp_;
+		ZnkStr str2 = ZnkStr_new( "./doc_root" );
+		MoaiLog_printf( "  As WebServer GET\n" );
+		/***
+		 * ここは本来なら str1内の .. を無効にするなどのサニタイズを行わなければならない.
+		 */
+		ZnkStr_add( str2, ZnkStr_cstr(str1) );
+		if( ZnkStr_last(str2) == '/' ){
+			ZnkStr_add( str2, "index.html" );
+		}
+		MoaiLog_printf( "  Requested file is [%s]\n", ZnkStr_cstr(str2) );
+		if( ZnkStr_isEnd(str2, "/config" ) ){
+			ret = printConfig( sock, NULL, ctx->peer_ipaddr_ );
+		} else if( !MoaiIO_sendResponseFile( sock, ZnkStr_cstr(str2) ) ){
+			ret = MoaiIO_sendTxtf( sock, "text/html", "<p><b><img src=\"moai.png\"> Moai WebServer : 404 Not found [%s].</b></p>\n",
+					ZnkStr_cstr(str2) );
+		}
+		MoaiLog_printf( "  Requested is done.\n" );
+		if( ret < 0 || !mcn->I_is_keep_alive_ ){
+			MoaiIO_close_ISock( "  WebServerGET", sock, mfds );
+		}
+		return MoaiRASResult_e_OK;
+	}
+	case ZnkHtpReqMethod_e_POST:
+	{
+		MoaiInfo* info = ctx->draft_info_;
+		ZnkStr str1 = info->req_urp_;
+		ZnkStr str2 = ZnkStr_new( "" );
+		bool is_proxy_updated = false;
+		ZnkStrAry result_msgs = ZnkStrAry_create( true );
+		const char* hostname = MoaiConnection_hostname( mcn );
+		const MoaiModule mod = MoaiModuleAry_find_byHostname( st_mod_ary, hostname );
+
+		ZnkStr_addf( str2, "<p><b><img src=\"moai.png\"> Moai WebServer : POST [%s].</b></p>\n",
+				ZnkStr_cstr(str1) );
+		ZnkStr_add( str2, "<pre>\n" );
+
+		MoaiPost_parsePostVars3( sock, mfds,
+				str2,
+				info->hdr_size_, info->hdrs_.hdr1st_, info->hdrs_.vars_,
+				ctx->body_info_.content_length_, info->stream_,
+				info->vars_,
+				mod );
+
+		ZnkStr_add( str2, "</pre>\n" );
+
+		if( info->vars_ ){
+			ZnkVarp var = NULL;
+
+			var = ZnkVarpAry_find_byName_literal( info->vars_, "Moai_Update", false );
+			if( var ){
+				doConfigUpdate( info, &is_proxy_updated );
+				ras_result = MoaiRASResult_e_OK;
+				MoaiLog_printf( "Moai_Update[%s] done.\n", ZnkVar_cstr(var) );
+			}
+
+			var = ZnkVarpAry_find_byName_literal( info->vars_, "Moai_Initiate", false );
+			if( var ){
+				initiateFilters( st_mod_ary, result_msgs );
+				ras_result = MoaiRASResult_e_OK;
+			}
+
+			var = ZnkVarpAry_find_byName_literal( info->vars_, "Moai_RestartServer", false );
+			if( var ){
+				st_you_need_to_restart_moai = false;
+				ras_result = MoaiRASResult_e_RestartServer;
+			}
+
+			var = ZnkVarpAry_find_byName_literal( info->vars_, "Moai_UpdateSys", false );
+			if( var ){
+				doConfigUpdateSys( info );
+				ras_result = MoaiRASResult_e_OK;
+				st_you_need_to_restart_moai = true;
+				MoaiLog_printf( "Moai_UpdateSys[%s] done.\n", ZnkVar_cstr(var) );
+			}
+
+		}
+
+		if( !st_enable_log_file ){
+			MoaiLog_printf( "Moai : config : enable_log_file is off.\n" );
+			MoaiLog_printf( "Moai : Stop writing to log file and close it here.\n" );
+			MoaiLog_close();
+		}
+
+
+		if( ras_result == MoaiRASResult_e_RestartServer ){
+			ZnkStr_clear( str2 );
+			ZnkStr_add( str2, "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" );
+			ZnkStr_add( str2, "<html><head><META HTTP-EQUIV=\"refresh\" content=\"1;URL=config\"></head>" );
+			ZnkStr_add( str2, "<body>Moai Server is Restarted.<br>\n" );
+			ZnkStr_add( str2, "<a href=\"./config\">Back to config</a></body></html>\n" );
+			ret = MoaiIO_sendTxtf( sock, "text/html", ZnkStr_cstr( str2 ) );
+		} else {
+			if( ZnkStr_isEnd( str1, "/config" ) ){
+				ret = printConfig( sock, result_msgs, ctx->peer_ipaddr_ );
+			} else {
+				ret = MoaiIO_sendTxtf( sock, "text/html", ZnkStr_cstr( str2 ) );
+			}
+		}
+		ZnkStr_delete( str2 );
+
+		/***
+		 * MoaiSeverをRestartする場合も、一旦コネクトをクロースした方がよい.
+		 * さもないとブラウザ側で「接続がリセットされました」が表示されることがあり不恰好である.
+		 */
+		if( ret < 0 || !mcn->I_is_keep_alive_ || ras_result == MoaiRASResult_e_RestartServer ){
+			MoaiIO_close_ISock( "  WebServerPOST", sock, mfds );
+		}
+		/***
+		 * 現在ObserveされているSocketをすべて強制的にcloseする.
+		 */
+		if( is_proxy_updated ){
+			MoaiIO_closeSocketAll( "  ProxyUpdate", fdst_observe_r, mfds );
+		}
+		ZnkStrAry_destroy( result_msgs );
+	}
+	default:
+		break;
+	}
+	return ras_result;
+}
+
+static MoaiRASResult
+recvAndSendCore( MoaiContext ctx, ZnkSocket sock, MoaiSockType sock_type, MoaiConnection mcn, MoaiFdSet mfds )
+{
+	ZnkFdSet fdst_observe_r = MoaiFdSet_fdst_observe_r( mfds );
+	MoaiRASResult ras_result = MoaiRASResult_e_OK;
+
+	HtpScanType scan_type = HtpScan_e_None;
+	MoaiHtpType htp_type = MoaiHtpType_e_None;
+
+	scan_type = scanHttpFirst( ctx, mcn, sock, sock_type, fdst_observe_r, mfds );
 	switch( scan_type ){
 	case HtpScan_e_Request:
-		if( !ZnkS_eq( htcn->hostname_, ctx->hostname_ ) ||  htcn->port_ != ctx->port_ ){
-			/***
-			 * この場合、htcn->dst_sock_との旧RARは完了した後、ブラウザは
-			 * htcn->src_sock_の接続をそのまま維持しつつリサイクルして、新たなるHTTPで
-			 * 接続していると思われる. しかし、新たな接続先ホストが以前のそれと同じとは限らない.  
-			 * それをチェックするため、上の比較を行い、ホスト名またはportが以前のそれとは
-			 * 異なる場合、旧htcn->dst_sock_をcloseし、新たな接続を作ってこれを新しい
-			 * htcn->dst_sock_とする.
-			 *
-			 * このとき、htcn->src_sock_はリサイクルされ、htcn->dst_sock_のみが
-			 * 作りなおされることになる. ブラウザによってはこのようなことが有り得る.
-			 * 例えばFirefoxでwww.google.co.jpに接続し、直後に別のサイトへ接続する場合などである.
-			 */
-			MoaiIO_closeSocket( "  SrcRecycle", htcn->dst_sock_, fdst_observe );
-			htcn->dst_sock_ = ZnkSocket_INVALID;
-		}
+		htp_type = MoaiHtpType_e_Request;
 		break;
 	case HtpScan_e_Response:
+		htp_type = MoaiHtpType_e_Response;
 		break;
 	case HtpScan_e_RecvZero:
 	case HtpScan_e_RecvError:
 		return MoaiRASResult_e_Ignored;
 	case HtpScan_e_NotHttpStart:
+		htp_type = MoaiHtpType_e_NotHttpStart;
 		break;
 	case HtpScan_e_UnknownMethod:
 	case HtpScan_e_CannotGetHost:
@@ -1449,194 +1904,112 @@ recvAndSendCore( MoaiContext ctx, ZnkSocket sock, MoaiConnection htcn, MoaiFdSet
 		return MoaiRASResult_e_Ignored;
 	}
 
-	if( !htcn->as_local_proxy_ ){
-		int ret = 0;
-
+	if( ctx->as_local_proxy_ ){
+		/* LocalProxyとして処理 */
+		ras_result = doLocalProxy( ctx, mcn, mfds, htp_type, sock_type );
+	} else {
 		/* WebServerとして処理 */
-		switch( ctx->req_method_ ){
-		case ZnkHtpReqMethod_e_GET:
-		{
-			ZnkStr str1 = ctx->req_urp_;
-			ZnkStr str2 = ZnkStr_new( "./doc_root" );
-			MoaiLog_printf( "  As WebServer GET\n" );
-			/***
-			 * ここは本来なら str1内の .. を無効にするなどのサニタイズを行わなければならない.
-			 */
-			ZnkStr_add( str2, ZnkStr_cstr(str1) );
-			if( ZnkStr_last(str2) == '/' ){
-				ZnkStr_add( str2, "index.html" );
-			}
-			if( ZnkStr_isEnd(str2, "/config" ) ){
-				ret = printConfig( sock );
-			} else if( !MoaiIO_sendResponseFile( sock, ZnkStr_cstr(str2) ) ){
-				ret = MoaiIO_sendTxtf( sock, "text/html", "<p><b><img src=\"moai.png\"> Moai WebServer : 404 Not found [%s].</b></p>\n",
-						ZnkStr_cstr(str2) );
-			}
-			if( ret < 0 || !htcn->is_keep_alive_ ){
-				MoaiIO_closeSocket( "  WebServerGET", sock, fdst_observe );
-			}
-			return MoaiRASResult_e_OK;
-		}
-		case ZnkHtpReqMethod_e_POST:
-		{
-			ZnkStr str1 = ctx->req_urp_;
-			ZnkStr str2 = ZnkStr_new( "" );
-			MoaiInfo* new_info;
-			MoaiRASResult ras_result = MoaiRASResult_e_OK;
-			bool is_proxy_updated = false;
-
-			ZnkStr_addf( str2, "<p><b><img src=\"moai.png\"> Moai WebServer : POST [%s].</b></p>\n",
-					ZnkStr_cstr(str1) );
-			ZnkStr_add( str2, "<pre>\n" );
-			new_info = MoaiPost_parsePostVars( sock, fdst_observe,
-					str2, ctx->hostname_, info, &ctx->body_info_,
-					ctx->mod_ary_, ctx->target_myf_ );
-			ZnkStr_add( str2, "</pre>\n" );
-
-			if( new_info->vars_ ){
-				ZnkVarp var = NULL;
-
-				var = ZnkVarpDAry_find_byName_literal( new_info->vars_, "post_confirm", false );
-				st_post_confirm = var ? true : false;
-
-				var = ZnkVarpDAry_find_byName_literal( new_info->vars_, "enable_log_file", false );
-				st_enable_log_file = var ? true : false;
-
-				var = ZnkVarpDAry_find_byName_literal( new_info->vars_, "acceptable_host", false );
-				if( var ){
-					ZnkS_copy( st_acceptable_host, sizeof(st_acceptable_host), ZnkVar_cstr(var), Znk_NPOS );
-				}
-
-				var = ZnkVarpDAry_find_byName_literal( new_info->vars_, "moai_port", false );
-				if( var ){
-					ZnkS_getU16U( &st_moai_port, ZnkVar_cstr(var) );
-				}
-
-				var = ZnkVarpDAry_find_byName_literal( new_info->vars_, "server_name", false );
-				if( var ){
-					ZnkS_copy( st_server_name, sizeof(st_server_name), ZnkVar_cstr(var), Znk_NPOS );
-				}
-				autosetServerName();
-
-				var = ZnkVarpDAry_find_byName_literal( new_info->vars_, "parent_proxy", false );
-				if( var ){
-					if( MoaiParentProxy_set_byAuthority( ZnkVar_cstr(var) ) ){
-						is_proxy_updated = true;
-					}
-				}
-
-				var = ZnkVarpDAry_find_byName_literal( new_info->vars_, "Moai_RestartServer", false );
-				ras_result = var ? MoaiRASResult_e_RestartServer : MoaiRASResult_e_OK;
-			}
-
-			if( !st_enable_log_file ){
-				MoaiLog_printf( "Moai : config : enable_log_file is off.\n" );
-				MoaiLog_printf( "Moai : Stop writing to log file and close it here.\n" );
-				MoaiLog_close();
-			}
-
-			{
-				ZnkVarpDAry vars = ZnkMyf_find_vars( ctx->config_, "config" );
-				if( vars ){
-					ZnkVarp var = NULL;
-
-					var = ZnkVarpDAry_find_byName_literal( vars, "parent_proxy", false );
-					if( var ){
-						const char*    hostname = MoaiParentProxy_getHostname();
-						const uint16_t port     = MoaiParentProxy_getPort();
-						char data[ 512 ];
-						Znk_snprintf( data, sizeof(data), "%s:%d", hostname, port );
-						ZnkVar_set_val_Str( var, data, Znk_strlen(data) );
-					}
-		
-					var = ZnkVarpDAry_find_byName_literal( vars, "post_confirm", false );
-					if( var ){
-						const char* data = st_post_confirm ? "on" : "off";
-						ZnkVar_set_val_Str( var, data, Znk_strlen(data) );
-					}
-
-					var = ZnkVarpDAry_find_byName_literal( vars, "enable_log_file", false );
-					if( var ){
-						const char* data = st_enable_log_file ? "on" : "off";
-						ZnkVar_set_val_Str( var, data, Znk_strlen(data) );
-					}
-
-					var = ZnkVarpDAry_find_byName_literal( vars, "acceptable_host", false );
-					if( var ){
-						const char* data = st_acceptable_host;
-						ZnkVar_set_val_Str( var, data, Znk_strlen(data) );
-					}
-
-					var = ZnkVarpDAry_find_byName_literal( vars, "moai_port", false );
-					if( var ){
-						char data[ 256 ] = "0";
-						Znk_snprintf( data, sizeof(data), "%hd", st_moai_port );
-						ZnkVar_set_val_Str( var, data, Znk_strlen(data) );
-					}
-
-					var = ZnkVarpDAry_find_byName_literal( vars, "server_name", false );
-					if( var ){
-						const char* data = st_server_name;
-						ZnkVar_set_val_Str( var, data, Znk_strlen(data) );
-					}
-
-					ZnkMyf_save( ctx->config_, "config.myf" );
-				}
-			}
-
-
-			if( ZnkStr_isEnd(str1, "/config" ) ){
-				ret = printConfig( sock );
-			} else {
-				ret = MoaiIO_sendTxtf( sock, "text/html", ZnkStr_cstr( str2 ) );
-			}
-			ZnkStr_delete( str2 );
-
-			/***
-			 * MoaiSeverをRestartする場合も、一旦コネクトをクロースした方がよい.
-			 * さもないとブラウザ側で「接続がリセットされました」が表示されることがあり不恰好である.
-			 */
-			if( ret < 0 || !htcn->is_keep_alive_ || ras_result == MoaiRASResult_e_RestartServer ){
-				MoaiIO_closeSocket( "  WebServerPOST", sock, fdst_observe );
-			}
-			/***
-			 * 現在ObserveされているSocketをすべて強制的にcloseする.
-			 */
-			if( is_proxy_updated ){
-				ZnkFdSet fdst_observe = MoaiFdSet_fdst_observe( mfds );
-				MoaiIO_closeSocketAll( "  ProxyUpdate", fdst_observe );
-			}
-			return ras_result;
-		}
-		default:
-			break;
-		}
+		ras_result = doWebServer( ctx, sock, mcn, mfds );
 	}
-	/* LocalProxyとして処理 */
-	return doLocalProxy( ctx, sock, htcn, mfds, info, scan_type );
+	return ras_result;
 }
 
 static void report_observe( MoaiFdSet mfds, void* arg )
 {
-	ZnkSocketDAry wk_sock_dary = MoaiFdSet_wk_sock_dary( mfds );
-	ZnkFdSet      fdst_observe = MoaiFdSet_fdst_observe( mfds );
-	MoaiIO_reportFdst( "Moai : Observe ", wk_sock_dary, fdst_observe, true );
+	ZnkSocketAry wk_sock_ary = MoaiFdSet_wk_sock_ary( mfds );
+	ZnkFdSet      fdst_observe_r = MoaiFdSet_fdst_observe_r( mfds );
+	ZnkFdSet      fdst_observe_w = MoaiFdSet_fdst_observe_w( mfds );
+	MoaiIO_reportFdst( "Moai : ObserveR ", wk_sock_ary, fdst_observe_r, true );
+	MoaiIO_reportFdst( "Moai : ObserveW ", wk_sock_ary, fdst_observe_w, true );
 }
 static void on_accept( MoaiFdSet mfds, ZnkSocket new_accept_sock, void* arg )
 {
-	MoaiConnection_intern( new_accept_sock, MoaiSockType_e_Inner );
 	MoaiLog_printf( "Moai : new_accept_sock=[%d]\n", new_accept_sock );
+	MoaiConnection_regist( "", 0, new_accept_sock, ZnkSocket_INVALID, mfds );
 }
 static MoaiRASResult recv_and_send( MoaiFdSet mfds, ZnkSocket sock, void* arg )
 {
-	MoaiConnection htcn = MoaiConnection_find( sock );
-	MoaiContext    ctx  = (MoaiContext)arg;
-	return recvAndSendCore( ctx, sock, htcn, mfds );
+	MoaiConnection mcn = NULL;
+	MoaiContext    ctx = (MoaiContext)arg;
+	MoaiSockType   sock_type = MoaiSockType_e_None;
+
+	mcn = MoaiConnection_find_byISock( sock );
+	if( mcn ){
+
+		/***
+		 * これを本当に弾いてよいのか?
+		 * isConnectInprogressが永久に終らない場合に対する対策
+		 * (timeoutなど設定するのがよいか?)
+		 * コネクト待ちのときにブラウザの中止ボタンを押しても同様のことが起こる.
+		 */
+#if 0
+		if( MoaiConnection_isConnectInprogress( mcn ) ){
+			MoaiLog_printf( "  recv_and_send : sock=[%d] is ConnectInprogress.\n", sock );
+			return MoaiRASResult_e_Ignored;
+		}
+#endif
+
+		sock_type = MoaiSockType_e_Inner;
+		return recvAndSendCore( ctx, sock, sock_type, mcn, mfds );
+	}
+
+	mcn = MoaiConnection_find_byOSock( sock );
+	if( mcn ){
+		if( MoaiConnection_isConnectInprogress( mcn ) ){
+			MoaiLog_printf( "  recv_and_send : sock=[%d] is ConnectInprogress.\n", sock );
+			return MoaiRASResult_e_Ignored;
+		}
+		sock_type = MoaiSockType_e_Outer;
+		return recvAndSendCore( ctx, sock, sock_type, mcn, mfds );
+	}
+
+	{
+		ZnkFdSet fdst_observe_r = MoaiFdSet_fdst_observe_r( mfds );
+		MoaiLog_printf( "  NotFoundConnection : close sock=[%d].\n", sock );
+		ZnkSocket_close( sock );
+		ZnkFdSet_clr( fdst_observe_r, sock );
+	}
+	return MoaiRASResult_e_Ignored;
+}
+
+static bool
+isAccessAllowIP( ZnkSocket new_accept_sock, uint32_t* ipaddr_ans )
+{
+	uint32_t ipaddr = 0;
+	bool result = false;
+	char ipstr[ 64 ] = "";
+	
+	ZnkSocket_getPeerIPandPort( new_accept_sock, &ipaddr, NULL );
+	ZnkNetIP_getIPStr_fromU32( ipaddr, ipstr, sizeof(ipstr) );
+
+	MoaiLog_printf( "Moai : peer ip=[%s]\n", ipstr );
+
+	if( ipaddr == 0x0100007f ){
+		/* loopback接続 : この場合は無条件に許可 */
+		result = true;
+	} else {
+		bool is_allow = (bool)( ZnkStrAry_find_isMatch( st_access_allow_ips,
+					0, ipstr, Znk_NPOS, ZnkS_isMatchSWC ) != Znk_NPOS );
+		bool is_deny = (bool)( ZnkStrAry_find_isMatch( st_access_deny_ips,
+					0, ipstr, Znk_NPOS, ZnkS_isMatchSWC ) != Znk_NPOS );
+		result = is_allow && !is_deny;
+#if 0
+		if( (ipaddr & 0xffff) == 0x0000a8c0 ){
+			/* 192.168.* からの接続 : この場合は許可 */
+			result = true;
+		}
+#endif
+	}
+	if( ipaddr_ans ){
+		*ipaddr_ans = ipaddr;
+	}
+	return result;
 }
 
 MoaiRASResult
-MoaiServer_main( bool enable_init, bool enable_parent_proxy )
+MoaiServer_main( bool first_initiate, bool enable_parent_proxy )
 {
+	static bool st_first_initiated = false;
 	int sel_ret;
 	MoaiFdSet mfds = NULL;
 
@@ -1650,47 +2023,44 @@ MoaiServer_main( bool enable_init, bool enable_parent_proxy )
 	bool req_fdst_report = true;
 	MoaiContext ctx = MoaiContext_create();
 	MoaiRASResult ras_result = MoaiRASResult_e_Ignored;
+	ZnkMyf config;
+	ZnkMyf target_myf;
+
+	MoaiLog_printf( "\n" );
+	MoaiLog_printf( "Moai : MoaiServer_main start.\n" );
 
 	fnca_ras.arg_ = ctx;
 
 	MoaiLog_open( "moai_log.log", false );
 
-	if( ZnkMyf_load( ctx->config_, "config.myf" ) ){
-		MoaiLog_printf("Moai : config load OK.\n" );
-	} else {
+	if( !MoaiMyf_loadConfig() ){
 		/***
 		 * この場合は致命的エラーとすべき.
 		 */
-		MoaiLog_printf("Moai : config load NG.\n" );
+		MoaiLog_printf( "Moai : Cannot load config.myf.\n" );
+		getchar();
 		goto FUNC_END;
 	}
+	MoaiMyf_loadTarget();
+	MoaiMyf_loadAnalysis();
 
-	if( ZnkMyf_load( ctx->target_myf_, "target.myf" ) ){
-		MoaiLog_printf("Moai : target load OK.\n" );
-	} else {
-		MoaiLog_printf("Moai : target load NG.\n" );
-	}
+	config     = MoaiMyf_theConfig();
+	target_myf = MoaiMyf_theTarget();
 
-	if( ZnkMyf_load( ctx->analysis_, "analysis.myf" ) ){
-		MoaiLog_printf("Moai : analysis load OK.\n" );
-	} else {
-		MoaiLog_printf("Moai : analysis load NG.\n" );
-	}
-
-	MoaiModuleAry_loadAllModules( ctx->mod_ary_, ctx->target_myf_ );
-
-
+	Znk_DELETE_PTR( st_mod_ary, MoaiModuleAry_destroy, NULL );
+	st_mod_ary = MoaiModuleAry_create( true );
+	MoaiModuleAry_loadAllModules( st_mod_ary, target_myf );
 
 	/***
 	 * parse config
 	 */
 	{
-		ZnkVarpDAry vars = ZnkMyf_find_vars( ctx->config_, "config" );
+		ZnkVarpAry vars = ZnkMyf_find_vars( config, "config" );
 		if( vars ){
 			ZnkVarp var = NULL;
 
 			if( enable_parent_proxy ){
-				var = ZnkVarpDAry_find_byName_literal( vars, "parent_proxy", false );
+				var = ZnkVarpAry_find_byName_literal( vars, "parent_proxy", false );
 				if( var ){
 					MoaiParentProxy_set_byAuthority( ZnkVar_cstr(var) );
 				}
@@ -1698,17 +2068,17 @@ MoaiServer_main( bool enable_init, bool enable_parent_proxy )
 				MoaiParentProxy_set_byAuthority( "NONE" );
 			}
 
-			var = ZnkVarpDAry_find_byName_literal( vars, "post_confirm", false );
+			var = ZnkVarpAry_find_byName_literal( vars, "post_confirm", false );
 			if( var ){
-				st_post_confirm = ZnkS_eq( ZnkVar_cstr(var), "on" );
+				MoaiPost_setPostConfirm( ZnkS_eq( ZnkVar_cstr(var), "on" ) );
 			}
 
-			var = ZnkVarpDAry_find_byName_literal( vars, "moai_port", false );
+			var = ZnkVarpAry_find_byName_literal( vars, "moai_port", false );
 			if( var ){
 				sscanf( ZnkVar_cstr( var ), "%hu", &st_moai_port );
 			}
 
-			var = ZnkVarpDAry_find_byName_literal( vars, "proxy_indicating_mode", false );
+			var = ZnkVarpAry_find_byName_literal( vars, "proxy_indicating_mode", false );
 			if( var ){
 				if( ZnkS_eq( ZnkVar_cstr(var), "minus" ) ){
 					MoaiParentProxy_setIndicatingMode( -1 );
@@ -1719,11 +2089,17 @@ MoaiServer_main( bool enable_init, bool enable_parent_proxy )
 				}
 			}
 
-			var = ZnkVarpDAry_find_byName_literal( vars, "enable_log_file", false );
+			var = ZnkVarpAry_find_byName_literal( vars, "enable_log_file", false );
 			if( var ){
 				st_enable_log_file = ZnkS_eq( ZnkVar_cstr(var), "on" );
 			}
-			var = ZnkVarpDAry_find_byName_literal( vars, "acceptable_host", false );
+
+			var = ZnkVarpAry_find_byName_literal( vars, "blocking_mode", false );
+			if( var ){
+				MoaiConnection_setBlockingMode( ZnkS_eq( ZnkVar_cstr(var), "on" ) );
+			}
+
+			var = ZnkVarpAry_find_byName_literal( vars, "acceptable_host", false );
 			if( var ){
 				const char* var_str = ZnkVar_cstr(var);
 				ZnkS_copy( st_acceptable_host, sizeof(st_acceptable_host), var_str, Znk_NPOS );
@@ -1749,20 +2125,20 @@ MoaiServer_main( bool enable_init, bool enable_parent_proxy )
 					acceptable_host = var_str;
 				}
 			}
-			var = ZnkVarpDAry_find_byName_literal( vars, "server_name", false );
+			var = ZnkVarpAry_find_byName_literal( vars, "server_name", false );
 			if( var ){
 				ZnkS_copy( st_server_name, sizeof(st_server_name), ZnkVar_cstr(var), Znk_NPOS );
 			}
 		}
 	}
-	{
-		ZnkStrDAry parent_proxys = ZnkMyf_find_lines( ctx->config_, "parent_proxy_list" );
-		if( parent_proxys ){
-			MoaiParentProxy_setParentProxys( parent_proxys );
-		}
-	}
+
+	MoaiParentProxy_loadCandidate( "parent_proxy.txt" );
+
+	st_access_allow_ips = ZnkMyf_find_lines( config, "access_allow_ips" );
+	st_access_deny_ips  = ZnkMyf_find_lines( config, "access_deny_ips" );
 
 	MoaiLog_printf( "Moai : acceptable_host=[%s]\n", st_acceptable_host );
+	MoaiLog_printf( "Moai : blocking_mode=[%d]\n", MoaiConnection_isBlockingMode() );
 
 	if( !st_enable_log_file ){
 		MoaiLog_printf( "Moai : config : enable_log_file is off.\n" );
@@ -1773,24 +2149,10 @@ MoaiServer_main( bool enable_init, bool enable_parent_proxy )
 	/***
 	 * pluginにおける初期化関数を呼び出す.
 	 */
-	if( enable_init )
+	if( first_initiate && !st_first_initiated )
 	{
-		const size_t mod_size = MoaiModuleAry_size( ctx->mod_ary_ );
-		size_t mod_idx;
-		MoaiModule mod;
-		const char* parent_proxy_hostname = MoaiParentProxy_getHostname();
-		uint16_t    port                  = MoaiParentProxy_getPort();
-		char parent_proxy_port[ 32 ] = "";
-		if( !ZnkS_empty( parent_proxy_hostname ) && !ZnkS_eq( parent_proxy_hostname, "NONE" ) ){
-			Znk_snprintf( parent_proxy_port, sizeof(parent_proxy_port), "%hd", port );
-		}
-		for( mod_idx=0; mod_idx<mod_size; ++mod_idx ){
-			mod = MoaiModuleAry_at( ctx->mod_ary_, mod_idx );
-			if( mod ){
-				MoaiLog_printf( "Moai : invokeOnInit [%s][%s]\n", parent_proxy_hostname, parent_proxy_port );
-				MoaiModule_invokeOnInit( mod, parent_proxy_hostname, parent_proxy_port );
-			}
-		}
+		initiateFilters( st_mod_ary, NULL );
+		st_first_initiated = true;
 	}
 
 	waitval.tv_sec  = 2;        /* 待ち時間に 2.500 秒を指定 */
@@ -1801,20 +2163,9 @@ MoaiServer_main( bool enable_init, bool enable_parent_proxy )
 	//ZnkNetIP_printTest();
 	autosetServerName();
 
-#if 0
-	if( argc > 1 ){
-		const char* parent_proxy_hostname = argv[ 1 ];
-		uint16_t    parent_proxy_port = 0;
-		if( argc > 2 ){
-			sscanf( argv[2], "%hd", &parent_proxy_port );
-		}
-		MoaiParentProxy_set( parent_proxy_hostname, parent_proxy_port );
-	}
-#endif
-
 	MoaiConnection_initiate();
-	MoaiConnection_clearAll();
-	MoaiPost_initiate();
+	MoaiConnection_clearAll( mfds );
+	MoaiInfo_initiate();
 	                              
 	srver = ZnkServer_create( acceptable_host, st_moai_port );
 	if( srver == NULL ){
@@ -1822,7 +2173,8 @@ MoaiServer_main( bool enable_init, bool enable_parent_proxy )
 		goto FUNC_END;
 	}
 	listen_sock = ZnkServer_getListenSocket( srver );
-	MoaiConnection_intern( listen_sock, MoaiSockType_e_Listen );
+	//MoaiConnection_intern( listen_sock, MoaiSockType_e_Listen );
+	MoaiConnection_setListeningSock( listen_sock );
 	mfds = MoaiFdSet_create( listen_sock, &waitval );
 
 	MoaiLog_printf( "Moai : Listen port %d...\n", st_moai_port );
@@ -1836,19 +2188,31 @@ MoaiServer_main( bool enable_init, bool enable_parent_proxy )
 		 */
 		if( sel_ret < 0 ){
 			/* select error */
-			continue;
+			uint32_t sys_errno = ZnkSysErrno_errno();
+			ZnkSysErrnoInfo* errinfo = ZnkSysErrno_getInfo( sys_errno );
+			MoaiLog_printf( "Moai : MoaiFdSet_select Error : sel_ret=[%d] : [%s]\n", sel_ret, errinfo->sys_errno_msg_ );
+			MoaiFdSet_printf_fdst_read( mfds );
+			ras_result = MoaiRASResult_e_RestartServer;
+			goto FUNC_END;
 		}
 		if( sel_ret == 0 ){
+			static size_t count = 0;
 			/* select timeout */
-			ZnkSocketDAry wk_sock_dary = MoaiFdSet_wk_sock_dary( mfds );
-			ZnkFdSet      fdst_observe = MoaiFdSet_fdst_observe( mfds );
-			if( MoaiIO_procExile( wk_sock_dary, fdst_observe ) ){
+			ZnkSocketAry wk_sock_ary = MoaiFdSet_wk_sock_ary( mfds );
+			ZnkFdSet      fdst_observe_r = MoaiFdSet_fdst_observe_r( mfds );
+			if( count % 10 == 0 ){
+				MoaiLog_printf( "Moai : MoaiFdSet_select timeout\n" );
+			}
+			if( MoaiIO_procExile( wk_sock_ary, fdst_observe_r, mfds ) ){
 				req_fdst_report = true;
 			}
+			MoaiFdSet_procConnectionTimeout( mfds );
+			++count;
 			continue;
 		}
 		                            
-		ras_result = MoaiFdSet_process( mfds, &fnca_on_accept, &fnca_ras );
+		ras_result = MoaiFdSet_process( mfds,
+				&fnca_on_accept, &fnca_ras, isAccessAllowIP );
 		switch( ras_result ){
 		case MoaiRASResult_e_CriticalError:
 		case MoaiRASResult_e_RestartServer:
@@ -1871,6 +2235,7 @@ FUNC_END:
 	ZnkSocket_close( listen_sock );
 	ZnkNetBase_finalize();
 	MoaiContext_destroy( ctx );
+	Znk_DELETE_PTR( st_mod_ary, MoaiModuleAry_destroy, NULL );
 	MoaiLog_close();
 
 	return ras_result;

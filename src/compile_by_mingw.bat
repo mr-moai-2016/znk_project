@@ -21,12 +21,6 @@ echo ====
 echo;
 
 echo ====
-mingw32-make -f Makefile_mingw.mak -C virtual_users
-if errorlevel 1 goto Error
-echo ====
-echo;
-
-echo ====
 mingw32-make -f Makefile_mingw.mak -C plugin_futaba
 if errorlevel 1 goto Error
 echo ====

@@ -1,11 +1,196 @@
 #include "Moai_info.h"
 #include "Moai_log.h"
 #include "Moai_parent_proxy.h"
+#include "Moai_post_vars.h"
+#include "Moai_myf.h"
 #include <Znk_stdc.h>
 #include <Znk_s_base.h>
 #include <Znk_missing_libc.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
+
+
+static ZnkObjAry st_moai_info_ary;
+
+static void
+deleteMoaiInfo( void* elem )
+{
+	if( elem ){
+		MoaiInfo* info = (MoaiInfo*)elem;
+		ZnkHtpHdrs_dispose( &info->hdrs_ );
+		ZnkVarpAry_destroy( info->vars_ );
+		ZnkBfr_destroy( info->stream_ );
+		ZnkStr_delete( info->req_urp_ );
+		ZnkStr_delete( info->proxy_hostname_ );
+		Znk_free( info );
+	}
+}
+
+static ZnkObj
+allocMoaiInfo( void* arg )
+{
+	MoaiInfo* info = (MoaiInfo*)Znk_alloc0( sizeof( MoaiInfo ) );
+	ZnkHtpHdrs_compose( &info->hdrs_ );
+	info->vars_   = ZnkVarpAry_create( true );
+	info->stream_ = ZnkBfr_create_null();
+	info->req_method_     = ZnkHtpReqMethod_e_Unknown;
+	info->req_urp_        = ZnkStr_new( "" );
+	info->proxy_hostname_ = ZnkStr_new( "" );
+	return (ZnkObj)info;
+}
+
+void
+MoaiInfo_initiate( void )
+{
+	if( st_moai_info_ary == NULL ){
+		st_moai_info_ary = ZnkObjAry_create( deleteMoaiInfo );
+	}
+}
+
+static void
+copyPostVars( ZnkVarpAry dst_vars, const ZnkVarpAry src_vars )
+{
+	const size_t size = ZnkVarpAry_size( src_vars );
+	size_t idx;
+	ZnkVarp src_varp;
+	ZnkVarp dst_varp;
+
+	ZnkVarpAry_clear( dst_vars );
+	for( idx=0; idx<size; ++idx ){
+		src_varp = ZnkVarpAry_at( src_vars, idx );
+		dst_varp = ZnkVarp_create( "", "", (int)src_varp->type_, ZnkPrim_type(&src_varp->prim_) ); 
+		ZnkVarpAry_push_bk( dst_vars, dst_varp );
+		ZnkStr_set( dst_varp->name_, ZnkStr_cstr(src_varp->name_) );
+		ZnkStr_set( dst_varp->filename_, ZnkStr_cstr(src_varp->filename_) );
+		if( src_varp->type_ == MoaiPostVar_e_BinaryData ){
+			ZnkBfr_set_dfr( dst_varp->prim_.u_.bfr_,
+					ZnkBfr_data(src_varp->prim_.u_.bfr_), ZnkBfr_size(src_varp->prim_.u_.bfr_) );
+		} else {
+			ZnkStr_set( dst_varp->prim_.u_.str_, ZnkStr_cstr(src_varp->prim_.u_.str_) );
+		}
+	}
+}
+
+static MoaiInfoID
+issueNewID( void )
+{
+	static uint32_t st_next_seq = 0;
+	time_t t;
+	uint32_t t32;
+	uint64_t ans = 0;
+
+	/***
+	 * 単にシーケンシャルな整数のみならず時刻に関する値も埋め込む.
+	 * これにより、前回Moai起動時に発行されたIDが、次回起動時のMoaiに
+	 * 万が一渡された場合でも、IDが被るのを確実に防ぐことができる.
+	 *
+	 * また、一方でシーケンシャルな整数を含めるのは、ミリ秒単位で
+	 * 発行が集中した場合でもIDが被るのを確実に防ぐためである.
+	 */
+	time(&t); /* 現在時刻の取得 */
+	t32 = (uint32_t)t;
+	ans = t32;
+	ans <<= 32;
+	ans |= st_next_seq;
+	++st_next_seq;
+
+	return (MoaiInfoID)ans;
+}
+
+MoaiInfoID
+MoaiInfo_regist( const MoaiInfo* info )
+{
+	size_t ans_idx  = Znk_NPOS;
+	bool   is_newly = false;
+	MoaiInfo* new_info = NULL;
+
+	MoaiInfo_initiate();
+	new_info = (MoaiInfo*)ZnkObjAry_intern( st_moai_info_ary, &ans_idx,
+			NULL, NULL,
+			allocMoaiInfo, NULL,
+			&is_newly );
+
+	new_info->id_ = issueNewID();
+
+	/* deep-copy all members except id */
+	if( info ){
+		/* deep-copy hdrs */
+		ZnkStrAry_copy( new_info->hdrs_.hdr1st_, info->hdrs_.hdr1st_ );
+		ZnkHtpHdrs_copyVars( new_info->hdrs_.vars_, info->hdrs_.vars_ );
+	
+		/* deep-copy POST vars */
+		copyPostVars( new_info->vars_, info->vars_ );
+	
+		/* deep-copy stream */
+		ZnkBfr_set_dfr( new_info->stream_,
+				ZnkBfr_data(info->stream_), ZnkBfr_size(info->stream_) );
+	
+		/* deep-copy others */
+		new_info->hdr_size_   = info->hdr_size_;
+		ZnkStr_set( new_info->req_urp_,        ZnkStr_cstr(info->req_urp_) );
+		ZnkStr_set( new_info->proxy_hostname_, ZnkStr_cstr(info->proxy_hostname_) );
+		new_info->proxy_port_ = info->proxy_port_;
+	}
+	return new_info->id_;
+}
+void
+MoaiInfo_clear( MoaiInfo* info )
+{
+	ZnkHtpHdrs_clear( &info->hdrs_ );
+	ZnkVarpAry_clear( info->vars_ );
+	ZnkBfr_clear( info->stream_ );
+	ZnkStr_clear( info->req_urp_ );
+	ZnkStr_clear( info->proxy_hostname_ );
+	info->hdr_size_   = 0;
+	info->req_method_ = ZnkHtpReqMethod_e_Unknown;
+}
+
+MoaiInfo*
+MoaiInfo_find( MoaiInfoID query_id )
+{
+	const size_t size = ZnkObjAry_size( st_moai_info_ary );
+	size_t idx;
+	MoaiInfo* info;
+	for( idx=0; idx<size; ++idx ){
+		info = (MoaiInfo*)ZnkObjAry_at( st_moai_info_ary, idx );
+		if( info->id_ == query_id ){
+			/* found */
+			return info;
+		}
+	}
+	/* not found */
+	return NULL;
+}
+
+static bool queryMoaiInfoID( ZnkObj obj, void* arg )
+{
+	MoaiInfoID query_id = Znk_force_ptr_cast( MoaiInfoID, arg );
+	MoaiInfo*  info     = (MoaiInfo*)obj;
+	return (bool)( info->id_ == query_id );
+}
+void
+MoaiInfo_erase( MoaiInfoID query_id )
+{
+	ZnkObjAry_erase_withQuery( st_moai_info_ary,
+			queryMoaiInfoID, Znk_force_ptr_cast( void*, query_id ) );
+}
+
+void
+MoaiInfoID_getStr( MoaiInfoID id, MoaiInfoIDStr* id_str )
+{
+	Znk_snprintf( id_str->buf_, sizeof(id_str->buf_), "%08" Znk_PFMD_64 "x", (uint64_t)id );
+}
+MoaiInfoID
+MoaiInfoID_scanIDStr( MoaiInfoIDStr* id_str )
+{
+	uint64_t ans = 0;
+	if( !ZnkS_getU64X( &ans, id_str->buf_ ) ){
+		assert(0);
+	}
+	return (MoaiInfoID)ans;
+}
+
 
 static bool
 isRelayToMe( const char* my_hostname, size_t my_hostname_leng,
@@ -30,11 +215,120 @@ isRelayToMe( const char* my_hostname, size_t my_hostname_leng,
 }
 
 
+static bool
+decideLocalProxy_or_WebServer( ZnkStr str, ZnkStr req_urp, uint16_t my_port, const char* server_name )
+{
+	const char* host_begin = NULL;
+	bool as_local_proxy = false;
+
+	/***
+	 * ここではホスト名から始まる場合は、UserAgentはLocalProxyとして
+	 * このプログラムに接続しようとしたものとみなし、/ から始まる場合は、
+	 * WebServerとしてこのプログラムに接続しようとしたものとみなす.
+	 *
+	 * 尚、Host名として指定されている値が localhost:Pや127.0.0.1:P
+	 * (Pはこのプログラムが使っているport番号)であるか否かを調べれば、
+	 * この種の判定ができそうに思えるかもしれないが、localhostを示す
+	 * Host名がそれ以外の文字列である場合も有り得るため、これでは不完全である.
+	 * 例えば/etc/hostsに 127.0.0.1 の別名を localhost以外にも指定していたり、
+	 * 物理的に別のマシンからこのプログラムが起動しているマシンへ
+	 * IPアドレスを指定して接続した場合(そのIPアドレスは異なるため当然であるが)
+	 * などでこれら以外の文字列に成り得る.
+	 */
+	if( ZnkS_isBegin_literal( ZnkStr_cstr(str), "http://" ) ){
+		/* http://から始まる場合. */
+		host_begin = ZnkStr_cstr( str ) + Znk_strlen_literal( "http://" );
+		/* 本件はLocalProxyとして受理 */
+		as_local_proxy = true;
+	} else if( ZnkStr_first( str ) == '/' ){
+		/* / から始まる場合. */
+		host_begin = NULL;
+		/* 本件はWebServerとして受理 */
+		as_local_proxy = false;
+		ZnkStr_set( req_urp, ZnkStr_cstr(str) );
+	} else if( ZnkStr_first( str ) == '*' ){
+		/**
+		 * OPTIONS methodなどの場合、この値になっているケースが有り得る.
+		 * とりあえず現時点ではLocalProxyとして処理.
+		 */
+		host_begin = NULL;
+		/* 本件はLocalProxyとして受理 */
+		as_local_proxy = true;
+	} else {
+		/* Host名から始まる場合. */
+		host_begin = ZnkStr_cstr( str );
+		/* 本件はLocalProxyとして受理 */
+		as_local_proxy = true;
+	}
+
+	if( host_begin ){
+		ZnkSRef sref = { 0 };
+		ZnkSRef_set_literal( &sref, "localhost" );
+		if( isRelayToMe( sref.cstr_, sref.leng_, my_port, host_begin ) ){
+			/* 本件はWebServerとしての受理に矯正 */
+			as_local_proxy = false;
+		}
+		ZnkSRef_set_literal( &sref, "127.0.0.1" );
+		if( isRelayToMe( sref.cstr_, sref.leng_, my_port, host_begin ) ){
+			/* 本件はWebServerとしての受理に矯正 */
+			as_local_proxy = false;
+		}
+		if( isRelayToMe( server_name, Znk_strlen(server_name), my_port, host_begin ) ){
+			/* 本件はWebServerとしての受理に矯正 */
+			as_local_proxy = false;
+		}
+
+		/***
+		 * 最前にあるHost名の部分は除去しなければならない.
+		 * ホスト名が含まれていてもうまく表示されるサイトもあるが、そうならないサイトがある.
+		 * 例えば www.nicovideo.jpなどは、この部分にhost名があることを想定しておらず
+		 * Redirect用のLocationを構成して返してくる. 具体的には以下のような流れになる.
+		 *
+		 * 1. GET http://www.nicovideo.jp/watch/sm0123456 HTTP/1.1 でRequestしたとする.
+		 * 2. nicovideoのWebサーバは、上記第2引数を / より始まるfilepathであるとみなす.
+		 *    即ちまず最初に / が現れる場所を検索し、その / の次から始まる文字列を
+		 *    filepath2 とした場合、Hostディレクティブに指定された文字列 + / + filepath2
+		 *    という文字列を作ってそれをリダイレクト用のLocationディレクティブに設定したものを
+		 *    Responseとして返す.
+		 * 3. 結果的にユーザ側のBrowserは GET www.nicovideo.jphttp/www.nicovideo.jp/watch/sm0123456 HTTP/1.1
+		 *    なるRequestを次回に発行してしまう.
+		 *    これは当然、www.nicovideo.jphttp というホストへの接続とみなされNotFoundになる.
+		 *
+		 * また逆に接続先としてさらに別のproxyを介す場合は、
+		 * 当然ながら除去は行ってはならない.
+		 */
+		{
+			/***
+			 * TODO:
+			 * この処理はこの関数の外へ追い出す方が望ましい.
+			 */
+			const char* end = strchr( host_begin, '/' );
+			if( end == NULL ){
+				end = host_begin + Znk_strlen( host_begin );
+			}
+			/***
+			 * ZnkStr_eraseする前に済ませておく.
+			 */
+			ZnkStr_assign( req_urp, 0, end, Znk_NPOS );
+			{
+				ZnkMyf config = MoaiMyf_theConfig();
+				size_t hostname_leng = end - host_begin;
+				const bool is_applied_host = MoaiParentProxy_isAppliedHost( config, host_begin, hostname_leng );
+				if( !is_applied_host ){
+					size_t cut_size = end - ZnkStr_cstr( str );
+					ZnkStr_erase( str, 0, cut_size );
+				}
+			}
+		}
+	}
+	return as_local_proxy;
+}
+
 void
 MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
-		ZnkMyf config, bool* as_local_proxy, uint16_t my_port, bool is_request,
+		bool* as_local_proxy, uint16_t my_port, bool is_request,
 		const char* response_hostname,
-		MoaiModuleAry mod_ary, ZnkMyf mtgt, ZnkStr req_urp )
+		MoaiModuleAry mod_ary, const char* server_name )
 {
 	size_t key_begin; size_t key_end;
 	size_t val_begin; size_t val_end;
@@ -52,6 +346,9 @@ MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 	/* first line */
 	line_begin = (char*)ZnkBfr_data( stream );
 
+	/***
+	 * MoaiInfo hdrsを設定.
+	 */
 	p = line_begin;
 	while( *p != '\r' ){
 		while( *p == ' ' || *p == '\t' ) ++p;
@@ -61,7 +358,7 @@ MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 		} else {
 			while( *q != '\r' ) ++q;
 		}
-		ZnkStrDAry_push_bk_cstr( hdrs->hdr1st_, p, q-p );
+		ZnkStrAry_push_bk_cstr( hdrs->hdr1st_, p, q-p );
 		p = q;
 		++arg_idx;
 	}
@@ -73,104 +370,8 @@ MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 	 * 第２引数はRequest-URIとなる.
 	 */
 	if( is_request ){
-		ZnkStr str = ZnkStrDAry_at( hdrs->hdr1st_, 1 );
-		const char* host_begin = NULL;
-
-		/***
-		 * ここではホスト名から始まる場合は、UserAgentはLocalProxyとして
-		 * このプログラムに接続しようとしたものとみなし、/ から始まる場合は、
-		 * WebServerとしてこのプログラムに接続しようとしたものとみなす.
-		 *
-		 * 尚、Host名として指定されている値が localhost:Pや127.0.0.1:P
-		 * (Pはこのプログラムが使っているport番号)であるか否かを調べれば、
-		 * この種の判定ができそうに思えるかもしれないが、localhostを示す
-		 * Host名がそれ以外の文字列である場合も有り得るため、これでは不完全である.
-		 * 例えば/etc/hostsに 127.0.0.1 の別名を localhost以外にも指定していたり、
-		 * 物理的に別のマシンからこのプログラムが起動しているマシンへ
-		 * IPアドレスを指定して接続した場合(そのIPアドレスは異なるため当然であるが)
-		 * などでこれら以外の文字列に成り得る.
-		 */
-		if( ZnkS_isBegin_literal( ZnkStr_cstr(str), "http://" ) ){
-			/* http://から始まる場合. */
-			host_begin = ZnkStr_cstr( str ) + Znk_strlen_literal( "http://" );
-			/* 本件はLocalProxyとして受理 */
-			*as_local_proxy = true;
-		} else if( ZnkStr_first( str ) == '/' ){
-			/* / から始まる場合. */
-			host_begin = NULL;
-			/* 本件はWebServerとして受理 */
-			*as_local_proxy = false;
-			ZnkStr_set( req_urp, ZnkStr_cstr(str) );
-		} else if( ZnkStr_first( str ) == '*' ){
-			/**
-			 * OPTIONS methodなどの場合、この値になっているケースが有り得る.
-			 * とりあえず現時点ではLocalProxyとして処理.
-			 */
-			host_begin = NULL;
-			/* 本件はLocalProxyとして受理 */
-			*as_local_proxy = true;
-		} else {
-			/* Host名から始まる場合. */
-			host_begin = ZnkStr_cstr( str );
-			/* 本件はLocalProxyとして受理 */
-			*as_local_proxy = true;
-		}
-
-		if( host_begin ){
-			ZnkSRef sref = { 0 };
-			ZnkSRef_set_literal( &sref, "localhost" );
-			if( isRelayToMe( sref.cstr_, sref.leng_, my_port, host_begin ) ){
-				/* 本件はWebServerとしての受理に矯正 */
-				*as_local_proxy = false;
-			}
-			ZnkSRef_set_literal( &sref, "127.0.0.1" );
-			if( isRelayToMe( sref.cstr_, sref.leng_, my_port, host_begin ) ){
-				/* 本件はWebServerとしての受理に矯正 */
-				*as_local_proxy = false;
-			}
-
-			/***
-			 * 最前にあるHost名の部分は除去しなければならない.
-			 * ホスト名が含まれていてもうまく表示されるサイトもあるが、そうならないサイトがある.
-			 * 例えば www.nicovideo.jpなどは、この部分にhost名があることを想定しておらず
-			 * Redirect用のLocationを構成して返してくる. 具体的には以下のような流れになる.
-			 *
-			 * 1. GET http://www.nicovideo.jp/watch/sm0123456 HTTP/1.1 でRequestしたとする.
-			 * 2. nicovideoのWebサーバは、上記第2引数を / より始まるfilepathであるとみなす.
-			 *    即ちまず最初に / が現れる場所を検索し、その / の次から始まる文字列を
-			 *    filepath2 とした場合、Hostディレクティブに指定された文字列 + / + filepath2
-			 *    という文字列を作ってそれをリダイレクト用のLocationディレクティブに設定したものを
-			 *    Responseとして返す.
-			 * 3. 結果的にユーザ側のBrowserは GET www.nicovideo.jphttp/www.nicovideo.jp/watch/sm0123456 HTTP/1.1
-			 *    なるRequestを次回に発行してしまう.
-			 *    これは当然、www.nicovideo.jphttp というホストへの接続とみなされNotFoundになる.
-			 *
-			 * また逆に接続先としてさらに別のproxyを介す場合は、
-			 * 当然ながら除去は行ってはならない.
-			 */
-			{
-				/***
-				 * TODO:
-				 * この処理はこの関数の外へ追い出す方が望ましい.
-				 */
-				const char* end = strchr( host_begin, '/' );
-				if( end == NULL ){
-					end = host_begin + Znk_strlen( host_begin );
-				}
-				/***
-				 * ZnkStr_eraseする前に済ませておく.
-				 */
-				ZnkStr_assign( req_urp, 0, end, Znk_NPOS );
-				{
-					size_t hostname_leng = end - host_begin;
-					const bool use_parent_proxy = MoaiParentProxy_isUse( config, host_begin, hostname_leng );
-					if( !use_parent_proxy ){
-						size_t cut_size = end - ZnkStr_cstr( str );
-						ZnkStr_erase( str, 0, cut_size );
-					}
-				}
-			}
-		}
+		ZnkStr str = ZnkStrAry_at( hdrs->hdr1st_, 1 );
+		*as_local_proxy = decideLocalProxy_or_WebServer( str, info->req_urp_, my_port, server_name );
 	}
 
 	while( line_begin - (char*)ZnkBfr_data( stream ) < (int)info->hdr_size_ ){
@@ -201,7 +402,7 @@ MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 
 		if( ZnkS_eqCase( key, "Referer" ) ){
 			ZnkStr str = ZnkHtpHdrs_val( varp, 0 );
-			MoaiLog_printf( "Referer=[%s]\n", ZnkStr_cstr( str ) );
+			MoaiLog_printf( "  Referer=[%s]\n", ZnkStr_cstr( str ) );
 			if( strstr( ZnkStr_cstr( str ), "web_start_page" ) ){
 				assert( 0 );
 			}
@@ -254,7 +455,7 @@ MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 			hostname = response_hostname;
 		}
 		if( hostname ){
-			MoaiModule mod = MoaiModuleAry_find_byHostname( mod_ary, mtgt, hostname );
+			MoaiModule mod = MoaiModuleAry_find_byHostname( mod_ary, hostname );
 			if( mod ){
 				MoaiModule_filtHtpHeader( mod, hdrs->vars_ );
 			}

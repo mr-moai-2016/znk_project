@@ -1,51 +1,39 @@
 @def_quote [' ']
 
 # 以下には接続をBlockしたいホストを記述する.
+# 有害サイトには最初から接続しないようにしましょう!
 @@L ignore_hosts
 free2.jp
 api.digiket.com
 js.ad-stir.com
 aladdin.genieesspv.jp
-adgen.socdm.com
-ssl.socdm.com
+*.socdm.com
 j.microad.net
+www.assoc-amazon.jp
 @@.
 
 # 以下にはPOST時に確認モードを表示したいホストを記述する.
 @@L post_confirm_hosts
-hanabi.2ch.net
-echo.2ch.net
-may.2chan.net
-jun.2chan.net
-dec.2chan.net
-img.2chan.net
-cgi.2chan.net
-dat.2chan.net
-zip.2chan.net
+*.2ch.net
+*.2chan.net
 @@.
 
-# 以下にはparent_proxyの候補となるプロキシ名を列挙する.
-@@L parent_proxy_list
-118.103.111.152:8080
-106.184.2.142:8080
-104.156.239.154:3128
-localhost:8123
-@@.
-
+# parent_proxy:
+#   現在使用中の外部プロキシ(Moaiが次に接続する先)であり、hostname:portという形式で指定する.
+#   外部プロキシを使用せず目的のサイトへ直接接続したい場合はここにNONEまたは:0または空値を設定する.
+#
 # post_confirm:
 #   HTTP POST時において確認画面を出すか否か.
 #   これが on の場合、post_confirm_hosts によって指定されたホストにおいては
 #   POST時に確認画面が出る
 #   offの場合はいかなるホストにおいても確認画面を出さない.
 #
-# moai_port:
-#   ローカルプロキシエンジンMoaiがリッスンするポート番号を指定する.
-#
 # enable_log_file:
 #   これが on の場合、moai_log.log ファイルにすべてのログ情報を記録していく.
 #   off の場合、初期起動時の最低限のメッセージを除いては moai_log.log ファイルにログ情報を記録しない.
 #   動画サイトなど、ログ情報が膨大なサイトを閲覧する場合は、ログファイルも大きくなりがちだが、
 #   これが気になる場合などにoffにしておくとよい.
+#
 #
 # acceptable_host:
 #   値として ANY または LOOPBACK を指定する.
@@ -59,36 +47,70 @@ localhost:8123
 #   例えばMoaiのWeb Configuration画面などではMoaiの起動しているサーバへのPOSTの必要があるが、
 #   その際に送信先情報として使われる.
 #
-# proxy_indicating_mode:
-#   proxy_minus によって指定したい場合は minusを
-#   proxy_plus によって指定したい場合はplusを指定する.
+# moai_port:
+#   Moaiがリッスンするポート番号を指定する.
+#   現時点ではローカルプロキシおよびウェブサイトで同じポートを使っているが
+#   将来のバージョンではこれらを異なるポートにするかもしれない.
+#
 @@V config
-parent_proxy = ['NONE']
-post_confirm = ['on']
+parent_proxy = [':0']
+post_confirm = ['off']
+blocking_mode = ['off']
 moai_port = ['8124']
 enable_log_file = ['on']
 acceptable_host = ['LOOPBACK']
 server_name = ['']
-proxy_indicating_mode = ['plus']
 @@.
 
-# 減算的な指定方法.
-# 基本的にすべてのホストに対して外部proxyを使うが
-# 以下のホストに接続する場合は外部proxyを使わない.
-@@L proxy_minus
+# 外部proxyが指定されている場合において
+# 以下のホストに接続する場合に外部proxyを使う.
+@@L proxy_apply
+*.2chan.net
+@@.
+
+# 外部proxyが指定されている場合において
+# 以下のホストに接続する場合は例外として外部proxyを使わない.
+# proxy_applyと被るものについてはproxy_exceptの指定が優先される.
+@@L proxy_except
 127.0.0.1
 localhost
+192.168.*
+*.google.com
+*.youtube.com
+*.ytimg.com
+*.googlevideo.com
+*.googleapis.com
+*.gstatic.com
+*.ggpht.com
+*.nicovideo.jp
+*.googleusercontent.com
+*.smilevideo.jp
+*.nimg.jp
+*.twitter.com
+*.optimizely.com
+*.nicodic.jp
+*.yjtag.jp
+*.facebook.net
+*.facebook.com
 @@.
 
-# 加算的な指定方法.
-# 基本的にすべてのホストに対して外部proxyを使わないが
-# 以下のホストに接続する場合のみ外部proxyを使う.
-@@L proxy_plus
-may.2chan.net
-jun.2chan.net
-dec.2chan.net
-img.2chan.net
-cgi.2chan.net
-dat.2chan.net
-zip.2chan.net
+# peer(接続元)が以下のIPの場合のみHTTP要求を受け付ける.
+# 逆に言えばそれ以外は全て許可しない(Forbiddenメッセージを返す)ものとする.
+# 下記に何も記述しない場合はすべての外部IPからの接続を拒否する形になる.
+#
+# ただし Loopback(127.0.0.1)からの接続の場合に関しては
+# ここでの記述の如何に関わらず無条件で許可するものとする.
+#
+# ここには典型的には 192.168.* などと記述してLANからのみの接続を
+# 許可しておけばよい.
+@@L access_allow_ips
+192.168.*
+@@.
+
+# access_allow_ipsで指定したIPの中で、さらに例外的に接続を拒否したいIPの
+# パターンをここで記述できる.
+#
+# ただし Loopback(127.0.0.1)からの接続の場合に関しては
+# ここでの記述の如何に関わらず無条件で許可するものとする.
+@@L access_deny_ips
 @@.

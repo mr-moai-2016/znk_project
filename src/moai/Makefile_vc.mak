@@ -20,6 +20,8 @@ OBJS = \
 	$O\Moai_log.obj \
 	$O\Moai_fdset.obj \
 	$O\Moai_parent_proxy.obj \
+	$O\Moai_myf.obj \
+	$O\Moai_enc_util.obj \
 	$O\main.obj \
 
 EXE_FILE=$O\$(BASENAME).exe
@@ -31,7 +33,7 @@ $O:
 	if not exist $O mkdir $O
 
 $(EXE_FILE): $(OBJS) $(RES_FILE)
-	$(LINKER) /OUT:$(EXE_FILE) $(RES_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\Znk-0.9.lib
+	$(LINKER) /OUT:$(EXE_FILE) $(RES_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\Znk-1.0.lib
 
 # サフィックスルール
 {$S}.cpp{$O}.obj:

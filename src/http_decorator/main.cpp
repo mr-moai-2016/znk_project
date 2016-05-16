@@ -9,6 +9,8 @@
 #include <Znk_str_fio.h>
 #include <Znk_cookie.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 /***
@@ -44,7 +46,7 @@ makeSendData_forGet( ZnkBfr ans,
  * RequestMethodÇÊÇËäÓñ{ÉwÉbÉ_ÇÃìTå^Çê∂ê¨Ç∑ÇÈ.
  */
 Znk_INLINE bool
-makeHdr1st( ZnkStrDAry hdr1st, ZnkHtpReqMethod req_method, const char* req_uri )
+makeHdr1st( ZnkStrAry hdr1st, ZnkHtpReqMethod req_method, const char* req_uri )
 {
 	switch( req_method ){
 	case ZnkHtpReqMethod_e_GET:
@@ -55,10 +57,10 @@ makeHdr1st( ZnkStrDAry hdr1st, ZnkHtpReqMethod req_method, const char* req_uri )
 	case ZnkHtpReqMethod_e_CONNECT:
 	case ZnkHtpReqMethod_e_OPTIONS:
 	case ZnkHtpReqMethod_e_TRACE:
-		ZnkStrDAry_resize( hdr1st, 3 );
-		ZnkStrDAry_set( hdr1st, 0, ZnkStr_new( ZnkHtpReqMethod_getCStr( req_method ) ) );
-		ZnkStrDAry_set( hdr1st, 1, ZnkStr_new( req_uri ) );
-		ZnkStrDAry_set( hdr1st, 2, ZnkStr_new( "HTTP/1.1" ) );
+		ZnkStrAry_resize( hdr1st, 3 );
+		ZnkStrAry_set( hdr1st, 0, ZnkStr_new( ZnkHtpReqMethod_getCStr( req_method ) ) );
+		ZnkStrAry_set( hdr1st, 1, ZnkStr_new( req_uri ) );
+		ZnkStrAry_set( hdr1st, 2, ZnkStr_new( "HTTP/1.1" ) );
 		break;
 	default:
 		return false;
@@ -120,13 +122,13 @@ writeFP( void* arg, const uint8_t* buf, size_t buf_size )
 
 static bool
 process( const char* cnct_hostname, uint16_t cnct_port,
-		const char* result_filename,
+		const char* result_filename, const char* cookie_filename,
 		const char* http_hdr_filename, const char* body_img_filename )
 {
 	bool result = false;
 
 	Znk_AUTO_PTR( ZnkBfr, send_body, ZnkBfr_create_null(), ZnkBfr_destroy );
-	Znk_AUTO_PTR( ZnkVarpDAry, cookie, ZnkVarpDAry_create(true), ZnkVarpDAry_destroy );
+	Znk_AUTO_PTR( ZnkVarpAry, cookie, ZnkVarpAry_create(true), ZnkVarpAry_destroy );
 	Znk_AUTO_PTR( ZnkBfr, wk_bfr, ZnkBfr_create_null(), ZnkBfr_destroy );
 	Znk_AUTO_PTR( ZnkFile, fp, ZnkF_fopen( result_filename, "wb" ), ZnkF_fclose );
 
@@ -137,7 +139,7 @@ process( const char* cnct_hostname, uint16_t cnct_port,
 	bool   is_proxy = false;
 	size_t try_connect_num = 3;
 
-	ZnkCookie_load( cookie, "cookie.txt" );
+	ZnkCookie_load( cookie, cookie_filename );
 
 	recv_fnca.func_ = writeFP;
 	recv_fnca.arg_  = fp;
@@ -153,8 +155,11 @@ process( const char* cnct_hostname, uint16_t cnct_port,
 			&recv_hdrs, recv_fnca,
 			cookie,
 			try_connect_num, is_proxy, wk_bfr );
+	if( !result ){
+		ZnkF_printf( "HttpDecorator : Cannot connect [%s:%hd]\n", cnct_hostname, cnct_port );
+		goto FUNC_END;
+	}
 
-	ZnkF_printf_e( "@@.\n" );
 	{
 		ZnkBfr_clear( wk_bfr );
 		ZnkHtpHdrs_extendToStream( send_hdrs.hdr1st_, send_hdrs.vars_, wk_bfr, false );
@@ -172,8 +177,9 @@ process( const char* cnct_hostname, uint16_t cnct_port,
 		ZnkF_printf_e( "@@.\n" );
 	}
 
-	ZnkCookie_save( cookie, "cookie.txt" );
+	ZnkCookie_save( cookie, cookie_filename );
 
+FUNC_END:
 	ZnkHtpHdrs_dispose( &send_hdrs );
 	ZnkHtpHdrs_dispose( &recv_hdrs );
 	return result;
@@ -182,41 +188,64 @@ process( const char* cnct_hostname, uint16_t cnct_port,
 
 int main(int argc, char **argv)
 {
-	bool ret;
-	const char* cnct_hostname = NULL;
+	const char* parent_cnct = NULL;
+	const char* port_p = NULL;
+
+	char        cnct_hostname[ 4096 ];
 	uint16_t    cnct_port = 80;
+	const char* result_filename = NULL;
+	const char* cookie_filename = NULL;
 	const char* http_hdr_filename = NULL;
 	const char* body_img_filename = NULL;
-	const char* result_filename = NULL;
 
-	ZnkF_printf( "@@L http_decorator_log\n" );
+	ZnkF_printf( "HttpDecorator Ver1.0 : Start\n" );
 
-	ret = ZnkZlib_initiate();
-	ZnkF_printf( "ZnkZlib_initiate : ret=[%d]\n", ret );
-
-	ret = ZnkNetBase_initiate( false );
-	ZnkF_printf( "ZnkNetBase_initiate : ret=[%d]\n", ret );
+	if( !ZnkZlib_initiate() ){
+		ZnkF_printf( "HttpDecorator : ZnkZlib_initiate is failure.\n" );
+		return EXIT_FAILURE;
+	}
+	if( !ZnkNetBase_initiate( false ) ){
+		ZnkF_printf( "HttpDecorator : ZnkNetBase_initiate is failure.\n" );
+		return EXIT_FAILURE;
+	}
 
 	if( argc < 5 ){
-		ZnkF_printf( "Usage : http_decorator hostname port result_filename http_hdr_filename (body_img_filename)\n" );
+		ZnkF_printf( "Usage : http_decorator hostname:port result_filename cookie_filename http_hdr_filename (body_img_filename)\n" );
 		getchar();
-		return 1;
+		return EXIT_FAILURE;
 	}
 
-	cnct_hostname = argv[ 1 ];
-	if( ZnkS_isBegin( cnct_hostname, "http://" ) ){
-		cnct_hostname = cnct_hostname + 7;
-	} else if( ZnkS_isBegin( cnct_hostname, "https://" ) ){
-		cnct_hostname = cnct_hostname + 8;
+	parent_cnct = argv[ 1 ];
+	if( ZnkS_isBegin( parent_cnct, "http://" ) ){
+		parent_cnct = parent_cnct + 7;
+	} else if( ZnkS_isBegin( parent_cnct, "https://" ) ){
+		parent_cnct = parent_cnct + 8;
 	}
-	sscanf( argv[ 2 ], "%hd", &cnct_port );
-	result_filename   = argv[ 3 ];
+
+	port_p = strchr( parent_cnct, ':' );
+	if( port_p ){
+		const size_t hostname_leng = port_p - parent_cnct;
+		ZnkS_copy( cnct_hostname, sizeof(cnct_hostname), parent_cnct, hostname_leng );
+		sscanf( port_p+1, "%hd", &cnct_port );
+	} else {
+		ZnkS_copy( cnct_hostname, sizeof(cnct_hostname), parent_cnct, Znk_NPOS );
+		cnct_port = 80;
+	}
+
+	result_filename   = argv[ 2 ];
+	cookie_filename   = argv[ 3 ];
 	http_hdr_filename = argv[ 4 ];
 	if( argc >= 6 ){
 		body_img_filename = argv[ 5 ];
 	}
 
-	process( cnct_hostname, cnct_port, result_filename, http_hdr_filename, body_img_filename );
+	if( !process( cnct_hostname, cnct_port,
+				result_filename, cookie_filename,
+				http_hdr_filename, body_img_filename ) )
+	{
+		return EXIT_FAILURE;
+	}
 
-	return 0;
+	ZnkF_printf( "HttpDecorator : Done.\n" );
+	return EXIT_SUCCESS;
 }

@@ -2,6 +2,7 @@
 #include <Znk_stdc.h>
 #include <Znk_def_util.h>
 #include <Znk_cookie.h>
+#include <Znk_htp_hdrs.h>
 #include <string.h>
 
 static ZnkVarp
@@ -80,7 +81,7 @@ bool on_post_before( ZnkMyf myf )
 	update_pwd( pwd, pwdc, USERS_password );
 	return true;
 }
-bool on_response_hdr( ZnkMyf myf, ZnkVarpDAry hdr_vars )
+bool on_response_hdr( ZnkMyf myf, ZnkVarpAry hdr_vars )
 {
 	ZnkVarp set_cookie = ZnkHtpHdrs_find_literal( hdr_vars, "Set-Cookie" );
 
@@ -90,7 +91,7 @@ bool on_response_hdr( ZnkMyf myf, ZnkVarpDAry hdr_vars )
 	if( set_cookie ){
 		const size_t val_size = ZnkHtpHdrs_val_size( set_cookie );
 		size_t       val_idx  = 0;
-		ZnkVarpDAry  cok_vars = ZnkMyf_find_vars( myf, "cookie_vars" );
+		ZnkVarpAry   cok_vars = ZnkMyf_find_vars( myf, "cookie_vars" );
 
 		for( val_idx=0; val_idx<val_size; ++val_idx ){
 			const char* p = ZnkHtpHdrs_val_cstr( set_cookie, val_idx );

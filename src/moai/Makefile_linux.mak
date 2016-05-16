@@ -20,6 +20,8 @@ OBJS = \
 	$O/Moai_log.o \
 	$O/Moai_fdset.o \
 	$O/Moai_parent_proxy.o \
+	$O/Moai_myf.o \
+	$O/Moai_enc_util.o \
 	$O/main.o \
 
 EXE_FILE=$O/$(BASENAME)

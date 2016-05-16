@@ -11,22 +11,17 @@ Znk_EXTERN_C_BEGIN
 typedef struct MoaiContextImpl* MoaiContext;
 
 struct MoaiContextImpl {
-	const char*     hostname_;
-	uint16_t        port_;
-	char            hostname_buf_[ 4096 ];
 	uint8_t         buf_[ 4096 ];
 	ZnkStr          msgs_;
 	ZnkStr          text_;
 	int             result_size_;
 	bool            recv_executed_;
-	ZnkStr          req_urp_;
 	ZnkHtpReqMethod req_method_;
 	MoaiBodyInfo    body_info_;
-	MoaiInfo        hi_;
-	ZnkMyf          target_myf_;
-	MoaiModuleAry   mod_ary_;
-	ZnkMyf          config_;
-	ZnkMyf          analysis_;
+	MoaiInfoID      draft_info_id_;
+	MoaiInfo*       draft_info_;
+	bool            as_local_proxy_;
+	uint32_t        peer_ipaddr_;
 };
 
 MoaiContext

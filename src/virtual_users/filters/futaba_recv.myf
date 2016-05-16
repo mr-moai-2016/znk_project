@@ -3,9 +3,9 @@
 @@L html_filter
 replace ['<iframe '] ['<!-- iframe ']
 replace ['</iframe>'] ['</iframe -->']
-replace ['<b>名無し </b>'] ['<b>オラ!!オラ!!ボーイ </b>']
-replace ['<b>ゆりあき </b>'] ['<b>高速ゆらこー変換 </b>']
+replace ['<b>ゆりあき </b>'] ['<b>高速ネカマ変換 </b>']
 replace ['<blockquote>'] ['<blockquote>[<font color="#ff0000">管理人</font>]<br>']
+replace ['<span style="color:#ff0000">政治はだめ.</span>'] ['<span style="color:#ff0000">ホモはだめ.</span>']
 replace ['<b>名無しさん＠お腹いっぱい。'] ['<b>全角がいっぱい。']
 replace ['type=password name=pwd size=8'] ['type=text name=pwd size=9']
 replace ['<h1>削除依頼のフォーム</h1>']     ['<h1>殿！どの罪でこやつを処しますか？</h1>']
@@ -23,14 +23,12 @@ replace ['"109">板違い']                       ['"109">mayでやれ！']
 replace ['"110">荒らし・嫌がらせ・混乱の元']   ['"110">俺のスレ荒らしてるのお前だろdel！']
 replace ['"111">政治・宗教・民族']             ['"111">壷でやれ！']
 replace ['"201">グロ画像(２次)']               ['"201">実装石とゆっくりな仲間たち']
-replace ['"202">猥褻画像・無修正画像(２次)']   ['"202">orz']
+replace ['"202">猥褻画像・無修正画像(２次)']   ['"202">ﾜｰｵ!']
 replace ['"301">グロ画像(３次)']               ['"301">アチャ～モロ']
 replace ['"302">エロ画像(３次)']               ['"302">ギャイボン']
 replace ['"303">児童ポルノ画像(３次)']         ['"303">ゴルゴ「はやくしろ！']
 replace ['"304">猥褻画像・無修正画像(３次)']   ['"304">ゴルゴ「ありがとう…']
 replace ['"削除依頼をする">']                  ['"処す">']
-replace ['innerHTML="そうだねx"+i']            ['innerHTML="そうだねx"+Math.pow(i*2+1,2)']
-replace ['>そうだねx']                         ['>そうだねx1']
 @@.
 
 @@L js_filter

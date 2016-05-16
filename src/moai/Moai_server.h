@@ -5,7 +5,7 @@
 
 Znk_EXTERN_C_BEGIN
 
-MoaiRASResult MoaiServer_main( bool enable_init, bool enable_parent_proxy );
+MoaiRASResult MoaiServer_main( bool first_initiate, bool enable_parent_proxy );
 
 Znk_EXTERN_C_END
 

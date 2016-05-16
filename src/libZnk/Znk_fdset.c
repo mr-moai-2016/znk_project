@@ -100,18 +100,18 @@ ZnkFdSet_copy( ZnkFdSet dst, const ZnkFdSet src )
 	}
 }
 void
-ZnkFdSet_getSocketDAry( ZnkFdSet fdst, ZnkSocketDAry sock_dary )
+ZnkFdSet_getSocketAry( ZnkFdSet fdst, ZnkSocketAry sock_ary )
 {
 #if defined(Znk_TARGET_WINDOWS)
 	size_t idx;
 	for( idx=0; idx<fdst->fds_.fd_count; ++idx ){
-		ZnkSocketDAry_push_bk( sock_dary, fdst->fds_.fd_array[ idx ] );
+		ZnkSocketAry_push_bk( sock_ary, fdst->fds_.fd_array[ idx ] );
 	}
 #else
 	int s;
 	for( s=0; s<FD_SETSIZE; ++s ){
 		if( FD_ISSET( s, &fdst->fds_ ) ){
-			ZnkSocketDAry_push_bk( sock_dary, (ZnkSocket)s );
+			ZnkSocketAry_push_bk( sock_ary, (ZnkSocket)s );
 		}
 	}
 #endif

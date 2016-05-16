@@ -3,7 +3,7 @@
 
 #include <Znk_str.h>
 #include <Znk_var.h>
-#include <Znk_varp_dary.h>
+#include <Znk_varp_ary.h>
 
 Znk_EXTERN_C_BEGIN
 
@@ -13,10 +13,10 @@ typedef enum {
 }MoaiPostVarType;
 
 ZnkVarp
-MoaiPostVars_regist( ZnkVarpDAry vars, const char* name, const char* filename,
+MoaiPostVars_regist( ZnkVarpAry vars, const char* name, const char* filename,
 		MoaiPostVarType type, const uint8_t* data, size_t data_size );
 bool
-MoaiPostVars_regist_byHttpBody( ZnkVarpDAry vars,
+MoaiPostVars_regist_byHttpBody( ZnkVarpAry vars,
 		const char* boundary, size_t boundary_leng,
 		const uint8_t* body, size_t body_size );
 

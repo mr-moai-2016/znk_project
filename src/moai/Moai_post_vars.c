@@ -1,5 +1,5 @@
 #include "Moai_post_vars.h"
-#include <Znk_varp_dary.h>
+#include <Znk_varp_ary.h>
 #include <Znk_stdc.h>
 #include <Znk_missing_libc.h>
 #include <Znk_s_base.h>
@@ -8,7 +8,7 @@
 
 
 ZnkVarp
-MoaiPostVars_regist( ZnkVarpDAry vars, const char* name, const char* filename,
+MoaiPostVars_regist( ZnkVarpAry vars, const char* name, const char* filename,
 		MoaiPostVarType type, const uint8_t* data, size_t data_size )
 {
 	ZnkVarp varp = ZnkVarp_create( name, filename, type, ZnkPrim_e_None );
@@ -21,12 +21,12 @@ MoaiPostVars_regist( ZnkVarpDAry vars, const char* name, const char* filename,
 		ZnkVar_set_val_Str( varp, (char*)data, data_size );
 		break;
 	}
-	ZnkVarpDAry_push_bk( vars, varp );
+	ZnkVarpAry_push_bk( vars, varp );
 	return varp;
 }
 
 bool
-MoaiPostVars_regist_byHttpBody( ZnkVarpDAry vars,
+MoaiPostVars_regist_byHttpBody( ZnkVarpAry vars,
 		const char* boundary, size_t boundary_leng,
 		const uint8_t* body, size_t body_size )
 {
@@ -142,7 +142,7 @@ MoaiPostVars_regist_byHttpBody( ZnkVarpDAry vars,
 			}
 
 			/* ‚±‚Ì varp ‚Ìõ–½‚Í info->vars_‚ÌŠÇ—‰º‚É’u‚©‚ê‚é */
-			ZnkVarpDAry_push_bk( vars, varp );
+			ZnkVarpAry_push_bk( vars, varp );
 		}
 
 		result = true;

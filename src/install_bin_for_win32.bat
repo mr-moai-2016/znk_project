@@ -37,13 +37,14 @@ REM
 REM
 REM setup virtual_users
 REM
-%CP_% virtual_users\out_dir\virtual_users.exe %INST_DIR_%\
-call bat_utils\install_one.bat /C user_agent.txt  virtual_users         %INST_DIR_%
-call bat_utils\install_one.bat /C screen_size.txt virtual_users         %INST_DIR_%
+call bat_utils\install_one.bat /C user_agent.txt   virtual_users         %INST_DIR_%
+call bat_utils\install_one.bat /C screen_size.txt  virtual_users         %INST_DIR_%
+call bat_utils\install_one.bat /C parent_proxy.txt virtual_users         %INST_DIR_%
 if not exist %INST_DIR_%\filters mkdir %INST_DIR_%\filters
 call bat_utils\install_one.bat /C futaba_recv.myf virtual_users\filters %INST_DIR_%\filters
 call bat_utils\install_one.bat /C futaba_send.myf virtual_users\filters %INST_DIR_%\filters
 call bat_utils\install_one.bat /C 2ch_recv.myf    virtual_users\filters %INST_DIR_%\filters
+call bat_utils\install_one.bat /C 2ch_send.myf    virtual_users\filters %INST_DIR_%\filters
 call bat_utils\install_one.bat /C config.myf      virtual_users         %INST_DIR_%
 call bat_utils\install_one.bat /C analysis.myf    virtual_users         %INST_DIR_%
 call bat_utils\install_one.bat /C target.myf      virtual_users         %INST_DIR_%

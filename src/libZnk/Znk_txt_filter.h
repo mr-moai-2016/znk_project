@@ -1,7 +1,7 @@
 #ifndef INCLUDE_GUARD__Znk_txt_filter_h__
 #define INCLUDE_GUARD__Znk_txt_filter_h__
 
-#include <Znk_str_dary.h>
+#include <Znk_str_ary.h>
 
 Znk_EXTERN_C_BEGIN
 
@@ -29,13 +29,13 @@ ZnkTxtFilterAry_regist_byCommand( ZnkTxtFilterAry fltr_ary,
 
 Znk_INLINE void
 ZnkTxtFilterAry_regist_byCommandAry( ZnkTxtFilterAry fltr_ary,
-		ZnkStrDAry command_ary, const char* quote_begin, const char* quote_end )
+		ZnkStrAry command_ary, const char* quote_begin, const char* quote_end )
 {
-	const size_t size = ZnkStrDAry_size( command_ary );
+	const size_t size = ZnkStrAry_size( command_ary );
 	size_t idx;
 	const char* command;
 	for( idx=0; idx<size; ++idx ){
-		command = ZnkStrDAry_at_cstr( command_ary, idx );
+		command = ZnkStrAry_at_cstr( command_ary, idx );
 		ZnkTxtFilterAry_regist_byCommand( fltr_ary, command, quote_begin, quote_end );
 	}
 }

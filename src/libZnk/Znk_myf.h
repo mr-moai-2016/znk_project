@@ -2,8 +2,8 @@
 #define INCLUDE_GUARD__Znk_myf_h__
 
 #include <Znk_var.h>
-#include <Znk_str_dary.h>
-#include <Znk_varp_dary.h>
+#include <Znk_str_ary.h>
+#include <Znk_varp_ary.h>
 
 Znk_EXTERN_C_BEGIN
 
@@ -17,10 +17,10 @@ typedef enum {
 	,ZnkMyfSection_e_OutOfSection
 } ZnkMyfSectionType;
 
-ZnkStrDAry
+ZnkStrAry
 ZnkMyfSection_lines( const ZnkMyfSection sec );
 
-ZnkVarpDAry
+ZnkVarpAry
 ZnkMyfSection_vars( const ZnkMyfSection sec );
 
 const char*
@@ -31,6 +31,8 @@ ZnkMyf
 ZnkMyf_create( void );
 void
 ZnkMyf_destroy( ZnkMyf myf );
+void
+ZnkMyf_clear( ZnkMyf myf );
 
 const char*
 ZnkMyf_quote_begin( const ZnkMyf myf );
@@ -50,9 +52,9 @@ ZnkMyf_load( ZnkMyf myf, const char* filename );
 bool
 ZnkMyf_save( ZnkMyf myf, const char* filename );
 
-ZnkVarpDAry
+ZnkVarpAry
 ZnkMyf_find_vars( const ZnkMyf myf, const char* section_name );
-ZnkStrDAry
+ZnkStrAry
 ZnkMyf_find_lines( const ZnkMyf myf, const char* section_name );
 
 ZnkVarp

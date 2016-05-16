@@ -1,7 +1,7 @@
 #include <Znk_txt_filter.h>
 #include <Znk_missing_libc.h>
 #include <Znk_s_base.h>
-#include <Znk_obj_dary.h>
+#include <Znk_obj_ary.h>
 #include <Znk_str_ptn.h>
 #include <string.h>
 
@@ -18,7 +18,7 @@ replaceStr( ZnkStr str, size_t begin,
 }
 
 struct ZnkTxtFilterAryImpl {
-	ZnkObjDAry obj_dary_;
+	ZnkObjAry obj_ary_;
 };
 
 static ZnkTxtFilter*
@@ -45,7 +45,7 @@ ZnkTxtFilterAry
 ZnkTxtFilterAry_create( void )
 {
 	ZnkTxtFilterAry fltr_ary = (ZnkTxtFilterAry)Znk_malloc( sizeof( struct ZnkTxtFilterAryImpl ) );
-	fltr_ary->obj_dary_ = ZnkObjDAry_create( deleteZnkTxtFilter );
+	fltr_ary->obj_ary_ = ZnkObjAry_create( deleteZnkTxtFilter );
 	return fltr_ary;
 }
 
@@ -53,7 +53,7 @@ void
 ZnkTxtFilterAry_destroy( ZnkTxtFilterAry fltr_ary )
 {
 	if( fltr_ary ){
-		ZnkObjDAry_destroy( fltr_ary->obj_dary_ );
+		ZnkObjAry_destroy( fltr_ary->obj_ary_ );
 		Znk_free( fltr_ary );
 	}
 }
@@ -97,7 +97,7 @@ ZnkTxtFilterAry_regist_byCommand( ZnkTxtFilterAry fltr_ary,
 	ZnkStr_assign( fltr->new_ptn_, 0, p, q-p );
 	p = q + quote_end_leng;
 
-	ZnkObjDAry_push_bk( fltr_ary->obj_dary_, (ZnkObj)fltr );
+	ZnkObjAry_push_bk( fltr_ary->obj_ary_, (ZnkObj)fltr );
 	return fltr;
 
 FUNC_ERROR:
@@ -108,13 +108,13 @@ FUNC_ERROR:
 ZnkTxtFilter*
 ZnkTxtFilterAry_at( const ZnkTxtFilterAry fltr_ary, size_t idx )
 {
-	ZnkTxtFilter* fltr = (ZnkTxtFilter*)ZnkObjDAry_at( fltr_ary->obj_dary_, idx );
+	ZnkTxtFilter* fltr = (ZnkTxtFilter*)ZnkObjAry_at( fltr_ary->obj_ary_, idx );
 	return fltr;
 }
 size_t
 ZnkTxtFilterAry_size( const ZnkTxtFilterAry fltr_ary )
 {
-	return ZnkObjDAry_size( fltr_ary->obj_dary_ );
+	return ZnkObjAry_size( fltr_ary->obj_ary_ );
 }
 
 void

@@ -46,3 +46,12 @@ Release Note 最終更新: 2016/04/29
     * localhost:8124/config より表示されるConfig画面を機能強化.
     * 各種ドキュメントの整備と刷新.
 ~~~
+
+## 2016/05/* Version 1.0 リリース.  
+  正式バージョン.  
+  Version 0.9からの修正点は以下の通り.  
+~~~
+    * config.myfにあったproxy_plus proxy_minusという項目は削除し、これをproxy_apply proxy_exceptという名前に変更.
+      またこれらでワイルドカード指定が行えるようにした.
+    * config.myfにあったproxy_indicating_modeという項目は廃止.
+~~~

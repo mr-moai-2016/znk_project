@@ -10,6 +10,7 @@
 #include <Znk_str_ptn.h>
 #include <Znk_cookie.h>
 #include <Znk_myf.h>
+#include <Znk_dir.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -38,9 +39,13 @@ getRandomUInt( void )
 
 static bool
 decorateHeaderGET( const char* hostname, const char* request_uri,
-		const char* ua, const char* referer, ZnkVarpDAry cookie )
+		const char* ua, const char* referer, ZnkVarpAry cookie )
 {
-	ZnkFile fp = ZnkF_fopen( "http_hdr.dat", "wb" );
+	const char* tmpdir = st_is_dos_path ? ".\\tmp\\" : "./tmp/";
+	ZnkFile fp = NULL;
+	char http_hdr_file[ 256 ] = "";
+	Znk_snprintf( http_hdr_file, sizeof(http_hdr_file), "%shttp_hdr.dat", tmpdir );
+	fp = ZnkF_fopen( http_hdr_file, "wb" );
 	if( fp ){
 		ZnkF_fprintf( fp, "GET %s HTTP/1.1\r\n", request_uri );
 		ZnkF_fprintf( fp, "Host: %s\r\n", hostname );
@@ -56,13 +61,13 @@ decorateHeaderGET( const char* hostname, const char* request_uri,
 		}
 		/* Cookie */
 		{
-			const size_t size = ZnkVarpDAry_size( cookie );
+			const size_t size = ZnkVarpAry_size( cookie );
 			if( size ){
 				size_t idx;
 				ZnkVarp varp;
 				ZnkF_fprintf( fp, "Cookie: " );
 				for( idx=0; idx<size; ++idx ){
-					varp = ZnkVarpDAry_at( cookie, idx );
+					varp = ZnkVarpAry_at( cookie, idx );
 					ZnkF_fprintf( fp, "%s=%s", ZnkStr_cstr(varp->name_), ZnkVar_cstr(varp) );
 					if( idx < size-1 ){
 						ZnkF_fprintf( fp, "; " );
@@ -82,33 +87,42 @@ decorateHeaderGET( const char* hostname, const char* request_uri,
 
 static bool
 getCatalog( const char* srv_name, const char* board_id,
-		ZnkStr posttime, const char* ua, ZnkVarpDAry cookie, ZnkStr thre_uri,
-		const char* cnct_hostname, const char* cnct_port )
+		ZnkStr posttime, const char* ua, ZnkVarpAry cookie, ZnkStr thre_uri,
+		const char* parent_proxy )
 {
 	bool result = false;
+	char result_file[ 256 ] = "";
+	char cookie_file[ 256 ] = "";
+	const char* exedir = st_is_dos_path ? ".\\"      : "./";
+	const char* tmpdir = st_is_dos_path ? ".\\tmp\\" : "./tmp/";
 	{
 		char hostname[ 256 ];
 		char req_uri[ 1024 ];
 		char cmd[ 4096 ];
-		const char sep = st_is_dos_path ? '\\' : '/';
+		char parent_cnct[ 4096 ] = "";
+		int ret = EXIT_FAILURE;
 
 		Znk_snprintf( hostname, sizeof(hostname), "%s.2chan.net", srv_name );
-		if( ZnkS_empty( cnct_port ) ){ cnct_port = "80"; }
-		if( ZnkS_empty( cnct_hostname ) ){
-			cnct_hostname = hostname;
+		if( ZnkS_empty( parent_proxy ) || ZnkS_eq( parent_proxy, "NONE" ) ){
+			Znk_snprintf( parent_cnct, sizeof(parent_cnct), "%s", hostname );
 			Znk_snprintf( req_uri, sizeof(req_uri), "/%s/futaba.php?mode=cat", board_id );
 		} else {
 			/* by proxy */
+			Znk_snprintf( parent_cnct, sizeof(parent_cnct), "%s", parent_proxy );
 			/* ここでのhttp://は必須である(ないとうまくいかないproxyもある) */
 			Znk_snprintf( req_uri, sizeof(req_uri), "http://%s/%s/futaba.php?mode=cat", hostname, board_id );
 		}
 		decorateHeaderGET( hostname, req_uri, ua, "", cookie );
-		Znk_snprintf( cmd, sizeof(cmd), ".%chttp_decorator %s %s catalog.htm http_hdr.dat",
-				sep, cnct_hostname, cnct_port );
-		system( cmd );
+		Znk_snprintf( result_file, sizeof(result_file), "%scatalog.htm", tmpdir );
+		Znk_snprintf( cmd, sizeof(cmd), "%shttp_decorator %s %s %scookie.txt %shttp_hdr.dat",
+				exedir, parent_cnct, result_file, tmpdir, tmpdir );
+		ret = system( cmd );
+		if( ret == EXIT_FAILURE ){
+			return false;
+		}
 	}
 	{
-		ZnkFile fp = ZnkF_fopen( "catalog.htm", "rb" );
+		ZnkFile fp = ZnkF_fopen( result_file, "rb" );
 		if( fp ){
 			ZnkStr line = ZnkStr_new( "" );
 			while( true ){
@@ -133,8 +147,9 @@ getCatalog( const char* srv_name, const char* board_id,
 		}
 	}
 	{
-		if( ZnkCookie_load( cookie, "cookie.txt" ) ){
-			ZnkVarp varp = ZnkVarpDAry_find_byName( cookie, "posttime", Znk_strlen_literal( "posttime" ), false );
+		Znk_snprintf( cookie_file, sizeof(cookie_file), "%scookie.txt", tmpdir );
+		if( ZnkCookie_load( cookie, cookie_file ) ){
+			ZnkVarp varp = ZnkVarpAry_find_byName( cookie, "posttime", Znk_strlen_literal( "posttime" ), false );
 			ZnkStr_set( posttime, ZnkVar_cstr(varp) );
 			result = true;
 		}
@@ -144,37 +159,45 @@ getCatalog( const char* srv_name, const char* board_id,
 }
 
 static bool
-getCaco( const char* srv_name, ZnkStr caco, const char* ua, ZnkVarpDAry cookie, ZnkStr thre_uri,
-		const char* cnct_hostname, const char* cnct_port )
+getCaco( const char* srv_name, ZnkStr caco, const char* ua, ZnkVarpAry cookie, ZnkStr thre_uri,
+		const char* parent_proxy )
 {
 	bool result = false;
+	char result_file[ 256 ] = "";
 	{
+		int ret = EXIT_FAILURE;
 		char hostname[ 256 ];
 		char req_uri[ 1024 ];
 		char cmd[ 4096 ];
 		char referer[ 4096 ];
-		const char sep = st_is_dos_path ? '\\' : '/';
+		const char* exedir = st_is_dos_path ? ".\\"      : "./";
+		const char* tmpdir = st_is_dos_path ? ".\\tmp\\" : "./tmp/";
+		char parent_cnct[ 4096 ] = "";
 
 		Znk_snprintf( hostname, sizeof(hostname), "%s.2chan.net", srv_name );
 		Znk_snprintf( referer, sizeof(referer), "http://%s%s", hostname, ZnkStr_cstr(thre_uri) );
-		if( ZnkS_empty( cnct_port ) ){ cnct_port = "80"; }
-		if( ZnkS_empty( cnct_hostname ) ){
-			cnct_hostname = hostname;
+		if( ZnkS_empty( parent_proxy ) || ZnkS_eq( parent_proxy, "NONE" ) ){
+			Znk_snprintf( parent_cnct, sizeof(parent_cnct), "%s", hostname );
 			Znk_snprintf( req_uri, sizeof(req_uri), "/bin/cachemt7.php" );
 		} else {
 			/* by proxy */
+			Znk_snprintf( parent_cnct, sizeof(parent_cnct), "%s", parent_proxy );
 			/* ここでのhttp://は必須である(ないとうまくいかないproxyもある) */
 			Znk_snprintf( req_uri, sizeof(req_uri), "http://%s/bin/cachemt7.php", hostname );
 		}
 		decorateHeaderGET( hostname, req_uri, ua, referer, cookie );
-		Znk_snprintf( cmd, sizeof(cmd), ".%chttp_decorator %s %s caco.txt http_hdr.dat",
-				sep, cnct_hostname, cnct_port );
+		Znk_snprintf( result_file, sizeof(result_file), "%scaco.txt", tmpdir );
+		Znk_snprintf( cmd, sizeof(cmd), "%shttp_decorator %s %s %scookie.txt %shttp_hdr.dat",
+				exedir, parent_cnct, result_file, tmpdir, tmpdir );
 
-		system( cmd );
+		ret = system( cmd );
+		if( ret == EXIT_FAILURE ){
+			return false;
+		}
 	}
 
 	{
-		ZnkFile fp = ZnkF_fopen( "caco.txt", "rb" );
+		ZnkFile fp = ZnkF_fopen( result_file, "rb" );
 		if( fp ){
 			ZnkStr line = ZnkStr_new( "" );
 			ZnkStrFIO_fgets( line, 0, 4096, fp );
@@ -189,12 +212,12 @@ getCaco( const char* srv_name, ZnkStr caco, const char* ua, ZnkVarpDAry cookie, 
 }
 
 static bool
-loadLineAryData( ZnkStrDAry line_ary, const char* filename )
+loadLineAryData( ZnkStrAry line_ary, const char* filename )
 {
 	ZnkFile fp = ZnkF_fopen( filename, "rb" );
 	if( fp ){
 		ZnkStr line = ZnkStr_new( "" );
-		ZnkStrDAry_clear( line_ary );
+		ZnkStrAry_clear( line_ary );
 
 		while( true ){
 			if( !ZnkStrFIO_fgets( line, 0, 4096, fp ) ){
@@ -214,7 +237,7 @@ loadLineAryData( ZnkStrDAry line_ary, const char* filename )
 			}
 
 			/* この行を一つの値として文字列配列へと追加 */
-			ZnkStrDAry_push_bk_cstr( line_ary, ZnkStr_cstr(line), ZnkStr_leng(line) );
+			ZnkStrAry_push_bk_cstr( line_ary, ZnkStr_cstr(line), ZnkStr_leng(line) );
 		}
 		ZnkStr_delete( line );
 		ZnkF_fclose( fp );
@@ -320,29 +343,29 @@ refUserAgent( ZnkMyf myf )
 
 static bool
 shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
-		const char* cnct_hostname, const char* cnct_port )
+		const char* parent_proxy, char* result_msg, size_t result_msg_size )
 {
 	bool result = false;
 
 	ZnkStr       caco     = ZnkStr_new( "" );
 	ZnkStr       posttime = ZnkStr_new( "" );
 	ZnkStr       thre_uri = ZnkStr_new( "" );
-	ZnkStrDAry   line_ary = ZnkStrDAry_create( true );
+	ZnkStrAry   line_ary = ZnkStrAry_create( true );
 
 	ZnkVarp      varp = NULL;
-	ZnkVarpDAry  cookie = NULL;
+	ZnkVarpAry  cookie = NULL;
 	/***
 	 * user_agent.txtの読み込みに失敗した場合は以下の値が使われる.
 	 */
-	const char*  ua   = "Firesexy";
+	const char*  ua = "futaba";
 	unsigned int random_uval1;
 	unsigned int random_uval2;
 
 	srand((unsigned) time(NULL));
 
-	cookie = ZnkVarpDAry_create( true );
+	cookie = ZnkVarpAry_create( true );
 
-	ZnkF_printf_e( "shuffleMyfFilter : cnct_hostname=[%s] cnct_port=[%s]\n", cnct_hostname, cnct_port );
+	ZnkF_printf_e( "shuffleMyfFilter : parent_proxy=[%s]", parent_proxy );
 	/***
 	 * user_agent.txtに列挙されているUser-Agentからランダムに一つ選び、
 	 * それをHttpヘッダにセットする.
@@ -368,11 +391,11 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 		size_t size;
 		size_t idx;
 		loadLineAryData( line_ary, "user_agent.txt" );
-		size = ZnkStrDAry_size( line_ary );
+		size = ZnkStrAry_size( line_ary );
 		if( size ){
 			random_uval1 = getRandomUInt();
 			idx = random_uval1 % size;
-			ua = ZnkStrDAry_at_cstr( line_ary, idx );
+			ua = ZnkStrAry_at_cstr( line_ary, idx );
 		}
 		ZnkVar_set_val_Str( varp, ua, Znk_strlen(ua) );
 	}
@@ -389,8 +412,8 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 	 * おそらく多くのユーザが最初にアクセスするのはcatalogであろうからこれは妥当な選択と思われる.
 	 * 尚、posttimeの値は全サーバで共通である. 換言すればサーバ毎に値を保持する必要はない.
 	 */
-	if( !getCatalog( srv_name, board_id, posttime, ua, cookie, thre_uri, cnct_hostname, cnct_port ) ){
-		ZnkF_printf_e( "gen_filter : Error : Cannot get catalog.\n" );
+	if( !getCatalog( srv_name, board_id, posttime, ua, cookie, thre_uri, parent_proxy ) ){
+		Znk_snprintf( result_msg, result_msg_size, "Cannot get catalog" );
 		goto FUNC_END;
 	}
 	
@@ -404,8 +427,8 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 	 * 一方、http_decoratorによるHTTP通信はキャッシングされない.
 	 * つまり毎回違った内容となる.
 	 */
-	if( !getCaco( srv_name, caco, ua, cookie, thre_uri, cnct_hostname, cnct_port ) ){
-		ZnkF_printf_e( "gen_filter : Error : Cannot get caco code.\n" );
+	if( !getCaco( srv_name, caco, ua, cookie, thre_uri, parent_proxy ) ){
+		Znk_snprintf( result_msg, result_msg_size, "Cannot get caco code" );
 		goto FUNC_END;
 	}
 
@@ -508,12 +531,12 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 
 		/* get wh */
 		loadLineAryData( line_ary, "screen_size.txt" );
-		size = ZnkStrDAry_size( line_ary );
+		size = ZnkStrAry_size( line_ary );
 		if( size ){
 			size_t idx;
 			random_uval1 = getRandomUInt();
 			idx = random_uval1 % size;
-			wh = ZnkStrDAry_at_cstr( line_ary, idx );
+			wh = ZnkStrAry_at_cstr( line_ary, idx );
 		}
 
 		/* get depth */
@@ -535,13 +558,13 @@ FUNC_END:
 	ZnkStr_delete( caco );
 	ZnkStr_delete( posttime );
 	ZnkStr_delete( thre_uri );
-	ZnkStrDAry_destroy( line_ary );
+	ZnkStrAry_destroy( line_ary );
 
 	return result;
 }
 
 bool
-on_init( ZnkMyf myf, const char* proxy_hostname, const char* proxy_port )
+initiate( ZnkMyf flr_send, const char* parent_proxy, char* result_msg, size_t result_msg_size )
 {
 	/***
 	 * 最初に参照するサーバ名と板ID名を指定.
@@ -556,14 +579,15 @@ on_init( ZnkMyf myf, const char* proxy_hostname, const char* proxy_port )
 	st_is_dos_path = false;
 #endif
 
-	if( !shuffleMyfFilter( myf, srv_name, board_id, proxy_hostname, proxy_port ) ){
-		ZnkF_printf_e( "gen_filter : Error : fail to process filter\n" );
+	ZnkDir_mkdirPath( "./tmp", Znk_NPOS, '/' );
+	if( !shuffleMyfFilter( flr_send, srv_name, board_id, parent_proxy, result_msg, result_msg_size ) ){
 		return false;
 	}
-	if( !ZnkMyf_save( myf, "filters/futaba_send.myf" ) ){
-		ZnkF_printf_e( "gen_filter : Error : Cannot save futaba_send.myf.\n" );
+	if( !ZnkMyf_save( flr_send, "filters/futaba_send.myf" ) ){
+		Znk_snprintf( result_msg, result_msg_size, "Cannot save futaba_send.myf" );
 		return false;
 	}
+	Znk_snprintf( result_msg, result_msg_size, "Virtual USERS done. Your futaba_send.myf is randomized successfully." );
 	return true;
 }
 

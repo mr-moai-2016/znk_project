@@ -24,7 +24,7 @@ $O:
 	if not exist $O mkdir $O
 
 $(DLIB_FILE): $(OBJS)
-	$(LINKER) /DLL /OUT:$(DLIB_FILE) /IMPLIB:$(ILIB_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\Znk-0.9.lib $(SUB_LIBS) ws2_32.lib /DEF:$(DEF_FILE)
+	$(LINKER) /DLL /OUT:$(DLIB_FILE) /IMPLIB:$(ILIB_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\Znk-1.0.lib $(SUB_LIBS) ws2_32.lib /DEF:$(DEF_FILE)
 
 # サフィックスルール
 {$S}.cpp{$O}.obj:

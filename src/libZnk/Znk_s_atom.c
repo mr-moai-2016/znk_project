@@ -1,5 +1,5 @@
 #include <Znk_s_atom.h>
-#include <Znk_str_dary.h>
+#include <Znk_str_ary.h>
 #include <Znk_stdc.h>
 #include <assert.h>
 
@@ -8,32 +8,32 @@ typedef struct { int dummy_; }* StrDB;
 static StrDB
 VStrDB_create( void )
 {
-	StrDB strdb = (StrDB)ZnkStrDAry_create( true );
+	StrDB strdb = (StrDB)ZnkStrAry_create( true );
 	return strdb;
 }
 static void
 VStrDB_destroy( StrDB strdb )
 {
 	if( strdb ){
-		ZnkStrDAry_destroy( (ZnkStrDAry)strdb );
+		ZnkStrAry_destroy( (ZnkStrAry)strdb );
 	}
 }
 static ZnkSAtomId
 VStrDB_intern( StrDB strdb, const char* key )
 {
-	const ZnkStrDAry vstr = (ZnkStrDAry)strdb;
+	const ZnkStrAry vstr = (ZnkStrAry)strdb;
 	const size_t leng = Znk_strlen( key );
-	const size_t id = ZnkStrDAry_find( vstr, 0, key, leng );
+	const size_t id = ZnkStrAry_find( vstr, 0, key, leng );
 	if( id == Znk_NPOS ){
-		ZnkStrDAry_push_bk_cstr( vstr, key, leng );
-		return ZnkStrDAry_size( vstr ) - 1;
+		ZnkStrAry_push_bk_cstr( vstr, key, leng );
+		return ZnkStrAry_size( vstr ) - 1;
 	}
 	return (ZnkSAtomId)id;
 }
 static const char*
 VStrDB_cstr( StrDB strdb, ZnkSAtomId id )
 {
-	return ZnkStrDAry_at_cstr( (ZnkStrDAry)strdb, id );
+	return ZnkStrAry_at_cstr( (ZnkStrAry)strdb, id );
 }
 
 typedef void        (*AtomDBFuncT_destroy)( StrDB );

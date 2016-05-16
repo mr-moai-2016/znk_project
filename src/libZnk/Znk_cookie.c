@@ -5,7 +5,7 @@
 #include <string.h>
 
 ZnkVarp
-ZnkCookie_regist_byAssignmentStatement( ZnkVarpDAry cookie, const char* stmt, size_t stmt_leng )
+ZnkCookie_regist_byAssignmentStatement( ZnkVarpAry cookie, const char* stmt, size_t stmt_leng )
 {
 	size_t key_begin = Znk_NPOS;
 	size_t key_end   = Znk_NPOS;
@@ -25,13 +25,13 @@ ZnkCookie_regist_byAssignmentStatement( ZnkVarpDAry cookie, const char* stmt, si
 		val = stmt + val_begin;
 
 		/* regist */
-		varp = ZnkVarpDAry_find_byName( cookie,
+		varp = ZnkVarpAry_find_byName( cookie,
 				key, key_end - key_begin, false );
 		if( varp == NULL ){
 			/* V‹K’Ç‰Á */
 			varp = ZnkVarp_create( "", "", 0, ZnkPrim_e_Str );
 			ZnkStr_assign( varp->name_, 0, key, key_end - key_begin );
-			ZnkVarpDAry_push_bk( cookie, varp );
+			ZnkVarpAry_push_bk( cookie, varp );
 		}
 		ZnkVar_set_val_Str( varp, val, val_end - val_begin );
 		return varp;
@@ -39,7 +39,7 @@ ZnkCookie_regist_byAssignmentStatement( ZnkVarpDAry cookie, const char* stmt, si
 	return NULL;
 }
 void
-ZnkCookie_regist_byCookieStatement( ZnkVarpDAry cok_vars, const char* cok_stmt, size_t cok_stmt_leng )
+ZnkCookie_regist_byCookieStatement( ZnkVarpAry cok_vars, const char* cok_stmt, size_t cok_stmt_leng )
 {
 	const char* p = cok_stmt;
 	const char* e = p + cok_stmt_leng;
@@ -61,15 +61,15 @@ ZnkCookie_regist_byCookieStatement( ZnkVarpDAry cok_vars, const char* cok_stmt, 
 }
 
 void
-ZnkCookie_extend_toCookieStatement( const ZnkVarpDAry cok_vars, ZnkStr cok_stmt )
+ZnkCookie_extend_toCookieStatement( const ZnkVarpAry cok_vars, ZnkStr cok_stmt )
 {
-	const size_t cok_size = ZnkVarpDAry_size( cok_vars );
+	const size_t cok_size = ZnkVarpAry_size( cok_vars );
 	size_t       cok_idx;
 	ZnkVarp      cok_var;
 	size_t       cok_val_leng;
 
 	for( cok_idx=0; cok_idx<cok_size; ++cok_idx ){
-		cok_var = ZnkVarpDAry_at( cok_vars, cok_idx );
+		cok_var = ZnkVarpAry_at( cok_vars, cok_idx );
 		cok_val_leng = ZnkVar_str_leng( cok_var );
 		if( cok_val_leng ){
 			ZnkStr_addf( cok_stmt, "%s=%s",
@@ -82,7 +82,7 @@ ZnkCookie_extend_toCookieStatement( const ZnkVarpDAry cok_vars, ZnkStr cok_stmt 
 }
 
 bool
-ZnkCookie_load( ZnkVarpDAry cookie, const char* cookie_filename )
+ZnkCookie_load( ZnkVarpAry cookie, const char* cookie_filename )
 {
 	ZnkFile fp = ZnkF_fopen( cookie_filename, "rb" );
 	if( fp == NULL ){
@@ -104,17 +104,17 @@ ZnkCookie_load( ZnkVarpDAry cookie, const char* cookie_filename )
 }
 
 bool
-ZnkCookie_save( const ZnkVarpDAry cookie, const char* cookie_filename )
+ZnkCookie_save( const ZnkVarpAry cookie, const char* cookie_filename )
 {
 	ZnkFile fp = ZnkF_fopen( cookie_filename, "wb" );
 	if( fp == NULL ){
 		return false;
 	} else {
-		const size_t size = ZnkVarpDAry_size( cookie );
+		const size_t size = ZnkVarpAry_size( cookie );
 		ZnkVarp varp;
 		size_t idx;
 		for( idx=0; idx<size; ++idx ){
-			varp = ZnkVarpDAry_at( cookie, idx );
+			varp = ZnkVarpAry_at( cookie, idx );
 			if( varp ){
 				ZnkF_fprintf( fp, "%s=%s\n",
 						ZnkStr_cstr( varp->name_ ),

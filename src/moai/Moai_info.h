@@ -2,13 +2,20 @@
 #define INCLUDE_GUARD__Moai_info_h__
 
 #include <Znk_str.h>
-#include <Znk_str_dary.h>
+#include <Znk_str_ary.h>
 #include <Znk_var.h>
+#include <Znk_varp_ary.h>
 #include <Znk_htp_hdrs.h>
 #include "Moai_module_ary.h"
 #include <assert.h>
 
 Znk_EXTERN_C_BEGIN
+
+typedef uint64_t MoaiInfoID;
+
+typedef struct {
+	char buf_[ 16+1 ];
+} MoaiInfoIDStr;
 
 typedef enum {
 	 MoaiText_e_Binary=0
@@ -18,22 +25,36 @@ typedef enum {
 } MoaiTextType;
 
 typedef struct {
+	MoaiInfoID            id_;
 	struct ZnkHtpHdrs_tag hdrs_;
-	ZnkVarpDAry           vars_;   /* for POST */
+	ZnkVarpAry           vars_;   /* for POST */
 	ZnkBfr                stream_; /* 送受信の際に実際に使われるストリーム */
 	size_t                hdr_size_;
-	const char*           proxy_hostname_;
+	ZnkHtpReqMethod       req_method_;
+	ZnkStr                req_urp_;
+	ZnkStr                proxy_hostname_;
 	uint16_t              proxy_port_;
 } MoaiInfo;
 
-Znk_INLINE void
-MoaiInfo_clear( MoaiInfo* info )
-{
-	ZnkHtpHdrs_clear( &info->hdrs_ );
-	ZnkVarpDAry_clear( info->vars_ );
-	ZnkBfr_clear( info->stream_ );
-	info->hdr_size_ = 0;
-}
+void
+MoaiInfo_initiate( void );
+
+MoaiInfoID
+MoaiInfo_regist( const MoaiInfo* info );
+
+MoaiInfo*
+MoaiInfo_find( MoaiInfoID query_id );
+
+void
+MoaiInfo_erase( MoaiInfoID query_id );
+void
+MoaiInfo_clear( MoaiInfo* info );
+
+void
+MoaiInfoID_getStr( MoaiInfoID id, MoaiInfoIDStr* id_str );
+MoaiInfoID
+MoaiInfoID_scanIDStr( MoaiInfoIDStr* id_str );
+
 
 typedef struct {
 	bool    is_chunked_;
@@ -65,9 +86,9 @@ MoaiBodyInfo_clear( MoaiBodyInfo* body_info )
  */
 void
 MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
-		ZnkMyf config, bool* as_local_proxy, uint16_t my_port, bool is_request,
+		bool* as_local_proxy, uint16_t my_port, bool is_request,
 		const char* response_hostname,
-		MoaiModuleAry mod_ary, ZnkMyf mtgt, ZnkStr req_urp );
+		MoaiModuleAry mod_ary, const char* server_name );
 
 Znk_EXTERN_C_END
 

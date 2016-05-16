@@ -271,10 +271,12 @@ makeDirectory( const char* dir )
 	bool result = (bool)( CreateDirectory( dir, NULL ) != 0 );
 	if( result ){
 		/* success */
+	ZnkF_printf_e( "makeDirectory[%s] result=[%d]\n", dir, result );
 		return true;
 	} else {
 		printWinLastError();
 	}
+	ZnkF_printf_e( "makeDirectory[%s] result=[%d]\n", dir, result );
 	return result;
 
 #else
@@ -332,7 +334,7 @@ makeDirectory( const char* dir )
  * Multibyte文字対応としなければならずコードが複雑化するので現段階ではサポートしていない.
  */
 bool
-ZnkDir_mkdirPath( char* path, const size_t path_leng, char sep )
+ZnkDir_mkdirPath( const char* path, size_t path_leng, char sep )
 {
 	bool result = false;
 	size_t begin = 0;
@@ -366,36 +368,58 @@ ZnkDir_mkdirPath( char* path, const size_t path_leng, char sep )
 		}
 	}
 
-	while( true ){
-		end = ZnkS_lfind_one_of( path, begin, path_leng, sep_set, sep_set_leng );
-		if( end == Znk_NPOS ){
-			result = makeDirectory( path ); /* 必ず文字列の開始位置(path)から指定 */
-			break;
-		} else if( end == begin ){
-			/***
-			 * 絶対パスの先頭であるか、または SEPが二つ以上連続しているケースなどでは
-			 * ここに来る可能性がある. これはスキップする.
-			 */
-			++begin;
-		} else {
-			if( path[ end ] == '\\' ){
+	{
+		/***
+		 * makeDirectory内のWindowsAPIおよびSystemCallではNULL終端するpath文字列を
+		 * 渡す必要がある. そしてここではsepを通過するたびにディレクトリを親から子へと
+		 * 段階的に作成していかなければならず、それぞれの呼び出しにおいてpath文字列内の
+		 * 使用範囲を段階的に拡張していく形になる.
+		 *
+		 * これを実現するには、path内のsepの存在する位置に一時的にNULL終端文字を代入し、
+		 * makeDirectoryを呼び出す必要がある. しかしながら、もしpathに文字列リテラルが
+		 * 指定されていた場合、これは大抵の環境ではROM領域にあり、よってこの方法では
+		 * セグメンテーションバイオレーションを引き起こす.
+		 *
+		 * よってpathを直接書き換えることはここでは出来ない. 
+		 * 別の書込み可な文字列バッファに一旦全体をコピーしてそれを使う必要がある.
+		 */
+		char path_buf[ 1024 ] = "";
+		ZnkS_copy( path_buf, sizeof(path_buf), path, Znk_NPOS );
+
+		while( true ){
+			end = ZnkS_lfind_one_of( path_buf, begin, path_leng, sep_set, sep_set_leng );
+			if( end == Znk_NPOS ){
+				result = makeDirectory( path_buf ); /* 必ず文字列の開始位置(path_buf)から指定 */
+				break;
+			} else if( end == begin ){
 				/***
-				 * \ 文字の直前が 下記の範囲であるような文字コードであった場合は
-				 * ここで処理を中断し、エラーとする.
+				 * 絶対パスの先頭であるか、または SEPが二つ以上連続しているケースなどでは
+				 * ここに来る可能性がある. これはスキップする.
 				 */
-				size_t prev = end-1;
-				int prev_ch = path[ prev ];
-				if( prev_ch & 0x80 ){
-					if( prev_ch <= 0x9F || prev_ch >= 0xE0 ){ 
-						return false;
+				++begin;
+			} else {
+				if( path_buf[ end ] == '\\' ){
+					/***
+					 * \ 文字の直前が 下記の範囲であるような文字コードであった場合は
+					 * ここで処理を中断し、エラーとする.
+					 */
+					size_t prev = end-1;
+					int prev_ch = path_buf[ prev ];
+					if( prev_ch & 0x80 ){
+						if( prev_ch <= 0x9F || prev_ch >= 0xE0 ){ 
+							return false;
+						}
 					}
 				}
+				/***
+				 * 既に存在しているDirectoryの場合、以下のresultはfalseとなるが
+				 * その場合でも中断せず、最後まで続ける.
+				 */
+				path_buf[ end ] = '\0'; /* 一時的にここで終端する */
+				result = makeDirectory( path_buf ); /* 必ず文字列の開始位置(path_buf)から指定 */
+				path_buf[ end ] = '/'; /* SEPに戻す */
+				begin = end + 1;
 			}
-			path[ end ] = '\0'; /* 一時的にここで終端する */
-			result = makeDirectory( path ); /* 必ず文字列の開始位置(path)から指定 */
-			path[ end ] = '/'; /* SEPに戻す */
-			if( !result ){ break; }
-			begin = end + 1;
 		}
 	}
 	return result;

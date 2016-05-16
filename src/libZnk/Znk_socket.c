@@ -2,6 +2,7 @@
 #include "Znk_net_base.h"
 #include "Znk_sys_errno.h"
 #include "Znk_stdc.h"
+#include "Znk_thread.h"
 
 #if defined(Znk_TARGET_WINDOWS)
 #  include <winsock2.h>
@@ -9,6 +10,7 @@
 #elif defined(Znk_TARGET_UNIX)
 #  include <sys/socket.h> /* for socket,connect,bind,listen,accept,shutdown,recv,send etc. */
 #  include <unistd.h>     /* for close */
+#  include <fcntl.h>      /* for fcntl etc. */
 #  include <arpa/inet.h>  /* for inet_* function (inet_addr etc) */
 #  include <netdb.h>      /* for gethostbyname, getservbyname */
 #  include <netinet/in.h> /* for struct sockaddr_in, htons etc. */
@@ -16,6 +18,7 @@
 #else
 #endif
 
+#include <errno.h>
 
 
 ZnkSocket
@@ -52,22 +55,25 @@ ZnkSocket_accept( ZnkSocket listen_sock )
 	return accept( listen_sock, &addr, &addr_leng );
 }
 
-void
-ZnkSocket_set_blocking_mode( ZnkSocket sock, bool is_blocking_mode )
+bool
+ZnkSocket_setBlockingMode( ZnkSocket sock, bool is_blocking_mode )
 {
+#if defined(Znk_TARGET_WINDOWS)
 	/***
 	 * ソケットのデフォルトはブロッキングモードである.
 	 * val = 1 で下記を呼び出すことにより非ブロッキングモードに変更できる.
 	 * val = 0 でブロッキングモードに設定しなおすことも可能.
-	 *
-	 * これは試験的実装である.
-	 * WinSockならばこれでよいがLinuxではまだ未確認でこれではうまくいかないかもしれない.
 	 */
-#if defined(Znk_TARGET_WINDOWS)
 	unsigned long val = is_blocking_mode ? 0 : 1;
-	ioctlsocket( sock, FIONBIO, &val );
+	int rc = ioctlsocket( sock, FIONBIO, &val );
+	return (bool)( rc == 0 );
 #else
-	/* 調査中 */
+    int rc = fcntl( sock, F_GETFL, 0 );
+    if( rc < 0 ) return false;
+
+    rc = fcntl( sock, F_SETFL, is_blocking_mode ? (rc & ~O_NONBLOCK) : (rc | O_NONBLOCK) );
+    if( rc < 0 ) return false;
+    return true;
 #endif
 }
 
@@ -76,8 +82,10 @@ ZnkSocket_set_blocking_mode( ZnkSocket sock, bool is_blocking_mode )
  * serverには sin_familyとsin_portは設定済みであるとする.
  */
 Znk_INLINE bool
-connectCore( ZnkSocket sock, struct sockaddr_in* server, const char* hostname, ZnkErr* zkerr )
+connectCore( ZnkSocket sock, struct sockaddr_in* server, const char* hostname, ZnkErr* zkerr, bool* is_inprogress )
 {
+	int rc;
+	*is_inprogress = false;
 #if defined(Znk_TARGET_WINDOWS)
 
 	/***
@@ -108,9 +116,19 @@ connectCore( ZnkSocket sock, struct sockaddr_in* server, const char* hostname, Z
 		while( *addrptr != NULL ){
 			server->sin_addr.S_un.S_addr = *(*addrptr);
 			/* connect()が成功したらloopを抜ける */
-			if( connect(sock, (struct sockaddr *)server, sizeof(struct sockaddr_in)) == 0 ){
+			rc = connect(sock, (struct sockaddr *)server, sizeof(struct sockaddr_in));
+			if( rc == 0 ){
 				/* 成功. これを採用 */
 				break;
+			}
+			/***
+			 * 非ブロッキングIOの場合.
+			 * この場合はWSAEWOULDBLOCKとなっていたらis_inprogressとみなす.
+			 * 戻り値はtrueとする.
+			 */
+			if( WSAGetLastError() == WSAEWOULDBLOCK ){
+				*is_inprogress = true;
+				return true;
 			}
 			++addrptr;
 		}
@@ -126,12 +144,22 @@ connectCore( ZnkSocket sock, struct sockaddr_in* server, const char* hostname, Z
 		
 	} else {
 		/* inet_addr()が成功したとき(hostnameにはIPアドレスが直に指定されていたものと思われる) */
-		if( connect(sock, (struct sockaddr *)server, sizeof(struct sockaddr_in)) != 0 ){
-			char errmsg_buf[ 4096 ];
-			ZnkNetBase_getErrMsg( errmsg_buf, sizeof(errmsg_buf), WSAGetLastError() );
-			ZnkErr_internf( zkerr, "ZnkSocket_connectToServer : Failure : connect IP=[%08x] WSAErr=[%s]",
-					server->sin_addr.S_un.S_addr, errmsg_buf );
-			return false;
+		rc = connect( sock, (struct sockaddr *)server, sizeof(struct sockaddr_in) );
+		if( rc != 0 ){
+			/***
+			 * 非ブロッキングIOの場合.
+			 * この場合はWSAEWOULDBLOCKとなっていたらis_inprogressとみなす.
+			 * 戻り値はtrueとする.
+			 */
+			if( WSAGetLastError() == WSAEWOULDBLOCK ){
+				*is_inprogress = true;
+			} else {
+				char errmsg_buf[ 4096 ];
+				ZnkNetBase_getErrMsg( errmsg_buf, sizeof(errmsg_buf), WSAGetLastError() );
+				ZnkErr_internf( zkerr, "ZnkSocket_connectToServer : Failure : connect IP=[%08x] WSAErr=[%s]",
+						server->sin_addr.S_un.S_addr, errmsg_buf );
+				return false;
+			}
 		}
 	}
 	return true;
@@ -140,6 +168,7 @@ connectCore( ZnkSocket sock, struct sockaddr_in* server, const char* hostname, Z
 
 	/* ホスト名とIP アドレスを扱うための構造体のポインタ(gethostbynameの戻り値) */
 	struct hostent* servhost = gethostbyname( hostname );
+	Znk_UNUSED( rc );
 	if( servhost == NULL ){
 		ZnkSysErrnoInfo* err_info = ZnkSysErrno_getInfo( ZnkSysErrno_errno() );
 		ZnkErr_internf( zkerr,
@@ -151,6 +180,10 @@ connectCore( ZnkSocket sock, struct sockaddr_in* server, const char* hostname, Z
 	/* sin_addr(IPアドレス) */
 	Znk_memcpy( &(server->sin_addr), servhost->h_addr, servhost->h_length ); 
 	if( connect(sock, (struct sockaddr*)server, sizeof(struct sockaddr_in) ) != 0 ){
+		if( errno == EINPROGRESS ){
+			*is_inprogress = true;
+			return true;
+		}
 		ZnkSysErrnoInfo* err_info = ZnkSysErrno_getInfo( ZnkSysErrno_errno() );
 		ZnkErr_internf( zkerr,
 				"ZnkSocket_connectToServer : Failure : connect IP=[%08x] SysErr=[%s:%s]",
@@ -162,7 +195,7 @@ connectCore( ZnkSocket sock, struct sockaddr_in* server, const char* hostname, Z
 }
 
 bool
-ZnkSocket_connectToServer( ZnkSocket sock, const char* hostname, uint16_t port, ZnkErr* zkerr )
+ZnkSocket_connectToServer( ZnkSocket sock, const char* hostname, uint16_t port, ZnkErr* zkerr, bool* is_inprogress )
 {
 	struct sockaddr_in server;   /* ソケットを扱うための構造体 */
 
@@ -175,7 +208,7 @@ ZnkSocket_connectToServer( ZnkSocket sock, const char* hostname, uint16_t port, 
 	/* port */
 	server.sin_port = htons(port);
 
-	return connectCore( sock, &server, hostname, zkerr );
+	return connectCore( sock, &server, hostname, zkerr, is_inprogress );
 }
 
 /***
@@ -198,43 +231,100 @@ ZnkSocket_getPort_byTCPName( const char* service_name )
 	return ntohs( service->s_port );
 }
 
+#if defined(Znk_TARGET_WINDOWS)
+/***
+ * WSAGetLastErrorの値およびerrnoは、マルチスレッド版ライブラリでは
+ * スレッド毎に実体がある(つまりthread-safeである).
+ */
+static void
+set_errno_forWin( int winsock_err )
+{
+	switch(winsock_err) {
+	case WSAEWOULDBLOCK:
+		errno = EAGAIN;
+		break;
+	default:
+		errno = winsock_err;
+		break;
+	}
+}
+#endif
+
 int
 ZnkSocket_send( ZnkSocket sock, const uint8_t* data, size_t data_size )
 {
+	int rc;
+AGAIN:
 #if defined(Znk_TARGET_WINDOWS)
-	return send( sock, (const char*)data, (int)data_size, 0 );
+	rc = send( sock, (const char*)data, (int)data_size, 0 );
+	if( rc == SOCKET_ERROR ){
+		int winsock_err = WSAGetLastError();
+		set_errno_forWin( winsock_err );
+	}
 #else
-	return send( sock, (const char*)data, data_size, 0 );
+	rc = send( sock, (const char*)data, data_size, 0 );
 #endif
+
+	/* とりあえず現時点では旧来のブロッキングIOの通り、完了するまで繰り返す */
+	if( rc < 0 ){
+		if( ZnkSysErrno_errno() == EAGAIN ){
+			ZnkThread_sleep( 500 );
+			goto AGAIN;
+		}
+	}
+	return rc;
 }
 int
 ZnkSocket_recv( ZnkSocket sock, uint8_t* buf, size_t buf_size )
 {
+	int rc;
+AGAIN:
 #if defined(Znk_TARGET_WINDOWS)
-	return recv( sock, (char*)buf, (int)buf_size, 0 );
-#else
-	return recv( sock, (char*)buf, buf_size, 0 );
-#endif
-}
-int
-ZnkSocket_forward( ZnkSocket src_sock, ZnkSocket dst_sock, uint8_t* buf, size_t buf_size )
-{
-	int recv_size = ZnkSocket_recv( src_sock, buf, buf_size );
-	if( recv_size > 0 ){
-		int forward_size = 0;
-		int send_size = 0;
-		while( forward_size < recv_size ){
-			send_size = ZnkSocket_send( dst_sock, buf + forward_size, recv_size - forward_size );
-			if( send_size > 0 ){
-				forward_size += send_size;
-			} else if( send_size < 0 ){
-				return send_size; /* send error */
-			} else {
-				/* 最大試行回数を設定すべきか? */
-			}
-		}
-		return forward_size;
+	rc = recv( sock, (char*)buf, (int)buf_size, 0 );
+	if( rc == SOCKET_ERROR ){
+		int winsock_err = WSAGetLastError();
+		set_errno_forWin( winsock_err );
 	}
-	return recv_size; /* recv error */
-}
+#else
+	rc = recv( sock, (char*)buf, buf_size, 0 );
+#endif
 
+	/* とりあえず現時点では旧来のブロッキングIOの通り、完了するまで繰り返す */
+	if( rc < 0 ){
+		if( ZnkSysErrno_errno() == EAGAIN ){
+			ZnkThread_sleep( 500 );
+			goto AGAIN;
+		}
+	}
+	return rc;
+}
+bool
+ZnkSocket_getPeerIPandPort( ZnkSocket sock, uint32_t* ipaddr, uint16_t* port )
+{
+	struct sockaddr_in addr;   // ソケットアドレス
+#if defined(Znk_TARGET_WINDOWS)
+	int addr_leng = sizeof(struct sockaddr);
+#else
+	socklen_t addr_leng = sizeof(struct sockaddr);
+#endif
+	int  result;
+	
+	// アドレス情報取得
+	result = getpeername( sock, (struct sockaddr*)&addr, &addr_leng );
+	if( result < 0 ){
+		ZnkF_printf_e( "ZnkSocket_print_peername : getpeername error\n" );
+		return false;
+	}
+	
+	if( ipaddr ){
+#if defined(Znk_TARGET_WINDOWS)
+		*ipaddr = (uint32_t)addr.sin_addr.S_un.S_addr;
+#else
+		*ipaddr = (uint32_t)addr.sin_addr.s_addr;
+#endif
+	}
+	if( port ){
+		*port = ntohs( addr.sin_port);
+	}
+	return true;
+}

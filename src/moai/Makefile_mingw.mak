@@ -20,6 +20,8 @@ OBJS = \
 	$O\Moai_log.o \
 	$O\Moai_fdset.o \
 	$O\Moai_parent_proxy.o \
+	$O\Moai_myf.o \
+	$O\Moai_enc_util.o \
 	$O\main.o \
 
 EXE_FILE=$O\$(BASENAME).exe
@@ -31,7 +33,7 @@ $O:
 	if not exist $O mkdir $O
 
 $(EXE_FILE): $(OBJS) $(RES_FILE)
-	$(LINKER) -o $(EXE_FILE) $(RES_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\Znk-0.9.dll.a
+	$(LINKER) -o $(EXE_FILE) $(RES_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\Znk-1.0.dll.a
 
 ##
 # Sub-DirectoryÇ…äiî[Ç≥ÇÍÇΩÉtÉ@ÉCÉãÇ»Ç«Ç…Ç‡è_ìÓÇ…ëŒâûÇ∑ÇÈÇΩÇﬂÅA

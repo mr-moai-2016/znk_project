@@ -2,7 +2,7 @@
 #define Znk_fdset_h__INCLUDED__
 
 #include <Znk_socket.h>
-#include <Znk_socket_dary.h>
+#include <Znk_socket_ary.h>
 
 Znk_EXTERN_C_BEGIN
 
@@ -37,7 +37,7 @@ ZnkFdSet_print( const ZnkFdSet fdst );
 void
 ZnkFdSet_copy( ZnkFdSet dst, const ZnkFdSet src );
 void
-ZnkFdSet_getSocketDAry( ZnkFdSet fdst, ZnkSocketDAry sock_dary );
+ZnkFdSet_getSocketAry( ZnkFdSet fdst, ZnkSocketAry sock_ary );
 ZnkSocket
 ZnkFdSet_getMaxOfSocket( const ZnkFdSet fdst );
 size_t

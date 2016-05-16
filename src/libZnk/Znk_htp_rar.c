@@ -3,7 +3,7 @@
 #include <Znk_socket.h>
 #include <Znk_cookie.h>
 #include <Znk_s_base.h>
-#include <Znk_str_dary.h>
+#include <Znk_str_ary.h>
 #include <Znk_stdc.h>
 #include <Znk_mem_find.h>
 #include <Znk_sys_errno.h>
@@ -27,7 +27,7 @@ typedef struct HeaderInfo_tag {
 	bool       is_chunked_;
 	size_t     content_length_;
 	bool       is_gzip_;
-	ZnkStrDAry set_cookie_; 
+	ZnkStrAry set_cookie_; 
 } HeaderInfo;
 
 static HeaderInfo*
@@ -37,7 +37,7 @@ createHeaderInfo( void )
 	hdr_info->is_chunked_     = false;
 	hdr_info->content_length_ = 0;
 	hdr_info->is_gzip_        = false;
-	hdr_info->set_cookie_     = ZnkStrDAry_create( true );
+	hdr_info->set_cookie_     = ZnkStrAry_create( true );
 	return hdr_info;
 }
 static void
@@ -46,13 +46,13 @@ clearHeaderInfo( HeaderInfo* hdr_info )
 	hdr_info->is_chunked_     = false;
 	hdr_info->content_length_ = 0;
 	hdr_info->is_gzip_        = false;
-	ZnkStrDAry_clear( hdr_info->set_cookie_ );
+	ZnkStrAry_clear( hdr_info->set_cookie_ );
 }
 static void
 destroyHeaderInfo( HeaderInfo* hdr_info )
 {
 	if( hdr_info ){
-		ZnkStrDAry_destroy( hdr_info->set_cookie_ );
+		ZnkStrAry_destroy( hdr_info->set_cookie_ );
 		Znk_free( hdr_info );
 	}
 }
@@ -290,7 +290,7 @@ recvHeader( ZnkStockBIO sbio, ZnkHtpHdrs recv_hdrs, HeaderInfo* hdr_info )
 				val = ZnkHtpHdrs_val_cstr( var, idx );
 				val_leng = Znk_strlen( val );
 				pos = ZnkMem_lfind_8( (uint8_t*)val, val_leng, (uint8_t)';', 1 );
-				ZnkStrDAry_push_bk_cstr( hdr_info->set_cookie_, val, ( pos == Znk_NPOS ) ? val_leng : pos );
+				ZnkStrAry_push_bk_cstr( hdr_info->set_cookie_, val, ( pos == Znk_NPOS ) ? val_leng : pos );
 			}
 		}
 	}
@@ -382,7 +382,7 @@ static bool
 sendAndRecv_bySocket( ZnkSocket sock,
 		ZnkHtpHdrs send_hdrs, ZnkBfr send_body,
 		ZnkHtpHdrs recv_hdrs, ZnkHtpOnRecvFuncArg recv_fnca,
-		ZnkVarpDAry cookie, ZnkBfr wk_bfr )
+		ZnkVarpAry cookie, ZnkBfr wk_bfr )
 {
 	ZnkErr_D( err );
 	bool result = false;
@@ -422,9 +422,9 @@ sendAndRecv_bySocket( ZnkSocket sock,
 		} else {
 			if( cookie ){
 				size_t i;
-				size_t n = ZnkStrDAry_size( hdr_info->set_cookie_ );
+				size_t n = ZnkStrAry_size( hdr_info->set_cookie_ );
 				for( i=0; i<n; ++i ){
-					const char* line = ZnkStrDAry_at_cstr( hdr_info->set_cookie_, i );
+					const char* line = ZnkStrAry_at_cstr( hdr_info->set_cookie_, i );
 					ZnkCookie_regist_byAssignmentStatement( cookie, line, Znk_NPOS );
 				}
 			}
@@ -497,19 +497,19 @@ bool
 ZnkHtpRAR_sendAndRecv( const char* cnct_hostname, uint16_t cnct_port,
 		ZnkHtpHdrs send_hdrs, ZnkBfr send_body,
 		ZnkHtpHdrs recv_hdrs, ZnkHtpOnRecvFuncArg recv_fnca,
-		ZnkVarpDAry cookie,
+		ZnkVarpAry cookie,
 		size_t try_connect_num, bool is_proxy, ZnkBfr wk_bfr )
 {
 	bool        result = false;
 	const char* hostname = cnct_hostname;
 	bool        is_need_modify_req_uri = false;
 	ZnkVarp     varp   = ZnkHtpHdrs_find_literal( send_hdrs->vars_, "Host" );
-	ZnkStrDAry  hdr1st = send_hdrs->hdr1st_;
+	ZnkStrAry  hdr1st = send_hdrs->hdr1st_;
 
 	if( varp ){
 		hostname = ZnkVar_name_cstr( varp );
 		if( is_proxy ){
-			ZnkStr req_uri = ZnkStrDAry_at( hdr1st, 1 );
+			ZnkStr req_uri = ZnkStrAry_at( hdr1st, 1 );
 			/* connect via proxy. */
 			switch( ZnkStr_first(req_uri) ){
 			case '/':
@@ -526,7 +526,7 @@ ZnkHtpRAR_sendAndRecv( const char* cnct_hostname, uint16_t cnct_port,
 
 	if( is_need_modify_req_uri ){
 		ZnkStr tmp = ZnkStr_new( "" );
-		ZnkStr req_uri = ZnkStrDAry_at( hdr1st, 1 );
+		ZnkStr req_uri = ZnkStrAry_at( hdr1st, 1 );
 		ZnkStr_addf( tmp, "%s%s", hostname, ZnkStr_cstr( req_uri ) );
 		ZnkStr_swap( tmp, req_uri );
 		ZnkStr_delete( tmp );
@@ -535,9 +535,10 @@ ZnkHtpRAR_sendAndRecv( const char* cnct_hostname, uint16_t cnct_port,
 	{
 		ZnkErr_D( err );
 		ZnkSocket sock = ZnkSocket_open();
+		bool is_inprogress = false;
 	
 		while( try_connect_num ){
-			if( !ZnkSocket_connectToServer( sock, cnct_hostname, cnct_port, &err ) ){
+			if( !ZnkSocket_connectToServer( sock, cnct_hostname, cnct_port, &err, &is_inprogress ) ){
 				ZnkF_printf_e( "%s (try=%u).\n", ZnkErr_cstr(err),try_connect_num );
 				--try_connect_num;
 				if( try_connect_num == 0 ){

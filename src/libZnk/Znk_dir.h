@@ -118,7 +118,7 @@ ZnkDir_rename( const char* src_path, const char* dst_path );
  *   ‚È‚ñ‚ç‚©‚Ì——R‚Åì¬‚É¸”s‚µ‚½ê‡‚Í‚È‚É‚à‚¹‚¸false‚ğ•Ô‚·.
  */
 bool
-ZnkDir_mkdirPath( char* path, const size_t path_leng, char sep );
+ZnkDir_mkdirPath( const char* path, size_t path_leng, char sep );
 
 
 

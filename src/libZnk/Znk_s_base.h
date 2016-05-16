@@ -141,6 +141,12 @@ typedef struct { ZnkS_FuncT_IsKeyChar  func_; void* arg_; } ZnkS_FuncArg_IsKeyCh
 
 /**
  * @brief
+ *   この関数型は、ptnで指定した規則にqueryがマッチするか否かを返す.
+ */
+typedef bool (*ZnkS_FuncT_IsMatch)( const char* ptn, size_t ptn_leng, const char* query, size_t query_leng );
+
+/**
+ * @brief
  *   第2引数に strncmp型の関数へのポインタを指定し、それをダイレクトに
  *   呼び出すような ZnkS_FuncArg_StrCompare 型を作成する.
  *   結果は第1引数へ格納される.
@@ -291,6 +297,9 @@ ZnkS_isMatchBeginEx(
 		const ZnkS_FuncArg_StrCompare* strcompare_funcarg );
 bool
 ZnkS_isMatchBegin( const char* str, const char* ptn, const char* keychars );
+bool
+ZnkS_isMatchSWC( const char* ptn, size_t ptn_leng,
+		const char* query, size_t query_leng );
 
 
 /**

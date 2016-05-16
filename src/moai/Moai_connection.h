@@ -3,14 +3,19 @@
 
 #include <Znk_socket.h>
 #include <Znk_htp_hdrs.h>
+#include <Znk_fdset.h>
+#include "Moai_info.h"
+#include "Moai_fdset.h"
 
 Znk_EXTERN_C_BEGIN
 
-/* DNS関連のRFCであるRFC1035によれば、ドメイン名は最大でも255オクテット以下とある.
- * 従って、ここではhostnameのバッファサイズとして256あれば十分 */
-#define MOAI_HOSTNAME_MAX 256  
-/* IPV6も含めれば64もあれば十分 */
-#define MOAI_IPADDR_MAX 64  
+/***
+ * DNS名:
+ * DNS関連のRFCであるRFC1035によれば、ドメイン名は最大でも255オクテット以下とある.
+ *
+ * IP:
+ * IPV6も含めれば64もあれば十分.
+ */
 
 typedef enum {
 	 MoaiSockType_e_None=0 /* 未接続状態など */
@@ -20,43 +25,99 @@ typedef enum {
 } MoaiSockType;
 
 typedef struct MoaiConnection_tag* MoaiConnection;
+typedef void (*MoaiConnectedCallback)( MoaiConnection mcn, MoaiFdSet mfds, MoaiInfoID );
+
 struct MoaiConnection_tag {
-	char            hostname_[ MOAI_HOSTNAME_MAX ]; /* O側ホスト名 */
-	//char            ipaddr_[ MOAI_IPADDR_MAX ];     /* O側IP アドレス */
-	uint16_t        port_;                          /* O側との通信に用いるport */
-	ZnkSocket       src_sock_;      /* keyとなるsock */
-	MoaiSockType    sock_type_;     /* src_sockのタイプ */
-	bool            is_keep_alive_; /* src_sockがkeep-aliveであるか否か */
-	ZnkSocket       dst_sock_;      /* tunnelingモードである場合のdst_sock */
+	ZnkStr          hostname_;        /* ゴールとなるホスト名(Proxyではない) */
+	uint16_t        port_;            /* ゴールとなるホストとの通信に用いるport(Proxyではない) */
+	ZnkSocket       I_sock_;          /* I側sock */
+	bool            I_is_keep_alive_; /* I側sockがkeep-aliveであるか否か */
+	ZnkSocket       O_sock_;          /* O側sock */
 	size_t          content_length_remain_;
-	bool            as_local_proxy_;
-	//ZnkStr          req_uri_;
-	ZnkStr          req_urp_; /* Request URL Path : URLにおけるオーソリティの終了以降の/で始まる部分を示す */
-	ZnkHtpReqMethod req_method_;
 	uint64_t        exile_time_;
-	uint64_t        waiting_;
-	/* TODO:timeoutすると自動的にcloseするための情報も追加したい */
+	bool            is_connect_inprogress_;
+	uint64_t        connect_begin_time_;
+	MoaiConnectedCallback cb_func_;
+
+	/***
+	 * Pipeline化に対応.
+	 */
+	ZnkBfr          info_id_list_;
+	ZnkBfr          prev_req_method_list_;
 };
+
 
 void
 MoaiConnection_initiate( void );
 
 void
-MoaiConnection_clear( MoaiConnection htcn );
+MoaiConnection_setListeningSock( ZnkSocket L_sock );
+bool
+MoaiConnection_isListeningSock( ZnkSocket query_sock );
+void
+MoaiConnection_setBlockingMode( bool blocking_mode );
+bool
+MoaiConnection_isBlockingMode( void );
 
 MoaiConnection
-MoaiConnection_find( const ZnkSocket query_sock );
-MoaiConnection
-MoaiConnection_find_dst_sock( const ZnkSocket query_sock );
+MoaiConnection_regist( const char* hostname, uint16_t port,
+		ZnkSocket I_sock, ZnkSocket O_sock, MoaiFdSet mfds );
 
 MoaiConnection
-MoaiConnection_intern( ZnkSocket sock, MoaiSockType sock_type );
+MoaiConnection_connectO( const char* goal_hostname, uint16_t goal_port,
+		const char* cnct_hostname, uint16_t cnct_port,
+		ZnkSocket I_sock, MoaiFdSet mfds );
+bool
+MoaiConnection_connectFromISock( const char* hostname, uint16_t port, ZnkSocket I_sock, const char* label,
+		MoaiInfoID info_id, MoaiFdSet mfds, bool is_proxy_use, MoaiConnectedCallback cb_func );
+
+const char*
+MoaiConnection_hostname( const MoaiConnection mcn );
+uint16_t
+MoaiConnection_port( const MoaiConnection mcn );
+ZnkSocket
+MoaiConnection_I_sock( const MoaiConnection mcn );
+ZnkSocket
+MoaiConnection_O_sock( const MoaiConnection mcn );
+void
+MoaiConnection_pushConnectedEvent( MoaiConnection mcn, MoaiConnectedCallback cb_func, MoaiInfoID info_id );
+void
+MoaiConnection_invokeCallback( MoaiConnection mcn, MoaiFdSet mfds );
+
+bool
+MoaiConnection_isConnectInprogress( const MoaiConnection mcn );
+void
+MoaiConnection_setConnectInprogress( MoaiConnection mcn, bool is_connect_inprogress );
 
 void
-MoaiConnection_clear_bySock( ZnkSocket sock );
+MoaiConnection_clear( MoaiConnection mcn, MoaiFdSet mfds );
+
+MoaiConnection
+MoaiConnection_find_byISock( const ZnkSocket query_sock );
+MoaiConnection
+MoaiConnection_find_byOSock( const ZnkSocket query_sock );
+
+Znk_INLINE void
+MoaiConnection_clear_byISock( ZnkSocket I_sock, MoaiFdSet mfds ){
+	MoaiConnection mcn = MoaiConnection_find_byISock( I_sock );
+	MoaiConnection_clear( mcn, mfds );
+}
+Znk_INLINE void
+MoaiConnection_clear_byOSock( ZnkSocket O_sock, MoaiFdSet mfds ){
+	MoaiConnection mcn = MoaiConnection_find_byOSock( O_sock );
+	MoaiConnection_clear( mcn, mfds );
+}
 
 void
-MoaiConnection_clearAll( void );
+MoaiConnection_clearAll( MoaiFdSet mfds );
+
+void
+MoaiConnection_erase( MoaiConnection mcn, MoaiFdSet mfds );
+
+void
+MoaiConnection_getPrevRequestMethodStr( const MoaiConnection mcn, char* buf, size_t buf_size );
+ZnkHtpReqMethod
+MoaiConnection_getPrevRequestMethod( const MoaiConnection mcn, size_t idx );
 
 Znk_EXTERN_C_END
 

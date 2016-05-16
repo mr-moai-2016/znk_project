@@ -27,14 +27,6 @@ echo ====
 echo;
 
 echo ====
-cd virtual_users
-nmake -f Makefile_vc.mak
-if errorlevel 1 goto Error
-cd ..
-echo ====
-echo;
-
-echo ====
 cd plugin_futaba
 nmake -f Makefile_vc.mak
 if errorlevel 1 goto Error

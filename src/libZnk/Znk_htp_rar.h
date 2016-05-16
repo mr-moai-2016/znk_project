@@ -2,7 +2,7 @@
 #define INCLUDE_GUARD__Znk_htp_rar_h__
 
 #include <Znk_bfr.h>
-#include <Znk_varp_dary.h>
+#include <Znk_varp_ary.h>
 #include <Znk_socket.h>
 #include <Znk_htp_hdrs.h>
 
@@ -33,7 +33,7 @@ ZnkHtpRAR_getHostnameAndPort( const char* url,
  *  cnct_hostname に hostname:portという形式を指定することはできない.
  *
  * @param send_hdrs:
- *  sendするHTTPのRequestヘッダをZnkVarpDAryですべてここに格納しておく必要がある.
+ *  sendするHTTPのRequestヘッダをZnkVarpAryですべてここに格納しておく必要がある.
  *  現状ではこの指定は必須であり、NULLは指定できない.
  *
  * @param send_hdrs:
@@ -46,7 +46,7 @@ ZnkHtpRAR_getHostnameAndPort( const char* url,
  *  現状ではこの指定は必須であり、NULLは指定できない.
  *
  * @param recv_hdrs:
- *  recvしたHTTPのResponseヘッダがZnkVarpDAryですべてここに格納される.
+ *  recvしたHTTPのResponseヘッダがZnkVarpAryですべてここに格納される.
  *  現状ではこの指定は必須であり、NULLは指定できない.
  *
  * @param cookie:
@@ -76,7 +76,7 @@ bool
 ZnkHtpRAR_sendAndRecv( const char* cnct_hostname, uint16_t cnct_port,
 		ZnkHtpHdrs send_hdrs, ZnkBfr send_body,
 		ZnkHtpHdrs recv_hdrs, ZnkHtpOnRecvFuncArg recv_fnca,
-		ZnkVarpDAry cookie,
+		ZnkVarpAry cookie,
 		size_t try_connect_num, bool is_proxy, ZnkBfr wk_bfr );
 
 Znk_EXTERN_C_END

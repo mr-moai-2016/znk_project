@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 {
 	int result = EXIT_FAILURE;
 	MoaiRASResult ras_result = MoaiRASResult_e_Ignored;
-	bool enable_init = true;
+	bool first_initiate = false;
 	bool enable_parent_proxy = true;
 
 	/***
@@ -46,14 +46,16 @@ int main(int argc, char **argv)
 	if( argc > 1 ){
 		const char* option = argv[ 1 ];
 		if( ZnkS_eq( option, "--disable_init" ) ){
-			enable_init = false;
+			first_initiate = false;
+		} else if( ZnkS_eq( option, "--initiate" ) ){
+			first_initiate = true;
 		} else if( ZnkS_eq( option, "--disable_parent_proxy" ) ){
 			enable_parent_proxy = false;
 		}
 	}
 
 	while( true ){
-		ras_result = MoaiServer_main( enable_init, enable_parent_proxy );
+		ras_result = MoaiServer_main( first_initiate, enable_parent_proxy );
 		if( ras_result != MoaiRASResult_e_RestartServer ){
 			break;
 		}

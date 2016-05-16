@@ -1,5 +1,5 @@
 #include "Znk_str_ex.h"
-#include "Znk_str_dary.h"
+#include "Znk_str_ary.h"
 #include "Znk_s_base.h"
 #include "Znk_mem_find.h"
 #include "Znk_def_util.h"
@@ -26,13 +26,13 @@ struct AdapterImpl {
 typedef struct AdapterImpl* Adapter;
 
 static size_t      adp__VStr_size(    StrListHandle list )
-{ return ZnkStrDAry_size(      (ZnkStrDAry)list ); }
+{ return ZnkStrAry_size(      (ZnkStrAry)list ); }
 static void        adp__VStr_reserve( StrListHandle list, size_t size )
-{        ZnkStrDAry_reserve(   (ZnkStrDAry)list, size ); }
+{        ZnkStrAry_reserve(   (ZnkStrAry)list, size ); }
 static void        adp__VStr_push_bk( StrListHandle list, const char* data, size_t data_leng )
-{        ZnkStrDAry_push_bk_cstr(   (ZnkStrDAry)list, data, data_leng ); }
+{        ZnkStrAry_push_bk_cstr(   (ZnkStrAry)list, data, data_leng ); }
 static const char* adp__VStr_at(      StrListHandle list, size_t idx )
-{ return ZnkStrDAry_at_cstr( (ZnkStrDAry)list, idx ); }
+{ return ZnkStrAry_at_cstr( (ZnkStrAry)list, idx ); }
 
 static struct AdapterImpl st_adapter_vstr = {
 	adp__VStr_size,
@@ -92,7 +92,7 @@ Adapter_addSplitC( Adapter adp, StrListHandle ans_list,
 }
 
 void
-ZnkStrEx_addSplitC( ZnkStrDAry ans_list,
+ZnkStrEx_addSplitC( ZnkStrAry ans_list,
 		const char* str, size_t str_leng,
 		char delimit_c, const bool count_void_str, size_t expect_size )
 {
@@ -237,7 +237,7 @@ Adapter_addSplitCSet( Adapter adp, StrListHandle ans_list,
 }
 
 void
-ZnkStrEx_addSplitCSet( ZnkStrDAry ans_list,
+ZnkStrEx_addSplitCSet( ZnkStrAry ans_list,
 		const char* str,   size_t str_leng,
 		const char* chset, size_t chset_leng,
 		size_t expect_size )
@@ -326,7 +326,7 @@ Adapter_addSplitStr( Adapter adp, StrListHandle ans_vstr, const char* str, size_
 }
 
 void
-ZnkStrEx_addSplitStr( ZnkStrDAry ans_vstr, const char* str, size_t str_leng,
+ZnkStrEx_addSplitStr( ZnkStrAry ans_vstr, const char* str, size_t str_leng,
 		const char* delimiter, size_t delimiter_leng,
 		const bool count_void_str, size_t expect_size )
 {
@@ -362,7 +362,7 @@ Adapter_addJoin( Adapter adp,
 }
 
 void
-ZnkStrEx_addJoin( ZnkStr ans, const ZnkStrDAry str_list,
+ZnkStrEx_addJoin( ZnkStr ans, const ZnkStrAry str_list,
 		const char* connector, size_t connector_leng, size_t expect_elem_leng )
 {
 	Adapter_addJoin( &st_adapter_vstr, ans, (StrListHandle)str_list,
@@ -484,7 +484,7 @@ Adapter_addQuotedTokens( Adapter adp, StrListHandle ans_vstr,
 	}
 }
 void
-ZnkStrEx_addQuotedTokens( ZnkStrDAry ans_vstr,
+ZnkStrEx_addQuotedTokens( ZnkStrAry ans_vstr,
 		const char* str, size_t str_leng,
 		const char* begin_quot, size_t begin_quot_leng,
 		const char* end_quot,   size_t end_quot_leng,
