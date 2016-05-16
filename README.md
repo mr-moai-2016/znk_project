@@ -10,14 +10,14 @@ developed for Windows or Linux.
 This repository have following :  
 * libZnk : Basically C/C++ library.  
   Japanese Document is [here][6].
-* moai: Yet another Local proxy engine.  
+* Moai: Yet another Local proxy engine.  
   Japanese Document is [here][3].
-* Virtual USERS : Virtualize notice board users on moai engine.  
+* Moai/Virtual USERS : How to virtualize notice board users on Moai engine.  
   Japanese Document is [here][1].
 * http_decorator : Simple http client.
 ...etc  
 
-Current version is 0.9.  
+Current version is 1.0.  
 Japanese Release Note is [here][5]
 
 These applications and librarys source codes are written and developed for VC(Ver6.0-Ver12.0),
