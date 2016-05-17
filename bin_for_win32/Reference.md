@@ -1,7 +1,7 @@
 # Moai ƒŠƒtƒ@ƒŒƒ“ƒXƒ}ƒjƒ…ƒAƒ‹
 -----------------------------------
 
-## –ÚŽŸ
+## <a name="index">–ÚŽŸ
 -----------------------------------
 * [ƒ^[ƒQƒbƒg‚Æ‚ÍH](#target)
 * [ŽóMƒtƒBƒ‹ƒ^‚É‚Â‚¢‚Ä](#filter_recv)
@@ -42,6 +42,8 @@ target.myf “à‚ÅˆÈ‰º‚Ì‚æ‚¤‚É2ch‚Æfutaba‚¢‚¤target–¼‚ð’è‹`‚µ(‚±‚Ìtarget–¼‚Íƒ†[ƒU‚
 ‚¿‚È‚Ý‚É‚±‚±‚Å‚Ìƒpƒ^[ƒ“‚Ì‹Lq‚É‚¨‚¢‚Ä‚Íˆês‚É‚Â‚«ˆê‰ÓŠ‚Ì‚Ý‚ÉƒƒCƒ‹ƒhƒJ[ƒh‚ðŽg‚¤‚±‚Æ‚à‚Å‚«‚é.
 myf‚Æ‚¢‚¤ƒtƒ@ƒCƒ‹‚Í‚±‚ÌƒvƒƒWƒFƒNƒg‘S”Ê‚É‚¨‚¢‚ÄÝ’èƒtƒ@ƒCƒ‹‚È‚Ç‚ð‹Lq‚·‚é‚Ì‚É—p‚¢‚é”Ä—p‚ÌƒtƒH[ƒ}ƒbƒg‚Å‚ ‚é.
 ‚±‚ê‚ÌŽd—l‚É‚Â‚¢‚Ä’m‚è‚½‚¢•û‚Í[‚±‚¿‚ç][1]‚ðŽQÆ‚µ‚Ä‚¢‚½‚¾‚«‚½‚¢.
+
+  <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
 ## <a name="filter_recv">ŽóMƒtƒBƒ‹ƒ^‚É‚Â‚¢‚Ä
@@ -102,6 +104,8 @@ HTML‚Ì“à—e‚ª‰ÁH‚³‚ê‚ÄA–¼‘O—“‚Ì•¶Žš—ñ‚ª•ÏX‚³‚ê‚Ä‚¢‚é‚±‚Æ‚ª‚í‚©‚é.
 ‚Ü‚½CSS‚Ì“à—e‚ª‰ÁH‚³‚ê‚ÄA”wŒiF‚Æ•¶ŽšF‚à•ÏX‚³‚ê‚Ä‚¢‚é.  
 ‚à‚µ‚à³‚µ‚­Ý’è‚µ‚½‚É‚à‚©‚©‚í‚ç‚¸•\Ž¦‚ª•Ï‚í‚ç‚È‚¢‚È‚çAƒuƒ‰ƒEƒU‚ÌƒLƒƒƒbƒVƒ…‚ÉŒÃ‚¢î•ñ‚ªŽc‚Á‚Ä‚¢‚é
 ‰Â”\«‚ª‚ ‚é. ƒLƒƒƒbƒVƒ…‚ðƒNƒŠƒA‚µ‚Ä‚©‚ç‚à‚¤ˆê“x–Ú“I‚ÌƒTƒCƒg‚ÖƒAƒNƒZƒX‚µ‚æ‚¤.
+
+  <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
 ## <a name="filter_send">‘—MƒtƒBƒ‹ƒ^‚É‚Â‚¢‚Ä
@@ -165,6 +169,8 @@ namec = ['']
 ‚Ü‚½namec‚Æ‚¢‚¤‚Ì‚ÍAÅŒã‚ÌƒŒƒX‚É‚¨‚¢‚ÄŽg—p‚µ‚½‚¨–¼‘O—“‚Ì“à—e‚Å‚ ‚èA
 ‚±‚±‚Å‚Í‚±‚ê‚ð‹­§“I‚É‹ó’l‚Ö‚ÆƒŠƒZƒbƒg‚µ‚Ä‚¢‚é.
 
+  <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
+
 
 ## <a name="ignore_hosts">–³—p‚ÈƒzƒXƒg‚Ö‚ÌÚ‘±‚ðƒuƒƒbƒN‚·‚é(ignore_hosts‹@”\) 
 -----------------------------------
@@ -226,6 +232,8 @@ Nico“®‰æ‚È‚Çˆê•”‚ÌƒTƒCƒg‚Å‚ÍAƒXƒNƒŠƒvƒg‚È‚Ç‚ÅŽ©“®“I‚ÈPOST‚ª“à•”‚Ås‚í‚ê‚Ä‚¢‚éê
 Ô•Ÿ‚ª—LŒø‚Èó‘Ô‚ÅA‚±‚ÌŠm”F‰æ–Ê‚ð‚¤‚Ü‚­•\Ž¦‚·‚é•û–@‚Í¡‚Ì‚Æ‚±‚ë‚Ý‚Â‚©‚Á‚Ä‚¢‚È‚¢.
 Ô•Ÿ‚Ì•û‚ð–³Œø‚É‚·‚é‚í‚¯‚É‚à‚¢‚©‚È‚¢‚Å‚ ‚ë‚¤‚©‚çA‚»‚Ìê‡‚à‚â‚Í‚èpost_confirm‚»‚Ì‚à‚Ì‚ð–³Œø‚É‚µ‚Ä‚¨‚­•K—v‚ª‚ ‚é.
 
+  <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
+
 
 ## <a name="acceptable_host">LAN“à‚É‚¨‚¯‚é‘¼‚Ìƒ}ƒVƒ“‚©‚ç‚ÌÚ‘±‚ð‹–‰Â/§ŒÀ‚·‚é
 -----------------------------------
@@ -271,6 +279,8 @@ access_allow_ips‚ÉˆÈ‰º‚ð‹Lq‚µ‚Ä‚¨‚­‚Æ‚æ‚¢.
 
 –Ü˜_Aƒ‹[ƒ^‚âOS‚È‚Ç‚É‚ ‚éƒtƒ@ƒCƒAƒEƒH[ƒ‹‹@”\‚ÅWAN(ŠO•”ƒCƒ“ƒ^[ƒlƒbƒg)‚©‚ç‚Ìƒ|[ƒg8124‚Ö‚Ì
 Ú‘±‚ª‚Å‚«‚È‚¢‚æ‚¤‚«‚¿‚ñ‚Æ–hŒä‚·‚é‚Ì‚àƒZƒLƒ…ƒŠƒeƒBã—LŒø‚È‘Îô‚¾.
+
+  <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
 ## <a name="proxy1">ŠO•”ƒvƒƒLƒV‚ðŽg‚¢‚½‚¢ê‡‚Ç‚¤‚·‚é‚Ì‚©H
@@ -364,6 +374,8 @@ localhost
 ‚¢‚æ‚¤‚Æ‚à)ŠO•”ƒvƒƒLƒV‚ÍŽg‚í‚ê‚È‚¢.
 ‚»‚Ì‘¼‚Ìˆê”ÊƒTƒCƒg‚ðŒ©‚éê‡‚ÍAparent_proxy‚Ì‹Lq‚É‰ž‚¶‚½ŠO•”ƒvƒƒLƒV‚ªŽg‚í‚ê‚éŒ`‚É‚È‚é.
 
+  <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
+
 
 ## <a name="proxy3">‚»‚Ì‘¼‚Ìƒ[ƒJƒ‹ƒvƒƒLƒV‚Éƒ`ƒF[ƒ“‚·‚éê‡
 -----------------------------------
@@ -386,6 +398,8 @@ parent_proxy‚©‚ç‚»‚ê‚ð‘I‚×‚Î‚æ‚¢.
 
 ‚±‚Ìê‡‚ÍPolipo‘¤‚ÌÝ’èƒtƒ@ƒCƒ‹‚ð•ÏX‚µAMoai(ƒ|[ƒg8124)‚ÖÚ‘±‚·‚é‚æ‚¤‚É‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢.
 ‚·‚È‚í‚¿Polipo‚Ìconfig.cfg‚É‚¨‚¢‚Ä parentProxy‚ðlocalhost:8124‚Æ‚·‚éŒ`‚É‚È‚é‚¾‚ë‚¤.
+
+  <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
 ## <a name="web_config">Moai Web Configuration
@@ -412,6 +426,8 @@ parent_proxy‚©‚ç‚»‚ê‚ð‘I‚×‚Î‚æ‚¢.
   (ŠO•”ƒ}ƒVƒ“‚©‚çƒŠƒ‚[ƒg‚Å‚Ís‚¦‚È‚¢‚Æ‚¢‚¤‚±‚Æ).
   uUpdate Systemvƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚±‚Æ‚ÅMoai‚ðÄ‹N“®‚·‚é‚æ‚¤‘£‚·ƒƒbƒZ[ƒW‚ª•\Ž¦‚³‚ê‚é.
   ‚»‚±‚©‚ç‚³‚ç‚ÉuRestart Moaivƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚±‚Æ‚ÅMoaiƒT[ƒo‚ªÄ‹N“®‚³‚êÝ’è‚ª”½‰f‚³‚ê‚éŒ`‚Æ‚È‚é.
+
+  <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
 ## <a name="plugin">ƒvƒ‰ƒOƒCƒ“‹@”\‚É‚Â‚¢‚Ä
@@ -467,6 +483,8 @@ Ver1.0‚É‚¨‚¢‚ÄƒTƒ|[ƒg‚³‚ê‚éŠÖ”‚ÍˆÈ‰º‚Å‚ ‚é.
     ˆ—‘ÎÛ‚Æ‚È‚éƒŒƒXƒ|ƒ“ƒXƒwƒbƒ_‚Ö‚ÌŽQÆ‚Å‚ ‚é.
     ‚±‚ê‚ª‚Ç‚¤‰ÁH‚³‚ê‚é‚Ì‚©‚Í‚ ‚È‚½‚ª‚±‚ÌŠÖ”‚ð‚Ç‚¤ŽÀ‘•‚·‚é‚©‚É‚æ‚é.
 ~~~
+
+  <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
 [1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/libZnk/myf_spec.md
