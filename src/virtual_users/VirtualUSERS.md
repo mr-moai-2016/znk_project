@@ -1,15 +1,17 @@
 # Moai/Virtual USERS
 -----------------------------------
 
-## 目次
+## <a name="index">目次
 -----------------------------------
 * [MoaiのVirtual USERS機能とは？](#pos1)
 * [何ができるのか？](#pos2)
 * [Web閲覧時に送信される情報とは何なのか？](#pos3)
-* [MoaiのVirtual USERS機能を使う](#pos5)
-* [その他の情報](#pos8)
+* [MoaiのVirtual USERS機能を使う](#pos4)
+* [futabaプラグイン : user_agent.txtとscreen_size.txtについて](#futaba_plugin1)
+* [futabaプラグイン : 手動で偽装を行った場合(参考)](#futaba_note)
+* [その他の情報](#pos5)
 
-## <a name="pos1">MoaiのVirtual USERS機能とは？
+## <a name="pos1">MoaiのVirtual USERS機能とは？ [目次へ](#index)
 -----------------------------------
 
   Virtual USERSとはVirtual User-agent Screen-size and Everything Randomize Systemの略である.
@@ -22,7 +24,7 @@
   つまり早い話、これはよくあるあなたのプライベートを守るセキュリティーツールの一つである.  
 
 
-## <a name="pos2">何ができるのか？
+## <a name="pos2">何ができるのか？ [目次へ](#index)
 -----------------------------------
 
   Virtual USERS機能はIPを除くすべてのあなたのマシンの情報をランダムに仮想化する.
@@ -104,7 +106,7 @@
   MoaiのVirtual USERS機能ならばそれをすべて自動で行うことができ、楽ができる.
 
 
-## <a name="pos5">MoaiのVirtual USERS機能を使う
+## <a name="pos4">MoaiのVirtual USERS機能を使う
 -----------------------------------
 
   初めてMoaiを使う場合は、[こちら][2]にある「初めてのMoai」の項目を参照していただきたい.
@@ -152,14 +154,113 @@
 
   以上である.  
 
+  Moai Web Configuration  
+  ![screenshot](../imgs/screenshot_config.png)
 
-## <a name="pos8">その他の情報
+
+## <a name="futaba_plugin1">futabaプラグイン : user_agent.txtとscreen_size.txtについて
+-----------------------------------
+#### user_agent.txt
+このファイルはRandomizeの際に選択されるUser-Agentの候補を列挙したものである.
+(一行につき一つ記述する)
+これらのUser-Agentはネット上に転がっているものを適当に巡回してコピペしただけのものであり、
+候補のパターンはあなたのお好みで自由に変えてよい.
+これを修正することなくそのまま使ってもよいが、新しいブラウザが登場するたびに段々とその情報は古くなるし、
+できればあなた独自のプライベートな user_agent.txtを生成しておくほうがなにかと確実ではある.
+手動で好みのリストを作成していってもよいし、 巷にあるUser-Agentジェネレータを使うのも一つの手である.
+このファイルにおいて、空行および # 記号で始まる行は候補値とはならず無視される.
+
+#### screen_size.txt
+このファイルはRandomizeの際に選択されるscszの解像度の候補を各行で列挙したものである.
+このファイルにおいて、空行および # 記号で始まる行は候補値とはならず無視される.
+
+
+## <a name="futaba_note">futabaプラグイン : 手動で偽装を行った場合(参考)
+-----------------------------------
+
+  参考のため、MoaiのVirtul USERSのような機能を使わず、手動で偽装する方法も記載しておいた.
+  これはふたばの例であるが、このような偽装を全て漏れなく手動でやろうとした場合、
+  以下のようにかなりの手間となる.
+
+~~~
+  1. ブラウザで開いているふたば関係のタブを一旦閉じる.
+     これによりうっかりPOST変数などが残留してしまう可能性を排除する.
+     キャッシュを消してもこれが消えずに残る場合もあるため一旦閉じた方が確実だろう.
+
+  2. ルーカチする.
+
+  3. ブラウザのクッキー、キャッシュ、localStorageを消去.
+     localStorageの消去についてはブラウザ毎に異なるが、Firefoxの場合
+     「オフラインWebページとユーザデータ」とある部分で「今すぐ消去」ボタンを押す.
+
+  4. User-Agentの値を変更する. 
+     最も安直な方法は、使うブラウザを変更することである.
+     あるいは使ってるブラウザにUser-Agent偽装アドオンなどが存在するならそれを入れて
+     別の値に設定する.
+
+  5. 新しいタブを開いた上で1で閉じたふたば関係のページなどに再度アクセスする.
+     逆に言えばこの段階になるまでは、まだふたば関係のページを開いてはいけない.
+
+  6. モニタの解像度や色深度を変更する.
+     最も安直な方法は、モニタのプロパティより解像度と色ｓ…
+     …というか、たかがふたばのためにこんなことまで実際にはやってられないので、
+     ここは以下にある「POST変数を手動で修正する方法」によって、POST変数scszを直接変更する.
+
+  7. POST変数 flrv, flvv(Fingerprint)の値を変更する. 
+     flrvはUser-Agentを変更すればその値も変わる.
+     一方、最近導入されたflvvはUser-Agentを変更しても変わらない.
+     よって以下にある「POST変数を手動で修正する方法」によって、POST変数flvvを直接変更する.
+     値は32bit整数なら何でもよい.
+     (ついでにflrvも直接変更しておけばよかろう. ただしflvvとは異なる32bit整数値にしておく)
+
+  8. jsの値をonに変更する. 
+     最も安直な方法は、女子小学生へonして変態すｒ…
+     ではなく、この値はJavaScriptを実行したかどうかを判断するためのものであり、
+     /bin/base4.js を実行すると on に設定される仕組みとなっている.
+     これを on にしておかないと「環境変数がありません(JavaScriptがオフ？)」という
+     エラーが表示され、投稿に失敗する.
+     よって以下にある「POST変数を手動で修正する方法」によって、POST変数jsの値をonに変更する.
+
+  9. レス投稿またはスレ立て.
+     「Cookieを有効にしてください」と出る場合は、もう一度投稿.
+      本当にCookieを無効にしていない限りは、2回目はうまくいくはずである.
+~~~
+
+#####  ※ POST変数を手動で修正する方法
+~~~html
+  Step1.
+    まずスレのHTMLを保存する
+
+  Step2.
+    次に保存したスレのHTMLをテキストエディタ(メモ帳など)で開き、
+    その中身を直接書き換えて修正する
+    <script type="text/javascript" src="/bin/base4.js?4"></script> などと書かれた部分があるはずである
+    ぶっちゃげこのbase4.jsが邪悪の元凶であり、コイツが忌々しい数々の変数の値を設定している.
+    そしてこのままでは base4.js を実行してしまうので、これが実行されないよう、この部分を削除する.
+
+  Step3.
+    後は <input type=hidden…> などと書かれている部分を好き放題変えればよいのだが、
+    例えばflrvならば、
+
+       <input type=hidden id="flrv" name="flrv" value="">
+
+    などと書かれてあるが、この部分を
+
+       <input type=hidden id="flrv" name="flrv" value="77777777"> 
+
+    とすれば晴れてflrvの値を77777777に偽装できる.
+
+  後は修正したHTMLをダブルクリックして、表示される投稿フォームから投稿すれば
+  上において偽装された値が送信されることだろう.
+~~~
+
+## <a name="pos5">その他の情報
 -----------------------------------
 
   Moaiに関する基本事項や注意事項に関しては、src/moaiにある[README][2]を参照して戴きたい.
-  Moaiに関するさらなる詳細については [リファレンスマニュアル(README_more.md)][1] をご覧いただきたい.
+  Moaiに関するさらなる詳細については [リファレンスマニュアル(Reference)][1] をご覧いただきたい.
 
 
-[1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/virtual_users/README_more.md
+[1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/Reference.md
 [2]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/README.md
 [3]: https://github.com/mr-moai-2016/znk_project/blob/master/src/HowToCompile.md
