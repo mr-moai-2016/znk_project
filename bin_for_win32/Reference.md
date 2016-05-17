@@ -40,6 +40,20 @@ target.myf “à‚ÅˆÈ‰º‚Ì‚æ‚¤‚É2ch‚Æfutaba‚¢‚¤target–¼‚ð’è‹`‚µ(‚±‚Ìtarget–¼‚Íƒ†[ƒU‚
 
 ‚±‚ê‚É‚æ‚èA‚»‚Ì‘¼‚Ì‰ÓŠ‚Å‚Í’P‚É "2ch" ‚Æ "futaba" ‚Æ‚¢‚¤ƒL[ƒ[ƒh‚ÅAã‹L‚ÌƒzƒXƒg‚ÌW‡‚ðŽ¦‚·‚±‚Æ‚ª‚Å‚«‚é.
 ‚¿‚È‚Ý‚É‚±‚±‚Å‚Ìƒpƒ^[ƒ“‚Ì‹Lq‚É‚¨‚¢‚Ä‚Íˆês‚É‚Â‚«ˆê‰ÓŠ‚Ì‚Ý‚ÉƒƒCƒ‹ƒhƒJ[ƒh‚ðŽg‚¤‚±‚Æ‚à‚Å‚«‚é.
+­‚µ’Eü‚·‚é‚ªA—á‚¦‚ÎˆÈ‰º‚Ì‹Lq‚ÍOK‚Å‚ ‚èAƒAƒXƒ^ƒŠƒXƒN‚Ì•”•ª‚Í”CˆÓ‚Ì•¶Žš—ñ‚Æl‚¦‚Ä‚æ‚¢.
+—á‚¦‚Î may.2chan.netAjun.2chan.net ‚È‚Ç‚ª‚±‚ê‚Éƒ}ƒbƒ`‚·‚é.
+
+~~~
+*.2chan.net
+~~~
+
+ˆê•ûA—á‚¦‚ÎˆÈ‰º‚Ì‹Lq‚ÍˆÓ}‚µ‚½’Ê‚è‚Ì‚à‚Ì‚Æ‚Í‚È‚ç‚È‚¢.
+~~~
+*.2chan.*
+~~~
+‚±‚Ìê‡Aˆê”Ô–Ú‚ÉŒ»‚ê‚½ƒAƒXƒ^ƒŠƒXƒN‚Ì‚Ý‚ªƒƒCƒ‹ƒhƒJ[ƒh‚Æ‚µ‚Äˆµ‚í‚êA
+“ñ”Ô–Ú‚ÉŒ»‚ê‚½ƒAƒXƒ^ƒŠƒXƒN‚ÍA•¶Žš’Ê‚èƒAƒXƒ^ƒŠƒXƒN‚»‚Ì‚à‚Ì‚Æ‚µ‚Äˆµ‚í‚ê‚é.
+
 myf‚Æ‚¢‚¤ƒtƒ@ƒCƒ‹‚Í‚±‚ÌƒvƒƒWƒFƒNƒg‘S”Ê‚É‚¨‚¢‚ÄÝ’èƒtƒ@ƒCƒ‹‚È‚Ç‚ð‹Lq‚·‚é‚Ì‚É—p‚¢‚é”Ä—p‚ÌƒtƒH[ƒ}ƒbƒg‚Å‚ ‚é.
 ‚±‚ê‚ÌŽd—l‚É‚Â‚¢‚Ä’m‚è‚½‚¢•û‚Í[‚±‚¿‚ç][1]‚ðŽQÆ‚µ‚Ä‚¢‚½‚¾‚«‚½‚¢.
 

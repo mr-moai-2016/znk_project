@@ -357,7 +357,7 @@
 
   よってあなたがルータの設定を特別弄くっていない限りは通常は心配いらないことであるが、
   acceptable_hostをANYとして、さらにルータやファイアウォールの8124ポートを開けているなど
-  WANからの接続が可能としているケースについては、Moai側での防御としてaccess_allow_ips や
+  WANからの接続を可能としているケースについては、Moai側での防御としてaccess_allow_ips や
   access_deny_ips などを適切に設定するなど、セキュリティ面にも十分配慮して欲しい.
 
   <a href="#user-content-index">目次へ戻る</a>
