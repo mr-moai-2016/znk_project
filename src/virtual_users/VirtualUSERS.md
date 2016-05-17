@@ -24,7 +24,6 @@
   つまり早い話、これはよくあるあなたのプライベートを守るセキュリティーツールの一つである.  
 
   <a href="#user-content-index">目次へ戻る</a>
-  <a href="#index">目次へ戻る</a>
 
 ## <a name="pos2">何ができるのか？
 -----------------------------------
@@ -40,7 +39,7 @@
   Moai Web Configuration上でこれらのプロキシがメニュー表示され、現在使用するプロキシを簡単かつ
   瞬時に切り替えができる.  
 
-  [目次へ戻る](#index)
+  <a href="#user-content-index">目次へ戻る</a>
 
 ## <a name="pos3">Web閲覧時に送信される情報とは何なのか？
 -----------------------------------
@@ -108,7 +107,7 @@
   実のところこれは手動でも可能であるし、プログラミングするにしてもそう難しい話でもないが
   MoaiのVirtual USERS機能ならばそれをすべて自動で行うことができ、楽ができる.
 
-  [目次へ戻る](#index)
+  <a href="#user-content-index">目次へ戻る</a>
 
 
 ## <a name="pos4">MoaiのVirtual USERS機能を使う
@@ -163,7 +162,7 @@
 
   ![screenshot](../imgs/screenshot_config.png)
 
-  [目次へ戻る](#index)
+  <a href="#user-content-index">目次へ戻る</a>
 
 
 ## <a name="futaba_plugin1">futabaプラグイン : user_agent.txtとscreen_size.txtについて
@@ -264,7 +263,7 @@
   上において偽装された値が送信されることだろう.
 ~~~
 
-  [目次へ戻る](#index)
+  <a href="#user-content-index">目次へ戻る</a>
 
 
 ## <a name="pos5">その他の情報
@@ -273,7 +272,7 @@
   Moaiに関する基本事項や注意事項に関しては、src/moaiにある[README][2]を参照して戴きたい.
   Moaiに関するさらなる詳細については [リファレンスマニュアル(Reference)][1] をご覧いただきたい.
 
-  [目次へ戻る](#index)
+  <a href="#user-content-index">目次へ戻る</a>
 
 [1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/Reference.md
 [2]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/README.md
