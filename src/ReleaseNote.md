@@ -84,6 +84,8 @@ Release Note 最終更新: 2016/05/17
     * application/x-www-form-urlencoded方式によりPOSTするタイプの掲示板(２ちゃんねるなど)でPOST変数の送信フィルタ
       が機能していなかった実装の不備を修正.
     * Web Configurationでのいくつかの使いづらい挙動を修正.
+    * Firefox赤福などが有効な場合で post_confirmがonの場合に処理が競合しレスができない問題がある.
+      これを回避するため、とりあえずデフォルトではpost_confirmをoffとした.
     * その他雑多なBugを徹底的に洗い出し修正.
 
     * libZnkのバージョンを1.0とした.
