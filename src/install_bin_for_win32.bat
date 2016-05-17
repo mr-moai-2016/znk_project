@@ -28,6 +28,7 @@ if not exist %INST_DIR_%\doc_root mkdir %INST_DIR_%\doc_root
 %CP_% moai\doc_root\*.gif  %INST_DIR_%\doc_root\
 %CP_% moai\doc_root\*.js   %INST_DIR_%\doc_root\
 %CP_% moai\doc_root\*.css  %INST_DIR_%\doc_root\
+%CP_% moai\*.md  %INST_DIR_%\
 
 REM
 REM setup http_decorator
@@ -48,8 +49,7 @@ call bat_utils\install_one.bat /C 2ch_send.myf    virtual_users\filters %INST_DI
 call bat_utils\install_one.bat /C config.myf      virtual_users         %INST_DIR_%
 call bat_utils\install_one.bat /C analysis.myf    virtual_users         %INST_DIR_%
 call bat_utils\install_one.bat /C target.myf      virtual_users         %INST_DIR_%
-%CP_% virtual_users\README.txt      %INST_DIR_%\
-%CP_% virtual_users\README_more.txt %INST_DIR_%\
+%CP_% virtual_users\VirtualUSERS.md %INST_DIR_%\
 
 REM
 REM setup plugin_futaba

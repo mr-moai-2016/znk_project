@@ -32,6 +32,7 @@ do
 	$CP_ moai/doc_root/$i $INST_DIR_/doc_root/
 	echo "$CP_ moai/doc_root/$i $INST_DIR_/doc_root/"
 done
+$CP_ moai/*.md $INST_DIR_/
 
 #
 # setup http_decorator
@@ -69,8 +70,7 @@ done
 install_one -c config.myf      virtual_users $INST_DIR_
 install_one -c analysis.myf    virtual_users $INST_DIR_
 install_one -c target.myf      virtual_users $INST_DIR_
-install_one -c README.txt      virtual_users $INST_DIR_
-install_one -c README_more.txt virtual_users $INST_DIR_
+install_one -c VirtualUSERS.md virtual_users $INST_DIR_
 
 #
 # setup plugin_futaba
