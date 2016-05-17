@@ -9,11 +9,12 @@ developed for Windows or Linux.
 
 This repository have following :  
 * libZnk : Basically C/C++ library.  
-  Japanese Document is [here][6].
-* Moai: Yet another Local proxy engine.  
-  Japanese Document is [here][3].
-* Moai/Virtual USERS : How to virtualize notice board users on Moai engine.  
   Japanese Document is [here][1].
+* Moai: Yet another Local proxy engine.  
+  Japanese Document is [here][2].
+  Japanese Reference Manual is [here][3].
+* Moai/Virtual USERS : How to virtualize notice board users on Moai engine.  
+  Japanese Document is [here][4].
 * http_decorator : Simple http client.
 ...etc  
 
@@ -22,7 +23,7 @@ Japanese Release Note is [here][5]
 
 These applications and librarys source codes are written and developed for VC(Ver6.0-Ver12.0),
 MinGW, gcc(on linux) and so on.  
-Japanese HowToCompile Document is [here][4].
+Japanese HowToCompile Document is [here][6].
 
 Download & Support site:  
 https://github.com/mr-moai-2016/znk_project
@@ -53,8 +54,8 @@ zlib 1.2.3 :
   (README) to avoid redundancy.
 
 Otherwise all the code :  
-  Copyright (c) 2016 Nippon HTTP Kenkyujo(NHK)
-  Licensed under the NYSL( see http://www.kmonos.net/nysl for detail ).
+  Copyright (c) Nippon HTTP Kenkyujo(NHK)
+  Licensed under the NYSL( see http://www.kmonos.net/nysl/index.en.html for detail ).
 
 
 This software is provided 'as-is', without any express or implied warranty.
@@ -62,9 +63,9 @@ In no event will the authors be held liable for any damages arising
 from the use of this software.
 
 
-[1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/virtual_users/README.md
-[2]: https://github.com/mr-moai-2016/znk_project/blob/master/src/virtual_users/README_more.md
-[3]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/README.md
-[4]: https://github.com/mr-moai-2016/znk_project/blob/master/src/HowToCompile.md
+[1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/libZnk/README.md
+[2]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/README.md
+[3]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/Reference.md
+[4]: https://github.com/mr-moai-2016/znk_project/blob/master/src/virtual_users/VirtualUSERS.md
 [5]: https://github.com/mr-moai-2016/znk_project/blob/master/src/ReleaseNote.md
-[6]: https://github.com/mr-moai-2016/znk_project/blob/master/src/libZnk/README.md
+[6]: https://github.com/mr-moai-2016/znk_project/blob/master/src/HowToCompile.md
