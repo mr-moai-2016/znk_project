@@ -252,7 +252,7 @@ MoaiPost_parsePostVars3( ZnkSocket sock, MoaiFdSet mfds,
 				 * そのようなことが可能なコマンドをinstallフォルダ内に置き、
 				 * それをsystemで呼び出す指針でいく.
 				 */
-				MoaiModule_invokeOnPostBefore( mod );
+				MoaiModule_invokeOnPost( mod );
 				if( MoaiModule_filtPostVars( mod, post_vars ) > 0 ){
 					/***
 					 * PostVarsの修正が発生.
@@ -344,7 +344,7 @@ MoaiPost_parsePostVars3( ZnkSocket sock, MoaiFdSet mfds,
 				 * そのようなことが可能なコマンドをinstallフォルダ内に置き、
 				 * それをsystemで呼び出す指針でいく.
 				 */
-				MoaiModule_invokeOnPostBefore( mod );
+				MoaiModule_invokeOnPost( mod );
 				if( MoaiModule_filtPostVars( mod, post_vars ) > 0 ){
 					/***
 					 * PostVarsの修正が発生.

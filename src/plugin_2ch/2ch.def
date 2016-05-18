@@ -1,4 +1,4 @@
-LIBRARY "futaba.dll"
+LIBRARY "2ch.dll"
 EXPORTS
   initiate
   on_post

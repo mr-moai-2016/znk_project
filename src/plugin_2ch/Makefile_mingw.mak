@@ -7,7 +7,7 @@ MY_LIBS_ROOT=..
 INCLUDE_FLAG+=  \
 	-I$(MY_LIBS_ROOT)\libZnk \
 
-BASENAME=futaba
+BASENAME=2ch
 OBJS = \
 	$O\dll_main.o \
 	$O\main.o \

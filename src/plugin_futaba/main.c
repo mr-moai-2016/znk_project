@@ -3,6 +3,7 @@
 #include <Znk_def_util.h>
 #include <Znk_cookie.h>
 #include <Znk_htp_hdrs.h>
+#include <Znk_str_ptn.h>
 #include <string.h>
 
 static ZnkVarp
@@ -46,7 +47,7 @@ update_pwd( ZnkVarp pwd, ZnkVarp pwdc, ZnkVarp USERS_password )
 	}
 }
 
-bool on_post_before( ZnkMyf myf )
+bool on_post( ZnkMyf myf )
 {
 	ZnkVarp USERS_futabapt = refPostVar( myf, "USERS_futabapt" );
 	ZnkVarp USERS_password = refPostVar( myf, "USERS_password" );
@@ -81,29 +82,30 @@ bool on_post_before( ZnkMyf myf )
 	update_pwd( pwd, pwdc, USERS_password );
 	return true;
 }
-bool on_response_hdr( ZnkMyf myf, ZnkVarpAry hdr_vars )
+
+static size_t
+replaceStr( ZnkStr str, size_t begin,
+		const char* old_ptn, size_t old_ptn_leng,
+		const char* new_ptn, size_t new_ptn_leng,
+		size_t seek_depth )
 {
-	ZnkVarp set_cookie = ZnkHtpHdrs_find_literal( hdr_vars, "Set-Cookie" );
+	return ZnkStrPtn_replace( str, begin,
+			(uint8_t*)old_ptn, old_ptn_leng,
+			(uint8_t*)new_ptn, new_ptn_leng,
+			seek_depth );
+}
 
-	/***
-	 * set_cookieÇÃâêÕÇµÅAmyfè„Ç…Ç®ÇØÇÈcookie_varsÇçXêVÇ∑ÇÈ.
-	 */
-	if( set_cookie ){
-		const size_t val_size = ZnkHtpHdrs_val_size( set_cookie );
-		size_t       val_idx  = 0;
-		ZnkVarpAry   cok_vars = ZnkMyf_find_vars( myf, "cookie_vars" );
-
-		for( val_idx=0; val_idx<val_size; ++val_idx ){
-			const char* p = ZnkHtpHdrs_val_cstr( set_cookie, val_idx );
-			const char* e = p + strlen(p);
-			const char* q = memchr( p, ';', (size_t)(e-p) );
-			if( q == NULL ){
-				q = e;
-			}
-			ZnkCookie_regist_byAssignmentStatement( cok_vars, p, (size_t)(q-p) );
-		}
-		return true;
+bool on_response( ZnkMyf myf,
+		ZnkVarpAry hdr_vars, ZnkStr text, const char* req_urp )
+{
+	if( text ){
+		const char* old_ptn = "ÅóÇ”ÇΩÇŒ</span>";
+		const char* new_ptn = "ÅóÇ”ÇΩÇŒ via Moai</span>";
+		replaceStr( text, 0,
+				old_ptn, Znk_NPOS,
+				new_ptn, Znk_NPOS,
+				Znk_NPOS );
 	}
-	return false;
+	return true;
 }
 

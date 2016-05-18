@@ -114,7 +114,7 @@ getCatalog( const char* srv_name, const char* board_id,
 		}
 		decorateHeaderGET( hostname, req_uri, ua, "", cookie );
 		Znk_snprintf( result_file, sizeof(result_file), "%scatalog.htm", tmpdir );
-		Znk_snprintf( cmd, sizeof(cmd), "%shttp_decorator %s %s %scookie.txt %shttp_hdr.dat",
+		Znk_snprintf( cmd, sizeof(cmd), "%shttp_decorator %s %s %scookie_futaba.txt %shttp_hdr.dat",
 				exedir, parent_cnct, result_file, tmpdir, tmpdir );
 		ret = system( cmd );
 		if( ret == EXIT_FAILURE ){
@@ -147,7 +147,7 @@ getCatalog( const char* srv_name, const char* board_id,
 		}
 	}
 	{
-		Znk_snprintf( cookie_file, sizeof(cookie_file), "%scookie.txt", tmpdir );
+		Znk_snprintf( cookie_file, sizeof(cookie_file), "%scookie_futaba.txt", tmpdir );
 		if( ZnkCookie_load( cookie, cookie_file ) ){
 			ZnkVarp varp = ZnkVarpAry_find_byName( cookie, "posttime", Znk_strlen_literal( "posttime" ), false );
 			ZnkStr_set( posttime, ZnkVar_cstr(varp) );
@@ -187,7 +187,7 @@ getCaco( const char* srv_name, ZnkStr caco, const char* ua, ZnkVarpAry cookie, Z
 		}
 		decorateHeaderGET( hostname, req_uri, ua, referer, cookie );
 		Znk_snprintf( result_file, sizeof(result_file), "%scaco.txt", tmpdir );
-		Znk_snprintf( cmd, sizeof(cmd), "%shttp_decorator %s %s %scookie.txt %shttp_hdr.dat",
+		Znk_snprintf( cmd, sizeof(cmd), "%shttp_decorator %s %s %scookie_futaba.txt %shttp_hdr.dat",
 				exedir, parent_cnct, result_file, tmpdir, tmpdir );
 
 		ret = system( cmd );
@@ -343,7 +343,7 @@ refUserAgent( ZnkMyf myf )
 
 static bool
 shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
-		const char* parent_proxy, char* result_msg, size_t result_msg_size )
+		const char* parent_proxy, ZnkStr result_msg )
 {
 	bool result = false;
 
@@ -413,7 +413,7 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 	 * 尚、posttimeの値は全サーバで共通である. 換言すればサーバ毎に値を保持する必要はない.
 	 */
 	if( !getCatalog( srv_name, board_id, posttime, ua, cookie, thre_uri, parent_proxy ) ){
-		Znk_snprintf( result_msg, result_msg_size, "Cannot get catalog" );
+		ZnkStr_set( result_msg, "Cannot get catalog" );
 		goto FUNC_END;
 	}
 	
@@ -428,7 +428,7 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 	 * つまり毎回違った内容となる.
 	 */
 	if( !getCaco( srv_name, caco, ua, cookie, thre_uri, parent_proxy ) ){
-		Znk_snprintf( result_msg, result_msg_size, "Cannot get caco code" );
+		ZnkStr_set( result_msg, "Cannot get caco code" );
 		goto FUNC_END;
 	}
 
@@ -564,7 +564,7 @@ FUNC_END:
 }
 
 bool
-initiate( ZnkMyf flr_send, const char* parent_proxy, char* result_msg, size_t result_msg_size )
+initiate( ZnkMyf flr_send, const char* parent_proxy, ZnkStr result_msg )
 {
 	/***
 	 * 最初に参照するサーバ名と板ID名を指定.
@@ -580,14 +580,14 @@ initiate( ZnkMyf flr_send, const char* parent_proxy, char* result_msg, size_t re
 #endif
 
 	ZnkDir_mkdirPath( "./tmp", Znk_NPOS, '/' );
-	if( !shuffleMyfFilter( flr_send, srv_name, board_id, parent_proxy, result_msg, result_msg_size ) ){
+	if( !shuffleMyfFilter( flr_send, srv_name, board_id, parent_proxy, result_msg ) ){
 		return false;
 	}
 	if( !ZnkMyf_save( flr_send, "filters/futaba_send.myf" ) ){
-		Znk_snprintf( result_msg, result_msg_size, "Cannot save futaba_send.myf" );
+		ZnkStr_set( result_msg, "Cannot save futaba_send.myf" );
 		return false;
 	}
-	Znk_snprintf( result_msg, result_msg_size, "Virtual USERS done. Your futaba_send.myf is randomized successfully." );
+	ZnkStr_set( result_msg, "Virtual USERS done. Your futaba_send.myf is randomized successfully." );
 	return true;
 }
 

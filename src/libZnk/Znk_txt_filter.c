@@ -118,7 +118,7 @@ ZnkTxtFilterAry_size( const ZnkTxtFilterAry fltr_ary )
 }
 
 void
-ZnkTxtFilterAry_exec( const ZnkTxtFilterAry fltr_ary, ZnkStr html )
+ZnkTxtFilterAry_exec( const ZnkTxtFilterAry fltr_ary, ZnkStr text )
 {
 	const char* old_ptn = NULL;
 	const char* new_ptn = NULL;
@@ -129,7 +129,7 @@ ZnkTxtFilterAry_exec( const ZnkTxtFilterAry fltr_ary, ZnkStr html )
 		fltr = ZnkTxtFilterAry_at( fltr_ary, idx );
 		old_ptn = ZnkStr_cstr( fltr->old_ptn_ );
 		new_ptn = ZnkStr_cstr( fltr->new_ptn_ );
-		replaceStr( html, 0,
+		replaceStr( text, 0,
 				old_ptn, Znk_NPOS,
 				new_ptn, Znk_NPOS,
 				Znk_NPOS );

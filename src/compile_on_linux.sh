@@ -24,4 +24,10 @@ _status=$?; if test $_status -ne 0; then exit $_status; fi
 echo "===="
 echo ""
 
+echo "===="
+make -f Makefile_linux.mak -C plugin_2ch
+_status=$?; if test $_status -ne 0; then exit $_status; fi 
+echo "===="
+echo ""
+
 echo "All compilings are done successfully."

@@ -34,6 +34,14 @@ cd ..
 echo ====
 echo;
 
+echo ====
+cd plugin_2ch
+nmake -f Makefile_vc.mak
+if errorlevel 1 goto Error
+cd ..
+echo ====
+echo;
+
 echo All compilings are done successfully.
 goto End
 :Error

@@ -133,293 +133,277 @@ demandSrc( uint8_t* src_buf, size_t src_size, void* arg )
 }
 
 static void
-processResponse( ZnkSocket O_sock, MoaiContext ctx, MoaiFdSet mfds,
-		size_t* content_length_remain )
+processResponse_forText( ZnkSocket O_sock, MoaiContext ctx, MoaiFdSet mfds,
+		size_t* content_length_remain, MoaiModule mod )
 {
 	bool is_direct_download = false;
 	MoaiInfo*     info      = ctx->draft_info_;
 	MoaiBodyInfo* body_info = &ctx->body_info_;
 
-	/***
-	 * HTMLの場合は全取得を試みる.
-	 */
-	if( body_info->txt_type_ != MoaiText_e_Binary || body_info->is_unlimited_ ){
-		size_t result_size = 0;
-		if( body_info->is_chunked_ ){
-			size_t      dbfr_size;
-			const char* chunk_size_cstr_begin;
-			const char* chunk_size_cstr_end;
-			char        chunk_size_cstr_buf[ 1024 ];
-			size_t      chunk_size = 0;
-			size_t      chunk_size_cstr_leng = 0;
-			size_t      chunk_remain = 0;
-			size_t      chunk_begin = info->hdr_size_;
+	size_t result_size = 0;
+	if( body_info->is_chunked_ ){
+		size_t      dbfr_size;
+		const char* chunk_size_cstr_begin;
+		const char* chunk_size_cstr_end;
+		char        chunk_size_cstr_buf[ 1024 ];
+		size_t      chunk_size = 0;
+		size_t      chunk_size_cstr_leng = 0;
+		size_t      chunk_remain = 0;
+		size_t      chunk_begin = info->hdr_size_;
 
-			while( true ){
+		while( true ){
+			dbfr_size = ZnkBfr_size( info->stream_ );
+			chunk_size_cstr_begin = (char*)ZnkBfr_data( info->stream_ ) + chunk_begin;
+			chunk_size_cstr_end   = Znk_memmem( chunk_size_cstr_begin, dbfr_size-chunk_begin, "\r\n", 2 );
+			if( chunk_size_cstr_end == NULL ){
+				MoaiIO_recvByPtn( info->stream_, O_sock, mfds, "\r\n", &result_size );
+				/* for realloc */
 				dbfr_size = ZnkBfr_size( info->stream_ );
 				chunk_size_cstr_begin = (char*)ZnkBfr_data( info->stream_ ) + chunk_begin;
 				chunk_size_cstr_end   = Znk_memmem( chunk_size_cstr_begin, dbfr_size-chunk_begin, "\r\n", 2 );
-				if( chunk_size_cstr_end == NULL ){
-					MoaiIO_recvByPtn( info->stream_, O_sock, mfds, "\r\n", &result_size );
-					/* for realloc */
-					dbfr_size = ZnkBfr_size( info->stream_ );
-					chunk_size_cstr_begin = (char*)ZnkBfr_data( info->stream_ ) + chunk_begin;
-					chunk_size_cstr_end   = Znk_memmem( chunk_size_cstr_begin, dbfr_size-chunk_begin, "\r\n", 2 );
-					assert( chunk_size_cstr_end != NULL );
-				}
-				chunk_size_cstr_leng = chunk_size_cstr_end-chunk_size_cstr_begin;
-				ZnkS_copy( chunk_size_cstr_buf, sizeof(chunk_size_cstr_buf),
-						chunk_size_cstr_begin, chunk_size_cstr_leng );
-				if( !ZnkS_getSzX( &chunk_size, chunk_size_cstr_buf ) ){
-					MoaiLog_printf( "chunk_size_cstr is broken. dump dbfr_dump.dat\n" );
-					{
-						ZnkFile fp = ZnkF_fopen( "dbfr_dump.dat", "wb" );
-						if( fp ){
-							const uint8_t* data = ZnkBfr_data( info->stream_ );
-							const size_t   size = ZnkBfr_size( info->stream_ );
-							ZnkF_fwrite( data, 1, size, fp );
-							ZnkF_fclose( fp );
-						}
-						assert( 0 );
-					}
-				} else {
-					//MoaiLog_printf( "chunk_size=[%u]\n", chunk_size );
-				}
-				/***
-				 * dbfrにおけるchunk_size_cstrの領域を削る.
-				 */
-				ZnkBfr_erase( info->stream_, chunk_begin, chunk_size_cstr_leng+2 );
-
-				if( ZnkBfr_size( info->stream_ ) < chunk_begin + chunk_size + 2 ){
-					chunk_remain = chunk_begin + chunk_size + 2 - ZnkBfr_size( info->stream_ );
-				} else {
-					chunk_remain = 0;
-				}
-				if( chunk_remain ){
-					if( !MoaiIO_recvBySize( info->stream_, O_sock, mfds, chunk_remain, &result_size ) ){
-						MoaiLog_printf( "MoaiIO_recvBySize : error[%s]\n", ZnkStr_cstr(ctx->msgs_) );
-					}
-				}
-				/***
-				 * dbfrにおけるchunkの最後にある\r\nを削る.
-				 * ( chunk_size_cstrが 0 の場合でも後ろに空白行が一つ存在するため、これが必要.
-				 * さらに厳密に言えば、その前にフッター行が来る可能性もあるが、今は考慮しない)
-				 */
-				ZnkBfr_erase( info->stream_, chunk_begin+chunk_size, 2 );
-				if( chunk_size == 0 ){
-					break;
-				}
-				chunk_begin += chunk_size;
+				assert( chunk_size_cstr_end != NULL );
 			}
-		} else if( ctx->body_info_.is_unlimited_ ){
-			MoaiLog_printf( "  MoaiIO_recvByZero Mode Begin\n" );
-			MoaiIO_recvByZero( info->stream_, O_sock, mfds, &result_size );
-			MoaiLog_printf( "  MoaiIO_recvByZero Mode End\n" );
-		} else {
-			while( *content_length_remain ){
-				MoaiIO_recvBySize( info->stream_, O_sock, mfds, *content_length_remain, &result_size );
-				if( *content_length_remain >= result_size ){
-					*content_length_remain -= result_size;
-				} else {
-					assert(0);
-				}
-			}
-		}
-
-		{
-			const uint8_t* body_data = ZnkBfr_data( info->stream_ ) + info->hdr_size_;
-			const size_t   body_size = ZnkBfr_size( info->stream_ ) - info->hdr_size_;
-
-			ZnkStr_clear( ctx->text_ );
-			if( body_info->is_gzip_ ){
-				static const bool method1 = false;
-				uint8_t dst_buf[ 4096 ];
-				ZnkZStream zst = ZnkZStream_create();
-				ZnkZStream_inflateInit( zst );
-
-				if( method1 ){
-					size_t expanded_dst_size = 0;
-					size_t expanded_src_size = 0;
-					const uint8_t* src;
-					size_t src_size;
-
-					src      = body_data;
-					src_size = body_size;
-					while( src_size ){
-						if( !ZnkZStream_inflate( zst, dst_buf, sizeof(dst_buf), src, src_size,
-								&expanded_dst_size, &expanded_src_size ) ){
-							MoaiLog_printf( "expanded_src_size=[%zu]\n", expanded_src_size );
-						}
-						assert( expanded_src_size );
-						ZnkStr_append( ctx->text_, (char*)dst_buf, expanded_dst_size );
-						src_size -= expanded_src_size;
-						src += expanded_src_size;
+			chunk_size_cstr_leng = chunk_size_cstr_end-chunk_size_cstr_begin;
+			ZnkS_copy( chunk_size_cstr_buf, sizeof(chunk_size_cstr_buf),
+					chunk_size_cstr_begin, chunk_size_cstr_leng );
+			if( !ZnkS_getSzX( &chunk_size, chunk_size_cstr_buf ) ){
+				MoaiLog_printf( "chunk_size_cstr is broken. dump dbfr_dump.dat\n" );
+				{
+					ZnkFile fp = ZnkF_fopen( "dbfr_dump.dat", "wb" );
+					if( fp ){
+						const uint8_t* data = ZnkBfr_data( info->stream_ );
+						const size_t   size = ZnkBfr_size( info->stream_ );
+						ZnkF_fwrite( data, 1, size, fp );
+						ZnkF_fclose( fp );
 					}
-				} else {
-					uint8_t src_buf[ 4096 ];
-					GZipInfo gzip_info = { 0 };
-
-					gzip_info.src_      = body_data;
-					gzip_info.src_size_ = body_size;
-					gzip_info.ans_      = ctx->text_;
-
-					while( gzip_info.src_size_ ){
-						if( !ZnkZStream_inflate2( zst,
-									dst_buf, sizeof(dst_buf), supplyDst, &gzip_info,
-									src_buf, sizeof(src_buf), demandSrc, &gzip_info ) )
-						{
-							assert( 0 );
-						}
-					}
+					assert( 0 );
 				}
-				ZnkZStream_inflateEnd( zst );
-				ZnkZStream_destroy( zst );
-
 			} else {
-				ZnkStr_append( ctx->text_, (char*)body_data, body_size );
+				//MoaiLog_printf( "chunk_size=[%u]\n", chunk_size );
 			}
-
-			{
-				MoaiConnection mcn = MoaiConnection_find_byOSock( O_sock );
-				/***
-				 * これがNULLになる場合があり得る.
-				 */
-				if( mcn ){
-					const char* hostname = ZnkStr_cstr( mcn->hostname_ );
-					MoaiModule mod = NULL;
-
-					mod = MoaiModuleAry_find_byHostname( st_mod_ary, hostname );
-					if( mod ){
-						ZnkTxtFilterAry txt_ftr = NULL;
-						switch( body_info->txt_type_ ){
-						case MoaiText_e_HTML:
-							txt_ftr = MoaiModule_ftrHtml( mod );
-							break;
-						case MoaiText_e_JS:
-							txt_ftr = MoaiModule_ftrJS( mod );
-							break;
-						case MoaiText_e_CSS:
-							txt_ftr = MoaiModule_ftrCSS( mod );
-							break;
-						default:
-							break;
-						}
-						if( txt_ftr ){
-							ZnkTxtFilterAry_exec( txt_ftr, ctx->text_ );
-						}
-					}
-				}
-			}
-
-		}
-
-		if( is_direct_download ){
 			/***
-			 * 現状ではまだ固定名なので問題ないが、
-			 * ここをもしhost上にあるファイル名で保存する場合は
-			 * カレントディレクトリへ直に保存するのは危険であるので
-			 * 例えばdownloads ディレクトリなどを作成してその配下へ保存するような
-			 * 形にした方がよい.
+			 * dbfrにおけるchunk_size_cstrの領域を削る.
 			 */
-			ZnkFile fp = ZnkF_fopen( "result.html", "wb" );
-			if( fp ){
-				const uint8_t* body_data = ZnkBfr_data( info->stream_ ) + info->hdr_size_;
-				const size_t   body_size = ZnkBfr_size( info->stream_ ) - info->hdr_size_;
+			ZnkBfr_erase( info->stream_, chunk_begin, chunk_size_cstr_leng+2 );
 
-				if( body_info->is_gzip_ ){
-					uint8_t dst_buf[ 4096 ];
-					size_t expanded_dst_size = 0;
-					size_t expanded_src_size = 0;
-					const uint8_t* src;
-					size_t src_size;
-					ZnkZStream zst = ZnkZStream_create();
-
-					ZnkZStream_inflateInit( zst );
-					src      = body_data;
-					src_size = body_size;
-					while( src_size ){
-						ZnkZStream_inflate( zst, dst_buf, sizeof(dst_buf), src, src_size,
-								&expanded_dst_size, &expanded_src_size );
-						assert( expanded_src_size );
-						ZnkF_fwrite( dst_buf, 1, expanded_dst_size, fp );
-						src_size -= expanded_src_size;
-						src += expanded_src_size;
-					}
-					ZnkZStream_inflateEnd( zst );
-
-					ZnkZStream_destroy( zst );
-				} else {
-					ZnkF_fwrite( body_data, 1, body_size, fp );
+			if( ZnkBfr_size( info->stream_ ) < chunk_begin + chunk_size + 2 ){
+				chunk_remain = chunk_begin + chunk_size + 2 - ZnkBfr_size( info->stream_ );
+			} else {
+				chunk_remain = 0;
+			}
+			if( chunk_remain ){
+				if( !MoaiIO_recvBySize( info->stream_, O_sock, mfds, chunk_remain, &result_size ) ){
+					MoaiLog_printf( "MoaiIO_recvBySize : error[%s]\n", ZnkStr_cstr(ctx->msgs_) );
 				}
-
-				ZnkF_fclose( fp );
 			}
-		} else {
-			ZnkFile fp = NULL;
-			switch( body_info->txt_type_ ){
-			case MoaiText_e_HTML:
-				fp = ZnkF_fopen( "result.html", "wb" );
-				break;
-			case MoaiText_e_JS:
-				fp = ZnkF_fopen( "result.js", "wb" );
-				break;
-			case MoaiText_e_CSS:
-				fp = ZnkF_fopen( "result.css", "wb" );
-				break;
-			default:
+			/***
+			 * dbfrにおけるchunkの最後にある\r\nを削る.
+			 * ( chunk_size_cstrが 0 の場合でも後ろに空白行が一つ存在するため、これが必要.
+			 * さらに厳密に言えば、その前にフッター行が来る可能性もあるが、今は考慮しない)
+			 */
+			ZnkBfr_erase( info->stream_, chunk_begin+chunk_size, 2 );
+			if( chunk_size == 0 ){
 				break;
 			}
-			if( fp ){
-				const uint8_t* html_data = (uint8_t*)ZnkStr_cstr( ctx->text_ );
-				const size_t   html_size = ZnkStr_leng( ctx->text_ );
-				ZnkF_fwrite( html_data, 1, html_size, fp );
-				ZnkF_fclose( fp );
-			}
+			chunk_begin += chunk_size;
 		}
-
-		/***
-		 * I側にはctx->text_の値で返信する.
-		 * これに伴い、HeaderにおけるContent-Lengthの値を修正する.
-		 */
-		{
-			ZnkHtpHdrs hdrs = &info->hdrs_;
-			const char* key;
-			bool exist_content_length = false;
-			size_t size;
-			size_t idx;
-			ZnkVarp varp;
-	
-			ZnkHtpHdrs_erase( hdrs->vars_, "Transfer-Encoding" );
-
-			size = ZnkVarpAry_size( hdrs->vars_ );
-			for( idx=0; idx<size; ++idx ){
-				varp = ZnkVarpAry_at( hdrs->vars_, idx );
-				key = ZnkHtpHdrs_key_cstr( varp );
-
-				if( ZnkS_eqCase( key, "Content-Length" ) ){
-					ZnkStr str = ZnkHtpHdrs_val( varp, 0 );
-					size_t new_contet_length = ZnkStr_leng( ctx->text_ );
-					ZnkStr_sprintf( str, 0, "%u", new_contet_length );
-					exist_content_length = true;
-				}
-				if( ZnkS_eqCase( key, "Content-Encoding" ) ){
-					ZnkStr str = ZnkHtpHdrs_val( varp, 0 );
-					/* identityは特別なEncodingはなしを示す */
-					ZnkStr_set( str, "identity" );
-				}
-			}
-			if( !exist_content_length ){
-				char buf[ 1024 ];
-				size_t new_contet_length = ZnkStr_leng( ctx->text_ );
-				key = "Content-Length";
-				Znk_snprintf( buf, sizeof(buf), "%u", new_contet_length );
-				ZnkHtpHdrs_regist( hdrs->vars_,
-						key, strlen(key),
-						buf, strlen(buf) );
+	} else if( ctx->body_info_.is_unlimited_ ){
+		MoaiLog_printf( "  MoaiIO_recvByZero Mode Begin\n" );
+		MoaiIO_recvByZero( info->stream_, O_sock, mfds, &result_size );
+		MoaiLog_printf( "  MoaiIO_recvByZero Mode End\n" );
+	} else {
+		while( *content_length_remain ){
+			MoaiIO_recvBySize( info->stream_, O_sock, mfds, *content_length_remain, &result_size );
+			if( *content_length_remain >= result_size ){
+				*content_length_remain -= result_size;
+			} else {
+				assert(0);
 			}
 		}
 	}
+
+	{
+		const uint8_t* body_data = ZnkBfr_data( info->stream_ ) + info->hdr_size_;
+		const size_t   body_size = ZnkBfr_size( info->stream_ ) - info->hdr_size_;
+
+		ZnkStr_clear( ctx->text_ );
+		if( body_info->is_gzip_ ){
+			static const bool method1 = false;
+			uint8_t dst_buf[ 4096 ];
+			ZnkZStream zst = ZnkZStream_create();
+			ZnkZStream_inflateInit( zst );
+
+			if( method1 ){
+				size_t expanded_dst_size = 0;
+				size_t expanded_src_size = 0;
+				const uint8_t* src;
+				size_t src_size;
+
+				src      = body_data;
+				src_size = body_size;
+				while( src_size ){
+					if( !ZnkZStream_inflate( zst, dst_buf, sizeof(dst_buf), src, src_size,
+							&expanded_dst_size, &expanded_src_size ) ){
+						MoaiLog_printf( "expanded_src_size=[%zu]\n", expanded_src_size );
+					}
+					assert( expanded_src_size );
+					ZnkStr_append( ctx->text_, (char*)dst_buf, expanded_dst_size );
+					src_size -= expanded_src_size;
+					src += expanded_src_size;
+				}
+			} else {
+				uint8_t src_buf[ 4096 ];
+				GZipInfo gzip_info = { 0 };
+
+				gzip_info.src_      = body_data;
+				gzip_info.src_size_ = body_size;
+				gzip_info.ans_      = ctx->text_;
+
+				while( gzip_info.src_size_ ){
+					if( !ZnkZStream_inflate2( zst,
+								dst_buf, sizeof(dst_buf), supplyDst, &gzip_info,
+								src_buf, sizeof(src_buf), demandSrc, &gzip_info ) )
+					{
+						assert( 0 );
+					}
+				}
+			}
+			ZnkZStream_inflateEnd( zst );
+			ZnkZStream_destroy( zst );
+
+		} else {
+			ZnkStr_append( ctx->text_, (char*)body_data, body_size );
+		}
+	}
+
+	if( mod ){
+		ZnkTxtFilterAry txt_ftr = NULL;
+		switch( body_info->txt_type_ ){
+		case MoaiText_e_HTML:
+			txt_ftr = MoaiModule_ftrHtml( mod );
+			break;
+		case MoaiText_e_JS:
+			txt_ftr = MoaiModule_ftrJS( mod );
+			break;
+		case MoaiText_e_CSS:
+			txt_ftr = MoaiModule_ftrCSS( mod );
+			break;
+		default:
+			break;
+		}
+		MoaiModule_invokeOnResponse( mod, info->hdrs_.vars_, ctx->text_, ZnkStr_cstr(info->req_urp_) );
+		if( txt_ftr ){
+			ZnkTxtFilterAry_exec( txt_ftr, ctx->text_ );
+		}
+	}
+
+	if( is_direct_download ){
+		/***
+		 * 現状ではまだ固定名なので問題ないが、
+		 * ここをもしhost上にあるファイル名で保存する場合は
+		 * カレントディレクトリへ直に保存するのは危険であるので
+		 * 例えばdownloads ディレクトリなどを作成してその配下へ保存するような
+		 * 形にした方がよい.
+		 */
+		ZnkFile fp = ZnkF_fopen( "result.html", "wb" );
+		if( fp ){
+			const uint8_t* body_data = ZnkBfr_data( info->stream_ ) + info->hdr_size_;
+			const size_t   body_size = ZnkBfr_size( info->stream_ ) - info->hdr_size_;
+
+			if( body_info->is_gzip_ ){
+				uint8_t dst_buf[ 4096 ];
+				size_t expanded_dst_size = 0;
+				size_t expanded_src_size = 0;
+				const uint8_t* src;
+				size_t src_size;
+				ZnkZStream zst = ZnkZStream_create();
+
+				ZnkZStream_inflateInit( zst );
+				src      = body_data;
+				src_size = body_size;
+				while( src_size ){
+					ZnkZStream_inflate( zst, dst_buf, sizeof(dst_buf), src, src_size,
+							&expanded_dst_size, &expanded_src_size );
+					assert( expanded_src_size );
+					ZnkF_fwrite( dst_buf, 1, expanded_dst_size, fp );
+					src_size -= expanded_src_size;
+					src += expanded_src_size;
+				}
+				ZnkZStream_inflateEnd( zst );
+
+				ZnkZStream_destroy( zst );
+			} else {
+				ZnkF_fwrite( body_data, 1, body_size, fp );
+			}
+
+			ZnkF_fclose( fp );
+		}
+	} else {
+		ZnkFile fp = NULL;
+		switch( body_info->txt_type_ ){
+		case MoaiText_e_HTML:
+			fp = ZnkF_fopen( "result.html", "wb" );
+			break;
+		case MoaiText_e_JS:
+			fp = ZnkF_fopen( "result.js", "wb" );
+			break;
+		case MoaiText_e_CSS:
+			fp = ZnkF_fopen( "result.css", "wb" );
+			break;
+		default:
+			break;
+		}
+		if( fp ){
+			const uint8_t* html_data = (uint8_t*)ZnkStr_cstr( ctx->text_ );
+			const size_t   html_size = ZnkStr_leng( ctx->text_ );
+			ZnkF_fwrite( html_data, 1, html_size, fp );
+			ZnkF_fclose( fp );
+		}
+	}
+
+	/***
+	 * I側にはctx->text_の値で返信する.
+	 * これに伴い、HeaderにおけるContent-Lengthの値を修正する.
+	 */
+	{
+		ZnkHtpHdrs hdrs = &info->hdrs_;
+		const char* key;
+		bool exist_content_length = false;
+		size_t size;
+		size_t idx;
+		ZnkVarp varp;
+
+		ZnkHtpHdrs_erase( hdrs->vars_, "Transfer-Encoding" );
+
+		size = ZnkVarpAry_size( hdrs->vars_ );
+		for( idx=0; idx<size; ++idx ){
+			varp = ZnkVarpAry_at( hdrs->vars_, idx );
+			key = ZnkHtpHdrs_key_cstr( varp );
+
+			if( ZnkS_eqCase( key, "Content-Length" ) ){
+				ZnkStr str = ZnkHtpHdrs_val( varp, 0 );
+				size_t new_contet_length = ZnkStr_leng( ctx->text_ );
+				ZnkStr_sprintf( str, 0, "%u", new_contet_length );
+				exist_content_length = true;
+			}
+			if( ZnkS_eqCase( key, "Content-Encoding" ) ){
+				ZnkStr str = ZnkHtpHdrs_val( varp, 0 );
+				/* identityは特別なEncodingはなしを示す */
+				ZnkStr_set( str, "identity" );
+			}
+		}
+		if( !exist_content_length ){
+			char buf[ 1024 ];
+			size_t new_contet_length = ZnkStr_leng( ctx->text_ );
+			key = "Content-Length";
+			Znk_snprintf( buf, sizeof(buf), "%u", new_contet_length );
+			ZnkHtpHdrs_regist( hdrs->vars_,
+					key, strlen(key),
+					buf, strlen(buf) );
+		}
+	}
 }
+
 static void
 sendHdrs( ZnkSocket sock, ZnkStrAry hdr1st, const ZnkVarpAry vars )
 {
@@ -875,17 +859,54 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
 		MoaiConnection mcn      = MoaiConnection_find_byOSock( sock );
 		const char*    hostname = MoaiConnection_hostname( mcn );
 		MoaiModule     mod      = MoaiModuleAry_find_byHostname( st_mod_ary, hostname );
+#if 0
 		if( mod ){
 			MoaiModule_invokeOnResponseHdr( mod, info->hdrs_.vars_ );
 		}
+#endif
 		MoaiLog_printf( "  Response hostname=[%s]\n", hostname );
+
+		if( mod ){
+			ZnkVarp set_cookie = ZnkHtpHdrs_find_literal( info->hdrs_.vars_, "Set-Cookie" );
+		
+			/***
+			 * set_cookieを解析し、myf上におけるcookie_varsを更新する.
+			 */
+			if( set_cookie ){
+				const size_t val_size = ZnkHtpHdrs_val_size( set_cookie );
+				size_t       val_idx  = 0;
+				ZnkMyf       myf      = MoaiModule_ftrSend( mod );
+				ZnkVarpAry   cok_vars = ZnkMyf_find_vars( myf, "cookie_vars" );
+		
+				for( val_idx=0; val_idx<val_size; ++val_idx ){
+					const char* p = ZnkHtpHdrs_val_cstr( set_cookie, val_idx );
+					const char* e = p + strlen(p);
+					const char* q = memchr( p, ';', (size_t)(e-p) );
+					if( q == NULL ){
+						q = e;
+					}
+					ZnkCookie_regist_byAssignmentStatement( cok_vars, p, (size_t)(q-p) );
+				}
+			}
+		}
 
 		/***
 		 * HEADの場合はConnect-Lengthが非ゼロであるにも関わらずそのデータ部がない
 		 */
-		if( prev_req_method != ZnkHtpReqMethod_e_HEAD ){
-			processResponse( sock, ctx, mfds, &mcn->content_length_remain_ );
-		}
+		if( prev_req_method == ZnkHtpReqMethod_e_HEAD && mod ){
+			MoaiModule_invokeOnResponse( mod, info->hdrs_.vars_, NULL, "" );
+		} else {
+			MoaiBodyInfo* body_info = &ctx->body_info_;
+		
+			/***
+			 * Textデータの場合は全取得を試みる.
+			 */
+			if( body_info->txt_type_ != MoaiText_e_Binary || body_info->is_unlimited_ ){
+				processResponse_forText( sock, ctx, mfds, &mcn->content_length_remain_, mod );
+			} else if( mod ){
+				MoaiModule_invokeOnResponse( mod, info->hdrs_.vars_, NULL, "" );
+			}
+		} 
 		return HtpScan_e_Response;
 	}
 	{
@@ -913,9 +934,8 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
 static void
 debugInterestURP( const MoaiInfo* info, const MoaiConnection mcn, HtpScanType scan_type, ZnkMyf analysis )
 {
-	const char*     req_urp         = ZnkStr_cstr( info->req_urp_ );
+	const char*    req_urp         = ZnkStr_cstr( info->req_urp_ );
 	ZnkStrAry      interest_urp    = ZnkMyf_find_lines( analysis, "interest_urp" );
-	//if( interest_urp && ZnkStrAry_find( interest_urp, 0, req_urp, Znk_NPOS ) != Znk_NPOS ){
 	if( ZnkStrAry_find_isMatch( interest_urp, 0, req_urp, Znk_NPOS, ZnkS_isMatchSWC ) != Znk_NPOS ){
 		if( ZnkStrAry_size(info->hdrs_.hdr1st_) > 1 ){
 			char prev_req_method_str[ 1024 ] = "";
@@ -1603,12 +1623,12 @@ initiateFilters( MoaiModuleAry mod_ary, ZnkStrAry result_msgs )
 	const size_t mod_size = MoaiModuleAry_size( mod_ary );
 	size_t       mod_idx;
 	MoaiModule   mod;
-	const char*  parent_proxy_hostname   = MoaiParentProxy_getHostname();
-	uint16_t     port                    = MoaiParentProxy_getPort();
-	char         parent_proxy[ 4096 ] = "NONE";
-	char         result_msg[ 4096 ] = "";
-	const char*  target_name = NULL;
-	bool result = false;
+	const char*  parent_proxy_hostname = MoaiParentProxy_getHostname();
+	uint16_t     port                  = MoaiParentProxy_getPort();
+	char         parent_proxy[ 4096 ]  = "NONE";
+	ZnkStr       result_msg            = ZnkStr_new( "" );
+	const char*  target_name           = NULL;
+	bool         result                = false;
 
 	if( !ZnkS_empty( parent_proxy_hostname ) && !ZnkS_eq( parent_proxy_hostname, "NONE" ) ){
 		Znk_snprintf( parent_proxy, sizeof(parent_proxy), "%s:%hd", parent_proxy_hostname, port );
@@ -1618,16 +1638,16 @@ initiateFilters( MoaiModuleAry mod_ary, ZnkStrAry result_msgs )
 		if( mod ){
 			MoaiLog_printf( "Moai : invokeInitiate [%s]\n", parent_proxy );
 			target_name = MoaiModule_targe_name( mod );
-			ZnkS_copy( result_msg, sizeof(result_msg), "Cannot call plugin function", Znk_NPOS );
-			result = MoaiModule_invokeInitiate( mod, parent_proxy, result_msg, sizeof(result_msg) );
+			ZnkStr_set( result_msg, "Cannot call plugin function" );
+			result = MoaiModule_invokeInitiate( mod, parent_proxy, result_msg );
 
 			if( result_msgs ){
 				ZnkStrAry_push_bk_snprintf( result_msgs, Znk_NPOS,
 						"Initiate %s : %s : %s",
-						target_name, result ? "Success" : "Failure", result_msg );
+						target_name, result ? "Success" : "Failure", ZnkStr_cstr(result_msg) );
 			}
 			MoaiLog_printf( "Moai : Initiate %s : %s : %s\n",
-					target_name, result ? "Success" : "Failure", result_msg );
+					target_name, result ? "Success" : "Failure", ZnkStr_cstr(result_msg) );
 		}
 	}
 }

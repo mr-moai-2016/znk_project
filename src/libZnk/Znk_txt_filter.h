@@ -47,7 +47,7 @@ size_t
 ZnkTxtFilterAry_size( const ZnkTxtFilterAry fltr_ary );
 
 void
-ZnkTxtFilterAry_exec( const ZnkTxtFilterAry fltr_ary, ZnkStr html );
+ZnkTxtFilterAry_exec( const ZnkTxtFilterAry fltr_ary, ZnkStr text );
 
 Znk_EXTERN_C_END
 

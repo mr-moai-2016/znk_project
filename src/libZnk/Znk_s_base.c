@@ -583,7 +583,7 @@ ZnkS_isMatchSWC( const char* ptn, size_t ptn_leng,
 				/* found */
 				return true;
 			}
-		} else if( ZnkS_eqEx( query, ptn, query_leng ) ){
+		} else if( query_leng == ptn_leng && ZnkS_eqEx( query, ptn, query_leng ) ){
 			/* found */
 			return true;
 		}

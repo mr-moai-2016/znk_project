@@ -73,9 +73,10 @@ install_one -c target.myf      virtual_users $INST_DIR_
 install_one -c VirtualUSERS.md virtual_users $INST_DIR_
 
 #
-# setup plugin_futaba
+# setup plugin
 #
 mkdir -p "$INST_DIR_/plugins"
 $CP_ plugin_futaba/out_dir/futaba.dll $INST_DIR_/plugins/
+$CP_ plugin_2ch/out_dir/2ch.dll       $INST_DIR_/plugins/
 
 echo "All files installed to $INST_DIR_ successfully."

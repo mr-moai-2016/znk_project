@@ -52,10 +52,11 @@ call bat_utils\install_one.bat /C target.myf      virtual_users         %INST_DI
 %CP_% virtual_users\VirtualUSERS.md %INST_DIR_%\
 
 REM
-REM setup plugin_futaba
+REM setup plugin
 REM
 if not exist %INST_DIR_%\plugins mkdir %INST_DIR_%\plugins
 %CP_% plugin_futaba\out_dir\futaba.dll %INST_DIR_%\plugins\
+%CP_% plugin_2ch\out_dir\2ch.dll       %INST_DIR_%\plugins\
 
 echo All files installed to %INST_DIR_% successfully.
 pause

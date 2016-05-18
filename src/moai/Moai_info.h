@@ -27,7 +27,7 @@ typedef enum {
 typedef struct {
 	MoaiInfoID            id_;
 	struct ZnkHtpHdrs_tag hdrs_;
-	ZnkVarpAry           vars_;   /* for POST */
+	ZnkVarpAry            vars_;   /* for POST */
 	ZnkBfr                stream_; /* 送受信の際に実際に使われるストリーム */
 	size_t                hdr_size_;
 	ZnkHtpReqMethod       req_method_;

@@ -19,8 +19,8 @@ struct MoaiModuleImpl {
 	char              target_name_[ 256 ];
 	ZnkDLinkHandler   plg_handle_;
 	MoaiInitiateFunc  plg_initiate_;
-	MoaiOnPostFunc    plg_on_post_before_;
-	MoaiOnResponseHdr plg_on_response_hdr_;
+	MoaiOnPostFunc    plg_on_post_;
+	MoaiOnResponse    plg_on_response_;
 	ZnkMyf            ftr_send_;
 	ZnkMyf            ftr_recv_;
 	ZnkTxtFilterAry   ftr_html_;
@@ -109,13 +109,13 @@ MoaiModule_load( MoaiModule mod, const char* target_name )
 	MoaiLog_printf( "Moai : Plugin Loading [%s]\n", filename );
 	mod->plg_handle_ = ZnkDLink_open( filename );
 	if( mod->plg_handle_ ){
-		mod->plg_initiate_        = (MoaiInitiateFunc) ZnkDLink_getFunc( mod->plg_handle_, "initiate" );
-		mod->plg_on_post_before_  = (MoaiOnPostFunc)   ZnkDLink_getFunc( mod->plg_handle_, "on_post_before" );
-		mod->plg_on_response_hdr_ = (MoaiOnResponseHdr)ZnkDLink_getFunc( mod->plg_handle_, "on_response_hdr" );
+		mod->plg_initiate_    = (MoaiInitiateFunc)ZnkDLink_getFunc( mod->plg_handle_, "initiate" );
+		mod->plg_on_post_     = (MoaiOnPostFunc)  ZnkDLink_getFunc( mod->plg_handle_, "on_post" );
+		mod->plg_on_response_ = (MoaiOnResponse)  ZnkDLink_getFunc( mod->plg_handle_, "on_response" );
 	} else {
-		mod->plg_initiate_        = NULL;
-		mod->plg_on_post_before_  = NULL;
-		mod->plg_on_response_hdr_ = NULL;
+		mod->plg_initiate_    = NULL;
+		mod->plg_on_post_     = NULL;
+		mod->plg_on_response_ = NULL;
 	}
 	return result;
 }
@@ -192,27 +192,26 @@ MoaiModule_ftrCSS( const MoaiModule mod )
 	return mod->ftr_css_;
 }
 bool
-MoaiModule_invokeInitiate( const MoaiModule mod, const char* parent_proxy,
-		char* result_msg_buf, size_t result_msg_buf_size )
+MoaiModule_invokeInitiate( const MoaiModule mod, const char* parent_proxy, ZnkStr result_msg )
 {
 	if( mod->plg_initiate_ ){
-		return mod->plg_initiate_( mod->ftr_send_, parent_proxy, result_msg_buf, result_msg_buf_size );
+		return mod->plg_initiate_( mod->ftr_send_, parent_proxy, result_msg );
 	}
 	return false;
 }
 bool
-MoaiModule_invokeOnPostBefore( const MoaiModule mod )
+MoaiModule_invokeOnPost( const MoaiModule mod )
 {
-	if( mod->plg_on_post_before_ ){
-		return mod->plg_on_post_before_( mod->ftr_send_ );
+	if( mod->plg_on_post_ ){
+		return mod->plg_on_post_( mod->ftr_send_ );
 	}
 	return false;
 }
 bool
-MoaiModule_invokeOnResponseHdr( const MoaiModule mod, ZnkVarpAry hdr_vars )
+MoaiModule_invokeOnResponse( const MoaiModule mod, ZnkVarpAry hdr_vars, ZnkStr text, const char* req_urp )
 {
-	if( mod->plg_on_response_hdr_ ){
-		return mod->plg_on_response_hdr_( mod->ftr_send_, hdr_vars );
+	if( mod->plg_on_response_ ){
+		return mod->plg_on_response_( mod->ftr_send_, hdr_vars, text, req_urp );
 	}
 	return false;
 }

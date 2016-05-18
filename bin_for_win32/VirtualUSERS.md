@@ -11,7 +11,7 @@
 * [futabaプラグイン : 手動で偽装を行った場合(参考)](#futaba_note)
 * [その他の情報](#pos5)
 
-## <a name="pos1">MoaiのVirtual USERS機能とは？ [目次へ](#index)
+## <a name="pos1">MoaiのVirtual USERS機能とは？
 -----------------------------------
 
   Virtual USERSとはVirtual User-agent Screen-size and Everything Randomize Systemの略である.
@@ -21,10 +21,11 @@
   Virtual USERS機能はブラウザと送信先のサイトとの通信を仲介し、IPを除くそれら全ての情報に関して、
   あなたの実際のマシン環境とは異なるバーチャルかつランダムな値へ変更した上でサイトへと送る.  
   これにより送信先はあなたを正しく識別できなくなる.  
-  つまり早い話、これはよくあるあなたのプライベートを守るセキュリティーツールの一つである.  
+  つまり早い話、これはよくあるあなたのプライベートを守るセキュリティー機能の一つである.  
 
+  <a href="#user-content-index">目次へ戻る</a>
 
-## <a name="pos2">何ができるのか？ [目次へ](#index)
+## <a name="pos2">何ができるのか？
 -----------------------------------
 
   Virtual USERS機能はIPを除くすべてのあなたのマシンの情報をランダムに仮想化する.
@@ -38,6 +39,7 @@
   Moai Web Configuration上でこれらのプロキシがメニュー表示され、現在使用するプロキシを簡単かつ
   瞬時に切り替えができる.  
 
+  <a href="#user-content-index">目次へ戻る</a>
 
 ## <a name="pos3">Web閲覧時に送信される情報とは何なのか？
 -----------------------------------
@@ -105,6 +107,8 @@
   実のところこれは手動でも可能であるし、プログラミングするにしてもそう難しい話でもないが
   MoaiのVirtual USERS機能ならばそれをすべて自動で行うことができ、楽ができる.
 
+  <a href="#user-content-index">目次へ戻る</a>
+
 
 ## <a name="pos4">MoaiのVirtual USERS機能を使う
 -----------------------------------
@@ -154,8 +158,11 @@
 
   以上である.  
 
-  Moai Web Configuration  
+  以下はMoai Web Configuration画面の様子である.  
+
   ![screenshot](../imgs/screenshot_config.png)
+
+  <a href="#user-content-index">目次へ戻る</a>
 
 
 ## <a name="futaba_plugin1">futabaプラグイン : user_agent.txtとscreen_size.txtについて
@@ -166,7 +173,7 @@
 これらのUser-Agentはネット上に転がっているものを適当に巡回してコピペしただけのものであり、
 候補のパターンはあなたのお好みで自由に変えてよい.
 これを修正することなくそのまま使ってもよいが、新しいブラウザが登場するたびに段々とその情報は古くなるし、
-できればあなた独自のプライベートな user_agent.txtを生成しておくほうがなにかと確実ではある.
+できればあなた独自のプライベートな user_agent.txtを生成しておくほうが望ましい.
 手動で好みのリストを作成していってもよいし、 巷にあるUser-Agentジェネレータを使うのも一つの手である.
 このファイルにおいて、空行および # 記号で始まる行は候補値とはならず無視される.
 このファイルは現状ではfutabaプラグインにおいてのみ使われる.
@@ -175,6 +182,9 @@
 このファイルはRandomizeの際に選択されるscszの解像度の候補を各行で列挙したものである.
 このファイルにおいて、空行および # 記号で始まる行は候補値とはならず無視される.
 このファイルは現状ではfutabaプラグインにおいてのみ使われる.
+
+
+  <a href="#user-content-index">目次へ戻る</a>
 
 
 ## <a name="futaba_note">futabaプラグイン : 手動で偽装を行った場合(参考)
@@ -256,12 +266,16 @@
   上において偽装された値が送信されることだろう.
 ~~~
 
+  <a href="#user-content-index">目次へ戻る</a>
+
+
 ## <a name="pos5">その他の情報
 -----------------------------------
 
   Moaiに関する基本事項や注意事項に関しては、src/moaiにある[README][2]を参照して戴きたい.
   Moaiに関するさらなる詳細については [リファレンスマニュアル(Reference)][1] をご覧いただきたい.
 
+  <a href="#user-content-index">目次へ戻る</a>
 
 [1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/Reference.md
 [2]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/README.md

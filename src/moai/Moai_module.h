@@ -9,10 +9,9 @@ Znk_EXTERN_C_BEGIN
 
 typedef struct MoaiModuleImpl* MoaiModule;
 
-typedef bool (*MoaiInitiateFunc)( ZnkMyf ftr_send, const char* parent_proxy,
-		char* result_msg_buf, size_t result_msg_buf_size );
+typedef bool (*MoaiInitiateFunc)( ZnkMyf ftr_send, const char* parent_proxy, ZnkStr result_msg );
 typedef bool (*MoaiOnPostFunc)( ZnkMyf ftr_send );
-typedef bool (*MoaiOnResponseHdr)( ZnkMyf ftr_send, ZnkVarpAry hdr_vars );
+typedef bool (*MoaiOnResponse)( ZnkMyf ftr_send, ZnkVarpAry hdr_vars, ZnkStr text, const char* req_urp );
 
 MoaiModule
 MoaiModule_create( void );
@@ -40,12 +39,11 @@ ZnkTxtFilterAry
 MoaiModule_ftrCSS( const MoaiModule mod );
 
 bool
-MoaiModule_invokeInitiate( const MoaiModule mod, const char* parent_proxy,
-		char* result_msg_buf, size_t result_msg_buf_size );
+MoaiModule_invokeInitiate( const MoaiModule mod, const char* parent_proxy, ZnkStr result_msg );
 bool
-MoaiModule_invokeOnPostBefore( const MoaiModule mod );
+MoaiModule_invokeOnPost( const MoaiModule mod );
 bool
-MoaiModule_invokeOnResponseHdr( const MoaiModule mod, ZnkVarpAry hdr_vars );
+MoaiModule_invokeOnResponse( const MoaiModule mod, ZnkVarpAry hdr_vars, ZnkStr text, const char* req_urp );
 
 /**
  * @brief
