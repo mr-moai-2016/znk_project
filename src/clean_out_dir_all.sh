@@ -21,12 +21,12 @@ echo "===="
 echo ""
 
 echo "===="
-make -f Makefile_linux.mak -C virtual_users clean
+make -f Makefile_linux.mak -C plugin_futaba clean
 echo "===="
 echo ""
 
 echo "===="
-make -f Makefile_linux.mak -C plugin_futaba clean
+make -f Makefile_linux.mak -C plugin_2ch clean
 echo "===="
 echo ""
 
