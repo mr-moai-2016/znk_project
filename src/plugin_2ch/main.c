@@ -6,9 +6,38 @@
 #include <Znk_str_ptn.h>
 #include <string.h>
 
+Znk_INLINE ZnkVarp
+refPostVar( ZnkMyf myf, const char* var_name )
+{
+	return ZnkMyf_refVar( myf, "post_vars", var_name );
+}
+Znk_INLINE ZnkVarp
+refCookieVar( ZnkMyf myf, const char* var_name )
+{
+	return ZnkMyf_refVar( myf, "cookie_vars", var_name );
+}
+
 bool on_post( ZnkMyf myf )
 {
-	/* none */
+	ZnkVarp USERS_yuki = refPostVar( myf, "USERS_yuki" );
+	ZnkVarp yuki       = refCookieVar( myf, "yuki" );
+
+	/***
+	 * myfにUSERS_yukiが定義されていない場合はこの処理は無視
+	 */
+	if( USERS_yuki ){
+		/***
+		 * 初投稿においては、yukiがcookie上に定義されていてはいけない.
+		 * yukiが定義されていない状態で現在の __cfduid の値をまず一旦サーバ側へ
+		 * 渡す必要がある.
+		 * Initiationを行った直後は、USERS_yukiの値は空となっている.
+		 * そのため、以下の処理で所望の処理を実現できる.
+		 */
+		if( yuki ){
+			ZnkVar_set_val_Str( yuki, ZnkVar_cstr(USERS_yuki), ZnkVar_str_leng(USERS_yuki) );
+			ZnkVar_set_val_Str( USERS_yuki, "akari", 5 );
+		}
+	}
 	return true;
 }
 

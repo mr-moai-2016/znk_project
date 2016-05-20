@@ -210,8 +210,8 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name,
 	 * 使うのも一つの手である.
 	 * (一応、USERSの次期バージョンではそのようなジェネレータの追加も予定してはいる).
 	 *
-	 * cacoコード取得のためにcachemt7.phpをGETするのであるが、この際にUser-Agentの
-	 * 情報も送られる. この値をcachemt7.phpがチェックしている可能性も否定はできない.
+	 * cfduidコード取得のためにtopページをGETするのであるが、この際にUser-Agentの
+	 * 情報も送られる. この値を2chがチェックしている可能性も否定はできない.
 	 * よって、それより前にUser-AgentのRandomizeを完了して置く必要があることに
 	 * 注意する.
 	 */
@@ -244,6 +244,15 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name,
 	varp = refCookieVar( myf, "__cfduid" );
 	if( varp ){
 		ZnkVar_set_val_Str( varp, ZnkStr_cstr(cfduid), ZnkStr_leng(cfduid) );
+	}
+
+	/***
+	 * この内部変数は初投稿の際にCookieにおけるyukiの値を隠蔽するために使われる.
+	 * ここでは空に設定しておく必要がある.
+	 */
+	varp = refPostVar( myf, "USERS_yuki" );
+	if( varp ){
+		ZnkVar_set_val_Str( varp, "", 0 );
 	}
 
 	result = true;

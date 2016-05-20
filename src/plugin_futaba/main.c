@@ -7,12 +7,12 @@
 #include <Znk_missing_libc.h>
 #include <string.h>
 
-static ZnkVarp
+Znk_INLINE ZnkVarp
 refPostVar( ZnkMyf myf, const char* var_name )
 {
 	return ZnkMyf_refVar( myf, "post_vars", var_name );
 }
-static ZnkVarp
+Znk_INLINE ZnkVarp
 refCookieVar( ZnkMyf myf, const char* var_name )
 {
 	return ZnkMyf_refVar( myf, "cookie_vars", var_name );
@@ -57,7 +57,6 @@ bool on_post( ZnkMyf myf )
 	ZnkVarp pwd  = refPostVar( myf, "pwd" );
 	ZnkVarp pwdc = refCookieVar( myf, "pwdc" );
 
-	ZnkF_printf_e( "plugin_futaba : on_post_before\n" );
 	/***
 	 * myf‚ÉUSERS_futabapt‚ª’è‹`‚³‚ê‚Ä‚¢‚È‚¢ê‡‚Í
 	 * localStorage‚ª–³Œø‚Å‚ ‚éŠÂ‹«‚Æ“¯‹““®‚Æ‚È‚é.
