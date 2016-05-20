@@ -5,7 +5,6 @@ User-Agent = ['Mozilla/5.0 (Linux; U; 2.3.5; ja-jp; SBM101SH Build/S0030) AppleW
 @@.
 
 @@V post_vars
-mail=['sage']
 USERS_yuki = ['']
 @@.
 
