@@ -6,6 +6,7 @@
 * [Hacking? ƒnƒbƒJ[‚Á‚Ä“z‚Á‚·‚©‚—H](#hacking)
 * [Cooking? ƒNƒbƒL[‚Á‚Ä“z‚Á‚·‚©‚—H](#cooking)
 * [ŠJ”­Œ¾Œê‚¨‚æ‚ÑŠJ”­‚É‚ ‚½‚Á‚Ä‚Ì”wŒi‚È‚Ç](#lang_and_background)
+* [libZnk‚É‚Â‚¢‚Ä](#libZnk)
 * [ƒvƒ‰ƒOƒCƒ“ƒCƒ“ƒ^[ƒtƒF[ƒX](#plugin)
 
 
@@ -14,7 +15,7 @@
 ‚»‚¤‚Á‚·‚æ‚—‚ ‚ÌƒnƒbƒJ[‚Á‚·‚æ‚—  
 ˆÈ‰º‚É³‚µ‚¢’è‹`‚ð‘‚¢‚Ä‚¨‚­‚Á‚·‚æ‚—
 
->uƒnƒbƒJ[v‚Á‚Ä‚¢‚¤‚Ì‚Í‚Ý‚ñ‚È‚à’m‚Á‚Ä‚¢‚é’Ê‚èAƒRƒ“ƒsƒ…[ƒ^‚Åˆ«‚¢‚±‚Æ‚·‚é”ÆßŽÒ‚Å
+>uƒnƒbƒJ[v‚Á‚Ä‚¢‚¤‚Ì‚Í—Ç‚¢Žq‚à‚Ý‚ñ‚È‚à’m‚Á‚Ä‚¢‚é’Ê‚èAƒRƒ“ƒsƒ…[ƒ^‚Åˆ«‚¢‚±‚Æ‚·‚é”ÆßŽÒ‚Å
 >uƒnƒbƒLƒ“ƒOv‚Á‚Ä‚Ì‚ÍƒnƒbƒJ[‚ªƒRƒ“ƒsƒ…[ƒ^‚Å**‚¯‚µ‚©‚ç‚ñ‚±‚Æ**‚·‚é‚±‚Æ‚Å‚ ‚é.
 
 ‚³‚ÄA‚±‚ñ‚È‚±‚Æ‚ð‘‚­‚Æ‰äX‚ÌŒoŒ±ãA**•@‘§‚ðr‚°‚È‚ª‚ç**ŽŸ‚Ì‚æ‚¤‚È”½˜_‚ð‚·‚é‚¨‚Á‚³‚ñ(‚¢‚â‚à‚Í‚âƒWƒWƒC‚©‚—)‚ª
@@ -82,14 +83,24 @@
    ‚æ‚è‘½‚­‚Ìl‚ÉŽg‚Á‚Ä‚à‚ç‚¦‚éŠm—¦‚Í‚‚­‚È‚é‚ÆŽv‚¤). 
 
   ‚Æ‚±‚ë‚ÅPolipo‚àC‚Å‹Lq‚³‚ê‚½ƒI[ƒvƒ“ƒ\[ƒX‚Å‚ ‚èAŽÀ‚Ì‚Æ‚±‚ë“–‰‚Í‚±‚ê‚ð‰ü‘¢‚µ‚Ä
-  Lolipo(Ž¸—ç‚—)‚Æ‚¢‚¤ƒc[ƒ‹‚ÅƒŠƒŠ[ƒX‚·‚é—\’è‚Å‚¢‚½‚Ì‚¾‚ªAPolipo‚ÌƒR[ƒh‚ÍŠÖ”–¼‚â
+  **Lolipo**(Ž¸—ç‚—)‚Æ‚¢‚¤ƒc[ƒ‹‚ÅƒŠƒŠ[ƒX‚·‚é—\’è‚Å‚¢‚½‚Ì‚¾‚ªAPolipo‚ÌƒR[ƒh‚ÍŠÖ”–¼‚â
   ƒOƒ[ƒoƒ‹•Ï”–¼‚Ì–½–¼‹K‘¥‚âA‚»‚ê‚ç‚ÌˆË‘¶ŠÖŒW‚ª‚ ‚Ü‚è‚É‰˜‚©‚Á‚½(Ž¸—ç‚—)‚Ì‚ÅA
-  ¡‰ñMoai‚Æ‚¢‚¤V‚µ‚¢ƒc[ƒ‹‚ðƒtƒ‹ƒXƒNƒ‰ƒbƒ`‚ÅŠJ”­‚·‚é•û‚ª‘‚¢‚Æ‚¢‚¤Œ‹˜_‚ÉŽŠ‚Á‚½. 
+  ~~‚¿‚å‚¤‚Çƒ‚ƒAƒC”Â‚ào—ˆ‚½‚±‚Æ‚¾‚µ~~¡‰ñMoai‚Æ‚¢‚¤V‚µ‚¢ƒc[ƒ‹‚ðƒtƒ‹ƒXƒNƒ‰ƒbƒ`‚ÅŠJ”­‚·‚é•û‚ª‘‚¢‚Æ‚¢‚¤Œ‹˜_‚ÉŽŠ‚Á‚½. 
   ‚Æ‚Í‚¢‚¦Polipo‚Í”ñí‚É—D‚ê‚½ƒc[ƒ‹‚Å‚ ‚èA‘½‚­‚Ì•”•ª‚ðŽQl‚É‚³‚¹‚Ä‚à‚ç‚Á‚½.
   ‚±‚Ìê‚ðŽØ‚è‚ÄJuliusz ChroboczekŽ‚É‚ÍŠ´ŽÓ‚·‚é. ƒ|[ƒg”Ô†8123‚ÍPolipo‚ÅŽg‚í‚ê‚Ä‚¢‚½‚à‚Ì‚Å‚ ‚èA
   ‚»‚ê‚ÉŒhˆÓ‚ð•\‚µMoai‚Å‚Í‚±‚ê‚Ì‚¨—×‚Æ‚¢‚¤ˆÓ–¡‚Å8124‚ðƒfƒtƒHƒ‹ƒgƒ|[ƒg‚Æ‚µ‚½.
 
   <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
+
+
+## <a name="libZnk">libZnk‚É‚Â‚¢‚Ä
+-----------------------------------
+‚±‚ÌŠî–{ƒ‰ƒCƒuƒ‰ƒŠ‚Í‚±‚ÌƒvƒƒWƒFƒNƒg‚É‘¶Ý‚·‚é‘S‚Ä‚ÌCƒR[ƒh‚É‚¨‚¢‚ÄŽg‚í‚ê‚Ä‚¢‚é.
+‚æ‚Á‚Ä‚±‚ê‚Ì‰ðà‚ð”²‚«‚É‚·‚é‚í‚¯‚É‚Í‚¢‚©‚È‚¢‚Ì‚Å‚ ‚é‚ªA‚±‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚ÌŽd—l‚ð
+Ú‚µ‚­‰ðà‚µ‚Ä‚¢‚½‚ç‚»‚ê‚±‚»Ž†–Ê‚ÆŽžŠÔ‚ª‚¢‚­‚ç‚ ‚Á‚Ä‚à‘«‚ç‚È‚¢‚Ì‚ÅA
+‚Æ‚è‚ ‚¦‚¸[libZnk/README][1]‚ÉŠT—v‚ð‘‚¢‚Ä‚¨‚¢‚½.
+‚ ‚Æ‚ÍlibZnk‚Ìƒ\[ƒXƒR[ƒh‚âƒRƒƒ“ƒg‚È‚Ç‚ð“K‹XŽQÆ‚µ‚Ä‘Õ‚«‚½‚¢.
+ŽžŠÔ‚ª‚ ‚ê‚Î‚»‚Ì‚¤‚¿Ú×‚ÈƒhƒLƒ…ƒƒ“ƒg‚à—pˆÓ‚µ‚½‚¢‚Æ‚±‚ë‚Å‚ ‚é‚ªA‚¢‚Â‚É‚È‚é‚©‚Í–¢’è‚Å‚ ‚é.
 
 
 ## <a name="plugin">ƒvƒ‰ƒOƒCƒ“ƒCƒ“ƒ^[ƒtƒF[ƒX
@@ -167,3 +178,66 @@ Moaiƒvƒ‰ƒOƒCƒ“‚Å‚ÍˆÈ‰º‚Ìƒ_ƒCƒiƒ~ƒbƒNƒ[ƒh‰Â”\‚ÈƒOƒ[ƒoƒ‹ŠÖ”‚ð C Œ¾Œê‚É‚æ‚èŽÀ‘
      plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ÌŽQÆ‚Í‰Â”\‚¾‚ª•ÏX‚·‚é‚±‚Æ‚Í‚Å‚«‚È‚¢.
 
 ~~~
+
+ã‹L‚ÉoŒ»‚·‚élibZnk“Á—L‚ÌŒ^‚ÉŠÖ‚µ‚ÄˆÈ‰º‚É‹ÉŠÈ’P‚ÉÐ‰î‚µ‚Ä‚¨‚±‚¤.
+
+~~~c
+
+  ZnkMyf
+    libZnk‚ª’ñ‹Ÿ‚·‚é”Ä—p‚ÌÝ’è—pƒtƒ@ƒCƒ‹ƒtƒH[ƒ}ƒbƒgmyf‚Ìƒf[ƒ^‚ðŠi”[‚·‚é‚½‚ß‚Ì\‘¢‘Ì‚Å‚ ‚é.
+    ‘SƒtƒB[ƒ‹ƒh‚Í‰B•Á‚³‚ê‚Ä‚¨‚èA‚»‚ê‚ç‚É‘Î‚·‚é‘€ì‚Í‚·‚×‚ÄŠÖ”‚ð’Ê‚¶‚Äs‚¤.
+    ƒCƒ“ƒ^[ƒtƒF[ƒX‚ÍZnk_myf.h ‚É‚æ‚Á‚Ä’ñ‹Ÿ‚³‚êAZnk_myf.c‚ª‚»‚ÌŽÀ‘••”‚Å‚ ‚é.
+
+  ZnkStr
+    libZnk‚ª’ñ‹Ÿ‚·‚é“®“IŠg’£‰Â”\‚È”Ä—p•¶Žš—ñŒ^‚ðŽÀŒ»‚·‚é‚½‚ß‚Ì\‘¢‘Ì‚Å‚ ‚é.
+    ‘SƒtƒB[ƒ‹ƒh‚Í‰B•Á‚³‚ê‚Ä‚¨‚èA‚»‚ê‚ç‚É‘Î‚·‚é‘€ì‚Í‚·‚×‚ÄŠÖ”‚ð’Ê‚¶‚Äs‚¤.
+    ƒCƒ“ƒ^[ƒtƒF[ƒX‚ÍZnk_str.h ‚É‚æ‚Á‚Ä’ñ‹Ÿ‚³‚êAZnk_str.c‚ª‚»‚ÌŽÀ‘••”‚Å‚ ‚é.
+    (ŽÀ‘•‚É‚ ‚½‚Á‚Ä‚ÍZnkBfr(Znk_bfr.h)‚Æ‚¢‚¤‚³‚ç‚ÉŠî–{“I‚È”Ä—pƒoƒCƒg—ñŒ^‚ð—˜—p‚µ‚Ä‚¢‚é)
+
+  ZnkPrim
+    ˆÈ‰º‚ðŠi”[‰Â”\‚ÈƒRƒ“ƒeƒi‚Æ‚¢‚¤‚©”Ä—pŒ^‚Å‚ ‚é.
+    ®”AŽÀ”Aƒ|ƒCƒ“ƒ^A
+    ƒoƒCƒg—ñƒf[ƒ^ZnkBfrAZnkBfr‚Ì”z—ñA
+    •¶Žš—ñZnkStrAZnkStr‚Ì”z—ñA
+    ZnkPrim‚»‚Ì‚à‚Ì‚Ì”z—ñ
+    ƒtƒB[ƒ‹ƒh‚ÍŒöŠJ‚³‚ê‚Ä‚¢‚é‚ªAˆÙƒRƒ“ƒpƒCƒ‰ŠÔ‚Å‚Ìƒ|[ƒ^ƒrƒŠƒeƒB‚É”z—¶‚·‚×‚­
+    ƒAƒ‰ƒCƒ“ƒƒ“ƒg‚ÉŠÖ‚µ‚Ä‰Â”\‚ÈŒÀ‚è‚Ì”z—¶‚ª‚È‚³‚ê‚Ä‚¢‚é.
+
+    ˆÈ‰º‚Ì‚æ‚¤‚ÈŒ`‚ÅŽg—p‚·‚é.
+    {
+      ZnkPrim prim;
+      ZnkPrimType type;
+      ZnkPrim_compose( &prim, ZnkPrim_e_Real ); /* ‰Šú‰» */
+
+      type = ZnkPrim_type( &prim ); /* “à•”‚É‚Ç‚Ìƒ^ƒCƒv‚Ì’l‚ª“ü‚Á‚Ä‚¢‚é‚©‚ðŽæ“¾ */
+      if( type == ZnkPrim_e_Real ){
+        prim.r64_ = 0.123; /* “à•”‚ªŽÀ”Œ^‚È‚çŽÀ”‚ðƒZƒbƒg‚·‚é‚È‚Ç */
+      }
+
+      ZnkPrim_d( &prim, ZnkPrim_e_Int ); /* ”jŠü */
+    }
+    ƒCƒ“ƒ^[ƒtƒF[ƒX‚ÍZnk_prim.h ‚É‚æ‚Á‚Ä’ñ‹Ÿ‚³‚ê‚é.
+
+  ZnkVarp
+    ZnkPrim‚É‰Á‚¦Aname‚Æfilename‚ð‚»‚ÌƒtƒB[ƒ‹ƒh‚ÉŽ‚Â.
+    ‚¢‚í‚ä‚éu•Ï”v‚Ì‚æ‚¤‚È\‘¢‚ðŽÀŒ»‚µ‚½Œ^‚Å‚ ‚é.
+    ‚·‚È‚í‚¿name‚ª•Ï”–¼‚Å‚ ‚èAZnkPrim‚ª‚»‚Ì’l‚Æ‚È‚é.
+    Žå‚ÈŠÖ”‚ðˆê•”Ð‰î‚µ‚æ‚¤.
+    ZnkVar_compose ‚Å‰Šú‰»‚ªs‚¦AZnkVar_dispose ‚Å”jŠü‚ðs‚¤.
+    ZnkVar_name_cstr( ZnkVar* var ) ‚Í•Ï”‚Ì–¼‘O‚ðC•¶Žš—ñ‚Æ‚µ‚ÄŽæ“¾‚·‚é.
+    ZnkVar_set_val_Str ‚Í•¶Žš—ñŒ^‚Ì•Ï”‚Æ‚µ‚Ä•Ï”‚ð‰Šú‰»‚·‚é.
+    ZnkVar_cstr( ZnkVar* var ) ‚Í var ‚ª•¶Žš—ñŒ^•Ï”‚Ìê‡‚ÉŒÀ‚èŽg—p‚Å‚«‚éŠÈˆÕŠÖ”‚Å
+    ‚»‚Ì’l‚ðC•¶Žš—ñ‚Æ‚µ‚ÄŽæ“¾‚Å‚«‚é.
+    ƒCƒ“ƒ^[ƒtƒF[ƒX‚ÍZnk_var.h ‚É‚æ‚Á‚Ä’ñ‹Ÿ‚³‚êAZnk_var.c‚ª‚»‚ÌŽÀ‘••”‚Å‚ ‚é.
+
+  ZnkVarpAry
+    ZnkVarp‚Ì“®“IŠg’£‰Â”\‚È”z—ñ‚Å‚ ‚é.
+    HTTPƒwƒbƒ_‘S‘ÌAPOST•Ï”ŒQACooking•Ï”ŒQ‚È‚Ç‚Í—v‚·‚é‚É‚·‚×‚Ä(’l‚ª•¶Žš—ñŒ^‚Å‚ ‚é)
+    •Ï”‚Ì”z—ñ‚Å‚ ‚Á‚ÄA‚¢‚¸‚ê‚à‚±‚ÌŒ^‚ÅŽÀŒ»‚Å‚«‚é.
+    ƒCƒ“ƒ^[ƒtƒF[ƒX‚ÍZnk_varp_ary.h ‚É‚æ‚Á‚Ä’ñ‹Ÿ‚³‚êAZnk_varp_ary.c‚ª‚»‚ÌŽÀ‘••”‚Å‚ ‚é.
+    (ŽÀ‘•‚É‚ ‚½‚Á‚Ä‚ÍZnkObjAry(Znk_obj_ary.h)‚Æ‚¢‚¤‚³‚ç‚ÉŠî–{“I‚Èƒ|ƒCƒ“ƒ^Œ^”Ä—p”z—ñ‚ð—˜—p‚µ‚Ä‚¢‚é)
+
+~~~
+
+
+[1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/libZnk/README.md
