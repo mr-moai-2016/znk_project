@@ -6,6 +6,7 @@
 * [Hacking? ハッカーって奴っすかｗ？](#hacking)
 * [Cooking? クッキーって奴っすかｗ？](#cooking)
 * [開発言語および開発にあたっての背景など](#lang_and_background)
+* [moai本体のソースコードの構成について](#moai_src)
 * [libZnkについて](#libZnk)
 * [プラグインインターフェース](#plugin)
 
@@ -93,7 +94,7 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="moai">moai本体のソースコードの構成について
+## <a name="moai_src">moai本体のソースコードの構成について
 -----------------------------------
 以下にMoaiを構成するファイルの概要を示す.
   <ul>
