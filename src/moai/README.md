@@ -313,9 +313,9 @@
 ## <a name="others">その他の情報(リファレンスマニュアル、Virtual USERS機能、FAQなど)
 -----------------------------------
 
-  Moaiに関するさらなる詳細については [リファレンスマニュアル(Reference)][1] をご覧いただきたい.
-  MoaiのVirtual USERS機能については、[VirtualUSERS][2]を参照して戴きたい.
-  Moaiに関するFAQについては [FAQ][5] をご覧いただきたい.
+  Moaiに関するさらなる詳細については [リファレンスマニュアル(Reference)][1] をご覧いただきたい.  
+  MoaiのVirtual USERS機能については、[VirtualUSERS][2]を参照して戴きたい.  
+  Moaiに関するFAQについては [FAQ][5] をご覧いただきたい.  
 
   <a href="#user-content-index">目次へ戻る</a>
 
@@ -349,9 +349,9 @@
   (Squidなどのプロキシサーバ用の専用ソフトが行っている様々な防衛機構は、Moaiではほとんど搭載されていないためである)
 
   よってあなたがルータの設定を特別弄くっていない限りは通常は心配いらないことであるが、
-  acceptable_hostをANYとして、さらにルータやファイアウォールの8124ポートを開けているなど
-  WANからの接続を可能としたようなチャレンジャーな使い方をされる予定なら、
-  Moai側での防御としてaccess_allow_ips やaccess_deny_ips などで不要なIPからの接続要求を弾くなどし、
+  **acceptable_host**を**ANY**として、さらにルータやファイアウォールの8124ポートを開けているなど
+  WANからの接続を可能としたような**チャレンジャーな**使い方をされる予定なら、
+  Moai側での防御として**access_allow_ips** や**access_deny_ips** などで不要なIPからの接続要求を弾くなどし、
   セキュリティ面にも十分配慮して欲しい.
 
   <a href="#user-content-index">目次へ戻る</a>
