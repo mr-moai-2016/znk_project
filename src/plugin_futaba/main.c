@@ -4,6 +4,7 @@
 #include <Znk_cookie.h>
 #include <Znk_htp_hdrs.h>
 #include <Znk_str_ptn.h>
+#include <Znk_missing_libc.h>
 #include <string.h>
 
 static ZnkVarp
@@ -100,7 +101,8 @@ bool on_response( ZnkMyf myf,
 {
 	if( text ){
 		const char* old_ptn = "ÅóÇ”ÇΩÇŒ</span>";
-		const char* new_ptn = "ÅóÇ”ÇΩÇŒ via Moai</span>";
+		char new_ptn[ 4096 ];
+		Znk_snprintf( new_ptn, sizeof(new_ptn), "ÅóÇ”ÇΩÇŒ via Moai[%s]</span>", req_urp );
 		replaceStr( text, 0,
 				old_ptn, Znk_NPOS,
 				new_ptn, Znk_NPOS,

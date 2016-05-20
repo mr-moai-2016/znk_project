@@ -6,17 +6,6 @@
 #include <Znk_str_ptn.h>
 #include <string.h>
 
-static ZnkVarp
-refPostVar( ZnkMyf myf, const char* var_name )
-{
-	return ZnkMyf_refVar( myf, "post_vars", var_name );
-}
-static ZnkVarp
-refCookieVar( ZnkMyf myf, const char* var_name )
-{
-	return ZnkMyf_refVar( myf, "cookie_vars", var_name );
-}
-
 bool on_post( ZnkMyf myf )
 {
 	/* none */

@@ -10,7 +10,7 @@
 * [POSTŽž‚ÌŠm”FƒƒbƒZ[ƒW•\Ž¦(post_confirm‹@”\)](#post_confirm)
 * [‘¼‚Ìƒ}ƒVƒ“‚©‚ç‚ÌÚ‘±‚ð‹–‰Â/§ŒÀ‚·‚é](#acceptable_host)
 * [ŠO•”ƒvƒƒLƒV‚ðŽg‚¢‚½‚¢ê‡‚Ç‚¤‚·‚é‚Ì‚©H](#proxy1)
-* [ŠO•”ƒvƒƒLƒV‚Ì“K—p‚ðˆê•”‚ÌƒTƒCƒg‚ðŒ©‚éê‡‚Ì‚Ý‚ÉŒÀ’è‚·‚é](#proxy2)
+* [ŠO•”ƒvƒƒLƒV‚Ì“K—p‚ðˆê•”‚ÌƒTƒCƒg‚Ì‚Ý‚ÉŒÀ’è‚·‚é](#proxy2)
 * [‚»‚Ì‘¼‚Ìƒ[ƒJƒ‹ƒvƒƒLƒV‚Éƒ`ƒF[ƒ“‚·‚éê‡](#proxy3)
 * [Moai Web Configuration](#web_config)
 * [ƒvƒ‰ƒOƒCƒ“‹@”\‚É‚Â‚¢‚Ä](#plugin)
@@ -347,7 +347,7 @@ Moai‚Å‚ÍŽŸ‚ÌÚ‘±’‡‰îæ‚Æ‚µ‚ÄŠO•”ƒvƒƒLƒV(parent proxy, eƒvƒƒLƒV‚È‚Ç‚Æ‚àŒÄ‚Î‚ê‚
   <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
-## <a name="proxy2">ŠO•”ƒvƒƒLƒV‚Ì“K—p‚ðˆê•”‚ÌƒTƒCƒg‚ðŒ©‚éê‡‚Ì‚Ý‚ÉŒÀ’è‚·‚é
+## <a name="proxy2">ŠO•”ƒvƒƒLƒV‚Ì“K—p‚ðˆê•”‚ÌƒTƒCƒg‚Ì‚Ý‚ÉŒÀ’è‚·‚é
 -----------------------------------
 —á‚¦‚ÎA‚ ‚éƒTƒCƒgdanger.net‚ðŒ©‚éê‡‚Ì‚Ý——R‚ ‚Á‚ÄŠO•”ƒvƒƒLƒV‚ðŽg—p‚µ‚½‚¢‚Æ‚·‚é.
 (‚»‚Ì‘¼‚·‚×‚Ä‚ÌƒTƒCƒg‚Å‚ÍŠO•”ƒvƒƒLƒV‚ðŽg—p‚µ‚½‚­‚È‚¢‚Æ‚·‚é).
@@ -502,36 +502,37 @@ Moai‚ÌVirtual USERSƒvƒ‰ƒOƒCƒ“‚Å‚ÍˆÈ‰º‚Ìƒ_ƒCƒiƒ~ƒbƒNƒ[ƒh‰Â”\‚ÈƒOƒ[ƒoƒ‹ŠÖ”‚ð 
 Ver1.0‚É‚¨‚¢‚ÄƒTƒ|[ƒg‚³‚ê‚éŠÖ”‚ÍˆÈ‰º‚Å‚ ‚é.
 
 ~~~c
-  bool initiate( ZnkMyf ftr_send, const char* parent_proxy,
-      char* result_msg_buf, size_t result_msg_buf_size );
+
+  bool initiate( ZnkMyf ftr_send, const char* parent_proxy, ZnkStr result_msg );
 
     targetŒÅ—L‚ÌsendƒtƒBƒ‹ƒ^‚Ì‰Šú‰»ˆ—‚ðs‚¤.
     Web Configuration‚ÌuVirtual USERS Initiationvƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚Æ‚±‚ÌŠÖ”‚ªŒÄ‚Ño‚³‚ê‚é.
+    
+    @param ftr_send:
+     ‰Šú‰»‘ÎÛ‚Æ‚È‚éƒtƒBƒ‹ƒ^‚Ö‚ÌŽQÆ‚Å‚ ‚é.
+     plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ðŽQÆ‚¨‚æ‚Ñ•ÏX‚µ‚Ä‚©‚Ü‚í‚È‚¢.
+    
+    @param parent_proxy:
+     Moai‚ªŒ»ÝŽg—p’†‚ÌŠO•”ƒvƒƒLƒV‚ªhostname:port‚ÌŒ`Ž®‚ÅÝ’è‚³‚ê‚Ä‚¢‚é.
+     (ŠO•”ƒvƒƒLƒV‚ðŽg—p‚µ‚Ä‚¢‚È‚¢ê‡‚Í‚±‚Ì’l‚ª‹ó’l‚Å‚ ‚é‚©‚Ü‚½‚ÍNONE‚Å‚ ‚é‚©‚Ü‚½‚Í:0‚ªŽw’è‚³‚ê‚Ä‚¢‚é)
+     plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ÌŽQÆ‚Í‰Â”\‚¾‚ª•ÏX‚·‚é‚±‚Æ‚Í‚Å‚«‚È‚¢.
+    
+    @param result_msg:
+     ‚±‚±‚É‚Í‚±‚ÌŠÖ”‚Ìˆ—‚ð‚¨‚±‚È‚Á‚½Œ‹‰Ê‚ÌƒƒbƒZ[ƒW‚ðŠi”[‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢.
+     ‚±‚ê‚Íˆ—‚ª¬Œ÷‚µ‚½ê‡‚Í‚»‚ê‚ðƒŠƒ|[ƒgƒƒbƒZ[ƒW‚Å‚ ‚èAƒGƒ‰[‚ª”­¶‚µ‚½ê‡‚Í‚»‚ê‚ðŽ¦‚·
+     ƒGƒ‰[ƒƒbƒZ[ƒW‚Æ‚È‚é.
+     uVirtual USERS Initiationvƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚Æ‚·‚®‰º‚É‚±‚ÌƒƒbƒZ[ƒW‚ª•\Ž¦‚³‚ê‚éŒ`‚É‚È‚é.
 
-    ftr_send:
-    ‰Šú‰»‘ÎÛ‚Æ‚È‚éƒtƒBƒ‹ƒ^‚Ö‚ÌŽQÆ‚Å‚ ‚é.
-    ‚±‚ê‚ª‚Ç‚¤‰ÁH‚³‚ê‚é‚Ì‚©‚Í‚ ‚È‚½‚ª‚±‚ÌŠÖ”‚ð‚Ç‚¤ŽÀ‘•‚·‚é‚©‚É‚æ‚é.
-
-    parent_proxy:
-    Moai‚ªŒ»ÝŽg—p’†‚ÌŠO•”ƒvƒƒLƒV‚ªhostname:port‚ÌŒ`Ž®‚ÅÝ’è‚³‚ê‚Ä‚¢‚é.
-    (ŠO•”ƒvƒƒLƒV‚ðŽg—p‚µ‚Ä‚¢‚È‚¢ê‡‚Í‚±‚Ì’l‚ª‹ó’l‚Å‚ ‚é‚©‚Ü‚½‚ÍNONE‚Å‚ ‚é‚©‚Ü‚½‚Í:0‚ªŽw’è‚³‚ê‚Ä‚¢‚é)
-
-    result_msg_buf:
-    ‚±‚±‚É‚Í‚±‚ÌŠÖ”‚Ìˆ—‚ð‚¨‚±‚È‚Á‚½Œ‹‰Ê‚ÌƒƒbƒZ[ƒW‚ðŠi”[‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢.
-    ‚±‚ê‚Íˆ—‚Ì¬Œ÷ŽžA‚Ü‚½‚ÍƒGƒ‰[”­¶Žž‚É‚¨‚¯‚é•ñƒƒbƒZ[ƒW‚Æ‚È‚é.
-    uVirtual USERS Initiationvƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚Æ‚·‚®‰º‚É‚±‚ÌƒƒbƒZ[ƒW‚ª•\Ž¦‚³‚ê‚éŒ`‚É‚È‚é.
-
-    result_msg_buf_size:
-    result_msg_buf‚Ìƒƒ‚ƒŠã‚ÉŠm•Û‚³‚ê‚½ƒoƒbƒtƒ@‚Ì‘å‚«‚³‚ð³‚µ‚­Žw’è‚·‚é‚±‚Æ.
 
   bool on_post_before( ZnkMyf ftr_send );
 
     targetŒÅ—L‚ÌPOST’¼‘OŽž‚Ìˆ—‚ðs‚¤.
     POST’¼‘O‚É–ˆ‰ñŒÄ‚Ño‚³‚ê‚é.
 
-    ftr_send:
-    ˆ—‘ÎÛ‚Æ‚È‚éƒtƒBƒ‹ƒ^‚Ö‚ÌŽQÆ‚Å‚ ‚é.
-    ‚±‚ê‚ª‚Ç‚¤‰ÁH‚³‚ê‚é‚Ì‚©‚Í‚ ‚È‚½‚ª‚±‚ÌŠÖ”‚ð‚Ç‚¤ŽÀ‘•‚·‚é‚©‚É‚æ‚é.
+    @param ftr_send:
+     ˆ—‘ÎÛ‚Æ‚È‚éƒtƒBƒ‹ƒ^‚Ö‚ÌŽQÆ‚Å‚ ‚é.
+     plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ðŽQÆ‚¨‚æ‚Ñ•ÏX‚µ‚Ä‚©‚Ü‚í‚È‚¢.
+
 
   bool on_response_hdr( ZnkMyf ftr_send, ZnkVarpAry hdr_vars );
 
@@ -546,22 +547,28 @@ Ver1.0‚É‚¨‚¢‚ÄƒTƒ|[ƒg‚³‚ê‚éŠÖ”‚ÍˆÈ‰º‚Å‚ ‚é.
     ˆ—‘ÎÛ‚Æ‚È‚éƒŒƒXƒ|ƒ“ƒXƒwƒbƒ_‚Ö‚ÌŽQÆ‚Å‚ ‚é.
     ‚±‚ê‚ª‚Ç‚¤‰ÁH‚³‚ê‚é‚Ì‚©‚Í‚ ‚È‚½‚ª‚±‚ÌŠÖ”‚ð‚Ç‚¤ŽÀ‘•‚·‚é‚©‚É‚æ‚é.
 
+
   bool on_response( ZnkMyf ftr_send, ZnkVarpAry hdr_vars, ZnkStr text );
 
     targetŒÅ—L‚ÌƒŒƒXƒ|ƒ“ƒX‚ðŽó‚¯Žæ‚Á‚½ê‡‚É‚¨‚¯‚éˆ—‚ðs‚¤.
     ƒŒƒXƒ|ƒ“ƒX‚ðŽó‚¯Žæ‚Á‚½ê‡‚É–ˆ‰ñŒÄ‚Ño‚³‚ê‚é.
 
-    ftr_send:
-    ˆ—‘ÎÛ‚Æ‚È‚éƒtƒBƒ‹ƒ^‚Ö‚ÌŽQÆ‚Å‚ ‚é.
-    ‚±‚ê‚ª‚Ç‚¤‰ÁH‚³‚ê‚é‚Ì‚©‚Í‚ ‚È‚½‚ª‚±‚ÌŠÖ”‚ð‚Ç‚¤ŽÀ‘•‚·‚é‚©‚É‚æ‚é.
+    @param ftr_send:
+     ˆ—‘ÎÛ‚Æ‚È‚éƒtƒBƒ‹ƒ^‚Ö‚ÌŽQÆ‚Å‚ ‚é.
+     plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ðŽQÆ‚¨‚æ‚Ñ•ÏX‚µ‚Ä‚©‚Ü‚í‚È‚¢.
+   
+    @param hdr_vars:
+     ˆ—‘ÎÛ‚Æ‚È‚éƒŒƒXƒ|ƒ“ƒXƒwƒbƒ_‚Ö‚ÌŽQÆ‚Å‚ ‚é.
+     plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ðŽQÆ‚¨‚æ‚Ñ•ÏX‚µ‚Ä‚©‚Ü‚í‚È‚¢.
+   
+    @param text:
+     ˆ—‘ÎÛ‚Æ‚È‚éƒŒƒXƒ|ƒ“ƒXƒeƒLƒXƒgƒf[ƒ^‚Ö‚ÌŽQÆ‚Å‚ ‚é.
+     plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ðŽQÆ‚¨‚æ‚Ñ•ÏX‚µ‚Ä‚©‚Ü‚í‚È‚¢.
+   
+    @param req_urp:
+     ˆ—‘ÎÛ‚Æ‚È‚éURI‚Ìpath•”•ª(URI‚É‚¨‚¯‚éƒI[ƒ\ƒŠƒeƒB‚æ‚èŒã‚ë‚Ì•”•ª)‚ª“n‚³‚ê‚é.
+     plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ÌŽQÆ‚Í‰Â”\‚¾‚ª•ÏX‚·‚é‚±‚Æ‚Í‚Å‚«‚È‚¢.
 
-    hdr_vars:
-    ˆ—‘ÎÛ‚Æ‚È‚éƒŒƒXƒ|ƒ“ƒXƒwƒbƒ_‚Ö‚ÌŽQÆ‚Å‚ ‚é.
-    ‚±‚ê‚ª‚Ç‚¤‰ÁH‚³‚ê‚é‚Ì‚©‚Í‚ ‚È‚½‚ª‚±‚ÌŠÖ”‚ð‚Ç‚¤ŽÀ‘•‚·‚é‚©‚É‚æ‚é.
-
-    hdr_vars:
-    ˆ—‘ÎÛ‚Æ‚È‚éƒŒƒXƒ|ƒ“ƒX‚ÌƒeƒLƒXƒgƒf[ƒ^‚Ö‚ÌŽQÆ‚Å‚ ‚é.
-    ‚±‚ê‚ª‚Ç‚¤‰ÁH‚³‚ê‚é‚Ì‚©‚Í‚ ‚È‚½‚ª‚±‚ÌŠÖ”‚ð‚Ç‚¤ŽÀ‘•‚·‚é‚©‚É‚æ‚é.
 ~~~
 
   <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
