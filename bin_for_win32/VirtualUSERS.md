@@ -7,7 +7,7 @@
 * [何ができるのか？](#pos2)
 * [Web閲覧時に送信される情報とは何なのか？](#pos3)
 * [MoaiのVirtual USERS機能を使う](#pos4)
-* [futabaプラグイン : user_agent.txtとscreen_size.txtについて](#futaba_plugin1)
+* [futabaプラグイン : ランダマイズの候補として使用するtxtファイルについて](#futaba_plugin1)
 * [futabaプラグイン : 手動で偽装を行った場合(参考)](#futaba_note)
 * [その他の情報](#pos5)
 
@@ -170,7 +170,7 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="futaba_plugin1">futabaプラグイン : user_agent.txtとscreen_size.txtについて
+## <a name="futaba_plugin1">futabaプラグイン : ランダマイズの候補として使用するtxtファイルについて
 -----------------------------------
 #### user_agent.txt
 このファイルはRandomizeの際に選択されるUser-Agentの候補を列挙したものである.
@@ -181,7 +181,6 @@
 できればあなた独自のプライベートな user_agent.txtを生成しておくほうが望ましい.
 手動で好みのリストを作成していってもよいし、 巷にあるUser-Agentジェネレータを使うのも一つの手である.
 このファイルにおいて、空行および # 記号で始まる行は候補値とはならず無視される.
-このファイルは現状ではfutabaプラグインにおいてのみ使われる.
 
 #### screen_size.txt
 このファイルはRandomizeの際に選択されるscszの解像度の候補を各行で列挙したものである.

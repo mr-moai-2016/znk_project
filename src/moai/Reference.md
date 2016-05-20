@@ -35,6 +35,7 @@ target.myf “à‚ÅˆÈ‰º‚Ì‚æ‚¤‚É2ch‚Æfutaba‚¢‚¤target–¼‚ð’è‹`‚µ(‚±‚Ìtarget–¼‚Íƒ†[ƒU‚
 
 @@L futaba
 *.2chan.net
+*.bbspink.com
 @@.
 ~~~
 
@@ -47,7 +48,7 @@ target.myf “à‚ÅˆÈ‰º‚Ì‚æ‚¤‚É2ch‚Æfutaba‚¢‚¤target–¼‚ð’è‹`‚µ(‚±‚Ìtarget–¼‚Íƒ†[ƒU‚
 *.2chan.net
 ~~~
 
-ˆê•ûA—á‚¦‚ÎˆÈ‰º‚Ì‹Lq‚ÍˆÓ}‚µ‚½’Ê‚è‚Ì‚à‚Ì‚Æ‚Í‚È‚ç‚È‚¢.
+ˆê•ûA—á‚¦‚ÎˆÈ‰º‚Ì‚æ‚¤‚Éˆês‚É‚Â‚«ƒAƒXƒ^ƒŠƒXƒN‚ª‚Q‰ÓŠˆÈã‚ ‚é‹Lq‚ÍˆÓ}‚µ‚½’Ê‚è‚Ì‚à‚Ì‚Æ‚Í‚È‚ç‚È‚¢.
 ~~~
 *.2chan.*
 ~~~
@@ -55,7 +56,7 @@ target.myf “à‚ÅˆÈ‰º‚Ì‚æ‚¤‚É2ch‚Æfutaba‚¢‚¤target–¼‚ð’è‹`‚µ(‚±‚Ìtarget–¼‚Íƒ†[ƒU‚
 “ñ”Ô–Ú‚ÉŒ»‚ê‚½ƒAƒXƒ^ƒŠƒXƒN‚ÍA•¶Žš’Ê‚èƒAƒXƒ^ƒŠƒXƒN‚»‚Ì‚à‚Ì‚Æ‚µ‚Äˆµ‚í‚ê‚é.
 
 myf‚Æ‚¢‚¤ƒtƒ@ƒCƒ‹‚Í‚±‚ÌƒvƒƒWƒFƒNƒg‘S”Ê‚É‚¨‚¢‚ÄÝ’èƒtƒ@ƒCƒ‹‚È‚Ç‚ð‹Lq‚·‚é‚Ì‚É—p‚¢‚é”Ä—p‚ÌƒtƒH[ƒ}ƒbƒg‚Å‚ ‚é.
-‚±‚ê‚ÌŽd—l‚É‚Â‚¢‚Ä’m‚è‚½‚¢•û‚Í[‚±‚¿‚ç][1]‚ðŽQÆ‚µ‚Ä‚¢‚½‚¾‚«‚½‚¢.
+‚±‚ê‚ÌŽd—l‚É‚Â‚¢‚Ä’m‚è‚½‚¢•û‚Í[myf_spec][1]‚ðŽQÆ‚µ‚Ä‚¢‚½‚¾‚«‚½‚¢.
 
   <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
@@ -139,6 +140,7 @@ Moai‚Å‚ÍAHTTP‚É‚¨‚¯‚éPOST‚É‚Ä‘—M‚³‚ê‚éƒwƒbƒ_‚âPOST•Ï”AƒNƒbƒL[‚Ì’l‚É‚¨‚¢‚Ä
 
 ‚±‚Ìƒtƒ@ƒCƒ‹“à‚É‚¨‚¢‚ÄŽw’è‚³‚ê‚Ä‚¢‚È‚¢•Ï”‚ÉŠÖ‚µ‚Ä‚Í‰½‚à‰ÁHC³‚Í‚³‚ê‚¸A’P‚É‚»‚Ì‚Ü‚Ü‘—‚ç‚ê‚é.
 ‚Ü‚½‰E•Ó‚Ì’uŠ·Œã‚Ì’l‚ª‹ó’l‚Ì‚Æ‚«‚ÍA•¶Žš’Ê‚è‹ó’l‚Ö‚Æ’uŠ·‚³‚ê‚é.
+(‚½‚¾‚µcookie_vars‚É‚¨‚¯‚é•Ï”‚ª‹ó’l‚Ìê‡‚ÍA‚»‚ÌƒNƒbƒL[•Ï”‚ª‘¶Ý‚µ‚È‚¢‚±‚Æ‚Æ“™‰¿‚Å‚ ‚é)
 ‚Ü‚½’†ŠÔˆ—‚Ì‚½‚ßAŽÀÛ‚É‘—M‚³‚ê‚éPOST•Ï”‚É‘¶Ý‚µ‚È‚¢•Ï”‚È‚Ç‚ð‹Lq‚µ‚Ä‚¨‚­‚±‚Æ‚à‚Å‚«‚é.
 ‚±‚Ìê‡AƒtƒBƒ‹ƒ^ˆ—‚É‚¨‚¢‚Ä‚»‚Ì•Ï”‚Í’P‚É–³Ž‹‚³‚ê‚é.
 
@@ -229,10 +231,10 @@ sock‚Ì•”•ª‚Í‹C‚É‚·‚é•K—v‚Í‚È‚¢‚ªAÚ‘±‚ÌÛ‚ÉŽg‚Á‚½ƒ\ƒPƒbƒg‚Ì”Ô†‚ðŽ¦‚µ‚Ä‚¢‚é.
 POST‚Æ‚ÍŒfŽ¦”Â‚È‚Ç‚ÖƒXƒŒ—§‚Ä‚âƒŒƒX“Še‚ð‚·‚éÛ‚És‚í‚ê‚éHTTPƒŠƒNƒGƒXƒg‚Ì‚±‚Æ‚Å‚ ‚é.
 ‚»‚µ‚Ä‚±‚Ì‚Æ‚«HTTPƒwƒbƒ_‚âƒT[ƒo‚ª’è‹`‚µ‚½•Ï”(POST•Ï”‚ÆŒÄ‚Ô)AƒNƒbƒL[‚Ì’l‚È‚Ç‚ª‘—M‚³‚ê‚é.
 
-config.myf“à‚Ìpost_confirm‚Ì’l‚ª on ‚Ì‚Æ‚«A‚±‚ê‚ç‚Ì’l‚ð‚·‚×‚Ä•\Ž¦‚·‚éŠm”F‰æ–Ê‚ðo‚·‚±‚Æ‚ª‚Å‚«‚é.
-(ƒeƒLƒXƒg‚¾‚¯‚Ì”ñí‚É’n–¡‚È‰æ–Ê‚Å‚Í‚ ‚é‚ªA‚±‚ê‚©‚ç‚»‚ÌƒTƒCƒg‚É‰½‚ª‘—‚ç‚ê‚é‚©‚ª—]‚·‚±‚Æ‚È‚­•\Ž¦‚³‚êA
+config.myf“à‚Ìpost_confirm‚Ì’l‚ª on ‚Ì‚Æ‚«A‚±‚ê‚ç‚Ì’l‚ð‚·‚×‚ÄŠm”F•\Ž¦‚·‚é‰æ–Ê‚ðo‚·‚±‚Æ‚ª‚Å‚«‚é.
+(ˆÈ‰º‚Ì‰æ‘œ‚Ì‚æ‚¤‚ÉƒeƒLƒXƒg‚¾‚¯‚Ì”ñí‚É’n–¡‚È‰æ–Ê‚Å‚Í‚ ‚é‚ªA‚±‚ê‚©‚ç‚»‚ÌƒTƒCƒg‚É‰½‚ª‘—‚ç‚ê‚é‚©‚ª—]‚·‚±‚Æ‚È‚­•\Ž¦‚³‚êA
  ó‹µ‚ð”cˆ¬‚â•ªÍ‚ð‚·‚é‚É‚Í\•ª–ð‚É—§‚Â‚¾‚ë‚¤).
-‚±‚Ì‰æ–Ê‚ªo‚Ä‚¢‚é’iŠK‚Å‚ÍA‚Ü‚¾“Še‚Ís‚í‚ê‚Ä‚¢‚È‚¢. ‚±‚ê‚Ìˆê”Ô‰º‚É‚ ‚éuSendvƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚±‚Æ‚Å**ŽÀÛ‚É**“Še‚³‚ê‚é.
+‚±‚Ì‰æ–Ê‚ªo‚Ä‚¢‚é’iŠK‚Å‚ÍA‚Ü‚¾“Še‚Ís‚í‚ê‚Ä‚¢‚È‚¢. ‚±‚ê‚Ìˆê”Ô‰º‚É‚ ‚éuSendvƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚±‚Æ‚ÅA‚±‚Ì“à—e‚Å**ŽÀÛ‚É**“Še‚³‚ê‚é.
 
 ![screenshot](../imgs/screenshot_post_confirm.png)
 
@@ -240,7 +242,7 @@ config.myf“à‚Ìpost_confirm‚Ì’l‚ª on ‚Ì‚Æ‚«A‚±‚ê‚ç‚Ì’l‚ð‚·‚×‚Ä•\Ž¦‚·‚éŠm”F‰æ–Ê‚ð
 (‚»‚±‚É‹LÚ‚³‚ê‚Ä‚¢‚È‚¢ƒzƒXƒg‚É‘Î‚µ‚Ä‚Ípost_confirm‚ªon‚Å‚ ‚Á‚Ä‚à‚±‚Ì‰æ–Ê‚Í•\Ž¦‚³‚ê‚È‚¢).
 ‚¿‚È‚Ý‚É‚±‚±‚Å‚Ìƒpƒ^[ƒ“‚Ì‹Lq‚É‚¨‚¢‚Ä‚Ítarget‚Å‚ÌŽw’è‚Æ“¯—l‚ÌŒ`‚ÅƒƒCƒ‹ƒhƒJ[ƒh‚ðŽg‚¤‚±‚Æ‚à‚Å‚«‚é.
 
-post_confirm_hosts‚È‚Ç‚Å‚í‚´‚í‚´”ÍˆÍ‚ði‚ç‚¸‚É‚·‚×‚Ä‚ÌƒTƒCƒg‚Å—LŒø‚É‚·‚ê‚Î‚æ‚¢‚Ì‚Å‚Í‚È‚¢‚©‚ÆŽv‚í‚ê‚é•û‚à‚¢‚é‚¾‚ë‚¤‚ª
+post_confirm_hosts‚È‚Ç‚Å‚í‚´‚í‚´”ÍˆÍ‚ði‚ç‚¸‚É‚·‚×‚Ä‚ÌƒTƒCƒg‚ð‘ÎÛ‚É‚·‚ê‚Î‚æ‚¢‚Ì‚Å‚Í‚È‚¢‚©‚ÆŽv‚í‚ê‚é•û‚à‚¢‚é‚¾‚ë‚¤‚ª
 Nico“®‰æ‚È‚Çˆê•”‚ÌƒTƒCƒg‚Å‚ÍAƒXƒNƒŠƒvƒg‚È‚Ç‚ÅŽ©“®“I‚ÈPOST‚ª“à•”‚Ås‚í‚ê‚Ä‚¢‚éê‡‚ª‚ ‚èA
 ‚»‚Ì‚æ‚¤‚Èê‡‚±‚ê‚ð—LŒø‚É‚µ‚Ä‚¨‚­‚Æ–â‘è‚ª”­¶‚·‚é‚½‚ßA‚±‚Ì‰æ–Ê‚ª”­“®‚·‚éƒzƒXƒg‚ð‘I‘ðŽw’è‚Å‚«‚é‚æ‚¤‚É‚µ‚Ä‚ ‚é.
 
@@ -249,7 +251,7 @@ Nico“®‰æ‚È‚Çˆê•”‚ÌƒTƒCƒg‚Å‚ÍAƒXƒNƒŠƒvƒg‚È‚Ç‚ÅŽ©“®“I‚ÈPOST‚ª“à•”‚Ås‚í‚ê‚Ä‚¢‚éê
 y’ˆÓz  
 —á‚¦‚Î‚Ó‚½‚Î—p‚ÌƒAƒhƒIƒ“Ô•Ÿ‚È‚Ç‚ðŽg—p‚µ‚Ä‚¢‚éê‡A‚±‚Ìƒ‚[ƒh‚ªon‚Ìê‡‚É“à•”ˆ—‚ª‹£‡‚µA
 ƒŒƒX‘—M‚È‚Ç‚ª‚¤‚Ü‚­s‚¦‚È‚¢‚æ‚¤‚Å‚ ‚é.
-Ô•Ÿ‚ª—LŒø‚Èó‘Ô‚ÅA‚±‚ÌŠm”F‰æ–Ê‚ð‚¤‚Ü‚­•\Ž¦‚·‚é•û–@‚Í¡‚Ì‚Æ‚±‚ë‚Ý‚Â‚©‚Á‚Ä‚¢‚È‚¢.
+Ô•Ÿ‚ª—LŒø‚Èó‘Ô‚ÅA‚±‚Ì–â‘è‚ð‚¤‚Ü‚­‰ñ”ð‚·‚é•û–@‚Í¡‚Ì‚Æ‚±‚ë‚Ý‚Â‚©‚Á‚Ä‚¢‚È‚¢.
 ‚±‚Ìê‡‚à‚â‚Í‚èpost_confirm‚»‚Ì‚à‚Ì‚ð–³Œø‚É‚µ‚Ä‚¨‚­•K—v‚ª‚ ‚é.
 ‚à‚Á‚Æ‚à‚±‚ÌŠm”F‰æ–Ê•\Ž¦‚Í¡‚Æ‚È‚Á‚Ä‚Í‰ðÍ—p‚ÉŽg—p‚·‚é‚­‚ç‚¢‚Å‚ ‚èA•’Ê‚Í•K—v‚È‚¢‚à‚Ì‚Å‚ ‚é‚½‚ßA
 ƒo[ƒWƒ‡ƒ“1.0‚æ‚èA‚±‚ÌŽw’è‚ÍƒfƒtƒHƒ‹ƒg‚Å‚Íoff‚Æ‚µ‚Ä‚ ‚é.
@@ -260,21 +262,25 @@ Nico“®‰æ‚È‚Çˆê•”‚ÌƒTƒCƒg‚Å‚ÍAƒXƒNƒŠƒvƒg‚È‚Ç‚ÅŽ©“®“I‚ÈPOST‚ª“à•”‚Ås‚í‚ê‚Ä‚¢‚éê
 
 ## <a name="acceptable_host">‘¼‚Ìƒ}ƒVƒ“‚©‚ç‚ÌÚ‘±‚ð‹–‰Â/§ŒÀ‚·‚é
 -----------------------------------
-Moai‚Í‘¼‚Ìƒ}ƒVƒ“‚©‚ç‚ÌÚ‘±‚àƒTƒ|[ƒg‚·‚é.
+Moai‚Í‘¼‚Ìƒ}ƒVƒ“‚©‚ç‚ÌÚ‘±‚ÌŽó•t‚àƒTƒ|[ƒg‚·‚é.
 
 ‚±‚ê‚Í‚²‰Æ’ë‚É‚ ‚é‚Q‘ä–Ú‚R‘ã–Ú‚Ìƒ}ƒVƒ““™‚©‚çAMoai‚Ì‹N“®‚µ‚Ä‚¢‚é‚P‘ä–Ú‚Ìƒ}ƒVƒ“‚ÖÚ‘±‚µ‚Ä
 Moai‚Ì’ñ‹Ÿ‚·‚é‹@”\‚ð—˜—p‚·‚é‚Æ‚¢‚Á‚½‚æ‚¤‚È—p“r‚ð‘z’è‚µ‚Ä‚¢‚é.
+ŠT”O“I‚É‚ÍˆÈ‰º‚Ì‚æ‚¤‚ÈÚ‘±‚É‚È‚é.
 
-‚±‚ÌÚ‘±‚Ì‹–‰Â/•s‹–‚Ì–h‰q‹@\‚Æ‚µ‚ÄMoai‚Í‚Q’iŠKÝ‚¯‚Ä‚ ‚é.
-‚ ‚éIP‚©‚ç‚ÌÚ‘±‚ð’Ê‰ß‚³‚¹‚é‚É‚ÍA‚±‚Ì‘o•û‚ð‹–‰Â‚·‚é•K—v‚ª‚ ‚é.
+~~~
+‘¼‚Ìƒ}ƒVƒ“ã‚É‚ ‚éƒuƒ‰ƒEƒU => Moai‚Ì‹N“®‚µ‚Ä‚¢‚éƒ}ƒVƒ“ã‚É‚ ‚éMoai => ‘—Mæ‚ÌƒTƒCƒg
+~~~
 
-‚Ü‚¸‘æ‚P‚Ì’iŠK‚Æ‚µ‚ÄAconfig.myf“à‚Ìacceptable_host‚É‚¨‚¯‚éŽw’è‚ª‚ ‚é.
+‚±‚ÌÚ‘±‚Ì‹–‰Â/•s‹–‚Ì–h‰q‹@\‚Æ‚µ‚ÄMoai‚Í‚Q’iŠKÝ‚¯‚Ä‚ ‚èA‚ ‚éIP‚©‚ç‚ÌÚ‘±‚ð’Ê‰ß‚³‚¹‚é‚É‚ÍA
+‚±‚Ì‘o•û‚ð‹–‰Â‚·‚é•K—v‚ª‚ ‚é.
+
+#### ‘æ‚P‚Ì’iŠK : config.myf“à‚Ìacceptable_host‚É‚¨‚¯‚éŽw’è
 ‚±‚Ì’l‚ÅANY‚ðŽw’è‚·‚é‚±‚Æ‚É‚æ‚è‘¼‚Ìƒ}ƒVƒ“‚©‚ç‚ÌÚ‘±‚ª‰Â”\‚Æ‚È‚èALOOPBACK‚ðŽw’è‚·‚é‚±‚Æ‚É‚æ‚èA
 Ž©ƒ}ƒVƒ“ˆÈŠO‚Í–â“š–³—p‚ÅŽÕ’f‚·‚é‚æ‚¤‚É‚È‚é.
 ƒfƒtƒHƒ‹ƒg‚Å‚ÍˆÀ‘S‚Ì‚½‚ßAˆê‰žLOOPBACK‚Æ‚µ‚Ä‚ ‚é.
 
-ŽŸ‚É‘æ‚Q‚Ì’iŠK‚Æ‚µ‚ÄAconfig.myf“à‚Ìaccess_allow_ips ‚Æ access_deny_ips ‚ÌŽw’è‚É‚¨‚¢‚Ä
-‹–‰Â/•s‹–‚ÌØ‚è•ª‚¯‚ªs‚¦‚é.
+#### ‘æ‚Q‚Ì’iŠK : config.myf“à‚Ìaccess_allow_ips ‚Æ access_deny_ips ‚ÌŽw’è
 access_allow_ips ‚É‚¨‚¢‚ÄÚ‘±‚ð‹–‰Â‚·‚éIPŒQ‚ðŽw’è‚·‚é(ƒzƒXƒg–¼‚Å‚Í‚È‚­•K‚¸IP‚Å‚È‚¯‚ê‚Î‚È‚ç‚È‚¢).
 access_allow_ips‚É‰½‚à‹Lq‚µ‚È‚¢ê‡‚ÍAlocalhost‚ðœ‚­‚·‚×‚Ä‚Ìƒ}ƒVƒ“‚©‚ç‚ÌÚ‘±‚Í•s‹–‚Æ‚È‚é
 (‚±‚Ìê‡AÚ‘±Œ³‚É‚ÍForbiddenƒƒbƒZ[ƒW‚ð•Ô‚·Œ`‚É‚È‚é).
@@ -315,7 +321,9 @@ access_allow_ips‚ÉˆÈ‰º‚ð‹Lq‚µ‚Ä‚¨‚­‚Æ‚æ‚¢.
 Moai‚Å‚ÍŽŸ‚ÌÚ‘±’‡‰îæ‚Æ‚µ‚ÄŠO•”ƒvƒƒLƒV(parent proxy, eƒvƒƒLƒV‚È‚Ç‚Æ‚àŒÄ‚Î‚ê‚é)‚ðÝ’è‚·‚é‚±‚Æ‚ª‚Å‚«‚é.
 ‚±‚Ì‚Æ‚«‚ÍAŠT”O“I‚ÉŽŸ‚Ì‚æ‚¤‚ÈÚ‘±‚É‚È‚é.
 
+~~~
 ‚ ‚È‚½‚Ìƒuƒ‰ƒEƒUŠÂ‹« => ƒ[ƒJƒ‹ƒvƒƒLƒVMoai => ŠO•”ƒvƒƒLƒV => ‘—Mæ‚ÌƒTƒCƒg
+~~~
 
 ‚±‚ê‚ðŽÀŒ»‚·‚é‚½‚ß‚É‚Í config.myf ‚Ì parent_proxy ‚Ì’l‚ðˆÈ‰º‚ÌŒ`Ž®‚Å—^‚¦‚é.
 
@@ -371,10 +379,10 @@ jun.2chan.net
 @@.
 ~~~
 
-ã‹L‚Ì‚æ‚¤‚É‹Lq‚µ‚½ê‡AÅI“I‚ÉƒAƒNƒZƒX‚·‚é–Ú“I‚ÌƒTƒCƒg‚ª—á‚¦‚Î may.2chan.net ‚Ìê‡‚ÍA
+ã‹L‚Ì‚æ‚¤‚É‹Lq‚µ‚½ê‡AÅI“I‚ÉƒAƒNƒZƒX‚·‚é–Ú“I‚ÌƒTƒCƒg‚ª—á‚¦‚Î may.2chan.net ‚â img.2chan.net ‚Ìê‡‚ÍA
 proxy_apply‚Éˆê’v‚·‚éƒpƒ^[ƒ“‚ª‘¶Ý‚·‚é‚Ì‚ÅAŒ»Ý‚ÌŠO•”ƒvƒƒLƒV‚ð’†Œp‚µ‚ÄÚ‘±‚ªs‚í‚ê‚é.
 ‚µ‚©‚µ jun.2chan.net‚¾‚¯‚Í proxy_except‚ÅŽw’è‚³‚ê‚Ä‚¢‚é‚Ì‚Å—áŠO“I‚ÉŠO•”ƒvƒƒLƒV‚ðŽg‚í‚È‚¢Œ`‚É‚È‚é.
-(‚½‚Æ‚¦‚Î‚¨•ó‰æ‘œ‚ðŽè‚ÁŽæ‚è‘‚­ŽûW‚µ‚½‚¢‚¾‚¯‚È‚Ì‚ÉŠÔ‚Éproxy‚ð‹²‚Þ‚Ì‚Í–³‘Ê‚Å‚ ‚ë‚¤)
+(‚½‚Æ‚¦‚Î‚¨•ó‰æ‘œ‚ðŽè‚ÁŽæ‚è‘‚­ŽûW‚µ‚½‚¢‚¾‚¯‚È‚Ì‚ÉŠÔ‚Éˆ—‚ª’x‚­‚È‚éproxy‚ð‹²‚Þ‚Ì‚Í–³‘Ê‚Å‚ ‚ë‚¤)
 ã‹L‚Ì‹Lq‚É‘¶Ý‚µ‚È‚¢‚»‚Ì‘¼‚Ìˆê”ÊƒTƒCƒg‚ÉƒAƒNƒZƒX‚·‚éê‡‚ÍŠO•”ƒvƒƒLƒV‚ÍŽg‚í‚ê‚È‚¢.
 
 ‚Ü‚½A‚±‚Ìl‚¦•û‚ð‹t‚É‚µ‚½Žw’è‚à‚Å‚«‚é.
@@ -408,7 +416,7 @@ localhost
 ## <a name="proxy3">‚»‚Ì‘¼‚Ìƒ[ƒJƒ‹ƒvƒƒLƒV‚Éƒ`ƒF[ƒ“‚·‚éê‡
 -----------------------------------
 
-Moai‚Í‚»‚Ì‘¼‚Ìƒ[ƒJƒ‹ƒvƒƒLƒV‚Æ•¹—p‚·‚é‚±‚Æ‚à‚Å‚«‚é.
+Moai‚Í‚»‚Ì‘¼‚Ìƒ[ƒJƒ‹ƒvƒƒLƒV‚Æ’¼—ñ‚ÉŒq‚°‚é‚±‚Æ‚à‚Å‚«‚é.
 —á‚¦‚ÎPolipo‚Æ‚ÌƒRƒ‰ƒ{‚à‰Â”\‚Å‚ ‚é‚±‚Æ‚ðŠm”F‚µ‚Ä‚¢‚é.
 ‚±‚ê‚É‚æ‚Á‚ÄPolipo‚ÆMoai‚Ì‰¶Œb‚ð“¯Žž‚É‹Žó‚Å‚«‚é.
 ŠT”O“I‚ÉŽŸ‚Ì‚æ‚¤‚ÈÚ‘±‚É‚È‚é.
@@ -438,7 +446,7 @@ parent_proxy‚©‚ç‚»‚ê‚ð‘I‚×‚Î‚æ‚¢.
   ![screenshot](../imgs/screenshot_config.png)
 
   **Filters and Plugins**  
-  ‚±‚±‚Å‚Íƒvƒ‰ƒOƒCƒ“‚Æ‚µ‚Ä“o˜^‚³‚ê‚Ä‚¢‚éƒ^[ƒQƒbƒg‚ÌVirtual USERS Initiation‹@”\‚ðŒÄ‚Ño‚·.
+  ‚±‚±‚Å‚Íƒvƒ‰ƒOƒCƒ“‚Æ‚µ‚Ä“o˜^‚³‚ê‚Ä‚¢‚éƒ^[ƒQƒbƒg‚Ì[**Virtual USERS Initiation**][2]‹@”\‚ðŒÄ‚Ño‚·.
   ‚±‚ê‚É‚æ‚èA‹ï‘Ì“I‚É‰½‚ªŽÀs‚³‚ê‚é‚©‚Íƒvƒ‰ƒOƒCƒ“‚É‚æ‚é‚ªA‚»‚ÌŽÀsŒ‹‰Ê‚ª‚·‚®‰º‚É•\Ž¦‚³‚ê‚é.
   —á‚¦‚ÎAŒfŽ¦”Â‚Ì“Še—psendƒtƒBƒ‹ƒ^‚Ì•Ï”’l‚ðƒ‰ƒ“ƒ_ƒ}ƒCƒY‰»‚µ‚½‚è‰¼‘z‰»‚µ‚½‚è‚È‚Ç‚ª
   uVirtual USERS Initiationvƒ{ƒ^ƒ“‚É‚æ‚ès‚¦‚é.
@@ -458,6 +466,10 @@ parent_proxy‚©‚ç‚»‚ê‚ð‘I‚×‚Î‚æ‚¢.
       moai_log.log‚Ö‘SLogî•ñ‚ð‘‚«o‚·‚©”Û‚©‚ðØ‚è‘Ö‚¦‚é.
       ƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚ðƒNƒŠƒbƒN‚µ‚Ä’l‚ðØ‚è‘Ö‚¦‚½ã‚ÅuUpdatev‚ð‰Ÿ‚¹‚ÎÝ’è‚ª”½‰f‚³‚ê‚é.
 
+    enable_log_verbose:
+      Logî•ñ‚ð‚³‚ç‚ÉÚ×‚É‘‚«o‚·‚©”Û‚©‚ðØ‚è‘Ö‚¦‚é.
+      ƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚ðƒNƒŠƒbƒN‚µ‚Ä’l‚ðØ‚è‘Ö‚¦‚½ã‚ÅuUpdatev‚ð‰Ÿ‚¹‚ÎÝ’è‚ª”½‰f‚³‚ê‚é.
+
     blocking_mode:
       ƒ\ƒPƒbƒg’ÊM‚É‚¨‚¯‚éƒuƒƒbƒLƒ“ƒOÚ‘±ƒ‚[ƒh‚Ìon/off‚ðØ‚è‘Ö‚¦‚é.
       on‚Ì‚Æ‚«ƒuƒƒbƒLƒ“ƒOÚ‘±Aoff‚Ì‚Æ‚«”ñƒuƒƒbƒLƒ“ƒOÚ‘±‚Æ‚È‚é‚ªA’ÊíŒãŽÒ‚Ì•û‚ª‰õ“K‚É‰{——‚ª‰Â”\‚Å‚ ‚èA
@@ -474,10 +486,10 @@ parent_proxy‚©‚ç‚»‚ê‚ð‘I‚×‚Î‚æ‚¢.
 ~~~
     acceptable_host:
       ‚±‚Ì’l‚ªLOOPBACK‚Å‚ ‚éê‡‚Í–â“š–³—p‚Å‘¼ƒ}ƒVƒ“‚©‚ç‚ÌÚ‘±‚ð”rœ‚·‚é.
-      ‚±‚Ì‚Æ‚«accept‚»‚Ì‚à‚Ì‚ªs‚í‚ê‚È‚¢‚½‚ßADOSUŒ‚‚É‚à‘Ï‚¦“¾‚é.
+      ‚±‚Ì‚Æ‚«accept‚»‚Ì‚à‚Ì‚ªs‚í‚ê‚È‚¢‚½‚ßADOSUŒ‚‚É‘Î‚·‚é–hŒä—Í‚Í‘‚·.
       ˆê•ûA‚±‚Ì’l‚ªANY‚Å‚ ‚éê‡‚Í‚·‚×‚Ä‚Ìƒ}ƒVƒ“‚©‚ç‚ÌÚ‘±‚ð”F‚ß‚é.
       ‚µ‚©‚µA‚±‚Ì‚Ü‚Ü‚¾‚Æ‹É’[‚È˜bAƒ‹[ƒ^‚È‚Ç‚Ìƒtƒ@ƒCƒAƒEƒH[ƒ‹‹@\‚ª‚È‚¢ŠÂ‹«‚Å‚ÍWAN‚©‚ç‚ÌÚ‘±‚à
-      ”F‚ß‚Ä‚µ‚Ü‚¤‚±‚Æ‚É‚È‚é.  uLAN ‚©‚ç‚ÌÚ‘±‚Ì‚Ý‹–‰Âv‚Æ‚¢‚Á‚½ˆÓ–¡‚ðŽ‚Â’l‚ð’ñ‹Ÿ‚µ‚½‚¢‚Æ‚±‚ë‚Å‚Í‚ ‚é‚ªA
+      ”F‚ß‚Ä‚µ‚Ü‚¤‚±‚Æ‚É‚È‚é.  uLAN ‚©‚ç‚ÌÚ‘±‚Ì‚Ý‹–‰Âv‚Æ‚¢‚Á‚½ˆÓ–¡‚ðŽ‚Â“Á•Ê‚ÈÝ’è’l‚ð’ñ‹Ÿ‚µ‚½‚¢‚Æ‚±‚ë‚Å‚Í‚ ‚é‚ªA
       Žc”O‚È‚ª‚çAOS‚Ìƒlƒbƒgƒ[ƒNAPI‚É‚»‚Ì‚æ‚¤‚È’l‚ª’ñ‹Ÿ‚³‚ê‚Ä‚¢‚È‚¢‚½‚ßA‚»‚ê‚ª‚Å‚«‚È‚¢.
       Moai‚Å‚ÍA‚±‚ê‚É‘Îˆ‚·‚é‚½‚ß config.myf“à‚É access_allow_ips, access_deny_ips •Ï”‚ð“±“ü‚µA
       Ú‘±‚ð‹–‰Â/•s‹–‚Æ‚·‚éIPŒQ‚ðŽw’è‚Å‚«‚é‚æ‚¤‚É‚µ‚Ä‚¢‚é.
@@ -496,82 +508,33 @@ parent_proxy‚©‚ç‚»‚ê‚ð‘I‚×‚Î‚æ‚¢.
 
 ## <a name="plugin">ƒvƒ‰ƒOƒCƒ“‹@”\‚É‚Â‚¢‚Ä
 -----------------------------------
-‚±‚Ì€–Ú‚ÍƒvƒƒOƒ‰ƒ}ˆÈŠO‚Ì•û‚Í“Ç‚Þ•K—v‚Í‚È‚¢.
+  Moai‚Ìƒvƒ‰ƒOƒCƒ“‚Å‚ÍŒ»ƒo[ƒWƒ‡ƒ“‚Å‚ÍŽŸ‚Ì‚æ‚¤‚ÈŠg’£ˆ—‚ðŽÀŒ»‚Å‚«‚é.
 
-Moai‚ÌVirtual USERSƒvƒ‰ƒOƒCƒ“‚Å‚ÍˆÈ‰º‚Ìƒ_ƒCƒiƒ~ƒbƒNƒ[ƒh‰Â”\‚ÈƒOƒ[ƒoƒ‹ŠÖ”‚ð C Œ¾Œê‚É‚æ‚èŽÀ‘•‚·‚é.
-Ver1.0‚É‚¨‚¢‚ÄƒTƒ|[ƒg‚³‚ê‚éŠÖ”‚ÍˆÈ‰º‚Å‚ ‚é.
+  <ul>
+  <li>initiate :
+      Web Configuration‰æ–Ê‚ÌuVirtual USERS Initiationvƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚½‚Æ‚«‚ÉŒÄ‚Ño‚³‚ê‚é
+      ƒ}ƒVƒ“ŠÂ‹«‚Ì‰¼‘z‰»‚¨‚æ‚Ñƒ‰ƒ“ƒ_ƒ}ƒCƒY‰»ˆ—‚ÌŽÀŒ».</li>
 
-~~~c
+  <li>on_post :
+      POSTŽž(ƒŒƒX“ŠeŽž‚È‚Ç)‚ÉŒÄ‚Ño‚³‚ê‚Ä’Ç‰Á‚ÅŽÀs‚³‚ê‚éˆ—‚ÌŽÀŒ».
+      ‚±‚ê‚Í‚³‚ç‚È‚é‚“x‚Èsend_filterˆ—‚ðƒvƒƒOƒ‰ƒ~ƒ“ƒO‚ÅŽÀŒ»‚·‚é‚½‚ß‚Ì‹@\‚Å‚à‚ ‚é.</li>
+      
+  <li>on_response :
+      ƒŠƒNƒGƒXƒg‚É‘Î‚·‚é‰ž“š(—á‚¦‚Î’Pƒ‚ÉHTML‚ÉƒAƒNƒZƒX‚µ‚Ä‚»‚Ì“à—e‚ðŽóM‚·‚éê‡‚È‚Ç)‚ÉŒÄ‚Ño‚³‚ê‚Ä
+      ’Ç‰Á‚ÅŽÀs‚³‚ê‚éˆ—‚ÌŽÀŒ».
+      ‚±‚ê‚Í‚³‚ç‚È‚é‚“x‚Èrecv_filterˆ—‚ðƒvƒƒOƒ‰ƒ~ƒ“ƒO‚ÅŽÀŒ»‚·‚é‚½‚ß‚Ì‹@\‚Å‚à‚ ‚é.</li>
+  </ul>
 
-  bool initiate( ZnkMyf ftr_send, const char* parent_proxy, ZnkStr result_msg );
+  plugin‚ÌŽÀ‘Ì‚ÍpluginsƒtƒHƒ‹ƒ_“à‚É‚ ‚é**TARGET_NAME**.dll(‚Ü‚½‚ÍLinux‚È‚Ç‚Ìê‡**TARGET_NAME**.so)‚Æ‚¢‚¤
+  ƒtƒ@ƒCƒ‹‚É‚È‚é. ‚±‚ê‚ç‚Ì“ÆŽ©‚Éì‚Á‚Ä‚Ý‚½‚¢‚Æ‚¢‚¤ƒvƒƒOƒ‰ƒ}‚È•û‚Í[Hacking][4]‚É‚»‚Ìƒqƒ“ƒg‚ð‹Lq‚µ‚Ä‚¨‚¢‚½‚Ì‚Å
+  ‹»–¡‚ª‚ ‚ê‚ÎŽQÆ‚µ‚Ä‚¢‚½‚¾‚«‚½‚¢.
 
-    targetŒÅ—L‚ÌsendƒtƒBƒ‹ƒ^‚Ì‰Šú‰»ˆ—‚ðs‚¤.
-    Web Configuration‚ÌuVirtual USERS Initiationvƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚Æ‚±‚ÌŠÖ”‚ªŒÄ‚Ño‚³‚ê‚é.
-    
-    @param ftr_send:
-     ‰Šú‰»‘ÎÛ‚Æ‚È‚éƒtƒBƒ‹ƒ^‚Ö‚ÌŽQÆ‚Å‚ ‚é.
-     plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ðŽQÆ‚¨‚æ‚Ñ•ÏX‚µ‚Ä‚©‚Ü‚í‚È‚¢.
-    
-    @param parent_proxy:
-     Moai‚ªŒ»ÝŽg—p’†‚ÌŠO•”ƒvƒƒLƒV‚ªhostname:port‚ÌŒ`Ž®‚ÅÝ’è‚³‚ê‚Ä‚¢‚é.
-     (ŠO•”ƒvƒƒLƒV‚ðŽg—p‚µ‚Ä‚¢‚È‚¢ê‡‚Í‚±‚Ì’l‚ª‹ó’l‚Å‚ ‚é‚©‚Ü‚½‚ÍNONE‚Å‚ ‚é‚©‚Ü‚½‚Í:0‚ªŽw’è‚³‚ê‚Ä‚¢‚é)
-     plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ÌŽQÆ‚Í‰Â”\‚¾‚ª•ÏX‚·‚é‚±‚Æ‚Í‚Å‚«‚È‚¢.
-    
-    @param result_msg:
-     ‚±‚±‚É‚Í‚±‚ÌŠÖ”‚Ìˆ—‚ð‚¨‚±‚È‚Á‚½Œ‹‰Ê‚ÌƒƒbƒZ[ƒW‚ðŠi”[‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢.
-     ‚±‚ê‚Íˆ—‚ª¬Œ÷‚µ‚½ê‡‚Í‚»‚ê‚ðƒŠƒ|[ƒgƒƒbƒZ[ƒW‚Å‚ ‚èAƒGƒ‰[‚ª”­¶‚µ‚½ê‡‚Í‚»‚ê‚ðŽ¦‚·
-     ƒGƒ‰[ƒƒbƒZ[ƒW‚Æ‚È‚é.
-     uVirtual USERS Initiationvƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚Æ‚·‚®‰º‚É‚±‚ÌƒƒbƒZ[ƒW‚ª•\Ž¦‚³‚ê‚éŒ`‚É‚È‚é.
-
-
-  bool on_post_before( ZnkMyf ftr_send );
-
-    targetŒÅ—L‚ÌPOST’¼‘OŽž‚Ìˆ—‚ðs‚¤.
-    POST’¼‘O‚É–ˆ‰ñŒÄ‚Ño‚³‚ê‚é.
-
-    @param ftr_send:
-     ˆ—‘ÎÛ‚Æ‚È‚éƒtƒBƒ‹ƒ^‚Ö‚ÌŽQÆ‚Å‚ ‚é.
-     plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ðŽQÆ‚¨‚æ‚Ñ•ÏX‚µ‚Ä‚©‚Ü‚í‚È‚¢.
-
-
-  bool on_response_hdr( ZnkMyf ftr_send, ZnkVarpAry hdr_vars );
-
-    targetŒÅ—L‚ÌƒŒƒXƒ|ƒ“ƒXƒwƒbƒ_‚ðŽó‚¯Žæ‚Á‚½ê‡‚É‚¨‚¯‚éˆ—‚ðs‚¤.
-    ƒŒƒXƒ|ƒ“ƒX‚ðŽó‚¯Žæ‚Á‚½ê‡‚É–ˆ‰ñŒÄ‚Ño‚³‚ê‚é.
-
-    ftr_send:
-    ˆ—‘ÎÛ‚Æ‚È‚éƒtƒBƒ‹ƒ^‚Ö‚ÌŽQÆ‚Å‚ ‚é.
-    ‚±‚ê‚ª‚Ç‚¤‰ÁH‚³‚ê‚é‚Ì‚©‚Í‚ ‚È‚½‚ª‚±‚ÌŠÖ”‚ð‚Ç‚¤ŽÀ‘•‚·‚é‚©‚É‚æ‚é.
-
-    hdr_vars:
-    ˆ—‘ÎÛ‚Æ‚È‚éƒŒƒXƒ|ƒ“ƒXƒwƒbƒ_‚Ö‚ÌŽQÆ‚Å‚ ‚é.
-    ‚±‚ê‚ª‚Ç‚¤‰ÁH‚³‚ê‚é‚Ì‚©‚Í‚ ‚È‚½‚ª‚±‚ÌŠÖ”‚ð‚Ç‚¤ŽÀ‘•‚·‚é‚©‚É‚æ‚é.
-
-
-  bool on_response( ZnkMyf ftr_send, ZnkVarpAry hdr_vars, ZnkStr text );
-
-    targetŒÅ—L‚ÌƒŒƒXƒ|ƒ“ƒX‚ðŽó‚¯Žæ‚Á‚½ê‡‚É‚¨‚¯‚éˆ—‚ðs‚¤.
-    ƒŒƒXƒ|ƒ“ƒX‚ðŽó‚¯Žæ‚Á‚½ê‡‚É–ˆ‰ñŒÄ‚Ño‚³‚ê‚é.
-
-    @param ftr_send:
-     ˆ—‘ÎÛ‚Æ‚È‚éƒtƒBƒ‹ƒ^‚Ö‚ÌŽQÆ‚Å‚ ‚é.
-     plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ðŽQÆ‚¨‚æ‚Ñ•ÏX‚µ‚Ä‚©‚Ü‚í‚È‚¢.
-   
-    @param hdr_vars:
-     ˆ—‘ÎÛ‚Æ‚È‚éƒŒƒXƒ|ƒ“ƒXƒwƒbƒ_‚Ö‚ÌŽQÆ‚Å‚ ‚é.
-     plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ðŽQÆ‚¨‚æ‚Ñ•ÏX‚µ‚Ä‚©‚Ü‚í‚È‚¢.
-   
-    @param text:
-     ˆ—‘ÎÛ‚Æ‚È‚éƒŒƒXƒ|ƒ“ƒXƒeƒLƒXƒgƒf[ƒ^‚Ö‚ÌŽQÆ‚Å‚ ‚é.
-     plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ðŽQÆ‚¨‚æ‚Ñ•ÏX‚µ‚Ä‚©‚Ü‚í‚È‚¢.
-   
-    @param req_urp:
-     ˆ—‘ÎÛ‚Æ‚È‚éURI‚Ìpath•”•ª(URI‚É‚¨‚¯‚éƒI[ƒ\ƒŠƒeƒB‚æ‚èŒã‚ë‚Ì•”•ª)‚ª“n‚³‚ê‚é.
-     plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ÌŽQÆ‚Í‰Â”\‚¾‚ª•ÏX‚·‚é‚±‚Æ‚Í‚Å‚«‚È‚¢.
-
-~~~
 
   <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
 [1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/libZnk/myf_spec.md
+[2]: https://github.com/mr-moai-2016/znk_project/blob/master/src/virtual_users/VirtualUSERS.md
+[3]: https://github.com/mr-moai-2016/znk_project/blob/master/src/HowToCompile.md
+[4]: https://github.com/mr-moai-2016/znk_project/blob/master/src/Hacking.md
+[5]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/FAQ.md

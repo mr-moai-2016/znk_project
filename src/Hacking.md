@@ -6,6 +6,7 @@
 * [Hacking? ハッカーって奴っすかｗ？](#hacking)
 * [Cooking? クッキーって奴っすかｗ？](#cooking)
 * [開発言語および開発にあたっての背景など](#lang_and_background)
+* [プラグインインターフェース](#plugin)
 
 
 ## <a name="hacking">Hacking? ハッカーって奴っすかｗ？
@@ -90,3 +91,79 @@
 
   <a href="#user-content-index">目次へ戻る</a>
 
+
+## <a name="plugin">プラグインインターフェース
+-----------------------------------
+
+Moaiプラグインでは以下のダイナミックロード可能なグローバル関数を C 言語により実装する.
+このバージョンにおいてサポートされる関数は以下である.
+
+~~~c
+
+  bool initiate( ZnkMyf ftr_send, const char* parent_proxy, ZnkStr result_msg );
+
+    target固有のsendフィルタの初期化処理を行う.
+    Web Configurationの「Virtual USERS Initiation」ボタンを押すとこの関数が呼び出される.
+    
+    @param ftr_send:
+     初期化対象となるフィルタへの参照である.
+     pluginはこの関数内でこの値を参照および変更してかまわない.
+    
+    @param parent_proxy:
+     Moaiが現在使用中の外部プロキシがhostname:portの形式で設定されている.
+     (外部プロキシを使用していない場合はこの値が空値であるかまたはNONEであるかまたは:0が指定されている)
+     pluginはこの関数内でこの値の参照は可能だが変更することはできない.
+    
+    @param result_msg:
+     ここにはこの関数の処理をおこなった結果のメッセージを格納しなければならない.
+     これは処理が成功した場合はそれをリポートメッセージであり、エラーが発生した場合はそれを示す
+     エラーメッセージとなる.
+     「Virtual USERS Initiation」ボタンを押すとすぐ下にこのメッセージが表示される形になる.
+
+
+  bool on_post( ZnkMyf ftr_send );
+
+    target固有のPOST直前時の処理を行う.
+    POST直前に毎回呼び出される.
+
+    @param ftr_send:
+     処理対象となるフィルタへの参照である.
+     pluginはこの関数内でこの値を参照および変更してかまわない.
+
+
+  bool on_response_hdr( ZnkMyf ftr_send, ZnkVarpAry hdr_vars );
+
+    target固有のレスポンスヘッダを受け取った場合における処理を行う.
+    レスポンスを受け取った場合に毎回呼び出される.
+
+    ftr_send:
+    処理対象となるフィルタへの参照である.
+    これがどう加工されるのかはあなたがこの関数をどう実装するかによる.
+
+    hdr_vars:
+    処理対象となるレスポンスヘッダへの参照である.
+    これがどう加工されるのかはあなたがこの関数をどう実装するかによる.
+
+
+  bool on_response( ZnkMyf ftr_send, ZnkVarpAry hdr_vars, ZnkStr text );
+
+    target固有のレスポンスを受け取った場合における処理を行う.
+    レスポンスを受け取った場合に毎回呼び出される.
+
+    @param ftr_send:
+     処理対象となるフィルタへの参照である.
+     pluginはこの関数内でこの値を参照および変更してかまわない.
+   
+    @param hdr_vars:
+     処理対象となるレスポンスヘッダへの参照である.
+     pluginはこの関数内でこの値を参照および変更してかまわない.
+   
+    @param text:
+     処理対象となるレスポンステキストデータへの参照である.
+     pluginはこの関数内でこの値を参照および変更してかまわない.
+   
+    @param req_urp:
+     処理対象となるURIのpath部分(URIにおけるオーソリティより後ろの部分)が渡される.
+     pluginはこの関数内でこの値の参照は可能だが変更することはできない.
+
+~~~
