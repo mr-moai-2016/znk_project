@@ -7,50 +7,50 @@
   このバージョンにおいては具体的には以下のような処理をサポートする.  
 
   <ul>
-  <li>処理系間の違いを吸収する基本ヘッダ(すべてのZnkヘッダからincludeされる):
+  <li>処理系間の違いを吸収する基本ヘッダ(すべてのZnkヘッダからincludeされる): 
 	Znk_base.h
   </li>
-  <li>汎用のバイナリ配列および文字列処理:
-	Znk_bfr.h Znk_vpod.h Znk_bfr_ary.h
-	Znk_str.h Znk_str_ex.h Znk_str_pth.h Znk_str_ary
-	Znk_s_base.h
+  <li>汎用のバイナリ配列および文字列処理: 
+	Znk_bfr.h Znk_vpod.h Znk_bfr_ary.h 
+	Znk_str.h Znk_str_ex.h Znk_str_pth.h Znk_str_ary 
+	Znk_s_base.h 
 	Znk_txt_filter.h
   </li>
-  <li>標準または準標準関数のラッパー群(Znk_snprintfなど):
-	Znk_stdc.h Znk_s_posix.h Znk_missing_libc.h
+  <li>標準または準標準関数のラッパー群(Znk_snprintfなど):  
+	Znk_stdc.h Znk_s_posix.h Znk_missing_libc.h 
   </li>
-  <li>ファイルIOおよびディレクトリ操作:
-	Znk_str_fio.h Znk_dir.h
+  <li>ファイルIOおよびディレクトリ操作: 
+	Znk_str_fio.h Znk_dir.h 
   </li>
-  <li>エラー処理:
-	Znk_err.h Znk_sys_errno.h
+  <li>エラー処理: 
+	Znk_err.h Znk_sys_errno.h 
 	Znk_s_atom.h
   </li>
-  <li>ネットワークAPI、ソケット通信およびHTTPに関する基本処理:
-	Znk_net_base.h Znk_net_ip.h
-	Znk_socket.h Znk_server.h Znk_fdset.h
-	Znk_htp_hdrs.h Znk_htp_rar.h
+  <li>ネットワークAPI、ソケット通信およびHTTPに関する基本処理: 
+	Znk_net_base.h Znk_net_ip.h 
+	Znk_socket.h Znk_server.h Znk_fdset.h 
+	Znk_htp_hdrs.h Znk_htp_rar.h 
 	Znk_cookie.h
   </li>
-  <li>zipおよびgzipの解凍処理(zlibを使用):
+  <li>zipおよびgzipの解凍処理(zlibを使用): 
 	Znk_zlib.h
   </li>
-  <li>動的ロード補助機構:
+  <li>動的ロード補助機構: 
 	Znk_dlink.h Znk_dlhlp.h
   </li>
-  <li>環境変数操作:
+  <li>環境変数操作: 
 	Znk_envvar.h
   </li>
-  <li>汎用変数、プリミティブ型、およびその動的配列:
+  <li>汎用変数、プリミティブ型、およびその動的配列: 
 	Znk_var.h Znk_prim.h Znk_varp_ary.h
   </li>
-  <li>汎用の設定ファイル(myf)パーサ:
+  <li>汎用の設定ファイル(myf)パーサ: 
 	Znk_myf.h
   </li>
-  <li>ミューテックスおよびスレッド:
+  <li>ミューテックスおよびスレッド: 
 	Znk_mutex.h Znk_thread.h
   </li>
-  <li>数学およびMD5計算など:
+  <li>数学およびMD5計算など: 
 	Znk_math.h Znk_md5.h 
   </li>
   </ul>
