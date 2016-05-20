@@ -255,6 +255,19 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name,
 		ZnkVar_set_val_Str( varp, "", 0 );
 	}
 
+	/***
+	 * PON, HAPの内容を一応消去.
+	 * しかしこのロジックにはまだ問題と改良の余地がある.
+	 */
+	varp = refCookieVar( myf, "PON" );
+	if( varp ){
+		ZnkVar_set_val_Str( varp, "", 0 );
+	}
+	varp = refCookieVar( myf, "HAP" );
+	if( varp ){
+		ZnkVar_set_val_Str( varp, "", 0 );
+	}
+
 	result = true;
 FUNC_END:
 	ZnkStr_delete( cfduid );

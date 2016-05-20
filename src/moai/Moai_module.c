@@ -289,10 +289,11 @@ filtCookieStatement( const ZnkVarpAry ftr_vars, ZnkStr cok_stmt )
 	const size_t ftr_size = ZnkVarpAry_size( ftr_vars );
 	ZnkVarp      ftr_var;
 	size_t       ftr_idx;
-	ZnkVarpAry  cok_vars = ZnkVarpAry_create( true );
+	ZnkVarpAry   cok_vars = ZnkVarpAry_create( true );
 	ZnkVarp      cok_var;
 	size_t       count = 0;
 
+	MoaiLog_printf( "start cok_stmt=[%s]\n", ZnkStr_cstr(cok_stmt) );
 	/* Parse orignal Cookie header field statement */
 	ZnkCookie_regist_byCookieStatement( cok_vars, ZnkStr_cstr(cok_stmt), ZnkStr_leng(cok_stmt) );
 
@@ -300,6 +301,7 @@ filtCookieStatement( const ZnkVarpAry ftr_vars, ZnkStr cok_stmt )
 		ftr_var = ZnkVarpAry_at( ftr_vars, ftr_idx );
 
 		cok_var = ZnkVarpAry_find_byName( cok_vars, ZnkVar_name_cstr(ftr_var), Znk_NPOS, false );
+	MoaiLog_printf( "cok_var=[%p] ftr_var_name=[%s]\n", cok_var, ZnkVar_name_cstr(ftr_var) );
 		if( cok_var ){
 			/* ftr_varÇÃílÇ≈è„èëÇ´ */
 			ZnkVar_set_val_Str( cok_var, ZnkVar_cstr(ftr_var), ZnkVar_str_leng(ftr_var) );
@@ -318,6 +320,7 @@ filtCookieStatement( const ZnkVarpAry ftr_vars, ZnkStr cok_stmt )
 	if( count ){
 		ZnkStr_clear( cok_stmt );
 		ZnkCookie_extend_toCookieStatement( cok_vars, cok_stmt );
+		MoaiLog_printf( "final cok_stmt=[%s]\n", ZnkStr_cstr(cok_stmt) );
 	}
 	ZnkVarpAry_destroy( cok_vars );
 	return count;

@@ -172,7 +172,7 @@ MoaiPost_setPostConfirm( bool post_confirm )
 }
 
 void
-MoaiPost_parsePostVars3( ZnkSocket sock, MoaiFdSet mfds,
+MoaiPost_parsePostAndCookieVars( ZnkSocket sock, MoaiFdSet mfds,
 		ZnkStr str,
 		const size_t hdr_size, ZnkStrAry hdr1st, const ZnkVarpAry hdr_vars,
 		size_t content_length, ZnkBfr stream,
@@ -180,21 +180,12 @@ MoaiPost_parsePostVars3( ZnkSocket sock, MoaiFdSet mfds,
 		const MoaiModule mod )
 {
 	const char* content_type = NULL;
-	const bool  is_print_stream = false;
 	/***
 	 * 実際に使用するboundaryはContent-Type内に記載されている文字列の前に
 	 * さらに -- を付加したものを使用しなければならない.
 	 */
 	ZnkStr boundary = ZnkStr_new( "--" );
-
-	{
-		ZnkStr_add( str, "<p><b>Moai : HTTP Header Confirmation.</b></p>" );
-		addHdrFirstLine( str, hdr1st );
-		ZnkStr_addf( str, "\n" );
-		addHdrVarsStr( str, hdr_vars );
-		ZnkStr_addf( str, "\n" );
-	}
-
+	ZnkStr pst_str = ZnkStr_new( "" );
 
 	content_type = ZnkHtpHdrs_scanContentType( hdr_vars, boundary );
 	if( content_type == NULL ){
@@ -233,13 +224,7 @@ MoaiPost_parsePostVars3( ZnkSocket sock, MoaiFdSet mfds,
 			MoaiIO_recvBySize( stream, sock, mfds, remain_size, &result_size );
 			ZnkF_printf_e( "result_size=[%u]\n", result_size );
 		}
-		ZnkStr_add( str, "<p><b>Moai : POST Variable Confirmation.</b></p>" );
 
-		if( is_print_stream ){
-			ZnkStr_append( str,
-					(char*)(ZnkBfr_data(stream)+hdr_size),
-					ZnkBfr_size(stream)-hdr_size );
-		}
 		result = MoaiPostVars_regist_byHttpBody( post_vars,
 				ZnkStr_cstr(boundary), ZnkStr_leng(boundary),
 				ZnkBfr_data(stream)+hdr_size,
@@ -270,20 +255,15 @@ MoaiPost_parsePostVars3( ZnkSocket sock, MoaiFdSet mfds,
 						val = ZnkHtpHdrs_val( varp, 0 );
 						ZnkStr_set( val, val_str );
 					}
-					if( is_print_stream ){
-						ZnkStr_append( str,
-								(char*)ZnkBfr_data(stream_mdy),
-								ZnkBfr_size(stream_mdy) );
-					}
 					ZnkBfr_destroy( stream_mdy );
 				}
 			}
 			if( is_filter_done ){
-				ZnkStr_add( str, "<p><font color=red>  POST Variables are Modified by your send filter.</font></p>" );
+				ZnkStr_add( pst_str, "<p><font color=red>  POST Variables are Modified by your send filter.</font></p>" );
 			}
-			addPostVarsStr( str, post_vars );
+			addPostVarsStr( pst_str, post_vars );
 		} else {
-			ZnkStr_add( str, "  Broken multipart/form-data.\n" );
+			ZnkStr_add( pst_str, "  Broken multipart/form-data.\n" );
 		}
 
 	} else if( ZnkS_isBegin_literal( content_type, "application/x-www-form-urlencoded" )
@@ -294,11 +274,10 @@ MoaiPost_parsePostVars3( ZnkSocket sock, MoaiFdSet mfds,
 		/***
 		 * この場合にもbodyが存在する.
 		 */
-		ZnkStr_add( str, "<p><b>Moai : POST Variable Confirmation.</b></p>" );
-		ZnkStr_add( str, "  This is application/x-www-form-urlencoded or text/xml\n" );
-		ZnkStr_add( str, "  " );
-		ZnkStr_append( str, (char*)body, body_leng );
-		ZnkStr_add( str, "\n" );
+		ZnkStr_add( pst_str, "  This is application/x-www-form-urlencoded or text/xml\n" );
+		ZnkStr_add( pst_str, "  " );
+		ZnkStr_append( pst_str, (char*)body, body_leng );
+		ZnkStr_add( pst_str, "\n" );
 
 		{
 			ZnkStrAry stmts = ZnkStrAry_create( true );
@@ -363,9 +342,9 @@ MoaiPost_parsePostVars3( ZnkSocket sock, MoaiFdSet mfds,
 						ZnkStr_set( val, val_str );
 					}
 
-					ZnkStr_add( str, "\n" );
-					ZnkStr_add( str, "<font color=red>  POST Variables are Modified by your send filter.</font>\n\n" );
-					addPostVarsStr( str, post_vars );
+					ZnkStr_add( pst_str, "\n" );
+					ZnkStr_add( pst_str, "<font color=red>  POST Variables are Modified by your send filter.</font>\n\n" );
+					addPostVarsStr( pst_str, post_vars );
 					/***
 					 * Moai_HtpPostTextBodyという変数に修正後の全bodyを格納して登録する.
 					 */
@@ -373,9 +352,9 @@ MoaiPost_parsePostVars3( ZnkSocket sock, MoaiFdSet mfds,
 							MoaiPostVar_e_None, ZnkBfr_data(stream_mdy), ZnkBfr_size(stream_mdy) );
 					{
 						ZnkVarp varp = ZnkVarpAry_find_byName( post_vars, "Moai_HtpPostTextBody", Znk_NPOS, false );
-						ZnkStr_add( str, "\n" );
-						ZnkStr_add( str, "  The following is finaly sending post vars stream.\n" );
-						ZnkStr_addf( str, "  %s\n", ZnkVar_cstr( varp ) );
+						ZnkStr_add( pst_str, "\n" );
+						ZnkStr_add( pst_str, "  The following is finaly sending post vars stream.\n" );
+						ZnkStr_addf( pst_str, "  %s\n", ZnkVar_cstr( varp ) );
 					}
 
 					ZnkBfr_destroy( stream_mdy );
@@ -383,7 +362,7 @@ MoaiPost_parsePostVars3( ZnkSocket sock, MoaiFdSet mfds,
 			}
 
 			if( !is_filter_done ){
-				addPostVarsStr( str, post_vars );
+				addPostVarsStr( pst_str, post_vars );
 				/***
 				 * Moai_HtpPostTextBodyという変数に全bodyを格納して登録する.
 				 */
@@ -393,8 +372,36 @@ MoaiPost_parsePostVars3( ZnkSocket sock, MoaiFdSet mfds,
 		}
 
 	}
-	ZnkF_printf_e( "  boundary=[%s]\n", ZnkStr_cstr(boundary) );
+	//ZnkF_printf_e( "  boundary=[%s]\n", ZnkStr_cstr(boundary) );
+
+	/***
+	 * Cookie filtering
+	 * PostVar filteringにおけるon_post関数の呼び出しでcookie_varsの値を
+	 * 加工するような処理にも対応するため、このCookie filteringをここで呼び出す.
+	 */
+	if( mod ){
+		MoaiModule_filtCookieVars( mod, hdr_vars );
+	}
+
+	/***
+	 * confirm用
+	 * メッセージ内容を正確なものとするため、filtering処理などが全て終った後に
+	 * 全文を構築しなければならない.
+	 */
+	{
+		ZnkStr_add( str, "<p><b>Moai : HTTP Header Confirmation.</b></p>" );
+		addHdrFirstLine( str, hdr1st );
+		ZnkStr_addf( str, "\n" );
+		addHdrVarsStr( str, hdr_vars );
+		ZnkStr_addf( str, "\n" );
+
+		ZnkStr_add( str, "<p><b>Moai : POST Variable Confirmation.</b></p>" );
+		ZnkStr_add( str, "  This is application/x-www-form-urlencoded or text/xml\n" );
+		ZnkStr_add( str, ZnkStr_cstr(pst_str) );
+	}
+
 	ZnkStr_delete( boundary );
+	ZnkStr_delete( pst_str );
 }
 
 bool

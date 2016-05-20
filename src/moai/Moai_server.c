@@ -1157,20 +1157,13 @@ doLocalProxy( MoaiContext ctx, MoaiConnection mcn, MoaiFdSet mfds, MoaiHtpType h
 			MoaiPostMode post_mode = MoaiPost_decidePostMode( config, hostname );
 			ZnkVarp varp = NULL;
 
-			{
-				/* Cookie filtering */
-				if( mod ){
-					MoaiModule_filtCookieVars( mod, info->hdrs_.vars_ );
-				}
-
-				/* PostVar filtering */
-				MoaiPost_parsePostVars3( I_sock, mfds,
-						str,
-						info->hdr_size_, info->hdrs_.hdr1st_, info->hdrs_.vars_,
-						ctx->body_info_.content_length_, info->stream_,
-						info->vars_,
-						mod );
-			}
+			/* PostVar and Cookie filtering */
+			MoaiPost_parsePostAndCookieVars( I_sock, mfds,
+					str,
+					info->hdr_size_, info->hdrs_.hdr1st_, info->hdrs_.vars_,
+					ctx->body_info_.content_length_, info->stream_,
+					info->vars_,
+					mod );
 
 			varp = ZnkVarpAry_find_byName( info->vars_, "Moai_PostInfoID", Znk_NPOS, false );
 			if( varp ){
@@ -1795,7 +1788,7 @@ doWebServer( const MoaiContext ctx, ZnkSocket sock, MoaiConnection mcn, MoaiFdSe
 				ZnkStr_cstr(str1) );
 		ZnkStr_add( str2, "<pre>\n" );
 
-		MoaiPost_parsePostVars3( sock, mfds,
+		MoaiPost_parsePostAndCookieVars( sock, mfds,
 				str2,
 				info->hdr_size_, info->hdrs_.hdr1st_, info->hdrs_.vars_,
 				ctx->body_info_.content_length_, info->stream_,
