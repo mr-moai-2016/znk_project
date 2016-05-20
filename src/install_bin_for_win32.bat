@@ -28,7 +28,10 @@ if not exist %INST_DIR_%\doc_root mkdir %INST_DIR_%\doc_root
 %CP_% moai\doc_root\*.gif  %INST_DIR_%\doc_root\
 %CP_% moai\doc_root\*.js   %INST_DIR_%\doc_root\
 %CP_% moai\doc_root\*.css  %INST_DIR_%\doc_root\
+if not exist %INST_DIR_%\filters mkdir %INST_DIR_%\filters
+%CP_% moai\filters\*.myf %INST_DIR_%\filters\
 %CP_% moai\*.md  %INST_DIR_%\
+%CP_% moai\*.myf %INST_DIR_%\
 
 REM
 REM setup http_decorator
@@ -38,18 +41,10 @@ REM
 REM
 REM setup virtual_users
 REM
-call bat_utils\install_one.bat /C user_agent.txt   virtual_users         %INST_DIR_%
-call bat_utils\install_one.bat /C screen_size.txt  virtual_users         %INST_DIR_%
-call bat_utils\install_one.bat /C parent_proxy.txt virtual_users         %INST_DIR_%
-if not exist %INST_DIR_%\filters mkdir %INST_DIR_%\filters
-call bat_utils\install_one.bat /C futaba_recv.myf virtual_users\filters %INST_DIR_%\filters
-call bat_utils\install_one.bat /C futaba_send.myf virtual_users\filters %INST_DIR_%\filters
-call bat_utils\install_one.bat /C 2ch_recv.myf    virtual_users\filters %INST_DIR_%\filters
-call bat_utils\install_one.bat /C 2ch_send.myf    virtual_users\filters %INST_DIR_%\filters
-call bat_utils\install_one.bat /C config.myf      virtual_users         %INST_DIR_%
-call bat_utils\install_one.bat /C analysis.myf    virtual_users         %INST_DIR_%
-call bat_utils\install_one.bat /C target.myf      virtual_users         %INST_DIR_%
-%CP_% virtual_users\VirtualUSERS.md %INST_DIR_%\
+call bat_utils\install_one.bat /C user_agent.txt   virtual_users %INST_DIR_%
+call bat_utils\install_one.bat /C screen_size.txt  virtual_users %INST_DIR_%
+call bat_utils\install_one.bat /C parent_proxy.txt virtual_users %INST_DIR_%
+%CP_% virtual_users\*.md %INST_DIR_%\
 
 REM
 REM setup plugin

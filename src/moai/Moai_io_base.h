@@ -27,8 +27,6 @@ MoaiIO_close_ISock( const char* label, ZnkSocket sock, MoaiFdSet mfds );
 void
 MoaiIO_close_OSock( const char* label, ZnkSocket sock, MoaiFdSet mfds );
 
-//void
-//MoaiIO_closeSocket( const char* label, ZnkSocket sock, ZnkFdSet fdst_observe, MoaiFdSet mfds );
 void
 MoaiIO_closeSocketAll( const char* label, ZnkFdSet fdst_observe, MoaiFdSet mfds );
 

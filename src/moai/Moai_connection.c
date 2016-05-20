@@ -20,8 +20,6 @@ allocConnection( void )
 	mcn->hostname_ = ZnkStr_new( "" );
 	mcn->info_id_list_ = ZnkBfr_create_null();
 	mcn->invoked_info_id_list_ = ZnkBfr_create_null();
-	//mcn->prev_req_method_list_ = ZnkBfr_create_null();
-	//mcn->prev_req_urp_list_    = ZnkStrAry_create( true );
 	/***
 	 * 特にLinuxにおいて, fd=0(stdin)がcloseされるようなことは絶対に避けねばならない.
 	 * 仮に0をcloseすると0番が不使用になるため、ZnkSocket_openで値0のsocketが発行されるようになる.
@@ -41,8 +39,6 @@ deleteConnection( void* elem )
 		ZnkStr_delete( mcn->hostname_ );
 		ZnkBfr_destroy( mcn->info_id_list_ );
 		ZnkBfr_destroy( mcn->invoked_info_id_list_ );
-		//ZnkBfr_destroy( mcn->prev_req_method_list_ );
-		//ZnkStrAry_destroy( mcn->prev_req_urp_list_ );
 		Znk_free( mcn );
 	}
 }
@@ -152,10 +148,11 @@ MoaiConnection_connectO( const char* goal_hostname, uint16_t goal_port,
 
 		/***
 		 * Pipeline化に対応.
+		 * invoked_info_id_list_ はここではまだクリアしない.
+		 * まだinvoked後のresponseなどが受信されていない可能性も有り得るからである.
+		 * これについてはconnectionを完全クローズするタイミングでクリアを行う.
 		 */
 		ZnkBfr_clear( mcn->info_id_list_ );
-		//ZnkBfr_clear( mcn->prev_req_method_list_ );
-		//ZnkStrAry_clear( mcn->prev_req_urp_list_ );
 
 		ZnkSocket_setBlockingMode( mcn->O_sock_, st_blocking_mode );
 
@@ -274,7 +271,6 @@ MoaiConnection_invokeCallback( MoaiConnection mcn, MoaiFdSet mfds )
 		const size_t info_id_list_size = numofInfoID( mcn->info_id_list_ );
 		if( info_id_list_size ){
 			MoaiInfoIDStr id_str = {{ 0 }};
-			//ZnkBfr_clear( mcn->prev_req_method_list_ );
 			for( idx=0; idx<info_id_list_size; ++idx ){
 				info_id = atInfoID( mcn->info_id_list_, idx );
 				MoaiInfoID_getStr( info_id, &id_str );
@@ -391,14 +387,6 @@ MoaiConnection_erase( MoaiConnection mcn, MoaiFdSet mfds )
 }
 
 
-/***
- * TODO:
- * とりあえず通常 idxには Znk_NPOS を指定して取得すればよいだろう.
- * この場合最後の要素を返すことにするが、HEAD/GETなどが組み合わさっているような場合に問題となる
- * 可能性があるのか? それへの対処を考えなくてはならないかもしれない.
- * POST/CONNECTについては、「これらをパイプライン化してはならない」というHTTP上の規則があるため、
- * その可能性を心配しなくてもよい.
- */
 MoaiInfo*
 MoaiConnection_getInvokedInfo( const MoaiConnection mcn, size_t idx )
 {
@@ -411,23 +399,6 @@ MoaiConnection_getInvokedInfo( const MoaiConnection mcn, size_t idx )
 	}
 	return NULL;
 }
-#if 0
-void
-MoaiConnection_getPrevRequestMethodStr( const MoaiConnection mcn, char* buf, size_t buf_size )
-{
-	const size_t size = numofInfoID( mcn->invoked_info_id_list_ );
-	size_t idx;
-	for( idx=0; idx<size; ++idx ){
-		const MoaiInfo* info = MoaiConnection_getInvokedInfo( mcn, idx );
-		const char* req_method_str = ZnkHtpReqMethod_getCStr( info->req_method_ );
-		if( idx == Znk_NPOS ){ idx = size-1; }
-		ZnkS_concat( buf, buf_size, req_method_str );
-		if( idx != size-1 ){
-			ZnkS_concat( buf, buf_size, ":" );
-		}
-	}
-}
-#endif
 size_t
 MoaiConnection_countResponseIdx( MoaiConnection mcn )
 {

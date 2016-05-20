@@ -419,22 +419,22 @@ MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 		}
 		if( ZnkS_eqCase( key, "Content-Type" ) ){
 			if( ZnkS_isBegin( val, "text/html" ) ){
-				body_info->txt_type_ = MoaiText_e_HTML;
+				body_info->txt_type_ = MoaiText_HTML;
 				MoaiLog_printf( "  MoaiInfo_parseHdr : txt_type=HTML\n" );
 			} else if(
 			    ZnkS_isBegin( val, "text/css" )
 			){
-				body_info->txt_type_ = MoaiText_e_CSS;
+				body_info->txt_type_ = MoaiText_CSS;
 				MoaiLog_printf( "  MoaiInfo_parseHdr : txt_type=CSS\n" );
 			} else if(
 			    ZnkS_isBegin( val, "application/javascript" )
 			 || ZnkS_isBegin( val, "application/x-javascript" )
 			 || ZnkS_isBegin( val, "text/javascript" )
 			){
-				body_info->txt_type_ = MoaiText_e_JS;
+				body_info->txt_type_ = MoaiText_JS;
 				MoaiLog_printf( "  MoaiInfo_parseHdr : txt_type=JS\n" );
 			} else {
-				body_info->txt_type_ = MoaiText_e_Binary;
+				body_info->txt_type_ = MoaiText_Binary;
 				MoaiLog_printf( "  MoaiInfo_parseHdr : txt_type=Binary\n" );
 			}
 		}

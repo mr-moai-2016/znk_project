@@ -18,8 +18,6 @@ MoaiParentProxy_getPort( void );
 void
 MoaiParentProxy_setIndicatingMode( int indicating_mode );
 
-//void
-//MoaiParentProxy_setParentProxys( ZnkStrAry parent_proxys );
 ZnkStrAry
 MoaiParentProxy_getParentProxys( void );
 bool

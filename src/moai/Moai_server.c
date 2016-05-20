@@ -280,13 +280,13 @@ processResponse_forText( ZnkSocket O_sock, MoaiContext ctx, MoaiFdSet mfds,
 	if( mod ){
 		ZnkTxtFilterAry txt_ftr = NULL;
 		switch( body_info->txt_type_ ){
-		case MoaiText_e_HTML:
+		case MoaiText_HTML:
 			txt_ftr = MoaiModule_ftrHtml( mod );
 			break;
-		case MoaiText_e_JS:
+		case MoaiText_JS:
 			txt_ftr = MoaiModule_ftrJS( mod );
 			break;
-		case MoaiText_e_CSS:
+		case MoaiText_CSS:
 			txt_ftr = MoaiModule_ftrCSS( mod );
 			break;
 		default:
@@ -342,13 +342,13 @@ processResponse_forText( ZnkSocket O_sock, MoaiContext ctx, MoaiFdSet mfds,
 	} else {
 		ZnkFile fp = NULL;
 		switch( body_info->txt_type_ ){
-		case MoaiText_e_HTML:
+		case MoaiText_HTML:
 			fp = ZnkF_fopen( "result.html", "wb" );
 			break;
-		case MoaiText_e_JS:
+		case MoaiText_JS:
 			fp = ZnkF_fopen( "result.js", "wb" );
 			break;
-		case MoaiText_e_CSS:
+		case MoaiText_CSS:
 			fp = ZnkF_fopen( "result.css", "wb" );
 			break;
 		default:
@@ -434,33 +434,6 @@ debugHdrVars( const ZnkVarpAry vars, const char* prefix_tab )
 }
 
 
-/***
- * socket I と O があったとして、まず I から O へのforward し、
- * それが終ったら O から I へのforwardを行う.
- *
- * select Iの読み込み可を検出.
- * forward : recv(from I) => send(to O)
- * select Iの読み込み可を検出.
- * forward : recv(from I) => send(to O)
- * select Iの読み込み可を検出.
- * forward : recv(from I) => send(to O)
- *
- * ここで I からのrecvが終了. しかしおそらく I はまだ接続を維持しcloseをしない.
- * つまりrecv(from I)が0か否かでこのタイミングを判定することはできないし、
- * そんなことをすれば、recv(from I)から制御が永遠に帰ってこなくなる.
- * そのため、ここでは select へ戻ってその判定を行わねばならない.
- *
- * select Oの読み込み可を検出.
- * forward : recv(from O) => send(to I)
- * select Oの読み込み可を検出.
- * forward : recv(from O) => send(to I)
- * select Oの読み込み可を検出.
- * forward : recv(from O) => send(to I)
- *
- * recv(from O) が 0 を返すことで O側がcloseしたことを検出.
- * あるいはrecv(from I) が 0 を返すことで I側がcloseしたことを検出.
- * これで一つのやり取りが終了となる.
- */
 static HtpScanType
 scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
 		ZnkSocket sock, MoaiSockType sock_type, ZnkFdSet fdst_observe_r, MoaiFdSet mfds )
@@ -468,6 +441,14 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
 	MoaiHtpType htp_type = MoaiHtpType_e_None;
 	MoaiInfo* draft_info = ctx->draft_info_;
 	char sock_str[ 4096 ];
+
+	/***
+	 * ここではパイプライン化され、複数存在する場合は最後の要素を返すことになるが、
+	 * そもそもパイプライン化はHEAD/GETなどが組み合わさっているような場合のみに起こる.
+	 * POST/CONNECTについては、「これらをパイプライン化してはならない」というHTTP上の規則があるため、
+	 * その可能性を心配しなくてもよい.
+	 * そして以下ではlast_invoked_infoをCONNECTの判定のみに使用する.
+	 */
 	MoaiInfo*       last_invoked_info = MoaiConnection_getInvokedInfo( mcn, Znk_NPOS );
 	ZnkHtpReqMethod last_req_method   = last_invoked_info ? last_invoked_info->req_method_ : ZnkHtpReqMethod_e_Unknown;
 
@@ -539,8 +520,7 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
 		 * その判定は、Content-LengthとTrasfer-Encodingの指定に頼る他ない.
 		 * Content-Lengthが指定されていないあるいは0であるにも関わらず
 		 * Content bodyが存在する場合はTrasfer-Encodingにchunkedが指定されているケースである.
-		 * これらをまとめて処理するため、Content-Lengthが指定されている場合もchunk_size_として
-		 * 扱う.
+		 * これらをまとめて処理するため、Content-Lengthが指定されている場合もchunk_size_として扱う.
 		 */
 		if( mcn->content_length_remain_ ){
 			if( mcn->content_length_remain_ >= (size_t)ctx->result_size_ ){
@@ -702,8 +682,10 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
 			case ZnkHtpReqMethod_e_POST:
 			case ZnkHtpReqMethod_e_HEAD:
 				if( ZnkS_eq( arg_tkns[ 1 ], "200" ) ){
-					MoaiLog_printf( "  body_info : is_chunked=[%d] is_gzip=[%d] txt_type=[%d]\n",
-							body_info->is_chunked_, body_info->is_gzip_, body_info->txt_type_ );
+					MoaiLog_printf( "  body_info : is_chunked=[%s] is_gzip=[%s] txt_type=[%d]\n",
+							body_info->is_chunked_ ? "true" : "false",
+							body_info->is_gzip_    ? "true" : "false",
+							body_info->txt_type_ );
 				}
 				break;
 			default:
@@ -903,7 +885,7 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
 			/***
 			 * Textデータの場合は全取得を試みる.
 			 */
-			if( body_info->txt_type_ != MoaiText_e_Binary || body_info->is_unlimited_ ){
+			if( body_info->txt_type_ != MoaiText_Binary || body_info->is_unlimited_ ){
 				processResponse_forText( sock, ctx, mfds, &mcn->content_length_remain_, mod );
 			} else if( mod ){
 				MoaiModule_invokeOnResponse( mod, draft_info->hdrs_.vars_, NULL, "" );
@@ -958,7 +940,7 @@ sendToDst( ZnkSocket dst_sock, MoaiInfo* info, MoaiTextType txt_type, ZnkStr tex
 	if( with_header ){
 		/* HTTPヘッダを送信 */
 		sendHdrs( dst_sock, info->hdrs_.hdr1st_, info->hdrs_.vars_ ); 
-		if( txt_type != MoaiText_e_Binary ){
+		if( txt_type != MoaiText_Binary ){
 			result_size = ZnkSocket_send( dst_sock,
 					(uint8_t*)ZnkStr_cstr(text), ZnkStr_leng(text) );
 		} else {
@@ -1145,7 +1127,6 @@ static MoaiRASResult
 doLocalProxy( MoaiContext ctx, MoaiConnection mcn, MoaiFdSet mfds, MoaiHtpType htp_type, MoaiSockType sock_type )
 {
 	ZnkErr_D( err );
-	//ZnkFdSet fdst_observe_r = MoaiFdSet_fdst_observe_r( mfds );
 	MoaiInfo* info = NULL;
 	ZnkSocket I_sock = MoaiConnection_I_sock( mcn );
 	ZnkSocket O_sock = MoaiConnection_O_sock( mcn );
@@ -1231,11 +1212,9 @@ doLocalProxy( MoaiContext ctx, MoaiConnection mcn, MoaiFdSet mfds, MoaiHtpType h
 		if( !MoaiConnection_connectFromISock( hostname, port, I_sock, "doLocalProxy",
 				info_id, mfds, is_proxy_use, cb_func ) )
 		{
-			//O_sock = MoaiConnection_O_sock( mcn );
 			MoaiLog_printf( "  doLocalProxy : makeConnectionFromISock failure.\n" );
 			MoaiIO_sendTxtf( I_sock, "text/html", "<p><b>Moai : doLocalProxy : makeConnectionFromISock Error.</b></p>\n" );
 			MoaiIO_close_ISock( "  doLocalProxy", I_sock, mfds );
-			//MoaiIO_close_OSock( "  doLocalProxy", O_sock, mfds );
 			return MoaiRASResult_e_Ignored;
 		}
 		I_sock = MoaiConnection_I_sock( mcn );
@@ -1289,7 +1268,6 @@ doLocalProxy( MoaiContext ctx, MoaiConnection mcn, MoaiFdSet mfds, MoaiHtpType h
 				MoaiLog_printf( "  sock=[%d] is invalid\n", sock );
 				return MoaiRASResult_e_Ignored;
 			}
-			//MoaiLog_printf( "  doLocalProxy htp_type=[%d] sending to sock[%d]...\n", htp_type, sock );
 			sendToDst( sock, info, ctx->body_info_.txt_type_, ctx->text_, with_header );
 			if( result_size == -1 ){
 				ZnkSysErrnoInfo* err_info = ZnkSysErrno_getInfo( ZnkSysErrno_errno() );
@@ -1972,12 +1950,14 @@ static MoaiRASResult recv_and_send( MoaiFdSet mfds, ZnkSocket sock, void* arg )
 
 	mcn = MoaiConnection_find_byISock( sock );
 	if( mcn ){
+		sock_type = MoaiSockType_e_Inner;
+		return recvAndSendCore( ctx, sock, sock_type, mcn, mfds );
+	}
 
+	mcn = MoaiConnection_find_byOSock( sock );
+	if( mcn ){
 		/***
-		 * これを本当に弾いてよいのか?
-		 * isConnectInprogressが永久に終らない場合に対する対策
-		 * (timeoutなど設定するのがよいか?)
-		 * コネクト待ちのときにブラウザの中止ボタンを押しても同様のことが起こる.
+		 * これはもはや必要ないのでは...?
 		 */
 #if 0
 		if( MoaiConnection_isConnectInprogress( mcn ) ){
@@ -1986,16 +1966,6 @@ static MoaiRASResult recv_and_send( MoaiFdSet mfds, ZnkSocket sock, void* arg )
 		}
 #endif
 
-		sock_type = MoaiSockType_e_Inner;
-		return recvAndSendCore( ctx, sock, sock_type, mcn, mfds );
-	}
-
-	mcn = MoaiConnection_find_byOSock( sock );
-	if( mcn ){
-		if( MoaiConnection_isConnectInprogress( mcn ) ){
-			MoaiLog_printf( "  recv_and_send : sock=[%d] is ConnectInprogress.\n", sock );
-			return MoaiRASResult_e_Ignored;
-		}
 		sock_type = MoaiSockType_e_Outer;
 		return recvAndSendCore( ctx, sock, sock_type, mcn, mfds );
 	}
@@ -2215,7 +2185,6 @@ MoaiServer_main( bool first_initiate, bool enable_parent_proxy )
 		goto FUNC_END;
 	}
 	listen_sock = ZnkServer_getListenSocket( srver );
-	//MoaiConnection_intern( listen_sock, MoaiSockType_e_Listen );
 	MoaiConnection_setListeningSock( listen_sock );
 	mfds = MoaiFdSet_create( listen_sock, &waitval );
 

@@ -329,88 +329,6 @@ MoaiIO_close_OSock( const char* label, ZnkSocket sock, MoaiFdSet mfds )
 		}
 	}
 }
-#if 0
-void
-MoaiIO_closeSocket( const char* label, ZnkSocket sock, ZnkFdSet fdst_observe, MoaiFdSet mfds )
-{
-	/***
-	 * ここでパートナーとなるsocketをどうするかという問題がある.
-	 * 以下変数名との混同を避けるため、sockの値を具体的に1900として考える.
-	 *
-	 * 問題1.
-	 * このとき、少なくともcinfo->dst_sock_が1900に等しいようなcinfoは
-	 * そのcinfo->dst_sock_の値をZnkSocket_INVALIDに戻しておくべきである.
-	 * さもないと次のシナリオが発生し得る.
-	 * 1. まずx(I)<=>1900(O)という接続が存在したとする.
-	 * 2. 1900(O)のRecvZeroを検知し、1900をclose 
-	 * 3. このときxのcinfo->dst_sock_に1900の値を今仮にそのまま残していたとする.
-	 * 4. I側からの新しい接続y(I)が発生. ZnkSocket_openによりソケットが新規作成されたとする.
-	 *    この新規作成ソケットの値として直前にcloseした1900が再利用される状況は割と頻繁に発生し得る.
-	 * 5. x(I)のcinfo->dst_sock_が想定する接続先と、y(I)のcinfo->dst_sock_が想定する接続先は
-	 *    一般に異なる. にも関わらずこれらのdst_sock_は同じ1900という値となっている.
-	 *    つまり二つのI側ソケットに対し、一つのO側ソケットが対応するという異常状態となる.
-	 * 6. x(I) はO側との接続を失ったExile(浮浪)Socketであるが、まだI(Browser)側とcloseしていない.
-	 *    Browserはこのソケットを新しい接続として再利用することがある.
-	 *    そのとき、x(I)は1900と中継されるが、ほぼ同時にy(I)からの接続が発生した場合:
-	 *    6-1. x(I)からの接続先Hostがy(I)からの接続先Hostと異なる場合、片方の通信先が
-	 *         誤ったものとなってしまい明らかにまずい.
-	 *    6-2. x(I)からの接続先Hostがy(I)からの接続先Hostと同じである場合、一見問題なさそうだが
-	 *         同じ1900というsocketに例えば二つのHTTP GETリクエストなどがほぼ同時に送られる.
-	 *         そうすると1900からrecvされるレスポンスがこれらのリクエストを連結したものとして
-	 *         送り返されてしまう. つまり一回のrecvによって取得されるデータ隗の中にHTTPレスポンス
-	 *         の開始位置が二つ含まれるといったような異常形式が受信され得る.
-	 *         これはレスポンスの終了の検知の解析処理に混乱をもたらす.
-	 *
-	 * 問題2.
-	 * では、cinfo->dst_sock_が1900に等しいようなcinfoに対応するsock(つまり相手となるsock)は
-	 * closeもしておくべきか？
-	 * これはもし相手がI側sockであれば、closeしてもよいし効率のため、接続を維持してもよい. 
-	 * もし相手がO側sockであればそのO側sockはcloseすべきである. これはO側sockが単にネットワークの
-	 * トラフィック上の理由などにより、受信に時間がかかって遅れていた場合、その間に新しいI側からの
-	 * 接続が発生し、これがもしそのまだ接続が生きているO側sockを(接続先Hostが同じだからということで)
-	 * closeせずにそのまま再利用したとすると、次の新しい接続のレスポンスの受信において
-	 * 直前の(もはや何の意味もない)接続のレスポンスの最終部分が前部に連結された状態で受信される
-	 * シナリオが考えられるからである. これはレスポンスの終了の検知の解析処理に混乱をもたらす.
-	 *
-	 * 特にO側へのconnectToServer処理は時間がかかることがある(Blocking Socketの場合は特に)
-	 * O側でも明らかに全受信が完了したことが保障できる状況に限り、接続を維持してもよいのではないか?
-	 * つまりそのような場合にそれをExile Socketとして、次のconnectToServerの機会にそれを
-	 * 再利用する形にして高速化を図りたい.
-	 */
-	char buf[ 1024 ];
-	MoaiLog_printf( "%s : close sock=[%s]\n", label, MoaiIO_makeSockStr(buf,sizeof(buf),sock,true) );
-	/***
-	 * ここでsockに対するmcnをfindし、O_sockを取得しこれをcloseする.
-	 * I_sockの接続については弄くらない.
-	 */
-#if 0
-	if( !MoaiConnection_isListeningSock( sock ) ){
-		MoaiConnection mcn = NULL;
-		if( (mcn = MoaiConnection_find_byOSock( sock )) != NULL ){
-			ZnkSocket I_sock = mcn->I_sock_;
-			ZnkSocket O_sock = sock;
-			ZnkSocket_close( O_sock );
-			MoaiConnection_clear( mcn, mfds );
-			mcn->I_sock_ = I_sock;
-			ZnkFdSet_clr( fdst_observe, O_sock );
-		} else if( (mcn = MoaiConnection_find_byISock( sock )) != NULL ){
-			ZnkSocket I_sock = sock;
-			ZnkSocket O_sock = MoaiConnection_O_sock( mcn );
-			ZnkSocket_close( I_sock );
-			ZnkSocket_close( O_sock );
-			MoaiConnection_erase( mcn, mfds );
-			ZnkFdSet_clr( fdst_observe, I_sock );
-			ZnkFdSet_clr( fdst_observe, O_sock );
-		} else {
-			/* I_sockでもO_sockでもない */
-			/* とりあえずこの場合は単純にcloseするとともにfdst_observeからも確実に除去しておく */
-			ZnkSocket_close( sock );
-			ZnkFdSet_clr( fdst_observe, sock );
-		}
-	}
-#endif
-}
-#endif
 
 /***
  * listening sockを除き、fdst_observe内の全sockをクローズ.
@@ -440,7 +358,6 @@ MoaiIO_closeSocketAll( const char* label, ZnkFdSet fdst_observe, MoaiFdSet mfds 
 bool
 MoaiIO_recvInPtn( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, const char* ptn, size_t* result_size )
 {
-	//ZnkFdSet fdst_observe_r = MoaiFdSet_fdst_observe_r( mfds );
 	const char* p = NULL;
 	size_t  ptn_leng = Znk_strlen( ptn );
 	uint8_t buf[ 4096 ];
@@ -485,7 +402,6 @@ MoaiIO_recvInPtn( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, const char* ptn
 bool
 MoaiIO_recvByPtn( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, const char* ptn, size_t* result_size )
 {
-	//ZnkFdSet fdst_observe_r = MoaiFdSet_fdst_observe_r( mfds );
 	const size_t old_bfr_size = ZnkBfr_size(stream);
 	const char* p = NULL;
 	size_t ptn_leng = Znk_strlen( ptn );
@@ -530,7 +446,6 @@ MoaiIO_recvByPtn( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, const char* ptn
 bool
 MoaiIO_recvBySize( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, size_t size, size_t* result_size )
 {
-	//ZnkFdSet fdst_observe_r = MoaiFdSet_fdst_observe_r( mfds );
 	const size_t old_bfr_size = ZnkBfr_size(stream);
 	uint8_t buf[ 4096 ];
 	int  recv_size;
@@ -568,7 +483,6 @@ MoaiIO_recvBySize( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, size_t size, s
 bool
 MoaiIO_recvByZero( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, size_t* result_size )
 {
-	//ZnkFdSet fdst_observe_r = MoaiFdSet_fdst_observe_r( mfds );
 	uint8_t buf[ 4096 ];
 	int  recv_size;
 	if( result_size ){ *result_size = 0; }

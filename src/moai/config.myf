@@ -56,10 +56,11 @@ ad.doubleclick.net
 #
 @@V config
 parent_proxy = [':0']
-post_confirm = ['on']
+post_confirm = ['off']
 blocking_mode = ['off']
 moai_port = ['8124']
 enable_log_file = ['on']
+enable_log_verbose = ['off']
 acceptable_host = ['LOOPBACK']
 server_name = ['']
 @@.

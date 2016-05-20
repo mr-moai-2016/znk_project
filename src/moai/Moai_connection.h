@@ -40,13 +40,11 @@ struct MoaiConnection_tag {
 	MoaiConnectedCallback cb_func_;
 
 	/***
-	 * Pipeline‰»‚É‘Î‰ž.
+	 * HTTP Pipeline‰»‚É‘Î‰ž.
 	 */
 	ZnkBfr          info_id_list_;
 	ZnkBfr          invoked_info_id_list_;
 	size_t          response_idx_;
-	//ZnkBfr          prev_req_method_list_;
-	//ZnkStrAry       prev_req_urp_list_;
 };
 
 
@@ -119,17 +117,8 @@ MoaiConnection_erase( MoaiConnection mcn, MoaiFdSet mfds );
 
 MoaiInfo*
 MoaiConnection_getInvokedInfo( const MoaiConnection mcn, size_t idx );
-//void
-//MoaiConnection_getPrevRequestMethodStr( const MoaiConnection mcn, char* buf, size_t buf_size );
 size_t
 MoaiConnection_countResponseIdx( MoaiConnection mcn );
-
-#if 0
-const char*
-MoaiConnection_getPrevRequestURP( const MoaiConnection mcn, size_t idx );
-const char*
-MoaiConnection_reportPrevRequestURP( const MoaiConnection mcn );
-#endif
 
 Znk_EXTERN_C_END
 

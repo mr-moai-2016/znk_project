@@ -10,6 +10,8 @@ aladdin.genieesspv.jp
 *.socdm.com
 j.microad.net
 www.assoc-amazon.jp
+www.google-analytics.com
+ad.doubleclick.net
 @@.
 
 # 以下にはPOST時に確認モードを表示したいホストを記述する.
@@ -58,6 +60,7 @@ post_confirm = ['off']
 blocking_mode = ['off']
 moai_port = ['8124']
 enable_log_file = ['on']
+enable_log_verbose = ['off']
 acceptable_host = ['LOOPBACK']
 server_name = ['']
 @@.
@@ -66,6 +69,7 @@ server_name = ['']
 # 以下のホストに接続する場合に外部proxyを使う.
 @@L proxy_apply
 *.2chan.net
+taruo.net
 @@.
 
 # 外部proxyが指定されている場合において

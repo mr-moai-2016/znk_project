@@ -1,7 +1,7 @@
 #ifndef INCLUDE_GUARD__Moai_type_h__
 #define INCLUDE_GUARD__Moai_type_h__
 
-#include <Znk_base.h>
+#include <Znk_stdc.h>
 
 Znk_EXTERN_C_BEGIN
 
@@ -18,6 +18,26 @@ typedef enum {
 	,MoaiHtpType_e_Response
 	,MoaiHtpType_e_NotHttpStart
 } MoaiHtpType;
+
+typedef enum {
+	 MoaiText_Binary=0
+	,MoaiText_HTML
+	,MoaiText_JS
+	,MoaiText_CSS
+} MoaiTextType;
+
+Znk_INLINE const char*
+MoaiTextType_getCStr( MoaiTextType type )
+{
+	const char* str = Znk_TO_STR( MoaiText_Binary );
+	switch( type ){
+	case Znk_BIND_STR( : str=, MoaiText_HTML );  break;
+	case Znk_BIND_STR( : str=, MoaiText_JS );    break;
+	case Znk_BIND_STR( : str=, MoaiText_CSS );   break;
+	default: break;
+	}
+	return str + Znk_strlen_literal( "MoaiText_" );
+}
 
 Znk_EXTERN_C_END
 

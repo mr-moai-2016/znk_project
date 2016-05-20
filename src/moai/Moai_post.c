@@ -14,7 +14,7 @@
 #include <string.h>
 
 
-static bool       st_post_confirm = true;
+static bool st_post_confirm = true;
 
 
 static void

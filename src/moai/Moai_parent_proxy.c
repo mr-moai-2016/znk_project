@@ -5,9 +5,9 @@
 #include <Znk_str_fio.h>
 #include <string.h>
 
-static char       st_proxy_hostname[ 256 ] = "";
-static uint16_t   st_proxy_port = 0;
-static int        st_proxy_indicating_mode = -1;
+static char      st_proxy_hostname[ 256 ] = "";
+static uint16_t  st_proxy_port = 0;
+static int       st_proxy_indicating_mode = -1;
 static ZnkStrAry st_parent_proxys = NULL; 
 
 bool
@@ -90,17 +90,6 @@ MoaiParentProxy_setIndicatingMode( int indicating_mode )
 {
 	st_proxy_indicating_mode = indicating_mode;
 }
-#if 0
-void
-MoaiParentProxy_setParentProxys( ZnkStrAry parent_proxys )
-{
-	if( st_parent_proxys == NULL ){
-		st_parent_proxys = ZnkStrAry_create( true );
-	}
-	ZnkStrAry_copy( st_parent_proxys, parent_proxys );
-	ZnkStrAry_push_bk_cstr( st_parent_proxys, "NONE", Znk_NPOS );
-}
-#endif
 ZnkStrAry
 MoaiParentProxy_getParentProxys( void )
 {

@@ -202,9 +202,7 @@ MoaiFdSet_select( MoaiFdSet mfds, bool* req_before_report, MoaiFdSetFuncArg_Repo
 			fnca_report->func_( mfds, fnca_report->arg_ );
 		}
 	}
-	//MoaiFdSet_printf_fdst_read( mfds );
 	sel_ret = ZnkFdSet_select( maxfd+1, fdst_read, fdst_write, NULL, &mfds->waitval_ );
-	//MoaiFdSet_printf_fdst_read( mfds );
 	/***
 	 * 将来ここにafter_report系の関数をサポートするかもしれない.
 	 */

@@ -10,7 +10,6 @@ MoaiContext_create( void )
 	ctx->text_    = ZnkStr_new( "" );
 	ctx->draft_info_id_ = MoaiInfo_regist( NULL );
 	ctx->draft_info_    = MoaiInfo_find( ctx->draft_info_id_ );
-	//ctx->mod_ary_       = MoaiModuleAry_create( true );
 	return ctx;
 }
 void
@@ -20,7 +19,6 @@ MoaiContext_destroy( MoaiContext ctx )
 		ZnkStr_delete( ctx->msgs_ );
 		ZnkStr_delete( ctx->text_ );
 		MoaiInfo_erase( ctx->draft_info_id_ );
-		//MoaiModuleAry_destroy( ctx->mod_ary_ );
 		Znk_free( ctx );
 	}
 }

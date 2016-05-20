@@ -26,12 +26,16 @@ $CP_ $SRC_DIR/out_dir/libZnk$DL_VER_SFX.so $INST_DIR_/
 #
 $CP_ moai/out_dir/moai $INST_DIR_/
 mkdir -p "$INST_DIR_/doc_root"
-LIST=`ls moai/doc_root`
+LIST=`ls moai/doc_root *.html *.png *.jpg *.gif *.js *.css`
 for i in $LIST
 do
 	$CP_ moai/doc_root/$i $INST_DIR_/doc_root/
+	echo "$CP_ moai/doc_root/$i $INST_DIR_/doc_root/"
 done
-$CP_ moai/*.md $INST_DIR_/
+mkdir -p $INST_DIR_/filters
+$CP_ moai/filters/*.myf $INST_DIR_/filters/
+$CP_ moai/*.md  $INST_DIR_/
+$CP_ moai/*.myf $INST_DIR_/
 
 #
 # setup http_decorator
@@ -60,16 +64,7 @@ install_one()
 install_one -c user_agent.txt   virtual_users $INST_DIR_
 install_one -c screen_size.txt  virtual_users $INST_DIR_
 install_one -c parent_proxy.txt virtual_users $INST_DIR_
-mkdir -p $INST_DIR_/filters
-LIST=`ls virtual_users/filters`
-for i in $LIST
-do
-	install_one -c $i virtual_users/filters $INST_DIR_/filters
-done
-install_one -c config.myf      virtual_users $INST_DIR_
-install_one -c analysis.myf    virtual_users $INST_DIR_
-install_one -c target.myf      virtual_users $INST_DIR_
-install_one -c VirtualUSERS.md virtual_users $INST_DIR_
+$CP_ virtual_users/*.md $INST_DIR_/
 
 #
 # setup plugin

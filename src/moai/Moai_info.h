@@ -1,12 +1,15 @@
 #ifndef INCLUDE_GUARD__Moai_info_h__
 #define INCLUDE_GUARD__Moai_info_h__
 
+#include "Moai_module_ary.h"
+#include "Moai_type.h"
+
 #include <Znk_str.h>
 #include <Znk_str_ary.h>
 #include <Znk_var.h>
 #include <Znk_varp_ary.h>
 #include <Znk_htp_hdrs.h>
-#include "Moai_module_ary.h"
+
 #include <assert.h>
 
 Znk_EXTERN_C_BEGIN
@@ -17,12 +20,6 @@ typedef struct {
 	char buf_[ 16+1 ];
 } MoaiInfoIDStr;
 
-typedef enum {
-	 MoaiText_e_Binary=0
-	,MoaiText_e_HTML
-	,MoaiText_e_JS
-	,MoaiText_e_CSS
-} MoaiTextType;
 
 typedef struct {
 	MoaiInfoID            id_;
