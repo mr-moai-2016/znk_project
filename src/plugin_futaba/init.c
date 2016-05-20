@@ -19,16 +19,6 @@
 #include <limits.h>
 #include <time.h>
 
-
-typedef enum {
-	 FtbSrvType_e_Unknown=0
-	,FtbSrvType_e_may
-	,FtbSrvType_e_jun
-	,FtbSrvType_e_dec
-	,FtbSrvType_e_img
-	,FtbSrvType_e_cgi
-} SrvType;
-
 static bool st_is_dos_path = false;
 
 static unsigned int
@@ -325,17 +315,17 @@ setMurmurhash32ToVar( ZnkVarp varp, const char* src_key )
 	ZnkVar_set_val_Str( varp, buf, Znk_strlen(buf) );
 }
 
-static ZnkVarp
+Znk_INLINE ZnkVarp
 refPostVar( ZnkMyf myf, const char* var_name )
 {
 	return ZnkMyf_refVar( myf, "post_vars", var_name );
 }
-static ZnkVarp
+Znk_INLINE ZnkVarp
 refCookieVar( ZnkMyf myf, const char* var_name )
 {
 	return ZnkMyf_refVar( myf, "cookie_vars", var_name );
 }
-static ZnkVarp
+Znk_INLINE ZnkVarp
 refUserAgent( ZnkMyf myf )
 {
 	return ZnkMyf_refVar( myf, "header_vars", "User-Agent" );
@@ -347,13 +337,13 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 {
 	bool result = false;
 
-	ZnkStr       caco     = ZnkStr_new( "" );
-	ZnkStr       posttime = ZnkStr_new( "" );
-	ZnkStr       thre_uri = ZnkStr_new( "" );
-	ZnkStrAry   line_ary = ZnkStrAry_create( true );
+	ZnkStrAry  line_ary = ZnkStrAry_create( true );
+	ZnkVarpAry cookie   = NULL;
+	ZnkVarp    varp     = NULL;
+	ZnkStr     caco     = ZnkStr_new( "" );
+	ZnkStr     posttime = ZnkStr_new( "" );
+	ZnkStr     thre_uri = ZnkStr_new( "" );
 
-	ZnkVarp      varp = NULL;
-	ZnkVarpAry  cookie = NULL;
 	/***
 	 * user_agent.txtÇÃì«Ç›çûÇ›Ç…é∏îsÇµÇΩèÍçáÇÕà»â∫ÇÃílÇ™égÇÌÇÍÇÈ.
 	 */
