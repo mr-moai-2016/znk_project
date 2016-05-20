@@ -682,7 +682,7 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
 			case ZnkHtpReqMethod_e_POST:
 			case ZnkHtpReqMethod_e_HEAD:
 				if( ZnkS_eq( arg_tkns[ 1 ], "200" ) ){
-					MoaiLog_printf( "  body_info : is_chunked=[%s] is_gzip=[%s] txt_type=[%d]\n",
+					MoaiLog_printf( "  body_info : is_chunked=[%s] is_gzip=[%s] txt_type=[%s]\n",
 							body_info->is_chunked_ ? "true" : "false",
 							body_info->is_gzip_    ? "true" : "false",
 							MoaiTextType_getCStr( body_info->txt_type_ ) );
