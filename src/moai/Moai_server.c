@@ -685,7 +685,7 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
 					MoaiLog_printf( "  body_info : is_chunked=[%s] is_gzip=[%s] txt_type=[%d]\n",
 							body_info->is_chunked_ ? "true" : "false",
 							body_info->is_gzip_    ? "true" : "false",
-							body_info->txt_type_ );
+							MoaiTextType_getCStr( body_info->txt_type_ ) );
 				}
 				break;
 			default:
