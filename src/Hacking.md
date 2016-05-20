@@ -93,12 +93,70 @@
   <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
+## <a name="moai">moai–{‘Ì‚Ìƒ\[ƒXƒR[ƒh‚Ì\¬‚É‚Â‚¢‚Ä
+-----------------------------------
+ˆÈ‰º‚ÉMoai‚ð\¬‚·‚éƒtƒ@ƒCƒ‹‚ÌŠT—v‚ðŽ¦‚·.
+  <ul>
+  <li>Moai_connection<br>
+    MoaiConnectionŒ^‚Æ‚»‚ÌŽõ–½‚ðŠÇ—‚·‚é.
+	MoaiConnection‚Æ‚ÍAProxy‚É‚¨‚¯‚éI‘¤‚ÆO‘¤‚Ìƒ\ƒPƒbƒg‚ðƒyƒA‚ÉŽ‚¿A‚»‚Ì‘¼‚»‚ê‚ÉŠÖŒW‚·‚éî•ñ‚ð•ÛŽ‚·‚é\‘¢‘Ì‚Å‚ ‚é.
+    ‚±‚±‚Å I‘¤‚Æ‚ÍHTTPƒŠƒNƒGƒXƒg‚Ì”­sŒ³‚Å‚ ‚èAO‘¤‚Æ‚Í‚»‚ÌƒŠƒNƒGƒXƒg‚ð‚»‚Ì‚Ü‚Ü(‚ ‚é‚¢‚Í‰ÁH‚µ‚Ä)‘—M‚·‚éæ‚Å‚ ‚é.
+    ‚Ü‚½O‘¤‚©‚ç‚»‚ÌƒŠƒNƒGƒXƒg‚É‘Î‚·‚é‰ž“š(ƒŒƒXƒ|ƒ“ƒX)‚ª•Ô‚³‚êAI‘¤‚Ö‚»‚ê‚ð‚»‚Ì‚Ü‚Ü(‚ ‚é‚¢‚Í‰ÁH‚µ‚Ä)‘—M‚·‚éŒ`‚É‚È‚é.
+	TCPƒRƒlƒNƒVƒ‡ƒ“ˆ—‚ÉŠÖ‚·‚éŠÇ—‚âƒR[ƒ‹ƒoƒbƒN‚È‚Ç‚à‚±‚±‚Å•ÛŽ‚·‚é.
+  </li>
+  <li>Moai_info<br>
+    MoaiInfoŒ^‚Æ‚»‚ÌŽõ–½‚ðŠÇ—‚·‚é.
+    MoaiInfo‚Æ‚ÍHTTP‚ÉŠÖ‚·‚é•K—v‚Èî•ñ‚ð•ÛŽ‚·‚éŒ^‚Å‚ ‚é.
+	‚Ü‚½AMoaiInfoID‚Æ‚¢‚¤64bit®”‚É‚æ‚èA‚±‚ÌMoaiInfoŒ^–{‘Ì‚ÖƒAƒNƒZƒX‚·‚é‚±‚Æ‚ª‚Å‚«‚é‚æ‚¤‚È‹@\‚ð”õ‚¦‚é.
+	(ˆêŽí‚Ì˜A‘z”z—ñ‚Å‚ ‚é)
+  </li>
+  <li>Moai_io_base<br>
+    ZnkSocket‚ÌƒNƒ[ƒY‚â‚»‚ê‚ç‚ÉŠÖ‚·‚é•ñ—pƒƒbƒZ[ƒW‚Ìì¬•â•A
+	textƒf[ƒ^‚ÌsendAƒpƒ^[ƒ“‚âƒTƒCƒY‚ð‰Á–¡‚µ‚½recv‚ðs‚¤.
+  </li>
+  <li>Moai_post_vars<br>
+    multitype/form-dataŒ`Ž®‚ÅŠi”[‚³‚ê‚½HTTP body‚ðƒp[ƒX‚·‚é.
+  </li>
+  <li>Moai_context<br>
+    Moai_server“à‚É‚¨‚¯‚éscanHttpFirst‚©‚çŽn‚Ü‚éˆê˜A‚Ìˆ—‚ÉŽg‚í‚ê‚é•Ï”ŒQ‚ðŠi”[‚µ‚½‚à‚Ì.
+  </li>
+  <li>Moai_module<br>
+    filterƒtƒ@ƒCƒ‹(myf)‚âplugin(dll/so)‚È‚Ç‚ÌŠÇ—‚âƒ[ƒhAŠÖ”‚ÌŽÀs‚È‚Ç‚ðs‚¤.
+  </li>
+  <li>Moai_post<br>
+    POST•Ï”‚âCookie•Ï”‚ÌƒtƒBƒ‹ƒ^ƒŠƒ“ƒO‚âpost_confirm—pƒƒbƒZ[ƒW‚Ì\’z‚È‚Ç‚ðs‚¤.
+  </li>
+  <li>Moai_server<br>
+    ƒT[ƒoˆ—‚ÌƒRƒA•”•ª‚Å‚ ‚èAselectƒƒCƒ“ƒ‹[ƒv‚ª‘¶Ý‚·‚é.
+  </li>
+  <li>Moai_log<br>
+    ƒƒOˆ—.
+  </li>
+  <li>Moai_fdset<br>
+    selectƒCƒxƒ“ƒg‚ÉŠÖ‚·‚ésocket‚Ì“o˜^AŠÏŽ@(Observe)—p.
+  </li>
+  <li>Moai_parent_proxy<br>
+    ŠO•”ƒvƒƒLƒV(parent_proxy)‚ÉŠÖ‚·‚éˆ—.<br>
+	parent_proxy.txt‚Ì“Ç‚Ýž‚Ý‚à‚±‚±‚Ås‚í‚ê‚é.
+  </li>
+  <li>Moai_myf<br>
+    config.myf, target.myf, analysis.myf‚Ìƒ[ƒh‚ÆŠÇ—.
+  </li>
+  <li>Moai_enc_util<br>
+    URLƒGƒ“ƒR[ƒfƒBƒ“ƒO‚¨‚æ‚ÑƒfƒR[ƒfƒBƒ“ƒO.
+  </li>
+  <li>main<br>
+    –Ü˜_main‚ª‘¶Ý‚·‚éƒGƒ“ƒgƒŠ[•”‚Å‚ ‚é.
+  </li>
+  </ul>
+
+
 ## <a name="libZnk">libZnk‚É‚Â‚¢‚Ä
 -----------------------------------
 ‚±‚ÌŠî–{ƒ‰ƒCƒuƒ‰ƒŠ‚Í‚±‚ÌƒvƒƒWƒFƒNƒg‚É‘¶Ý‚·‚é‘S‚Ä‚ÌCƒR[ƒh‚É‚¨‚¢‚ÄŽg‚í‚ê‚Ä‚¢‚é.
 ‚æ‚Á‚Ä‚±‚ê‚Ì‰ðà‚ð”²‚«‚É‚·‚é‚í‚¯‚É‚Í‚¢‚©‚È‚¢‚Ì‚Å‚ ‚é‚ªA‚±‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚ÌŽd—l‚ð
 Ú‚µ‚­‰ðà‚µ‚Ä‚¢‚½‚ç‚»‚ê‚±‚»Ž†–Ê‚ÆŽžŠÔ‚ª‚¢‚­‚ç‚ ‚Á‚Ä‚à‘«‚ç‚È‚¢‚Ì‚ÅA
-‚Æ‚è‚ ‚¦‚¸[libZnk/README][1]‚É–Ò—ó‚ÉŽè”²‚«‚ÈŠT—v‚ð‘‚¢‚Ä‚¨‚¢‚½.
+‚Æ‚è‚ ‚¦‚¸[libZnk/README][1]‚É**–Ò—ó‚ÉŽè”²‚«‚È**ŠT—v‚ð‘‚¢‚Ä‚¨‚¢‚½.
 ‚ ‚Æ‚ÍlibZnk‚Ìƒ\[ƒXƒR[ƒh‚âƒRƒƒ“ƒg‚È‚Ç‚ð“K‹XŽQÆ‚µ‚Ä‘Õ‚«‚½‚¢.
 ŽžŠÔ‚ª‚ ‚ê‚Î‚»‚Ì‚¤‚¿Ú×‚ÈƒhƒLƒ…ƒƒ“ƒg‚à—pˆÓ‚µ‚½‚¢‚Æ‚±‚ë‚Å‚ ‚é‚ªA‚¢‚Â‚É‚È‚é‚©‚Í–¢’è‚Å‚ ‚é.
 
@@ -119,6 +177,7 @@ Moaiƒvƒ‰ƒOƒCƒ“‚Å‚ÍˆÈ‰º‚Ìƒ_ƒCƒiƒ~ƒbƒNƒ[ƒh‰Â”\‚ÈƒOƒ[ƒoƒ‹ŠÖ”‚ð C Œ¾Œê‚É‚æ‚èŽÀ‘
     @param ftr_send:
      ‰Šú‰»‘ÎÛ‚Æ‚È‚éƒtƒBƒ‹ƒ^‚Ö‚ÌŽQÆ‚Å‚ ‚é.
      plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ðŽQÆ‚¨‚æ‚Ñ•ÏX‚µ‚Ä‚©‚Ü‚í‚È‚¢.
+	 ‚±‚ê‚É‚æ‚èAƒwƒbƒ_Aƒ|ƒXƒg•Ï”ACookie•Ï”‚Ì“Á•Ê‚È‰Šú‰»(‰¼‘z‰»‚âƒ‰ƒ“ƒ_ƒ}ƒCƒY‰»)‚ª‰Â”\‚Æ‚È‚é‚¾‚ë‚¤.
     
     @param parent_proxy:
      Moai‚ªŒ»ÝŽg—p’†‚ÌŠO•”ƒvƒƒLƒV‚ªhostname:port‚ÌŒ`Ž®‚ÅÝ’è‚³‚ê‚Ä‚¢‚é.
@@ -140,26 +199,15 @@ Moaiƒvƒ‰ƒOƒCƒ“‚Å‚ÍˆÈ‰º‚Ìƒ_ƒCƒiƒ~ƒbƒNƒ[ƒh‰Â”\‚ÈƒOƒ[ƒoƒ‹ŠÖ”‚ð C Œ¾Œê‚É‚æ‚èŽÀ‘
     @param ftr_send:
      ˆ—‘ÎÛ‚Æ‚È‚éƒtƒBƒ‹ƒ^‚Ö‚ÌŽQÆ‚Å‚ ‚é.
      plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ðŽQÆ‚¨‚æ‚Ñ•ÏX‚µ‚Ä‚©‚Ü‚í‚È‚¢.
+	 ‚±‚ê‚É‚æ‚èAƒwƒbƒ_Aƒ|ƒXƒg•Ï”ACookie•Ï”‚Ì‚³‚ç‚È‚é_“î‚ÈƒtƒBƒ‹ƒ^ƒŠƒ“ƒO‚ª‰Â”\‚Æ‚È‚é‚¾‚ë‚¤.
 
 
-  bool on_response_hdr( ZnkMyf ftr_send, ZnkVarpAry hdr_vars );
-
-    targetŒÅ—L‚ÌƒŒƒXƒ|ƒ“ƒXƒwƒbƒ_‚ðŽó‚¯Žæ‚Á‚½ê‡‚É‚¨‚¯‚éˆ—‚ðs‚¤.
-    ƒŒƒXƒ|ƒ“ƒX‚ðŽó‚¯Žæ‚Á‚½ê‡‚É–ˆ‰ñŒÄ‚Ño‚³‚ê‚é.
-
-    ftr_send:
-    ˆ—‘ÎÛ‚Æ‚È‚éƒtƒBƒ‹ƒ^‚Ö‚ÌŽQÆ‚Å‚ ‚é.
-    ‚±‚ê‚ª‚Ç‚¤‰ÁH‚³‚ê‚é‚Ì‚©‚Í‚ ‚È‚½‚ª‚±‚ÌŠÖ”‚ð‚Ç‚¤ŽÀ‘•‚·‚é‚©‚É‚æ‚é.
-
-    hdr_vars:
-    ˆ—‘ÎÛ‚Æ‚È‚éƒŒƒXƒ|ƒ“ƒXƒwƒbƒ_‚Ö‚ÌŽQÆ‚Å‚ ‚é.
-    ‚±‚ê‚ª‚Ç‚¤‰ÁH‚³‚ê‚é‚Ì‚©‚Í‚ ‚È‚½‚ª‚±‚ÌŠÖ”‚ð‚Ç‚¤ŽÀ‘•‚·‚é‚©‚É‚æ‚é.
-
-
-  bool on_response( ZnkMyf ftr_send, ZnkVarpAry hdr_vars, ZnkStr text );
+  bool on_response( ZnkMyf ftr_send,
+  		ZnkVarpAry hdr_vars, ZnkStr text, const char* req_urp );
 
     targetŒÅ—L‚ÌƒŒƒXƒ|ƒ“ƒX‚ðŽó‚¯Žæ‚Á‚½ê‡‚É‚¨‚¯‚éˆ—‚ðs‚¤.
     ƒŒƒXƒ|ƒ“ƒX‚ðŽó‚¯Žæ‚Á‚½ê‡‚É–ˆ‰ñŒÄ‚Ño‚³‚ê‚é.
+	text(‚±‚ê‚ÍHTML,CSS,Javascript‚È‚Ç‚Å‚ ‚Á‚½‚è‚·‚é)‚ð‰ÁH‚·‚é‚±‚Æ‚ªŽå‚È–Ú“I‚Æ‚È‚é‚¾‚ë‚¤.
 
     @param ftr_send:
      ˆ—‘ÎÛ‚Æ‚È‚éƒtƒBƒ‹ƒ^‚Ö‚ÌŽQÆ‚Å‚ ‚é.
@@ -214,7 +262,7 @@ Moaiƒvƒ‰ƒOƒCƒ“‚Å‚ÍˆÈ‰º‚Ìƒ_ƒCƒiƒ~ƒbƒNƒ[ƒh‰Â”\‚ÈƒOƒ[ƒoƒ‹ŠÖ”‚ð C Œ¾Œê‚É‚æ‚èŽÀ‘
         prim.r64_ = 0.123; /* “à•”‚ªŽÀ”Œ^‚È‚çŽÀ”‚ðƒZƒbƒg‚·‚é‚È‚Ç */
       }
 
-      ZnkPrim_d( &prim, ZnkPrim_e_Int ); /* ”jŠü */
+      ZnkPrim_dispose( &prim ); /* ”jŠü */
     }
     ƒCƒ“ƒ^[ƒtƒF[ƒX‚ÍZnk_prim.h ‚É‚æ‚Á‚Ä’ñ‹Ÿ‚³‚ê‚é.
 
@@ -227,7 +275,7 @@ Moaiƒvƒ‰ƒOƒCƒ“‚Å‚ÍˆÈ‰º‚Ìƒ_ƒCƒiƒ~ƒbƒNƒ[ƒh‰Â”\‚ÈƒOƒ[ƒoƒ‹ŠÖ”‚ð C Œ¾Œê‚É‚æ‚èŽÀ‘
     ZnkVar_name_cstr( ZnkVar* var ) ‚Í•Ï”‚Ì–¼‘O‚ðC•¶Žš—ñ‚Æ‚µ‚ÄŽæ“¾‚·‚é.
     ZnkVar_set_val_Str ‚Í•¶Žš—ñŒ^‚Ì•Ï”‚Æ‚µ‚Ä•Ï”‚ð‰Šú‰»‚·‚é.
     ZnkVar_cstr( ZnkVar* var ) ‚Í var ‚ª•¶Žš—ñŒ^•Ï”‚Ìê‡‚ÉŒÀ‚èŽg—p‚Å‚«‚éŠÈˆÕŠÖ”‚Å
-    ‚»‚Ì’l‚ðC•¶Žš—ñ‚Æ‚µ‚ÄŽæ“¾‚Å‚«‚é.
+    ‚»‚Ì•Ï”‚Æ‚µ‚Ä‚Ì’l‚ðC•¶Žš—ñ‚Æ‚µ‚ÄŽæ“¾‚Å‚«‚é.
     ƒCƒ“ƒ^[ƒtƒF[ƒX‚ÍZnk_var.h ‚É‚æ‚Á‚Ä’ñ‹Ÿ‚³‚êAZnk_var.c‚ª‚»‚ÌŽÀ‘••”‚Å‚ ‚é.
 
   ZnkVarpAry
