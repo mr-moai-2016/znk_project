@@ -46,7 +46,8 @@
 ## <a name="cooking">Cooking? クッキーって奴っすか？
 -----------------------------------
 ※本製品は観賞用であり、食べられません.
-  ![screenshot](../imgs/do_not_eat.png)
+
+  ![screenshot](./imgs/do_not_eat.png)
 
   <a href="#user-content-index">目次へ戻る</a>
 
