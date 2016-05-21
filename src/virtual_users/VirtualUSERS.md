@@ -7,8 +7,8 @@
 * [何ができるのか？](#pos2)
 * [Web閲覧時に送信される情報とは何なのか？](#pos3)
 * [MoaiのVirtual USERS機能を使う](#pos4)
-* [futabaプラグイン : ランダマイズの候補として使用するtxtファイルについて](#txt_for_randomize)
-* [futabaプラグイン : 手動で偽装を行った場合(参考)](#futaba_note)
+* [ランダマイズの候補として使用するtxtファイルについて](#txt_for_randomize)
+* [ふたばにて手動で偽装を行う場合(参考)](#futaba_note)
 * [その他の情報](#pos5)
 
 ## <a name="pos1">MoaiのVirtual USERS機能とは？
