@@ -25,6 +25,79 @@ MoaiPostVars_regist( ZnkVarpAry vars, const char* name, const char* filename,
 	return varp;
 }
 
+
+Znk_INLINE bool
+isASCII( uint32_t c ) { return (bool)( c < 0x80 ); }
+Znk_INLINE bool
+SJIS_isHankakuKatakana( uint8_t b ){ return ( b >= 0xa1 && b <= 0xdf ); }
+Znk_INLINE bool
+SJIS_isSecondByte( const char* base, const char* p )
+{
+	int lbc = 0;
+	while( p > base ){
+		--p;
+		if( isASCII(*p) ){
+			/* second or ascii */
+			break;
+		} else if( SJIS_isHankakuKatakana(*p) ){
+			/* second or hankaku_katakana */
+			break;
+		} else {
+			/* second or first */
+		}
+		++lbc;
+	}
+	return (bool)(lbc & 1);
+}
+static const char*
+getTail_byDOS( ZnkStr filename )
+{
+	const char* begin = ZnkStr_cstr( filename );
+	size_t      size  = Znk_strlen( begin );
+	char*       p     = Znk_memrchr( begin, '\\', size );
+	while( p ){
+		if( SJIS_isSecondByte( begin, p ) ){
+			size = p - begin;
+			p = Znk_memrchr( begin, '\\', size );
+		} else {
+			/* p is really separator. */
+			return p+1;
+		}
+	}
+	/* separator is not found */
+	return begin;
+}
+static const char*
+getTail_byUNIX( ZnkStr filename )
+{
+	const char* begin = ZnkStr_cstr( filename );
+	size_t      size  = Znk_strlen( begin );
+	char*       p     = Znk_memrchr( begin, '/', size );
+	if( p ){
+		/* p is really separator. */
+		return p+1;
+	}
+	/* separator is not found */
+	return begin;
+}
+static void
+eraseHeadOfPath( ZnkStr filename )
+{
+	const char* begin = ZnkStr_cstr( filename );
+	const char* p     = getTail_byDOS( filename );
+	const char* q     = getTail_byUNIX( filename );
+	if( p < q ){
+		ZnkStr_erase( filename, 0, q-begin );
+	} else if( p > q ){
+		ZnkStr_erase( filename, 0, p-begin );
+	} else {
+		if( p != begin ){
+			ZnkStr_erase( filename, 0, p-begin );
+		}
+	}
+}
+
+
 bool
 MoaiPostVars_regist_byHttpBody( ZnkVarpAry vars,
 		const char* boundary, size_t boundary_leng,
@@ -84,6 +157,7 @@ MoaiPostVars_regist_byHttpBody( ZnkVarpAry vars,
 				if( *p == '"' ){ ++p; } else { assert(0); } /* skip quote */
 				q = Znk_memstr_literal( p, r-p, "\"" );
 				ZnkStr_assign( varp->filename_, 0, (char*)p, q-p );
+				eraseHeadOfPath( varp->filename_ ); /* remove fullpath on IE */
 				p += q-p+1; /* after end quote */
 				is_upfile = true;
 			}
