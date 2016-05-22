@@ -1,38 +1,32 @@
 # znk_project
 ===================================
 
-This is Japanese overview. English version is [here][7].
-
-## 概要 znk_projectとは?
+## Overview
 -----------------------------------
 
-"znk_project" はフリーかつオープンソースなアプリケーションおよびライブラリを開発/提供するリポジトリです.
-これらはすべてlibZnkという基本ライブラリによってWindows またはLinux向けに開発されたものであります.
+"znk_project" is a repository of free and open source applications and libraries by based on libZnk
+developed for Windows or Linux. 
 
-現在このリポジトリで提供しておりますものは以下の通り:
+This repository have following :  
+* libZnk : Basically C/C++ library.  
+  Japanese Document is [here][1].
+* Moai: Yet another Local proxy engine.  
+  Japanese Document is [here][2].
+  Japanese Reference Manual is [here][3].
+* Moai/Virtual USERS : How to virtualize notice board users on Moai engine.  
+  Japanese Document is [here][4].
+* http_decorator : Simple http client.
+...etc  
 
-* libZnk : 基本的なC/C++用ライブラリ  
-  ドキュメントは[こちら][1]です.
-* Moai: また一つ生まれた(ばかりの)ローカルプロキシエンジン  
-  ドキュメントは[こちら][2]です.
-  リファレンスマニュアルは[こちら][3]です.
-* Moai/Virtual USERS機能: Moaiを使って掲示板のユーザ情報を仮想化する方法について  
-  ドキュメントは[こちら][4]です.
-* http_decorator : シンプルなHTTPクライアント.  
-...などなど 
+Current version is 1.0.  
+Japanese Release Note is [here][5]
 
-これらのアプリケーションおよびライブラリのソースコードはVC(Ver6.0からVer12.0)、MinGW、(linux上の)gccなど向けに
-書かれたものです. コンパイル方法に関しては[こちら][6]をご覧ください.
+These applications and librarys source codes are written and developed for VC(Ver6.0-Ver12.0),
+MinGW, gcc(on linux) and so on.  
+Japanese HowToCompile Document is [here][6].
 
 Download & Support site:  
 https://github.com/mr-moai-2016/znk_project
-
-
-## What's new?
------------------------------------
-
-* 2016/05/21 : 正式バージョン1.0がリリースされました.  
-  リリースノートは[こちら][5]です.
 
 
 ## License
@@ -75,4 +69,3 @@ from the use of this software.
 [4]: https://github.com/mr-moai-2016/znk_project/blob/master/src/virtual_users/VirtualUSERS.md
 [5]: https://github.com/mr-moai-2016/znk_project/blob/master/src/ReleaseNote.md
 [6]: https://github.com/mr-moai-2016/znk_project/blob/master/src/HowToCompile.md
-[7]: https://github.com/mr-moai-2016/znk_project/blob/master/README_en.md
