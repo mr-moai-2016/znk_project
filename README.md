@@ -3,10 +3,11 @@
 
 This is Japanese overview. English version is [here][7].
 
-## 概要 znk_projectとは?
+## znk_projectとは?
 -----------------------------------
 
-"znk_project" はフリーかつオープンソースなアプリケーションおよびライブラリを開発/提供するリポジトリです.
+"znk_project" は我々**日本HTTP研究所(通称NHK)**によるフリーかつオープンソースなアプリケーション
+およびライブラリを開発/提供するリポジトリです.
 これらはすべてlibZnkという基本ライブラリによってWindows またはLinux向けに開発されたものであります.
 
 現在このリポジトリで提供しておりますものは以下の通り:
@@ -18,15 +19,11 @@ This is Japanese overview. English version is [here][7].
   リファレンスマニュアルは[こちら][3]です.
 * Moai/Virtual USERS機能: Moaiを使って掲示板のユーザ情報を仮想化する方法について  
   ドキュメントは[こちら][4]です.
-* http_decorator : シンプルなHTTPクライアント.  
+* http_decorator : ~~マスコット~~シンプルなHTTPクライアント.  
 ...などなど 
 
 これらのアプリケーションおよびライブラリのソースコードはVC(Ver6.0からVer12.0)、MinGW、(linux上の)gccなど向けに
 書かれたものです. コンパイル方法に関しては[こちら][6]をご覧ください.
-
-Download & Support site:  
-https://github.com/mr-moai-2016/znk_project
-
 
 ## What's new?
 -----------------------------------
@@ -35,38 +32,43 @@ https://github.com/mr-moai-2016/znk_project
   リリースノートは[こちら][5]です.
 
 
-## License
+## <a name="license">ライセンス
 -----------------------------------
 
-zlib 1.2.3 :   
-  Copyright (C) 1995-2005 Jean-loup Gailly and Mark Adler  
-
-  Permission is granted to anyone to use this software for any purpose,
-  including commercial applications, and to alter it and redistribute it
-  freely, subject to the following restrictions:
-
-  1. The origin of this software must not be misrepresented; you must not
-     claim that you wrote the original software. If you use this software
-     in a product, an acknowledgment in the product documentation would be
-     appreciated but is not required.
-  2. Altered source versions must be plainly marked as such, and must not be
-     misrepresented as being the original software.
-  3. This notice may not be removed or altered from any source distribution.
-
-  [NOTE]  
-  libZnk use zlib as statically sub-object.
-  zlib in here, its source code itself is not at all modified from its original version,
-  but accessory of example and document files are deleted except for the license terms
-  (README) to avoid redundancy.
-
-Otherwise all the code :  
   Copyright (c) Nippon HTTP Kenkyujo(NHK)
-  Licensed under the NYSL( see http://www.kmonos.net/nysl/index.en.html for detail ).
+
+  このリポジトリで提供されるツールおよびライブラリは基本的にはすべて
+  NYSL(煮るなり焼くなり好きにしろ)というライセンスで提供されます.
+  ( NYSLについては http://www.kmonos.net/nysl を参照. )  
+
+  NYSLはパブリックドメインとほぼ同義で、例えば以下のことが自由に行えます.
+  またこれらを行うにあたって我々に許可をとる必要は全くないし、我々作者の名前や
+  このリポジトリ由来であることを明記する必要もありません.(明記してもよいけれども)
+  <ul>
+  <li>再配布などが自由に行える.</li>
+  <li>商用/非商用に関わらずあなたの開発/使うツールなどで自由に利用できる.
+      (勿論、某ライセンスのようなソースコード公開の義務なんてものはありません).</li>
+  <li>改造などしてあなたの名前で公開できる.
+      (ほんのちょっとの改造であっても全然構いません).</li>
+  </ul>
+
+  まあ要するに一言で言えば「なんでもOK好きにしろ」ということです.
+
+  ただし、libZnkにおいてはzlibというライブラリ(このライセンスも相当に緩いものですが)が
+  そのまま丸ごと含まれており、その部分においてのみzlibのライセンスに従うものとします.
 
 
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising
-from the use of this software.
+## <a name="as_is">免責事項
+-----------------------------------
+
+  本ソフトウェアは「現状のまま」で、明示であるか暗黙であるかを問わず、
+  何らの保証もなく提供されます. 本ソフトウェアの使用によって生じるいかなる損害についても、
+  作者は一切の責任を負わないものとします.
+
+  This software is provided 'as-is', without any express or implied warranty.
+  In no event will the authors be held liable for any damages arising
+  from the use of this software.
+
 
 
 [1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/libZnk/README.md
