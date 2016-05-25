@@ -280,7 +280,7 @@ makeDirectory( const char* dir )
 		 * 既に存在する場合はエラーメッセージとして出力させない.
 		 */
 		if( last_err != ERROR_ALREADY_EXISTS ){
-			printWinLastError();
+			printWinLastError( last_err );
 		}
 	}
 	return result;
