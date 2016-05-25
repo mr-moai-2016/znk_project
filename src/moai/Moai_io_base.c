@@ -512,3 +512,48 @@ MoaiIO_recvByZero( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, size_t* result
 	return true;
 }
 
+size_t
+MoaiIO_recvByPtn2( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, const char* ptn )
+{
+	const size_t old_bfr_size = ZnkBfr_size(stream);
+	const char*  p            = NULL;
+	size_t       ptn_leng     = Znk_strlen( ptn );
+	uint8_t      buf[ 4096 ];
+	int          recv_size;
+	size_t       result_size = 0;
+	while( true ){
+		p = Znk_memmem( ZnkBfr_data(stream)+old_bfr_size, ZnkBfr_size(stream)-old_bfr_size, ptn, ptn_leng );
+		if( p ){
+			/* found */
+			uint8_t* begin = ZnkBfr_data( stream )+old_bfr_size;
+			uint8_t* end   = (uint8_t*)p + ptn_leng;
+			result_size    = end - begin;
+			break;
+		}
+		recv_size = ZnkSocket_recv( sock, buf, sizeof(buf) );
+		if( recv_size == 0 ){
+			/* RecvZero */
+			MoaiLog_printf( "  MoaiIO_recvByPtn2 : RecvZero\n" );
+			/* OK : この関数ではこれは成功終了の一種であるとみなし. ここまでrecvしたサイズを返す */
+			return ZnkBfr_size( stream ) - old_bfr_size;
+		}
+		if( recv_size < 0 ){
+			char errmsg_buf[ 4096 ];
+			int  err_code = ZnkNetBase_getLastErrCode();
+			ZnkStr msgs = ZnkStr_new( "" );
+			ZnkNetBase_getErrMsg( errmsg_buf, sizeof(errmsg_buf), err_code );
+			MoaiIO_addAnalyzeLabel( msgs, sock, recv_size, "recvByPtn" );
+			ZnkStr_addf( msgs, "RecvError.\n" );
+			ZnkStr_addf( msgs, "  errmsg=[%s]\n", errmsg_buf );
+			MoaiLog_printf( "  MoaiIO_recvByPtn2 : [%s]", ZnkStr_cstr( msgs ) );
+			ZnkStr_delete( msgs );
+			MoaiIO_close_ISock( "  MoaiIO_recvByPtn2 : Error", sock, mfds );
+			MoaiIO_close_OSock( "  MoaiIO_recvByPtn2 : Error", sock, mfds );
+			/* Error */
+			return Znk_NPOS;
+		}
+		ZnkBfr_append_dfr( stream, buf, recv_size );
+	}
+	/* OK */
+	return result_size;
+}

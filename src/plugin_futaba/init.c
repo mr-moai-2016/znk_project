@@ -369,7 +369,7 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 	 * 生成しておくほうがなにかと確実ではある.
 	 * 手動で好みのリストを作成していってもよいし、 巷にあるUser-Agentジェネレータを
 	 * 使うのも一つの手である.
-	 * (一応、USERSの次期バージョンではそのようなジェネレータの追加も予定してはいる).
+	 * (一応、znk_projectではそのようなジェネレータの追加も予定してはいる).
 	 *
 	 * cacoコード取得のためにcachemt7.phpをGETするのであるが、この際にUser-Agentの
 	 * 情報も送られる. この値をcachemt7.phpがチェックしている可能性も否定はできない.
@@ -431,10 +431,9 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 	}
 
 	/***
-	 * この変数は現状では、古いcacoコードの値を出来るだけ残すことを狙いとして
-	 * いるものと思われる. 実際、Cookieやキャッシュをクリアしたとしても
-	 * localStorage(futabapt)の値が消去されていない場合は、古いcaco値がここに
-	 * 格納される仕組みとなっている.
+	 * この変数は現状では、古いcacoコードの値を出来るだけ残すことを狙いとしているものと思われる.
+	 * 実際、Cookieやキャッシュをクリアしたとしても localStorage(futabapt)の値が消去されていない場合は、
+	 * 古いcaco値がここに格納される仕組みとなっている.
 	 * おそらく、pthcの値が変わりpthbには以前のcacoコード値がそのまま残っていた場合に
 	 * futaba.php側でのユーザ特定アルゴリズムはpthcよりpthbの値を優先するものと思われる.
 	 *
@@ -450,7 +449,7 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 	 * この変数は実際にはPOST変数群の中に存在せず、localStorageにこの名前で存在する.
 	 * これは初回のPOST時にcacoコード値によって初期化される.
 	 * そして２回目のPOSTにおいて参照され、pthb値として使われる.
-	 * ここでは、on_post_before の呼び出しによってこの挙動を実現するものとする.
+	 * ここでは、on_post の呼び出しによってこの挙動を実現するものとする.
 	 *
 	 * とりあえずこのshuffle処理においてはlocalStorageの完全消去をシミュレートすればよい.
 	 * つまり空値を設定しておけばよい.
@@ -486,8 +485,7 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 	 *
 	 * flrvと同様にランダム化すればよいが、異なる値となるよう注意する.
 	 * (この両者が同じ値となる確率はゼロではないにしても天文学的に低く、
-	 * つまり事実上明らかに異常であり、このことはfutaba.php側でも瞬時に
-	 * 判定可能である)
+	 * つまり事実上明らかに異常であり、このことはfutaba.php側でも瞬時に判定可能である)
 	 * 以下では仕様に忠実にkey文字列にUser-Agent部のみを含めていない.
 	 */
 	varp = refPostVar( myf, "flvv" );
@@ -503,9 +501,9 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 	 * screen_size.txtには我々が自由に値を記述することができるが
 	 * 実際に有り得る値を記述しておくことをお勧めする.
 	 *
-	 * デフォルトで付属しているscreen_size.txtを修正することなくそのまま使っても
-	 * なんら問題なかろう. 大多数のユーザはここに記載されている解像度のいずれかを
-	 * 使用しているはずである(それでももし過不足を感じるなら自由に削除/追加すればよい).
+	 * デフォルトで付属しているscreen_size.txtを修正することなくそのまま使ってもなんら問題なかろう.
+	 * 大多数のユーザはここに記載されている解像度のいずれかを使用しているはずである
+	 * (それでももし過不足を感じるなら自由に削除/追加すればよい).
 	 */
 	varp = refPostVar( myf, "scsz" );
 	if( varp ){

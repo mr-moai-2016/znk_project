@@ -6,7 +6,6 @@
 #if   defined(Znk_TARGET_WINDOWS)
 #  include <windows.h>
 #else
-//#  include <dirent.h>
 #  include <unistd.h>
 #  include <sys/types.h>
 #  include <sys/stat.h>
@@ -18,14 +17,14 @@
 #include <ctype.h>
 
 #if   defined(Znk_TARGET_WINDOWS)
-Znk_INLINE void printWinLastError( void )
+Znk_INLINE void printWinLastError( DWORD last_err )
 {
 	LPVOID lpMsgBuf;
 	const char* msg;
 	/* エラー表示文字列作成 */
 	FormatMessage(
 			FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-			NULL, GetLastError(),
+			NULL, last_err,
 			MAKELANGID(LANG_NEUTRAL,SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL );
 	msg = (const char*)lpMsgBuf;
 	ZnkF_printf_e( "%s", msg );
@@ -142,7 +141,8 @@ ZnkDir_copyFile_byForce( const char* src_file, const char* dst_file )
 		/* success */
 		return true;
 	} else {
-		printWinLastError();
+		DWORD last_err = GetLastError();
+		printWinLastError( last_err );
 	}
 	return result;
 #else
@@ -220,7 +220,8 @@ ZnkDir_rename( const char* src_path, const char* dst_path )
 		/* success */
 		return true;
 	} else {
-		printWinLastError();
+		DWORD last_err = GetLastError();
+		printWinLastError( last_err );
 	}
 	return false;
 
@@ -271,12 +272,17 @@ makeDirectory( const char* dir )
 	bool result = (bool)( CreateDirectory( dir, NULL ) != 0 );
 	if( result ){
 		/* success */
-	ZnkF_printf_e( "makeDirectory[%s] result=[%d]\n", dir, result );
+		ZnkF_printf_e( "makeDirectory[%s] result=[%d]\n", dir, result );
 		return true;
 	} else {
-		printWinLastError();
+		DWORD last_err = GetLastError();
+		/***
+		 * 既に存在する場合はエラーメッセージとして出力させない.
+		 */
+		if( last_err != ERROR_ALREADY_EXISTS ){
+			printWinLastError();
+		}
 	}
-	ZnkF_printf_e( "makeDirectory[%s] result=[%d]\n", dir, result );
 	return result;
 
 #else

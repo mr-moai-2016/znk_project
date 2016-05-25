@@ -39,6 +39,9 @@ MoaiIO_recvBySize( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, size_t size, s
 bool
 MoaiIO_recvByZero( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, size_t* result_size );
 
+size_t
+MoaiIO_recvByPtn2( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, const char* ptn );
+
 Znk_EXTERN_C_END
 
 #endif /* INCLUDE_GUARD */

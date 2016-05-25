@@ -31,6 +31,7 @@
 #include <Znk_cookie.h>
 #include <Znk_txt_filter.h>
 #include <Znk_net_ip.h>
+#include <Znk_dir.h>
 
 #include <stdio.h>
 #include <assert.h>
@@ -133,6 +134,217 @@ demandSrc( uint8_t* src_buf, size_t src_size, void* arg )
 	return (unsigned int)cpy_size;
 }
 
+static ZnkFile
+openResultFile( MoaiTextType txt_type )
+{
+	ZnkFile fp = NULL;
+	/***
+	 * 現状ではまだ固定名なので問題ないが、ここをもしhost上にあるファイル名で保存する場合は
+	 * カレントディレクトリへ直に保存するのは危険であるのでdownloads ディレクトリを作成して
+	 * その配下へ保存する形にした方がよい.
+	 */
+	ZnkDir_mkdirPath( "./downloads", Znk_NPOS, '/' );
+	switch( txt_type ){
+	case MoaiText_HTML:
+		fp = ZnkF_fopen( "./downloads/result.html", "wb" );
+		break;
+	case MoaiText_JS:
+		fp = ZnkF_fopen( "./downloads/result.js", "wb" );
+		break;
+	case MoaiText_CSS:
+		fp = ZnkF_fopen( "./downloads/result.css", "wb" );
+		break;
+	case MoaiText_Binary:
+		fp = ZnkF_fopen( "./downloads/result.bin", "wb" );
+		break;
+	default:
+		fp = ZnkF_fopen( "./downloads/result.dat", "wb" );
+		break;
+	}
+	return fp;
+}
+
+typedef enum {
+	 ChunkRecv_OK=0
+	,ChunkRecv_UnexpectedZero
+	,ChunkRecv_BrokenData
+	,ChunkRecv_Error
+}ChunkRecv;
+
+
+static bool
+isBrokenChunkSizeStr( const char* cstr, size_t cstr_leng )
+{
+	size_t idx;
+	if( cstr_leng > sizeof(size_t)*2 ){
+		/* size_t型変数の16進数最大桁を超えている場合は異常とみなす */
+		return true;
+	}
+	for( idx=0; idx<cstr_leng; ++idx ){
+		switch( cstr[ idx ] ){
+		case '0': case '1': case '2': case '3': case '4':
+		case '5': case '6': case '7': case '8': case '9':
+		case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
+		case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
+			continue;
+		default:
+			/* broken. */
+			return true;
+		}
+	}
+	return false;
+}
+
+/***
+ * いきなりparseChunkDataを読んでもロジックとしては問題ないのだが、
+ * detectChunkedBodyBeginの方がrecv量を最小に抑えている分高速であるので、
+ * まずこれを試した方がよい.
+ */
+static ChunkRecv
+detectChunkedBodyBegin( ZnkBfr stream, size_t chunk_begin, ZnkSocket O_sock, MoaiFdSet mfds,
+		size_t* total_recv_size )
+{
+	static const size_t check_size = sizeof(size_t)*2+2;
+	size_t      dbfr_size;
+	const char* chunk_size_cstr_begin;
+	const char* chunk_size_cstr_end;
+	size_t      chunk_size_cstr_leng = 0;
+	size_t      result_size = 0;
+
+	dbfr_size = ZnkBfr_size( stream );
+	chunk_size_cstr_begin = (char*)ZnkBfr_data( stream ) + chunk_begin;
+	chunk_size_cstr_leng = dbfr_size - chunk_begin;
+	if( chunk_size_cstr_leng < check_size ){
+		/* checkに必要なサイズに達していないため、そこまでrecvする */
+		if( !MoaiIO_recvBySize( stream, O_sock, mfds, check_size-chunk_size_cstr_leng, &result_size ) ){
+			/* recv error. */
+			return false;
+		}
+		if( total_recv_size ){ *total_recv_size += result_size; }
+	}
+
+	dbfr_size = ZnkBfr_size( stream );
+	chunk_size_cstr_begin = (char*)ZnkBfr_data( stream ) + chunk_begin; /* for realloc */
+	chunk_size_cstr_end = Znk_memmem( chunk_size_cstr_begin, dbfr_size-chunk_begin, "\r\n", 2 );
+	if( chunk_size_cstr_end == NULL ){
+		/* check_size内で \r\nが検出されないため、checkedではないとみなす */
+		return false;
+	}
+	//MoaiLog_printf( "  dbfr_size=[%u] chunk_begin=[%u]\n", dbfr_size, chunk_begin );
+	chunk_size_cstr_leng = (size_t)( chunk_size_cstr_end - chunk_size_cstr_begin );
+	//MoaiLog_printf( "  chunk_size_cstr_leng=[%u]\n", chunk_size_cstr_leng );
+	if( isBrokenChunkSizeStr( chunk_size_cstr_begin, chunk_size_cstr_leng ) ){
+		/* \r\nまでの範囲で、16進数以外の文字が含まれている. checkedではないとみなす */
+		return false;
+	}
+	/***
+	 * check_size内かつ\r\nまでの範囲で、すべて16進数文字であった場合.
+	 * chunkedである可能性が濃厚である.
+	 */
+	MoaiLog_printf( "  Implicit chunked is detected. chunk_size_cstr=[%s]\n", chunk_size_cstr_begin );
+	return true;
+}
+
+static ChunkRecv
+parseChunkData( ZnkBfr stream, size_t chunk_begin, ZnkSocket O_sock, MoaiFdSet mfds,
+		size_t* total_recv_size )
+{
+	size_t      dbfr_size;
+	const char* chunk_size_cstr_begin;
+	const char* chunk_size_cstr_end;
+	char        chunk_size_cstr_buf[ 1024 ];
+	size_t      chunk_size = 0;
+	size_t      chunk_size_cstr_leng = 0;
+	size_t      chunk_remain = 0;
+	size_t      result_size = 0;
+
+	while( true ){
+		dbfr_size = ZnkBfr_size( stream );
+		chunk_size_cstr_begin = (char*)ZnkBfr_data( stream ) + chunk_begin;
+		chunk_size_cstr_end   = Znk_memmem( chunk_size_cstr_begin, dbfr_size-chunk_begin, "\r\n", 2 );
+		if( chunk_size_cstr_end == NULL ){
+			result_size = MoaiIO_recvByPtn2( stream, O_sock, mfds, "\r\n" );
+			if( result_size == Znk_NPOS ){
+				/* recv error. */
+				return ChunkRecv_Error;
+			}
+			if( total_recv_size ){ *total_recv_size += result_size; }
+			result_size = 0;
+
+			/* for realloc */
+			dbfr_size = ZnkBfr_size( stream );
+			chunk_size_cstr_begin = (char*)ZnkBfr_data( stream ) + chunk_begin;
+			chunk_size_cstr_end   = Znk_memmem( chunk_size_cstr_begin, dbfr_size-chunk_begin, "\r\n", 2 );
+			if( chunk_size_cstr_end == NULL ){
+				/* pattern not found in recved data. */
+				return ChunkRecv_UnexpectedZero;
+			}
+		}
+
+		chunk_size_cstr_leng = (size_t)( chunk_size_cstr_end - chunk_size_cstr_begin );
+		if( isBrokenChunkSizeStr( chunk_size_cstr_begin, chunk_size_cstr_leng ) ){
+			return ChunkRecv_BrokenData;
+		}
+		ZnkS_copy( chunk_size_cstr_buf, sizeof(chunk_size_cstr_buf),
+				chunk_size_cstr_begin, chunk_size_cstr_leng );
+
+		ZnkS_getSzX( &chunk_size, chunk_size_cstr_buf );
+
+		/***
+		 * dbfrにおけるchunk_size_cstrの領域を削る.
+		 */
+		ZnkBfr_erase( stream, chunk_begin, chunk_size_cstr_leng+2 );
+
+		if( ZnkBfr_size( stream ) < chunk_begin + chunk_size + 2 ){
+			chunk_remain = chunk_begin + chunk_size + 2 - ZnkBfr_size( stream );
+		} else {
+			chunk_remain = 0;
+		}
+		if( chunk_remain ){
+			if( !MoaiIO_recvBySize( stream, O_sock, mfds, chunk_remain, &result_size ) ){
+			}
+			if( total_recv_size ){ *total_recv_size += result_size; }
+			result_size = 0;
+		}
+		/***
+		 * dbfrにおけるchunkの最後にある\r\nを削る.
+		 * ( chunk_size_cstrが 0 の場合でも後ろに空白行が一つ存在するため、これが必要.
+		 * さらに厳密に言えば、その前にフッター行が来る可能性もあるが、今は考慮しない)
+		 */
+		ZnkBfr_erase( stream, chunk_begin+chunk_size, 2 );
+		if( chunk_size == 0 ){
+			break;
+		}
+		chunk_begin += chunk_size;
+	}
+	return ChunkRecv_OK;
+}
+
+Znk_INLINE bool
+updateContentLengthRemain( size_t* content_length_remain, size_t result_size )
+{
+	if( *content_length_remain >= result_size ){
+		*content_length_remain -= result_size;
+	} else {
+		*content_length_remain = 0;
+		return false;
+	}
+	return true;
+}
+static void
+dumpBrokenChunkStream( ZnkBfr stream )
+{
+	ZnkFile fp;
+	ZnkDir_mkdirPath( "./tmp", Znk_NPOS, '/' );
+	fp = ZnkF_fopen( "./tmp/dbfr_dump.dat", "wb" );
+	if( fp ){
+		const uint8_t* data = ZnkBfr_data( stream );
+		const size_t   size = ZnkBfr_size( stream );
+		MoaiLog_printf( "chunk_size_cstr is broken. dump dbfr_dump.dat\n" );
+		ZnkF_fwrite( data, 1, size, fp );
+		ZnkF_fclose( fp );
+	}
+}
 static void
 processResponse_forText( ZnkSocket O_sock, MoaiContext ctx, MoaiFdSet mfds,
 		size_t* content_length_remain, MoaiModule mod )
@@ -140,85 +352,96 @@ processResponse_forText( ZnkSocket O_sock, MoaiContext ctx, MoaiFdSet mfds,
 	bool is_direct_download = false;
 	MoaiInfo*     info      = ctx->draft_info_;
 	MoaiBodyInfo* body_info = &ctx->body_info_;
+	bool is_chunked = ctx->body_info_.is_chunked_;
 
 	size_t result_size = 0;
-	if( body_info->is_chunked_ ){
-		size_t      dbfr_size;
-		const char* chunk_size_cstr_begin;
-		const char* chunk_size_cstr_end;
-		char        chunk_size_cstr_buf[ 1024 ];
-		size_t      chunk_size = 0;
-		size_t      chunk_size_cstr_leng = 0;
-		size_t      chunk_remain = 0;
-		size_t      chunk_begin = info->hdr_size_;
 
-		while( true ){
-			dbfr_size = ZnkBfr_size( info->stream_ );
-			chunk_size_cstr_begin = (char*)ZnkBfr_data( info->stream_ ) + chunk_begin;
-			chunk_size_cstr_end   = Znk_memmem( chunk_size_cstr_begin, dbfr_size-chunk_begin, "\r\n", 2 );
-			if( chunk_size_cstr_end == NULL ){
-				MoaiIO_recvByPtn( info->stream_, O_sock, mfds, "\r\n", &result_size );
-				/* for realloc */
-				dbfr_size = ZnkBfr_size( info->stream_ );
-				chunk_size_cstr_begin = (char*)ZnkBfr_data( info->stream_ ) + chunk_begin;
-				chunk_size_cstr_end   = Znk_memmem( chunk_size_cstr_begin, dbfr_size-chunk_begin, "\r\n", 2 );
-				assert( chunk_size_cstr_end != NULL );
+	/***
+	 * checkedが指定されていない場合でもとりあえず最初はcheckedのパターンを検査してrecvを試みる.
+	 * (checkedが指定されていないにも関わらずcheckedなパターンでデータを返している行儀の悪い
+	 * CGIなどが極稀に存在する(例えばwww1.axfc.net)からであり、それに対応するためである)
+	 */
+	/***
+	 * is_unlimited_ とは !is_chunked_ && content_length_ == 0 の状態のことである.
+	 * !is_unlimited_では is_chunked_ || content_length_ != 0 となる.
+	 */
+	if( ctx->body_info_.is_unlimited_ ){
+		if( !is_chunked ){
+			if( detectChunkedBodyBegin( info->stream_, info->hdr_size_, O_sock, mfds, &result_size ) ){
+				is_chunked = true;
 			}
-			chunk_size_cstr_leng = chunk_size_cstr_end-chunk_size_cstr_begin;
-			ZnkS_copy( chunk_size_cstr_buf, sizeof(chunk_size_cstr_buf),
-					chunk_size_cstr_begin, chunk_size_cstr_leng );
-			if( !ZnkS_getSzX( &chunk_size, chunk_size_cstr_buf ) ){
-				MoaiLog_printf( "chunk_size_cstr is broken. dump dbfr_dump.dat\n" );
-				{
-					ZnkFile fp = ZnkF_fopen( "dbfr_dump.dat", "wb" );
-					if( fp ){
-						const uint8_t* data = ZnkBfr_data( info->stream_ );
-						const size_t   size = ZnkBfr_size( info->stream_ );
-						ZnkF_fwrite( data, 1, size, fp );
-						ZnkF_fclose( fp );
-					}
-					assert( 0 );
-				}
-			} else {
-				//MoaiLog_printf( "chunk_size=[%u]\n", chunk_size );
-			}
-			/***
-			 * dbfrにおけるchunk_size_cstrの領域を削る.
-			 */
-			ZnkBfr_erase( info->stream_, chunk_begin, chunk_size_cstr_leng+2 );
-
-			if( ZnkBfr_size( info->stream_ ) < chunk_begin + chunk_size + 2 ){
-				chunk_remain = chunk_begin + chunk_size + 2 - ZnkBfr_size( info->stream_ );
-			} else {
-				chunk_remain = 0;
-			}
-			if( chunk_remain ){
-				if( !MoaiIO_recvBySize( info->stream_, O_sock, mfds, chunk_remain, &result_size ) ){
-					MoaiLog_printf( "MoaiIO_recvBySize : error[%s]\n", ZnkStr_cstr(ctx->msgs_) );
-				}
-			}
-			/***
-			 * dbfrにおけるchunkの最後にある\r\nを削る.
-			 * ( chunk_size_cstrが 0 の場合でも後ろに空白行が一つ存在するため、これが必要.
-			 * さらに厳密に言えば、その前にフッター行が来る可能性もあるが、今は考慮しない)
-			 */
-			ZnkBfr_erase( info->stream_, chunk_begin+chunk_size, 2 );
-			if( chunk_size == 0 ){
-				break;
-			}
-			chunk_begin += chunk_size;
 		}
-	} else if( ctx->body_info_.is_unlimited_ ){
-		MoaiLog_printf( "  MoaiIO_recvByZero Mode Begin\n" );
-		MoaiIO_recvByZero( info->stream_, O_sock, mfds, &result_size );
-		MoaiLog_printf( "  MoaiIO_recvByZero Mode End\n" );
-	} else {
-		while( *content_length_remain ){
-			MoaiIO_recvBySize( info->stream_, O_sock, mfds, *content_length_remain, &result_size );
-			if( *content_length_remain >= result_size ){
-				*content_length_remain -= result_size;
-			} else {
-				assert(0);
+		if( is_chunked ){
+			/* parseChunkDataを実行 */
+			ChunkRecv cr = parseChunkData( info->stream_, info->hdr_size_, O_sock, mfds, &result_size );
+			if( cr == ChunkRecv_BrokenData ){
+				/* 残りはRecvZeroを受け取るまで力技でrecv. */
+				MoaiLog_printf( "  MoaiIO_recvByZero Mode Begin\n" );
+				MoaiIO_recvByZero( info->stream_, O_sock, mfds, &result_size );
+				MoaiLog_printf( "  MoaiIO_recvByZero Mode End\n" );
+			}
+		}  else {
+			/* 残りはRecvZeroを受け取るまで力技でrecv. */
+			MoaiLog_printf( "  MoaiIO_recvByZero Mode Begin\n" );
+			MoaiIO_recvByZero( info->stream_, O_sock, mfds, &result_size );
+			MoaiLog_printf( "  MoaiIO_recvByZero Mode End\n" );
+		}
+	} else if( is_chunked ){
+		/* Transfer-Encodingにおいて明示的にchunkedが指定されている場合 */
+		ChunkRecv cr = parseChunkData( info->stream_, info->hdr_size_, O_sock, mfds, &result_size );
+		MoaiLog_printf( "  parseChunkData result=[%d]\n", cr );
+		updateContentLengthRemain( content_length_remain, result_size );
+		if( cr == ChunkRecv_BrokenData ){
+			dumpBrokenChunkStream( info->stream_ );
+
+			/* 残りはcheckedが指定されていない場合と同様にrecv. */
+			while( *content_length_remain ){
+				if( !MoaiIO_recvBySize( info->stream_, O_sock, mfds, *content_length_remain, &result_size ) ){
+					break;
+				}
+				if( !updateContentLengthRemain( content_length_remain, result_size ) ){
+					break;
+				}
+			}
+		}
+
+	} else if( *content_length_remain ){
+		/* Transfer-Encodingにおいて明示的にchunkedが指定されておらず
+		 * Content-Lengthの指定は存在する場合 */
+		if( !is_chunked ){
+			//MoaiLog_printf( "  detectChunkedBodyBegin before : content_length_remain=[%u]\n", *content_length_remain );
+			if( detectChunkedBodyBegin( info->stream_, info->hdr_size_, O_sock, mfds, &result_size ) ){
+				is_chunked = true;
+			}
+			updateContentLengthRemain( content_length_remain, result_size );
+		}
+		if( is_chunked ){
+			/***
+			 * この場合chunkedデータとみなす.
+			 */
+			ChunkRecv cr = parseChunkData( info->stream_, info->hdr_size_, O_sock, mfds, &result_size );
+			updateContentLengthRemain( content_length_remain, result_size );
+			if( cr == ChunkRecv_BrokenData ){
+				/* 残りはcheckedが指定されていない場合と同様にrecv. */
+				while( *content_length_remain ){
+					if( !MoaiIO_recvBySize( info->stream_, O_sock, mfds, *content_length_remain, &result_size ) ){
+						break;
+					}
+					if( !updateContentLengthRemain( content_length_remain, result_size ) ){
+						break;
+					}
+				}
+			}
+		} else {
+			/* chunkedではない場合.
+			 * 以下によって全取得. */
+			while( *content_length_remain ){
+				if( !MoaiIO_recvBySize( info->stream_, O_sock, mfds, *content_length_remain, &result_size ) ){
+					break;
+				}
+				if( !updateContentLengthRemain( content_length_remain, result_size ) ){
+					break;
+				}
 			}
 		}
 	}
@@ -299,14 +522,7 @@ processResponse_forText( ZnkSocket O_sock, MoaiContext ctx, MoaiFdSet mfds,
 	}
 
 	if( is_direct_download ){
-		/***
-		 * 現状ではまだ固定名なので問題ないが、
-		 * ここをもしhost上にあるファイル名で保存する場合は
-		 * カレントディレクトリへ直に保存するのは危険であるので
-		 * 例えばdownloads ディレクトリなどを作成してその配下へ保存するような
-		 * 形にした方がよい.
-		 */
-		ZnkFile fp = ZnkF_fopen( "result.html", "wb" );
+		ZnkFile fp = openResultFile( body_info->txt_type_ );
 		if( fp ){
 			const uint8_t* body_data = ZnkBfr_data( info->stream_ ) + info->hdr_size_;
 			const size_t   body_size = ZnkBfr_size( info->stream_ ) - info->hdr_size_;
@@ -340,20 +556,7 @@ processResponse_forText( ZnkSocket O_sock, MoaiContext ctx, MoaiFdSet mfds,
 			ZnkF_fclose( fp );
 		}
 	} else {
-		ZnkFile fp = NULL;
-		switch( body_info->txt_type_ ){
-		case MoaiText_HTML:
-			fp = ZnkF_fopen( "result.html", "wb" );
-			break;
-		case MoaiText_JS:
-			fp = ZnkF_fopen( "result.js", "wb" );
-			break;
-		case MoaiText_CSS:
-			fp = ZnkF_fopen( "result.css", "wb" );
-			break;
-		default:
-			break;
-		}
+		ZnkFile fp = openResultFile( body_info->txt_type_ );
 		if( fp ){
 			const uint8_t* html_data = (uint8_t*)ZnkStr_cstr( ctx->text_ );
 			const size_t   html_size = ZnkStr_leng( ctx->text_ );
@@ -658,6 +861,7 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
 		MoaiInfo_parseHdr( draft_info, &ctx->body_info_,
 				&ctx->as_local_proxy_, st_moai_port, (bool)(htp_type == MoaiHtpType_e_Request),
 				ZnkStr_cstr(mcn->hostname_), st_mod_ary, st_server_name );
+		//debugHdrVars( draft_info->hdrs_.vars_, "----" );
 
 		switch( htp_type ){
 		case MoaiHtpType_e_Response:
@@ -916,20 +1120,24 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
 
 
 static void
-debugInterestURP( const MoaiInfo* info, const MoaiConnection mcn, HtpScanType scan_type, ZnkMyf analysis )
+debugInterestGoal( const MoaiInfo* info, const MoaiConnection mcn, HtpScanType scan_type, ZnkMyf analysis )
 {
-	const char*    req_urp         = ZnkStr_cstr(info->req_urp_);
-	ZnkStrAry      interest_urp    = ZnkMyf_find_lines( analysis, "interest_urp" );
-	if( ZnkStrAry_find_isMatch( interest_urp, 0, req_urp, Znk_NPOS, ZnkS_isMatchSWC ) != Znk_NPOS ){
-		if( ZnkStrAry_size(info->hdrs_.hdr1st_) > 1 ){
-			const char* req_method_str = ZnkHtpReqMethod_getCStr( info->req_method_ );
-			MoaiLog_printf( "  Moai %s %s%s : InterestURP=[%s]\n",
-					req_method_str,
-					( scan_type == HtpScan_e_Request ) ? "Request" : "Response ",
-					( scan_type == HtpScan_e_Request ) ? "" : ZnkStrAry_at_cstr(info->hdrs_.hdr1st_,1),
-					req_urp );
+	const char* hostname       = ZnkStr_cstr( mcn->hostname_ );
+	const char* req_urp        = ZnkStr_cstr( info->req_urp_ );
+	ZnkStrAry   interest_urp   = ZnkMyf_find_lines( analysis, "interest_urp" );
+	ZnkStrAry   interest_hosts = ZnkMyf_find_lines( analysis, "interest_hosts" );
+	if( ZnkStrAry_find_isMatch( interest_hosts, 0, hostname, Znk_NPOS, ZnkS_isMatchSWC ) != Znk_NPOS ){
+		if( ZnkStrAry_find_isMatch( interest_urp, 0, req_urp, Znk_NPOS, ZnkS_isMatchSWC ) != Znk_NPOS ){
+			if( ZnkStrAry_size(info->hdrs_.hdr1st_) > 1 ){
+				const char* req_method_str = ZnkHtpReqMethod_getCStr( info->req_method_ );
+				MoaiLog_printf( "  Moai %s %s%s : InterestGoal=[%s%s]\n",
+						req_method_str,
+						( scan_type == HtpScan_e_Request ) ? "Request" : "Response ",
+						( scan_type == HtpScan_e_Request ) ? "" : ZnkStrAry_at_cstr(info->hdrs_.hdr1st_,1),
+						hostname, req_urp );
+			}
+			debugHdrVars( info->hdrs_.vars_, "    " );
 		}
-		debugHdrVars( info->hdrs_.vars_, "    " );
 	}
 }
 
@@ -1225,7 +1433,7 @@ doLocalProxy( MoaiContext ctx, MoaiConnection mcn, MoaiFdSet mfds, MoaiHtpType h
 		switch( htp_type ){
 		case MoaiHtpType_e_Request:
 		{
-			debugInterestURP( info, mcn, htp_type, analysis );
+			debugInterestGoal( info, mcn, htp_type, analysis );
 
 			switch( info->req_method_ ){
 			case ZnkHtpReqMethod_e_GET:
@@ -1256,7 +1464,7 @@ doLocalProxy( MoaiContext ctx, MoaiConnection mcn, MoaiFdSet mfds, MoaiHtpType h
 				: ( sock_type == MoaiSockType_e_Outer ) ? I_sock
 				: ZnkSocket_INVALID;
 
-			debugInterestURP( info, mcn, htp_type, analysis );
+			debugInterestGoal( info, mcn, htp_type, analysis );
 			if( sock == ZnkSocket_INVALID ){
 				MoaiLog_printf( "  sock=[%d] is invalid\n", sock );
 				return MoaiRASResult_e_Ignored;

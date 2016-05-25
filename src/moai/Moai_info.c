@@ -462,6 +462,13 @@ MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 		}
 	}
 
+
+	/***
+	 * www1.axfc.netでダウンロードする際など、is_unlimited_となっているCGIレスポンスがある.
+	 * しかもそれはContent-Typeも指定されていないHTMLでもある.
+	 * この場合、その内容からtxt_typeを推定しなければならない.
+	 * とはいえ、今の段階ではまだヘッダしか読み込んでいないため、この推定処理は後まわしになる.
+	 */
 	if( !body_info->is_chunked_ && body_info->content_length_ == 0 ){
 		/***
 		 * chunkedかつContent-Lengthがどちらも指定されていないにも関わらず

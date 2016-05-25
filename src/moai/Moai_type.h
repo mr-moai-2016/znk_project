@@ -20,20 +20,22 @@ typedef enum {
 } MoaiHtpType;
 
 typedef enum {
-	 MoaiText_Binary=0
+	 MoaiText_Unknown=0
 	,MoaiText_HTML
 	,MoaiText_JS
 	,MoaiText_CSS
+	,MoaiText_Binary
 } MoaiTextType;
 
 Znk_INLINE const char*
 MoaiTextType_getCStr( MoaiTextType type )
 {
-	const char* str = Znk_TO_STR( MoaiText_Binary );
+	const char* str = Znk_TO_STR( MoaiText_Unknown );
 	switch( type ){
-	case Znk_BIND_STR( : str=, MoaiText_HTML );  break;
-	case Znk_BIND_STR( : str=, MoaiText_JS );    break;
-	case Znk_BIND_STR( : str=, MoaiText_CSS );   break;
+	case Znk_BIND_STR( : str=, MoaiText_HTML );   break;
+	case Znk_BIND_STR( : str=, MoaiText_JS );     break;
+	case Znk_BIND_STR( : str=, MoaiText_CSS );    break;
+	case Znk_BIND_STR( : str=, MoaiText_Binary ); break;
 	default: break;
 	}
 	return str + Znk_strlen_literal( "MoaiText_" );
