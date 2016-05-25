@@ -267,6 +267,7 @@ MoaiPost_parsePostAndCookieVars( ZnkSocket sock, MoaiFdSet mfds,
 		}
 
 	} else if( ZnkS_isBegin_literal( content_type, "application/x-www-form-urlencoded" )
+//	        || ZnkS_isBegin_literal( content_type, "application/ocsp-request" )
 	        || ZnkS_isBegin_literal( content_type, "text/xml" ) ){
 
 		const uint8_t* body      = ZnkBfr_data(stream) + hdr_size;
@@ -429,6 +430,7 @@ MoaiPost_sendRealy( MoaiInfoID info_id,
 		if( ZnkS_isBegin_literal( content_type, "multipart/form-data" ) ){
 			extendPostVarsToStream_forMPFD( info->vars_, stream_fnl, ZnkStr_cstr(boundary) );
 		} else if( ZnkS_isBegin_literal( content_type, "application/x-www-form-urlencoded" )
+//	        	|| ZnkS_isBegin_literal( content_type, "application/ocsp-request" )
 		        || ZnkS_isBegin_literal( content_type, "text/xml" ) ){
 			ZnkVarp varp = ZnkVarpAry_find_byName( info->vars_, "Moai_HtpPostTextBody", Znk_NPOS, false );
 			if( varp ){

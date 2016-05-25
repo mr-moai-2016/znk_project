@@ -2,6 +2,7 @@
 #include "Znk_stdc.h"
 #include "Znk_s_base.h"
 #include "Znk_missing_libc.h"
+#include "Znk_sys_errno.h"
 
 #if   defined(Znk_TARGET_WINDOWS)
 #  include <windows.h>
@@ -317,7 +318,12 @@ makeDirectory( const char* dir )
 	 */
 	mode_t mode = S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH;
 	bool result = ( mkdir( dir, mode ) == 0 );
-	if( !result ){ perror( "makeDirectory" ); }
+	if( !result ){
+		uint32_t sys_errno = ZnkSysErrno_errno();
+		if( sys_errno != EEXIST ){
+			perror( "makeDirectory" );
+		}
+	}
 	return result;
 #endif
 }

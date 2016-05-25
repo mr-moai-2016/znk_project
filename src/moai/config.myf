@@ -14,6 +14,7 @@ www.google-analytics.com
 ad.doubleclick.net
 *.adingo.jp
 js.fout.jp
+ocsp.digicert.com
 @@.
 
 # 以下にはPOST時に確認モードを表示したいホストを記述する.
