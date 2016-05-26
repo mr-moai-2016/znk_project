@@ -17,6 +17,7 @@ This is Japanese overview. English version is [here][7].
 * Moai: また一つ生まれた(ばかりの)ローカルプロキシエンジン  
   ドキュメントは[こちら][2]です.
   リファレンスマニュアルは[こちら][3]です.
+  FAQは[こちら][8]です.
 * Moai/Virtual USERS機能: Moaiを使って掲示板のユーザ情報を仮想化する方法について  
   ドキュメントは[こちら][4]です.
 * http_decorator : ~~マスコット~~シンプルなHTTPクライアント.  
@@ -24,6 +25,7 @@ This is Japanese overview. English version is [here][7].
 
 これらのアプリケーションおよびライブラリのソースコードはVC(Ver6.0からVer12.0)、MinGW、(linux上の)gccなど向けに
 書かれたものです. コンパイル方法に関しては[こちら][6]をご覧ください.
+また、これらのツールの改造を試みたいといったプログラマな方のために、そのガイドラインを[こちら][9]にまとめてあります.
 
 ## What's new?
 -----------------------------------
@@ -86,3 +88,5 @@ This is Japanese overview. English version is [here][7].
 [5]: https://github.com/mr-moai-2016/znk_project/blob/master/src/ReleaseNote.md
 [6]: https://github.com/mr-moai-2016/znk_project/blob/master/src/HowToCompile.md
 [7]: https://github.com/mr-moai-2016/znk_project/blob/master/README_en.md
+[8]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/FAQ.md
+[9]: https://github.com/mr-moai-2016/znk_project/blob/master/src/Hacking.md
