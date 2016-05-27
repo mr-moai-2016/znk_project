@@ -25,7 +25,7 @@ typedef enum {
 } MoaiSockType;
 
 typedef struct MoaiConnection_tag* MoaiConnection;
-typedef void (*MoaiConnectedCallback)( MoaiConnection mcn, MoaiFdSet mfds, MoaiInfoID );
+typedef bool (*MoaiConnectedCallback)( MoaiConnection mcn, MoaiFdSet mfds, MoaiInfoID );
 
 struct MoaiConnection_tag {
 	ZnkStr          hostname_;        /* ゴールとなるホスト名(Proxyではない) */
@@ -82,7 +82,7 @@ ZnkSocket
 MoaiConnection_O_sock( const MoaiConnection mcn );
 void
 MoaiConnection_pushConnectedEvent( MoaiConnection mcn, MoaiConnectedCallback cb_func, MoaiInfoID info_id );
-void
+bool
 MoaiConnection_invokeCallback( MoaiConnection mcn, MoaiFdSet mfds );
 
 bool

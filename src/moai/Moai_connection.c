@@ -258,7 +258,7 @@ MoaiConnection_pushConnectedEvent( MoaiConnection mcn, MoaiConnectedCallback cb_
 	mcn->cb_func_ = cb_func;
 	ZnkBfr_push_bk_64( mcn->info_id_list_, info_id, Znk_isLE() );
 }
-void
+bool
 MoaiConnection_invokeCallback( MoaiConnection mcn, MoaiFdSet mfds )
 {
 	if( mcn->cb_func_ ){
@@ -279,7 +279,13 @@ MoaiConnection_invokeCallback( MoaiConnection mcn, MoaiFdSet mfds )
 						idx, id_str.buf_,
 						ZnkHtpReqMethod_getCStr( info->req_method_ ),
 						ZnkStr_cstr(info->req_urp_) );
-				mcn->cb_func_( mcn, mfds, info_id );
+				if( !mcn->cb_func_( mcn, mfds, info_id ) ){
+					/***
+					 * ‚±‚Ìê‡ cb_func_“à‚Åmcn‚ªíœ‚³‚ê‚Ä‚¢‚é‰Â”\«‚ª‚ ‚é.
+					 * ‚æ‚Á‚Ä‚±‚±‚Å‹­§’†’f.
+					 */
+					return false;
+				}
 
 				/***
 				 * invokeÏ‚İ‚Èinfo_id‚ğ‚»‚Ìˆ—‚³‚ê‚½‡‚Å“o˜^‚µ‚Ä‚¨‚­.
@@ -298,6 +304,7 @@ MoaiConnection_invokeCallback( MoaiConnection mcn, MoaiFdSet mfds )
 			}
 		}
 	}
+	return true;
 }
 
 void
@@ -383,6 +390,7 @@ void
 MoaiConnection_erase( MoaiConnection mcn, MoaiFdSet mfds )
 {
 	MoaiConnection_clear( mcn, mfds );
+	//MoaiLog_printf( "MoaiConnection_erase mcn=[%p]\n", mcn );
 	ZnkObjAry_erase( st_connection_ary, (ZnkObj)mcn );
 }
 

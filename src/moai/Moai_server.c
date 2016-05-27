@@ -909,13 +909,20 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
 			case ZnkHtpReqMethod_e_GET:
 			case ZnkHtpReqMethod_e_POST:
 			case ZnkHtpReqMethod_e_HEAD:
-				if( ZnkS_eq( arg_tkns[ 1 ], "200" ) ){
+			{
+				ZnkS_getIntD( &info_on_response->response_state_, arg_tkns[ 1 ] );
+				if( info_on_response->response_state_ == 200 ){
 					MoaiLog_printf( "  body_info : is_chunked=[%s] is_gzip=[%s] txt_type=[%s]\n",
 							body_info->is_chunked_ ? "true" : "false",
 							body_info->is_gzip_    ? "true" : "false",
 							MoaiTextType_getCStr( body_info->txt_type_ ) );
+				} else {
+					if( body_info->is_unlimited_ ){
+						body_info->is_unlimited_ = false;
+					}
 				}
 				break;
+			}
 			default:
 				break;
 			}
@@ -1304,22 +1311,24 @@ requestOnConnectCompleted_GET( ZnkSocket O_sock,
 	return MoaiRASResult_e_OK;
 }
 
-static void
+static bool
 sendOnConnected_CONNECT( MoaiConnection mcn, MoaiFdSet mfds, MoaiInfoID info_id )
 {
 	ZnkSocket   O_sock   = MoaiConnection_O_sock( mcn );
 	const char* hostname = MoaiConnection_hostname( mcn );
+	bool result;
 
-	requestOnConnectCompleted_CONNECT( O_sock, hostname, info_id, mfds );
+	result = (bool)( requestOnConnectCompleted_CONNECT( O_sock, hostname, info_id, mfds ) == MoaiRASResult_e_OK );
 	{
 		ZnkFdSet fdst_observe = MoaiFdSet_fdst_observe_r( mfds );
 		if( !ZnkFdSet_set( fdst_observe, O_sock ) ){
 			MoaiFdSet_reserveConnectSock( mfds, O_sock );
 		}
 	}
+	return result;
 }
 
-static void
+static bool
 sendOnConnected_POST( MoaiConnection mcn, MoaiFdSet mfds, MoaiInfoID info_id )
 {
 	ZnkSocket   O_sock       = MoaiConnection_O_sock( mcn );
@@ -1329,21 +1338,24 @@ sendOnConnected_POST( MoaiConnection mcn, MoaiFdSet mfds, MoaiInfoID info_id )
 	if( !ZnkFdSet_set( fdst_observe, O_sock ) ){
 		MoaiFdSet_reserveConnectSock( mfds, O_sock );
 	}
+	return true;
 }
 
-static void
+static bool
 sendOnConnected_GET( MoaiConnection mcn, MoaiFdSet mfds, MoaiInfoID info_id )
 {
 	ZnkSocket   O_sock   = MoaiConnection_O_sock( mcn );
 	const char* hostname = MoaiConnection_hostname( mcn );
+	bool result;
 
-	requestOnConnectCompleted_GET( O_sock, hostname, info_id, mfds );
+	result = (bool)( requestOnConnectCompleted_GET( O_sock, hostname, info_id, mfds ) == MoaiRASResult_e_OK  );
 	{
 		ZnkFdSet fdst_observe = MoaiFdSet_fdst_observe_r( mfds );
 		if( !ZnkFdSet_set( fdst_observe, O_sock ) ){
 			MoaiFdSet_reserveConnectSock( mfds, O_sock );
 		}
 	}
+	return result;
 }
 
 

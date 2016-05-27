@@ -254,6 +254,7 @@ int
 ZnkSocket_send( ZnkSocket sock, const uint8_t* data, size_t data_size )
 {
 	int rc;
+	size_t waiting_count = 0;
 AGAIN:
 #if defined(Znk_TARGET_WINDOWS)
 	rc = send( sock, (const char*)data, (int)data_size, 0 );
@@ -269,8 +270,18 @@ AGAIN:
 	if( rc < 0 ){
 		if( ZnkSysErrno_errno() == EAGAIN ){
 			ZnkThread_sleep( 500 );
+			if( waiting_count == 0 ){
+				ZnkF_printf_e( "  ZnkSocket_send : EAGAIN count=" );
+			} else {
+				ZnkF_printf_e( "\b\b\b\b" );
+			}
+			ZnkF_printf_e( "%04u", waiting_count );
+			++waiting_count;
 			goto AGAIN;
 		}
+	}
+	if( waiting_count ){
+		ZnkF_printf_e( "\n" );
 	}
 	return rc;
 }
@@ -278,6 +289,7 @@ int
 ZnkSocket_recv( ZnkSocket sock, uint8_t* buf, size_t buf_size )
 {
 	int rc;
+	size_t waiting_count = 0;
 AGAIN:
 #if defined(Znk_TARGET_WINDOWS)
 	rc = recv( sock, (char*)buf, (int)buf_size, 0 );
@@ -293,8 +305,18 @@ AGAIN:
 	if( rc < 0 ){
 		if( ZnkSysErrno_errno() == EAGAIN ){
 			ZnkThread_sleep( 500 );
+			if( waiting_count == 0 ){
+				ZnkF_printf_e( "  ZnkSocket_recv : EAGAIN count=" );
+			} else {
+				ZnkF_printf_e( "\b\b\b\b" );
+			}
+			ZnkF_printf_e( "%04u", waiting_count );
+			++waiting_count;
 			goto AGAIN;
 		}
+	}
+	if( waiting_count ){
+		ZnkF_printf_e( "\n" );
 	}
 	return rc;
 }

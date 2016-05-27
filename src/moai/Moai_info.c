@@ -144,6 +144,7 @@ MoaiInfo_clear( MoaiInfo* info )
 	ZnkStr_clear( info->proxy_hostname_ );
 	info->hdr_size_   = 0;
 	info->req_method_ = ZnkHtpReqMethod_e_Unknown;
+	info->response_state_ = 0;
 }
 
 MoaiInfo*

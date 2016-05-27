@@ -29,6 +29,7 @@ typedef struct {
 	size_t                hdr_size_;
 	ZnkHtpReqMethod       req_method_;
 	ZnkStr                req_urp_;
+	int                   response_state_;
 	ZnkStr                proxy_hostname_;
 	uint16_t              proxy_port_;
 } MoaiInfo;
