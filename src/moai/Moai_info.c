@@ -471,13 +471,21 @@ MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 	 */
 	if( !body_info->is_chunked_ && body_info->content_length_ == 0 ){
 		/***
-		 * chunkedかつContent-Lengthがどちらも指定されていないにも関わらず
-		 * body部と思わしき余剰が存在する場合.
+		 * chunkedかつContent-Lengthがどちらも指定されていない場合.
 		 * 残念ながら、このような行儀の悪いサーバも存在する.
 		 * 特にProxyなどに見られる.
+		 *
+		 * 尚、body部と思わしき余剰の存在如何を関わらず、ここではis_unlimited_をtrueとする.
+		 * (body部と思わしき余剰が存在する場合のみis_unlimited_をtrueにした場合、
+		 * ある種のProxyを介した場合にふたば内でBodyが読み込まれないことがある)
 		 */
+		MoaiLog_printf( "  Detect unlimited.\n" );
+		body_info->is_unlimited_ = true;
+#if 0
 		if( line_begin - (char*)ZnkBfr_data( stream ) + 2 < (int)ZnkBfr_size( stream ) ){
 			body_info->is_unlimited_ = true;
+			MoaiLog_printf( "  It is unlimited\n" );
 		}
+#endif
 	}
 }
