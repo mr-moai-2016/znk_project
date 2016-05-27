@@ -5,11 +5,14 @@
 void*
 Znk_memrchr( const void* buf, int val, size_t size )
 {
-	register const uint8_t* r1;
-	register const uint8_t* last = (uint8_t*)buf;
-	r1 = last + size - 1;
-	while( r1 != last && *r1 != val ) --r1;
-	return ( *r1 == val ) ? (void*)r1 : NULL;
+	if( size ){
+		register const uint8_t* r1;
+		register const uint8_t* last = (uint8_t*)buf;
+		r1 = last + size - 1;
+		while( r1 != last && *r1 != val ) --r1;
+		return ( *r1 == val ) ? (void*)r1 : NULL;
+	}
+	return NULL;
 }
 
 int

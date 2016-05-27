@@ -19,6 +19,7 @@ refCookieVar( ZnkMyf myf, const char* var_name )
 
 bool on_post( ZnkMyf myf )
 {
+#if 0
 	ZnkVarp USERS_yuki = refPostVar( myf, "USERS_yuki" );
 	ZnkVarp yuki       = refCookieVar( myf, "yuki" );
 
@@ -38,6 +39,7 @@ bool on_post( ZnkMyf myf )
 			ZnkVar_set_val_Str( USERS_yuki, "akari", 5 );
 		}
 	}
+#endif
 	return true;
 }
 

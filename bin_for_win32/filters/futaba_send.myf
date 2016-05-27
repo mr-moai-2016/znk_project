@@ -1,16 +1,16 @@
 @def_quote [' ']
 
 @@V header_vars
-User-Agent = ['Mozilla/5.0 (Linux; U; Android 2.3.5; ja-jp; SBM101SH Build/S0030) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1']
+User-Agent = ['Mozilla/5.0 (Windows; U; Windows NT 5.1; de-DE; rv:1.7.5) Gecko/20041122 Firefox/1.0']
 @@.
 
 @@V post_vars
 pthb = ['']
-pthc = ['1460683273229']
+pthc = ['1464330707153']
 pthd = ['']
-flrv = ['1375985763']
-flvv = ['2317873764']
-scsz = ['1280x720x24']
+flrv = ['2739407074']
+flvv = ['3792482965']
+scsz = ['1920x1080x32']
 pwd = ['']
 js = ['on']
 USERS_futabapt = ['']
@@ -18,9 +18,8 @@ USERS_password = ['']
 @@.
 
 @@V cookie_vars
-posttime = ['1460683273229']
+posttime = ['1464330707153']
 pwdc = ['']
 namec = ['']
-_ga=['']
+_ga = ['']
 @@.
-

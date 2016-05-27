@@ -26,7 +26,7 @@ bool
 MoaiModule_saveFilter( const MoaiModule mod );
 
 const char*
-MoaiModule_targe_name( const MoaiModule mod );
+MoaiModule_target_name( const MoaiModule mod );
 
 ZnkMyf
 MoaiModule_ftrSend( const MoaiModule mod );

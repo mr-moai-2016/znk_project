@@ -636,6 +636,30 @@ debugHdrVars( const ZnkVarpAry vars, const char* prefix_tab )
 	}
 }
 
+/***
+ * サイトから発行されるSet-CookieによりCookieの値変更が指示された場合は
+ * それを優先してfilterの値も変える.
+ */
+static void
+updateCookieFilter_bySetCookie( const ZnkVarpAry hdr_vars, ZnkMyf ftr_send )
+{
+	ZnkVarp set_cookie = ZnkHtpHdrs_find_literal( hdr_vars, "Set-Cookie" );
+	if( set_cookie ){
+		const size_t val_size = ZnkHtpHdrs_val_size( set_cookie );
+		size_t       val_idx  = 0;
+		ZnkVarpAry   ftr_vars = ZnkMyf_find_vars( ftr_send, "cookie_vars" );
+
+		for( val_idx=0; val_idx<val_size; ++val_idx ){
+			const char* p = ZnkHtpHdrs_val_cstr( set_cookie, val_idx );
+			const char* e = p + strlen( p );
+			const char* q = memchr( p, ';', (size_t)(e-p) );
+			if( q == NULL ){
+				q = e;
+			}
+			ZnkCookie_regist_byAssignmentStatement( ftr_vars, p, (size_t)(q-p) );
+		}
+	}
+}
 
 static HtpScanType
 scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
@@ -1053,25 +1077,17 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
 		MoaiLog_printf( "  Response hostname=[%s]\n", hostname );
 
 		if( mod ){
-			ZnkVarp set_cookie = ZnkHtpHdrs_find_literal( draft_info->hdrs_.vars_, "Set-Cookie" );
-		
+			ZnkMyf ftr_send = MoaiModule_ftrSend( mod );
+			updateCookieFilter_bySetCookie( draft_info->hdrs_.vars_, ftr_send );
 			/***
-			 * set_cookieを解析し、myf上におけるcookie_varsを更新する.
+			 * 次回起動時にも状態を引き継ぐため、saveが必要.
 			 */
-			if( set_cookie ){
-				const size_t val_size = ZnkHtpHdrs_val_size( set_cookie );
-				size_t       val_idx  = 0;
-				ZnkMyf       myf      = MoaiModule_ftrSend( mod );
-				ZnkVarpAry   cok_vars = ZnkMyf_find_vars( myf, "cookie_vars" );
-		
-				for( val_idx=0; val_idx<val_size; ++val_idx ){
-					const char* p = ZnkHtpHdrs_val_cstr( set_cookie, val_idx );
-					const char* e = p + strlen(p);
-					const char* q = memchr( p, ';', (size_t)(e-p) );
-					if( q == NULL ){
-						q = e;
-					}
-					ZnkCookie_regist_byAssignmentStatement( cok_vars, p, (size_t)(q-p) );
+			{
+				char        filename[ 256 ];
+				const char* target_name = MoaiModule_target_name( mod );
+				Znk_snprintf( filename, sizeof(filename), "filters/%s_send.myf", target_name );
+				if( !ZnkMyf_save( ftr_send, filename ) ){
+					MoaiLog_printf( "  Response : Cannot save %s\n", filename );
 				}
 			}
 		}
@@ -1618,7 +1634,7 @@ printConfig( ZnkSocket sock, ZnkStrAry result_msgs, uint32_t peer_ipaddr )
 	ZnkStrAry str_list = ZnkStrAry_create( true );
 
 	ZnkStr_add( html, "<html><body>\n" );
-	ZnkStr_add( html, "<p><b><img src=\"moai.png\"> Moai : Web Configuration Version 1.0</b></p>\n" );
+	ZnkStr_add( html, "<p><b><img src=\"moai.png\"> Moai : Web Configuration Version 1.0.2</b></p>\n" );
 
 	ZnkStr_add( html, "<style type=\"text/css\">\n" );
 	ZnkStr_add( html, "#config_filters tbody tr.evn td { background-color: #E0F0D6; }\n" );
@@ -1816,13 +1832,13 @@ initiateFilters( MoaiModuleAry mod_ary, ZnkStrAry result_msgs )
 		mod = MoaiModuleAry_at( mod_ary, mod_idx );
 		if( mod ){
 			MoaiLog_printf( "Moai : invokeInitiate [%s]\n", parent_proxy );
-			target_name = MoaiModule_targe_name( mod );
+			target_name = MoaiModule_target_name( mod );
 			ZnkStr_set( result_msg, "Cannot call plugin function" );
 			result = MoaiModule_invokeInitiate( mod, parent_proxy, result_msg );
 
 			if( result_msgs ){
 				ZnkStrAry_push_bk_snprintf( result_msgs, Znk_NPOS,
-						"Initiate %s : %s : %s",
+						"Initiate %s : %s : <blockquote><pre>%s</pre></blockquote>",
 						target_name, result ? "Success" : "Failure", ZnkStr_cstr(result_msg) );
 			}
 			MoaiLog_printf( "Moai : Initiate %s : %s : %s\n",

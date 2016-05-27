@@ -246,6 +246,7 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name,
 		ZnkVar_set_val_Str( varp, ZnkStr_cstr(cfduid), ZnkStr_leng(cfduid) );
 	}
 
+#if 0
 	/***
 	 * この内部変数は初投稿の際にCookieにおけるyukiの値を隠蔽するために使われる.
 	 * ここでは空に設定しておく必要がある.
@@ -254,6 +255,12 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name,
 	if( varp ){
 		ZnkVar_set_val_Str( varp, "", 0 );
 	}
+#else
+	varp = refCookieVar( myf, "yuki" );
+	if( varp ){
+		ZnkVar_set_val_Str( varp, "", 0 );
+	}
+#endif
 
 	/***
 	 * PON, HAPの内容を一応消去.
@@ -277,7 +284,7 @@ FUNC_END:
 }
 
 bool
-initiate( ZnkMyf flr_send, const char* parent_proxy, ZnkStr result_msg )
+initiate( ZnkMyf ftr_send, const char* parent_proxy, ZnkStr result_msg )
 {
 	/***
 	 * 最初に参照するサーバ名を指定.
@@ -291,14 +298,25 @@ initiate( ZnkMyf flr_send, const char* parent_proxy, ZnkStr result_msg )
 #endif
 
 	ZnkDir_mkdirPath( "./tmp", Znk_NPOS, '/' );
-	if( !shuffleMyfFilter( flr_send, srv_name, parent_proxy, result_msg ) ){
+	if( !shuffleMyfFilter( ftr_send, srv_name, parent_proxy, result_msg ) ){
 		return false;
 	}
-	if( !ZnkMyf_save( flr_send, "filters/2ch_send.myf" ) ){
+	if( !ZnkMyf_save( ftr_send, "filters/2ch_send.myf" ) ){
 		ZnkStr_set( result_msg, "Cannot save 2ch_send.myf" );
 		return false;
 	}
 	ZnkStr_set( result_msg, "Virtual USERS done. Your 2ch_send.myf is initiated successfully." );
+	{
+		ZnkVarp varp;
+		varp = refUserAgent( ftr_send );
+		if( varp ){
+			ZnkStr_addf( result_msg, "\nUser-Agent=[%s]", ZnkVar_cstr(varp) );
+		}
+		varp = refCookieVar( ftr_send, "__cfduid" );
+		if( varp ){
+			ZnkStr_addf( result_msg, "\n__cfduid=[%s]", ZnkVar_cstr(varp) );
+		}
+	}
 	return true;
 }
 

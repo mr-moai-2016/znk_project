@@ -15,6 +15,7 @@ ad.doubleclick.net
 *.adingo.jp
 js.fout.jp
 ocsp.digicert.com
+spnet33.i-mobile.co.jp
 @@.
 
 # 以下にはPOST時に確認モードを表示したいホストを記述する.

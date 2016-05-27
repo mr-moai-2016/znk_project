@@ -144,6 +144,12 @@ ZnkHtpHdrs_registReferer( ZnkVarpAry vars, const char* val, size_t val_leng )
 	ZnkSRef_set_literal( &sref, "Referer" );
 	return ZnkHtpHdrs_regist( vars, sref.cstr_, sref.leng_, val, val_leng );
 }
+
+/***
+ * Deprecated.
+ * 次期メジャーリリースでは削除の予定.
+ * 替わりに ZnkCookie_extend_toCookieStatement を用いること.
+ */
 ZnkVarp
 ZnkHtpHdrs_registCookie( ZnkVarpAry vars, const ZnkVarpAry cookie );
 

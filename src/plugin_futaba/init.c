@@ -541,6 +541,14 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 		ZnkVar_set_val_Str( varp, ZnkStr_cstr(posttime), ZnkStr_leng(posttime) );
 	}
 
+	/***
+	 * pwdcの内容はここで一旦確実に消去しておくべきであろう.
+	 */
+	varp = refCookieVar( myf, "pwdc" );
+	if( varp ){
+		ZnkVar_set_val_Str( varp, "", 0 );
+	}
+
 	result = true;
 FUNC_END:
 	ZnkStr_delete( caco );
@@ -552,7 +560,7 @@ FUNC_END:
 }
 
 bool
-initiate( ZnkMyf flr_send, const char* parent_proxy, ZnkStr result_msg )
+initiate( ZnkMyf ftr_send, const char* parent_proxy, ZnkStr result_msg )
 {
 	/***
 	 * 最初に参照するサーバ名と板ID名を指定.
@@ -568,14 +576,41 @@ initiate( ZnkMyf flr_send, const char* parent_proxy, ZnkStr result_msg )
 #endif
 
 	ZnkDir_mkdirPath( "./tmp", Znk_NPOS, '/' );
-	if( !shuffleMyfFilter( flr_send, srv_name, board_id, parent_proxy, result_msg ) ){
+	if( !shuffleMyfFilter( ftr_send, srv_name, board_id, parent_proxy, result_msg ) ){
 		return false;
 	}
-	if( !ZnkMyf_save( flr_send, "filters/futaba_send.myf" ) ){
+	if( !ZnkMyf_save( ftr_send, "filters/futaba_send.myf" ) ){
 		ZnkStr_set( result_msg, "Cannot save futaba_send.myf" );
 		return false;
 	}
 	ZnkStr_set( result_msg, "Virtual USERS done. Your futaba_send.myf is randomized successfully." );
+	{
+		ZnkVarp varp;
+		varp = refUserAgent( ftr_send );
+		if( varp ){
+			ZnkStr_addf( result_msg, "\nUser-Agent=[%s]", ZnkVar_cstr(varp) );
+		}
+		varp = refPostVar( ftr_send, "scsz" );
+		if( varp ){
+			ZnkStr_addf( result_msg, "\nscsz=[%s]", ZnkVar_cstr(varp) );
+		}
+		varp = refPostVar( ftr_send, "flrv" );
+		if( varp ){
+			ZnkStr_addf( result_msg, "\nflrv=[%s]", ZnkVar_cstr(varp) );
+		}
+		varp = refPostVar( ftr_send, "flvv" );
+		if( varp ){
+			ZnkStr_addf( result_msg, "\nflvv=[%s]", ZnkVar_cstr(varp) );
+		}
+		varp = refPostVar( ftr_send, "pthc" );
+		if( varp ){
+			ZnkStr_addf( result_msg, "\npthc(caco code issued by bin/cachemt7.php)=[%s]", ZnkVar_cstr(varp) );
+		}
+		varp = refCookieVar( ftr_send, "posttime" );
+		if( varp ){
+			ZnkStr_addf( result_msg, "\ncookie posttime=[%s]", ZnkVar_cstr(varp) );
+		}
+	}
 	return true;
 }
 

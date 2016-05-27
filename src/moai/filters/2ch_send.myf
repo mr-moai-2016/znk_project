@@ -1,16 +1,13 @@
 @def_quote [' ']
 
 @@V header_vars
-User-Agent = ['Mozilla/5.0 (Linux; U; 2.3.5; ja-jp; SBM101SH Build/S0030) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1']
+User-Agent = ['Mozilla/5.0 (Windows; U; Windows NT 5.0; it-IT; rv:1.7.5) Gecko/20041110 Firefox/1.0']
 @@.
 
 @@V post_vars
-USERS_yuki = ['']
 @@.
 
 @@V cookie_vars
-__cfduid=['']
-yuki=['']
-#__cfduid=['dffffffffffffffffffffffffffffffff1400000000']
-#READJS=['off']
+__cfduid = ['dc21a92c39d0e47587ca520f8476eed6a1464330707']
+yuki = ['']
 @@.
