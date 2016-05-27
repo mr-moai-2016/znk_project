@@ -10,6 +10,15 @@ This is Japanese overview. English version is [here][7].
 およびライブラリを開発/提供するリポジトリです.
 これらはすべてlibZnkという基本ライブラリによってWindows またはLinux向けに開発されたものであります.
 
+このページの右上にあります「Clone or download」というボタンをクリックすると
+さらに「Download ZIP」と書かれた部分が現れるので、これをクリックすれば
+プロジェクト全体をアーカイブした最新のzipファイルがダウンロードできます.
+
+あるいは、以下のリンクからもこれを直接ダウンロード可能です.
+
+  https://github.com/mr-moai-2016/znk_project/archive/master.zip
+
+
 現在このリポジトリで提供しておりますものは以下の通り:
 
 * libZnk : 基本的なC/C++用ライブラリ  
