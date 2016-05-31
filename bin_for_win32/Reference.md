@@ -132,13 +132,53 @@ Moaiでは、HTTPにおけるPOSTにて送信されるヘッダやPOST変数、クッキーの値において
 
 このファイル内の header_vars、post_vars、cookie_varsという部分で
 それぞれHTTPヘッダ、POST変数、Cookieにおける値の置換を行うことができる.
-この部分には以下の変数代入形式を記述する.
+これらにはすべて以下の変数代入形式を記述する.
 
 ~~~
     varname = ['置換後の値']
 ~~~
 
-このファイル内において指定されていない変数に関しては何も加工修正はされず、単にそのまま送られる.
+** header_vars(HTTPヘッダの値の修正) **  
+一般にHTTPにおいてサイトへアクセスする場合、送信や受信されるデータ本体の直前に
+HTTPヘッダと呼ばれるものが付加されて通信される.
+例えば単純にブラウザから http://may.2chan.net/b/res/77777777.htm へURL指定したり、
+そのページで「再読み込み」ボタンなどを押した場合は、概念的には以下のようなヘッダが送られる
+（実際はもっと複雑であるかもしれない).
+
+~~~
+GET /b/res/77777777.htm HTTP/1.1
+Host: may.2chan.net
+User-Agent: My Sexy Browser
+Accept: */*
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: ja,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Referer: may.2chan.net/b/res/77777777.htm
+Cookie: posttime=1464336000000; uuc=1
+Connection: keep-alive
+
+~~~
+
+あるいは http://may.2chan.net/b/futaba.php?guid=onがあて先となっているような掲示板へ
+レスしようとした場合、概念的には以下のようなヘッダが送られる（実際はもっと複雑であるかもしれない).
+~~~
+POST /b/futaba.php?guid=on HTTP/1.1
+Host: may.2chan.net
+User-Agent: My Sexy Browser
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: ja,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Referer: http://may.2chan.net/b/res/77777777.htm
+Cookie: posttime=1464336000000; uuc=1
+Connection: keep-alive
+Content-Type: multipart/form-data; boundary=---------------------------134281275020820
+Content-Length: 2050
+
+(以下、2050バイトのPOSTデータ本体(これをHTTPのBody部と呼ぶ)が続く)
+~~~
+
+
+これらにおいて指定されていない変数に関しては何も加工修正はされず、ブラウザにおいて設定された状態が単にそのまま送られる.
 また右辺の置換後の値が空値のときは、文字通り空値へと置換される.
 (ただしcookie_varsにおける変数が空値の場合は、そのクッキー変数が存在しないことと等価である)
 また中間処理のため、実際に送信されるPOST変数に存在しない変数などを記述しておくこともできる.
@@ -183,7 +223,7 @@ namec = ['']
 というフォーマットを持つ記述子であり、これを指定しない場合、futaba.phpはデフォルトとして ['14x6x4x0x0'] を指定したものとみなすようである.
 
 またnamecというのは、最後のレスにおいて使用したお名前欄の内容であり、
-ここではこれを強制的に空値へとリセットしている.
+ここではこれを強制的に空値へとリセット(Cookie変数を削除)している.
 
   <a href="#user-content-index">目次へ戻る</a>
 
