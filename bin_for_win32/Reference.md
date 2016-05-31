@@ -138,7 +138,12 @@ Moaiでは、HTTPにおけるPOSTにて送信されるヘッダやPOST変数、クッキーの値において
     varname = ['置換後の値']
 ~~~
 
-** header_vars(HTTPヘッダの値の修正) **  
+これらにおいて指定されていない変数に関しては何も加工修正はされず、ブラウザにおいて設定された状態が単にそのまま送られる.
+また右辺の置換後の値が空値のときは、文字通り空値へと置換される.
+(ただしcookie_varsにおける変数が空値の場合は、そのクッキー変数が存在しないことと等価である)
+
+
+**header_vars(HTTPヘッダの値の修正) **  
 一般にHTTPにおいてサイトへアクセスする場合、送信や受信されるデータ本体の直前に
 HTTPヘッダと呼ばれるものが付加されて通信される.
 例えば単純にブラウザから http://may.2chan.net/b/res/77777777.htm へURL指定したり、
@@ -164,7 +169,7 @@ Connection: keep-alive
 ~~~
 POST /b/futaba.php?guid=on HTTP/1.1
 Host: may.2chan.net
-User-Agent: My Sexy Browser
+User-Agent: Mozilla/5.0 Gecko/20041122 Firefox/1.0
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
 Accept-Language: ja,en-US;q=0.7,en;q=0.3
 Accept-Encoding: gzip, deflate
@@ -177,10 +182,23 @@ Content-Length: 2050
 (以下、2050バイトのPOSTデータ本体(これをHTTPのBody部と呼ぶ)が続く)
 ~~~
 
+Host だとかUser-Agent だとか : 記号の前にある部分がHTTPヘッダーの変数名となり、
+それより後にある部分がその値を意味する.
+上記よりお分かり戴けると思うが、User-Agentの値はHTTPヘッダーの変数の一種として格納される形になる.
+従って、変数User-Agentの値を修正することで、サイトに送られるUser-Agentを偽装することができる.
+これを行うには、header_varsにおいて以下のように記述する.
 
-これらにおいて指定されていない変数に関しては何も加工修正はされず、ブラウザにおいて設定された状態が単にそのまま送られる.
-また右辺の置換後の値が空値のときは、文字通り空値へと置換される.
-(ただしcookie_varsにおける変数が空値の場合は、そのクッキー変数が存在しないことと等価である)
+~~~
+@@V header_vars
+User-Agent = ['My Sexy Browser']
+@@.
+~~~
+これによってUser-Agentの値が本来の値である Mozilla/5.0 Gecko/20041122 Firefox/1.0 から
+My Sexy Browserという値に偽装される.
+
+
+
+
 また中間処理のため、実際に送信されるPOST変数に存在しない変数などを記述しておくこともできる.
 この場合、フィルタ処理においてその変数は単に無視される.
 
