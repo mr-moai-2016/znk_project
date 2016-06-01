@@ -132,11 +132,14 @@ Moaiでは、HTTPにおけるPOSTにて送信されるヘッダやPOST変数、クッキーの値において
 
 このファイル内の header_vars、post_vars、cookie_varsという部分で
 それぞれHTTPヘッダ、POST変数、Cookieにおける値の置換を行うことができる.
-これらにはすべて以下の変数代入形式を記述する.
+これらには以下の変数代入形式を記述する.
 
 ~~~
     varname = ['置換後の値']
 ~~~
+
+> このようにMoaiでは、特にPOST変数のフィルタリングを比較的簡易に実現できる.
+> これに関しては同種のツールであるProxomitronなどに比べて有利な点の一つである.
 
 これらにおいて指定されていない変数に関しては何も加工修正はされず、ブラウザにおいて設定された状態が単にそのまま送られる.
 また右辺の置換後の値が空値のときは、文字通り空値へと置換される.
@@ -226,9 +229,9 @@ My Sexy Browserという値に書き換えられた形でサイトへ送信される形となる.
 この**inputタグに書かれた内容**が最終的にはPOST変数となり、POSTを行う場合(レス送信時など)に送信されるデータの本体に相当する.
 実際のHTTP通信においてPOST変数はHTTP Body部のデータとしてHTTPヘッダーより後ろに配置される.
 
-以下にいくつかの練習用例題を出しておこう.
+以下にあなたのトレーニングのため、いくつかの例題を出しておこう.
 
-**【例題1】**  
+**【トレーニング用例題1】**  
 例えば、掲示板のHTMLのソースに以下のような部分が含まれていたとしよう.
 
 ~~~html
@@ -284,7 +287,7 @@ My Sexy Browserという値に書き換えられた形でサイトへ送信される形となる.
 
 さて、前置きが長くなったが、この掲示板exampleではhimitu_no_dataというPOST変数により、
 ユーザの識別を行っているものとしよう.
-**Moaiによってこの値を適当な値(例えば59635963)にでっち上げよ！！**
+**Moaiによってこの値を適当な値(例えば07210721)にでっち上げよ！！**
 
 【例題1の解答】  
 
@@ -305,17 +308,163 @@ www.example.net
 @@.
 
 @@V post_vars
-himitu_no_data = ['59635963']
+himitu_no_data = ['07210721']
 @@.
 
 @@V cookie_vars
 @@.
 ~~~
 
+最後に既にMoaiを起動している場合はtarget.myfとフィルタファイルfilters/example_send.myfをリロードしなければならない.
+一度Moaiを終了してそれをもう一度起動するか、あるいはWeb Configuration画面で「Restart Moai」ボタンを押せばよい.
+
+以上である.
+
+
+#### cookie_vars(Cookieの値の修正)  
+Cookieについては知っている方も多いであろう.
+ブラウザの設定画面からも簡単に確認できるし、その内容を消去するのも同様に簡単である.
+一般にこの値はサイト毎に別に記録される.
+
+例えば www.example.net と www.moai-chan.net という二つの異なるサイトがあったとして、
+これらは別のカテゴリとして分離して記録される. このときwww.example.netからはwww.moai-chan.netの
+カテゴリにあるCookieの値を見ることも更新することもできないし、その逆も然りである.
+
+また、ふたばちゃんねるなどでは、2chan.netというふたば全体で使われるCookie と may.2chan.net
+というようにmayだけで使われるCookieの２つが、現在は記録されるようである.
+
+> ところで勘のよい方は気づかれたかもしれないが、上記HTTPヘッダー変数の解説においてCookieという名前の変数が現れている.
+> 実のところ、Cookieデータは最終的にはHTTPヘッダ内のCookie変数として送信が行われており、
+> つまり上記で説明したheader_varsによってこの値を修正することも面倒だが不可能ではない.
+> また一方、HTTPヘッダ変数Set-Cookieによって、Cookieデータの新規作成や更新などが行われ、
+> これも同様の考え方で修正することもできる.
+> しかし、ヘッダ変数CookieまたはSet-Cookieの値は複雑なフォーマットを持っており、
+> 仮にheader_varsによってこの値を修正するとなれば、このフォーマットを自力で解釈しなければならない.
+> cookie_varsを用いればその作業は不要となり、簡易にCookie値の加工が可能となる.
+
+
+**【トレーニング用例題2】**  
+例えば、掲示板moai-chanという架空の掲示板を考えよう.
+この掲示板には mei.moai-chan.net と imoge.moai-chan.netという二つのサーバが存在し、
+これらのHTMLのソースはいずれも以下のような部分が含まれているものとする.
+
+~~~html
+<head>
+<base href="http://mei.moai-chan.net/">
+</head>
+
+<form action="moai.php" method="POST">
+
+<input type=hidden name="entry_time"     value="2016/06/01/12:05:25">
+<input type=hidden name="secret_of_mana" value="192837465">
+
+<b>おなまえ</b><input type=text name="your_name" size="28"><br><br>
+<b>メール欄</b><input type=text name="your_mail" size="28"><br><br>
+<b>コメント</b><textarea name="comment" cols="48" rows="4"></textarea><br><br>
+
+<b>添付File</b><input type=file name="upload_file" size="35"><br><br>
+
+<input type=checkbox name="text_only" value=on>画像なし
+
+</form>
+~~~
+
+２つ目の例題なので、解説はある程度省略しよう.
+ちなみにこの例は大分ふたばの状況に近い(笑).
+
+以下に簡単にこのHTMLに関するヒントを列挙しておく.
+
+<ul>
+<li>この例ではformタグのactionではURLがフルパスで記述されていないが、これはすぐ上のbaseタグによって
+    この指定より上に来るべきパスを指定しているためである.
+	尚、ここでのbaseタグの値は、mei.moai-chan.net 向けのものとなっているが、
+	もう一つのサーバimoge.moai-chan.netの場合は同様にここがそれ向けの値になっていると考えればよい.</li>
+<li>この例ではformタグ内にenctypeが指定されていないが、この場合application/x-www-form-urlencodedが指定されたのと同じになる.
+    いずれにせよこれに関して気にする必要はない.</li>
+<li>inputタグ内のtype=textは、画面上では「おなまえ」や「メール欄」などの一行文字列入力フォームに相当する.
+    勿論これもPOST変数となる.</li>
+</ul>
+
+さて、この架空の掲示板moai-chanではsecret_of_manaにおいてあなたのマシン環境のFingerprint値を設定しているものとしよう.
+Fingerprintとはマシン固有の色々な情報をかき集めて足し合わせ、それをハッシュ値としたものである.
+また、あなたが始めてこの掲示板に入場した場合、Cookieにおいて cok_entry_time という変数を作って
+その時刻を設定するものとする.
+それと同時に、Javascriptにより cok_entry_timeの値を参照して POST変数entry_timeにも全く同じ値を設定しているものとしよう.
+moai-chanではこれらをもってユーザの識別を行っているものとする.
+
+**MoaiによってまずCookie変数cok_entry_timeを削除し、あたかも初めてこの掲示板に入場したかのような状況をシミュレートせよ！！**
+**次にあなたのマシン環境を示すsecret_of_manaを適当な値にでっち上げよ！！**
+
+
+【例題2の解答】  
+
+まずtarget.myf内で例えばmoai-chanという名前のtargetを定義する.
+このファイルに以下のような指定を書き加えればよいだろう.
+
+~~~
+@@L moai-chan
+mei.moai-chan.net
+imoge.moai-chan.net
+@@.
+~~~
+
+サーバの数が多いなど列挙するのが面倒な場合は、替わりに以下のように記述することもできる.
+
+~~~
+@@L moai-chan
+*.moai-chan.net
+@@.
+~~~
+
+次にfilters/moai-chan_send.myfというファイルを作成し、その内容を以下のようにする.
+~~~
+@def_quote [' ']
+
+@@V header_vars
+@@.
+
+@@V post_vars
+entry_time = ['']
+secret_of_mana = ['07210721']
+@@.
+
+@@V cookie_vars
+cok_entry_time = [''}
+@@.
+~~~
+
+cok_entry_timeを空値に設定することにより、moai-chan.netがこれに新たな値を明示的に設定するまでの期間は
+このCookieの値は存在していないのと同じになる.
+(cookie_varsに設定している変数に関して、moai-chan.netからはブラウザに実際に設定されている真の値は見えない.)
+また、moai-chan.netがこれに新たな値を明示的に設定した瞬間、filters/moai-chan_send.myfも更新され、
+上記cookie_varsのcok_entry_timeの値はその値に自動的に書き換わる.
+
+少し難しいだろうか？
+この辺りの処理はMoaiがすべてうまく取り計らってくれる.
+まあこの場合、素直に実際のブラウザのCookieを削除した方が早いだろうが、
+ここではcookie_varsフィルタの練習例として、このような方法を紹介している.
+
+一方、POST変数entry_timeについてはmoai-chan.netのJavascriptが勝手にブラウザにある真のCookieの値を設定するので
+とりあえずentry_timeを空値に設定してある.
+ここで「とりあえず」と言う言葉を使ったのは、このままでは不十分であるからだ.
+後でcok_entry_timeにどのような値が設定されたかを見て、その値を手動でコピペしなければならない.
+(この辺りはpluginを用いればその必要もなくなりさらにスマートに行えるが、ここではそこまでは踏み込まない.)
+
+ここで既にMoaiを起動している場合はtarget.myfとフィルタファイルfilters/moai-chan_send.myfをリロードしなければならない.
+一度Moaiを終了してそれをもう一度起動するか、あるいはWeb Configuration画面で「Restart Moai」ボタンを押せばよい.
+
+これでmoai-chan.netにあたかも初めて入場するのと同じ状況を作り出せたことになる.
+ここで一旦moai-chan.netにアクセスすると、entry_timeの値が空であるので、「Javascriptを有効にして下さい」
+といった旨のメッセージがおそらく表示されるはずである.
+一方、cookie_vars 内の cok_entry_time 変数は、この時点で moai-chanより発行された値に書き換わっているはずである.
+その値をentry_timeにそのままコピペすれば、ミッション完了である.
+
+
 
 最後に実際の適用例も出しておこう.
+(pluginは用いない方法なので一部面倒だが)
 
-**【例】**  
+**【実戦例題】**  
 例えば掲示板「ふたばちゃんねる」を対象として、その送信ヘッダとPOST変数とCookieの値を加工したいとしよう.
 target.myf内で例えばfutabaという名前のtargetを定義し、filters/futaba_send.myfというファイルを作成する.
 このファイル内で以下の指定を行う.
@@ -326,27 +475,34 @@ User-Agent = ['Mozilla/5.0 MyBrowser_MoreMoreFireSexy']
 @@.
 
 @@V post_vars
-name = ['モア!!モア!!モアーイ']
-email = ['moge']
+pthb = ['']
+pthc = ['']
+pthd = ['']
+flrv = ['2739407074']
+flvv = ['3792482965']
+scsz = ['800x600x32']
+pwd = ['']
+js = ['on']
 @@.
 
 @@V cookie_vars
-cxyl = ['5x3x2x0x2']
+posttime = ['']
 namec = ['']
+cxyl = ['5x3x2x0x2']
+pwdc = ['']
 @@.
 
 ~~~
 
-ファイルが作成できたら、Moaiを起動(再起動)し、この状態で普通に「ふたばちゃんねる」へとアクセスする.
 この例では、HTTPヘッダ変数のうち、User-Agent の値を「Mozilla/5.0 MyBrowser_MoreMoreFireSexy」へと変更している.
+また、flrv, flvv, scszの値も適当な値にでっちあげておく.
+ファイルが作成できたら、Moaiを起動(再起動)し、この状態で普通に「ふたばちゃんねる」のカタログ(どのカタログでもよい)を開く.
 
-また、POST変数のうち、上記で指定したものの値を変更している.
-これにより、レス投稿時にお名前欄とE-mail欄が強制的に「モア!!モア!!モアーイ」および「moge」となる.
+初回のカタログアクセスにおいて、上記のうち、cookie_vars内のposttimeの値がふたばによって発行された値に書き換わるはずである.
+この後もう一度 filters/futaba_send.myf を開き、pthbとpthcの値を新しいposttimeの値に書き直しておく.
+(pthbとpthcを空のままにしておいてもいけるケースもあるかもしれない)
 
-> このようにMoaiでは、POST変数のフィルタリングを比較的簡易に実現できる.
-> これに関しては同種のツールであるProxomitronなどに比べて有利な点の一つである.
-
-最後にCookie変数のうち、上記で指定したものの値を変更している.
+あとオマケとしてCookie変数のうち、上記で指定したものの値を変更している.
 ここでcxylというのは、
 ~~~
     横のスレ個数 x 縦のスレ個数 x 各スレでの文字数 x 文字位置(0:下,1:右) x 画像サイズ(0から6までで0が最小で旧来の表示)
@@ -355,6 +511,7 @@ namec = ['']
 
 またnamecというのは、最後のレスにおいて使用したお名前欄の内容であり、
 ここではこれを強制的に空値へとリセット(Cookie変数を削除)している.
+
 
   <a href="#user-content-index">目次へ戻る</a>
 

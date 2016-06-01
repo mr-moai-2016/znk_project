@@ -41,7 +41,7 @@ update_pwd( ZnkVarp pwd, ZnkVarp pwdc, ZnkVarp USERS_password )
 		} else {
 			/***
 			 * pwdcがcookie_vars上において設定されていないなら、空値とする.
-			 * この場合、以後pwdcがふたばから適当な値として自動発行発行されるはずである.
+			 * この場合、以後pwdcがふたばから適当な値として自動発行されるはずである.
 			 */
 			ZnkVar_set_val_Str( pwd, "", 0 );
 		}
