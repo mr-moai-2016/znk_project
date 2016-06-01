@@ -143,7 +143,7 @@ Moaiでは、HTTPにおけるPOSTにて送信されるヘッダやPOST変数、クッキーの値において
 (ただしcookie_varsにおける変数が空値の場合は、そのクッキー変数が存在しないことと等価である)
 
 
-## header_vars(HTTPヘッダの値の修正)  
+#### header_vars(HTTPヘッダの値の修正)  
 一般にHTTPにおいてサイトへアクセスする場合、送信や受信されるデータ本体の直前に
 HTTPヘッダと呼ばれるものが付加されて通信される.
 例えば単純にブラウザから http://may.2chan.net/b/res/77777777.htm へURL指定したり、
@@ -201,34 +201,47 @@ My Sexy Browserという値に書き換えられた形でサイトへ送信される形となる.
 不用意に変えると通信そのものが不可能になる恐れがあるので、深い知識のある方以外は弄らないこと.
 
 
-## post_vars(POST変数の値の修正)  
+#### post_vars(POST変数の値の修正)  
 レスが可能な掲示板のHTMLのソースなどを開いてもらうと、まず&lt;form&gt; と &lt;/form&gt;で囲まれた領域があり、
 さらにその部分に &lt;input type=… name=... value=... &gt; などと書かれていることが分かる.
-これがPOST変数であり、POSTを行う場合(レス送信時など)に送信されるデータの本体に相当する.
+これらが最終的にはPOST変数となり、POSTを行う場合(レス送信時など)に送信されるデータの本体に相当する.
 実際のHTTP通信においてPOST変数はHTTP Body部のデータとしてHTTPヘッダーより後ろに配置される.
 
 以下にいくつかの練習用例題を出しておこう.
 
-**【例題1】**
+**【例題1】**  
 例えば、掲示板のHTMLのソースに以下のような部分が含まれていたとしよう.
 
 ~~~html
+<html><body bgcolor="#ffcccc">
+
 <form action="http://www.example.net/bbs.php" method="POST" enctype="multipart/form-data">
+
 <input type=hidden name="himitu_no_data" value="12345678">
-<input type=hidden name="thread" value="1000">
+<input type=hidden name="thread"         value="1000">
+
 <b>コメント</b><textarea name="comment" cols="48" rows="4"></textarea><br><br>
+
 <b>添付File</b><input type=file name="upfile" size="35"><br><br>
+
 <input type=checkbox name="text_only" value=on>画像なし
+
 </form>
+
+</body></html>
 ~~~
 
+例えばFirefoxなどでは以下のように表示されるはずである.
+
+![screenshot](../imgs/post_example_01.png)
+
 <ul>
-<li>レスの送信先はformのactionの値に記述されており、この例だと、http://www.example.net/bbs.phpとなる.</li>
-<li>method、enctypeの部分はとりあえず気にしなくてよい.</li>
-<li>inputタグ内のtype=hiddenという指定は、実際の画面には表示されない隠されたデータであることを意味する.
+<li>レスの送信先はformのactionの値に記述されており、この例だと、http://www.example.net/bbs.php となる.</li>
+<li>method、enctypeの部分はとりあえず気にしなくてよい(Moaiが適切に取り計らう).</li>
+<li>inputタグ内のtype=hiddenという指定は、これが実際の画面には表示されない隠されたデータであることを意味する.
     この例では himitu_no_data と thread が隠されたPOST変数となる</li>
-<li>textareaタグ内のcommentが、文字列レスの内容となり、画面上ではテキスト入力フォームに相当する.
-    これはinputタグではないが、これもPOST変数となる.</li>
+<li>textareaタグ内のcommentが文字列レスの内容となり、画面上ではテキスト入力フォームに相当する.
+    inputタグではないが、**特例として**これもPOST変数となる.</li>
 <li>inputタグ内のtype=fileという指定は、画面上では添付ファイル用のダイアログを出すためのボタンに相当する.
     この例ではupfileという名前のPOST変数となり、その値は添付ファイルの全内容である.
 	(尚、この際に添付ファイルのファイル名も、そのフルパスが除去された形で付加される)</li>
