@@ -231,12 +231,10 @@ My Sexy Browser‚Æ‚¢‚¤’l‚É‘‚«Š·‚¦‚ç‚ê‚½Œ`‚ÅƒTƒCƒg‚Ö‘—M‚³‚ê‚éŒ`‚Æ‚È‚é.
 
 ˆÈ‰º‚É‚ ‚È‚½‚ÌƒgƒŒ[ƒjƒ“ƒO‚Ì‚½‚ßA‚¢‚­‚Â‚©‚Ì—á‘è‚ðo‚µ‚Ä‚¨‚±‚¤.
 
-**yƒgƒŒ[ƒjƒ“ƒO—p—á‘è1z**  
+**yƒgƒŒ[ƒjƒ“ƒO—p—á‘è Lv1z**  
 —á‚¦‚ÎAŒfŽ¦”Â‚ÌHTML‚Ìƒ\[ƒX‚ÉˆÈ‰º‚Ì‚æ‚¤‚È•”•ª‚ªŠÜ‚Ü‚ê‚Ä‚¢‚½‚Æ‚µ‚æ‚¤.
 
 ~~~html
-<html><body bgcolor="#ffcccc">
-
 <form action="http://www.example.net/bbs.php" method="POST" enctype="multipart/form-data">
 
 <input type=hidden name="himitu_no_data" value="12345678">
@@ -249,8 +247,6 @@ My Sexy Browser‚Æ‚¢‚¤’l‚É‘‚«Š·‚¦‚ç‚ê‚½Œ`‚ÅƒTƒCƒg‚Ö‘—M‚³‚ê‚éŒ`‚Æ‚È‚é.
 <input type=checkbox name="text_only" value=on>‰æ‘œ‚È‚µ
 
 </form>
-
-</body></html>
 ~~~
 
 ‚±‚ê‚ðŽÀÛ‚Éƒuƒ‰ƒEƒU‚ÅŠJ‚­‚ÆA—á‚¦‚ÎFirefox‚È‚Ç‚Å‚ÍˆÈ‰º‚Ì‚æ‚¤‚É•\Ž¦‚³‚ê‚é‚Í‚¸‚Å‚ ‚é.
@@ -262,10 +258,10 @@ My Sexy Browser‚Æ‚¢‚¤’l‚É‘‚«Š·‚¦‚ç‚ê‚½Œ`‚ÅƒTƒCƒg‚Ö‘—M‚³‚ê‚éŒ`‚Æ‚È‚é.
 <ul>
 <li>ƒŒƒX‚Ì‘—Mæ‚Íform‚Ìaction‚Ì’l‚É‹Lq‚³‚ê‚Ä‚¨‚èA‚±‚Ì—á‚¾‚ÆAhttp://www.example.net/bbs.php ‚Æ‚È‚é.</li>
 <li>methodAenctype‚Ì•”•ª‚Í‚Æ‚è‚ ‚¦‚¸‹C‚É‚µ‚È‚­‚Ä‚æ‚¢(‚±‚Ì‚ ‚½‚è‚ÌŽw’è‚ÍMoai‚ª“KØ‚ÉŽæ‚èŒv‚ç‚¤).</li>
-<li>inputƒ^ƒO“à‚Ìtype=hidden‚Æ‚¢‚¤Žw’è‚ÍA‚±‚ê‚ªŽÀÛ‚Ì‰æ–Ê‚É‚Í•\Ž¦‚³‚ê‚È‚¢‰B‚³‚ê‚½ƒf[ƒ^‚Å‚ ‚é‚±‚Æ‚ðˆÓ–¡‚·‚é.
-    ‚±‚Ì—á‚Å‚Í himitu_no_data ‚Æ thread ‚ª‰B‚³‚ê‚½POST•Ï”‚Æ‚È‚é</li>
+<li>inputƒ^ƒO“à‚Ìtype=hidden‚Æ‚¢‚¤Žw’è‚ÍA‚±‚ê‚ªŽÀÛ‚Ì‰æ–Ê‚É‚Í•\Ž¦‚³‚ê‚È‚¢‰B‚³‚ê‚½POST•Ï”‚Å‚ ‚é‚±‚Æ‚ðˆÓ–¡‚·‚é.
+    ‚±‚Ì—á‚Å‚Í himitu_no_data ‚Æ thread ‚ªŠY“–‚·‚é.</li>
 <li>textareaƒ^ƒO“à‚Ìcomment‚ª•¶Žš—ñƒŒƒX‚Ì“à—e‚Æ‚È‚èA‰æ–Êã‚Å‚ÍƒeƒLƒXƒg“ü—ÍƒtƒH[ƒ€‚É‘Š“–‚·‚é.
-    inputƒ^ƒO‚Å‚Í‚È‚¢‚ªA**“Á—á‚Æ‚µ‚Ä**‚±‚ê‚àPOST•Ï”‚Æ‚È‚é.</li>
+    inputƒ^ƒO‚Å‚Í‚È‚¢‚ªA“Á—á‚Æ‚µ‚Ä‚±‚ê‚àPOST•Ï”‚Æ‚È‚é.</li>
 <li>inputƒ^ƒO“à‚Ìtype=file‚Æ‚¢‚¤Žw’è‚ÍA‰æ–Êã‚Å‚Í“Y•tƒtƒ@ƒCƒ‹—p‚Ìƒ_ƒCƒAƒƒO‚ðo‚·‚½‚ß‚Ìƒ{ƒ^ƒ“‚É‘Š“–‚·‚é.
     ‚±‚Ì—á‚Å‚Íupload_file‚Æ‚¢‚¤–¼‘O‚ÌPOST•Ï”‚Æ‚È‚èA‚»‚Ì’l‚Í“Y•tƒtƒ@ƒCƒ‹‚Ì‘S“à—e‚Å‚ ‚é.
 	(®A‚±‚ÌÛ‚É“Y•tƒtƒ@ƒCƒ‹‚Ìƒtƒ@ƒCƒ‹–¼‚àA‚»‚Ìƒtƒ‹ƒpƒX‚ªœ‹Ž‚³‚ê‚½Œ`‚Å•t‰Á‚³‚ê‚é)</li>
@@ -289,7 +285,7 @@ My Sexy Browser‚Æ‚¢‚¤’l‚É‘‚«Š·‚¦‚ç‚ê‚½Œ`‚ÅƒTƒCƒg‚Ö‘—M‚³‚ê‚éŒ`‚Æ‚È‚é.
 ƒ†[ƒU‚ÌŽ¯•Ê‚ðs‚Á‚Ä‚¢‚é‚à‚Ì‚Æ‚µ‚æ‚¤.
 **Moai‚É‚æ‚Á‚Ä‚±‚Ì’l‚ð“K“–‚È’l(—á‚¦‚Î07210721)‚É‚Å‚Á‚¿ã‚°‚æII**
 
-y—á‘è1‚Ì‰ð“šz  
+y—á‘è Lv1‚Ì‰ð“šz  
 
 ‚Ü‚¸target.myf“à‚Å—á‚¦‚Îexample‚Æ‚¢‚¤–¼‘O‚Ìtarget‚ð’è‹`‚·‚é.
 ‚±‚Ìƒtƒ@ƒCƒ‹‚ÉˆÈ‰º‚Ì‚æ‚¤‚ÈŽw’è‚ð‘‚«‰Á‚¦‚ê‚Î‚æ‚¢‚¾‚ë‚¤.
@@ -335,7 +331,7 @@ Cookie‚É‚Â‚¢‚Ä‚Í’m‚Á‚Ä‚¢‚é•û‚à‘½‚¢‚Å‚ ‚ë‚¤.
 
 > ‚Æ‚±‚ë‚ÅŠ¨‚Ì‚æ‚¢•û‚Í‹C‚Ã‚©‚ê‚½‚©‚à‚µ‚ê‚È‚¢‚ªAã‹LHTTPƒwƒbƒ_[•Ï”‚Ì‰ðà‚É‚¨‚¢‚ÄCookie‚Æ‚¢‚¤–¼‘O‚Ì•Ï”‚ªŒ»‚ê‚Ä‚¢‚é.
 > ŽÀ‚Ì‚Æ‚±‚ëACookieƒf[ƒ^‚ÍÅI“I‚É‚ÍHTTPƒwƒbƒ_“à‚ÌCookie•Ï”‚Æ‚µ‚Ä‘—M‚ªs‚í‚ê‚Ä‚¨‚èA
-> ‚Â‚Ü‚èã‹L‚Åà–¾‚µ‚½header_vars‚É‚æ‚Á‚Ä‚±‚Ì’l‚ðC³‚·‚é‚±‚Æ‚à–Ê“|‚¾‚ª•s‰Â”\‚Å‚Í‚È‚¢.
+> ‚Â‚Ü‚èã‹L‚Åà–¾‚µ‚½header_vars‚É‚æ‚Á‚ÄCookie•Ï”‚ðC³‚·‚é‚±‚Æ‚à–Ê“|‚¾‚ª•s‰Â”\‚Å‚Í‚È‚¢.
 > ‚Ü‚½ˆê•ûAHTTPƒwƒbƒ_•Ï”Set-Cookie‚É‚æ‚Á‚ÄACookieƒf[ƒ^‚ÌV‹Kì¬‚âXV‚È‚Ç‚ªs‚í‚êA
 > ‚±‚ê‚à“¯—l‚Ìl‚¦•û‚ÅC³‚·‚é‚±‚Æ‚à‚Å‚«‚é.
 > ‚µ‚©‚µAƒwƒbƒ_•Ï”Cookie‚Ü‚½‚ÍSet-Cookie‚Ì’l‚Í•¡ŽG‚ÈƒtƒH[ƒ}ƒbƒg‚ðŽ‚Á‚Ä‚¨‚èA
@@ -343,7 +339,7 @@ Cookie‚É‚Â‚¢‚Ä‚Í’m‚Á‚Ä‚¢‚é•û‚à‘½‚¢‚Å‚ ‚ë‚¤.
 > cookie_vars‚ð—p‚¢‚ê‚Î‚»‚Ìì‹Æ‚Í•s—v‚Æ‚È‚èAŠÈˆÕ‚ÉCookie’l‚Ì‰ÁH‚ª‰Â”\‚Æ‚È‚é.
 
 
-**yƒgƒŒ[ƒjƒ“ƒO—p—á‘è2z**  
+**yƒgƒŒ[ƒjƒ“ƒO—p—á‘è Lv2z**  
 —á‚¦‚ÎAŒfŽ¦”Âmoai-chan‚Æ‚¢‚¤‰Ë‹ó‚ÌŒfŽ¦”Â‚ðl‚¦‚æ‚¤.
 ‚±‚ÌŒfŽ¦”Â‚É‚Í mei.moai-chan.net ‚Æ imoge.moai-chan.net‚Æ‚¢‚¤“ñ‚Â‚ÌƒT[ƒo‚ª‘¶Ý‚µA
 ‚±‚ê‚ç‚ÌHTML‚Ìƒ\[ƒX‚Í‚¢‚¸‚ê‚àˆÈ‰º‚Ì‚æ‚¤‚È•”•ª‚ªŠÜ‚Ü‚ê‚Ä‚¢‚é‚à‚Ì‚Æ‚·‚é.
@@ -387,16 +383,16 @@ Cookie‚É‚Â‚¢‚Ä‚Í’m‚Á‚Ä‚¢‚é•û‚à‘½‚¢‚Å‚ ‚ë‚¤.
 
 ‚³‚ÄA‚±‚Ì‰Ë‹ó‚ÌŒfŽ¦”Âmoai-chan‚Å‚Ísecret_of_mana‚É‚¨‚¢‚Ä‚ ‚È‚½‚Ìƒ}ƒVƒ“ŠÂ‹«‚ÌFingerprint’l‚ðÝ’è‚µ‚Ä‚¢‚é‚à‚Ì‚Æ‚µ‚æ‚¤.
 Fingerprint‚Æ‚Íƒ}ƒVƒ“ŒÅ—L‚ÌFX‚Èî•ñ‚ð‚©‚«W‚ß‚Ä‘«‚µ‡‚í‚¹A‚»‚ê‚ðƒnƒbƒVƒ…’l‚Æ‚µ‚½‚à‚Ì‚Å‚ ‚é.
-‚Ü‚½A‚ ‚È‚½‚ªŽn‚ß‚Ä‚±‚ÌŒfŽ¦”Â‚É“üê‚µ‚½ê‡ACookie‚É‚¨‚¢‚Ä cok_entry_time ‚Æ‚¢‚¤•Ï”‚ðì‚Á‚Ä
+‚Ü‚½A‚ ‚È‚½‚ªŽn‚ß‚Ä‚±‚ÌŒfŽ¦”Â‚É“üê‚µ‚½ê‡Amoai-chan‚Í cok_entry_time ‚Æ‚¢‚¤Cookie•Ï”‚ðì‚Á‚Ä
 ‚»‚ÌŽž‚ðÝ’è‚·‚é‚à‚Ì‚Æ‚·‚é.
-‚»‚ê‚Æ“¯Žž‚ÉAJavascript‚É‚æ‚è cok_entry_time‚Ì’l‚ðŽQÆ‚µ‚Ä POST•Ï”entry_time‚É‚à‘S‚­“¯‚¶’l‚ðÝ’è‚µ‚Ä‚¢‚é‚à‚Ì‚Æ‚µ‚æ‚¤.
+‚»‚µ‚ÄˆÈ~‚ÌPOST‚Å‚ÍAJavascript‚É‚æ‚è cok_entry_time‚Ì’l‚ðŽQÆ‚µ‚Ä POST•Ï”entry_time‚É‚à‘S‚­“¯‚¶’l‚ðÝ’è‚µ‚Ä‚¢‚é‚à‚Ì‚Æ‚µ‚æ‚¤.
 moai-chan‚Å‚Í‚±‚ê‚ç‚ð‚à‚Á‚Äƒ†[ƒU‚ÌŽ¯•Ê‚ðs‚Á‚Ä‚¢‚é‚à‚Ì‚Æ‚·‚é.
 
 **Moai‚É‚æ‚Á‚Ä‚Ü‚¸Cookie•Ï”cok_entry_time‚ðíœ‚µA‚ ‚½‚©‚à‰‚ß‚Ä‚±‚ÌŒfŽ¦”Â‚É“üê‚µ‚½‚©‚Ì‚æ‚¤‚Èó‹µ‚ðƒVƒ~ƒ…ƒŒ[ƒg‚¹‚æII**
 **ŽŸ‚É‚ ‚È‚½‚Ìƒ}ƒVƒ“ŠÂ‹«‚ðŽ¦‚·secret_of_mana‚ð“K“–‚È’l‚É‚Å‚Á‚¿ã‚°‚æII**
 
 
-y—á‘è2‚Ì‰ð“šz  
+y—á‘è Lv2‚Ì‰ð“šz  
 
 ‚Ü‚¸target.myf“à‚Å—á‚¦‚Îmoai-chan‚Æ‚¢‚¤–¼‘O‚Ìtarget‚ð’è‹`‚·‚é.
 ‚±‚Ìƒtƒ@ƒCƒ‹‚ÉˆÈ‰º‚Ì‚æ‚¤‚ÈŽw’è‚ð‘‚«‰Á‚¦‚ê‚Î‚æ‚¢‚¾‚ë‚¤.
@@ -454,7 +450,7 @@ cok_entry_time‚ð‹ó’l‚ÉÝ’è‚·‚é‚±‚Æ‚É‚æ‚èAmoai-chan.net‚ª‚±‚ê‚ÉV‚½‚È’l‚ð–¾Ž¦“I‚
 ˆê“xMoai‚ðI—¹‚µ‚Ä‚»‚ê‚ð‚à‚¤ˆê“x‹N“®‚·‚é‚©A‚ ‚é‚¢‚ÍWeb Configuration‰æ–Ê‚ÅuRestart Moaivƒ{ƒ^ƒ“‚ð‰Ÿ‚¹‚Î‚æ‚¢.
 
 ‚±‚ê‚Åmoai-chan.net‚É‚ ‚½‚©‚à‰‚ß‚Ä“üê‚·‚é‚Ì‚Æ“¯‚¶ó‹µ‚ðì‚èo‚¹‚½‚±‚Æ‚É‚È‚é.
-‚±‚±‚Åˆê’Umoai-chan.net‚ÉƒAƒNƒZƒX‚·‚é‚ÆAentry_time‚Ì’l‚ª‹ó‚Å‚ ‚é‚Ì‚ÅAuJavascript‚ð—LŒø‚É‚µ‚Ä‰º‚³‚¢v
+‚±‚±‚Åˆê’Umoai-chan.net‚ÉƒAƒNƒZƒX‚·‚é‚ÆAentry_time‚Ì’l‚ª‹ó‚Å‚ ‚é‚Ì‚ÅAuCookie‚Ü‚½‚ÍJavascript‚ð—LŒø‚É‚µ‚Ä‰º‚³‚¢v
 ‚Æ‚¢‚Á‚½Ž|‚ÌƒƒbƒZ[ƒW‚ª‚¨‚»‚ç‚­•\Ž¦‚³‚ê‚é‚Í‚¸‚Å‚ ‚é.
 ˆê•ûAcookie_vars “à‚Ì cok_entry_time •Ï”‚ÍA‚±‚ÌŽž“_‚Å moai-chan‚æ‚è”­s‚³‚ê‚½’l‚É‘‚«Š·‚í‚Á‚Ä‚¢‚é‚Í‚¸‚Å‚ ‚é.
 ‚»‚Ì’l‚ðentry_time‚É‚»‚Ì‚Ü‚ÜƒRƒsƒy‚·‚ê‚ÎAƒ~ƒbƒVƒ‡ƒ“Š®—¹‚Å‚ ‚é.
