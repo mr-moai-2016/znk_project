@@ -284,52 +284,66 @@ MoaiModule_filtPostVars( const MoaiModule mod, ZnkVarpAry post_vars )
 }
 
 static size_t
-filtCookieStatement( const ZnkVarpAry ftr_vars, ZnkStr cok_stmt )
+updateCokVars( ZnkVarpAry cok_vars, const ZnkVarpAry cok_ftr )
 {
-	const size_t ftr_size = ZnkVarpAry_size( ftr_vars );
-	ZnkVarp      ftr_var;
-	size_t       ftr_idx;
+	size_t count = 0;
+	if( cok_ftr ){
+		ZnkVarp      cok_var;
+		const char*  new_val = NULL;
+		size_t       new_val_leng = 0;
+		const size_t ftr_size = ZnkVarpAry_size( cok_ftr );
+		ZnkVarp      ftr_var;
+		size_t       ftr_idx;
+		for( ftr_idx=0; ftr_idx<ftr_size; ++ftr_idx ){
+			ftr_var      = ZnkVarpAry_at( cok_ftr, ftr_idx );
+			new_val      = ZnkVar_cstr(ftr_var);
+			new_val_leng = ZnkVar_str_leng(ftr_var);
+	
+			cok_var = ZnkVarpAry_find_byName( cok_vars, ZnkVar_name_cstr(ftr_var), Znk_NPOS, false );
+			if( cok_var ){
+				/***
+				 * ftr_varの値で上書きする.
+				 * ftr_varの値が空の場合でもその空値で上書きする(countもインクリメントさせる).
+				 * このとき、既にcok_vars内にあるCookie変数を削除するという扱いになるが、
+				 * その処理はZnkCookie_extend_toCookieStatementが計らう.
+				 */
+				if( !ZnkS_eq( ZnkVar_cstr(cok_var), new_val ) ){
+					MoaiLog_printf( "  filtCookie : var_name=[%s] replace cok_val=[%s]=>ftr_val=[%s]\n",
+							ZnkVar_name_cstr(cok_var), ZnkVar_cstr(cok_var), new_val );
+					ZnkVar_set_val_Str( cok_var, new_val, new_val_leng );
+					++count;
+				}
+			} else {
+				/***
+				 * ftr_varの値が非空ならcok_varsへ新規追加.
+				 * ftr_varの値が空のときはcok_varsへ何も追加しないし、countも変更しない.
+				 */
+				if( new_val_leng ){
+					ZnkVarp new_var = ZnkVarp_create( ZnkVar_name_cstr(ftr_var), "", 0, ZnkPrim_e_Str );
+					ZnkVar_set_val_Str( new_var, new_val, Znk_NPOS );
+					MoaiLog_printf( "  filtCookie : new var=[%s] val=[%s] is added to cok_vars.\n",
+							ZnkVar_name_cstr(ftr_var), new_val );
+					ZnkVarpAry_push_bk( cok_vars, new_var );
+					++count;
+				}
+			}
+		}
+	}
+	return count;
+}
+
+static size_t
+filtCookieStatement( ZnkStr cok_stmt, const ZnkVarpAry ftr_vars, const ZnkVarpAry ftr_force )
+{
 	ZnkVarpAry   cok_vars = ZnkVarpAry_create( true );
-	ZnkVarp      cok_var;
 	size_t       count = 0;
-	const char*  new_val = NULL;
-	size_t       new_val_leng = 0;
 
 	MoaiLog_printf( "  filtCookie : start cok_stmt=[%s]\n", ZnkStr_cstr(cok_stmt) );
 	/* Parse orignal Cookie header field statement */
 	ZnkCookie_regist_byCookieStatement( cok_vars, ZnkStr_cstr(cok_stmt), ZnkStr_leng(cok_stmt) );
 
-	for( ftr_idx=0; ftr_idx<ftr_size; ++ftr_idx ){
-		ftr_var = ZnkVarpAry_at( ftr_vars, ftr_idx );
-		new_val      = ZnkVar_cstr(ftr_var);
-		new_val_leng = ZnkVar_str_leng(ftr_var);
-
-		cok_var = ZnkVarpAry_find_byName( cok_vars, ZnkVar_name_cstr(ftr_var), Znk_NPOS, false );
-		if( cok_var ){
-			/***
-			 * ftr_varの値で上書きする.
-			 * ftr_varの値が空の場合でもその空値で上書きする(countもインクリメントさせる).
-			 * このとき、既にcok_vars内にあるCookie変数を削除するという扱いになるが、
-			 * その処理はZnkCookie_extend_toCookieStatementが計らう.
-			 */
-			MoaiLog_printf( "  filtCookie : var_name=[%s] replace cok_val=[%s]=>ftr_val=[%s]\n",
-					ZnkVar_name_cstr(cok_var), ZnkVar_cstr(cok_var), new_val );
-			ZnkVar_set_val_Str( cok_var, new_val, new_val_leng );
-			++count;
-		} else {
-			/***
-			 * ftr_varの値が非空ならcok_varsへ新規追加.
-			 * ftr_varの値が空のときはcok_varsへ何も追加しないし、countも変更しない.
-			 */
-			if( new_val_leng ){
-				ZnkVarp new_var = ZnkVarp_create( ZnkVar_name_cstr(ftr_var), new_val, 0, ZnkPrim_e_Str );
-				MoaiLog_printf( "  filtCookie : new var=[%s] val=[%s] is added to cok_vars.\n",
-						ZnkVar_name_cstr(ftr_var), new_val );
-				ZnkVarpAry_push_bk( cok_vars, new_var );
-				++count;
-			}
-		}
-	}
+	count += updateCokVars( cok_vars, ftr_vars );
+	count += updateCokVars( cok_vars, ftr_force );
 
 	/***
 	 * 一つ以上更新があればcok_stmtを構築しなおす.
@@ -343,47 +357,69 @@ filtCookieStatement( const ZnkVarpAry ftr_vars, ZnkStr cok_stmt )
 	return count;
 }
 
+static size_t
+addNewCokVars( ZnkVarpAry cok_vars, const ZnkVarpAry cok_ftr )
+{
+	size_t count = 0;
+	if( cok_ftr ){
+		const size_t ftr_size = ZnkVarpAry_size( cok_ftr );
+		ZnkVarp      ftr_var;
+		size_t       ftr_idx;
+		for( ftr_idx=0; ftr_idx<ftr_size; ++ftr_idx ){
+			ftr_var = ZnkVarpAry_at( cok_ftr, ftr_idx );
+			if( ZnkVar_str_leng(ftr_var) ){
+				/* found */
+				ZnkVarp new_var = ZnkVarp_create( ZnkVar_name_cstr(ftr_var), "", 0, ZnkPrim_e_Str );
+				ZnkVar_set_val_Str( new_var, ZnkVar_cstr(ftr_var), ZnkVar_str_leng(ftr_var) );
+				ZnkVarpAry_push_bk( cok_vars, new_var );
+				++count;
+			}
+		}
+	}
+	return count;
+}
+
 bool
 MoaiModule_filtCookieVars( const MoaiModule mod, ZnkVarpAry hdr_vars )
 {
 	size_t           count    = 0;
-	const ZnkVarpAry ftr_vars = ZnkMyf_find_vars( mod->ftr_send_, "cookie_vars" );
+	const ZnkVarpAry ftr_vars  = ZnkMyf_find_vars( mod->ftr_send_, "cookie_vars" );
+	const ZnkVarpAry ftr_force = ZnkMyf_find_vars( mod->ftr_send_, "cookie_force" );
 	if( ftr_vars == NULL ){
 		/* Does not exist send filter file or cannot load it. */
 	} else {
-		ZnkVarp           htp_var;
-		ZnkStr            htp_val;
+		ZnkVarp htp_var;
+		ZnkStr  cok_stmt;
 	
 		htp_var = ZnkHtpHdrs_find_literal( hdr_vars, "Cookie" );
 		if( htp_var ){
-			htp_val = ZnkHtpHdrs_val( htp_var, 0 );
-			count = filtCookieStatement( ftr_vars, htp_val );
+			cok_stmt = ZnkHtpHdrs_val( htp_var, 0 );
+			count = filtCookieStatement( cok_stmt, ftr_vars, ftr_force );
+			if( ZnkStr_empty( cok_stmt ) ){
+				/***
+				 * この場合Cookieフィールドそのものを削除する.
+				 */
+				ZnkHtpHdrs_erase( hdr_vars, "Cookie" );
+			}
 		} else {
 			/***
 			 * ftr_vars内のCookieの変数の値のうち、非空なものがあれば
 			 * それらから構成されるCookieヘッダフィールドを新たに追加する.
 			 */
-			const size_t ftr_size = ZnkVarpAry_size( ftr_vars );
-			ZnkVarp      ftr_var;
-			size_t       ftr_idx;
-			ZnkVarpAry   cok_vars = ZnkVarpAry_create( true );
-			for( ftr_idx=0; ftr_idx<ftr_size; ++ftr_idx ){
-				ftr_var = ZnkVarpAry_at( ftr_vars, ftr_idx );
-				if( ZnkVar_str_leng(ftr_var) ){
-					/* found */
-					ZnkVarp new_var = ZnkVarp_create( ZnkVar_name_cstr(ftr_var), "", 0, ZnkPrim_e_Str );
-					ZnkVar_set_val_Str( new_var, ZnkVar_cstr(ftr_var), ZnkVar_str_leng(ftr_var) );
-					ZnkVarpAry_push_bk( cok_vars, new_var );
-					++count;
-				}
-			}
-			if( count ){
-				//ZnkHtpHdrs_registCookie( hdr_vars, cok_vars );
-				ZnkStr cok_stmt = ZnkHtpHdrs_val( htp_var, 0 );
-				ZnkStr_clear( cok_stmt );
+			ZnkVarpAry cok_vars = ZnkVarpAry_create( true );
+			count += addNewCokVars( cok_vars, ftr_vars );
+			count += addNewCokVars( cok_vars, ftr_force );
+
+			if( ZnkVarpAry_size( cok_vars ) ){
+				/* この場合のみCookieフィールドを新規追加 */
+				htp_var = ZnkHtpHdrs_regist( hdr_vars,
+						"Cookie", Znk_strlen_literal( "Cookie" ),
+						"", 0 );
+				cok_stmt = ZnkHtpHdrs_val( htp_var, 0 );
 				ZnkCookie_extend_toCookieStatement( cok_vars, cok_stmt );
 				MoaiLog_printf( "  filtCookie : final cok_stmt=[%s]\n", ZnkStr_cstr(cok_stmt) );
 			}
+
 			ZnkVarpAry_destroy( cok_vars );
 		}
 	}

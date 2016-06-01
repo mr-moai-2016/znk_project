@@ -188,9 +188,8 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name,
 	 */
 	const char*  ua = "2ch";
 	unsigned int random_uval1;
-	//unsigned int random_uval2;
 
-	srand((unsigned) time(NULL));
+	srand((unsigned) time(NULL)+1);
 
 	cookie = ZnkVarpAry_create( true );
 
@@ -246,21 +245,10 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name,
 		ZnkVar_set_val_Str( varp, ZnkStr_cstr(cfduid), ZnkStr_leng(cfduid) );
 	}
 
-#if 0
-	/***
-	 * この内部変数は初投稿の際にCookieにおけるyukiの値を隠蔽するために使われる.
-	 * ここでは空に設定しておく必要がある.
-	 */
-	varp = refPostVar( myf, "USERS_yuki" );
-	if( varp ){
-		ZnkVar_set_val_Str( varp, "", 0 );
-	}
-#else
 	varp = refCookieVar( myf, "yuki" );
 	if( varp ){
 		ZnkVar_set_val_Str( varp, "", 0 );
 	}
-#endif
 
 	/***
 	 * PON, HAPの内容を一応消去.

@@ -1377,6 +1377,8 @@ doLocalProxy( MoaiContext ctx, MoaiConnection mcn, MoaiFdSet mfds, MoaiHtpType h
 
 
 	if( htp_type == MoaiHtpType_e_Request ){
+		const MoaiModuleAry mod_ary  = st_mod_ary;
+		const MoaiModule mod = MoaiModuleAry_find_byHostname( mod_ary, hostname );
 		MoaiInfoID info_id = MoaiInfo_regist( ctx->draft_info_ );
 		info = MoaiInfo_find( info_id );
 		info->req_method_ = ctx->req_method_;
@@ -1388,8 +1390,6 @@ doLocalProxy( MoaiContext ctx, MoaiConnection mcn, MoaiFdSet mfds, MoaiHtpType h
 		case ZnkHtpReqMethod_e_POST:
 		{
 			ZnkStr str = ZnkStr_new( "" );
-			const MoaiModuleAry mod_ary  = st_mod_ary;
-			const MoaiModule mod = MoaiModuleAry_find_byHostname( mod_ary, hostname );
 			MoaiPostMode post_mode = MoaiPost_decidePostMode( config, hostname );
 			ZnkVarp varp = NULL;
 
@@ -1435,6 +1435,13 @@ doLocalProxy( MoaiContext ctx, MoaiConnection mcn, MoaiFdSet mfds, MoaiHtpType h
 		case ZnkHtpReqMethod_e_GET:
 		default:
 			MoaiLog_printf( "  doLocalProxy : Request info->req_method_=[%s]\n", ZnkHtpReqMethod_getCStr(info->req_method_) );
+			/***
+			 * Cookie filtering
+			 * GETŽž‚É‚àCookie‚Í‘—M‚³‚ê‚é‚Ì‚Åˆê‰ž‚±‚ê‚às‚Á‚Ä‚¨‚¢‚½•û‚ª‚æ‚¢‚¾‚ë‚¤.
+			 */
+			if( mod ){
+				MoaiModule_filtCookieVars( mod, info->hdrs_.vars_ );
+			}
 			cb_func = sendOnConnected_GET;
 			break;
 		}

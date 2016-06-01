@@ -67,16 +67,18 @@ ZnkCookie_extend_toCookieStatement( const ZnkVarpAry cok_vars, ZnkStr cok_stmt )
 	size_t       cok_idx;
 	ZnkVarp      cok_var;
 	size_t       cok_val_leng;
+	size_t       count = 0;
 
 	for( cok_idx=0; cok_idx<cok_size; ++cok_idx ){
 		cok_var = ZnkVarpAry_at( cok_vars, cok_idx );
 		cok_val_leng = ZnkVar_str_leng( cok_var );
 		if( cok_val_leng ){
-			ZnkStr_addf( cok_stmt, "%s=%s",
-					ZnkVar_name_cstr(cok_var), ZnkVar_cstr(cok_var) );
-			if( cok_idx != cok_size-1 ){
+			if( count ){
 				ZnkStr_add( cok_stmt, "; " );
 			}
+			ZnkStr_addf( cok_stmt, "%s=%s",
+					ZnkVar_name_cstr(cok_var), ZnkVar_cstr(cok_var) );
+			++count;
 		}
 	}
 }
