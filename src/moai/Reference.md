@@ -143,7 +143,7 @@ Moaiでは、HTTPにおけるPOSTにて送信されるヘッダやPOST変数、クッキーの値において
 (ただしcookie_varsにおける変数が空値の場合は、そのクッキー変数が存在しないことと等価である)
 
 
-### header_vars(HTTPヘッダの値の修正)  
+## header_vars(HTTPヘッダの値の修正)  
 一般にHTTPにおいてサイトへアクセスする場合、送信や受信されるデータ本体の直前に
 HTTPヘッダと呼ばれるものが付加されて通信される.
 例えば単純にブラウザから http://may.2chan.net/b/res/77777777.htm へURL指定したり、
@@ -184,8 +184,8 @@ Content-Length: 2050
 
 Host だとかUser-Agent だとか : 記号の前にある部分がHTTPヘッダーの変数名となり、
 それより後にある部分がその値を意味する.
-上記よりお分かり戴けると思うが、User-Agentの値はHTTPヘッダーの変数の一種として格納される形になる.
-従って、変数User-Agentの値を修正することで、サイトに送られるUser-Agentを偽装することができる.
+上記よりお分かり戴けると思うが、いわゆるUser-Agentの値はHTTPヘッダーの変数の一種として格納される形になる.
+従って、このヘッダー変数の値を修正することで、サイトに送られるUser-Agentを偽装することができる.
 これを行うには、header_varsにおいて以下のように記述する.
 
 ~~~
@@ -193,14 +193,55 @@ Host だとかUser-Agent だとか : 記号の前にある部分がHTTPヘッダーの変数名となり、
 User-Agent = ['My Sexy Browser']
 @@.
 ~~~
-これによってUser-Agentの値が本来の値である Mozilla/5.0 Gecko/20041122 Firefox/1.0 から
-My Sexy Browserという値に偽装される.
+これによってUser-Agentの変数値が本来の値である Mozilla/5.0 Gecko/20041122 Firefox/1.0 から
+My Sexy Browserという値に書き換えられた形でサイトへ送信される形となる.
+以上がUser-Agent偽装の詳しいメカニズムとなる.
 
+尚、その他のヘッダー変数の値も同様に変更することができるが通常その必要はない上、
+不用意に変えると通信そのものが不可能になる恐れがあるので、深い知識のある方以外は弄らないこと.
+
+
+## post_vars(POST変数の値の修正)  
+レスが可能な掲示板のHTMLのソースなどを開いてもらうと、まず&lt;form&gt; と &lt;/form&gt;で囲まれた領域があり、
+さらにその部分に &lt;input type=… name=... value=... &gt; などと書かれていることが分かる.
+これがPOST変数であり、POSTを行う場合(レス送信時など)に送信されるデータの本体に相当する.
+実際のHTTP通信においてPOST変数はHTTP Body部のデータとしてHTTPヘッダーより後ろに配置される.
+
+以下にいくつかの練習用例題を出しておこう.
+
+**【例題1】**
+例えば、掲示板のHTMLのソースに以下のような部分が含まれていたとしよう.
+
+~~~html
+<form action="http://www.example.net/bbs.php" method="POST" enctype="multipart/form-data">
+<input type=hidden name="himitu_no_data" value="12345678">
+<input type=hidden name="thread" value="1000">
+<b>コメント</b><textarea name="comment" cols="48" rows="4"></textarea><br><br>
+<b>添付File</b><input type=file name="upfile" size="35"><br><br>
+<input type=checkbox name="text_only" value=on>画像なし
+</form>
+~~~
+
+<ul>
+<li>レスの送信先はformのactionの値に記述されており、この例だと、http://www.example.net/bbs.phpとなる.</li>
+<li>method、enctypeの部分はとりあえず気にしなくてよい.</li>
+<li>inputタグ内のtype=hiddenという指定は、実際の画面には表示されない隠されたデータであることを意味する.
+    この例では himitu_no_data と thread が隠されたPOST変数となる</li>
+<li>textareaタグ内のcommentが、文字列レスの内容となり、画面上ではテキスト入力フォームに相当する.
+    これはinputタグではないが、これもPOST変数となる.</li>
+<li>inputタグ内のtype=fileという指定は、画面上では添付ファイル用のダイアログを出すためのボタンに相当する.
+    この例ではupfileという名前のPOST変数となり、その値は添付ファイルの全内容である.
+	(尚、この際に添付ファイルのファイル名も、そのフルパスが除去された形で付加される)</li>
+<li>inputタグ内のtype=checkboxという指定は、画面上では文字通りチェックボックスに相当する.
+    このチェックボックスにチェックを入れた場合のみPOST変数text_onlyが付加される.
+	(チェックを入れてない場合はその変数は付加されない).
+</ul>
 
 
 
 また中間処理のため、実際に送信されるPOST変数に存在しない変数などを記述しておくこともできる.
 この場合、フィルタ処理においてその変数は単に無視される.
+
 
 **【例】**  
 例えば掲示板「ふたばちゃんねる」を対象として、その送信ヘッダとPOST変数とCookieの値を加工したいとしよう.
