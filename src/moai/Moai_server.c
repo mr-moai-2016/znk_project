@@ -1653,7 +1653,7 @@ printConfig( ZnkSocket sock, ZnkStrAry result_msgs, uint32_t peer_ipaddr )
 	ZnkStrAry str_list = ZnkStrAry_create( true );
 
 	ZnkStr_add( html, "<html><body>\n" );
-	ZnkStr_add( html, "<p><b><img src=\"moai.png\"> Moai : Web Configuration Version 1.0.3</b></p>\n" );
+	ZnkStr_add( html, "<p><b><img src=\"moai.png\"> Moai : Web Configuration Version 1.0.4</b></p>\n" );
 
 	ZnkStr_add( html, "<style type=\"text/css\">\n" );
 	ZnkStr_add( html, "#config_filters tbody tr.evn td { background-color: #E0F0D6; }\n" );
