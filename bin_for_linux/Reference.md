@@ -172,7 +172,7 @@ Connection: keep-alive
 
 ~~~
 
-あるいは http://may.2chan.net/b/futaba.php?guid=onがあて先となっているような掲示板へ
+あるいは http://may.2chan.net/b/futaba.php?guid=on があて先となっているような掲示板へ
 レスしようとした場合、概念的には以下のようなヘッダが送られる（実際はもっと複雑であるかもしれない).
 ~~~
 POST /b/futaba.php?guid=on HTTP/1.1
@@ -187,10 +187,10 @@ Connection: keep-alive
 Content-Type: multipart/form-data; boundary=---------------------------134281275020820
 Content-Length: 2050
 
-(以下、2050バイトのPOSTデータ本体(これをHTTPのBody部と呼ぶ)が続く)
+(以下、Content-Lengthで指定されたバイト(ここでは2050バイト)のPOSTデータ本体(これをHTTPのBody部と呼ぶ)が続く)
 ~~~
 
-Host だとかUser-Agent だとか : 記号の前にある部分がHTTPヘッダーの変数名となり、
+Host だとかUser-Agent だとか **「:」 記号**の前にある部分がHTTPヘッダーの変数名となり、
 それより後にある部分がその値を意味する.
 上記よりお分かり戴けると思うが、いわゆるUser-Agentの値はHTTPヘッダーの変数の一種として格納される形になる.
 従って、このヘッダー変数の値を修正することで、サイトに送られるUser-Agentを偽装することができる.
