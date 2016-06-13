@@ -103,6 +103,8 @@ MoaiModule_load( MoaiModule mod, const char* target_name )
 	/* Plugin module */
 #if defined(Znk_TARGET_WINDOWS)
 	Znk_snprintf( filename, sizeof(filename), "plugins/%s.dll", target_name );
+#elif defined(__CYGWIN__)
+	Znk_snprintf( filename, sizeof(filename), "plugins/cyg%s.dll", target_name );
 #else
 	Znk_snprintf( filename, sizeof(filename), "plugins/%s.so", target_name );
 #endif

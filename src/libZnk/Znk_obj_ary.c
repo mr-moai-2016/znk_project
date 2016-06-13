@@ -43,7 +43,15 @@ ZnkObjAry_size( const ZnkObjAry obj_ary )
 ZnkObj
 ZnkObjAry_at( const ZnkObjAry obj_ary, size_t idx )
 {
-	assert( idx * sizeof(ZnkObj) < ZnkBfr_size( obj_ary->zkbfr_ ) );
+#if !defined(NDEBUG)
+	//assert( idx * sizeof(ZnkObj) < ZnkBfr_size( obj_ary->zkbfr_ ) );
+	if( idx * sizeof(ZnkObj) >= ZnkBfr_size( obj_ary->zkbfr_ ) ){
+		ZnkF_printf_e( "ZnkObjAry_at : idx=[%d] obj_ary=[%p]\n", idx, obj_ary );
+		ZnkF_printf_e( "             : zkbfr=[%p]\n", obj_ary->zkbfr_ );
+		ZnkF_printf_e( "             : zkbfr_size=[%u]\n", ZnkBfr_size( obj_ary->zkbfr_ ) );
+		assert( 0 );
+	}
+#endif
 	return (ZnkObj)ZnkBfr_at_ptr( obj_ary->zkbfr_, idx );
 }
 ZnkObj*

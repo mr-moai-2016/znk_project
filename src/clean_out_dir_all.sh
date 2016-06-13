@@ -1,32 +1,41 @@
 #!/bin/sh
 
+if test "x$UNAME_OS" = "x"; then
+	UNAME_OS=`uname | cut -d _ -f 1`
+fi
+
+MAKEFILE_NAME=Makefile_linux.mak
+if test "x$UNAME_OS" = "xCYGWIN"; then
+	MAKEFILE_NAME=Makefile_cygwin.mak
+fi
+
 echo "===="
-make -f Makefile_linux.mak -C libZnk clean
+make -f ${MAKEFILE_NAME} -C libZnk clean
 echo "===="
 echo ""
 
 echo "===="
-make -f Makefile_linux.mak -C libZnk/zlib clean
+make -f ${MAKEFILE_NAME} -C libZnk/zlib clean
 echo "===="
 echo ""
 
 echo "===="
-make -f Makefile_linux.mak -C moai clean
+make -f ${MAKEFILE_NAME} -C moai clean
 echo "===="
 echo ""
 
 echo "===="
-make -f Makefile_linux.mak -C http_decorator clean
+make -f ${MAKEFILE_NAME} -C http_decorator clean
 echo "===="
 echo ""
 
 echo "===="
-make -f Makefile_linux.mak -C plugin_futaba clean
+make -f ${MAKEFILE_NAME} -C plugin_futaba clean
 echo "===="
 echo ""
 
 echo "===="
-make -f Makefile_linux.mak -C plugin_2ch clean
+make -f ${MAKEFILE_NAME} -C plugin_2ch clean
 echo "===="
 echo ""
 

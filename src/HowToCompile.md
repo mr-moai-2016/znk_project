@@ -1,14 +1,16 @@
 # ソースコードのコンパイル手順
 -----------------------------------
 
-## 目次
+## <a name="index">目次
 -----------------------------------
 * [Windowsな方へ、はじめてのコマンドプロンプト](#windows_first)
 * [Windowsな方へ、はじめてのMinGW](#windows_next)
 * [MinGWの入手方法](#get_mingw)
 * [WindowsでMinGWを使う場合](#use_mingw_on_windows)
 * [WindowsでVCを使う場合](#use_vc_on_windows)
-* [Linux/Cygwin/MSYS1.0の場合](#compile_on_linux)
+* [Linuxの場合](#compile_on_linux)
+* [Cygwinの場合](#compile_on_cygwin)
+* [MSYS1.0でMinGWを使用する場合](#compile_on_msys10)
 * [WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使う場合(おまけ)](#use_others_on_windows)
 * [MacOSについて](#about_macos)
 * [Androidについて](#about_android)
@@ -38,6 +40,8 @@
 
   以上がコマンドプロンプトを開く方法だ！
   全くの初心者の方は**10回くらい開けて閉じてを繰り返し**、確実にマスターしておくことォ！
+
+  <a href="#user-content-index">目次へ戻る</a>
 
 
 ## <a name="windows_next">Windowsな方へ、はじめてのMinGW
@@ -337,16 +341,105 @@
   そしてcompile_by_vc.batは内部でこれを呼び出す.
 
 
-## <a name="compile_on_linux">Linux/Cygwin/MSYS1.0の場合:
+## <a name="compile_on_linux">Linuxの場合:
 -----------------------------------
   これを使われているような方は既にある程度わかっておられる方だとは思うが...
 
-  ターミナル(xterm, urxvtなどなんでもよいが)を開き、gcc, makeコマンドが実行できるように
-  必要に応じてこれらをインストールした上で、make -f Makefile_linux.mak を実行すると
-  ビルド可能なはずである.
+  gcc, g++, make, ld, ar, ranlib コマンドが実行できるように必要に応じてこれらをインストールする.
+  これらはどれも C/C++での開発において最低限必要となる基本コマンドばかりである.
+  個別にインストールしてもよいが、Development系のカテゴリにある基本パッケージをインストールすれば
+  まずすべて自動でインストールされると思う（例えばArch Linuxなら pacman で base-devel をインストールする). 
+  具体的なインストール方法はそれぞれのLinuxディストリビューションによって千差万別なのでここでは記載しない. 
+  ディストリビューションによっては最初からインストールされている可能性も高い.
 
-  これらのインストール方法はそれぞれのLinuxディストリビューションによって千差万別なので
-  ここでは記載しない. 最初からインストールされている可能性も高い.
+  その上でターミナル(xterm, urxvtなどなんでもよいが)を開き、以下のシェルスクリプトを実行する.
+
+    ./compile_on_linux.sh
+
+  このシェルスクリプトにより、Makefile_linux.mak の存在する全ディレクトリへ自動的に移動しつつ
+  make -f Makefile_linux.mak が実行される. この時点でコンパイル後のバイナリは、各ディレクトリ内の
+  out_dirに格納されている.
+  (Permission deniedのようなエラーメッセージが表示されてこのシェルスクリプトが実行できない場合は、
+  まず chmod 755 compile_on_linux.sh で「実行権限」を与え、再度試してみよう！)
+
+  次に、上でコンパイルした全バイナリや設定ファイルをインストールするには、以下を実行すればよい.
+
+	./install_bin_for_linux.sh
+
+  これにより、このディレクトリの一つ上にある ../bin_for_linux へ必要なすべてのファイルがインストールされる.
+  (Permission deniedのようなエラーメッセージが表示されてこのシェルスクリプトが実行できない場合は、
+  上と同様に chmod 755 install_bin_for_linux.sh で「実行権限」を与え、再度試してみよう！)
+
+  以上でコンパイルおよびインストールは完了である.
+
+  ../bin_for_linuxへ移動し、moaiを起動しよう.
+  以下のようなメッセージが表示されればmoaiは無事起動している.
+
+~~~
+  Moai : config load OK.
+  Moai : target load OK.
+  Moai : analysis load OK.
+  Moai : Filter Loading [filters/….myf]
+  Moai : Plugin Loading [plugins/….so]
+  …
+  Moai : acceptable_host=[LOOPBACK]
+  Moai : blocking_mode=[0]
+  Moai : AutoGet PrivateIP=[192.168.…].
+  Moai : Listen port 8124...
+
+  Moai : ObserveR : 1-th sock events by select.
+~~~
+
+  この状態でブラウザにおけるプロキシ設定で接続先を127.0.0.1:8124に設定すれば、
+  moaiをローカルプロキシとして機能させることができるはずである.
+
+
+
+## <a name="compile_on_cygwin">Cygwinの場合:
+-----------------------------------
+  既にCygwinを愛用されており、MinGWなどの競合開発環境をわざわざインストールしたくない方もおられると思う.
+  この項目はそのような方向けである.
+
+> Cygwinではややこしいことに、この上で動作するMinGWをインストールすることもでき、その場合gccオプションとして
+>  -mno-cygwinを使うことでCygwin版gccではなくMinGW版gccを呼び出すこともできる.
+> ここでは設定ファイルなどムダにややこしくしたくないため、そのような使い方については対応しない.
+> つまり純粋なWindowsプログラムを作る用途ではなく、UNIXエミュレータとしてプログラムを作るというCygwin本来の
+> 趣旨に限定するものとする. MinGWを使いたい場合は、上記での説明のようにコマンドプロンプト上で使用するか、
+> あるいはMSYS1.0を使って欲しい. ( どうしてもCygwin上でMinGWを使いたい方はMakefile_cygwin.makを各自修正する必要がある.
+> 生成されるdll名の微調整やコマンドラインオプション -mno-cygwin を追加する程度の変更で済むとは思う ).
+
+  gcc-core, gcc-g++, make, binutils(ld, ar, ranlib, asコマンドなど)をインストールする.
+  これらはどれも C/C++での開発において最低限必要となる基本パッケージである.
+  setup-x86.exe においてこれらを個別にインストールしてもよいが、Develカテゴリにこれらは全て含まれているので
+  面倒ならこのカテゴリごと一括でインストールしてもよい.
+
+  その上でCygwinターミナルを開き、以下のシェルスクリプトを実行する.
+
+    ./compile_on_cygwin.sh
+
+  このシェルスクリプトにより、Makefile_cygwin.mak の存在する全ディレクトリへ自動的に移動しつつ
+  make -f Makefile_cygwin.mak が実行される. この時点でコンパイル後のバイナリは、各ディレクトリ内の
+  out_dirに格納されている.
+  尚、Cygwinの場合、出来上がるdllの名前にはcygプリフィックスをつけている.
+  これば別に必須というわけではないのだが、Cygwin用のdllはVCやMinGWにより生成する普通のdllとは一部異なるため、
+  区別するためにこのようにしてある. 
+
+  次に、上でコンパイルした全バイナリや設定ファイルをインストールするには、以下を実行すればよい.
+
+	./install_bin_for_cygwin.sh
+
+  これにより、このディレクトリの一つ上にある ../bin_for_cygwin へ必要なすべてのファイルがインストールされる.
+
+  以上でコンパイルおよびインストールは完了である.
+
+  ../bin_for_cygwinへ移動し、moaiを起動しよう.
+  以降はLinux版と同じである.
+
+
+## <a name="compile_on_msys10">MSYS1.0の場合:
+-----------------------------------
+
+  作成中.
 
 
 ## <a name="use_others_on_windows">WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使う場合(おまけ)
@@ -417,7 +510,13 @@
 ## <a name="about_android">Androidについて:
 -----------------------------------
   基本的にLinuxなのであるが、現状では未サポートである.
-  仮にコンパイルを試みるなら(未確認であるが)Android NDKを使うことになると思う.
+  しかし我々は現在、このプラットフォームにおいてlibZnkおよびMoaiの開発が可能かどうかを検証中である.
+
+  仮にコンパイルを試みるならAndroid NDKを使うことになる.
+  JNIでのロードはおそらく可能であるが、我々はまだAndroid NDKでのコンパイル成功まで到達していない.
+  これはAndroid NDKでのビルドスキームがPCとは全く異なることと、一部Posixと非互換な関数などが含まれているためである.
+  これへの対応は今しばらく時間がかかりそうである.
+
   また、仮にコンパイルに成功しても携帯端末を想定していない部分もあるため、
   もくろみどおり動作するかどうかは未知数な部分がある.
 

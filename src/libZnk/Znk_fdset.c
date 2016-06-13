@@ -46,7 +46,11 @@ bool
 ZnkFdSet_set( ZnkFdSet fdst, const ZnkSocket sock )
 {
 	Fd_int_t s = (Fd_int_t)sock;
+#if defined(__CYGWIN__)
+	if( sock != ZnkSocket_INVALID ){ FD_SET( s, &fdst->fds_ ); }
+#else
 	FD_SET( s, &fdst->fds_ );
+#endif
 	/***
 	 * fdsは最大FD_SETSIZE個のsockしか保持できない.
 	 * FD_SETではこれを超えた場合は何もせず何のエラーも出さないため、
@@ -65,13 +69,24 @@ void
 ZnkFdSet_clr( ZnkFdSet fdst, const ZnkSocket sock )
 {
 	Fd_int_t s = (Fd_int_t)sock;
+#if defined(__CYGWIN__)
+	if( sock != ZnkSocket_INVALID ){ FD_CLR( s, &fdst->fds_ ); }
+#else
 	FD_CLR( s, &fdst->fds_ );
+#endif
 }
 bool
 ZnkFdSet_isset( const ZnkFdSet fdst, const ZnkSocket sock )
 {
 	Fd_int_t s = (Fd_int_t)sock;
+#if defined(__CYGWIN__)
+	if( sock != ZnkSocket_INVALID ){
+		return (bool)( FD_ISSET( s, &fdst->fds_ ) );
+	}
+	return false;
+#else
 	return (bool)( FD_ISSET( s, &fdst->fds_ ) );
+#endif
 }
 void
 ZnkFdSet_print( const ZnkFdSet fdst )
