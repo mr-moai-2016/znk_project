@@ -12,7 +12,7 @@ OBJS = \
 	$O/main.o \
 	$O/init.o \
 
-DLIB_FILE=$O/$(BASENAME).dll
+DLIB_FILE=$O/cyg$(BASENAME).dll
 DEF_FILE=.\$(BASENAME).def
 
 CLEAN_LIST= \
@@ -29,7 +29,7 @@ $O:
 
 $(DLIB_FILE): $(OBJS)
 	if test -e $(DLIB_FILE); then rm $(DLIB_FILE); fi
-	gcc -shared -o $(DLIB_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\cygZnk.dll $(SUB_LIBS) -lws2_32 $(DEF_FILE)
+	gcc -shared -o $(DLIB_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\cygZnk.dll $(SUB_LIBS)
 
 ##
 # Sub-DirectoryÇ…äiî[Ç≥ÇÍÇΩÉtÉ@ÉCÉãÇ»Ç«Ç…Ç‡è_ìÓÇ…ëŒâûÇ∑ÇÈÇΩÇﬂÅA

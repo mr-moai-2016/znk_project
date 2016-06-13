@@ -1,6 +1,6 @@
 O = ./out_dir
 S = .
-COMPILER=gcc -Wall -O2 -g
+COMPILER=gcc -Wall -O2
 LINKER=gcc
 
 MY_LIBS_ROOT=..
