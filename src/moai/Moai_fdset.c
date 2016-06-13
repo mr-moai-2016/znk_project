@@ -310,16 +310,27 @@ MoaiFdSet_process( MoaiFdSet mfds,
 		const size_t cnt_size = ZnkSocketAry_size( mfds->connecting_socks_ );
 		ZnkSocket connecting_sock = ZnkSocket_INVALID;
 
+		/***
+		 * mfds->connecting_socks_は MoaiConnection_invokeCallback( mcn, mfds ) 呼び出しで
+		 * 要素がeraseされる可能性があるため、一旦wk_sock_ary_に配列全体をコピーしておく.
+		 */
+		ZnkSocketAry_clear( wk_sock_ary );
 		for( cnt_idx=0; cnt_idx<cnt_size; ++cnt_idx ){
 			connecting_sock = ZnkSocketAry_at( mfds->connecting_socks_, cnt_idx );
+			ZnkSocketAry_push_bk( wk_sock_ary, connecting_sock );
+		}
+
+		for( cnt_idx=0; cnt_idx<cnt_size; ++cnt_idx ){
+			connecting_sock = ZnkSocketAry_at( wk_sock_ary, cnt_idx );
 			if( ZnkFdSet_isset( fdst_write, connecting_sock ) ){
 				/* OK. */
 				MoaiConnection mcn = MoaiConnection_find_byOSock( connecting_sock );
+				ZnkSocketAry_set( mfds->connecting_socks_, cnt_idx, ZnkSocket_INVALID );
 				MoaiConnection_setConnectInprogress( mcn, false );
 				ZnkF_printf_e( "  Connection Inprogress Completed : sock=[%d]\n", connecting_sock );
 				MoaiConnection_invokeCallback( mcn, mfds );
 				ZnkFdSet_clr( mfds->fdst_observe_w_, connecting_sock );
-				ZnkSocketAry_set( mfds->connecting_socks_, cnt_idx, ZnkSocket_INVALID );
+				//ZnkSocketAry_set( mfds->connecting_socks_, cnt_idx, ZnkSocket_INVALID );
 			}
 		}
 
