@@ -58,6 +58,8 @@
 
   尚、MinGWではなくVCを使いたいという方は「[WindowsでVCを使う場合](#use_vc_on_windows)」を参照していただきたい.
 
+  <a href="#user-content-index">目次へ戻る</a>
+
 
 ## <a name="get_mingw">MinGWの入手方法:
 -----------------------------------
@@ -197,6 +199,8 @@
     ( mingw-get.exeはダウンロード時、お使いのブラウザの機能を内部で利用しているためである ).
 ~~~
 
+  <a href="#user-content-index">目次へ戻る</a>
+
 
 ## <a name="use_mingw_on_windows">WindowsでMinGWを使う場合
 -----------------------------------
@@ -254,6 +258,8 @@
   「gcc: fatal error: no input files」と出たら成功である.
   一方、「gccは内部コマンドまたは外部コマンド～なんたらかんたら～として認識されていません」
   と出たら失敗である. 上記のPATHの設定において何かを間違えている(例えば打ち間違えなど).
+
+  <a href="#user-content-index">目次へ戻る</a>
 
 
 ## <a name="use_vc_on_windows">WindowsでVCを使う場合
@@ -340,6 +346,8 @@
   同梱してあるスクリプト setenv_vc.batはこれを実現するものである.
   そしてcompile_by_vc.batは内部でこれを呼び出す.
 
+  <a href="#user-content-index">目次へ戻る</a>
+
 
 ## <a name="compile_on_linux">Linuxの場合:
 -----------------------------------
@@ -393,6 +401,7 @@
   この状態でブラウザにおけるプロキシ設定で接続先を127.0.0.1:8124に設定すれば、
   moaiをローカルプロキシとして機能させることができるはずである.
 
+  <a href="#user-content-index">目次へ戻る</a>
 
 
 ## <a name="compile_on_cygwin">Cygwinの場合:
@@ -435,11 +444,15 @@
   ../bin_for_cygwinへ移動し、moaiを起動しよう.
   以降はLinux版と同じである.
 
+  <a href="#user-content-index">目次へ戻る</a>
+
 
 ## <a name="compile_on_msys10">MSYS1.0の場合:
 -----------------------------------
 
   作成中.
+
+  <a href="#user-content-index">目次へ戻る</a>
 
 
 ## <a name="use_others_on_windows">WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使う場合(おまけ)
@@ -496,6 +509,8 @@
     implib /system YourDLL.lib YourDLL.dll
 ~~~
 
+  <a href="#user-content-index">目次へ戻る</a>
+
 
 ## <a name="about_macos">MacOSについて:
 -----------------------------------
@@ -505,6 +520,8 @@
   少し手直しすれば同様の方法でビルドできるはずである.
   (ダイナミックリンクライブラリの拡張子はsoではなくdylibやtbdといったものになるようである.
   その他リンカldのオプションもおそらくMacOS独自のものを指定しなければならないだろう)
+
+  <a href="#user-content-index">目次へ戻る</a>
 
 
 ## <a name="about_android">Androidについて:
@@ -519,4 +536,6 @@
 
   また、仮にコンパイルに成功しても携帯端末を想定していない部分もあるため、
   もくろみどおり動作するかどうかは未知数な部分がある.
+
+  <a href="#user-content-index">目次へ戻る</a>
 
