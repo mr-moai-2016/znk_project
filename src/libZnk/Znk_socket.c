@@ -19,6 +19,7 @@
 #endif
 
 #include <errno.h>
+#include <assert.h>
 
 
 ZnkSocket
@@ -30,6 +31,7 @@ ZnkSocket_open( void )
 
 void ZnkSocket_close( ZnkSocket sock )
 {
+	assert( sock != 0 );
 #if defined(Znk_TARGET_WINDOWS)
 	closesocket( sock );
 #else

@@ -25,7 +25,7 @@ pwdc = ['']
 
 # Cookie値の強制変更
 # ここでの指定はサイトがSet-Cookieを発行しても書き変えられることはない.
-@@V cookie_vars
+@@V cookie_force
 namec = ['']
 _ga = ['']
 @@.

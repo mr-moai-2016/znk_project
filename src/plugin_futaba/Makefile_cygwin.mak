@@ -30,7 +30,6 @@ $O:
 $(DLIB_FILE): $(OBJS)
 	if test -e $(DLIB_FILE); then rm $(DLIB_FILE); fi
 	gcc -shared -o $(DLIB_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\cygZnk.dll $(SUB_LIBS)
-#	gcc -shared -o $(DLIB_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\cygZnk.dll $(SUB_LIBS) -lws2_32 $(DEF_FILE)
 
 ##
 # Sub-Directoryに格納されたファイルなどにも柔軟に対応するため、
