@@ -5,6 +5,9 @@ CP_COMFIRM_="cp -i"
 
 mkdir -p ../bin_for_android
 
+$CP_ virtual_users/*.md ../bin_for_android/
+$CP_ moai/*.md          ../bin_for_android/
+
 install_one()
 {
 	if_dst_exist=$1
@@ -46,7 +49,6 @@ install_abi()
 	done
 	mkdir -p $INST_DIR_/filters
 	$CP_ moai/filters/*.myf $INST_DIR_/filters/
-	$CP_ moai/*.md  $INST_DIR_/
 	$CP_ moai/*.myf $INST_DIR_/
 
 	#
@@ -60,7 +62,6 @@ install_abi()
 	install_one -c user_agent.txt   virtual_users $INST_DIR_
 	install_one -c screen_size.txt  virtual_users $INST_DIR_
 	install_one -c parent_proxy.txt virtual_users $INST_DIR_
-	$CP_ virtual_users/*.md $INST_DIR_/
 
 	#
 	# setup plugins
