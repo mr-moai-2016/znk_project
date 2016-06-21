@@ -656,3 +656,18 @@ KDDI-FJ31 UP.Browser/6.2_7.2.7.1.K.8.160 (GUI) MMP/2.0
 KDDI-KC4A UP.Browser/6.2_7.2.7.1.K.7.1.104 (GUI) MMP/2.0
 KDDI-PT36 UP.Browser/6.2.0.17.2.4.1.1 (GUI) MMP/2.0
 
+Futabaholic 1.1.5b/asus/K00L/4.2.2
+Futabaholic 1.1.5b/blackberry/STV100-3/6.0.1
+Futabaholic 1.1.5b/asus/Nexus 7/4.4.4
+Futabaholic 1.1.5b/TJC Corporation/Q5002/4.4.2
+Futabaholic 1.1.5b/asus/Nexus 7/4.3
+Futabaholic 1.1.5b/KYOCERA/KYY24/4.4.2
+Futabaholic 1.1.5b/Amazon/KFARWI/5.1.1
+Futabaholic 1.1.5b/SHARP/503SH/5.1.1
+Futabaholic 1.1.5b/Sony/SO-03H/6.0
+Futabaholic 1.1.5b/PANTECH/IS11PT/2.3.4
+Futabaholic 1.1.5b/Sony/SO-03G/6.0
+Futabaholic 1.1.5b/asus/Nexus 7/6.0.1
+Futabaholic 1.1.5b/HTC/HTL23/5.0.2
+Futabaholic 1.1.5b/HTC/HTV31/5.0.2
+Futabaholic 1.1.5b/asus/Nexus 7/6.0.1

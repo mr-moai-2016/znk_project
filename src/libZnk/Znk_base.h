@@ -106,9 +106,9 @@
 
 
 /* Target CPU BIT */
-#if   defined(_WIN64) || defined(__x86_64__) || defined(__MINGW64__)
+#if   defined(_WIN64) || defined(__x86_64__) || defined(__MINGW64__) || defined(__aarch64__) || defined(__mips64)
 #  define Znk_CPU_BIT 64
-#elif defined(_WIN32) || defined(__i386__)   || defined(__MINGW32__)
+#elif defined(_WIN32) || defined(__i386__)   || defined(__MINGW32__) || defined(__arm__) || defined(__mips__)
 #  define Znk_CPU_BIT 32
 #else
 #  error "Not supported CPU bit"

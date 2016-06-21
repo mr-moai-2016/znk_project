@@ -1,0 +1,15 @@
+@def_quote [' ']
+
+# 解析対象としたいホスト名を列挙
+@@L interest_hosts
+www1.axfc.net
+www.nijibox2.com
+errorcode-search.com
+@@.
+
+# 解析対象としたいURP(URIにおけるホスト名以降のパスの部分)を列挙
+# 例えば may.2chan.net/bin/cachemt7.php の場合、
+# /bin/cachemt7.php の部分がこれに相当する.
+@@L interest_urp
+*
+@@.
