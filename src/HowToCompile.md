@@ -12,8 +12,8 @@
 * [Cygwinの場合](#compile_on_cygwin)
 * [MSYS1.0でMinGWを使用する場合](#compile_on_msys10)
 * [WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使う場合(おまけ)](#use_others_on_windows)
-* [MacOSについて](#about_macos)
 * [Androidについて](#about_android)
+* [MacOSについて](#about_macos)
 
 ## <a name="windows_first">Windowsな方へ、はじめてのコマンドプロンプト
 -----------------------------------
@@ -512,6 +512,101 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
+## <a name="about_android">Androidについて:
+-----------------------------------
+  Androidは基本的にLinuxであるが、PC Linuxとは大きく異なる部分もある.
+  そして通常、AndroidにおけるプログラムはJavaアプリという形で提供される.
+  Javaアプリでは、グラフィカルなアイコンがホーム画面に表示され、
+  それをタップすることで起動する.
+
+  しかしながら、今回ビルドする Moai for Android はJava VMベースではなくAndroidのLinux上で
+  直接走るネイティブアプリとしてC言語で開発する. この場合ホーム画面にMoai用の特別なアイコンが表示されることはない.
+  Moaiを起動するには、まず端末エミュレータを開き、cdコマンドにより moai実行バイナリが存在するディレクトリ
+  (bin_for_android)へと移動してからmoai実行バイナリを直接起動する形になる.
+  要するに本来のLinux環境やWindowsのコマンドプロンプトなどからプログラムを起動する要領で行う.
+
+  さて、前置きが長くなったが、ネイティブアプリとしてC言語のソースコードをコンパイルするにはAndroid NDKを使う.
+  Android NDKは https://developer.android.com/ndk/downloads/index.html よりダウンロードできる.
+  しかしこれのファイルサイズはかなり大きいので注意してほしい. ダウンロードするzipファイルは約750MB程度もあり、
+  さらにこれを解凍展開すると、なんと3GBほどにもなる！ つまりこれらを単純に合計しただけでも
+  ディスクの空きが4GB程度必要となる. さらにWindows上でコンパイルする場合、今回はCygwinを使うことを想定する.
+  (Cygwinを使わずにコンパイルすることもおそらく可能だが、これに関してはまだ調査/調整中である)
+  尚、Android Studio および android-sdk は全く使わないし、インストールする必要もない.
+  JDK(Java Development Kit)やJREなども必要ない.
+
+
+  Android NDKをダウンロードしたら、これをディスク解凍展開する.
+  無事解凍できただろうか？なにせファイルサイズが馬鹿デカイため、ディスクの空きが少ない場合など失敗の恐れがある.
+  解凍ツールでエラーなどが表示されていないことを確認しよう.
+
+  次に android_setting_ndk.sh をテキストエディタで開き、ZNK_NDK_HOMEの値をAndroid NDKが解凍展開されたディレクトリ
+  のパスに書きかえる. 例えばWindowsでC:\android-ndk-r12フォルダに解凍展開されているなら、Cygwin上でのこれを示すパスは
+  /cygdrive/c/android-ndk-r12となる. 即ち以下のように書き換える形となる.
+  
+
+~~~
+   export ZNK_NDK_HOME=/cygdrive/c/android-ndk-r12
+~~~
+
+  後は以下のコマンドを順番に実行していけばよい.
+  (Windowsの場合はCygwinを起動してこれを実行しよう.)
+~~~
+  chmod 755 *.sh
+  source ./android_setting_ndk.sh
+  ./android_compile.sh
+  ./android_install_bin.sh
+~~~
+
+  src/libZnk, src/moai などにandroidディレクトリが存在するが、この内部にあるjni/*.mk ファイルが
+  Android NDKでコンパイルするためのMakefileである.
+  android_compile.shを実行すると、まずこのディレクトリへ移動してndk-buildコマンドが呼び出される.
+  このとき、同ディレクトリに libs, obj ディレクトリが生成され、ビルドしたバイナリやライブラリなどが
+  ここに出力される.
+  ./android_install_bin.sh を実行することで、これらのバイナリが ../bin_for_androidへとインストールされる形となる.
+
+
+  最後に出来上がった bin_for_android を実機に転送して実行する.
+  これには色々方法があるが、とりあえずはbin_for_androidを一旦zipファイルに固めてWeb上にアップし
+  実機からこれをダウンロードするというクソ回りくどい方法が~~ここで説明するには~~一番簡単だ.
+  まあどんな方法でもよいがとりあえずなんとかこれを実機へと転送して欲しい.
+
+  実行するにあたっては次の点に注意していただきたい.
+
+  <ul>
+  <li>ホームディレクトリ以外では書き込み権限および実行権限の関係で実行できない.<br>
+      よってまず「端末エミュレータ」を開き、cd コマンドよりホームディレクトリへ移動する.
+      (単にcdと入力してEnterを押せばよい).<br>
+      そしてbin_for_android.zipをダウンロードなどした場合は、Downloadディレクトリからホームディレクトリへ
+      これをコピーしなければならない.
+      Downloadディレクトリは通常、/storage/sdcard0/Download などのパスに存在し、その配下にダウンロードした
+      ファイルも置かれている.
+      以下のように実行することでこれをホームディレクトリへコピーしよう.
+~~~
+      cp /storage/sdcard0/Download/bin_for_android.zip ~/
+~~~
+  </li>
+  <li>bin_for_android.zip をホームディレクトリへコピーしたら、unzip bin_for_android.zip でこれを解凍展開しよう.
+      次に cd bin_for_android/armeabi で中へと移動し、moai および http_decorator に実行権限を与える. 
+      以下を実行しておこう.
+~~~
+      chmod 755 moai http_decorator
+~~~
+  </li>
+  <li>moaiは起動時にlibZnk.soを動的ロードする.
+      これを成功させるためにLD_LIBRARY_PATHを適切に指定しておかなければならない.
+      以下を実行しておこう.
+~~~
+      export LD_LIBRARY_PATH=.
+~~~
+      これでようやく準備が整った.
+      ./moai と入力し、上記「Linuxの場合」で説明したのと同様のメッセージが表示されれば成功である.
+  </li>
+  </ul>
+
+
+  <a href="#user-content-index">目次へ戻る</a>
+
+
 ## <a name="about_macos">MacOSについて:
 -----------------------------------
   現状では未サポートである.
@@ -523,19 +618,4 @@
 
   <a href="#user-content-index">目次へ戻る</a>
 
-
-## <a name="about_android">Androidについて:
------------------------------------
-  基本的にLinuxなのであるが、現状では未サポートである.
-  しかし我々は現在、このプラットフォームにおいてlibZnkおよびMoaiの開発が可能かどうかを検証中である.
-
-  仮にコンパイルを試みるならAndroid NDKを使うことになる.
-  JNIでのロードはおそらく可能であるが、我々はまだAndroid NDKでのコンパイル成功まで到達していない.
-  これはAndroid NDKでのビルドスキームがPCとは全く異なることと、一部Posixと非互換な関数などが含まれているためである.
-  これへの対応は今しばらく時間がかかりそうである.
-
-  また、仮にコンパイルに成功しても携帯端末を想定していない部分もあるため、
-  もくろみどおり動作するかどうかは未知数な部分がある.
-
-  <a href="#user-content-index">目次へ戻る</a>
 
