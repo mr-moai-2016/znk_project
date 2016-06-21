@@ -515,8 +515,8 @@
 ## <a name="about_android">Androidについて:
 -----------------------------------
   Androidは基本的にLinuxであるが、PC Linuxとは大きく異なる部分もある.
-  そして通常、AndroidにおけるプログラムはJavaアプリという形で提供される.
-  Javaアプリでは、グラフィカルなアイコンがホーム画面に表示され、
+  そして通常、AndroidにおけるアプリはJava VMをベースとして(エントリポイントとして)提供される.
+  Java VMベースなアプリでは、グラフィカルなアイコンがホーム画面に表示され、
   それをタップすることで起動する.
 
   しかしながら、今回ビルドする Moai for Android はJava VMベースではなくAndroidのLinux上で
@@ -527,21 +527,21 @@
 
   さて、前置きが長くなったが、ネイティブアプリとしてC言語のソースコードをコンパイルするにはAndroid NDKを使う.
   Android NDKは https://developer.android.com/ndk/downloads/index.html よりダウンロードできる.
-  しかしこれのファイルサイズはかなり大きいので注意してほしい. ダウンロードするzipファイルは約750MB程度もあり、
+  また開発はAndroid上では行えないため、PCが必要である. つまりAndroid NDKをPCへダウンロードし、PC上にて開発を行う.
+
+  しかし Android NDKのファイルサイズはかなり大きいので注意してほしい. ダウンロードするzipファイルは約750MB程度もあり、
   さらにこれを解凍展開すると、なんと3GBほどにもなる！ つまりこれらを単純に合計しただけでも
   ディスクの空きが4GB程度必要となる. さらにWindows上でコンパイルする場合、今回はCygwinを使うことを想定する.
-  (Cygwinを使わずにコンパイルすることもおそらく可能だが、これに関してはまだ調査/調整中である)
-  尚、Android Studio および android-sdk は全く使わないし、インストールする必要もない.
-  JDK(Java Development Kit)やJREなども必要ない.
+  (Cygwinを使わずにコンパイルすることもおそらく可能だが、これに関してはまだ調査/調整中である)  
+  尚、Android Studio および android-sdk は今回は全く使わない. インストールさえも不要である.
+  同様にJDK(Java Development Kit)やJREなども必要ない.
 
-
-  Android NDKをダウンロードしたら、これをディスク解凍展開する.
-  無事解凍できただろうか？なにせファイルサイズが馬鹿デカイため、ディスクの空きが少ない場合など失敗の恐れがある.
-  解凍ツールでエラーなどが表示されていないことを確認しよう.
+  Android NDKをダウンロードしたら、これをディスクへ解凍展開する.
+  無事解凍できただろうか？なにせファイルサイズが馬鹿デカイため、解凍ツールでエラーなどが表示されていないことを念のため確認しよう.
 
   次に android_setting_ndk.sh をテキストエディタで開き、ZNK_NDK_HOMEの値をAndroid NDKが解凍展開されたディレクトリ
   のパスに書きかえる. 例えばWindowsでC:\android-ndk-r12フォルダに解凍展開されているなら、Cygwin上でのこれを示すパスは
-  /cygdrive/c/android-ndk-r12となる. 即ち以下のように書き換える形となる.
+  /cygdrive/c/android-ndk-r12となり、以下のように書き換える形となる.
   
 
 ~~~
@@ -557,15 +557,15 @@
   ./android_install_bin.sh
 ~~~
 
-  src/libZnk, src/moai などにandroidディレクトリが存在するが、この内部にあるjni/*.mk ファイルが
-  Android NDKでコンパイルするためのMakefileである.
-  android_compile.shを実行すると、まずこのディレクトリへ移動してndk-buildコマンドが呼び出される.
+  src/libZnk, src/moai などにandroidディレクトリが存在するが、この内部にあるjniディレクトリに
+  Android NDKでコンパイルするためのMakefileが格納されてある.
+  android_compile.shを実行すると、まずこのandroid ディレクトリへ移動してndk-buildコマンドが呼び出される.
   このとき、同ディレクトリに libs, obj ディレクトリが生成され、ビルドしたバイナリやライブラリなどが
   ここに出力される.
   ./android_install_bin.sh を実行することで、これらのバイナリが ../bin_for_androidへとインストールされる形となる.
 
 
-  最後に出来上がった bin_for_android を実機に転送して実行する.
+  最後に出来上がった bin_for_android を実機に転送した上でそれを実行する.
   これには色々方法があるが、とりあえずはbin_for_androidを一旦zipファイルに固めてWeb上にアップし
   実機からこれをダウンロードするというクソ回りくどい方法が~~ここで説明するには~~一番簡単だ.
   まあどんな方法でもよいがとりあえずなんとかこれを実機へと転送して欲しい.
@@ -586,7 +586,8 @@
 ~~~
   </li>
   <li>bin_for_android.zip をホームディレクトリへコピーしたら、unzip bin_for_android.zip でこれを解凍展開しよう.
-      次に cd bin_for_android/armeabi で中へと移動し、moai および http_decorator に実行権限を与える. 
+      次に cd bin_for_android/armeabi で実行バイナリのあるディレクトリ内へと移動し、
+      moai および http_decorator に実行権限を与える. 
       以下を実行しておこう.
 ~~~
       chmod 755 moai http_decorator
@@ -596,12 +597,13 @@
       これを成功させるためにLD_LIBRARY_PATHを適切に指定しておかなければならない.
       以下を実行しておこう.
 ~~~
-      export LD_LIBRARY_PATH=.
+      export LD_LIBRARY_PATH=. 
 ~~~
-      これでようやく準備が整った.
-      ./moai と入力し、上記「Linuxの場合」で説明したのと同様のメッセージが表示されれば成功である.
   </li>
   </ul>
+
+  これでようやく準備が整った.
+  ./moai と入力し、上記「Linuxの場合」で説明したのと同様のメッセージが表示されれば成功である.
 
 
   <a href="#user-content-index">目次へ戻る</a>
