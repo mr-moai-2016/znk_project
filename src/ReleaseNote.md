@@ -3,7 +3,7 @@ Release Note 最終更新: 2016/06/21
 
 
 ## 2016/06/21 Version 1.0.6 リリース.  
-  スマホユーザの皆様！おまたせしました！
+  Androidユーザの皆様！おまたせしました！
   ついに Moai for Android (試験的バージョン)の登場です.
   今回我々開発チームがAndroid向けにコンパイルしたものをbin_for_androidとしてご提供します.
   そしてまた、あなたがAndroid向けにコンパイルするための指針をHowToCompileにて解説してあります.
