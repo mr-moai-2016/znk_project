@@ -23,9 +23,8 @@ This is Japanese overview. English version is [here][7].
 
 * libZnk : 基本的なC/C++用ライブラリ  
 * Moai: また一つ生まれた(ばかりの)ローカルプロキシエンジン  
-* Moai/Virtual USERS機能: Moaiを使って掲示板のユーザ情報を仮想化する方法について  
+* Moai plugins: 掲示板用のMoaiプラグイン.
 * http_decorator : ~~マスコット~~シンプルなHTTPクライアント.  
-...などなど 
 
 以下はこれらに関するドキュメントへのリンク一覧となります: 
 
