@@ -176,7 +176,7 @@
   <li>5. znk_project-master.zip を解凍展開する.
          以下のように入力しEnterを押す.
 ~~~
-    unzip znk_project-master.zip と入力しEnterを押します.
+    unzip znk_project-master.zip
 ~~~
   </li>
   <li>6. znk_project-master/bin_for_android ディレクトリへ移動する.
