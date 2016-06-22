@@ -7,6 +7,7 @@
 * [ローカルプロキシとは？](#what_localproxy)
 * [何ができるのか？ また同種のツールと比べた場合の特徴は？](#pos2)
 * [インストール/アンインストール方法](#pos4)
+* [Android版における初回起動までの手順](#for_android)
 * [初めてのMoai](#pos5)
 * [プロキシ設定ダイアログって何ぞ？](#pos6)
 * [いっしょに含まれているhttp_decoratorとかZnkとかいうのは何なのか？](#pos7)
@@ -144,19 +145,81 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
+## <a name="for_android">Android版における初回起動までの手順
+-----------------------------------
+  Android版のMoaiをご利用いただく方はここを一読願いたい.
+  Android版に関しても、PC版と同様にznk_project-master.zipをダウンロードして使用して戴く形となる.
+  ただしいわゆる一般的なAndroidアプリとは起動方法が異なるため、以下にファイルのダウンロードから
+  初回Moai起動までの全手順を説明する.
+
+  <ul>
+  <li>1. まずAndroidのWebブラウザよりznk_projectのページへアクセスし、
+         PC版と同様にznk_project-master.zipをダウンロードする.
+  </li>
+  <li>2. Androidのホーム画面より「端末エミュレータ」を開く.
+  </li>
+  <li>3. ホームディレクトリへ移動する.
+         以下のように入力しEnterを押す.
+~~~
+    cd
+~~~
+  </li>
+  <li>4. ダウンロードした znk_project-master.zip は通常 /storage/sdcard0/Download ディレクトリに保存されている.
+		 システム構成によっては違う場所に保存されるかもしれない. その場合はその場所に読み替えて欲しい.
+         ホームディレクトリ以外では書き込み権限および実行権限の関係で実行することができない.
+         そのため、znk_project-master.zip をホームディレクトリへコピーする必要がある.
+         以下のように入力しEnterを押す.
+~~~
+    cp /storage/sdcard0/Download/znk_project-master.zip ~/
+~~~
+  </li>
+  <li>5. znk_project-master.zip を解凍展開する.
+         以下のように入力しEnterを押す.
+~~~
+    unzip znk_project-master.zip と入力しEnterを押します.
+~~~
+  </li>
+  <li>6. znk_project-master/bin_for_android ディレクトリへ移動する.
+         以下のように入力しEnterを押す.
+~~~
+    cd znk_project-master/bin_for_android
+~~~
+  </li>
+  <li>7. moai_for_android.sh に実行権限を付与する.
+         以下のように入力しEnterを押す.
+~~~
+    chmod 755 *.sh
+~~~
+  </li>
+  <li>8. moai_for_android.sh を起動.
+         以下のように入力しEnterを押す.
+~~~
+    ./moai_for_android.sh
+~~~
+  </li>
+  </ul>
+
+  尚、上記 1 から 7 までの手順は最初の一回だけでよい.
+  これらを一度済ませてしまえば以降は上記 8 だけでMoaiが起動可能である.
+
+  <a href="#user-content-index">目次へ戻る</a>
+
+
 ## <a name="pos5">初めてのMoai
 -----------------------------------
 
   初めてMoaiを使う場合は、以下の手順で設定しよう.
 
-~~~
-  1. moai(Windowsならmoai.exe)を起動する.
-
-  2. ブラウザのプロキシ設定ダイアログでプロキシサーバとして localhost:8124 を指定する.
-     これでうまくいかない場合は 127.0.0.1:8124 で試してみよう! 
-     これは一般にループバック接続と呼ばれ、自分自身への接続を意味する.
-     リモートホストで起動しているMoaiに接続したい場合はそのIPを指定してもよい.
-~~~
+  <ul>
+  <li>1. moai(Windowsならmoai.exe)を起動する.
+         (Android版の場合は[「Android版における初回起動までの手順」](#for_android)を参照.)
+  </li>
+  <li>2. ブラウザのプロキシ設定ダイアログでプロキシサーバとして localhost:8124 を指定する.
+         これでうまくいかない場合は 127.0.0.1:8124 で試してみよう! 
+         これは一般にループバック接続と呼ばれ、自分自身への接続を意味する.
+         リモートホストで起動しているMoaiに接続したい場合はそのIPを指定してもよい.
+  </li>
+  </ul>
 
   基本的には以上である.
   ブラウザから目的のサイトへアクセスできればOKである.

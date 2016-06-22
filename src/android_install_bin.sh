@@ -7,6 +7,7 @@ mkdir -p ../bin_for_android
 
 $CP_ virtual_users/*.md ../bin_for_android/
 $CP_ moai/*.md          ../bin_for_android/
+$CP_ moai/moai_for_android.sh ../bin_for_android/
 
 install_one()
 {
