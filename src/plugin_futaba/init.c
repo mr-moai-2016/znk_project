@@ -448,6 +448,15 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 	}
 
 	/***
+	 * 長く無効化されていたptuaが復活したようである.
+	 * 当然、ここにはuaの値をセットする.
+	 */
+	varp = refPostVar( myf, "ptua" );
+	if( varp ){
+		ZnkVar_set_val_Str( varp, ua, Znk_strlen(ua) );
+	}
+
+	/***
 	 * この変数は実際にはPOST変数群の中に存在せず、localStorageにこの名前で存在する.
 	 * これは初回のPOST時にcacoコード値によって初期化される.
 	 * そして２回目のPOSTにおいて参照され、pthb値として使われる.
@@ -607,6 +616,10 @@ initiate( ZnkMyf ftr_send, const char* parent_proxy, ZnkStr result_msg )
 		varp = refPostVar( ftr_send, "pthc" );
 		if( varp ){
 			ZnkStr_addf( result_msg, "\npthc(caco code issued by bin/cachemt7.php)=[%s]", ZnkVar_cstr(varp) );
+		}
+		varp = refPostVar( ftr_send, "ptua" );
+		if( varp ){
+			ZnkStr_addf( result_msg, "\nptua(User-Agent by Javascript)=[%s]", ZnkVar_cstr(varp) );
 		}
 		varp = refCookieVar( ftr_send, "posttime" );
 		if( varp ){

@@ -1,7 +1,5 @@
 #!/bin/sh
 
-source ./android_setting_ndk.sh
-
 cd libZnk/android
 ndk-build
 cd ../..

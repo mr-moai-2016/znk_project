@@ -39,6 +39,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+static const char* st_version_str = "1.0.7";
 static uint16_t    st_moai_port = 8124;
 static bool        st_enable_log_file = true;
 static bool        st_enable_log_verbose = true;
@@ -1653,7 +1654,7 @@ printConfig( ZnkSocket sock, ZnkStrAry result_msgs, uint32_t peer_ipaddr )
 	ZnkStrAry str_list = ZnkStrAry_create( true );
 
 	ZnkStr_add( html, "<html><body>\n" );
-	ZnkStr_add( html, "<p><b><img src=\"moai.png\"> Moai : Web Configuration Version 1.0.4</b></p>\n" );
+	ZnkStr_addf( html, "<p><b><img src=\"moai.png\"> Moai : Web Configuration Version %s</b></p>\n", st_version_str );
 
 	ZnkStr_add( html, "<style type=\"text/css\">\n" );
 	ZnkStr_add( html, "#config_filters tbody tr.evn td { background-color: #E0F0D6; }\n" );
