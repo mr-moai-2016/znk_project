@@ -36,7 +36,7 @@ bool initiate( ZnkMyf ftr_send, const char* parent_proxy, ZnkStr result_msg );
  *  処理対象となるフィルタへの参照である.
  *  pluginはこの関数内でこの値を参照および変更してかまわない.
  *
- * @param ftr_send:
+ * @param post_vars:
  *  処理対象となるPOST変数の参照である.
  *  pluginはこの関数内でこの値を参照および変更してかまわない.
  */
