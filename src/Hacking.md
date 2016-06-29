@@ -214,7 +214,7 @@ Moaiƒvƒ‰ƒOƒCƒ“‚Å‚ÍˆÈ‰º‚Ìƒ_ƒCƒiƒ~ƒbƒNƒ[ƒh‰Â”\‚ÈƒOƒ[ƒoƒ‹ŠÖ”‚ğ C Œ¾Œê‚É‚æ‚èÀ‘
      uVirtual USERS Initiationvƒ{ƒ^ƒ“‚ğ‰Ÿ‚·‚Æ‚·‚®‰º‚É‚±‚ÌƒƒbƒZ[ƒW‚ª•\¦‚³‚ê‚éŒ`‚É‚È‚é.
 
 
-  bool on_post( ZnkMyf ftr_send );
+  bool on_post( ZnkMyf ftr_send, ZnkVarpAry post_vars );
 
     targetŒÅ—L‚ÌPOST’¼‘O‚Ìˆ—‚ğs‚¤.
     POST’¼‘O‚É–ˆ‰ñŒÄ‚Ño‚³‚ê‚é.
