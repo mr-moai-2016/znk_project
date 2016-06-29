@@ -233,11 +233,10 @@ MoaiPost_parsePostAndCookieVars( ZnkSocket sock, MoaiFdSet mfds,
 			bool is_filter_done = false;
 			if( mod ){
 				/***
-				 * ここで外部Callbackを呼び、fltrの微調整を可能としたい.
-				 * そのようなことが可能なコマンドをinstallフォルダ内に置き、
-				 * それをsystemで呼び出す指針でいく.
+				 * ここで外部Callbackを呼び、現在のpost_varsの値を加味して
+				 * fltrの微調整なども可能とする.
 				 */
-				MoaiModule_invokeOnPost( mod );
+				MoaiModule_invokeOnPost( mod, post_vars );
 				if( MoaiModule_filtPostVars( mod, post_vars ) > 0 ){
 					/***
 					 * PostVarsの修正が発生.
@@ -320,11 +319,10 @@ MoaiPost_parsePostAndCookieVars( ZnkSocket sock, MoaiFdSet mfds,
 
 			if( mod ){
 				/***
-				 * ここで外部Callbackを呼び、fltrの微調整を可能としたい.
-				 * そのようなことが可能なコマンドをinstallフォルダ内に置き、
-				 * それをsystemで呼び出す指針でいく.
+				 * ここで外部Callbackを呼び、現在のpost_varsの値を加味して
+				 * fltrの微調整なども可能とする.
 				 */
-				MoaiModule_invokeOnPost( mod );
+				MoaiModule_invokeOnPost( mod, post_vars );
 				if( MoaiModule_filtPostVars( mod, post_vars ) > 0 ){
 					/***
 					 * PostVarsの修正が発生.

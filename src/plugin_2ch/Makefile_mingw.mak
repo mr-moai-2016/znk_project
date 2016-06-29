@@ -7,6 +7,8 @@ MY_LIBS_ROOT=..
 INCLUDE_FLAG+=  \
 	-I$(MY_LIBS_ROOT)\libZnk \
 
+include Makefile_version.mak
+
 BASENAME=2ch
 OBJS = \
 	$O\dll_main.o \
@@ -24,7 +26,7 @@ $O:
 	if not exist $O mkdir $O
 
 $(DLIB_FILE): $(OBJS)
-	gcc -g -Wl,--disable-stdcall-fixup,--kill-at -shared -o $(DLIB_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\Znk-1.0.dll.a $(SUB_LIBS) -lws2_32 $(DEF_FILE)
+	gcc -g -Wl,--disable-stdcall-fixup,--kill-at -shared -o $(DLIB_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\Znk-$(DL_VER).dll.a $(SUB_LIBS) -lws2_32 $(DEF_FILE)
 	dlltool --kill-at --dllname $(BASENAME).dll -d $(DEF_FILE) -l $(ILIB_FILE)
 
 ##

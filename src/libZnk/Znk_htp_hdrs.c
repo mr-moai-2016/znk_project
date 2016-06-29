@@ -82,6 +82,8 @@ ZnkHtpHdrs_regist_byLine( ZnkVarpAry vars, const char* hdr_line, size_t hdr_line
 			hdr_line+val_begin, val_end-val_begin );
 	return varp;
 }
+
+#if 0
 ZnkVarp
 ZnkHtpHdrs_registCookie( ZnkVarpAry vars, const ZnkVarpAry cookie )
 {
@@ -111,6 +113,8 @@ ZnkHtpHdrs_registCookie( ZnkVarpAry vars, const ZnkVarpAry cookie )
 	ZnkStr_delete( str );
 	return varp;
 }
+#endif
+
 bool
 ZnkHtpHdrs_erase( const ZnkVarpAry vars, const char* query_key )
 {

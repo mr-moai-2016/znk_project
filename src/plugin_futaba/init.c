@@ -448,10 +448,10 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 	}
 
 	/***
-	 * 長く無効化されていたptuaが復活したようである.
+	 * この設定は有効/無効を頻繁に切り替えるようである.
 	 * 当然、ここにはuaの値をセットする.
 	 */
-	varp = refPostVar( myf, "ptua" );
+	varp = refPostVar( myf, "USERS_ptua" );
 	if( varp ){
 		ZnkVar_set_val_Str( varp, ua, Znk_strlen(ua) );
 	}
@@ -616,10 +616,6 @@ initiate( ZnkMyf ftr_send, const char* parent_proxy, ZnkStr result_msg )
 		varp = refPostVar( ftr_send, "pthc" );
 		if( varp ){
 			ZnkStr_addf( result_msg, "\npthc(caco code issued by bin/cachemt7.php)=[%s]", ZnkVar_cstr(varp) );
-		}
-		varp = refPostVar( ftr_send, "ptua" );
-		if( varp ){
-			ZnkStr_addf( result_msg, "\nptua(User-Agent by Javascript)=[%s]", ZnkVar_cstr(varp) );
 		}
 		varp = refCookieVar( ftr_send, "posttime" );
 		if( varp ){

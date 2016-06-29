@@ -7,6 +7,8 @@ MY_LIBS_ROOT=..
 INCLUDE_FLAG+=  \
 	-I$(MY_LIBS_ROOT)\libZnk \
 
+include Makefile_version.mak
+
 BASENAME=moai
 OBJS = \
 	$O\Moai_connection.o \
@@ -33,7 +35,7 @@ $O:
 	if not exist $O mkdir $O
 
 $(EXE_FILE): $(OBJS) $(RES_FILE)
-	$(LINKER) -o $(EXE_FILE) $(RES_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\Znk-1.0.dll.a
+	$(LINKER) -o $(EXE_FILE) $(RES_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\Znk-$(DL_VER).dll.a
 
 ##
 # Sub-DirectoryÇ…äiî[Ç≥ÇÍÇΩÉtÉ@ÉCÉãÇ»Ç«Ç…Ç‡è_ìÓÇ…ëŒâûÇ∑ÇÈÇΩÇﬂÅA

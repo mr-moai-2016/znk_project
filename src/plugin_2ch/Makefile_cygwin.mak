@@ -7,6 +7,8 @@ MY_LIBS_ROOT=..
 INCLUDE_FLAG+=  \
 	-I$(MY_LIBS_ROOT)/libZnk \
 
+include Makefile_version.mak
+
 BASENAME=2ch
 OBJS = \
 	$O/main.o \
@@ -39,7 +41,6 @@ $O/%.o: $S/%.c
 	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c $<
 $O/%.o: $S/%.cpp
 	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c $<
-
 
 clean:
 	@for tgt in $(CLEAN_LIST) ; do  if test -e "$$tgt" ; then echo "rm $$tgt" ; rm "$$tgt" ; fi ;  done

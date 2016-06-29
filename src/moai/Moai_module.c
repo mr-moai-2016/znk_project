@@ -202,10 +202,10 @@ MoaiModule_invokeInitiate( const MoaiModule mod, const char* parent_proxy, ZnkSt
 	return false;
 }
 bool
-MoaiModule_invokeOnPost( const MoaiModule mod )
+MoaiModule_invokeOnPost( const MoaiModule mod, ZnkVarpAry post_vars )
 {
 	if( mod->plg_on_post_ ){
-		return mod->plg_on_post_( mod->ftr_send_ );
+		return mod->plg_on_post_( mod->ftr_send_, post_vars );
 	}
 	return false;
 }
@@ -243,6 +243,13 @@ MoaiModule_filtHtpHeader( const MoaiModule mod, ZnkVarpAry hdr_vars )
 				htp_val = ZnkHtpHdrs_val( htp_var, 0 );
 				ZnkStr_set( htp_val, ZnkStr_cstr(ftr_var->prim_.u_.str_) );
 				++count;
+			} else {
+				/* not found */
+				/* ‚±‚Ìê‡V‹K’Ç‰Á‚Æ‚·‚é */
+				const ZnkStr val_str = ftr_var->prim_.u_.str_;
+				ZnkHtpHdrs_regist( hdr_vars,
+						ftr_name, strlen(ftr_name),
+						ZnkStr_cstr(val_str), ZnkStr_leng(val_str) );
 			}
 		}
 	}
@@ -252,7 +259,7 @@ MoaiModule_filtHtpHeader( const MoaiModule mod, ZnkVarpAry hdr_vars )
 size_t
 MoaiModule_filtPostVars( const MoaiModule mod, ZnkVarpAry post_vars )
 {
-	size_t            count = 0;
+	size_t           count = 0;
 	const ZnkVarpAry ftr_vars = ZnkMyf_find_vars( mod->ftr_send_, "post_vars" );
 	if( ftr_vars == NULL ){
 		/* Does not exist send filter file or cannot load it. */

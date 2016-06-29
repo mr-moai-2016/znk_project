@@ -7,6 +7,8 @@ MY_LIBS_ROOT=..
 INCLUDE_FLAG =  \
 	-I$(MY_LIBS_ROOT)\libZnk \
 
+include Makefile_version.mak
+
 BASENAME=http_decorator
 OBJS = \
 	$O\main.obj \
@@ -20,7 +22,7 @@ $O:
 	if not exist $O mkdir $O
 
 $(EXE_FILE): $(OBJS) $(RES_FILE)
-	$(LINKER) /OUT:$(EXE_FILE) $(RES_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\Znk-1.0.lib
+	$(LINKER) /OUT:$(EXE_FILE) $(RES_FILE) $(OBJS) $(MY_LIBS_ROOT)\libZnk\out_dir\Znk-$(DL_VER).lib
 
 # サフィックスルール
 {$S}.cpp{$O}.obj:

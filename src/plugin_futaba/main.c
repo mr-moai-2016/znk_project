@@ -48,17 +48,19 @@ update_pwd( ZnkVarp pwd, ZnkVarp pwdc, ZnkVarp USERS_password )
 	}
 }
 
-bool on_post( ZnkMyf myf )
+bool on_post( ZnkMyf ftr_send, ZnkVarpAry post_vars )
 {
-	ZnkVarp USERS_futabapt = refPostVar( myf, "USERS_futabapt" );
-	ZnkVarp USERS_password = refPostVar( myf, "USERS_password" );
-	ZnkVarp pthb = refPostVar( myf, "pthb" );
-	ZnkVarp pthc = refPostVar( myf, "pthc" );
-	ZnkVarp pwd  = refPostVar( myf, "pwd" );
-	ZnkVarp pwdc = refCookieVar( myf, "pwdc" );
+	ZnkVarp USERS_futabapt = refPostVar( ftr_send, "USERS_futabapt" );
+	ZnkVarp USERS_password = refPostVar( ftr_send, "USERS_password" );
+	ZnkVarp USERS_ptua     = refPostVar( ftr_send, "USERS_ptua" );
+	ZnkVarp pthb = refPostVar( ftr_send, "pthb" );
+	ZnkVarp pthc = refPostVar( ftr_send, "pthc" );
+	ZnkVarp pwd  = refPostVar( ftr_send, "pwd" );
+	ZnkVarp pwdc = refCookieVar( ftr_send, "pwdc" );
+	ZnkVarp dst_ptua = ZnkVarpAry_find_byName( post_vars, "ptua", Znk_strlen_literal("ptua"), false );
 
 	/***
-	 * myfにUSERS_futabaptが定義されていない場合は
+	 * ftr_sendにUSERS_futabaptが定義されていない場合は
 	 * localStorageが無効である環境と同挙動となる.
 	 */
 	if( USERS_futabapt ){
@@ -76,8 +78,20 @@ bool on_post( ZnkMyf myf )
 	}
 
 	/***
+	 * dst_ptuaに何か値が設定されていれば ptuaをUSERS_ptuaで書き換える.
+	 * そうでなければ dst_ptuaに空値を設定する.
+	 */
+	if( dst_ptua ){
+		if( ZnkVar_str_leng(dst_ptua) ){
+			ZnkVar_set_val_Str( dst_ptua, ZnkVar_cstr(USERS_ptua), ZnkVar_str_leng(USERS_ptua) );
+		} else {
+			ZnkVar_set_val_Str( dst_ptua, "", 0 );
+		}
+	}
+
+	/***
 	 * これによりブラウザ上にあるpwdの値は遮断され、
-	 * myf上にある値が替わりに採用される.
+	 * ftr_send上にある値が替わりに採用される.
 	 */
 	update_pwd( pwd, pwdc, USERS_password );
 	return true;
@@ -95,7 +109,7 @@ replaceStr( ZnkStr str, size_t begin,
 			seek_depth );
 }
 
-bool on_response( ZnkMyf myf,
+bool on_response( ZnkMyf ftr_send,
 		ZnkVarpAry hdr_vars, ZnkStr text, const char* req_urp )
 {
 	if( text ){

@@ -1,4 +1,4 @@
-LIBRARY "Znk-1.0.dll"
+LIBRARY "Znk-1.1.dll"
 EXPORTS
   ZnkAry_lfind_16                 
   ZnkAry_lfind_32                 

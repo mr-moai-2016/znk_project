@@ -39,7 +39,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-static const char* st_version_str = "1.0.7";
+static const char* st_version_str = "1.1";
 static uint16_t    st_moai_port = 8124;
 static bool        st_enable_log_file = true;
 static bool        st_enable_log_verbose = true;

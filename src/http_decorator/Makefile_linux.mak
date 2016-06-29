@@ -7,6 +7,8 @@ MY_LIBS_ROOT=..
 INCLUDE_FLAG+=  \
 	-I$(MY_LIBS_ROOT)/libZnk \
 
+include Makefile_version.mak
+
 BASENAME=http_decorator
 OBJS = \
 	$O/main.o \

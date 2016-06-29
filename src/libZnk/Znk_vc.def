@@ -1,4 +1,4 @@
-LIBRARY "Znk-1.0.dll"
+LIBRARY "Znk-1.1.dll"
 EXPORTS
   ZnkAry_lfind_16                 
   ZnkAry_lfind_32                 
@@ -108,7 +108,6 @@ EXPORTS
   ZnkHtpHdrs_erase                
   ZnkHtpHdrs_extendToStream       
   ZnkHtpHdrs_regist               
-  ZnkHtpHdrs_registCookie         
   ZnkHtpHdrs_registHdr1st         
   ZnkHtpHdrs_regist_byLine        
   ZnkHtpHdrs_scanContentType      
