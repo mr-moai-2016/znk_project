@@ -8,7 +8,6 @@ User-Agent = ['Mozilla/5.0 (Windows; U; Windows NT 5.1; de-DE; rv:1.7.5) Gecko/2
 pthb = ['']
 pthc = ['']
 pthd = ['']
-ptua = ['Mozilla/5.0 (Windows; U; Windows NT 5.1; de-DE; rv:1.7.5) Gecko/20041122 Firefox/1.0']
 flrv = ['2739407074']
 flvv = ['3792482965']
 scsz = ['1920x1080x32']
@@ -16,6 +15,7 @@ pwd = ['']
 js = ['on']
 USERS_futabapt = ['']
 USERS_password = ['']
+USERS_ptua = ['Mozilla/5.0 (Windows; U; Windows NT 5.1; de-DE; rv:1.7.5) Gecko/20041122 Firefox/1.0']
 @@.
 
 # Cookie値のフィルタリング
