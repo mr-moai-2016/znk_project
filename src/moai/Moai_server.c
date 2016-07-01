@@ -1437,10 +1437,11 @@ doLocalProxy( MoaiContext ctx, MoaiConnection mcn, MoaiFdSet mfds, MoaiHtpType h
 		default:
 			MoaiLog_printf( "  doLocalProxy : Request info->req_method_=[%s]\n", ZnkHtpReqMethod_getCStr(info->req_method_) );
 			/***
-			 * Cookie filtering
-			 * GET時にもCookieは送信されるので一応これも行っておいた方がよいだろう.
+			 * Header and Cookie filtering
+			 * GET時にもこれらは送信されるのでここで行っておく.
 			 */
 			if( mod ){
+				MoaiModule_filtHtpHeader(  mod, info->hdrs_.vars_ );
 				MoaiModule_filtCookieVars( mod, info->hdrs_.vars_ );
 			}
 			cb_func = sendOnConnected_GET;

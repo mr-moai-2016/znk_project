@@ -4,8 +4,10 @@
 #include <Znk_cookie.h>
 #include <Znk_htp_hdrs.h>
 #include <Znk_str_ptn.h>
+#include <Znk_str_ex.h>
 #include <Znk_missing_libc.h>
 #include <string.h>
+#include <ctype.h>
 
 Znk_INLINE ZnkVarp
 refPostVar( ZnkMyf myf, const char* var_name )
@@ -48,7 +50,31 @@ update_pwd( ZnkVarp pwd, ZnkVarp pwdc, ZnkVarp USERS_password )
 	}
 }
 
-bool on_post( ZnkMyf ftr_send, ZnkVarpAry post_vars )
+static bool
+isInteger( const char* cstr )
+{
+	const char* p = cstr;
+	while( *p ){
+		if( !isdigit( *p ) ){
+			return false;
+		}
+		++p;
+	}
+	return (bool)( p != cstr );
+}
+static bool
+isUntouchable_ptua( ZnkVarp dst_ptua )
+{
+	/***
+	 * dst_ptuaが以下のケースの場合、値を変更してはならない.
+	 *
+	 *   空値
+	 *   整数
+	 */
+	return ZnkVar_str_leng(dst_ptua) == 0 || isInteger(ZnkVar_cstr(dst_ptua));
+}
+
+bool on_post( ZnkMyf ftr_send, ZnkVarpAry hdr_vars, ZnkVarpAry post_vars )
 {
 	ZnkVarp USERS_futabapt = refPostVar( ftr_send, "USERS_futabapt" );
 	ZnkVarp USERS_password = refPostVar( ftr_send, "USERS_password" );
@@ -77,15 +103,25 @@ bool on_post( ZnkMyf ftr_send, ZnkVarpAry post_vars )
 		}
 	}
 
-	/***
-	 * dst_ptuaに何か値が設定されていれば ptuaをUSERS_ptuaで書き換える.
-	 * そうでなければ dst_ptuaに空値を設定する.
-	 */
 	if( dst_ptua ){
-		if( ZnkVar_str_leng(dst_ptua) ){
+		ZnkVarp     real_ua      = ZnkHtpHdrs_find( hdr_vars, "User-Agent", Znk_strlen_literal("User-Agent") );
+		const char* real_ua_cstr = ZnkHtpHdrs_val_cstr( real_ua, 0 );
+		/* まず簡易なケースを弾く */
+		if( !isUntouchable_ptua( dst_ptua ) ){
+#if 0
+			/***
+			 * 現在ふたばではptuaの実値をtransientな仕様とすることで偽装をかわす戦略をとっている.
+			 * そのため、単純な代入が通用しない.
+			 */
 			ZnkVar_set_val_Str( dst_ptua, ZnkVar_cstr(USERS_ptua), ZnkVar_str_leng(USERS_ptua) );
-		} else {
-			ZnkVar_set_val_Str( dst_ptua, "", 0 );
+#else
+			/* とりあえずbrute force algorismで十分であろう */
+			ZnkStr dst_ptua_str = ZnkVar_str( dst_ptua );
+			ZnkStrEx_replace_BF( dst_ptua_str, 0,
+					real_ua_cstr, strlen(real_ua_cstr),
+					ZnkVar_cstr(USERS_ptua), ZnkVar_str_leng(USERS_ptua),
+					Znk_NPOS );
+#endif
 		}
 	}
 

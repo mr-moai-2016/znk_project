@@ -445,6 +445,10 @@ MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 		line_begin = line_end + 2;
 	}
 
+	/***
+	 * HtpHeadrのフィルタのタイミングをここではなく後にしたい.
+	 */
+#if 0
 	{
 		const char* hostname = NULL;
 		if( is_request ){
@@ -462,6 +466,7 @@ MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 			}
 		}
 	}
+#endif
 
 
 	/***

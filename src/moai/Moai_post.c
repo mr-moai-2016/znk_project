@@ -174,7 +174,7 @@ MoaiPost_setPostConfirm( bool post_confirm )
 void
 MoaiPost_parsePostAndCookieVars( ZnkSocket sock, MoaiFdSet mfds,
 		ZnkStr str,
-		const size_t hdr_size, ZnkStrAry hdr1st, const ZnkVarpAry hdr_vars,
+		const size_t hdr_size, ZnkStrAry hdr1st, ZnkVarpAry hdr_vars,
 		size_t content_length, ZnkBfr stream,
 		ZnkVarpAry post_vars,
 		const MoaiModule mod )
@@ -236,7 +236,7 @@ MoaiPost_parsePostAndCookieVars( ZnkSocket sock, MoaiFdSet mfds,
 				 * ここで外部Callbackを呼び、現在のpost_varsの値を加味して
 				 * fltrの微調整なども可能とする.
 				 */
-				MoaiModule_invokeOnPost( mod, post_vars );
+				MoaiModule_invokeOnPost( mod, hdr_vars, post_vars );
 				if( MoaiModule_filtPostVars( mod, post_vars ) > 0 ){
 					/***
 					 * PostVarsの修正が発生.
@@ -322,7 +322,7 @@ MoaiPost_parsePostAndCookieVars( ZnkSocket sock, MoaiFdSet mfds,
 				 * ここで外部Callbackを呼び、現在のpost_varsの値を加味して
 				 * fltrの微調整なども可能とする.
 				 */
-				MoaiModule_invokeOnPost( mod, post_vars );
+				MoaiModule_invokeOnPost( mod, hdr_vars, post_vars );
 				if( MoaiModule_filtPostVars( mod, post_vars ) > 0 ){
 					/***
 					 * PostVarsの修正が発生.
@@ -374,11 +374,12 @@ MoaiPost_parsePostAndCookieVars( ZnkSocket sock, MoaiFdSet mfds,
 	//ZnkF_printf_e( "  boundary=[%s]\n", ZnkStr_cstr(boundary) );
 
 	/***
-	 * Cookie filtering
-	 * PostVar filteringにおけるon_post関数の呼び出しでcookie_varsの値を
-	 * 加工するような処理にも対応するため、このCookie filteringをここで呼び出す.
+	 * Header and Cookie filtering
+	 * PostVar filteringにおけるon_post関数の呼び出しで、headerやcookie_varsの値を
+	 * 参照/加工するような処理にも対応するため、この filteringをここで呼び出す.
 	 */
 	if( mod ){
+		MoaiModule_filtHtpHeader(  mod, hdr_vars );
 		MoaiModule_filtCookieVars( mod, hdr_vars );
 	}
 

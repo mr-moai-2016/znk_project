@@ -26,7 +26,7 @@ MoaiPost_setPostConfirm( bool post_confirm );
 void
 MoaiPost_parsePostAndCookieVars( ZnkSocket sock, MoaiFdSet mfds,
 		ZnkStr str,
-		const size_t hdr_size, ZnkStrAry hdr1st, const ZnkVarpAry hdr_vars,
+		const size_t hdr_size, ZnkStrAry hdr1st, ZnkVarpAry hdr_vars,
 		size_t content_length, ZnkBfr stream,
 		ZnkVarpAry post_vars,
 		const MoaiModule mod );

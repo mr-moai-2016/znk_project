@@ -17,7 +17,7 @@ refCookieVar( ZnkMyf myf, const char* var_name )
 	return ZnkMyf_refVar( myf, "cookie_vars", var_name );
 }
 
-bool on_post( ZnkMyf ftr_send, ZnkVarpAry post_vars )
+bool on_post( ZnkMyf ftr_send, ZnkVarpAry hdr_vars, ZnkVarpAry post_vars )
 {
 	return true;
 }

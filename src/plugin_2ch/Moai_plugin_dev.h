@@ -36,11 +36,16 @@ bool initiate( ZnkMyf ftr_send, const char* parent_proxy, ZnkStr result_msg );
  *  処理対象となるフィルタへの参照である.
  *  pluginはこの関数内でこの値を参照および変更してかまわない.
  *
+ * @param hdr_vars:
+ *  処理対象となるHtp Headerの参照である.
+ *  pluginはこの関数内でこの値を参照および変更してかまわない.
+ *
  * @param post_vars:
  *  処理対象となるPOST変数の参照である.
  *  pluginはこの関数内でこの値を参照および変更してかまわない.
  */
-bool on_post( ZnkMyf ftr_send, ZnkVarpAry post_vars );
+bool on_post( ZnkMyf ftr_send,
+		ZnkVarpAry hdr_vars, ZnkVarpAry post_vars );
 
 /**
  * @brief

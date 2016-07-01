@@ -202,10 +202,10 @@ MoaiModule_invokeInitiate( const MoaiModule mod, const char* parent_proxy, ZnkSt
 	return false;
 }
 bool
-MoaiModule_invokeOnPost( const MoaiModule mod, ZnkVarpAry post_vars )
+MoaiModule_invokeOnPost( const MoaiModule mod, ZnkVarpAry hdr_vars, ZnkVarpAry post_vars )
 {
 	if( mod->plg_on_post_ ){
-		return mod->plg_on_post_( mod->ftr_send_, post_vars );
+		return mod->plg_on_post_( mod->ftr_send_, hdr_vars, post_vars );
 	}
 	return false;
 }
