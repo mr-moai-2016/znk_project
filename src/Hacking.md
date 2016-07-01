@@ -214,7 +214,7 @@ Moaiƒvƒ‰ƒOƒCƒ“‚Å‚ÍˆÈ‰º‚Ìƒ_ƒCƒiƒ~ƒbƒNƒ[ƒh‰Â”\‚ÈƒOƒ[ƒoƒ‹ŠÖ”‚ð C Œ¾Œê‚É‚æ‚èŽÀ‘
      uVirtual USERS Initiationvƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚Æ‚·‚®‰º‚É‚±‚ÌƒƒbƒZ[ƒW‚ª•\Ž¦‚³‚ê‚éŒ`‚É‚È‚é.
 
 
-  bool on_post( ZnkMyf ftr_send, ZnkVarpAry post_vars );
+  bool on_post( ZnkMyf ftr_send, ZnkVarpAry hdr_vars, ZnkVarpAry post_vars );
 
     targetŒÅ—L‚ÌPOST’¼‘OŽž‚Ìˆ—‚ðs‚¤.
     POST’¼‘O‚É–ˆ‰ñŒÄ‚Ño‚³‚ê‚é.
@@ -222,7 +222,11 @@ Moaiƒvƒ‰ƒOƒCƒ“‚Å‚ÍˆÈ‰º‚Ìƒ_ƒCƒiƒ~ƒbƒNƒ[ƒh‰Â”\‚ÈƒOƒ[ƒoƒ‹ŠÖ”‚ð C Œ¾Œê‚É‚æ‚èŽÀ‘
     @param ftr_send:
      ˆ—‘ÎÛ‚Æ‚È‚éƒtƒBƒ‹ƒ^‚Ö‚ÌŽQÆ‚Å‚ ‚é.
      plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ðŽQÆ‚¨‚æ‚Ñ•ÏX‚µ‚Ä‚©‚Ü‚í‚È‚¢.
-	 ‚±‚ê‚É‚æ‚èAƒwƒbƒ_Aƒ|ƒXƒg•Ï”ACookie•Ï”‚Ì‚³‚ç‚È‚é_“î‚ÈƒtƒBƒ‹ƒ^ƒŠƒ“ƒO‚ª‰Â”\‚Æ‚È‚é‚¾‚ë‚¤.
+     ‚±‚ê‚É‚æ‚èAƒwƒbƒ_Aƒ|ƒXƒg•Ï”ACookie•Ï”‚Ì‚³‚ç‚È‚é_“î‚ÈƒtƒBƒ‹ƒ^ƒŠƒ“ƒO‚ª‰Â”\‚Æ‚È‚é‚¾‚ë‚¤.
+
+   @param hdr_vars:
+     ˆ—‘ÎÛ‚Æ‚È‚éƒŠƒNƒGƒXƒg HTTP Header‚ÌŽQÆ‚Å‚ ‚é.
+     plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ðŽQÆ‚¨‚æ‚Ñ•ÏX‚µ‚Ä‚©‚Ü‚í‚È‚¢.
 
     @param post_vars:
      ˆ—‘ÎÛ‚Æ‚È‚éPOST•Ï”‚ÌŽQÆ‚Å‚ ‚é.
@@ -241,7 +245,7 @@ Moaiƒvƒ‰ƒOƒCƒ“‚Å‚ÍˆÈ‰º‚Ìƒ_ƒCƒiƒ~ƒbƒNƒ[ƒh‰Â”\‚ÈƒOƒ[ƒoƒ‹ŠÖ”‚ð C Œ¾Œê‚É‚æ‚èŽÀ‘
      plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ðŽQÆ‚¨‚æ‚Ñ•ÏX‚µ‚Ä‚©‚Ü‚í‚È‚¢.
    
     @param hdr_vars:
-     ˆ—‘ÎÛ‚Æ‚È‚éƒŒƒXƒ|ƒ“ƒXƒwƒbƒ_‚Ö‚ÌŽQÆ‚Å‚ ‚é.
+     ˆ—‘ÎÛ‚Æ‚È‚éƒŒƒXƒ|ƒ“ƒXHTTP ƒwƒbƒ_‚Ö‚ÌŽQÆ‚Å‚ ‚é.
      plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ðŽQÆ‚¨‚æ‚Ñ•ÏX‚µ‚Ä‚©‚Ü‚í‚È‚¢.
    
     @param text:

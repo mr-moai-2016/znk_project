@@ -37,7 +37,7 @@ bool initiate( ZnkMyf ftr_send, const char* parent_proxy, ZnkStr result_msg );
  *  pluginはこの関数内でこの値を参照および変更してかまわない.
  *
  * @param hdr_vars:
- *  処理対象となるHtp Headerの参照である.
+ *  処理対象となるリクエストHTTP Headerの参照である.
  *  pluginはこの関数内でこの値を参照および変更してかまわない.
  *
  * @param post_vars:
@@ -57,7 +57,7 @@ bool on_post( ZnkMyf ftr_send,
  *  pluginはこの関数内でこの値を参照および変更してかまわない.
  *
  * @param hdr_vars:
- *  処理対象となるレスポンスヘッダへの参照である.
+ *  処理対象となるレスポンスHTTPヘッダへの参照である.
  *  pluginはこの関数内でこの値を参照および変更してかまわない.
  *
  * @param text:

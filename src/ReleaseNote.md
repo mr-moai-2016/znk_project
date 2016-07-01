@@ -10,7 +10,7 @@ Release Note 最終更新: 2016/07/01
       これにより現在のHTTP Headerの値に応じて処理をより柔軟に切り替えることが可能となります.
     * MoaiModule_filtHtpHeader を適用するタイミングを変更.
       send_filter の header_vars のフィルタリングが適用されるタイミングは
-      on_post, on_release プラグイン関数の呼び出しより後となります.
+      on_post, on_response プラグイン関数の呼び出しより後となります.
     * ふたばの新しい仕様に対応するため、ふたばプラグインを修正.
 ~~~
 
