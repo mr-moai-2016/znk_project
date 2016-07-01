@@ -224,7 +224,7 @@ Moaiƒvƒ‰ƒOƒCƒ“‚Å‚ÍˆÈ‰º‚Ìƒ_ƒCƒiƒ~ƒbƒNƒ[ƒh‰Â”\‚ÈƒOƒ[ƒoƒ‹ŠÖ”‚ğ C Œ¾Œê‚É‚æ‚èÀ‘
      plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ğQÆ‚¨‚æ‚Ñ•ÏX‚µ‚Ä‚©‚Ü‚í‚È‚¢.
      ‚±‚ê‚É‚æ‚èAƒwƒbƒ_Aƒ|ƒXƒg•Ï”ACookie•Ï”‚Ì‚³‚ç‚È‚é_“î‚ÈƒtƒBƒ‹ƒ^ƒŠƒ“ƒO‚ª‰Â”\‚Æ‚È‚é‚¾‚ë‚¤.
 
-   @param hdr_vars:
+    @param hdr_vars:
      ˆ—‘ÎÛ‚Æ‚È‚éƒŠƒNƒGƒXƒg HTTP Header‚ÌQÆ‚Å‚ ‚é.
      plugin‚Í‚±‚ÌŠÖ”“à‚Å‚±‚Ì’l‚ğQÆ‚¨‚æ‚Ñ•ÏX‚µ‚Ä‚©‚Ü‚í‚È‚¢.
 
@@ -234,11 +234,11 @@ Moaiƒvƒ‰ƒOƒCƒ“‚Å‚ÍˆÈ‰º‚Ìƒ_ƒCƒiƒ~ƒbƒNƒ[ƒh‰Â”\‚ÈƒOƒ[ƒoƒ‹ŠÖ”‚ğ C Œ¾Œê‚É‚æ‚èÀ‘
 
 
   bool on_response( ZnkMyf ftr_send,
-  		ZnkVarpAry hdr_vars, ZnkStr text, const char* req_urp );
+      ZnkVarpAry hdr_vars, ZnkStr text, const char* req_urp );
 
     targetŒÅ—L‚ÌƒŒƒXƒ|ƒ“ƒX‚ğó‚¯æ‚Á‚½ê‡‚É‚¨‚¯‚éˆ—‚ğs‚¤.
     ƒŒƒXƒ|ƒ“ƒX‚ğó‚¯æ‚Á‚½ê‡‚É–ˆ‰ñŒÄ‚Ño‚³‚ê‚é.
-	text(‚±‚ê‚ÍHTML,CSS,Javascript‚È‚Ç‚Å‚ ‚Á‚½‚è‚·‚é)‚ğ‰ÁH‚·‚é‚±‚Æ‚ªå‚È–Ú“I‚Æ‚È‚é‚¾‚ë‚¤.
+    text(‚±‚ê‚ÍHTML,CSS,Javascript‚È‚Ç‚Å‚ ‚Á‚½‚è‚·‚é)‚ğ‰ÁH‚·‚é‚±‚Æ‚ªå‚È–Ú“I‚Æ‚È‚é‚¾‚ë‚¤.
 
     @param ftr_send:
      ˆ—‘ÎÛ‚Æ‚È‚éƒtƒBƒ‹ƒ^‚Ö‚ÌQÆ‚Å‚ ‚é.
