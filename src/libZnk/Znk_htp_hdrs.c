@@ -83,37 +83,6 @@ ZnkHtpHdrs_regist_byLine( ZnkVarpAry vars, const char* hdr_line, size_t hdr_line
 	return varp;
 }
 
-#if 0
-ZnkVarp
-ZnkHtpHdrs_registCookie( ZnkVarpAry vars, const ZnkVarpAry cookie )
-{
-	ZnkVarp varp = NULL;
-	ZnkStr str = ZnkStr_new( "" );
-	ZnkSRef sref = { 0 };
-	size_t size;
-	size_t idx;
-	const char* key = "";
-	const char* val = "";
-
-	size = ZnkVarpAry_size( cookie );
-	for( idx=0; idx<size; ++idx ){
-		varp = ZnkVarpAry_at( cookie, idx );
-		key = ZnkStr_cstr( varp->name_ );
-		val = ZnkVar_cstr( varp );
-		ZnkStr_addf( str, "%s=%s", key, val );
-		if( idx != size-1 ){
-			ZnkStr_add( str, "; " );
-		}
-	}
-
-	ZnkSRef_set_literal( &sref, "Cookie" );
-	varp = ZnkHtpHdrs_regist( vars, sref.cstr_, sref.leng_,
-			ZnkStr_cstr(str), ZnkStr_leng(str) );
-
-	ZnkStr_delete( str );
-	return varp;
-}
-#endif
 
 bool
 ZnkHtpHdrs_erase( const ZnkVarpAry vars, const char* query_key )
