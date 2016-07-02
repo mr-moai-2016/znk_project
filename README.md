@@ -50,7 +50,7 @@ This is Japanese overview. English version is [here][7].
   replace ['</iframe>'] ['</iframe -->']
 
   C³Œã:
-  replace ['</iframe'] ['</iframe -->']
+  replace ['</iframe'] ['</iframe --><noscript></noscript']
 ~~~
 
 * 2016/07/01 Version 1.1.1 ƒŠƒŠ[ƒX.  
