@@ -6,7 +6,8 @@
 Znk_EXTERN_C_BEGIN
 
 typedef enum {
-	ZnkTxtFilter_e_Replace = 0
+	 ZnkTxtFilter_e_Replace = 0
+	,ZnkTxtFilter_e_ReplaceBetween
 } ZnkTxtFilterType;
 
 typedef struct ZnkTxtFilter_tag {

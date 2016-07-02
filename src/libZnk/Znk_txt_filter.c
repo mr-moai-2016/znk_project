@@ -72,33 +72,37 @@ ZnkTxtFilterAry_regist_byCommand( ZnkTxtFilterAry fltr_ary,
 	while( *p == ' ' || *p == '\t' ) ++p; /* skip whitespace */
 
 	p = strstr( p, "replace" );
-	if( p == NULL ){ goto FUNC_ERROR; }
-	p += 7;
-	fltr = makeZnkTxtFilter( ZnkTxtFilter_e_Replace );
-
-	/***
-	 * ‚Æ‚è‚ ‚¦‚¸Œ»Žž“_‚Å‚Íquote‚ð•K{‚Æ‚·‚é.
-	 */
-	p = strstr( p, quote_begin );
-	if( p == NULL ){ goto FUNC_ERROR; }
-	p += quote_begin_leng;
-
-	q = strstr( p, quote_end );
-	if( p == NULL ){ goto FUNC_ERROR; }
-	ZnkStr_assign( fltr->old_ptn_, 0, p, q-p );
-	p = q + quote_end_leng;
-
-	p = strstr( p, quote_begin );
-	if( p == NULL ){ goto FUNC_ERROR; }
-	p += quote_begin_leng;
-
-	q = strstr( p, quote_end );
-	if( p == NULL ){ goto FUNC_ERROR; }
-	ZnkStr_assign( fltr->new_ptn_, 0, p, q-p );
-	p = q + quote_end_leng;
-
-	ZnkObjAry_push_bk( fltr_ary->obj_ary_, (ZnkObj)fltr );
-	return fltr;
+	if( p ){
+		p += 7;
+		fltr = makeZnkTxtFilter( ZnkTxtFilter_e_Replace );
+	
+		/***
+		 * ‚Æ‚è‚ ‚¦‚¸Œ»Žž“_‚Å‚Íquote‚ð•K{‚Æ‚·‚é.
+		 */
+		p = strstr( p, quote_begin );
+		if( p == NULL ){ goto FUNC_ERROR; }
+		p += quote_begin_leng;
+	
+		q = strstr( p, quote_end );
+		if( p == NULL ){ goto FUNC_ERROR; }
+		ZnkStr_assign( fltr->old_ptn_, 0, p, q-p );
+		p = q + quote_end_leng;
+	
+		p = strstr( p, quote_begin );
+		if( p == NULL ){ goto FUNC_ERROR; }
+		p += quote_begin_leng;
+	
+		q = strstr( p, quote_end );
+		if( p == NULL ){ goto FUNC_ERROR; }
+		ZnkStr_assign( fltr->new_ptn_, 0, p, q-p );
+		p = q + quote_end_leng;
+		ZnkObjAry_push_bk( fltr_ary->obj_ary_, (ZnkObj)fltr );
+		return fltr;
+	}
+	p = strstr( p, "replace_between" );
+	if( p ){
+		return fltr;
+	}
 
 FUNC_ERROR:
 	deleteZnkTxtFilter( fltr );
