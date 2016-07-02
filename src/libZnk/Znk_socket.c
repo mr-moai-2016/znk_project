@@ -84,7 +84,8 @@ ZnkSocket_setBlockingMode( ZnkSocket sock, bool is_blocking_mode )
  * server‚É‚Í sin_family‚Æsin_port‚Íİ’èÏ‚İ‚Å‚ ‚é‚Æ‚·‚é.
  */
 Znk_INLINE bool
-connectCore( ZnkSocket sock, struct sockaddr_in* server, const char* hostname, ZnkErr* zkerr, bool* is_inprogress )
+connectCore( ZnkSocket sock,
+		struct sockaddr_in* server, const char* hostname, ZnkErr* zkerr, bool* is_inprogress )
 {
 	int rc;
 	*is_inprogress = false;
