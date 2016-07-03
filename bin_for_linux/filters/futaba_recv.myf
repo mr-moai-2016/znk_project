@@ -4,6 +4,7 @@
 replace ['<iframe '] ['<!-- iframe ']
 #replace ['</iframe>'] ['</iframe -->']
 replace ['</iframe'] ['</iframe --><noscript></noscript']
+replace ['display:none'] ['display:inline']
 replace ['<b>ゆりあき </b>'] ['<b>高速ネカマ変換 </b>']
 replace ['<blockquote>'] ['<blockquote>[<font color="#ff0000">管理人</font>]<br>']
 replace ['<span style="color:#ff0000">政治はだめ.</span>'] ['<span style="color:#ff0000">ホモはだめ.</span>']
