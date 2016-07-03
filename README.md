@@ -51,7 +51,6 @@ This is Japanese overview. English version is [here][7].
   **ふたばの仕様変更により、古いfilterファイルでは表示が乱れる問題が発生します**.  
   **filters/futaba_recv.myf**を最新のものに置き換えてください. 
   あるいは同ファイル内の以下の文を次のように修正します.  
-
 ~~~html
   修正前:
   replace ['</iframe>'] ['</iframe -->']
@@ -59,22 +58,18 @@ This is Japanese overview. English version is [here][7].
   修正後:
   replace ['</iframe'] ['</iframe --><noscript></noscript']
 ~~~
-
   さらに以下の一文を追加します.
 ~~~html
   replace ['display:none'] ['display:inline']
 ~~~
-
   しかし、ふたばの仕様は現在頻繁に変更されているため、
   またすぐに問題が発生する可能性があります.
   古いバージョンを使われている方は最新のリリース(Ver1.1.2)にバージョンアップすることをお勧めします.
-  ( 最新のバージョンではこの問題の修正が行われています ).
+  ( 最新のバージョンではこの問題の修正が行われています ).  
 
 * 2016/07/01 Version 1.1.1 リリース.  
   プラグインにおけるon_post関数の仕様を変更.
   ふたばの新しい仕様に対応.
-
-  リリースノートは[こちら][5]です.
 
 * 2016/06/30 Version 1.1 リリース.  
   久しぶりのメジャーバージョン番号引き上げリリースとなります.
@@ -105,9 +100,6 @@ This is Japanese overview. English version is [here][7].
   ここからのMoaiの大きな構想として「作者の手を離れたツール」を目指します.
   今回の主な修正点としては、リファレンスマニュアルにある送信filterに関するドキュメントの詳細化と
   新しいCookie用フィルタ指定である cookie_force の導入があります.
-
-* 2016/05/23 : IE7以前で画像投稿時、POST部に含まれるfilenameがフルパスのままになっておりイヤーンバカーン&hearts;な不具合を修正.
-  (mIpN0ZXK0さん、kQKv21nt0さんご指摘ありがとうございます).
 
 * 2016/05/21 : 正式バージョン1.0がリリースされました.  
 
