@@ -3,9 +3,11 @@
 #include <Znk_def_util.h>
 #include <Znk_cookie.h>
 #include <Znk_htp_hdrs.h>
+#include <Znk_s_base.h>
 #include <Znk_str_ptn.h>
 #include <Znk_str_ex.h>
 #include <Znk_missing_libc.h>
+#include <Znk_mem_find.h>
 #include <string.h>
 #include <ctype.h>
 
@@ -145,6 +147,71 @@ replaceStr( ZnkStr str, size_t begin,
 			seek_depth );
 }
 
+static void
+sanitizeHTMLCommentOut( ZnkStr text )
+{
+	/***
+	 * Hi all,
+	 *
+	 * First, we search comment out range, and replace iframe to other pattern
+	 * if it exists in the range.  We use Boyer-Moore Sunday algorism for performance.
+	 * Second, adopt your myf filter to the text normally.
+	 *
+	 * Regard.
+	 */
+	ZnkSRef sref_begin;
+	ZnkSRef sref_end;
+	ZnkSRef sref_target;
+	ZnkSRef sref_other;
+	size_t occ_tbl_begin[ 256 ];
+	size_t occ_tbl_end[ 256 ];
+	size_t occ_tbl_target[ 256 ];
+	size_t pos   = 0;
+	size_t begin = 0;
+	size_t end   = 0;
+	size_t text_leng = ZnkStr_leng( text );
+	ZnkStr tmp = ZnkStr_new( "" );
+
+	ZnkSRef_set_literal( &sref_begin,  "<!--" );
+	ZnkSRef_set_literal( &sref_end,    "-->" );
+	ZnkSRef_set_literal( &sref_target, "iframe" );
+	ZnkSRef_set_literal( &sref_other,  "zenkakudayoon" );
+
+	ZnkMem_getLOccTable_forBMS( occ_tbl_begin,  (uint8_t*)sref_begin.cstr_,  sref_begin.leng_ );
+	ZnkMem_getLOccTable_forBMS( occ_tbl_end,    (uint8_t*)sref_end.cstr_,    sref_end.leng_ );
+	ZnkMem_getLOccTable_forBMS( occ_tbl_target, (uint8_t*)sref_target.cstr_, sref_target.leng_ );
+
+	while( true ){
+		text_leng = ZnkStr_leng( text );
+		if( pos >= text_leng ){
+			break;
+		}
+		begin = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+pos, text_leng-pos,
+				(uint8_t*)sref_begin.cstr_, sref_begin.leng_, 1, occ_tbl_begin );
+		if( begin == Znk_NPOS ){
+			break;
+		}
+		begin += pos + sref_begin.leng_;
+		end   = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+begin, text_leng-begin,
+				(uint8_t*)sref_end.cstr_, sref_end.leng_, 1, occ_tbl_end );
+		if( end == Znk_NPOS ){
+			end = text_leng;
+		} else {
+			end += begin;
+		}
+		ZnkStr_assign( tmp, 0, ZnkStr_cstr( text ) + begin, end-begin );
+		ZnkStrEx_replace_BMS( tmp, 0,
+				sref_target.cstr_, sref_target.leng_, occ_tbl_target,
+				sref_other.cstr_,  sref_other.leng_,
+				Znk_NPOS );
+		ZnkBfr_replace( text, begin, end-begin, (uint8_t*)ZnkStr_cstr(tmp), ZnkStr_leng(tmp) );
+
+		pos = begin + ZnkStr_leng(tmp) + sref_end.leng_;
+	}
+
+	ZnkStr_delete( tmp );
+}
+
 bool on_response( ZnkMyf ftr_send,
 		ZnkVarpAry hdr_vars, ZnkStr text, const char* req_urp )
 {
@@ -156,6 +223,7 @@ bool on_response( ZnkMyf ftr_send,
 				old_ptn, Znk_NPOS,
 				new_ptn, Znk_NPOS,
 				Znk_NPOS );
+		sanitizeHTMLCommentOut( text );
 	}
 	return true;
 }
