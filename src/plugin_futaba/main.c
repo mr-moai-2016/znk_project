@@ -147,22 +147,18 @@ replaceStr( ZnkStr str, size_t begin,
 			seek_depth );
 }
 
+/***
+ * これはなかなか使えそうである.
+ * 次期メジャーリリースで汎用ユーティリティに昇格予定.
+ */
 static void
-sanitizeHTMLCommentOut( ZnkStr text )
+replacePtnInnerRange( ZnkStr text, const char* begin_ptn, const char* end_ptn,
+		const char* old_ptn, const char* new_ptn )
 {
-	/***
-	 * Hi all,
-	 *
-	 * First, we search comment out range, and replace iframe to other pattern
-	 * if it exists in the range.  We use Boyer-Moore Sunday algorism for performance.
-	 * Second, adopt your myf filter to the text normally.
-	 *
-	 * Regard.
-	 */
 	ZnkSRef sref_begin;
 	ZnkSRef sref_end;
-	ZnkSRef sref_target;
-	ZnkSRef sref_other;
+	ZnkSRef sref_old;
+	ZnkSRef sref_new;
 	size_t occ_tbl_begin[ 256 ];
 	size_t occ_tbl_end[ 256 ];
 	size_t occ_tbl_target[ 256 ];
@@ -172,14 +168,18 @@ sanitizeHTMLCommentOut( ZnkStr text )
 	size_t text_leng = ZnkStr_leng( text );
 	ZnkStr tmp = ZnkStr_new( "" );
 
-	ZnkSRef_set_literal( &sref_begin,  "<!--" );
-	ZnkSRef_set_literal( &sref_end,    "-->" );
-	ZnkSRef_set_literal( &sref_target, "iframe" );
-	ZnkSRef_set_literal( &sref_other,  "zenkakudayoon" );
+	sref_begin.cstr_ = begin_ptn;
+	sref_begin.leng_ = strlen( begin_ptn );
+	sref_end.cstr_   = end_ptn;
+	sref_end.leng_   = strlen( end_ptn );
+	sref_old.cstr_   = old_ptn;
+	sref_old.leng_   = strlen( old_ptn );
+	sref_new.cstr_   = new_ptn;
+	sref_new.leng_   = strlen( new_ptn );
 
-	ZnkMem_getLOccTable_forBMS( occ_tbl_begin,  (uint8_t*)sref_begin.cstr_,  sref_begin.leng_ );
-	ZnkMem_getLOccTable_forBMS( occ_tbl_end,    (uint8_t*)sref_end.cstr_,    sref_end.leng_ );
-	ZnkMem_getLOccTable_forBMS( occ_tbl_target, (uint8_t*)sref_target.cstr_, sref_target.leng_ );
+	ZnkMem_getLOccTable_forBMS( occ_tbl_begin,  (uint8_t*)sref_begin.cstr_, sref_begin.leng_ );
+	ZnkMem_getLOccTable_forBMS( occ_tbl_end,    (uint8_t*)sref_end.cstr_,   sref_end.leng_ );
+	ZnkMem_getLOccTable_forBMS( occ_tbl_target, (uint8_t*)sref_old.cstr_,   sref_old.leng_ );
 
 	while( true ){
 		text_leng = ZnkStr_leng( text );
@@ -201,8 +201,8 @@ sanitizeHTMLCommentOut( ZnkStr text )
 		}
 		ZnkStr_assign( tmp, 0, ZnkStr_cstr( text ) + begin, end-begin );
 		ZnkStrEx_replace_BMS( tmp, 0,
-				sref_target.cstr_, sref_target.leng_, occ_tbl_target,
-				sref_other.cstr_,  sref_other.leng_,
+				sref_old.cstr_, sref_old.leng_, occ_tbl_target,
+				sref_new.cstr_, sref_new.leng_,
 				Znk_NPOS );
 		ZnkBfr_replace( text, begin, end-begin, (uint8_t*)ZnkStr_cstr(tmp), ZnkStr_leng(tmp) );
 
@@ -223,7 +223,23 @@ bool on_response( ZnkMyf ftr_send,
 				old_ptn, Znk_NPOS,
 				new_ptn, Znk_NPOS,
 				Znk_NPOS );
-		sanitizeHTMLCommentOut( text );
+
+		/***
+		 * Hi all,
+		 *
+		 * First, we search comment out range, and replace evil patterns to innocences
+		 * if it exists in the range.  We use Boyer-Moore Sunday algorism for performance.
+		 * Second, adopt your myf filter to the text normally.
+		 *
+		 * Regard.
+		 */
+		/* sanitize HTML comment out */
+		replacePtnInnerRange( text, "<!--", "-->", "iframe",   "zenkakudayoon" );
+		replacePtnInnerRange( text, "<!--", "-->", "script",   "zenkakudayoon" );
+		replacePtnInnerRange( text, "<!--", "-->", "noscript", "zenkakudayoon" );
+		/* sanitize HTML script or noscript tag */
+		replacePtnInnerRange( text, "<script", "</script",     "iframe", "zenkakudayoon" );
+		replacePtnInnerRange( text, "<noscript", "</noscript", "iframe", "zenkakudayoon" );
 	}
 	return true;
 }
