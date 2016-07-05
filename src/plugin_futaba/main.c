@@ -147,69 +147,128 @@ replaceStr( ZnkStr str, size_t begin,
 			seek_depth );
 }
 
+
+typedef int (*StrProcessFuncT)( ZnkStr str, void* arg );
+
 /***
- * これはなかなか使えそうである.
- * 次期メジャーリリースで汎用ユーティリティに昇格予定.
+ * 完成.
+ * 次期メジャーバージョンリリース1.2にて
+ * libZnkへ追加予定.
  */
 static void
-replacePtnInnerRange( ZnkStr text, const char* begin_ptn, const char* end_ptn,
-		const char* old_ptn, const char* new_ptn )
+ZnkQuoteParser_invoke( ZnkStr text,
+		const char* begin_ptn, const char* end_ptn, const char* escape_ptn,
+		const StrProcessFuncT event_handler, void* event_arg )
 {
 	ZnkSRef sref_begin;
 	ZnkSRef sref_end;
-	ZnkSRef sref_old;
-	ZnkSRef sref_new;
-	size_t occ_tbl_begin[ 256 ];
-	size_t occ_tbl_end[ 256 ];
-	size_t occ_tbl_target[ 256 ];
-	size_t pos   = 0;
-	size_t begin = 0;
-	size_t end   = 0;
-	size_t text_leng = ZnkStr_leng( text );
-	ZnkStr tmp = ZnkStr_new( "" );
+	ZnkSRef sref_escape;
+	size_t  occ_tbl_begin[ 256 ];
+	size_t  occ_tbl_end[ 256 ];
+	size_t  occ_tbl_escape[ 256 ];
+	size_t  curp = 0;
+	size_t  begp = 0;
+	size_t  endp = 0;
+	size_t  escp = 0;
+	size_t  text_leng = ZnkStr_leng( text );
+	ZnkStr  tmp = ZnkStr_new( "" );
 
-	sref_begin.cstr_ = begin_ptn;
-	sref_begin.leng_ = strlen( begin_ptn );
-	sref_end.cstr_   = end_ptn;
-	sref_end.leng_   = strlen( end_ptn );
-	sref_old.cstr_   = old_ptn;
-	sref_old.leng_   = strlen( old_ptn );
-	sref_new.cstr_   = new_ptn;
-	sref_new.leng_   = strlen( new_ptn );
+	sref_begin.cstr_  = begin_ptn;
+	sref_begin.leng_  = strlen( begin_ptn );
+	sref_end.cstr_    = end_ptn;
+	sref_end.leng_    = strlen( end_ptn );
+	ZnkMem_getLOccTable_forBMS( occ_tbl_begin,  (uint8_t*)sref_begin.cstr_,  sref_begin.leng_ );
+	ZnkMem_getLOccTable_forBMS( occ_tbl_end,    (uint8_t*)sref_end.cstr_,    sref_end.leng_ );
 
-	ZnkMem_getLOccTable_forBMS( occ_tbl_begin,  (uint8_t*)sref_begin.cstr_, sref_begin.leng_ );
-	ZnkMem_getLOccTable_forBMS( occ_tbl_end,    (uint8_t*)sref_end.cstr_,   sref_end.leng_ );
-	ZnkMem_getLOccTable_forBMS( occ_tbl_target, (uint8_t*)sref_old.cstr_,   sref_old.leng_ );
+	sref_escape.cstr_ = escape_ptn;
+	if( sref_escape.cstr_ ){
+		sref_escape.leng_ = strlen( escape_ptn );
+		ZnkMem_getLOccTable_forBMS( occ_tbl_escape, (uint8_t*)sref_escape.cstr_, sref_escape.leng_ );
+	}
 
 	while( true ){
 		text_leng = ZnkStr_leng( text );
-		if( pos >= text_leng ){
+		if( curp >= text_leng ){
 			break;
 		}
-		begin = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+pos, text_leng-pos,
-				(uint8_t*)sref_begin.cstr_, sref_begin.leng_, 1, occ_tbl_begin );
-		if( begin == Znk_NPOS ){
-			break;
-		}
-		begin += pos + sref_begin.leng_;
-		end   = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+begin, text_leng-begin,
-				(uint8_t*)sref_end.cstr_, sref_end.leng_, 1, occ_tbl_end );
-		if( end == Znk_NPOS ){
-			end = text_leng;
-		} else {
-			end += begin;
-		}
-		ZnkStr_assign( tmp, 0, ZnkStr_cstr( text ) + begin, end-begin );
-		ZnkStrEx_replace_BMS( tmp, 0,
-				sref_old.cstr_, sref_old.leng_, occ_tbl_target,
-				sref_new.cstr_, sref_new.leng_,
-				Znk_NPOS );
-		ZnkBfr_replace( text, begin, end-begin, (uint8_t*)ZnkStr_cstr(tmp), ZnkStr_leng(tmp) );
 
-		pos = begin + ZnkStr_leng(tmp) + sref_end.leng_;
+		/* lexical-scan phase1 */
+		begp = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+curp, text_leng-curp,
+				(uint8_t*)sref_begin.cstr_, sref_begin.leng_, 1, occ_tbl_begin );
+		if( begp == Znk_NPOS ){
+			break;
+		}
+		begp += curp + sref_begin.leng_;
+
+		/* lexical-scan phase2 */
+		curp = begp;
+		while( true ){
+			endp = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+curp, text_leng-curp,
+					(uint8_t*)sref_end.cstr_, sref_end.leng_, 1, occ_tbl_end );
+			if( sref_escape.cstr_ ){
+				escp = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+curp, text_leng-curp,
+						(uint8_t*)sref_escape.cstr_, sref_escape.leng_, 1, occ_tbl_escape );
+			} else {
+				escp = Znk_NPOS;
+			}
+			if( endp == Znk_NPOS ){
+				endp = text_leng;
+			} else {
+				if( escp != Znk_NPOS && escp + sref_escape.leng_ == endp ){
+					/* Escape sequence is recognized. Try again. */
+					curp += endp + sref_end.leng_;
+					continue;
+				}
+				endp += curp;
+			}
+			break;
+		}
+
+		ZnkStr_assign( tmp, 0, ZnkStr_cstr( text ) + begp, endp-begp );
+
+		/* invoke event callback. */
+		event_handler( tmp, event_arg );
+
+		/* replace by the result */
+		ZnkBfr_replace( text, begp, endp-begp, (uint8_t*)ZnkStr_cstr(tmp), ZnkStr_leng(tmp) );
+
+		curp = begp + ZnkStr_leng(tmp) + sref_end.leng_;
 	}
 
 	ZnkStr_delete( tmp );
+}
+
+struct PtnInfo {
+	const char* old_ptn_;
+	const char* new_ptn_;
+};
+static int
+replaceStr_BMS( ZnkStr str, void* arg )
+{
+	struct PtnInfo* ptn_info = Znk_force_ptr_cast( struct PtnInfo*, arg );
+	const char* old_ptn = ptn_info->old_ptn_;
+	const char* new_ptn = ptn_info->new_ptn_;
+	ZnkSRef sref_old;
+	ZnkSRef sref_new;
+	size_t occ_tbl_target[ 256 ];
+	sref_old.cstr_   = old_ptn;
+	sref_old.leng_   = strlen( old_ptn );
+	ZnkMem_getLOccTable_forBMS( occ_tbl_target, (uint8_t*)sref_old.cstr_,   sref_old.leng_ );
+	sref_new.cstr_   = new_ptn;
+	sref_new.leng_   = strlen( new_ptn );
+
+	ZnkStrEx_replace_BMS( str, 0,
+			sref_old.cstr_, sref_old.leng_, occ_tbl_target,
+			sref_new.cstr_, sref_new.leng_,
+			Znk_NPOS );
+	return 0;
+}
+static int
+processQuote( ZnkStr str, void* arg )
+{
+	ZnkQuoteParser_invoke( str, "\"", "\"", "\\",
+			replaceStr_BMS, arg );
+	return 0;
 }
 
 bool on_response( ZnkMyf ftr_send,
@@ -227,19 +286,48 @@ bool on_response( ZnkMyf ftr_send,
 		/***
 		 * Hi all,
 		 *
-		 * First, we search comment out range, and replace evil patterns to innocences
+		 * First, we search miscellaneous range, and replace evil patterns to innocences
 		 * if it exists in the range.  We use Boyer-Moore Sunday algorism for performance.
 		 * Second, adopt your myf filter to the text normally.
 		 *
 		 * Regard.
 		 */
-		/* sanitize HTML comment out */
-		replacePtnInnerRange( text, "<!--", "-->", "iframe",   "zenkakudayoon" );
-		replacePtnInnerRange( text, "<!--", "-->", "script",   "zenkakudayoon" );
-		replacePtnInnerRange( text, "<!--", "-->", "noscript", "zenkakudayoon" );
-		/* sanitize HTML script or noscript tag */
-		replacePtnInnerRange( text, "<script", "</script",     "iframe", "zenkakudayoon" );
-		replacePtnInnerRange( text, "<noscript", "</noscript", "iframe", "zenkakudayoon" );
+
+		/* boiiinize */
+		{
+			struct PtnInfo ptn_info = { "iframe", "zenkakuboiiin" };
+			ZnkQuoteParser_invoke( text, "<!--", "-->", NULL,
+					processQuote, &ptn_info );
+			ZnkQuoteParser_invoke( text, "<script", "</script", NULL,
+					processQuote, &ptn_info );
+		}
+	
+		/* dayoonize */
+		{
+			struct PtnInfo ptn_info = { "iframe", "zenkakudayoon" };
+			ZnkQuoteParser_invoke( text, "<!--", "-->", NULL,
+					replaceStr_BMS, &ptn_info );
+			ZnkQuoteParser_invoke( text, "<script", "</script", NULL,
+					replaceStr_BMS, &ptn_info );
+		}
+	
+		/* disable iframe */
+		{
+			struct PtnInfo ptn_info = { "<iframe", "<!-- iframe" };
+			replaceStr_BMS( text, &ptn_info );
+		}
+		{
+			struct PtnInfo ptn_info = { "</iframe", "</iframe --><noscript></noscript" };
+			replaceStr_BMS( text, &ptn_info );
+		}
+	
+		/* de-boiiinize */
+		{
+			struct PtnInfo ptn_info = { "zenkakuboiiin", "iframe" };
+			ZnkQuoteParser_invoke( text, "<script", "</script", NULL,
+					replaceStr_BMS, &ptn_info );
+		}
+
 	}
 	return true;
 }
