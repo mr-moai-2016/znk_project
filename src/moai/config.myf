@@ -5,7 +5,7 @@
 @@L ignore_hosts
 free2.jp
 api.digiket.com
-js.ad-stir.com
+*.ad-stir.com
 aladdin.genieesspv.jp
 *.socdm.com
 j.microad.net

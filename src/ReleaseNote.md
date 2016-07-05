@@ -1,5 +1,25 @@
-Release Note 最終更新: 2016/07/04
+Release Note 最終更新: 2016/07/06
 -----------------------------------
+
+## 2016/07/06 Version 1.1.4 リリース.  
+  以下を修正しました.
+
+~~~
+    * ふたばプラグインを修正.  
+      ふたばの仕様が大きく変更されました. これに対する修正となります.
+      これより古いバージョンでは正常に表示されなかったりレス投稿などができない可能性が考えられます.
+      この問題に対する古いバージョンでの回避策はありませんので最新版をお使いください.
+
+    * filters/futaba_recv.myf を修正.
+      今回、以下のフィルタ文がすべて削除されています.
+
+        replace ['</iframe>'] ['</iframe -->']
+        replace ['</iframe'] ['</iframe --><noscript></noscript']
+        replace ['display: '] ['display:']
+        replace ['display:none'] ['display:inline']
+        replace ['display: '] ['dasplay: ']
+~~~
+
 
 ## 2016/07/04 Version 1.1.3 リリース.  
   以下を修正しました.
