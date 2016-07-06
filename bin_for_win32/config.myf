@@ -33,12 +33,21 @@ spnet33.i-mobile.co.jp
 #   これが on の場合、post_confirm_hosts によって指定されたホストにおいては
 #   POST時に確認画面が出る
 #   offの場合はいかなるホストにおいても確認画面を出さない.
-#
+# 
 # enable_log_file:
 #   これが on の場合、moai_log.log ファイルにすべてのログ情報を記録していく.
 #   off の場合、初期起動時の最低限のメッセージを除いては moai_log.log ファイルにログ情報を記録しない.
 #   動画サイトなど、ログ情報が膨大なサイトを閲覧する場合は、ログファイルも大きくなりがちだが、
 #   これが気になる場合などにoffにしておくとよい.
+#
+# enable_log_verbose:
+#   Log情報をさらに詳細に書き出すか否かを切り替える.
+#   チェックボックスをクリックして値を切り替えた上で「Update」を押せば設定が反映される.
+#
+# blocking_mode:
+#   ソケット通信におけるブロッキング接続モードのon/offを切り替える.
+#   onのときブロッキング接続、offのとき非ブロッキング接続となるが、通常後者の方が快適に閲覧が可能であり、
+#   特に問題ない限りはoffでよい.
 #
 #
 # acceptable_host:
@@ -61,12 +70,12 @@ spnet33.i-mobile.co.jp
 @@V config
 parent_proxy = [':0']
 post_confirm = ['off']
-blocking_mode = ['off']
-moai_port = ['8124']
 enable_log_file = ['on']
 enable_log_verbose = ['off']
+blocking_mode = ['off']
 acceptable_host = ['LOOPBACK']
 server_name = ['']
+moai_port = ['8124']
 @@.
 
 # 外部proxyが指定されている場合において

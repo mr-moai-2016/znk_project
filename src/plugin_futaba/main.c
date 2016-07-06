@@ -268,6 +268,8 @@ processQuote( ZnkStr str, void* arg )
 {
 	ZnkQuoteParser_invoke( str, "\"", "\"", "\\",
 			replaceStr_BMS, arg );
+	ZnkQuoteParser_invoke( str, "\'", "\'", "\\",
+			replaceStr_BMS, arg );
 	return 0;
 }
 
