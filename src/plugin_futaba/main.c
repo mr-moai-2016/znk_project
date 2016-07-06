@@ -440,6 +440,12 @@ bool on_response( ZnkMyf ftr_send,
 			struct PtnInfo ptn_info = { "</iframe", "</iframe --><noscript></noscript" };
 			replaceStr_BMS( text, &ptn_info );
 		}
+
+		/* omake */
+		{
+			struct PtnInfo ptn_info = { "GazouBBS", "Nakanaka yarimasune! Kanrinin-san!" };
+			replaceStr_BMS( text, &ptn_info );
+		}
 	
 		/* de-boiiinize */
 		{
