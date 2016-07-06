@@ -237,6 +237,117 @@ ZnkQuoteParser_invoke( ZnkStr text,
 
 	ZnkStr_delete( tmp );
 }
+/***
+ * ‚³‚ç‚È‚éŠg’£”Å.
+ * ‚Æ‚è‚ ‚¦‚¸ƒhƒ‰ƒtƒg.
+ */
+static void
+ZnkQuoteParser_invokeEx( ZnkStr text,
+		const char* begin_ptn, const char* end_ptn,
+		const char* escape_ptn, const char* coend_ptn,
+		const StrProcessFuncT event_handler, void* event_arg )
+{
+	ZnkSRef sref_begin;
+	ZnkSRef sref_end;
+	ZnkSRef sref_escape;
+	ZnkSRef sref_coend;
+	size_t  occ_tbl_begin[ 256 ];
+	size_t  occ_tbl_end[ 256 ];
+	size_t  occ_tbl_escape[ 256 ];
+	size_t  occ_tbl_coend[ 256 ];
+	size_t  curp = 0;
+	size_t  begp = 0;
+	size_t  endp = 0;
+	size_t  escp = 0;
+	size_t  coend = 0;
+	size_t  text_leng = ZnkStr_leng( text );
+	ZnkStr  tmp = ZnkStr_new( "" );
+
+	sref_begin.cstr_  = begin_ptn;
+	sref_begin.leng_  = strlen( begin_ptn );
+	sref_end.cstr_    = end_ptn;
+	sref_end.leng_    = strlen( end_ptn );
+	ZnkMem_getLOccTable_forBMS( occ_tbl_begin,  (uint8_t*)sref_begin.cstr_,  sref_begin.leng_ );
+	ZnkMem_getLOccTable_forBMS( occ_tbl_end,    (uint8_t*)sref_end.cstr_,    sref_end.leng_ );
+
+	sref_escape.cstr_ = escape_ptn;
+	if( sref_escape.cstr_ ){
+		sref_escape.leng_ = strlen( escape_ptn );
+		ZnkMem_getLOccTable_forBMS( occ_tbl_escape, (uint8_t*)sref_escape.cstr_, sref_escape.leng_ );
+	}
+	sref_coend.cstr_ = coend_ptn;
+	if( sref_coend.cstr_ ){
+		sref_coend.leng_ = strlen( coend_ptn );
+		ZnkMem_getLOccTable_forBMS( occ_tbl_coend, (uint8_t*)sref_coend.cstr_, sref_coend.leng_ );
+	}
+
+	while( true ){
+		text_leng = ZnkStr_leng( text );
+		if( curp >= text_leng ){
+			break;
+		}
+
+		/* lexical-scan phase1 */
+		begp = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+curp, text_leng-curp,
+				(uint8_t*)sref_begin.cstr_, sref_begin.leng_, 1, occ_tbl_begin );
+		if( begp == Znk_NPOS ){
+			break;
+		}
+		begp += curp + sref_begin.leng_;
+
+		/* lexical-scan phase2 */
+		curp = begp;
+		while( true ){
+			endp = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+curp, text_leng-curp,
+					(uint8_t*)sref_end.cstr_, sref_end.leng_, 1, occ_tbl_end );
+			if( sref_escape.cstr_ ){
+				escp = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+curp, text_leng-curp,
+						(uint8_t*)sref_escape.cstr_, sref_escape.leng_, 1, occ_tbl_escape );
+			} else {
+				escp = Znk_NPOS;
+			}
+			if( endp == Znk_NPOS ){
+				endp = text_leng;
+			} else {
+				if( coend_ptn ){
+					if( escp != Znk_NPOS && escp < endp ){
+						curp += escp + sref_escape.leng_;
+						coend = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+curp, text_leng-curp,
+								(uint8_t*)sref_coend.cstr_, sref_coend.leng_, 1, occ_tbl_coend );
+						if( coend == Znk_NPOS ){
+							endp = text_leng;
+							break;
+						}
+						/* Comment out is recognized. Try again. */
+						curp += coend + sref_coend.leng_;
+						continue;
+					}
+				} else {
+					if( escp != Znk_NPOS && escp + sref_escape.leng_ == endp ){
+						/* Escape sequence is recognized. Try again. */
+						curp += endp + sref_end.leng_;
+						continue;
+					}
+				}
+				endp += curp;
+			}
+			break;
+		}
+
+		ZnkStr_assign( tmp, 0, ZnkStr_cstr( text ) + begp, endp-begp );
+
+		/* invoke event callback. */
+		event_handler( tmp, event_arg );
+
+		/* replace by the result */
+		ZnkBfr_replace( text, begp, endp-begp, (uint8_t*)ZnkStr_cstr(tmp), ZnkStr_leng(tmp) );
+
+		curp = begp + ZnkStr_leng(tmp) + sref_end.leng_;
+	}
+
+	ZnkStr_delete( tmp );
+}
+
 
 struct PtnInfo {
 	const char* old_ptn_;
@@ -306,7 +417,14 @@ bool on_response( ZnkMyf ftr_send,
 
 		/* dayoonize */
 		{
-			struct PtnInfo ptn_info = { "iframe", "zenkakudayoon" };
+			struct PtnInfo ptn_info = { "<iframe", "<zenkakudayoon" };
+			ZnkQuoteParser_invoke( text, "<!--", "-->", NULL,
+					replaceStr_BMS, &ptn_info );
+			ZnkQuoteParser_invoke( text, "<script", "</script", NULL,
+					replaceStr_BMS, &ptn_info );
+		}
+		{
+			struct PtnInfo ptn_info = { "</iframe", "</zenkakudayoon" };
 			ZnkQuoteParser_invoke( text, "<!--", "-->", NULL,
 					replaceStr_BMS, &ptn_info );
 			ZnkQuoteParser_invoke( text, "<script", "</script", NULL,
@@ -326,7 +444,7 @@ bool on_response( ZnkMyf ftr_send,
 		/* de-boiiinize */
 		{
 			struct PtnInfo ptn_info = { "zenkakuboiiin", "iframe" };
-			ZnkQuoteParser_invoke( text, "<script", "</script", "/*",
+			ZnkQuoteParser_invokeEx( text, "<script", "</script", "/*", "*/",
 					replaceStr_BMS, &ptn_info );
 		}
 
