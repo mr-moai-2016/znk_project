@@ -270,6 +270,13 @@ processQuote( ZnkStr str, void* arg )
 			replaceStr_BMS, arg );
 	return 0;
 }
+static int
+processCommentOut( ZnkStr str, void* arg )
+{
+	ZnkQuoteParser_invoke( str, "/*", "*/", NULL,
+			replaceStr_BMS, arg );
+	return 0;
+}
 
 bool on_response( ZnkMyf ftr_send,
 		ZnkVarpAry hdr_vars, ZnkStr text, const char* req_urp )
@@ -301,7 +308,7 @@ bool on_response( ZnkMyf ftr_send,
 			ZnkQuoteParser_invoke( text, "<script", "</script", NULL,
 					processQuote, &ptn_info );
 		}
-	
+
 		/* dayoonize */
 		{
 			struct PtnInfo ptn_info = { "iframe", "zenkakudayoon" };
@@ -324,7 +331,7 @@ bool on_response( ZnkMyf ftr_send,
 		/* de-boiiinize */
 		{
 			struct PtnInfo ptn_info = { "zenkakuboiiin", "iframe" };
-			ZnkQuoteParser_invoke( text, "<script", "</script", NULL,
+			ZnkQuoteParser_invoke( text, "<script", "</script", "/*",
 					replaceStr_BMS, &ptn_info );
 		}
 
