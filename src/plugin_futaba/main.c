@@ -148,7 +148,7 @@ replaceStr( ZnkStr str, size_t begin,
 }
 
 
-typedef int (*StrProcessFuncT)( ZnkStr str, void* arg );
+typedef int (*ZnkStrProcessFuncT)( ZnkStr str, void* arg );
 
 /***
  * Š®¬.
@@ -156,109 +156,23 @@ typedef int (*StrProcessFuncT)( ZnkStr str, void* arg );
  * libZnk‚Ö’Ç‰Á—\’è.
  */
 static void
-ZnkQuoteParser_invoke( ZnkStr text,
-		const char* begin_ptn, const char* end_ptn, const char* escape_ptn,
-		const StrProcessFuncT event_handler, void* event_arg )
-{
-	ZnkSRef sref_begin;
-	ZnkSRef sref_end;
-	ZnkSRef sref_escape;
-	size_t  occ_tbl_begin[ 256 ];
-	size_t  occ_tbl_end[ 256 ];
-	size_t  occ_tbl_escape[ 256 ];
-	size_t  curp = 0;
-	size_t  begp = 0;
-	size_t  endp = 0;
-	size_t  escp = 0;
-	size_t  text_leng = ZnkStr_leng( text );
-	ZnkStr  tmp = ZnkStr_new( "" );
-
-	sref_begin.cstr_  = begin_ptn;
-	sref_begin.leng_  = strlen( begin_ptn );
-	sref_end.cstr_    = end_ptn;
-	sref_end.leng_    = strlen( end_ptn );
-	ZnkMem_getLOccTable_forBMS( occ_tbl_begin,  (uint8_t*)sref_begin.cstr_,  sref_begin.leng_ );
-	ZnkMem_getLOccTable_forBMS( occ_tbl_end,    (uint8_t*)sref_end.cstr_,    sref_end.leng_ );
-
-	sref_escape.cstr_ = escape_ptn;
-	if( sref_escape.cstr_ ){
-		sref_escape.leng_ = strlen( escape_ptn );
-		ZnkMem_getLOccTable_forBMS( occ_tbl_escape, (uint8_t*)sref_escape.cstr_, sref_escape.leng_ );
-	}
-
-	while( true ){
-		text_leng = ZnkStr_leng( text );
-		if( curp >= text_leng ){
-			break;
-		}
-
-		/* lexical-scan phase1 */
-		begp = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+curp, text_leng-curp,
-				(uint8_t*)sref_begin.cstr_, sref_begin.leng_, 1, occ_tbl_begin );
-		if( begp == Znk_NPOS ){
-			break;
-		}
-		begp += curp + sref_begin.leng_;
-
-		/* lexical-scan phase2 */
-		curp = begp;
-		while( true ){
-			endp = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+curp, text_leng-curp,
-					(uint8_t*)sref_end.cstr_, sref_end.leng_, 1, occ_tbl_end );
-			if( sref_escape.cstr_ ){
-				escp = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+curp, text_leng-curp,
-						(uint8_t*)sref_escape.cstr_, sref_escape.leng_, 1, occ_tbl_escape );
-			} else {
-				escp = Znk_NPOS;
-			}
-			if( endp == Znk_NPOS ){
-				endp = text_leng;
-			} else {
-				if( escp != Znk_NPOS && escp + sref_escape.leng_ == endp ){
-					/* Escape sequence is recognized. Try again. */
-					curp += endp + sref_end.leng_;
-					continue;
-				}
-				endp += curp;
-			}
-			break;
-		}
-
-		ZnkStr_assign( tmp, 0, ZnkStr_cstr( text ) + begp, endp-begp );
-
-		/* invoke event callback. */
-		event_handler( tmp, event_arg );
-
-		/* replace by the result */
-		ZnkBfr_replace( text, begp, endp-begp, (uint8_t*)ZnkStr_cstr(tmp), ZnkStr_leng(tmp) );
-
-		curp = begp + ZnkStr_leng(tmp) + sref_end.leng_;
-	}
-
-	ZnkStr_delete( tmp );
-}
-/***
- * ‚³‚ç‚È‚éŠg’£”Å.
- * ‚Æ‚è‚ ‚¦‚¸ƒhƒ‰ƒtƒg.
- */
-static void
 ZnkQuoteParser_invokeEx( ZnkStr text,
 		const char* begin_ptn, const char* end_ptn,
-		const char* escape_ptn, const char* coend_ptn,
-		const StrProcessFuncT event_handler, void* event_arg )
+		const char* coesc_ptn, const char* coend_ptn,
+		const ZnkStrProcessFuncT event_handler, void* event_arg )
 {
-	ZnkSRef sref_begin;
-	ZnkSRef sref_end;
-	ZnkSRef sref_escape;
-	ZnkSRef sref_coend;
+	ZnkSRef sref_begin = { 0 };
+	ZnkSRef sref_end   = { 0 };
+	ZnkSRef sref_coesc = { 0 };
+	ZnkSRef sref_coend = { 0 };
 	size_t  occ_tbl_begin[ 256 ];
 	size_t  occ_tbl_end[ 256 ];
-	size_t  occ_tbl_escape[ 256 ];
+	size_t  occ_tbl_coesc[ 256 ];
 	size_t  occ_tbl_coend[ 256 ];
 	size_t  curp = 0;
 	size_t  begp = 0;
 	size_t  endp = 0;
-	size_t  escp = 0;
+	size_t  coesc = 0;
 	size_t  coend = 0;
 	size_t  text_leng = ZnkStr_leng( text );
 	ZnkStr  tmp = ZnkStr_new( "" );
@@ -270,10 +184,10 @@ ZnkQuoteParser_invokeEx( ZnkStr text,
 	ZnkMem_getLOccTable_forBMS( occ_tbl_begin,  (uint8_t*)sref_begin.cstr_,  sref_begin.leng_ );
 	ZnkMem_getLOccTable_forBMS( occ_tbl_end,    (uint8_t*)sref_end.cstr_,    sref_end.leng_ );
 
-	sref_escape.cstr_ = escape_ptn;
-	if( sref_escape.cstr_ ){
-		sref_escape.leng_ = strlen( escape_ptn );
-		ZnkMem_getLOccTable_forBMS( occ_tbl_escape, (uint8_t*)sref_escape.cstr_, sref_escape.leng_ );
+	sref_coesc.cstr_ = coesc_ptn;
+	if( sref_coesc.cstr_ ){
+		sref_coesc.leng_ = strlen( coesc_ptn );
+		ZnkMem_getLOccTable_forBMS( occ_tbl_coesc, (uint8_t*)sref_coesc.cstr_, sref_coesc.leng_ );
 	}
 	sref_coend.cstr_ = coend_ptn;
 	if( sref_coend.cstr_ ){
@@ -300,18 +214,18 @@ ZnkQuoteParser_invokeEx( ZnkStr text,
 		while( true ){
 			endp = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+curp, text_leng-curp,
 					(uint8_t*)sref_end.cstr_, sref_end.leng_, 1, occ_tbl_end );
-			if( sref_escape.cstr_ ){
-				escp = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+curp, text_leng-curp,
-						(uint8_t*)sref_escape.cstr_, sref_escape.leng_, 1, occ_tbl_escape );
+			if( sref_coesc.cstr_ ){
+				coesc = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+curp, text_leng-curp,
+						(uint8_t*)sref_coesc.cstr_, sref_coesc.leng_, 1, occ_tbl_coesc );
 			} else {
-				escp = Znk_NPOS;
+				coesc = Znk_NPOS;
 			}
 			if( endp == Znk_NPOS ){
 				endp = text_leng;
 			} else {
 				if( coend_ptn ){
-					if( escp != Znk_NPOS && escp < endp ){
-						curp += escp + sref_escape.leng_;
+					if( coesc != Znk_NPOS && coesc < endp ){
+						curp += coesc + sref_coesc.leng_;
 						coend = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+curp, text_leng-curp,
 								(uint8_t*)sref_coend.cstr_, sref_coend.leng_, 1, occ_tbl_coend );
 						if( coend == Znk_NPOS ){
@@ -323,7 +237,7 @@ ZnkQuoteParser_invokeEx( ZnkStr text,
 						continue;
 					}
 				} else {
-					if( escp != Znk_NPOS && escp + sref_escape.leng_ == endp ){
+					if( coesc != Znk_NPOS && coesc + sref_coesc.leng_ == endp ){
 						/* Escape sequence is recognized. Try again. */
 						curp += endp + sref_end.leng_;
 						continue;
@@ -346,6 +260,15 @@ ZnkQuoteParser_invokeEx( ZnkStr text,
 	}
 
 	ZnkStr_delete( tmp );
+}
+Znk_INLINE void
+ZnkQuoteParser_invoke( ZnkStr text,
+		const char* begin_ptn, const char* end_ptn, const char* coesc_ptn,
+		const ZnkStrProcessFuncT event_handler, void* event_arg )
+{
+	ZnkQuoteParser_invokeEx( text,
+			begin_ptn, end_ptn, coesc_ptn, NULL,
+			event_handler, event_arg );
 }
 
 
