@@ -270,13 +270,6 @@ processQuote( ZnkStr str, void* arg )
 			replaceStr_BMS, arg );
 	return 0;
 }
-static int
-processCommentOut( ZnkStr str, void* arg )
-{
-	ZnkQuoteParser_invoke( str, "/*", "*/", NULL,
-			replaceStr_BMS, arg );
-	return 0;
-}
 
 bool on_response( ZnkMyf ftr_send,
 		ZnkVarpAry hdr_vars, ZnkStr text, const char* req_urp )
