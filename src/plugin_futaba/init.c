@@ -24,8 +24,7 @@ static bool st_is_dos_path = false;
 static unsigned int
 getRandomUInt( void )
 {
-	unsigned int r = (unsigned int)( rand() * UINT_MAX );
-	ZnkF_printf_e( "plugin_futaba : r=[%u]\n", r );
+	unsigned int r = (unsigned int)( ( rand() / (double)RAND_MAX ) * UINT_MAX );
 	return r;
 }
 

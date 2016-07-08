@@ -24,7 +24,8 @@ static bool st_is_dos_path = false;
 static unsigned int
 getRandomUInt( void )
 {
-	return (unsigned int)( rand() * UINT_MAX );
+	unsigned int r = (unsigned int)( ( rand() / (double)RAND_MAX ) * UINT_MAX );
+	return r;
 }
 
 static bool
