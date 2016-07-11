@@ -26,6 +26,7 @@ struct MoaiModuleImpl {
 	ZnkTxtFilterAry   ftr_html_;
 	ZnkTxtFilterAry   ftr_js_;
 	ZnkTxtFilterAry   ftr_css_;
+	ZnkStrAry         ftr_css_additional_;
 };
 
 
@@ -38,6 +39,7 @@ MoaiModule_create( void )
 	mod->ftr_html_ = ZnkTxtFilterAry_create();
 	mod->ftr_js_   = ZnkTxtFilterAry_create();
 	mod->ftr_css_  = ZnkTxtFilterAry_create();
+	mod->ftr_css_additional_ = ZnkStrAry_create( true );
 	return mod;
 }
 
@@ -50,6 +52,7 @@ MoaiModule_destroy( MoaiModule mod )
 		ZnkTxtFilterAry_destroy( mod->ftr_html_ );
 		ZnkTxtFilterAry_destroy( mod->ftr_js_ );
 		ZnkTxtFilterAry_destroy( mod->ftr_css_ );
+		ZnkStrAry_destroy( mod->ftr_css_additional_ );
 		if( mod->plg_handle_ ){
 			ZnkDLink_close( mod->plg_handle_ );
 		}
@@ -96,6 +99,11 @@ MoaiModule_load( MoaiModule mod, const char* target_name )
 			ZnkTxtFilterAry_regist_byCommandAry( mod->ftr_css_, command_ary,
 					ZnkMyf_quote_begin( mod->ftr_recv_ ),
 					ZnkMyf_quote_end( mod->ftr_recv_ ) );
+		}
+
+		command_ary = ZnkMyf_find_lines( mod->ftr_recv_, "css_additional" );
+		if( command_ary ){
+			ZnkStrAry_swap( mod->ftr_css_additional_, command_ary );
 		}
 		MoaiLog_printf( "Moai : Filter Loading [%s]\n", filename );
 	}
@@ -160,6 +168,10 @@ MoaiModule_saveFilter( const MoaiModule mod )
 	updateReplaceCmdAry( mod->ftr_recv_, "html_filter", mod->ftr_html_, nl );
 	updateReplaceCmdAry( mod->ftr_recv_, "js_filter",   mod->ftr_js_, nl );
 	updateReplaceCmdAry( mod->ftr_recv_, "css_filter",  mod->ftr_css_, nl );
+	{
+		ZnkStrAry dst_ary  = ZnkMyf_find_lines( mod->ftr_recv_, "css_additional" );
+		ZnkStrAry_copy( dst_ary, mod->ftr_css_additional_ );
+	}
 
 	Znk_snprintf( filename, sizeof(filename), "filters/%s_recv.myf", target_name );
 	result = ZnkMyf_save( mod->ftr_recv_, filename );
@@ -192,6 +204,11 @@ ZnkTxtFilterAry
 MoaiModule_ftrCSS( const MoaiModule mod )
 {
 	return mod->ftr_css_;
+}
+ZnkStrAry
+MoaiModule_ftrCSSAdditional( const MoaiModule mod )
+{
+	return mod->ftr_css_additional_;
 }
 bool
 MoaiModule_invokeInitiate( const MoaiModule mod, const char* parent_proxy, ZnkStr result_msg )

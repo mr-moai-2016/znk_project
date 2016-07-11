@@ -519,6 +519,18 @@ processResponse_forText( ZnkSocket O_sock, MoaiContext ctx, MoaiFdSet mfds,
 		MoaiModule_invokeOnResponse( mod, info->hdrs_.vars_, ctx->text_, ZnkStr_cstr(info->req_urp_) );
 		if( txt_ftr ){
 			ZnkTxtFilterAry_exec( txt_ftr, ctx->text_ );
+
+			if( body_info->txt_type_ == MoaiText_CSS ){
+				const ZnkStrAry css_additional = MoaiModule_ftrCSSAdditional( mod );
+				const size_t size = ZnkStrAry_size( css_additional );
+				size_t idx;
+				ZnkStr line;
+				for( idx=0; idx<size; ++idx ){
+					line =  ZnkStrAry_at( css_additional, idx );
+					ZnkStr_add_c( ctx->text_, '\n' );
+					ZnkStr_append( ctx->text_, ZnkStr_cstr(line), ZnkStr_leng(line) );
+				}
+			}
 		}
 	}
 

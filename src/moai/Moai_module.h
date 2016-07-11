@@ -37,6 +37,8 @@ ZnkTxtFilterAry
 MoaiModule_ftrJS( const MoaiModule mod );
 ZnkTxtFilterAry
 MoaiModule_ftrCSS( const MoaiModule mod );
+ZnkStrAry
+MoaiModule_ftrCSSAdditional( const MoaiModule mod );
 
 bool
 MoaiModule_invokeInitiate( const MoaiModule mod, const char* parent_proxy, ZnkStr result_msg );

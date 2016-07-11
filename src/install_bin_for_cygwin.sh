@@ -12,7 +12,7 @@ INST_DIR_=$ROOT_DIR_/bin_for_cygwin
 mkdir -p "$INST_DIR_"
 
 #
-# copy libZnk dll
+# copy libZnk
 #
 if test -e libZnk ; then
 	SRC_DIR=libZnk

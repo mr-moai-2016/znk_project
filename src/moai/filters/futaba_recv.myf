@@ -34,3 +34,19 @@ replace ['"íœˆË—Š‚ð‚·‚é">']                  ['"ˆ‚·">']
 
 @@L css_filter
 @@.
+
+@@L css_additional
+table[width="100%"] {
+margin: 2px auto 4px !important;
+}
+td.rts {
+display: none !important;
+}
+td.rtd {
+padding: 1px !important;
+border: 2px solid rgb(255,180,200) !important;
+#-moz-border-radius: 20px !important;
+border-radius: 20px !important;
+background-color: rgba(255,253,250,0.6) !important;
+}
+@@.

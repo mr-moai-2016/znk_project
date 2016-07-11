@@ -41,7 +41,8 @@ REM
 REM
 REM setup virtual_users
 REM
-call bat_utils\install_one.bat /C user_agent.txt   virtual_users %INST_DIR_%
+REM call bat_utils\install_one.bat /C user_agent.txt   virtual_users %INST_DIR_%
+%CP_COMFIRM_% virtual_users\user_agent_for_pc.txt %INST_DIR_%\user_agent.txt
 call bat_utils\install_one.bat /C screen_size.txt  virtual_users %INST_DIR_%
 call bat_utils\install_one.bat /C parent_proxy.txt virtual_users %INST_DIR_%
 %CP_% virtual_users\*.md %INST_DIR_%\

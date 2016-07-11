@@ -60,7 +60,8 @@ install_abi()
 	#
 	# setup virtual_users
 	#
-	install_one -c user_agent.txt   virtual_users $INST_DIR_
+	#install_one -c user_agent.txt   virtual_users $INST_DIR_
+	$CP_COMFIRM_ virtual_users/user_agent_for_android.txt $INST_DIR_/user_agent.txt
 	install_one -c screen_size.txt  virtual_users $INST_DIR_
 	install_one -c parent_proxy.txt virtual_users $INST_DIR_
 
