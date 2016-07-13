@@ -64,10 +64,12 @@ myf‚Æ‚¢‚¤ƒtƒ@ƒCƒ‹‚Í‚±‚ÌƒvƒƒWƒFƒNƒg‘S”Ê‚É‚¨‚¢‚ÄÝ’èƒtƒ@ƒCƒ‹‚È‚Ç‚ð‹Lq‚·‚é‚Ì‚É—p‚
 ## <a name="filter_recv">ŽóMƒtƒBƒ‹ƒ^‚É‚Â‚¢‚Ä
 -----------------------------------
 Moai‚Å‚ÍAHTTP‚É‚¨‚¯‚éGET‚É‚ÄŽóM‚³‚ê‚éHTML‚âJavascript‚âCSS‚É‚¨‚¢‚Ä
-‚»‚ÌŽóM•¶Žš—ñ‚ðŽ©—R‚É’uŠ·(replace)‚Å‚«‚éƒtƒBƒ‹ƒ^[‹@”\‚ð”õ‚¦‚Ä‚¢‚é.  
+‚»‚ÌŽóM•¶Žš—ñ‚ðŽ©—R‚É’uŠ·(replace)‚µ‚½‚èA‰ÁH‚Å‚«‚éƒtƒBƒ‹ƒ^[‹@”\‚ð”õ‚¦‚Ä‚¢‚é.  
 ‚±‚ê‚ðŽw’è‚µ‚Ä‚¢‚é‚Ì‚ªAfilters/**TARGET_NAME**_recv.myf ‚É‚È‚é.
 **TARGET_NAME**‚Ì•”•ª‚É‚Ítarget.myf‚É‚¨‚¢‚Ä’è‹`‚µ‚½ƒ^[ƒQƒbƒg–¼‚ª“ü‚é.
 
+
+#### html_filter, js_filter, css_filter ƒZƒNƒVƒ‡ƒ“ 
 ‚±‚Ìƒtƒ@ƒCƒ‹“à‚Ì html_filterAjs_filterAcss_filter‚Æ‚¢‚¤•”•ª‚Å
 ‚»‚ê‚¼‚êHTMLAJavascriptACSS‚É‚¨‚¯‚é•¶Žš—ñ‚Ì’uŠ·‚ðs‚¤‚±‚Æ‚ª‚Å‚«‚é.
 ‚±‚Ì•”•ª‚É‚ÍfiltersƒRƒ}ƒ“ƒh‚ÆŒÄ‚Î‚ê‚é–½—ß—ñ‚ð‹Lq‚·‚é.
@@ -119,6 +121,13 @@ HTML‚Ì“à—e‚ª‰ÁH‚³‚ê‚ÄA–¼‘O—“‚Ì•¶Žš—ñ‚ª•ÏX‚³‚ê‚Ä‚¢‚é‚±‚Æ‚ª‚í‚©‚é.
 ‚Ü‚½CSS‚Ì“à—e‚ª‰ÁH‚³‚ê‚ÄA”wŒiF‚Æ•¶ŽšF‚à•ÏX‚³‚ê‚Ä‚¢‚é.  
 ‚à‚µ‚à³‚µ‚­Ý’è‚µ‚½‚É‚à‚©‚©‚í‚ç‚¸•\Ž¦‚ª•Ï‚í‚ç‚È‚¢‚È‚çAƒuƒ‰ƒEƒU‚ÌƒLƒƒƒbƒVƒ…‚ÉŒÃ‚¢î•ñ‚ªŽc‚Á‚Ä‚¢‚é
 ‰Â”\«‚ª‚ ‚é. ƒLƒƒƒbƒVƒ…‚ðƒNƒŠƒA‚µ‚Ä‚©‚ç‚à‚¤ˆê“x–Ú“I‚ÌƒTƒCƒg‚ÖƒAƒNƒZƒX‚µ‚æ‚¤.
+
+
+#### css_additional ƒZƒNƒVƒ‡ƒ“ 
+‚±‚Ìƒtƒ@ƒCƒ‹“à‚Ì css_additional ‚Æ‚¢‚¤•”•ª‚ÅA•¡”s‚É“n‚éƒ†[ƒU“ÆŽ©‚Ìcss‚Ì‹Lq‚ð’Ç‰Á‚·‚é‚±‚Æ‚ª‚Å‚«‚é.
+CSS‚Ì’mŽ¯‚ª‚ ‚é•û‚ÍAƒTƒCƒg‚É‚æ‚Á‚ÄŽw’è‚µ‚Ä‚¢‚éƒXƒ^ƒCƒ‹‚ð‚±‚Ì•”•ª‚É‚æ‚èã‘‚«‚·‚é‚È‚Ç‚·‚é‚±‚Æ‚Å
+“ÆŽ©‚Ìƒy[ƒWƒfƒUƒCƒ“‚ÉƒJƒXƒ^ƒ}ƒCƒY‚·‚é‚È‚Ç‚Æ‚¢‚Á‚½‚±‚Æ‚ª‰Â”\‚¾.
+
 
   <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
