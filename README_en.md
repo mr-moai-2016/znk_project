@@ -18,7 +18,7 @@ This repository have following :
 * http_decorator : Simple http client.
 ...etc  
 
-Current version is 1.0.  
+Current version is 1.1.  
 Japanese Release Note is [here][5]
 
 These applications and librarys source codes are written and developed for VC(Ver6.0-Ver12.0),

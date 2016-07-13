@@ -46,7 +46,7 @@ This is Japanese overview. English version is [here][7].
   この部分にユーザ独自のcssを追加で記述できるようになりました.
   これにより閲覧しているページのスタイルを比較的容易にカスタマイズできます.
 
-  Virtual USERS Initiate機能におけるuser_agentのデフォルト生成値を若干改良.
+  Virtual USERS Initiate機能におけるuser_agentのデフォルト生成値を若干改良.  
   ふたばの新しいサーバ test.2chan.net への試験的対応.
 
   リリースノートは[こちら][5]です.
