@@ -98,7 +98,35 @@
 
 ## <a name="dependency">各ソースの依存関係について
 -----------------------------------
-作成中.
+
+  各ツールおよびライブラリの依存関係について以下に簡単に示しておく.
+
+#### libZnk
+  <ul>
+  <li>依存ライブラリはなし(zlibを使用しているがソース内に同梱されてある) </li>
+  </ul>
+
+#### Moai
+  <ul>
+  <li>libZnk </li>
+  </ul>
+
+#### http_decorator
+  <ul>
+  <li>libZnk </li>
+  </ul>
+
+#### plugin_futaba
+  <ul>
+  <li>libZnk </li>
+  <li>http_decorator(外部ツールとして呼び出す) </li>
+  </ul>
+
+#### plugin_2ch
+  <ul>
+  <li>libZnk </li>
+  <li>http_decorator(外部ツールとして呼び出す) </li>
+  </ul>
 
   <a href="#user-content-index">目次へ戻る</a>
 
