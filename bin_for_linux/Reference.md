@@ -31,11 +31,11 @@ target.myf “à‚ÅˆÈ‰º‚Ì‚æ‚¤‚É2ch‚Æfutaba‚¢‚¤target–¼‚ğ’è‹`‚µ(‚±‚Ìtarget–¼‚Íƒ†[ƒU‚
 ~~~
 @@L 2ch
 *.2ch.net
+*.bbspink.com
 @@.
 
 @@L futaba
 *.2chan.net
-*.bbspink.com
 @@.
 ~~~
 
