@@ -1139,6 +1139,12 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
 		ZnkMyf      config       = MoaiMyf_theConfig();
 		ZnkStrAry   ignore_hosts = ZnkMyf_find_lines( config, "ignore_hosts" );
 
+		/***
+		 * hostname:port と指定されていた場合は
+		 * そのportへの接続のみをブロックする.
+		 * hostname と指定されていた場合は
+		 * 80のみではなく全portをブロックする.
+		 */
 		MoaiLog_printf( "  New Destination : [%s:%d]\n", hostname, port );
 		if( ZnkStrAry_find_isMatch( ignore_hosts, 0, hostname, Znk_NPOS, ZnkS_isMatchSWC ) != Znk_NPOS ){
 			int ret = MoaiIO_sendTxtf( sock, "text/html", "Moai : Ignored Host Blocking[%s] sock=[%d].\n",
