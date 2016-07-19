@@ -148,6 +148,13 @@
 
   ![screenshot](../imgs/virtual_users_initiated_result.png)
 
+####  参考
+> 受信フィルタにおける header_vars 内のUser-Agent行を削除することによって、**敢えてMoaiにおいてUser-Agent偽装を行わせない**ようにすることもできる.
+> 例えば、ブラウザのUser-Agent偽装アドオンなどによって既にUser-Agentを任意の値に偽装している場合など
+> その偽装値をMoaiで再修正することなくそのまま送信して欲しいことがある.
+> 現状のMoaiはJavascriptにおけるnavigator.userAgentの値やHTTPSによって暗号化されたHTTPヘッダにおけるUser-Agentまでは
+> 修正できないので、場合によってはそのようなアドオンを使う方が確実なこともあるかもしれない.
+> 元通りMoaiによってUser-Agentを偽装させるようにするには、User-Agent行を追加すればよい(このときの右辺値は適当なものでよい).
 
   また、使用する外部プロキシを異なるものに切り替えたいという方は次のようにすればよい.
 
