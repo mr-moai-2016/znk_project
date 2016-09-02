@@ -1,6 +1,7 @@
 @def_quote [' ']
 
 @@L html_filter
+replace ['lists[rNo]'] ['"なー"']
 replace ['id="foot3"'] ['id="foot4"']
 replace ['id="foot4abdef_right"'] ['id="foot5abdef_right"']
 replace ['<b>ゆりあき </b>'] ['<b>高速ネカマ変換 </b>']
@@ -32,6 +33,7 @@ replace ['"削除依頼をする">']                  ['"処す">']
 @@.
 
 @@L js_filter
+replace ['隠す']                  ['かくす']
 @@.
 
 @@L css_filter
