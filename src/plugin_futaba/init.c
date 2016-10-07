@@ -78,7 +78,7 @@ decorateHeaderGET( const char* hostname, const char* request_uri,
 
 static bool
 getCatalog( const char* srv_name, const char* board_id,
-		ZnkStr posttime, const char* ua, ZnkVarpAry cookie, ZnkStr thre_uri,
+		ZnkStr cfduid, ZnkStr posttime, const char* ua, ZnkVarpAry cookie, ZnkStr thre_uri,
 		const char* parent_proxy )
 {
 	bool result = false;
@@ -140,8 +140,11 @@ getCatalog( const char* srv_name, const char* board_id,
 	{
 		Znk_snprintf( cookie_file, sizeof(cookie_file), "%scookie_futaba.txt", tmpdir );
 		if( ZnkCookie_load( cookie, cookie_file ) ){
-			ZnkVarp varp = ZnkVarpAry_find_byName( cookie, "posttime", Znk_strlen_literal( "posttime" ), false );
+			ZnkVarp varp;
+			varp = ZnkVarpAry_find_byName( cookie, "posttime", Znk_strlen_literal( "posttime" ), false );
 			ZnkStr_set( posttime, ZnkVar_cstr(varp) );
+			varp = ZnkVarpAry_find_byName( cookie, "__cfduid", Znk_strlen_literal( "__cfduid" ), false );
+			ZnkStr_set( cfduid, ZnkVar_cstr(varp) );
 			result = true;
 		}
 	}
@@ -341,6 +344,7 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 	ZnkStrAry  line_ary = ZnkStrAry_create( true );
 	ZnkVarpAry cookie   = NULL;
 	ZnkVarp    varp     = NULL;
+	ZnkStr     cfduid   = ZnkStr_new( "" );
 	ZnkStr     caco     = ZnkStr_new( "" );
 	ZnkStr     posttime = ZnkStr_new( "" );
 	ZnkStr     thre_uri = ZnkStr_new( "" );
@@ -352,7 +356,7 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 	unsigned int random_uval1;
 	unsigned int random_uval2;
 
-	srand((unsigned) time(NULL));
+	srand((unsigned) time(NULL) + 7);
 
 	cookie = ZnkVarpAry_create( true );
 
@@ -403,7 +407,7 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 	 * おそらく多くのユーザが最初にアクセスするのはcatalogであろうからこれは妥当な選択と思われる.
 	 * 尚、posttimeの値は全サーバで共通である. 換言すればサーバ毎に値を保持する必要はない.
 	 */
-	if( !getCatalog( srv_name, board_id, posttime, ua, cookie, thre_uri, parent_proxy ) ){
+	if( !getCatalog( srv_name, board_id, cfduid, posttime, ua, cookie, thre_uri, parent_proxy ) ){
 		ZnkStr_set( result_msg, "Cannot get catalog" );
 		goto FUNC_END;
 	}
@@ -421,6 +425,11 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 	if( !getCaco( srv_name, caco, ua, cookie, thre_uri, parent_proxy ) ){
 		ZnkStr_set( result_msg, "Cannot get caco code" );
 		goto FUNC_END;
+	}
+
+	varp = refCookieVar( myf, "__cfduid" );
+	if( varp ){
+		ZnkVar_set_val_Str( varp, ZnkStr_cstr(cfduid), ZnkStr_leng(cfduid) );
 	}
 
 	/***
@@ -447,12 +456,22 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 	}
 
 	/***
-	 * この設定は有効/無効を頻繁に切り替えるようである.
-	 * 当然、ここにはuaの値をセットする.
+	 * この値は最終的にptuaへとセットされる.
 	 */
 	varp = refPostVar( myf, "USERS_ptua" );
 	if( varp ){
-		ZnkVar_set_val_Str( varp, ua, Znk_strlen(ua) );
+		/* 偽装UAを設定する仕様はとりあえず一時無効とする */
+		//ZnkVar_set_val_Str( varp, ua, Znk_strlen(ua) );
+
+	 	/* 2016/10/07 futaba 新仕様: 33bitの環境依存整数を設定する. */
+		char ptua33[ 256 ] = "0";
+		uint64_t sph_u64 = 0;
+		sph_u64 = getRandomUInt();
+		if( getRandomUInt() % 2 == 0 ){
+			sph_u64 += UINT64_C(0x100000000);
+		}
+		Znk_snprintf( ptua33, sizeof(ptua33), "%" Znk_PFMD_64 "u", sph_u64 );
+		ZnkVar_set_val_Str( varp, ptua33, Znk_strlen(ptua33) );
 	}
 
 	/***
@@ -561,10 +580,12 @@ shuffleMyfFilter( ZnkMyf myf, const char* srv_name, const char* board_id,
 
 	result = true;
 FUNC_END:
+	ZnkStr_delete( cfduid );
 	ZnkStr_delete( caco );
 	ZnkStr_delete( posttime );
 	ZnkStr_delete( thre_uri );
 	ZnkStrAry_destroy( line_ary );
+	ZnkVarpAry_destroy( cookie );
 
 	return result;
 }

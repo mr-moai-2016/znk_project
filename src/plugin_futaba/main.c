@@ -67,6 +67,7 @@ isInteger( const char* cstr )
 static bool
 isUntouchable_ptua( ZnkVarp dst_ptua )
 {
+#if 0
 	/***
 	 * dst_ptuaが以下のケースの場合、値を変更してはならない.
 	 *
@@ -74,9 +75,14 @@ isUntouchable_ptua( ZnkVarp dst_ptua )
 	 *   整数
 	 */
 	return ZnkVar_str_leng(dst_ptua) == 0 || isInteger(ZnkVar_cstr(dst_ptua));
+#else
+	/* 2016/10/07: 最新の仕様においてはここはfalseでよい */
+	return false;
+#endif
 }
 
-bool on_post( ZnkMyf ftr_send, ZnkVarpAry hdr_vars, ZnkVarpAry post_vars )
+bool
+on_post( ZnkMyf ftr_send, ZnkVarpAry hdr_vars, ZnkVarpAry post_vars )
 {
 	ZnkVarp USERS_futabapt = refPostVar( ftr_send, "USERS_futabapt" );
 	ZnkVarp USERS_password = refPostVar( ftr_send, "USERS_password" );
@@ -112,7 +118,7 @@ bool on_post( ZnkMyf ftr_send, ZnkVarpAry hdr_vars, ZnkVarpAry post_vars )
 		if( !isUntouchable_ptua( dst_ptua ) ){
 #if 0
 			/***
-			 * 現在ふたばではptuaの実値をtransientな仕様とすることで偽装をかわす戦略をとっている.
+			 * ptuaの実値をtransientな仕様とすることで偽装をかわす可能性がある.
 			 * そのため、単純な代入が通用しない.
 			 */
 			ZnkVar_set_val_Str( dst_ptua, ZnkVar_cstr(USERS_ptua), ZnkVar_str_leng(USERS_ptua) );
