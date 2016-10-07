@@ -1,28 +1,28 @@
 @def_quote [' ']
 
 @@V header_vars
-User-Agent = ['Mozilla/5.0 (Windows; U; Windows NT 5.1; de-DE; rv:1.7.5) Gecko/20041122 Firefox/1.0']
+User-Agent = ['Opera/8.01 (Windows ME; U; ja)']
 @@.
 
 @@V post_vars
 pthb = ['']
-pthc = ['']
+pthc = ['1475827652849']
 pthd = ['']
-ptua = ['']
-flrv = ['2739407074']
-flvv = ['3792482965']
-scsz = ['1920x1080x32']
+flrv = ['3844176863']
+flvv = ['2079752498']
+scsz = ['640x480x16']
 pwd = ['']
 js = ['on']
-USERS_futabapt = ['']
+USERS_futabapt = ['1475827652849']
 USERS_password = ['']
-USERS_ptua = ['Mozilla/5.0 (Windows; U; Windows NT 5.1; de-DE; rv:1.7.5) Gecko/20041122 Firefox/1.0']
+USERS_ptua = ['6720528677']
 @@.
 
 # Cookie値のフィルタリング
 # ここでの指定はサイトがSet-Cookieを発行した時点で自動的に書き変えられることがある.
 @@V cookie_vars
 pwdc = ['']
+posttime = ['1475827652849']
 @@.
 
 # Cookie値の強制変更
