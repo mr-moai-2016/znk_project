@@ -41,6 +41,12 @@ This is Japanese overview. English version is [here][7].
 ## What's new?
 -----------------------------------
 
+* 2016/10/07 Version 1.1.7 リリース.  
+  ふたばの新しい仕様に対応.
+  ふたばプラグインを修正.  
+
+  リリースノートは[こちら][5]です.
+
 * 2016/07/13 Version 1.1.6 リリース.  
   recv_filterにおいてcss_addtional というセクションを新たに導入.
   この部分にユーザ独自のcssを追加で記述できるようになりました.
@@ -48,8 +54,6 @@ This is Japanese overview. English version is [here][7].
 
   Virtual USERS Initiate機能におけるuser_agentのデフォルト生成値を若干改良.   
   ふたばの新しいサーバ test.2chan.net への試験的対応.
-
-  リリースノートは[こちら][5]です.
 
 * 2016/07/07 Version 1.1.5 リリース.  
   ふたばの新しい仕様に対応.
