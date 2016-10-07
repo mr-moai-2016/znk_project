@@ -633,6 +633,10 @@ initiate( ZnkMyf ftr_send, const char* parent_proxy, ZnkStr result_msg )
 		if( varp ){
 			ZnkStr_addf( result_msg, "\nflvv=[%s]", ZnkVar_cstr(varp) );
 		}
+		varp = refPostVar( ftr_send, "ptua" );
+		if( varp ){
+			ZnkStr_addf( result_msg, "\nptua=[%s]", ZnkVar_cstr(varp) );
+		}
 		varp = refPostVar( ftr_send, "pthc" );
 		if( varp ){
 			ZnkStr_addf( result_msg, "\npthc(caco code issued by bin/cachemt7.php)=[%s]", ZnkVar_cstr(varp) );
