@@ -76,7 +76,7 @@ isUntouchable_ptua( ZnkVarp dst_ptua )
 	 */
 	return ZnkVar_str_leng(dst_ptua) == 0 || isInteger(ZnkVar_cstr(dst_ptua));
 #else
-	/* 2016/10/07: 最新の仕様においてはここはfalseでよい */
+	/* 2016/10/07: 最新の仕様に対応. */
 	return false;
 #endif
 }
@@ -116,11 +116,10 @@ on_post( ZnkMyf ftr_send, ZnkVarpAry hdr_vars, ZnkVarpAry post_vars )
 		const char* real_ua_cstr = ZnkHtpHdrs_val_cstr( real_ua, 0 );
 		/* まず簡易なケースを弾く */
 		if( !isUntouchable_ptua( dst_ptua ) ){
-#if 0
 			/***
 			 * ptuaの実値をtransientな仕様とすることで偽装をかわす可能性がある.
-			 * そのため、単純な代入が通用しない.
 			 */
+#if 1
 			ZnkVar_set_val_Str( dst_ptua, ZnkVar_cstr(USERS_ptua), ZnkVar_str_leng(USERS_ptua) );
 #else
 			/* とりあえずbrute force algorismで十分であろう */
