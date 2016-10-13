@@ -681,6 +681,7 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
 	MoaiHtpType htp_type = MoaiHtpType_e_None;
 	MoaiInfo* draft_info = ctx->draft_info_;
 	char sock_str[ 4096 ];
+	bool response_for_req_HEAD = false;
 
 	/***
 	 * ここではパイプライン化され、複数存在する場合は最後の要素を返すことになるが、
@@ -939,6 +940,7 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
 			default:
 				break;
 			}
+			response_for_req_HEAD = (bool)( info_on_response->req_method_ == ZnkHtpReqMethod_e_HEAD );
 			break;
 		}
 		case MoaiHtpType_e_Request:
@@ -1089,6 +1091,9 @@ scanHttpFirst( MoaiContext ctx, MoaiConnection mcn,
 		}
 	}
 
+	if( response_for_req_HEAD ){
+		mcn->content_length_remain_ = 0;
+	}
 
 	if( htp_type == MoaiHtpType_e_Response ){
 		MoaiConnection mcn      = MoaiConnection_find_byOSock( sock );
@@ -1353,7 +1358,9 @@ sendOnConnected_POST( MoaiConnection mcn, MoaiFdSet mfds, MoaiInfoID info_id )
 	ZnkSocket   O_sock       = MoaiConnection_O_sock( mcn );
 	ZnkFdSet    fdst_observe = MoaiFdSet_fdst_observe_r( mfds );
 
-	MoaiPost_sendRealy( info_id, true, O_sock, mfds );
+	if( MoaiPost_sendRealy( info_id, true, O_sock, mfds ) ){
+		mcn->content_length_remain_ = 0;
+	}
 	if( !ZnkFdSet_set( fdst_observe, O_sock ) ){
 		MoaiFdSet_reserveConnectSock( mfds, O_sock );
 	}
