@@ -148,6 +148,13 @@
 
   ![screenshot](../imgs/virtual_users_initiated_result.png)
 
+####  参考
+> 受信フィルタにおける header_vars 内のUser-Agent行を削除することによって、**敢えてMoaiにおいてUser-Agent偽装を行わせない**ようにすることもできる.
+> 例えば、ブラウザのUser-Agent偽装アドオンなどによって既にUser-Agentを任意の値に偽装している場合など
+> その偽装値をMoaiで再修正することなくそのまま送信して欲しいことがある.
+> 現状のMoaiはJavascriptにおけるnavigator.userAgentの値やHTTPSによって暗号化されたHTTPヘッダにおけるUser-Agentまでは
+> 修正できないので、場合によってはそのようなアドオンを使う方が確実なこともあるかもしれない.
+> 元通りMoaiによってUser-Agentを偽装させるようにするには、User-Agent行を追加すればよい(このときの右辺値は適当なものでよい).
 
   また、使用する外部プロキシを異なるものに切り替えたいという方は次のようにすればよい.
 
@@ -236,9 +243,12 @@
      ここは以下にある「POST変数を手動で修正する方法」によって、POST変数scszを直接変更する.
 
   7. POST変数 flrv, flvv(Fingerprint)の値を変更する. 
-     flrvはUser-Agentを変更すればその値も変わる.
-     一方、最近導入されたflvvはUser-Agentを変更しても変わらない.
-     よって以下にある「POST変数を手動で修正する方法」によって、POST変数flvvを直接変更する.
+     flrvは以前まではUser-AgentやブラウザのPlugin構成を変更すればその値も変わっていたが、
+     今現在はそれらを変更してもその値は変わらなくなった（その他どのような要素に依存しているか
+     についてはfingerprint.jsを参照して欲しい).
+     flvvはUser-Agentを変更しても変わらないがブラウザのPlugin構成を変更すればその値は変わる.
+     いずれにせよ、以下にある「POST変数を手動で修正する方法」によって、これらのPOST変数を
+     直接変更するのが妥当だろう.
      値は32bit整数なら何でもよい.
      (ついでにflrvも直接変更しておけばよかろう. ただしflvvとは異なる32bit整数値にしておく)
 
@@ -263,7 +273,7 @@
   Step2.
     次に保存したスレのHTMLをテキストエディタ(メモ帳など)で開き、
     その中身を直接書き換えて修正する
-    <script type="text/javascript" src="/bin/base4.js?4"></script> などと書かれた部分があるはずである
+    <script type="text/javascript" src="/bin/base4.js?d"></script> などと書かれた部分があるはずである
     このbase4.jsが邪悪の元凶と言えよう. コイツがあなたのマシンを識別するための数々の変数の値を設定している.
     そしてこのままでは base4.js を実行してしまうので、これが実行されないよう、この部分を削除する.
 
