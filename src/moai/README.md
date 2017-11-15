@@ -1,452 +1,452 @@
 # Moai
 -----------------------------------
 
-## <a name="index"></a>�ڎ�
+## <a name="index"></a>目次
 -----------------------------------
-* [Moai�Ƃ́H](#pos1)
-* [���[�J���v���L�V�Ƃ́H](#what_localproxy)
-* [�����ł���̂��H �܂�����̃c�[���Ɣ�ׂ��ꍇ�̓����́H](#pos2)
-* [�C���X�g�[��/�A���C���X�g�[�����@](#pos4)
-* [Android�łɂ����鏉��N���܂ł̎菇](#for_android)
-* [���߂Ă�Moai](#pos5)
-* [�v���L�V�ݒ�_�C�A���O���ĉ����H](#pos6)
-* [��������Ɋ܂܂�Ă���http_decorator�Ƃ�Znk�Ƃ������͉̂��Ȃ̂��H](#pos7)
-* [�v���O���}�łȂ����� : Moai�̈��S�����ǂ��m�F����΂悢�̂��H](#for_not_programmer)
-* [�v���O���}�ȕ���](#for_programmer)
-* [���̑��̏��(���t�@�����X�}�j���A���AVirtual USERS�@�\�AFAQ�Ȃ�)](#others)
-* [���C�Z���X](#license)
-* [������](#warning)
-* [�Ɛӎ���](#as_is)
+* [Moaiとは？](#user-content-pos1)
+* [ローカルプロキシとは？](#user-content-what_localproxy)
+* [何ができるのか？ また同種のツールと比べた場合の特徴は？](#user-content-pos2)
+* [インストール/アンインストール方法](#user-content-pos4)
+* [Android版における初回起動までの手順](#user-content-for_android)
+* [初めてのMoai](#user-content-pos5)
+* [プロキシ設定ダイアログって何ぞ？](#user-content-pos6)
+* [いっしょに含まれているhttp_decoratorとかZnkとかいうのは何なのか？](#user-content-pos7)
+* [プログラマでない方へ : Moaiの安全性をどう確認すればよいのか？](#user-content-for_not_programmer)
+* [プログラマな方へ](#user-content-for_programmer)
+* [その他の情報(リファレンスマニュアル、Virtual USERS機能、FAQなど)](#user-content-others)
+* [ライセンス](#user-content-license)
+* [ご注意](#user-content-warning)
+* [免責事項](#user-content-as_is)
 
-## <a name="pos1"></a>Moai�Ƃ́H
------------------------------------
-
-  ���̃c�[���͈ꌾ�Ō�����HTTP�𒇉�郍�[�J���v���L�V�ł���.
-  ����̃c�[���Ƃ��Ă�Proxomitron��Polipo�Ȃǂ�����A�����������m�̕���
-  ����Ɗ�{�I�ɓ����悤�Ȃ��̂ł���.
-
-  <a href="#user-content-index">�ڎ��֖߂�</a>
-
-## <a name="what_localproxy"></a>���[�J���v���L�V�Ƃ́H
+## <a name="pos1"></a>Moaiとは？
 -----------------------------------
 
-  �ʏ�A�v���L�V���g���ꍇ�A���Ȃ��ƍŏI�ڑ���ƂȂ�z�X�g�ȊO�̑�O�҂ł���
-  �v���L�V�T�[�o�ւƐڑ����ĒʐM�𒇉����. �T�O�I�ɂ͈ȉ��̂悤�ɂȂ�.
+  このツールは一言で言えばHTTPを仲介するローカルプロキシである.
+  同種のツールとしてはProxomitronやPolipoなどがあり、これらをご存知の方は
+  それと基本的に同じようなものである.
 
-~~~
-    �u���E�U <=> �O���T�[�o��Proxy�v���O���� <=> �ڑ���T�C�g
-~~~
+  <a href="#user-content-index">目次へ戻る</a>
 
-  ����ɂ��A�ڑ���T�C�g����͂��Ȃ���IP�A�h���X���B�������.
-
-  ����A���[�J���v���L�V�Ƃ͂��̂悤�ȑ�O�҂ƂȂ�T�[�o�Œ����̂ł͂Ȃ��A
-  ���̎d���𕶎��ʂ荡���Ȃ��̎g���Ă���R���s���[�^��ōs���Ƃ������̂ł���.
-  �T�O�I�ɂ͈ȉ��̂悤�ɂȂ�.
-
-~~~
-    �u���E�U <=> ���Ȃ��̃}�V����œ��삷�郍�[�J���v���L�V <=> �ڑ���T�C�g
-~~~
-
-  ���C�Â����Ǝv�����A���[�J���v���L�V�������܂ł��Ȃ��̃}�V���œ��삵�Ă���ȏ�A
-  �ڑ���T�C�g���猩��΂��Ȃ��̃}�V������̒ʐM�ƂȂ�. �܂�IP�A�h���X�͉B������Ȃ�.
-  ���[�J���v���L�V���g���ړI�� IP�A�h���X���B�����邱�Ƃł͂Ȃ��̂�.
-
-  �ł͉��̂��߂ɂ�����Ԃɋ��ނ̂��H
-
-  Moai�Ɍ��炸�A��ʂɃ��[�J���v���L�V�́A���Ȃ��̃u���E�U�ƃT�C�g�Ƃ̒ʐM�𒇉��.
-  ���̎傽��ړI�́A���Ȃ�����`�����t�B���^�ɏ]���āA���̒ʐM���e���t�B���^�����O
-  ���邱�Ƃł���. ���̃t�B���^�����O�̑ΏۂƂȂ�z�X�g�ׂ͍����I�����邱�Ƃ��ł���.
-  �Ⴆ�� www.moai-chan.net �Ƃ����f�����������Ƃ��āA���̃T�C�g�Ƃ̒ʐM���s���ꍇ�̂�
-  �����̃t�B���^�����O���s���A���̑��̃T�C�g�Ɋւ��Ă͂܂��ʂ̃t�B���^���g������
-  ���������t�B���^�����O���s��Ȃ��Ƃ�������ł���.
-
-  ����ɂ���ē���̐ڑ���T�C�g�ɑ����邠�Ȃ��̃}�V���ŗL�̏����Ւf������
-  �U�������肷�邱�Ƃ��ł���. �܂胍�[�J���v���L�V�Ƃ̓v���C�x�[�g����邽�߂�
-  �Z�L�����e�B�[�c�[���ł���A���ꂪ�{���̖ړI�ł���.
-
-  �ڑ���T�C�g�ɑ����邱�̎�̏��Ƃ͋�̓I�ɂ�User-Agent�Ȃǂ�HTTP�w�b�_�̓��e�A
-  POST���̕ϐ��̓��e�ACookie�̓��e�Ȃǂł���.
-  ���Ȃ����g���Ă���u���E�U�ɂ͓��ɃN���[���A�b�v���Ȃ����肱�̎�̏�񂪂��������Ɏc�����Ă���.
-  ���[�J���v���L�V�̃t�B���^�����O�͂�����Ւf��������H�C�����邱�Ƃ�
-  �ڑ���T�C�g�ɂ���炪���̂܂ܑ��M����邱�Ƃ�h��.
-
-  �܂�����A��M�ɂ����ăT�C�g����̉������̃f�[�^(HTML, Javascript��js�t�@�C��, css�t�@�C���Ȃ�)
-  �����H�C�����邱�Ƃ��ł���������p���邱�ƂŁA�y�[�W�̃��C�A�E�g���D�݂̌`�ɏC��������A
-  �L�������������肷�邱�Ƃ��ł���. 
-
-  <a href="#user-content-index">�ڎ��֖߂�</a>
-
-
-## <a name="pos2"></a>�����ł���̂��H �܂�����̃c�[���Ɣ�ׂ��ꍇ�̓����́H
+## <a name="what_localproxy"></a>ローカルプロキシとは？
 -----------------------------------
 
-  �@�\�I�ȖʂɊւ��Ă͈ȉ��̓_����������.
+  通常、プロキシを使う場合、あなたと最終接続先となるホスト以外の第三者である
+  プロキシサーバへと接続して通信を仲介させる. 概念的には以下のようになる.
+
+~~~
+    ブラウザ <=> 外部サーバのProxyプログラム <=> 接続先サイト
+~~~
+
+  これにより、接続先サイトからはあなたのIPアドレスが隠蔽される.
+
+  一方、ローカルプロキシとはそのような第三者となるサーバで仲介するのではなく、
+  この仕事を文字通り今あなたの使っているコンピュータ上で行うというものである.
+  概念的には以下のようになる.
+
+~~~
+    ブラウザ <=> あなたのマシン上で動作するローカルプロキシ <=> 接続先サイト
+~~~
+
+  お気づきだと思うが、ローカルプロキシがあくまであなたのマシンで動作している以上、
+  接続先サイトから見ればあなたのマシンからの通信となる. つまりIPアドレスは隠蔽されない.
+  ローカルプロキシを使う目的は IPアドレスを隠蔽することではないのだ.
+
+  では何のためにこれを間に挟むのか？
+
+  Moaiに限らず、一般にローカルプロキシは、あなたのブラウザとサイトとの通信を仲介する.
+  その主たる目的は、あなたが定義したフィルタに従って、その通信内容をフィルタリング
+  することである. このフィルタリングの対象となるホストは細かく選択することもできる.
+  例えば www.moai-chan.net という掲示板があったとして、そのサイトとの通信を行う場合のみ
+  ある種のフィルタリングを行い、その他のサイトに関してはまた別のフィルタを使ったり
+  そもそもフィルタリングを行わないといった具合である.
+
+  これによって特定の接続先サイトに送られるあなたのマシン固有の情報を遮断したり
+  偽装したりすることができる. つまりローカルプロキシとはプライベートを守るための
+  セキュリティーツールであり、それが本来の目的である.
+
+  接続先サイトに送られるこの種の情報とは具体的にはUser-AgentなどのHTTPヘッダの内容、
+  POST時の変数の内容、Cookieの内容などである.
+  あなたが使っているブラウザには特にクリーンアップしない限りこの種の情報があちこちに残留している.
+  ローカルプロキシのフィルタリングはこれを遮断したり加工修正することで
+  接続先サイトにこれらがそのまま送信されることを防ぐ.
+
+  また一方、受信においてサイトからの応答時のデータ(HTML, Javascriptのjsファイル, cssファイルなど)
+  を加工修正することもできこれを応用することで、ページのレイアウトを好みの形に修正したり、
+  広告を除去したりすることができる. 
+
+  <a href="#user-content-index">目次へ戻る</a>
+
+
+## <a name="pos2"></a>何ができるのか？ また同種のツールと比べた場合の特徴は？
+-----------------------------------
+
+  機能的な面に関しては以下の点が挙げられる.
 
   <ul>
-  <li>GET��(�P���Ƀy�[�W�{�����Ȃ�)�ɂ�����e�L�X�g�f�[�^�̕�����u���t�B���^�����O�����e�Ղɍs����.
-      �܂�plugin�𓱓����邱�Ƃɂ�肳��ɍ��x�Ŏ��R�ȃt�B���^�����O���s�����Ƃ��ł���.</li>
-  <li>POST��(�f�����e���Ȃ�)�AHTTP�w�b�_�A�N�b�L�[�APOST�ϐ��Ɋւ���l�����ς���Ȃǂ��e�Ղɍs����.
-      �܂�plugin�𓱓����邱�Ƃɂ�肳��ɍ��x�Ŏ��R�ȃt�B���^�����O���s�����Ƃ��ł���.</li>
-  <li>POST��(�f�����e���Ȃ�)�A���M�����S�w�b�_�����POST�ϐ��f�[�^�̊m�F�\�����\�ŁA
-      ���̂Ƃ����ۂɉ������M����Ă���̂�����͂���̂ɍœK�ł���.
-      �܂�plugin�𓱓����邱�Ƃɂ��A���Ȃ��̃}�V���������z���A�����_�}�C�Y������
-      [**Virtual USERS Initiation** �@�\][2]�𓋍ڂ��Ă���.</li>
-  <li>**ignore_hosts** �ɒʐM���u���b�N�������z�X�g���L�q���Ă������Ƃŗ]�v�ȒʐM�𖢑R�ɖh���A
-      ���ʓI�ɂ��Ȃ������i�悭����T�C�g�̕\�����������肳�����荂��������.</li>
-  <li>�u���E�U���s���SHTTP�𒇉�Ă���A���ׂĂ̒ʐM���e�����Ȃ��փ��|�[�g����.  
-      ���̃��|�[�g�̓^�[�~�i��(Windows�̏ꍇ�R�}���h�v�����v�g�E�B���h�E)�ɂ����čs���A
-      �܂�**moai_log.log**�Ƃ����t�@�C���Ƀ��O�Ƃ��Ă��L�^�����.</li> 
+  <li>GET時(単純にページ閲覧時など)におけるテキストデータの文字列置換フィルタリング等が容易に行える.
+      またpluginを導入することによりさらに高度で自由なフィルタリングを行うこともできる.</li>
+  <li>POST時(掲示板投稿時など)、HTTPヘッダ、クッキー、POST変数に関する値を改変するなどが容易に行える.
+      またpluginを導入することによりさらに高度で自由なフィルタリングを行うこともできる.</li>
+  <li>POST時(掲示板投稿時など)、送信される全ヘッダおよびPOST変数データの確認表示が可能で、
+      そのとき実際に何が送信されているのかを解析するのに最適である.
+      またpluginを導入することにより、あなたのマシン環境を仮想化、ランダマイズ化する
+      [**Virtual USERS Initiation** 機能][2]を搭載している.</li>
+  <li>**ignore_hosts** に通信をブロックしたいホストを記述しておくことで余計な通信を未然に防ぎ、
+      結果的にあなたが普段よく見るサイトの表示をすっきりさせたり高速化する.</li>
+  <li>ブラウザが行う全HTTPを仲介しており、すべての通信内容をあなたへレポートする.  
+      このレポートはターミナル(Windowsの場合コマンドプロンプトウィンドウ)において行われ、
+      また**moai_log.log**というファイルにログとしても記録される.</li> 
   </ul>
 
-  �����̓������A���S���A�ڐA���A����ѓ�����Ɋւ��Ĉȉ��̓_����������.
+  処理の透明性、安全性、移植性、および動作環境に関して以下の点が挙げられる.
 
   <ul>
-  <li>Moai�͊��S�ȃI�[�v���\�[�X�ł���A�u���b�N�{�b�N�X�ȕ����͈�ؑ��݂��Ȃ�.</li>
-  <li>�g�p���C�Z���XNYSL�͑�������ȏ�Ȃ����炢�Ɋɂ����̂ł���.</li>
-  <li>���̎�̏������������邽�߂̃R�[�h�Ƃ��Ă͓���̂��̂Ɣ�ׂ��Ȃ�R���p�N�g��
-      �K�v�ŏ����ɍi���Ă��茩�ʂ��������₷��.
-      �܂�����ɂ��A���m�̕s��ɂ����ݓI�ȃZ�L�����e�B�[�z�[�����܂ރ��X�N��}������.</li>
-  <li>�R�[�h��C�ŋL�q����Ă���A�g�p���Ă���O���̃��C�u�����͊�{���C�u�����ł���libZnk�݂̂ł���.
-      (libZnk���I�[�v���\�[�X��NYSL�ł���). �]���Ė�蔭�����ɔ�r�I�ǐՂ����₷��.</li>
-  <li>�R���p�C�����e�Ղł���(VC�̂قڑS�o�[�W�����AMinGW�Agcc�ȂǂŃR���p�C���\).</li>
-  <li>���s�o�C�i����Windows��Linux(Android���܂�)�œ��삷��(���m�F����MacOS�ł������債���C���Ȃ������邾�낤).</li>
+  <li>Moaiは完全なオープンソースであり、ブラックボックスな部分は一切存在しない.</li>
+  <li>使用ライセンスNYSLは多分これ以上ないくらいに緩いものである.</li>
+  <li>この種の処理を実現するためのコードとしては同種のものと比べかなりコンパクトで
+      必要最小限に絞られており見通しが立ちやすい.
+      またこれにより、未知の不具合により潜在的なセキュリティーホールを含むリスクを抑えられる.</li>
+  <li>コードはCで記述されており、使用している外部のライブラリは基本ライブラリであるlibZnkのみである.
+      (libZnkもオープンソースでNYSLである). 従って問題発生時に比較的追跡がしやすい.</li>
+  <li>コンパイルが容易である(VCのほぼ全バージョン、MinGW、gccなどでコンパイル可能).</li>
+  <li>実行バイナリはWindowsやLinux(Androidも含む)で動作する(未確認だがMacOSでも多分大した修正なくいけるだろう).</li>
   </ul>
 
-  �ȉ��͂��Ȃ荂�x�ȋZ�p�ʂɊւ���Q�l�����ł���.
+  以下はかなり高度な技術面に関する参考事項である.
 
   <ul>
-  <li>HTTP CONNECT�ɂ��g���l�����O�ɂ��HTTPS�𒇉�邱�Ƃ��ł���.
-      ����ɂ��Ⴆ��Google������Youtube�Anico����Ȃǂ����邱�Ƃ��\�ł���.</li>
-  <li>Socket�ʐM�ɂ������u���b�L���O�ڑ���HTTP�p�C�v���C�����̒��p���T�|�[�g����.
-      �u���b�L���O�ڑ��ł́A�����̃^�u���J����Web���{������ꍇ�ɁA�ŏ��̐ڑ����I��܂łQ�ԖڂR�Ԗڂ̐ڑ���
-      �u���b�N����҂�����Ă��܂����A��u���b�L���O�ڑ��ɂ���Ă��̖�������ł���.</li>
+  <li>HTTP CONNECTによるトンネリングによりHTTPSを仲介することができる.
+      これにより例えばGoogle検索やYoutube、nico動画などを見ることも可能である.</li>
+  <li>Socket通信における非ブロッキング接続やHTTPパイプライン化の中継をサポートする.
+      ブロッキング接続では、複数のタブを開いてWebを閲覧する場合に、最初の接続が終るまで２番目３番目の接続が
+      ブロックされ待たされてしまうが、非ブロッキング接続によってこの問題を回避できる.</li>
   </ul>
 
-  Moai�̒񋟂���@�\�͓���̃c�[���ł���Proxomitron��Polipo�ȂǂƔ�ׁA
-  �@�\�͂����ƌ��肳��邽�߁A���i�������g�����Ȃ��Ă�����ɂƂ��Ă�
-  ����͕s�v��������Ȃ�. 
+  Moaiの提供する機能は同種のツールであるProxomitronやPolipoなどと比べ、
+  機能はずっと限定されるため、普段これらを使いこなしている方にとっては
+  これは不要かもしれない. 
 
-  ������POST�ϐ��Ɋւ���t�B���^�����O�Ɋւ��Ă�Proxomitron��Polipo�͂���������ڂ̓T�|�[�g���Ă��炸�A
-  �������������ɂ͊O���c�[�����g���K�v������Ȃǂ��ώG�ɂȂ�. �΂���Moai�̓t�B���^�t�@�C���ɂ��
-  ���ꂪ�_�C���N�g���e�Ղɐݒ�ł��邽�߁A���̓_�ł͗L���ł���. 
+  しかしPOST変数に関するフィルタリングに関してはProxomitronとPolipoはいずれも直接はサポートしておらず、
+  それを実現するには外部ツールを使う必要があるなどやや煩雑になる. 対してMoaiはフィルタファイルにより
+  これがダイレクトかつ容易に設定できるため、その点では有利である. 
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="pos4"></a>�C���X�g�[��/�A���C���X�g�[�����@
+## <a name="pos4"></a>インストール/アンインストール方法
 -----------------------------------
 
-  ���ɂȂ�. 
-  ���l�ɃA���C���X�g�[���̂��߂̓��ʂȎ菇���Ȃ�.
-  ���W�X�g���Ȃǂւ̏������݂₱�̃t�H���_�z���ȊO�ւ̈ꎞ�t�@�C���̍쐬�Ȃǂ͈�؍s���Ȃ�.
-  �s�K�v�ɂȂ����炱�̃t�H���_���폜����΂悢.
+  特にない. 
+  同様にアンインストールのための特別な手順もない.
+  レジストリなどへの書き込みやこのフォルダ配下以外への一時ファイルの作成などは一切行われない.
+  不必要になったらこのフォルダ毎削除すればよい.
 
-  �����AWindows�ł����moai.exe�̃V���[�g�J�b�g�����A�f�X�N�g�b�v�ɒu���Ă�����
-  �����K�ł��낤.
+  ただ、Windowsであればmoai.exeのショートカットを作り、デスクトップに置いておけば
+  より快適であろう.
 
-  ���̃c�[����Linux�ł����삵�ALinux�p�̎��s�p�o�C�i�����ꉞ�������Ă��邪�A
-  �f�B�X�g���r���[�V�����₻�̃��C�u�����̃o�[�W�����\���ɂ���Ă͓��삵�Ȃ��Ƃ������Ƃ��L�蓾��.  
-  �K�v�Ȃ�[HowToCompile.md][3]�����Ă��炢�\�[�X�R�[�h����R���p�C�����đՂ�����. 
-  (Moai�̃\�[�X�R�[�h�� src/moai�ɂ���).
+  このツールはLinuxでも動作し、Linux用の実行用バイナリも一応同梱してあるが、
+  ディストリビューションやそのライブラリのバージョン構成によっては動作しないということも有り得る.  
+  必要なら[HowToCompile.md][3]を見てもらいソースコードからコンパイルして戴きたい. 
+  (Moaiのソースコードは src/moaiにある).
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="for_android"></a>Android�łɂ����鏉��N���܂ł̎菇
+## <a name="for_android"></a>Android版における初回起動までの手順
 -----------------------------------
-  Android�ł�Moai�������p�����������͂�������Ǌ肢����.
-  Android�łɊւ��Ă��APC�łƓ��l��znk_project-master.zip���_�E�����[�h���Ďg�p���đՂ��`�ƂȂ�.
-  �������������ʓI��Android�A�v���Ƃ͋N�����@���قȂ邽�߁A�ȉ��Ƀt�@�C���̃_�E�����[�h����
-  ����Moai�N���܂ł̑S�菇���������.
+  Android版のMoaiをご利用いただく方はここを一読願いたい.
+  Android版に関しても、PC版と同様にznk_project-master.zipをダウンロードして使用して戴く形となる.
+  ただしいわゆる一般的なAndroidアプリとは起動方法が異なるため、以下にファイルのダウンロードから
+  初回Moai起動までの全手順を説明する.
 
   <ul>
-  <li>1. �܂�Android��Web�u���E�U���znk_project�̃y�[�W�փA�N�Z�X���A
-         PC�łƓ��l��znk_project-master.zip���_�E�����[�h����.
+  <li>1. まずAndroidのWebブラウザよりznk_projectのページへアクセスし、
+         PC版と同様にznk_project-master.zipをダウンロードする.
   </li>
-  <li>2. Android�̃z�[����ʂ��u�[���G�~�����[�^�v���J��.
+  <li>2. Androidのホーム画面より「端末エミュレータ」を開く.
   </li>
-  <li>3. �z�[���f�B���N�g���ֈړ�����.
-         �ȉ��̂悤�ɓ��͂�Enter������.
+  <li>3. ホームディレクトリへ移動する.
+         以下のように入力しEnterを押す.
 ~~~
     cd
 ~~~
   </li>
-  <li>4. �_�E�����[�h���� znk_project-master.zip �͒ʏ� /storage/sdcard0/Download �f�B���N�g���ɕۑ�����Ă���.
-		 �V�X�e���\���ɂ���Ă͈Ⴄ�ꏊ�ɕۑ�����邩������Ȃ�. ���̏ꍇ�͂��̏ꏊ�ɓǂݑւ��ė~����.
-         �z�[���f�B���N�g���ȊO�ł͏������݌�������ю��s�����̊֌W�Ŏ��s���邱�Ƃ��ł��Ȃ�.
-         ���̂��߁Aznk_project-master.zip ���z�[���f�B���N�g���փR�s�[����K�v������.
-         �ȉ��̂悤�ɓ��͂�Enter������.
+  <li>4. ダウンロードした znk_project-master.zip は通常 /storage/sdcard0/Download ディレクトリに保存されている.
+		 システム構成によっては違う場所に保存されるかもしれない. その場合はその場所に読み替えて欲しい.
+         ホームディレクトリ以外では書き込み権限および実行権限の関係で実行することができない.
+         そのため、znk_project-master.zip をホームディレクトリへコピーする必要がある.
+         以下のように入力しEnterを押す.
 ~~~
     cp /storage/sdcard0/Download/znk_project-master.zip ~/
 ~~~
   </li>
-  <li>5. znk_project-master.zip ���𓀓W�J����.
-         �ȉ��̂悤�ɓ��͂�Enter������.
+  <li>5. znk_project-master.zip を解凍展開する.
+         以下のように入力しEnterを押す.
 ~~~
     unzip znk_project-master.zip
 ~~~
   </li>
-  <li>6. znk_project-master/bin_for_android �f�B���N�g���ֈړ�����.
-         �ȉ��̂悤�ɓ��͂�Enter������.
+  <li>6. znk_project-master/bin_for_android ディレクトリへ移動する.
+         以下のように入力しEnterを押す.
 ~~~
     cd znk_project-master/bin_for_android
 ~~~
   </li>
-  <li>7. moai_for_android.sh �Ɏ��s������t�^����.
-         �ȉ��̂悤�ɓ��͂�Enter������.
+  <li>7. moai_for_android.sh に実行権限を付与する.
+         以下のように入力しEnterを押す.
 ~~~
     chmod 755 *.sh
 ~~~
   </li>
-  <li>8. moai_for_android.sh ���N��.
-         �ȉ��̂悤�ɓ��͂�Enter������.
+  <li>8. moai_for_android.sh を起動.
+         以下のように入力しEnterを押す.
 ~~~
     ./moai_for_android.sh
 ~~~
   </li>
   </ul>
 
-  ���A��L 1 ���� 7 �܂ł̎菇�͍ŏ��̈�񂾂��ł悢.
-  ��������x�ς܂��Ă��܂��Έȍ~�͏�L 8 ������Moai���N���\�ł���.
+  尚、上記 1 から 7 までの手順は最初の一回だけでよい.
+  これらを一度済ませてしまえば以降は上記 8 だけでMoaiが起動可能である.
 
-  ���Amoai_for_android.sh�ɂ����ē��ɖ����I��CPU�̃A�[�L�e�N�`�����w�肵�����ꍇ��
-  �����ɂ��̃A�[�L�e�N�`����ABI�����w�肷��. �Ⴆ��android-x86 �G�~�����[�^��œ��삳�������ꍇ
-  ./moai_for_android.sh x86 �ȂǂƎ��s����΂悢.
+  尚、moai_for_android.shにおいて特に明示的にCPUのアーキテクチャを指定したい場合は
+  引数にそのアーキテクチャのABI名を指定する. 例えばandroid-x86 エミュレータ上で動作させたい場合
+  ./moai_for_android.sh x86 などと実行すればよい.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="pos5"></a>���߂Ă�Moai
+## <a name="pos5"></a>初めてのMoai
 -----------------------------------
 
-  ���߂�Moai���g���ꍇ�́A�ȉ��̎菇�Őݒ肵�悤.
+  初めてMoaiを使う場合は、以下の手順で設定しよう.
 
   <ul>
-  <li>1. moai(Windows�Ȃ�moai.exe)���N������.
-         (Android�ł̏ꍇ��[�uAndroid�łɂ����鏉��N���܂ł̎菇�v](#for_android)���Q��.)
+  <li>1. moai(Windowsならmoai.exe)を起動する.
+         (Android版の場合は[「Android版における初回起動までの手順」](#for_android)を参照.)
   </li>
-  <li>2. �u���E�U�̃v���L�V�ݒ�_�C�A���O�Ńv���L�V�T�[�o�Ƃ��� localhost:8124 ���w�肷��.
-         ����ł��܂������Ȃ��ꍇ�� 127.0.0.1:8124 �Ŏ����Ă݂悤! 
-         ����͈�ʂɃ��[�v�o�b�N�ڑ��ƌĂ΂�A�������g�ւ̐ڑ����Ӗ�����.
-         �����[�g�z�X�g�ŋN�����Ă���Moai�ɐڑ��������ꍇ�͂���IP���w�肵�Ă��悢.
+  <li>2. ブラウザのプロキシ設定ダイアログでプロキシサーバとして localhost:8124 を指定する.
+         これでうまくいかない場合は 127.0.0.1:8124 で試してみよう! 
+         これは一般にループバック接続と呼ばれ、自分自身への接続を意味する.
+         リモートホストで起動しているMoaiに接続したい場合はそのIPを指定してもよい.
   </li>
   </ul>
 
-  ��{�I�ɂ͈ȏ�ł���.
-  �u���E�U����ړI�̃T�C�g�փA�N�Z�X�ł����OK�ł���.
-  ����� http://127.0.0.1:8124 �ɃA�N�Z�X���AWelcome to Moai Web Server�̃y�[�W���\������邱�Ƃ��m�F���悤.
+  基本的には以上である.
+  ブラウザから目的のサイトへアクセスできればOKである.
+  さらに http://127.0.0.1:8124 にアクセスし、Welcome to Moai Web Serverのページが表示されることも確認しよう.
 
-  ���ɐV����Moai���_�E�����[�h��������A�f�t�H���g�̐ݒ�l�ł͌f���ɂ���Ă͖����ƂȂ���
-  ���X�Ȃǂ��ł��Ȃ��\��������̂ŁA���߂Ă�Moai�N�����͂܂�Moai Web Configuration��ʂɂ���
-  �uVirtual USERS Initiation�v�{�^���������A���̐ݒ�l����U���Ȃ��p�ɏ��������Ă����������悢.
-  ����ɂ��Ă̏ڍׂ�[�������][2]����������������.
+  特に新しくMoaiをダウンロードした直後、デフォルトの設定値では掲示板によっては無効となって
+  レスなどができない可能性もあるので、初めてのMoai起動時はまずMoai Web Configuration画面にある
+  「Virtual USERS Initiation」ボタンを押し、この設定値を一旦あなた用に初期化しておいた方がよい.
+  これについての詳細は[こちらも][2]ご覧いただきたい.
 
-  �����u�v���L�V�T�[�o�ւ̐ڑ������ۂ���܂����v�̂悤�ȕ\�����Ȃ��ꂽ�ꍇ��
-  �����炭 1 ���N�����Ă��Ȃ��� 2 �̎菇�ŉ����w����~�X���Ă���.  
-  ���邢��OS�̃t�@�C�A�E�H�[���@�\�ɂ��8124�ւ̐ڑ����u���b�N����Ă���\��������̂�
-  ���̐ݒ���m�F���Ă݂悤.  
+  もし「プロキシサーバへの接続を拒否されました」のような表示がなされた場合は
+  おそらく 1 を起動していないか 2 の手順で何か指定をミスしている.  
+  あるいはOSのファイアウォール機能により8124への接続がブロックされている可能性もあるので
+  その設定を確認してみよう.  
 
-  Windows XP�ȍ~�̏ꍇ�A���̂悤�ȃ_�C�A���O���\�������ꍇ������.  
+  Windows XP以降の場合、次のようなダイアログが表示される場合がある.  
   ![screenshot](../imgs/screenshot_warning_on_win32.png)
 
-  �����Łu�u���b�N����v��I��ł��A���̃c�[�������[�J���v���L�V�Ƃ��Ďg�����ɂ͓��ɖ��Ȃ�.  
-  �����A����LAN��̃}�V���Ȃǂ���̗��p���������ꍇ�́A���̃u���b�N����������K�v������.
+  ここで「ブロックする」を選んでも、このツールをローカルプロキシとして使う分には特に問題ない.  
+  ただ、他のLAN上のマシンなどからの利用をしたい場合は、このブロックを解除する必要がある.
 
-  **�y�Q�l�z**
+  **【参考】**
 ~~~
-    ���̃_�C�A���O�͈�̉��Ȃ̂��H  
+    このダイアログは一体何なのか？  
 
-    �����ڂ����q�ׂ�ƁA�T�[�o�̂悤�ȊO���̃}�V������̐ڑ��v���̉\��������v���O�����ɂ�����
-	����N�����ɕK���\���������̂ł���.  ���̎�̃v���O�������ߋ��ɃC���X�g�[���������Ƃ�������Ȃ�
-	�������Ƃ�����Ƃ������������̂ł͂Ȃ����낤���H
+    少し詳しく述べると、サーバのような外部のマシンからの接続要求の可能性があるプログラムにおいて
+	初回起動時に必ず表示されるものである.  この種のプログラムを過去にインストールしたことがある方なら
+	見たことがあるという方も多いのではないだろうか？
   
-    ����Ƀv���O���}�̕������̘b�ɂȂ邪�A���̃_�C�A���O�� INADDR_ANY���w�肵��WinSock2 API�ł�
-    bind �����s����ƕ\�������.
+    さらにプログラマの方向けの話になるが、このダイアログは INADDR_ANYを指定してWinSock2 APIでの
+    bind を実行すると表示される.
 ~~~
 
-  Moai�͊Ȉ�Web�T�[�o�Ƃ��Ă��@�\����.  
-  Moai���N�����Ă����ԂŃu���E�U��URL�w�藓�� http://localhost:8124 �܂��� http://127.0.0.1:8124 ��
-  �w�肵�ăA�N�Z�X�����ꍇ�AWelcome to Moai Web Server�Ƃ������悤�ȃy�[�W���\�������.
-  ��������doc_root�ɂ���t�@�C���ɃA�N�Z�X������AMoai Web Configuration��ʂȂǂ��o���Đݒ�Ȃǂ�
-  �s�����Ƃ��ł���.  
+  Moaiは簡易Webサーバとしても機能する.  
+  Moaiが起動している状態でブラウザのURL指定欄に http://localhost:8124 または http://127.0.0.1:8124 を
+  指定してアクセスした場合、Welcome to Moai Web Serverといったようなページが表示される.
+  ここからdoc_rootにあるファイルにアクセスしたり、Moai Web Configuration画面などを出して設定などを
+  行うことができる.  
 
-  Moai Web Top�y�[�W  
+  Moai Web Topページ  
   ![screenshot](../imgs/screenshot_top.png)
 
   Moai Web Configuration  
   ![screenshot](../imgs/screenshot_config.png)
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="pos6"></a>�v���L�V�ݒ�_�C�A���O���ĉ����H
+## <a name="pos6"></a>プロキシ設定ダイアログって何ぞ？
 -----------------------------------
 
-  �v���L�V���g�������Ƃ�������Ȃ�A���̍��ڂ�ǂޕK�v�͂Ȃ�.
-  **�g�������Ƃ���܂ւ���**�ȕ��ł��A�v���L�V�̐ݒ���@�Ɋւ��Ă̓O�O��΂�����ł�
-  �o�Ă���̂ł�����������Ղ��������A����ŕЕt����̂��Ȃ�Ȃ̂ŁA�ȉ��ł͏��S�҂̕�
-  ������Firefox���ɂƂ��ċ�̓I�Ȑݒ���@���ꉞ��������.
+  プロキシを使ったことがある方なら、この項目を読む必要はない.
+  **使ったことありまへぇん**な方でも、プロキシの設定方法に関してはググればいくらでも
+  出てくるのでそちらをご覧戴きたいが、それで片付けるのもなんなので、以下では初心者の方
+  向けにFirefoxを例にとって具体的な設定方法を一応説明する.
 
 ~~~
-  1. �u�c�[���v���j���[����u�I�v�V�����v��I�сA��̐F�X�ݒ�ł����ʂ��J��.
-  2. �u�ڍׁv�^�u��I�сA�����ɂ���u�ڑ��ݒ�v�{�^��������.
-  3. �u�C���^�[�l�b�g�ڑ��v�_�C�A���O(���})���o��̂Łu�蓮�Ńv���L�V��ݒ肷��v
-      �Ƃ��������Ƀ`�F�b�N������.
-  4.  �������ɂ���uHTTP�v���L�V�v�̕����� localhost (�܂���127.0.0.1) �Ɠ��͂���.
-      �܂��E�ׂɂ���u�|�[�g�v�̕����� 8124 �Ɠ��͂���(���̂Ƃ����{����͂�OFF�ɂ��Ă�����!)
-  5.  ���l�ɂ��̉��ɂ���uSSL�v���L�V�v�̕����� localhost (�܂���127.0.0.1) �Ɠ��͂���.
-      �܂��E�ׂɂ���u�|�[�g�v�̕����� 8124 �Ɠ��͂���(���̂Ƃ����{����͂�OFF�ɂ��Ă�����!)
-  6.  moai���N������.  
+  1. 「ツール」メニューから「オプション」を選び、例の色々設定できる画面を開く.
+  2. 「詳細」タブを選び、そこにある「接続設定」ボタンを押す.
+  3. 「インターネット接続」ダイアログ(下図)が出るので「手動でプロキシを設定する」
+      という部分にチェックをつける.
+  4.  すぐ下にある「HTTPプロキシ」の部分に localhost (または127.0.0.1) と入力する.
+      また右隣にある「ポート」の部分に 8124 と入力する(このとき日本語入力はOFFにしておこう!)
+  5.  同様にその下にある「SSLプロキシ」の部分に localhost (または127.0.0.1) と入力する.
+      また右隣にある「ポート」の部分に 8124 と入力する(このとき日本語入力はOFFにしておこう!)
+  6.  moaiを起動する.  
 ~~~
-  �ȏ�ł���(���moai���N�������Ă����Ă��悢).
+  以上である(先にmoaiを起動させておいてもよい).
 
   ![screenshot](../imgs/screenshot_proxy_dialog.png)
 
 
-  **�y�d�v�z**  
-  ���̐ݒ�ɖ߂�(�v���L�V���g�p���Ȃ�)���@���o���Ă�����.
-  ��L 3. �ɂ����āu�v���L�V���g�p���Ȃ��v�Ƃ������ڂ���ԏ�ɂ���.
-  ����Ƀ`�F�b�N�����邱�ƂŁAFirefox�̓v���L�V����Ȃ��ʏ�̏�Ԃɖ߂�.
-  (Firefox�̏����ݒ�ł͌��X���̏�Ԃ̂͂��ł���)
+  **【重要】**  
+  元の設定に戻す(プロキシを使用しない)方法も覚えておこう.
+  上記 3. において「プロキシを使用しない」という項目が一番上にある.
+  これにチェックをつけることで、Firefoxはプロキシを介さない通常の状態に戻る.
+  (Firefoxの初期設定では元々この状態のはずである)
 
-  ����moai�̕��������ςȂ��ƂɂȂ����ꍇ�́A��xmoai���I�����čĂыN���������
-  ���̏ꍇ�͖��͉��������. ����{�����Ă���T�C�g���ǂ����Ă�moai������ꍇ��
-  ���܂��\������Ȃ��ȂǕs�����������ꍇ�́A�u���E�U�̃v���L�V�ݒ�����ɖ߂�����ŉ{�����悤.
+  もしmoaiの方が何か変なことになった場合は、一度moaiを終了して再び起動させれば
+  大抵の場合は問題は解消される. 万一閲覧しているサイトがどうしてもmoaiを介した場合に
+  うまく表示されないなど不具合が発生する場合は、ブラウザのプロキシ設定を元に戻した上で閲覧しよう.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="pos7"></a>��������Ɋ܂܂�Ă���http_decorator�Ƃ�Znk�Ƃ������͉̂��Ȃ̂��H
+## <a name="pos7"></a>いっしょに含まれているhttp_decoratorとかZnkとかいうのは何なのか？
 -----------------------------------
 
-  Moai�͉�X**���{HTTP������(�ʏ�NHK)**�̃{�X�ł���**Mr.Moai**�����J���������[�J���v���L�V�G���W���ł���A
-  ���̃c�[���Q�̂܂��ɒ��j�ł���.
-  �܂��Ahttp_decorator�͉�X��**���ݒ���**�ł��� DecoDecoBoy����**������������**�����ŏ������Ȉ�HTTP�N���C�A���g�ł���A
-  ����ł�plugin���̓�������Ăяo����邱�Ƃ�����.
-  libZnk�͓��{HTTP������(NHK)�̂ӂ���/�Q�����˂�n��S���̗��G�[�W�F���gZenkaku���J���������C�u������
-  ��L�̃c�[����C����ŋL�q����ۂ̊�ՂƂ��Ďg����. ���̂��߁A����炪���̃t�H���_�Ɋ܂܂��.
+  Moaiは我々**日本HTTP研究所(通称NHK)**のボスである**Mr.Moai**氏が開発したローカルプロキシエンジンであり、
+  このツール群のまさに中核である.
+  また、http_decoratorは我々の**飲み仲間**である DecoDecoBoy氏が**酔った勢いで**即興で書いた簡易HTTPクライアントであり、
+  現状ではplugin等の内部から呼び出されることがある.
+  libZnkは日本HTTP研究所(NHK)のふたば/２ちゃんねる地区担当の裏エージェントZenkakuが開発したライブラリで
+  上記のツールをC言語で記述する際の基盤として使われる. そのため、これらがこのフォルダに含まれる.
 
-  �Ƃ܂��A**�����99.9���ǂ��ł������b**�͒u���Ƃ��āAMoai�̓u���E�U�̃N�b�L�[��L���b�V���Ȃǂ����ۂɏ���������A
-  ���Ȃ��̃��j�^�̉𑜓x�����ۂɕύX������ȂǂƂ��������Ƃ͖ܘ_�s��Ȃ�. 
-  �����ł͂Ȃ��ʐM���ɒ����t�B���^��ύX���邱�Ƃɂ���āA
-  �T�C�g�ւƑ�����������ς��A���̂悤�ȏ󋵂����z�I�ɃV�~�����[�g���Ă���.
+  とまあ、**こんな99.9％どうでもいい話**は置いといて、Moaiはブラウザのクッキーやキャッシュなどを実際に消去したり、
+  あなたのモニタの解像度を実際に変更したりなどといったことは勿論行わない. 
+  そうではなく通信時に仲介するフィルタを変更することによって、
+  サイトへと送られる情報を改変し、そのような状況を仮想的にシミュレートしている.
 
-  filters��plugins�ɂ́AMoai�̃t�B���^��@�\�g���̂��߂̃��W���[�����i�[����Ă���.
-  Moai���̂͂ǂ��̃T�C�g��p�Ƃ����킯�ł͂Ȃ��A������T�C�g�Ɏg�����Ƃ��ł���ėp�̃c�[���ł���.
-  [Virtual USERS�@�\][2]�́A�t�B���^��v���O�C���@�\���g���Ď������Ă���`�ƂȂ�A
-  �����_�ł�futaba�܂���2�����˂�����̃��W���[�����f�t�H���g�Œ񋟂���Ă���.
-  �K�v�Ȃ�V���ȃT�C�g�����̃t�B���^��v���O�C�������Ȃ����V���������Moai�̋@�\���g�����邱�Ƃ��\��.
+  filtersやpluginsには、Moaiのフィルタや機能拡張のためのモジュールが格納されている.
+  Moai自体はどこのサイト専用というわけではなく、あらゆるサイトに使うことができる汎用のツールである.
+  [Virtual USERS機能][2]は、フィルタやプラグイン機能を使って実現している形となり、
+  現時点ではfutabaまたは2ちゃんねる向けのモジュールがデフォルトで提供されている.
+  必要なら新たなサイト向けのフィルタやプラグインをあなたが新しく作ってMoaiの機能を拡張することも可能だ.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="for_not_programmer"></a>�v���O���}�łȂ����� : Moai�̈��S�����ǂ��m�F����΂悢�̂��H
+## <a name="for_not_programmer">プログラマでない方へ : Moaiの安全性をどう確認すればよいのか？
 -----------------------------------
 
-  ���̍��ڂ̓v���O���}�ł͂Ȃ��l�����̂��̂ł���.
+  この項目はプログラマではない人向けのものである.
 
-  �����Ĉꉞ�A���̂悤�ȕ��ł������Ɏg����悤�ɁAzip�t�@�C���ɂ̓\�[�X�R�[�h�ɉ���
-  Windows�p��Linux�p�̎��s�o�C�i�����������Ă���. �C���X�g�[�������ʂȍ�Ƃ͕s�v�ł���.
+  そして一応、そのような方でもすぐに使えるように、zipファイルにはソースコードに加え
+  Windows用とLinux用の実行バイナリも同梱してある. インストール等特別な作業は不要である.
 
-  �������A���̃c�[����**���S�ł���Ƃ����m��**���Ȃ���Έ��S���Ďg���Ȃ��Ƃ������������悤.
-  �c�O�Ȃ���u�����炱��͈��S�ł��v�ƍ�҂ł����X���������Ƃ���łقƂ�ǉ��̊m�؂ɂ�
-  �Ȃ�Ȃ�. ���Ȃ��̗ǂ��m��F�l�������Ȃ班���͐M�p�ł��邩������Ȃ����A����Ɋւ���
-  �B��m���ȕ��@�́A�\�[�X�R�[�h�����Ĕ[�����Ă��炤���Ȃ�. �Ƃ����킯�őS�\�[�X�R�[�h��
-  �������Ă���.
+  しかし、このツールが**安全であるという確証**がなければ安心して使えないという方もおられよう.
+  残念ながら「いくらこれは安全です」と作者である我々が言ったところでほとんど何の確証にも
+  ならない. あなたの良く知る友人が言うなら少しは信用できるかもしれないが、これに関する
+  唯一確実な方法は、ソースコードを見て納得してもらう他ない. というわけで全ソースコードも
+  同梱してある.
 
-  �Ƃ͂����A��X�v���O���}�ł����A�I�[�v���\�[�X�̃c�[�����g���Ƃ��A���̃R�[�h�̋��X�܂�
-  �ǂ�ł���g���ȂǋH�Ȃ��Ƃł���. �܂��Ă�v���O���}�ł��Ȃ����ɂ��������Ƃ����̂�
-  ���Ƃ������̂ł���.
+  とはいえ、我々プログラマでさえ、オープンソースのツールを使うとき、そのコードの隅々まで
+  読んでから使うなど稀なことである. ましてやプログラマでもない方にこれをせよというのは
+  酷というものである.
   
-  �ł͂ǂ�����΂悢���H
-  �\�[�X�R�[�h�����J����Ă��鎖�������ł悵�Ƃ��āA����ȏ�͋C�ɂ��Ȃ��Ƃ����̂����
-  �l�����ł���. ����A���̓��e���ꉞ�������Ă���g�������Ƃ����T�d�h�ȕ��́A���Ȃ���
-  �v���O���~���O�ɏڂ����m�荇��������Ȃ�A���̃\�[�X�R�[�h����������ƃ`�F�b�N����
-  ���炤�̂��悢. ����Ȓm�荇���͂��Ȃ����̓v���O���~���O�������f���Ȃǂł��̃c�[����
-  �\�[�X�R�[�h���A�b�v���[�h����Ȃǂ��Ĉӌ��𕷂��A���Ȃ��Ȃ�̔[���𓾂�̂��悢��������Ȃ�.
+  ではどうすればよいか？
+  ソースコードが公開されている事実だけでよしとして、それ以上は気にしないというのも一つの
+  考え方である. 一方、その内容を一応検査してから使いたいという慎重派な方は、あなたに
+  プログラミングに詳しい知り合いがいるなら、このソースコードをざっくりとチェックして
+  もらうのもよい. そんな知り合いはいない方はプログラミングを扱う掲示板などでこのツールの
+  ソースコードをアップロードするなどして意見を聞き、あなたなりの納得を得るのもよいかもしれない.
 
-  ����Ɍ��Ȃȕ��́A�t������\�[�X�R�[�h���R���p�C�����Ă�����g�p���邱�Ƃ����߂�. 
-  �@�B�I�ȍ�ƂȂ̂Ō����قǓ���͂Ȃ�(�c�Ɖ�X�͎v���̂����c).
-  ������񓯍����Ă�����s�o�C�i���́A�������������Ă���\�[�X�R�[�h����R���p�C����������
-  �Ȃ̂ł��邪�A�Ⴆ�΂��Ȃ������̂��Ƃ��^���āA�{���ɂ����ł���Ƃ����m�؂��~�����Ǝv����
-  �Ƃ���. ���̂��߂ɂ́A���Ȃ����g���������Ă���\�[�X�R�[�h���R���p�C�����A�o���オ����
-  ���s�o�C�i�����g���Ă��炤�����Ȃ�.
+  さらに潔癖な方は、付属するソースコードをコンパイルしてそれを使用することを勧める. 
+  機械的な作業なので言うほど難しくはない(…と我々は思うのだが…).
+  もちろん同梱してある実行バイナリは、同じく同梱してあるソースコードからコンパイルしたもの
+  なのであるが、例えばあなたがそのことを疑って、本当にそうであるという確証が欲しいと思った
+  とする. そのためには、あなた自身が同梱してあるソースコードをコンパイルし、出来上がった
+  実行バイナリを使ってもらうしかない.
 
-  �Ƃ����킯�ŕt����[HowToCompile][3]�ɂ̓R���p�C���̓�����@�A�C���X�g�[��/�ݒ���@�A
-  ���s���@�Ɏ���܂ŁA�S���̏��S�҂ł��킩��悤����ł����Ƃ������炢���J�ɂ��̎菇��
-  ����������ł���.
+  というわけで付属の[HowToCompile][3]にはコンパイラの入手方法、インストール/設定方法、
+  実行方法に至るまで、全くの初心者でもわかるようこれでもかというくらい丁寧にその手順を
+  書いたつもりである.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="for_programmer"></a>�v���O���}�ȕ���
+## <a name="for_programmer"></a>プログラマな方へ
 -----------------------------------
 
-  Moai�̃R�[�h�ɂ������{�I�Ȕw�i���������ɂ������Ĕc�����Ă������������S�̗̂���A
-  �܂��v���O�C�����J������ۂ̃q���g�Ȃǂ�[Hacking][4]�ɂ܂Ƃ߂Ă������̂ŋ����������
-  �Q�Ƃ��ꂽ��.
+  Moaiのコードにおける基本的な背景や改造するにあたって把握しておきたい処理全体の流れ、
+  またプラグインを開発する際のヒントなどを[Hacking][4]にまとめておいたので興味があれば
+  参照されたい.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="others"></a>���̑��̏��(���t�@�����X�}�j���A���AVirtual USERS�@�\�AFAQ�Ȃ�)
+## <a name="others"></a>その他の情報(リファレンスマニュアル、Virtual USERS機能、FAQなど)
 -----------------------------------
 
-  Moai�Ɋւ��邳��Ȃ�ڍׂɂ��Ă� [���t�@�����X�}�j���A��(Reference)][1] ������������������.  
-  Moai��Virtual USERS�@�\�ɂ��ẮA[VirtualUSERS][2]���Q�Ƃ��đՂ�����.  
-  Moai�Ɋւ���FAQ�ɂ��Ă� [FAQ][5] ������������������.  
+  Moaiに関するさらなる詳細については [リファレンスマニュアル(Reference)][1] をご覧いただきたい.  
+  MoaiのVirtual USERS機能については、[VirtualUSERS][2]を参照して戴きたい.  
+  Moaiに関するFAQについては [FAQ][5] をご覧いただきたい.  
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="license"></a>���C�Z���X
+## <a name="license"></a>ライセンス
 -----------------------------------
 
-  NYSL(�ς�Ȃ�Ă��Ȃ�D���ɂ���)�ł���.  
-  ( NYSL�ɂ��Ă� http://www.kmonos.net/nysl ���Q��. )  
-  �����_�ł̌����̃\�[�X���|�W�g���� https://github.com/mr-moai-2016/znk_project �ł��邪
-  �Ĕz�z�͂����R�ɂǂ���.
+  NYSL(煮るなり焼くなり好きにしろ)である.  
+  ( NYSLについては http://www.kmonos.net/nysl を参照. )  
+  現時点での公式のソースリポジトリは https://github.com/mr-moai-2016/znk_project であるが
+  再配布はご自由にどうぞ.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
-## <a name="warning"></a>������
+## <a name="warning"></a>ご注意
 -----------------------------------
 
-  Moai�͐��܂ꂽ�΂���̃��[�J���v���L�V�ł�.
-  ���ɏd�v�ȓ��e�𔺂����̒ʐM���m���ɍs���K�v������ꍇ�ɂ����ẮA
-  �܂����Ȃ��Ƃ͎v�����A�O�̂���Moai�̎g�p���ꎞ���f����Ȃǂ��������悢��������Ȃ�. 
+  Moaiは生まれたばかりのローカルプロキシです.
+  特に重要な内容を伴う情報の通信を確実に行う必要がある場合においては、
+  まず問題ないとは思うが、念のためMoaiの使用を一時中断するなどした方がよいかもしれない. 
 
-  �܂��A���̃v���O�����̓|�[�g�ԍ�8124�ɂ����ăN���C�A���g����̐ڑ������b�X������.
-  (���̃f�t�H���g�̃|�[�g�ԍ���config.myf���ύX���邱�Ƃ��ł��邪�A���̏ꍇ��
-   8124�����̔ԍ��œǂݑւ��ė~����). 
-  �����Ō����u�N���C�A���g�v�Ƃ́A���Ȃ��̃}�V���A���邢�͉ƒ��LAN�Ȃǋɂ߂ď��K�͂�
-  ���S�������炩�ȃ}�V���ɂ����āA���Ȃ��̎g��Web�u���E�U�₻�̑��̃��[�J���v���L�V�Ȃǂ̃\�t�g�Ȃǂ̂��Ƃł���.
+  また、このプログラムはポート番号8124においてクライアントからの接続をリッスンする.
+  (このデフォルトのポート番号はconfig.myfより変更することもできるが、その場合は
+   8124をその番号で読み替えて欲しい). 
+  ここで言う「クライアント」とは、あなたのマシン、あるいは家庭内LANなど極めて小規模で
+  安全性が明らかなマシンにおいて、あなたの使うWebブラウザやその他のローカルプロキシなどのソフトなどのことである.
 
-  ���ɊO���l�b�g���[�N(WAN)����̕s���葽������̐ڑ����������ꍇ�A
-  Moai�͈�ʓI�ȃv���L�V�T�[�o�̃\�t�g�Ɠ��l�̏������s�����A���̂悤�ȗp�r�ł̎g�p�͑z�肳��Ă��Ȃ����߁A
-  ��{�I��WAN�����IP�A�h���X�̐ڑ��v�����������ꍇ�A����������Ă͂Ȃ�Ȃ�. 
-  (Squid�Ȃǂ̃v���L�V�T�[�o�p�̐�p�\�t�g���s���Ă���l�X�Ȗh�q�@�\�́AMoai�ł͂قƂ�Ǔ��ڂ���Ă��Ȃ����߂ł���)
+  仮に外部ネットワーク(WAN)からの不特定多数からの接続を許可した場合、
+  Moaiは一般的なプロキシサーバのソフトと同様の処理を行うが、このような用途での使用は想定されていないため、
+  基本的にWANからのIPアドレスの接続要求があった場合、それを許可してはならない. 
+  (Squidなどのプロキシサーバ用の専用ソフトが行っている様々な防衛機構は、Moaiではほとんど搭載されていないためである)
 
-  ����Ă��Ȃ������[�^�̐ݒ����ʘM�����Ă��Ȃ�����͒ʏ�͐S�z����Ȃ����Ƃł��邪�A
-  **acceptable_host**��**ANY**�Ƃ��āA����Ƀ��[�^��t�@�C�A�E�H�[����8124�|�[�g���J���Ă���Ȃ�
-  WAN����̐ڑ����\�Ƃ����悤��**�`�������W���[��**�g�����������\��Ȃ�A
-  Moai���ł̖h��Ƃ���**access_allow_ips** ��**access_deny_ips** �Ȃǂŕs�v��IP����̐ڑ��v����e���Ȃǂ��A
-  �Z�L�����e�B�ʂɂ��\���z�����ė~����.
+  よってあなたがルータの設定を特別弄くっていない限りは通常は心配いらないことであるが、
+  **acceptable_host**を**ANY**として、さらにルータやファイアウォールの8124ポートを開けているなど
+  WANからの接続を可能としたような**チャレンジャーな**使い方をされる予定なら、
+  Moai側での防御として**access_allow_ips** や**access_deny_ips** などで不要なIPからの接続要求を弾くなどし、
+  セキュリティ面にも十分配慮して欲しい.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
-## <a name="as_is"></a>�Ɛӎ���
+## <a name="as_is"></a>免責事項
 -----------------------------------
 
-  �{�\�t�g�E�F�A�́u����̂܂܁v�ŁA�����ł��邩�Öقł��邩���킸�A
-  ����̕ۏ؂��Ȃ��񋟂���܂�. �{�\�t�g�E�F�A�̎g�p�ɂ���Đ����邢���Ȃ鑹�Q�ɂ��Ă��A
-  ��҂͈�؂̐ӔC�𕉂�Ȃ����̂Ƃ��܂�.
+  本ソフトウェアは「現状のまま」で、明示であるか暗黙であるかを問わず、
+  何らの保証もなく提供されます. 本ソフトウェアの使用によって生じるいかなる損害についても、
+  作者は一切の責任を負わないものとします.
 
   This software is provided 'as-is', without any express or implied warranty.
   In no event will the authors be held liable for any damages arising
   from the use of this software.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 [1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/Reference.md
 [2]: https://github.com/mr-moai-2016/znk_project/blob/master/src/virtual_users/VirtualUSERS.md

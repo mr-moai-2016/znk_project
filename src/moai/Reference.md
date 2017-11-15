@@ -1,32 +1,32 @@
-# Moai ���t�@�����X�}�j���A��
+# Moai リファレンスマニュアル
 -----------------------------------
 
-## <a name="index">�ڎ�
+## <a name="index">目次
 -----------------------------------
-* [�^�[�Q�b�g�Ƃ́H    ](#user-content-target)
-* [��M�t�B���^�ɂ���](#user-content-filter_recv)
-* [���M�t�B���^�ɂ���](#user-content-filter_send)
-* [���p�ȃz�X�g�ւ̐ڑ����u���b�N����(ignore_hosts�@�\)](#user-content-ignore_hosts) 
-* [POST���̊m�F���b�Z�[�W�\��(post_confirm�@�\)](#user-content-post_confirm)
-* [���̃}�V������̐ڑ�������/��������](#user-content-acceptable_host)
-* [�O���v���L�V���g�������ꍇ�ǂ�����̂��H](#user-content-proxy1)
-* [�O���v���L�V�̓K�p���ꕔ�̃T�C�g�݂̂Ɍ��肷��](#user-content-proxy2)
-* [���̑��̃��[�J���v���L�V�Ƀ`�F�[������ꍇ](#user-content-proxy3)
+* [ターゲットとは？    ](#user-content-target)
+* [受信フィルタについて](#user-content-filter_recv)
+* [送信フィルタについて](#user-content-filter_send)
+* [無用なホストへの接続をブロックする(ignore_hosts機能)](#user-content-ignore_hosts) 
+* [POST時の確認メッセージ表示(post_confirm機能)](#user-content-post_confirm)
+* [他のマシンからの接続を許可/制限する](#user-content-acceptable_host)
+* [外部プロキシを使いたい場合どうするのか？](#user-content-proxy1)
+* [外部プロキシの適用を一部のサイトのみに限定する](#user-content-proxy2)
+* [その他のローカルプロキシにチェーンする場合](#user-content-proxy3)
 * [Moai Web Configuration](#user-content-web_config)
-* [�v���O�C���@�\�ɂ���](#user-content-plugin)
+* [プラグイン機能について](#user-content-plugin)
 
 
-## <a name="target"></a>�^�[�Q�b�g�Ƃ́H
+## <a name="target"></a>ターゲットとは？
 -----------------------------------
-�^�[�Q�b�g�Ƃ́A��̒Z���L�[���[�h(�^�[�Q�b�g��)�ɂ��A�������̃z�X�g�̏W�����������߂̂��̂ł���.
-��̃^�[�Q�b�g�ɂ͂������̃z�X�g����񋓂��āA���̃^�[�Q�b�g���ɂ��O���[�v��������`�ɂȂ�.
-�ȉ��̗�����Ă݂悤.
+ターゲットとは、一つの短いキーワード(ターゲット名)により、いくつかのホストの集合を示すためのものである.
+一つのターゲットにはいくつかのホスト名を列挙して、そのターゲット名によりグループ分けする形になる.
+以下の例を見てみよう.
 
-**�y��z**  
-�Ⴆ�Όf���u�Q�����˂�v��ΏۂƂ��āA�����̃t�B���^��K�p�������Ƃ��悤.
-����ɕʂ̌f���u�ӂ��΂����˂�v��ΏۂƂ��āA�܂��ʂ̃t�B���^�@�\��K�p�������Ƃ���.
-target.myf ���ňȉ��̂悤��2ch��futaba����target�����`��(����target���̓��[�U�����R�Ɍ��߂邱�Ƃ��ł���)�A
-���ꂼ��Ɂu�Q�����˂�v�Ɓu�ӂ��΂����˂�v�̃z�X�g����񋓂��Ă���.
+**【例】**  
+例えば掲示板「２ちゃんねる」を対象として、ある種のフィルタを適用したいとしよう.
+さらに別の掲示板「ふたばちゃんねる」を対象として、また別のフィルタ機能を適用したいとする.
+target.myf 内で以下のように2chとfutabaいうtarget名を定義し(このtarget名はユーザが自由に決めることができる)、
+それぞれに「２ちゃんねる」と「ふたばちゃんねる」のホスト名を列挙しておく.
 
 ~~~
 @@L 2ch
@@ -39,72 +39,72 @@ target.myf ���ňȉ��̂悤��2ch��futaba����target�����`��(����target���̓��[�U�
 @@.
 ~~~
 
-����ɂ��A���̑��̉ӏ��ł͒P�� "2ch" �� "futaba" �Ƃ����L�[���[�h�ŁA��L�̃z�X�g�̏W�����������Ƃ��ł���.
-���Ȃ݂ɂ����ł̃p�^�[���̋L�q�ɂ����Ă͈�s�ɂ���ӏ��݂̂Ƀ��C���h�J�[�h���g�����Ƃ��ł���.
-�����E�����邪�A�Ⴆ�Έȉ��̋L�q��OK�ł���A�A�X�^���X�N�̕����͔C�ӂ̕�����ƍl���Ă悢.
-�Ⴆ�� may.2chan.net�Ajun.2chan.net �Ȃǂ�����Ƀ}�b�`����.
+これにより、その他の箇所では単に "2ch" と "futaba" というキーワードで、上記のホストの集合を示すことができる.
+ちなみにここでのパターンの記述においては一行につき一箇所のみにワイルドカードを使うこともできる.
+少し脱線するが、例えば以下の記述はOKであり、アスタリスクの部分は任意の文字列と考えてよい.
+例えば may.2chan.net、jun.2chan.net などがこれにマッチする.
 
 ~~~
 *.2chan.net
 ~~~
 
-����A�Ⴆ�Έȉ��̂悤�Ɉ�s�ɂ��A�X�^���X�N���Q�ӏ��ȏ゠��L�q�͈Ӑ}�����ʂ�̂��̂Ƃ͂Ȃ�Ȃ�.
+一方、例えば以下のように一行につきアスタリスクが２箇所以上ある記述は意図した通りのものとはならない.
 ~~~
 *.2chan.*
 ~~~
-���̏ꍇ�A��ԖڂɌ��ꂽ�A�X�^���X�N�݂̂����C���h�J�[�h�Ƃ��Ĉ����A
-��ԖڂɌ��ꂽ�A�X�^���X�N�́A�����ʂ�A�X�^���X�N���̂��̂Ƃ��Ĉ�����.
+この場合、一番目に現れたアスタリスクのみがワイルドカードとして扱われ、
+二番目に現れたアスタリスクは、文字通りアスタリスクそのものとして扱われる.
 
-myf�Ƃ����t�@�C���͂��̃v���W�F�N�g�S�ʂɂ����Đݒ�t�@�C���Ȃǂ��L�q����̂ɗp����ėp�̃t�H�[�}�b�g�ł���.
-����̎d�l�ɂ��Ēm�肽������[myf_spec][1]���Q�Ƃ��Ă�����������.
+myfというファイルはこのプロジェクト全般において設定ファイルなどを記述するのに用いる汎用のフォーマットである.
+これの仕様について知りたい方は[myf_spec][1]を参照していただきたい.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="filter_recv"></a>��M�t�B���^�ɂ���
+## <a name="filter_recv"></a>受信フィルタについて
 -----------------------------------
-Moai�ł́AHTTP�ɂ�����GET�ɂĎ�M�����HTML��Javascript��CSS�ɂ�����
-���̎�M����������R�ɒu��(replace)������A���H�ł���t�B���^�[�@�\������Ă���.  
-������w�肵�Ă���̂��Afilters/**TARGET_NAME**_recv.myf �ɂȂ�.
-**TARGET_NAME**�̕����ɂ�target.myf�ɂ����Ē�`�����^�[�Q�b�g��������.
+Moaiでは、HTTPにおけるGETにて受信されるHTMLやJavascriptやCSSにおいて
+その受信文字列を自由に置換(replace)したり、加工できるフィルター機能を備えている.  
+これを指定しているのが、filters/**TARGET_NAME**_recv.myf になる.
+**TARGET_NAME**の部分にはtarget.myfにおいて定義したターゲット名が入る.
 
 
-#### html_filter, js_filter, css_filter �Z�N�V���� 
-���̃t�@�C������ html_filter�Ajs_filter�Acss_filter�Ƃ���������
-���ꂼ��HTML�AJavascript�ACSS�ɂ����镶����̒u�����s�����Ƃ��ł���.
-���̕����ɂ�filters�R�}���h�ƌĂ΂�閽�ߗ���L�q����.
-���݃T�|�[�g����Ă���R�}���h��replace�݂̂ŁA�ȉ��̌`���ŋL�q����.
+#### html_filter, js_filter, css_filter セクション 
+このファイル内の html_filter、js_filter、css_filterという部分で
+それぞれHTML、Javascript、CSSにおける文字列の置換を行うことができる.
+この部分にはfiltersコマンドと呼ばれる命令列を記述する.
+現在サポートされているコマンドはreplaceのみで、以下の形式で記述する.
 
 ~~~
-    replace ['�u���O�̕�����'] ['�u����̕�����']
+    replace ['置換前の文字列'] ['置換後の文字列']
 ~~~
 
-����́u�O�҂���҂Œu��(replace)����v�Ƃ������߂ɂȂ�.
-�����html_filter���ŏ����Ă����΁A**TARGET_NAME**�Ŏw�肳�ꂽ�z�X�g�ɂ�����
-�g���q��HTML�̃t�@�C���̂��ׂĂ̍s�ɑ΂��A���̕�����u�����s����.
-js_filter�Acss_filter�ɂ��Ă����l�ł���.
+これは「前者を後者で置換(replace)せよ」という命令になる.
+これをhtml_filter内で書いておけば、**TARGET_NAME**で指定されたホストにおいて
+拡張子がHTMLのファイルのすべての行に対し、この文字列置換が行われる.
+js_filter、css_filterについても同様である.
 
-�u���O�̕�����ƒu����̕������
-�K�� [' �� '] �Ƃ����N�H�[�e�B���O�L���ň͂��K�v�����邱�Ƃɒ��ӂ��邱��.
-���̗p�r�ł́A���̃N�H�[�e�B���O�L���Ŗ��͋N����Ȃ��Ǝv���邪�A
-�u���Ώە�������ɂ��̋L�����܂܂��ȂǂŁA���̋L�����Ɠs���������ꍇ�́A
-�t�@�C���̍ŏ��̍s�ɂ��� @def_quote �f�B���N�e�B�u�ł��̋L�������R�ɕύX���邱�Ƃ��ł���.
-�Ⴆ�� [' �� '] �̑ւ��� -[ �� ]- ���g�������Ƃ������ꍇ�́Amyf�t�@�C���̈�ԍŏ��̍s��
+置換前の文字列と置換後の文字列は
+必ず [' と '] というクォーティング記号で囲う必要があることに注意すること.
+大抵の用途では、このクォーティング記号で問題は起こらないと思われるが、
+置換対象文字列内にこの記号が含まれるなどで、この記号だと都合が悪い場合は、
+ファイルの最初の行にある @def_quote ディレクティブでこの記号を自由に変更することもできる.
+例えば [' と '] の替わりに -[ と ]- を使いたいといった場合は、myfファイルの一番最初の行に
 ~~~
     @def_quote -[ ]-
 ~~~
-�Ə����Ă���( -[ �� ]- �̊Ԃɂ͕K���X�y�[�X�����邱�� ).
+と書いておく( -[ と ]- の間には必ずスペースを入れること ).
 
 
-**�y��z**  
-�Ⴆ�Όf���u�Q�����˂�v��ΏۂƂ��āA���̎�MHTML��CSS�����H�������Ƃ��悤.
-target.myf���ŗႦ��2ch�Ƃ������O��target���`���Afilters/2ch_recv.myf�Ƃ����t�@�C�����쐬����.
-���̃t�@�C�����ňȉ��̃t�B���^�R�}���h���w�肷��.
+**【例】**  
+例えば掲示板「２ちゃんねる」を対象として、その受信HTMLとCSSを加工したいとしよう.
+target.myf内で例えば2chという名前のtargetを定義し、filters/2ch_recv.myfというファイルを作成する.
+このファイル内で以下のフィルタコマンドを指定する.
 
 ~~~
 @@L html_filter
-replace ['<b>�f�t�H���g�̖���������</b>'] ['<b>�f�t�H���g�̃��A�C����</b>']
-replace ['">�f�t�H���g�̖���������</a>'] ['">�f�t�H���g�̃��A�C����</a>']
+replace ['<b>デフォルトの名無しさん</b>'] ['<b>デフォルトのモアイさん</b>']
+replace ['">デフォルトの名無しさん</a>'] ['">デフォルトのモアイさん</a>']
 @@.
 
 @@L css_filter
@@ -112,60 +112,60 @@ replace ['{background:rgb(239,239,239)}'] ['{background:rgb(240,224,214); color:
 @@.
 ~~~
 
-�t�@�C�����쐬�ł�����AMoai���N��(�ċN��)���A���̏�Ԃŕ��ʂɁu�Q�����˂�v�ւƃA�N�Z�X����.
-�ȉ��͂��̕\�����ʂł���.  
+ファイルが作成できたら、Moaiを起動(再起動)し、この状態で普通に「２ちゃんねる」へとアクセスする.
+以下はその表示結果である.  
 
 ![screenshot](../imgs/screenshot_recv.png)
 
-HTML�̓��e�����H����āA���O���̕����񂪕ύX����Ă��邱�Ƃ��킩��.
-�܂�CSS�̓��e�����H����āA�w�i�F�ƕ����F���ύX����Ă���.  
-�������������ݒ肵���ɂ�������炸�\�����ς��Ȃ��Ȃ�A�u���E�U�̃L���b�V���ɌÂ���񂪎c���Ă���
-�\��������. �L���b�V�����N���A���Ă��������x�ړI�̃T�C�g�փA�N�Z�X���悤.
+HTMLの内容が加工されて、名前欄の文字列が変更されていることがわかる.
+またCSSの内容が加工されて、背景色と文字色も変更されている.  
+もしも正しく設定したにもかかわらず表示が変わらないなら、ブラウザのキャッシュに古い情報が残っている
+可能性がある. キャッシュをクリアしてからもう一度目的のサイトへアクセスしよう.
 
 
-#### css_additional �Z�N�V���� 
-���̃t�@�C������ css_additional �Ƃ��������ŁA�����s�ɓn�郆�[�U�Ǝ���css�̋L�q��ǉ����邱�Ƃ��ł���.
-CSS�̒m����������́A�T�C�g�ɂ���Ďw�肵�Ă���X�^�C�������̕����ɂ��㏑������Ȃǂ��邱�Ƃ�
-�Ǝ��̃y�[�W�f�U�C���ɃJ�X�^�}�C�Y����ȂǂƂ��������Ƃ��\��.
+#### css_additional セクション 
+このファイル内の css_additional という部分で、複数行に渡るユーザ独自のcssの記述を追加することができる.
+CSSの知識がある方は、サイトによって指定しているスタイルをこの部分により上書きするなどすることで
+独自のページデザインにカスタマイズするなどといったことが可能だ.
 
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="filter_send"></a>���M�t�B���^�ɂ���
+## <a name="filter_send"></a>送信フィルタについて
 -----------------------------------
-Moai�ł́AHTTP�ɂ�����POST�ɂđ��M�����w�b�_��POST�ϐ��A�N�b�L�[�̒l�ɂ�����
-���̒l�̓��e��������x���R�ɒu��(replace)�ł���t�B���^�[�@�\������Ă���.  
-������w�肵�Ă���̂��Afilters/**TARGET_NAME**_send.myf �ɂȂ�.
-**TARGET_NAME**�̕����ɂ�target.myf�ɂ����Ē�`�����^�[�Q�b�g��������.
+Moaiでは、HTTPにおけるPOSTにて送信されるヘッダやPOST変数、クッキーの値において
+その値の内容をある程度自由に置換(replace)できるフィルター機能を備えている.  
+これを指定しているのが、filters/**TARGET_NAME**_send.myf になる.
+**TARGET_NAME**の部分にはtarget.myfにおいて定義したターゲット名が入る.
 
-���̃t�@�C������ header_vars�Apost_vars�Acookie_vars�Acookie_force�Ƃ���������
-���ꂼ��HTTP�w�b�_�APOST�ϐ��ACookie�ɂ�����l�̒u�����s�����Ƃ��ł���.
-�����ɂ͈ȉ��̕ϐ�����`�����L�q����.
+このファイル内の header_vars、post_vars、cookie_vars、cookie_forceという部分で
+それぞれHTTPヘッダ、POST変数、Cookieにおける値の置換を行うことができる.
+これらには以下の変数代入形式を記述する.
 
 ~~~
-    varname = ['�u����̒l']
+    varname = ['置換後の値']
 ~~~
 
-> ���̂悤��Moai�ł́A����POST�ϐ��̃t�B���^�����O���r�I�ȈՂɎ����ł���.
-> ����Ɋւ��Ă͓���̃c�[���ł���Proxomitron�Ȃǂɔ�ׂėL���ȓ_�̈�ł���.
+> このようにMoaiでは、特にPOST変数のフィルタリングを比較的簡易に実現できる.
+> これに関しては同種のツールであるProxomitronなどに比べて有利な点の一つである.
 
-�����ɂ����Ďw�肳��Ă��Ȃ��ϐ��Ɋւ��Ă͉������H�C���͂��ꂸ�A�u���E�U�ɂ����Đݒ肳�ꂽ��Ԃ��P�ɂ��̂܂ܑ�����.
-�܂��E�ӂ̒u����̒l����l�̂Ƃ��́A�����ʂ��l�ւƒu�������.
-(������cookie_vars ����� cookie_force �ɂ�����ϐ�����l�̏ꍇ�́A���̃N�b�L�[�ϐ������݂��Ȃ����ƂƓ����ł���)
+これらにおいて指定されていない変数に関しては何も加工修正はされず、ブラウザにおいて設定された状態が単にそのまま送られる.
+また右辺の置換後の値が空値のときは、文字通り空値へと置換される.
+(ただしcookie_vars および cookie_force における変数が空値の場合は、そのクッキー変数が存在しないことと等価である)
 
-�܂����ԏ����̂��߁A���ۂɑ��M�����POST�ϐ��ɑ��݂��Ȃ��ϐ��Ȃǂ��L�q���Ă������Ƃ��ł���.
-���̏ꍇ�A�t�B���^�����ɂ����Ă��̕ϐ��͒P�ɖ��������.
+また中間処理のため、実際に送信されるPOST変数に存在しない変数などを記述しておくこともできる.
+この場合、フィルタ処理においてその変数は単に無視される.
 
-�ȉ��ɂ��ꂼ��Ɋւ���ڍׂ��q�ׂ�.
+以下にそれぞれに関する詳細を述べる.
 
 
-#### header_vars(HTTP�w�b�_�̒l�̏C��)  
-��ʂ�HTTP�ɂ����ăT�C�g�փA�N�Z�X����ꍇ�A���M���M�����f�[�^�{�̂̒��O��
-HTTP�w�b�_�ƌĂ΂����̂��t������ĒʐM�����.
-�Ⴆ�ΒP���Ƀu���E�U���� http://may.2chan.net/b/res/77777777.htm ��URL�w�肵����A
-���̃y�[�W�Łu�ēǂݍ��݁v�{�^���Ȃǂ��������ꍇ�́A�T�O�I�ɂ͈ȉ��̂悤�ȃw�b�_��������
-�i���ۂ͂����ƕ��G�ł��邩������Ȃ�).
+#### header_vars(HTTPヘッダの値の修正)  
+一般にHTTPにおいてサイトへアクセスする場合、送信や受信されるデータ本体の直前に
+HTTPヘッダと呼ばれるものが付加されて通信される.
+例えば単純にブラウザから http://may.2chan.net/b/res/77777777.htm へURL指定したり、
+そのページで「再読み込み」ボタンなどを押した場合は、概念的には以下のようなヘッダが送られる
+（実際はもっと複雑であるかもしれない).
 
 ~~~
 GET /b/res/77777777.htm HTTP/1.1
@@ -181,8 +181,8 @@ Connection: keep-alive
 
 ~~~
 
-���邢�� http://may.2chan.net/b/futaba.php?guid=on �����Đ�ƂȂ��Ă���悤�Ȍf����
-���X���悤�Ƃ����ꍇ�A�T�O�I�ɂ͈ȉ��̂悤�ȃw�b�_��������i���ۂ͂����ƕ��G�ł��邩������Ȃ�).
+あるいは http://may.2chan.net/b/futaba.php?guid=on があて先となっているような掲示板へ
+レスしようとした場合、概念的には以下のようなヘッダが送られる（実際はもっと複雑であるかもしれない).
 ~~~
 POST /b/futaba.php?guid=on HTTP/1.1
 Host: may.2chan.net
@@ -196,38 +196,38 @@ Connection: keep-alive
 Content-Type: multipart/form-data; boundary=---------------------------134281275020820
 Content-Length: 2050
 
-(�ȉ��AContent-Length�Ŏw�肳�ꂽ�o�C�g(�����ł�2050�o�C�g)��POST�f�[�^�{��(�����HTTP��Body���ƌĂ�)������)
+(以下、Content-Lengthで指定されたバイト(ここでは2050バイト)のPOSTデータ本体(これをHTTPのBody部と呼ぶ)が続く)
 ~~~
 
-Host ���Ƃ�User-Agent ���Ƃ� **�u:�v �L��**�̑O�ɂ��镔����HTTP�w�b�_�[�̕ϐ����ƂȂ�A
-�������ɂ��镔�������̒l���Ӗ�����.
-��L��肨������Ղ���Ǝv�����A������User-Agent�̒l��HTTP�w�b�_�[�̕ϐ��̈��Ƃ��Ċi�[�����`�ɂȂ�.
-�]���āA���̃w�b�_�[�ϐ��̒l���C�����邱�ƂŁA�T�C�g�ɑ�����User-Agent���U�����邱�Ƃ��ł���.
-������s���ɂ́Aheader_vars�ɂ����Ĉȉ��̂悤�ɋL�q����.
+Host だとかUser-Agent だとか **「:」 記号**の前にある部分がHTTPヘッダーの変数名となり、
+それより後にある部分がその値を意味する.
+上記よりお分かり戴けると思うが、いわゆるUser-Agentの値はHTTPヘッダーの変数の一種として格納される形になる.
+従って、このヘッダー変数の値を修正することで、サイトに送られるUser-Agentを偽装することができる.
+これを行うには、header_varsにおいて以下のように記述する.
 
 ~~~
 @@V header_vars
 User-Agent = ['My Sexy Browser']
 @@.
 ~~~
-����ɂ����User-Agent�̕ϐ��l���{���̒l�ł��� Mozilla/5.0 Gecko/20041122 Firefox/1.0 ����
-My Sexy Browser�Ƃ����l�ɏ���������ꂽ�`�ŃT�C�g�֑��M�����`�ƂȂ�.
-�ȏオUser-Agent�U���̏ڂ������J�j�Y���ƂȂ�.
+これによってUser-Agentの変数値が本来の値である Mozilla/5.0 Gecko/20041122 Firefox/1.0 から
+My Sexy Browserという値に書き換えられた形でサイトへ送信される形となる.
+以上がUser-Agent偽装の詳しいメカニズムとなる.
 
-####  �Q�l
-> ��M�t�B���^�ɂ����� header_vars ����User-Agent�s���폜���邱�Ƃɂ���āA**������Moai�ɂ�����User-Agent�U�����s�킹�Ȃ�**�悤�ɂ��邱�Ƃ��ł���.
-> �Ⴆ�΁A�u���E�U��User-Agent�U���A�h�I���Ȃǂɂ���Ċ���User-Agent��C�ӂ̒l�ɋU�����Ă���ꍇ�Ȃ�
-> ���̋U���l��Moai�ōďC�����邱�ƂȂ����̂܂ܑ��M���ė~�������Ƃ�����.
-> �����Moai��Javascript�ɂ�����navigator.userAgent�̒l��HTTPS�ɂ���ĈÍ������ꂽHTTP�w�b�_�ɂ�����User-Agent�܂ł�
-> �C���ł��Ȃ��̂ŁA�ꍇ�ɂ���Ă͂��̂悤�ȃA�h�I�����g�������m���Ȃ��Ƃ����邩������Ȃ�.
-> ���ʂ�Moai�ɂ����User-Agent���U��������悤�ɂ���ɂ́AUser-Agent�s��ǉ�����΂悢(���̂Ƃ��̉E�Ӓl�͓K���Ȃ��̂ł悢).
+####  参考
+> 受信フィルタにおける header_vars 内のUser-Agent行を削除することによって、**敢えてMoaiにおいてUser-Agent偽装を行わせない**ようにすることもできる.
+> 例えば、ブラウザのUser-Agent偽装アドオンなどによって既にUser-Agentを任意の値に偽装している場合など
+> その偽装値をMoaiで再修正することなくそのまま送信して欲しいことがある.
+> 現状のMoaiはJavascriptにおけるnavigator.userAgentの値やHTTPSによって暗号化されたHTTPヘッダにおけるUser-Agentまでは
+> 修正できないので、場合によってはそのようなアドオンを使う方が確実なこともあるかもしれない.
+> 元通りMoaiによってUser-Agentを偽装させるようにするには、User-Agent行を追加すればよい(このときの右辺値は適当なものでよい).
 
-���AUser-Agent�ȊO�̂��̑��̃w�b�_�[�ϐ��̒l�����l�ɕύX���邱�Ƃ��ł��邪�ʏ킻�̕K�v�͂Ȃ���A
-�s�p�ӂɕς���ƒʐM���̂��̂��s�\�ɂȂ鋰�ꂪ����̂ŁA�[���m���̂�����ȊO�͘M��Ȃ�����.
+尚、User-Agent以外のその他のヘッダー変数の値も同様に変更することができるが通常その必要はない上、
+不用意に変えると通信そのものが不可能になる恐れがあるので、深い知識のある方以外は弄らないこと.
 
 
-#### post_vars(POST�ϐ��̒l�̏C��)  
-���X���\�Ȍf����HTML�̃\�[�X�Ȃǂ��J���Ă��炤�ƁA�܂��ȉ��̂悤�� form�^�O�ň͂܂ꂽ�̈悪����.
+#### post_vars(POST変数の値の修正)  
+レスが可能な掲示板のHTMLのソースなどを開いてもらうと、まず以下のように formタグで囲まれた領域がある.
 
 ~~~
 <form action=... >
@@ -236,20 +236,20 @@ My Sexy Browser�Ƃ����l�ɏ���������ꂽ�`�ŃT�C�g�֑��M�����`�ƂȂ�.
 
 ~~~
 
-����ɂ��̕������悭�ώ@����ƈȉ��̂悤��input�^�O��������������Ă��邱�Ƃ��킩��.
+さらにその部分をよく観察すると以下のようなinputタグがいくつか書かれていることがわかる.
 ~~~
-<input type=�c name=... value=... >
-<input type=�c name=... value=... >
+<input type=… name=... value=... >
+<input type=… name=... value=... >
 ...
 
 ~~~
-����**input�^�O�ɏ����ꂽ���e**���ŏI�I�ɂ�POST�ϐ��ƂȂ�APOST���s���ꍇ(���X���M���Ȃ�)�ɑ��M�����f�[�^�̖{�̂ɑ�������.
-���ۂ�HTTP�ʐM�ɂ�����POST�ϐ���HTTP Body���̃f�[�^�Ƃ���HTTP�w�b�_�[�����ɔz�u�����.
+この**inputタグに書かれた内容**が最終的にはPOST変数となり、POSTを行う場合(レス送信時など)に送信されるデータの本体に相当する.
+実際のHTTP通信においてPOST変数はHTTP Body部のデータとしてHTTPヘッダーより後ろに配置される.
 
-�ȉ��ɂ��Ȃ��̃g���[�j���O�̂��߁A�������̗����o���Ă�����.
+以下にあなたのトレーニングのため、いくつかの例題を出しておこう.
 
-**�y�g���[�j���O�p��� Lv1�z**  
-�Ⴆ�΁A�f����HTML�̃\�[�X�Ɉȉ��̂悤�ȕ������܂܂�Ă����Ƃ��悤.
+**【トレーニング用例題 Lv1】**  
+例えば、掲示板のHTMLのソースに以下のような部分が含まれていたとしよう.
 
 ~~~html
 <form action="http://www.example.net/bbs.php" method="POST" enctype="multipart/form-data">
@@ -257,55 +257,55 @@ My Sexy Browser�Ƃ����l�ɏ���������ꂽ�`�ŃT�C�g�֑��M�����`�ƂȂ�.
 <input type=hidden name="himitu_no_data" value="12345678">
 <input type=hidden name="thread"         value="1000">
 
-<b>�R�����g</b><textarea name="comment" cols="48" rows="4"></textarea><br><br>
+<b>コメント</b><textarea name="comment" cols="48" rows="4"></textarea><br><br>
 
-<b>�Y�tFile</b><input type=file name="upload_file" size="35"><br><br>
+<b>添付File</b><input type=file name="upload_file" size="35"><br><br>
 
-<input type=checkbox name="text_only" value=on>�摜�Ȃ�
+<input type=checkbox name="text_only" value=on>画像なし
 
 </form>
 ~~~
 
-��������ۂɃu���E�U�ŊJ���ƁA�Ⴆ��Firefox�Ȃǂł͈ȉ��̂悤�ɕ\�������͂��ł���.
+これを実際にブラウザで開くと、例えばFirefoxなどでは以下のように表示されるはずである.
 
 ![screenshot](../imgs/post_example_01.png)
 
-�܂��A�ȉ��ɂ���HTML�̈Ӗ��ɂ��ăq���g��񋓂��Ă���.
+また、以下にこのHTMLの意味についてヒントを列挙しておく.
 
 <ul>
-<li>���X�̑��M���form��action�̒l�ɋL�q����Ă���A���̗Ⴞ�ƁAhttp://www.example.net/bbs.php �ƂȂ�.</li>
-<li>method�Aenctype�̕����͂Ƃ肠�����C�ɂ��Ȃ��Ă悢(���̂�����̎w���Moai���K�؂Ɏ��v�炤).</li>
-<li>input�^�O����type=hidden�Ƃ����w��́A���ꂪ���ۂ̉�ʂɂ͕\������Ȃ��B���ꂽPOST�ϐ��ł��邱�Ƃ��Ӗ�����.
-    ���̗�ł� himitu_no_data �� thread ���Y������.</li>
-<li>textarea�^�O����comment�������񃌃X�̓��e�ƂȂ�A��ʏ�ł̓e�L�X�g���̓t�H�[���ɑ�������.
-    input�^�O�ł͂Ȃ����A����Ƃ��Ă����POST�ϐ��ƂȂ�.</li>
-<li>input�^�O����type=file�Ƃ����w��́A��ʏ�ł͓Y�t�t�@�C���p�̃_�C�A���O���o�����߂̃{�^���ɑ�������.
-    ���̗�ł�upload_file�Ƃ������O��POST�ϐ��ƂȂ�A���̒l�͓Y�t�t�@�C���̑S���e�ł���.
-	(���A���̍ۂɓY�t�t�@�C���̃t�@�C�������A���̃t���p�X���������ꂽ�`�ŕt�������)</li>
-<li>input�^�O����type=checkbox�Ƃ����w��́A��ʏ�ł͕����ʂ�`�F�b�N�{�b�N�X�ɑ�������.
-    ���̃`�F�b�N�{�b�N�X�Ƀ`�F�b�N����ꂽ�ꍇ�̂�POST�ϐ�text_only���t�������.
-	(�`�F�b�N�����ĂȂ��ꍇ�͂��̕ϐ��͕t������Ȃ�).
+<li>レスの送信先はformのactionの値に記述されており、この例だと、http://www.example.net/bbs.php となる.</li>
+<li>method、enctypeの部分はとりあえず気にしなくてよい(このあたりの指定はMoaiが適切に取り計らう).</li>
+<li>inputタグ内のtype=hiddenという指定は、これが実際の画面には表示されない隠されたPOST変数であることを意味する.
+    この例では himitu_no_data と thread が該当する.</li>
+<li>textareaタグ内のcommentが文字列レスの内容となり、画面上ではテキスト入力フォームに相当する.
+    inputタグではないが、特例としてこれもPOST変数となる.</li>
+<li>inputタグ内のtype=fileという指定は、画面上では添付ファイル用のダイアログを出すためのボタンに相当する.
+    この例ではupload_fileという名前のPOST変数となり、その値は添付ファイルの全内容である.
+	(尚、この際に添付ファイルのファイル名も、そのフルパスが除去された形で付加される)</li>
+<li>inputタグ内のtype=checkboxという指定は、画面上では文字通りチェックボックスに相当する.
+    このチェックボックスにチェックを入れた場合のみPOST変数text_onlyが付加される.
+	(チェックを入れてない場合はその変数は付加されない).
 </ul>
 
-�܂Ƃ߂�ƁA���̃t�H�[���ɂ���đ����邷�ׂĂ�POST�ϐ��͈ȉ��ƂȂ�A
-����炪�Ahttp://www.example.net/bbs.php �ɑ��M�����.
+まとめると、このフォームによって送られるすべてのPOST変数は以下となり、
+これらが、http://www.example.net/bbs.php に送信される.
 
 ~~~
- �ϐ��� : himitu_no_data   �l : 12345678
- �ϐ��� : thread           �l : 1000
- �ϐ��� : comment          �l : ���[�U���e�L�X�g�t�H�[�������͂����R�����g������
- �ϐ��� : upload_file      �l : �Y�t�t�@�C���̑S���e(�t�@�C����Y�t���Ă��Ȃ��ꍇ�͋�l�ƂȂ�)
- �ϐ��� : text_only        �l : on(�������`�F�b�N�����Ă��Ȃ��ꍇ�͂��̕ϐ����̂��̂����݂��Ȃ�)
+ 変数名 : himitu_no_data   値 : 12345678
+ 変数名 : thread           値 : 1000
+ 変数名 : comment          値 : ユーザがテキストフォームより入力したコメント文字列
+ 変数名 : upload_file      値 : 添付ファイルの全内容(ファイルを添付していない場合は空値となる)
+ 変数名 : text_only        値 : on(ただしチェックを入れていない場合はこの変数そのものが存在しない)
 ~~~
 
-���āA�O�u���������Ȃ������A���̌f����example�ł�himitu_no_data�Ƃ���POST�ϐ��ɂ��A
-���[�U�̎��ʂ��s���Ă�����̂Ƃ��悤.
-**Moai�ɂ���Ă��̒l��K���Ȓl(�Ⴆ��07210721)�ɂł����グ��I�I**
+さて、前置きが長くなったが、この掲示板exampleではhimitu_no_dataというPOST変数により、
+ユーザの識別を行っているものとしよう.
+**Moaiによってこの値を適当な値(例えば07210721)にでっち上げよ！！**
 
-�y��� Lv1�̉𓚁z  
+【例題 Lv1の解答】  
 
-�܂�target.myf���ŗႦ��example�Ƃ������O��target���`����.
-���̃t�@�C���Ɉȉ��̂悤�Ȏw�������������΂悢���낤.
+まずtarget.myf内で例えばexampleという名前のtargetを定義する.
+このファイルに以下のような指定を書き加えればよいだろう.
 
 ~~~
 @@L example
@@ -313,7 +313,7 @@ www.example.net
 @@.
 ~~~
 
-����filters/example_send.myf�Ƃ����t�@�C�����쐬���A���̓��e���ȉ��̂悤�ɂ���.
+次にfilters/example_send.myfというファイルを作成し、その内容を以下のようにする.
 ~~~
 @def_quote [' ']
 
@@ -331,58 +331,58 @@ himitu_no_data = ['07210721']
 @@.
 ~~~
 
-�Ō�Ɋ���Moai���N�����Ă���ꍇ��target.myf�ƃt�B���^�t�@�C��filters/example_send.myf�������[�h���Ȃ���΂Ȃ�Ȃ�.
-��xMoai���I�����Ă����������x�N�����邩�A���邢��Web Configuration��ʂŁuRestart Moai�v�{�^���������΂悢.
+最後に既にMoaiを起動している場合はtarget.myfとフィルタファイルfilters/example_send.myfをリロードしなければならない.
+一度Moaiを終了してそれをもう一度起動するか、あるいはWeb Configuration画面で「Restart Moai」ボタンを押せばよい.
 
-�ȏ�ł���.
-
-
-#### cookie_vars ����� cookie_force (Cookie�̒l�̏C��)  
-Cookie�ɂ��Ă͒m���Ă�����������ł��낤.
-�u���E�U�̐ݒ��ʂ�����ȒP�Ɋm�F�ł��邵�A���̓��e����������̂����l�ɊȒP�ł���.
-��ʂɂ��̒l�̓T�C�g���ɕʂɋL�^�����.
-
-�Ⴆ�� www.example.net �� www.moai-chan.net �Ƃ�����̈قȂ�T�C�g���������Ƃ��āA
-�����͕ʂ̃J�e�S���Ƃ��ĕ������ċL�^�����. ���̂Ƃ�www.example.net�����www.moai-chan.net��
-�J�e�S���ɂ���Cookie�̒l�����邱�Ƃ��X�V���邱�Ƃ��ł��Ȃ����A���̋t���R��ł���.
-
-�܂��A�ӂ��΂����˂�Ȃǂł́A2chan.net�Ƃ����ӂ��ΑS�̂Ŏg����Cookie �� may.2chan.net
-�Ƃ����悤��may�����Ŏg����Cookie�̂Q���A���݂͋L�^�����悤�ł���.
-
-> �Ƃ���Ŋ��̂悢���͋C�Â��ꂽ��������Ȃ����A��LHTTP�w�b�_�[�ϐ��̉���ɂ�����Cookie�Ƃ������O�̕ϐ�������Ă���.
-> ���̂Ƃ���ACookie�f�[�^�͍ŏI�I�ɂ�HTTP�w�b�_����Cookie�ϐ��Ƃ��đ��M���s���Ă���A
-> �܂��L�Ő�������header_vars�ɂ����Cookie�ϐ����C�����邱�Ƃ��ʓ|�����s�\�ł͂Ȃ�.
-> �܂�����AHTTP�w�b�_�ϐ�Set-Cookie�ɂ���āACookie�f�[�^�̐V�K�쐬��X�V�Ȃǂ��s���A
-> ��������l�̍l�����ŏC�����邱�Ƃ��ł���.
-> �������A�w�b�_�ϐ�Cookie�܂���Set-Cookie�̒l�͕��G�ȃt�H�[�}�b�g�������Ă���A
-> ����header_vars�ɂ���Ă��̒l���C������ƂȂ�΁A���̃t�H�[�}�b�g�����͂ŉ��߂��Ȃ���΂Ȃ�Ȃ�.
-> cookie_vars ����� cookie_force ��p����΂��̍�Ƃ͕s�v�ƂȂ�A�ȈՂ�Cookie�l�̉��H���\�ƂȂ�.
-
-cookie_vars �ɂ����Ďw�肳�ꂽ�ϐ��́A�u���E�U�ɂ�����^�̒l���㏑������.
-������target�ƂȂ�T�C�g��Set-Cookie�ɂ���ĐV����Cookie�l��ݒ肵�ė����ꍇ�A
-cookie_vars�̕ϐ��l�͂��̒l�Ŏ����I�ɏ�����������. 
-���邢��cookie_vars�ɂ܂����̕ϐ������݂��Ȃ��ꍇ�͎����I�ɐV�K�ǉ������.
-���̕ӂ��header_vars��post_vars�ɔ�ׁA��╡�G�Ȏd�l�ł���.
-�������A**�T�C�g��Set-Cookie�𔭍s����܂ł̊ԁA������Cookie�ϐ��̒l���ꎞ�I�ɋ�ɂ��Ă��������P�[�X**�Ƃ������̂����\����A
-���̎d�l�Ȃ炻�ꂪ���R�Ɏ����ł���̂ł���.
-
-����Acookie_force �ɂ����Ďw�肳�ꂽ�ϐ��́A�u���E�U�ɂ�����^�̒l���㏑�����A
-�����cookie_vars�ɂ�����w�肳���������I�ɏ㏑������.
-�܂��Acookie_force�ɂ�����w���cookie_vars�ƈقȂ�A��{�I�ɏ����������邱�Ƃ͂Ȃ�.
-�Ⴆ�΂���Cookie�ϐ���ⓚ���p�ŏ�ɍ폜���Ă��������ꍇ�́Acookie_force�ɂ����Ă��̕ϐ�����l�Ɏw�肵�Ă����΂悢.
+以上である.
 
 
-�܂Ƃ߂�ƁA�T�O�I��Cookie�̒l�͈ȉ��̂悤�ȏ��ԂŃt�B���^�����O����A�T�C�g�ւƗ���Ă���.
+#### cookie_vars および cookie_force (Cookieの値の修正)  
+Cookieについては知っている方も多いであろう.
+ブラウザの設定画面からも簡単に確認できるし、その内容を消去するのも同様に簡単である.
+一般にこの値はサイト毎に別に記録される.
 
-~~~
- �u���E�U�ɂ�����^��Cookie�l => cookie_vars�ɂ��ύX => cookie_force�ɂ�鋭���ύX => �ړI�̃T�C�g�֑��M
+例えば www.example.net と www.moai-chan.net という二つの異なるサイトがあったとして、
+これらは別のカテゴリとして分離して記録される. このときwww.example.netからはwww.moai-chan.netの
+カテゴリにあるCookieの値を見ることも更新することもできないし、その逆も然りである.
+
+また、ふたばちゃんねるなどでは、2chan.netというふたば全体で使われるCookie と may.2chan.net
+というようにmayだけで使われるCookieの２つが、現在は記録されるようである.
+
+> ところで勘のよい方は気づかれたかもしれないが、上記HTTPヘッダー変数の解説においてCookieという名前の変数が現れている.
+> 実のところ、Cookieデータは最終的にはHTTPヘッダ内のCookie変数として送信が行われており、
+> つまり上記で説明したheader_varsによってCookie変数を修正することも面倒だが不可能ではない.
+> また一方、HTTPヘッダ変数Set-Cookieによって、Cookieデータの新規作成や更新などが行われ、
+> これも同様の考え方で修正することもできる.
+> しかし、ヘッダ変数CookieまたはSet-Cookieの値は複雑なフォーマットを持っており、
+> 仮にheader_varsによってこの値を修正するとなれば、このフォーマットを自力で解釈しなければならない.
+> cookie_vars および cookie_force を用いればその作業は不要となり、簡易にCookie値の加工が可能となる.
+
+cookie_vars において指定された変数は、ブラウザにおける真の値を上書きする.
+ただしtargetとなるサイトがSet-Cookieによって新たなCookie値を設定して来た場合、
+cookie_varsの変数値はその値で自動的に書き換えられる. 
+あるいはcookie_varsにまだその変数が存在しない場合は自動的に新規追加される.
+この辺りはheader_varsやpost_varsに比べ、やや複雑な仕様である.
+しかし、**サイトがSet-Cookieを発行するまでの間、ある種のCookie変数の値を一時的に空にしておきたいケース**というものが結構あり、
+この仕様ならそれが自然に実現できるのである.
+
+一方、cookie_force において指定された変数は、ブラウザにおける真の値を上書きし、
+さらにcookie_varsにおける指定さえも強制的に上書きする.
+また、cookie_forceにおける指定はcookie_varsと異なり、基本的に書き換えられることはない.
+例えばあるCookie変数を問答無用で常に削除しておきたい場合は、cookie_forceにおいてその変数を空値に指定しておけばよい.
+
+
+まとめると、概念的にCookieの値は以下のような順番でフィルタリングされ、サイトへと流れていく.
 
 ~~~
+ ブラウザにおける真のCookie値 => cookie_varsによる変更 => cookie_forceによる強制変更 => 目的のサイトへ送信
 
-**�y�g���[�j���O�p��� Lv2�z**  
-�Ⴆ�΁A�f����moai-chan�Ƃ����ˋ�̌f�����l���悤.
-���̌f���ɂ� mei.moai-chan.net �� imoge.moai-chan.net�Ƃ�����̃T�[�o�����݂��A
-������HTML�̃\�[�X�͂�������ȉ��̂悤�ȕ������܂܂�Ă�����̂Ƃ���.
+~~~
+
+**【トレーニング用例題 Lv2】**  
+例えば、掲示板moai-chanという架空の掲示板を考えよう.
+この掲示板には mei.moai-chan.net と imoge.moai-chan.netという二つのサーバが存在し、
+これらのHTMLのソースはいずれも以下のような部分が含まれているものとする.
 
 ~~~html
 <head>
@@ -394,48 +394,48 @@ cookie_vars�̕ϐ��l�͂��̒l�Ŏ����I�ɏ�����������.
 <input type=hidden name="entry_time"     value="2016/06/01/12:05:25">
 <input type=hidden name="secret_of_mana" value="192837465">
 
-<b>���Ȃ܂�</b><input type=text name="your_name" size="28"><br><br>
-<b>���[����</b><input type=text name="your_mail" size="28"><br><br>
-<b>�R�����g</b><textarea name="comment" cols="48" rows="4"></textarea><br><br>
+<b>おなまえ</b><input type=text name="your_name" size="28"><br><br>
+<b>メール欄</b><input type=text name="your_mail" size="28"><br><br>
+<b>コメント</b><textarea name="comment" cols="48" rows="4"></textarea><br><br>
 
-<b>�Y�tFile</b><input type=file name="upload_file" size="35"><br><br>
+<b>添付File</b><input type=file name="upload_file" size="35"><br><br>
 
-<input type=checkbox name="text_only" value=on>�摜�Ȃ�
+<input type=checkbox name="text_only" value=on>画像なし
 
 </form>
 ~~~
 
-�Q�ڂ̗��Ȃ̂ŁA����͂�����x�ȗ����悤.
-���Ȃ݂ɂ��̗�͑啪�ӂ��΂̏󋵂ɋ߂�(��).
+２つ目の例題なので、解説はある程度省略しよう.
+ちなみにこの例は大分ふたばの状況に近い(笑).
 
-�ȉ��ɊȒP�ɂ���HTML�Ɋւ���q���g��񋓂��Ă���.
+以下に簡単にこのHTMLに関するヒントを列挙しておく.
 
 <ul>
-<li>���̗�ł�form�^�O��action�ł�URL���t���p�X�ŋL�q����Ă��Ȃ����A����͂������base�^�O�ɂ����
-    ���̎w�����ɗ���ׂ��p�X���w�肵�Ă��邽�߂ł���.
-	���A�����ł�base�^�O�̒l�́Amei.moai-chan.net �����̂��̂ƂȂ��Ă��邪�A
-	������̃T�[�oimoge.moai-chan.net�̏ꍇ�͓��l�ɂ�������������̒l�ɂȂ��Ă���ƍl����΂悢.</li>
-<li>���̗�ł�form�^�O����enctype���w�肳��Ă��Ȃ����A���̏ꍇapplication/x-www-form-urlencoded���w�肳�ꂽ�̂Ɠ����ɂȂ�.
-    ������ɂ��悱��Ɋւ��ċC�ɂ���K�v�͂Ȃ�.</li>
-<li>input�^�O����type=text�́A��ʏ�ł́u���Ȃ܂��v��u���[�����v�Ȃǂ̈�s��������̓t�H�[���ɑ�������.
-    �ܘ_�����POST�ϐ��ƂȂ�.</li>
+<li>この例ではformタグのactionではURLがフルパスで記述されていないが、これはすぐ上のbaseタグによって
+    この指定より上に来るべきパスを指定しているためである.
+	尚、ここでのbaseタグの値は、mei.moai-chan.net 向けのものとなっているが、
+	もう一つのサーバimoge.moai-chan.netの場合は同様にここがそれ向けの値になっていると考えればよい.</li>
+<li>この例ではformタグ内にenctypeが指定されていないが、この場合application/x-www-form-urlencodedが指定されたのと同じになる.
+    いずれにせよこれに関して気にする必要はない.</li>
+<li>inputタグ内のtype=textは、画面上では「おなまえ」や「メール欄」などの一行文字列入力フォームに相当する.
+    勿論これもPOST変数となる.</li>
 </ul>
 
-���āA���̉ˋ�̌f����moai-chan�ł�secret_of_mana�ɂ����Ă��Ȃ��̃}�V������Fingerprint�l��ݒ肵�Ă�����̂Ƃ��悤.
-Fingerprint�Ƃ̓}�V���ŗL�̐F�X�ȏ��������W�߂đ������킹�A������n�b�V���l�Ƃ������̂ł���.
-�܂��A���Ȃ����n�߂Ă��̌f���ɓ��ꂵ���ꍇ�Amoai-chan�� cok_entry_time �Ƃ���Cookie�ϐ��������
-���̎�����ݒ肷����̂Ƃ���.
-�����Ĉȍ~��POST�ł́AJavascript�ɂ�� cok_entry_time�̒l���Q�Ƃ��� POST�ϐ�entry_time�ɂ��S�������l��ݒ肵�Ă�����̂Ƃ��悤.
-moai-chan�ł͂����������ă��[�U�̎��ʂ��s���Ă�����̂Ƃ���.
+さて、この架空の掲示板moai-chanではsecret_of_manaにおいてあなたのマシン環境のFingerprint値を設定しているものとしよう.
+Fingerprintとはマシン固有の色々な情報をかき集めて足し合わせ、それをハッシュ値としたものである.
+また、あなたが始めてこの掲示板に入場した場合、moai-chanは cok_entry_time というCookie変数を作って
+その時刻を設定するものとする.
+そして以降のPOSTでは、Javascriptにより cok_entry_timeの値を参照して POST変数entry_timeにも全く同じ値を設定しているものとしよう.
+moai-chanではこれらをもってユーザの識別を行っているものとする.
 
-**Moai�ɂ���Ă܂�Cookie�ϐ�cok_entry_time���폜���A�����������߂Ă��̌f���ɓ��ꂵ�����̂悤�ȏ󋵂��V�~�����[�g����I�I**
-**���ɂ��Ȃ��̃}�V����������secret_of_mana��K���Ȓl�ɂł����グ��I�I**
+**MoaiによってまずCookie変数cok_entry_timeを削除し、あたかも初めてこの掲示板に入場したかのような状況をシミュレートせよ！！**
+**次にあなたのマシン環境を示すsecret_of_manaを適当な値にでっち上げよ！！**
 
 
-�y��� Lv2�̉𓚁z  
+【例題 Lv2の解答】  
 
-�܂�target.myf���ŗႦ��moai-chan�Ƃ������O��target���`����.
-���̃t�@�C���Ɉȉ��̂悤�Ȏw�������������΂悢���낤.
+まずtarget.myf内で例えばmoai-chanという名前のtargetを定義する.
+このファイルに以下のような指定を書き加えればよいだろう.
 
 ~~~
 @@L moai-chan
@@ -444,7 +444,7 @@ imoge.moai-chan.net
 @@.
 ~~~
 
-�T�[�o�̐��������ȂǗ񋓂���̂��ʓ|�ȏꍇ�́A�ւ��Ɉȉ��̂悤�ɋL�q���邱�Ƃ��ł���.
+サーバの数が多いなど列挙するのが面倒な場合は、替わりに以下のように記述することもできる.
 
 ~~~
 @@L moai-chan
@@ -452,7 +452,7 @@ imoge.moai-chan.net
 @@.
 ~~~
 
-����filters/moai-chan_send.myf�Ƃ����t�@�C�����쐬���A���̓��e���ȉ��̂悤�ɂ���.
+次にfilters/moai-chan_send.myfというファイルを作成し、その内容を以下のようにする.
 ~~~
 @def_quote [' ']
 
@@ -465,53 +465,53 @@ secret_of_mana = ['07210721']
 @@.
 
 
-# Cookie�l�̃t�B���^�����O
-# �����ł̎w��̓T�C�g��Set-Cookie�𔭍s�������_�Ŏ����I�ɏ����ς����邱�Ƃ�����.
+# Cookie値のフィルタリング
+# ここでの指定はサイトがSet-Cookieを発行した時点で自動的に書き変えられることがある.
 @@V cookie_vars
 cok_entry_time = ['']
 @@.
 
-# Cookie�l�̋����ύX
-# �����ł̎w��̓T�C�g��Set-Cookie�𔭍s���Ă������ς����邱�Ƃ͂Ȃ�.
+# Cookie値の強制変更
+# ここでの指定はサイトがSet-Cookieを発行しても書き変えられることはない.
 @@V cookie_force
 @@.
 ~~~
 
-cok_entry_time����l�ɐݒ肷�邱�Ƃɂ��Amoai-chan.net������ɐV���Ȓl�𖾎��I�ɐݒ肷��܂ł̊��Ԃ�
-����Cookie�̒l�͑��݂��Ă��Ȃ��̂Ɠ����ɂȂ�.
-(cookie_vars�ɐݒ肵�Ă���ϐ��Ɋւ��āAmoai-chan.net����̓u���E�U�Ɏ��ۂɐݒ肳��Ă���^�̒l�͌����Ȃ�.)
-�܂��Amoai-chan.net������ɐV���Ȓl�𖾎��I�ɐݒ肵���u�ԁAfilters/moai-chan_send.myf���X�V����A
-��Lcookie_vars��cok_entry_time�̒l�͂��̒l�Ɏ����I�ɏ��������.
+cok_entry_timeを空値に設定することにより、moai-chan.netがこれに新たな値を明示的に設定するまでの期間は
+このCookieの値は存在していないのと同じになる.
+(cookie_varsに設定している変数に関して、moai-chan.netからはブラウザに実際に設定されている真の値は見えない.)
+また、moai-chan.netがこれに新たな値を明示的に設定した瞬間、filters/moai-chan_send.myfも更新され、
+上記cookie_varsのcok_entry_timeの値はその値に自動的に書き換わる.
 
-����������낤���H
-���̕ӂ�̏�����Moai�����ׂĂ��܂����v����Ă����.
-�܂����̏ꍇ�A�f���Ɏ��ۂ̃u���E�U��Cookie���폜���������������낤���A
-�����ł�cookie_vars�t�B���^�̗��K��Ƃ��āA���̂悤�ȕ��@���Љ�Ă���.
+少し難しいだろうか？
+この辺りの処理はMoaiがすべてうまく取り計らってくれる.
+まあこの場合、素直に実際のブラウザのCookieを削除した方が早いだろうが、
+ここではcookie_varsフィルタの練習例として、このような方法を紹介している.
 
-����APOST�ϐ�entry_time�ɂ��Ă�moai-chan.net��Javascript������Ƀu���E�U�ɂ���^��Cookie�̒l��ݒ肷��̂�
-�Ƃ肠����entry_time����l�ɐݒ肵�Ă���.
-�����Łu�Ƃ肠�����v�ƌ������t���g�����̂́A���̂܂܂ł͕s�\���ł��邩�炾.
-���cok_entry_time�ɂǂ̂悤�Ȓl���ݒ肳�ꂽ�������āA���̒l���蓮�ŃR�s�y���Ȃ���΂Ȃ�Ȃ�.
-(���̕ӂ��plugin��p����΂��̕K�v���Ȃ��Ȃ肳��ɃX�}�[�g�ɍs���邪�A�����ł͂����܂ł͓��ݍ��܂Ȃ�.)
+一方、POST変数entry_timeについてはmoai-chan.netのJavascriptが勝手にブラウザにある真のCookieの値を設定するので
+とりあえずentry_timeを空値に設定してある.
+ここで「とりあえず」と言う言葉を使ったのは、このままでは不十分であるからだ.
+後でcok_entry_timeにどのような値が設定されたかを見て、その値を手動でコピペしなければならない.
+(この辺りはpluginを用いればその必要もなくなりさらにスマートに行えるが、ここではそこまでは踏み込まない.)
 
-�����Ŋ���Moai���N�����Ă���ꍇ��target.myf�ƃt�B���^�t�@�C��filters/moai-chan_send.myf�������[�h���Ȃ���΂Ȃ�Ȃ�.
-��xMoai���I�����Ă����������x�N�����邩�A���邢��Web Configuration��ʂŁuRestart Moai�v�{�^���������΂悢.
+ここで既にMoaiを起動している場合はtarget.myfとフィルタファイルfilters/moai-chan_send.myfをリロードしなければならない.
+一度Moaiを終了してそれをもう一度起動するか、あるいはWeb Configuration画面で「Restart Moai」ボタンを押せばよい.
 
-�����moai-chan.net�ɂ����������߂ē��ꂷ��̂Ɠ����󋵂����o�������ƂɂȂ�.
-�����ň�Umoai-chan.net�ɃA�N�Z�X����ƁAentry_time�̒l����ł���̂ŁA�uCookie�܂���Javascript��L���ɂ��ĉ������v
-�Ƃ������|�̃��b�Z�[�W�������炭�\�������͂��ł���.
-����Acookie_vars ���� cok_entry_time �ϐ��́A���̎��_�� moai-chan��蔭�s���ꂽ�l�ɏ���������Ă���͂��ł���.
-���̒l��entry_time�ɂ��̂܂܃R�s�y����΁A�~�b�V���������ł���.
+これでmoai-chan.netにあたかも初めて入場するのと同じ状況を作り出せたことになる.
+ここで一旦moai-chan.netにアクセスすると、entry_timeの値が空であるので、「CookieまたはJavascriptを有効にして下さい」
+といった旨のメッセージがおそらく表示されるはずである.
+一方、cookie_vars 内の cok_entry_time 変数は、この時点で moai-chanより発行された値に書き換わっているはずである.
+その値をentry_timeにそのままコピペすれば、ミッション完了である.
 
 
 
-�Ō�Ɏ��ۂ̓K�p����o���Ă�����.
-(plugin�͗p���Ȃ����@�Ȃ̂ňꕔ�ʓ|����)
+最後に実際の適用例も出しておこう.
+(pluginは用いない方法なので一部面倒だが)
 
-**�y������z**  
-�Ⴆ�Όf���u�ӂ��΂����˂�v��ΏۂƂ��āA���̑��M�w�b�_��POST�ϐ���Cookie�̒l�����H�������Ƃ��悤.
-target.myf���ŗႦ��futaba�Ƃ������O��target���`���Afilters/futaba_send.myf�Ƃ����t�@�C�����쐬����.
-���̃t�@�C�����ňȉ��̎w����s��.
+**【実戦例題】**  
+例えば掲示板「ふたばちゃんねる」を対象として、その送信ヘッダとPOST変数とCookieの値を加工したいとしよう.
+target.myf内で例えばfutabaという名前のtargetを定義し、filters/futaba_send.myfというファイルを作成する.
+このファイル内で以下の指定を行う.
 
 ~~~
 @@V header_vars
@@ -529,65 +529,65 @@ pwd = ['']
 js = ['on']
 @@.
 
-# Cookie�l�̃t�B���^�����O
-# �����ł̎w��̓T�C�g��Set-Cookie�𔭍s�������_�Ŏ����I�ɏ����ς����邱�Ƃ�����.
+# Cookie値のフィルタリング
+# ここでの指定はサイトがSet-Cookieを発行した時点で自動的に書き変えられることがある.
 @@V cookie_vars
 posttime = ['']
 pwdc = ['']
 cxyl = ['5x3x2x0x2']
 @@.
 
-# Cookie�l�̋����ύX
-# �����ł̎w��̓T�C�g��Set-Cookie�𔭍s���Ă������ς����邱�Ƃ͂Ȃ�.
+# Cookie値の強制変更
+# ここでの指定はサイトがSet-Cookieを発行しても書き変えられることはない.
 @@V cookie_force
 namec = ['']
 @@.
 
 ~~~
 
-���̗�ł́AHTTP�w�b�_�ϐ��̂����AUser-Agent �̒l���uMozilla/5.0 MyBrowser_MoreMoreFireSexy�v�ւƕύX���Ă���.
-�܂��Aflrv, flvv, scsz�̒l���K���Ȓl�ɂł��������Ă���.
-�t�@�C�����쐬�ł�����AMoai���N��(�ċN��)���A���̏�Ԃŕ��ʂɁu�ӂ��΂����˂�v�̃J�^���O(�ǂ̃J�^���O�ł��悢)���J��.
+この例では、HTTPヘッダ変数のうち、User-Agent の値を「Mozilla/5.0 MyBrowser_MoreMoreFireSexy」へと変更している.
+また、flrv, flvv, scszの値も適当な値にでっちあげておく.
+ファイルが作成できたら、Moaiを起動(再起動)し、この状態で普通に「ふたばちゃんねる」のカタログ(どのカタログでもよい)を開く.
 
-����̃J�^���O�A�N�Z�X�ɂ����āA��L�̂����Acookie_vars����posttime�̒l���ӂ��΂ɂ���Ĕ��s���ꂽ�l�ɏ��������͂��ł���.
-���̌������x filters/futaba_send.myf ���J���Apthb��pthc�̒l��V����posttime�̒l�ɏ��������Ă���.
-(pthb��pthc����̂܂܂ɂ��Ă����Ă�������P�[�X�����邩������Ȃ�.
-�܂������Ɍ�����pthc�ɐݒ肷�ׂ��l��/bin/cachemt7.php�ɂ���Ĕ��s�����ŐV�̒l�ł���K�v�����邪�A
-���̗��K�p���ł͂Ƃ肠���������͑Ë�����)
+初回のカタログアクセスにおいて、上記のうち、cookie_vars内のposttimeの値がふたばによって発行された値に書き換わるはずである.
+この後もう一度 filters/futaba_send.myf を開き、pthbとpthcの値を新しいposttimeの値に書き直しておく.
+(pthbとpthcを空のままにしておいてもいけるケースもあるかもしれない.
+また厳密に言えばpthcに設定すべき値は/bin/cachemt7.phpによって発行される最新の値である必要があるが、
+この練習用例題ではとりあえずそこは妥協する)
 
-�ȏ�Ńt�B���^�̏������������ł���.
-����ɉ���IP���ύX���Ă����΁A�ȍ~��Moai�N�����͓��ɉ��������Ƃ����ʂɃ��X��X�����Ă��o����悤�ɂȂ��Ă���n�Y��.
+以上でフィルタの初期化が完了である.
+これに加えIPも変更しておけば、以降はMoai起動中は特に何もせずとも普通にレスやスレ立てが出来るようになっているハズだ.
 
-���A�����ł͗��K�p���Ƃ��Ă��̂悤�ȕ��@���Љ�����A���ʂ͂���Ȃ��Ƃ����Ȃ��Ă��uVirtual USERS Initiation�v
-�{�^���������Έꔭ�ŏ����������ł���.
-���̃{�^���ɂ��Moai�ɕt�����Ă���futaba�v���O�C�����Ăяo����A�܂��ɏ�L�̏���������ŏu���ɍs���Ă����.
+尚、ここでは練習用例題としてこのような方法を紹介したが、普通はこんなことをしなくても「Virtual USERS Initiation」
+ボタンを押せば一発で初期化完了である.
+このボタンによりMoaiに付属しているfutabaプラグインが呼び出され、まさに上記の処理を内部で瞬時に行ってくれる.
 
 
-���ƃI�}�P�Ƃ���Cookie�ϐ��̂����A��L�Ŏw�肵�����̂̒l��ύX���Ă���.
-������cxyl�Ƃ����̂́A
+あとオマケとしてCookie変数のうち、上記で指定したものの値を変更している.
+ここでcxylというのは、
 ~~~
-    ���̃X���� x �c�̃X���� x �e�X���ł̕����� x �����ʒu(0:��,1:�E) x �摜�T�C�Y(0����6�܂ł�0���ŏ��ŋ����̕\��)
+    横のスレ個数 x 縦のスレ個数 x 各スレでの文字数 x 文字位置(0:下,1:右) x 画像サイズ(0から6までで0が最小で旧来の表示)
 ~~~
-�Ƃ����t�H�[�}�b�g�����L�q�q�ł���A������w�肵�Ȃ��ꍇ�Afutaba.php�̓f�t�H���g�Ƃ��� ['14x6x4x0x0'] ���w�肵�����̂Ƃ݂Ȃ��悤�ł���.
+というフォーマットを持つ記述子であり、これを指定しない場合、futaba.phpはデフォルトとして ['14x6x4x0x0'] を指定したものとみなすようである.
 
-�܂�namec�Ƃ����̂́A�Ō�̃��X�ɂ����Ďg�p���������O���̓��e�ł���A
-�����ł͂���������I�ɋ�l�ւƃ��Z�b�g(Cookie�ϐ����폜)���Ă���.
-
-
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+またnamecというのは、最後のレスにおいて使用したお名前欄の内容であり、
+ここではこれを強制的に空値へとリセット(Cookie変数を削除)している.
 
 
-## <a name="ignore_hosts"></a>���p�ȃz�X�g�ւ̐ڑ����u���b�N����(ignore_hosts�@�\) 
+  <a href="#user-content-index">目次へ戻る</a>
+
+
+## <a name="ignore_hosts"></a>無用なホストへの接続をブロックする(ignore_hosts機能) 
 -----------------------------------
-Moai�ł́Aconfig.myf ���� ignore_hosts �ɂ����ċL�ڂ���Ă���z�X�g�փu���E�U���ڑ����悤�Ƃ����ꍇ
-������u���b�N���邱�Ƃ��ł���.
-�Ⴆ�΂��Ȃ����������Ă���T�C�g���ɑ�ʂ̍L��������A�����̃o�i�[�Ȃǂ��O���T�C�g�ɂ���ꍇ
-���̂܂܂ł͂����̊O���T�C�g���ׂĂɑ΂��āuTCP�R�l�N�V�����̊m���v���s��Ȃ���΂Ȃ�Ȃ�.
-�uTCP�R�l�N�V�����̊m���v�Ƃ��������͔��ɏd��(���Ԃ�������)�̂ŁA�{���ɕ\���̍�������}�肽���Ȃ�
-���ʂȐڑ��𖢑R�ɖh���̂���Ԍ��ʓI�Ȃ̂ł���.
+Moaiでは、config.myf 内の ignore_hosts において記載されているホストへブラウザが接続しようとした場合
+それをブロックすることができる.
+例えばあなたがいつも見ているサイト内に大量の広告があり、それらのバナーなどが外部サイトにある場合
+このままではそれらの外部サイトすべてに対して「TCPコネクションの確立」を行わなければならない.
+「TCPコネクションの確立」という処理は非常に重い(時間がかかる)ので、本当に表示の高速化を図りたいなら
+無駄な接続を未然に防ぐのが一番効果的なのである.
 
-�ȉ��ɗ������.
-���Ȃ݂ɂ����ł̃p�^�[���̋L�q�ɂ����Ă�target�ł̎w��Ɠ��l�̌`�Ń��C���h�J�[�h���g�����Ƃ��ł���.
+以下に例を示す.
+ちなみにここでのパターンの記述においてはtargetでの指定と同様の形でワイルドカードを使うこともできる.
 
 ~~~
 @@L ignore_hosts
@@ -601,84 +601,84 @@ www.assoc-amazon.jp
 @@.
 ~~~
 
-config�t�@�C�����ɗႦ�΂��̂悤�ɋL�q���Ă����ƁA���Ȃ����������Ă���T�C�g�̃y�[�W����
-��L�̊O���T�C�g�փA�N�Z�X���悤�Ƃ��镔��������ꍇ�A�����̊O���T�C�g�ւ̐ڑ��𖢑R�ɖh�~����.
-�����đւ��ɂ��̕����ɂ͈ȉ��̂悤�ȃ��b�Z�[�W���\�������.
+configファイル中に例えばこのように記述しておくと、あなたがいつも見ているサイトのページ中に
+上記の外部サイトへアクセスしようとする部分がある場合、それらの外部サイトへの接続を未然に防止する.
+そして替わりにその部分には以下のようなメッセージが表示される.
 
   Moai : Ignored Host Blocking[**blocked_hostname**] sock=[1234].
 
-**blocked_hostname**�̕����ɂ́A�ǂ̃z�X�g�ւ̃A�N�Z�X���u���b�N���������\�������.  
-�܂��L�Ŏw�肵���z�X�g�̂����ꂩ���\�������͂��ł���.  
-sock�̕����͋C�ɂ���K�v�͂Ȃ����A�ڑ��̍ۂɎg�����\�P�b�g�̔ԍ��������Ă���.
+**blocked_hostname**の部分には、どのホストへのアクセスをブロックしたかが表示される.  
+つまり上記で指定したホストのいずれかが表示されるはずである.  
+sockの部分は気にする必要はないが、接続の際に使ったソケットの番号を示している.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="post_confirm"></a>POST���̊m�F���b�Z�[�W�\��(post_confirm�@�\) 
+## <a name="post_confirm"></a>POST時の確認メッセージ表示(post_confirm機能) 
 -----------------------------------
-�����ŊȒP�ɂ����炢���悤.
-POST�Ƃ͌f���ȂǂփX�����Ă⃌�X���e������ۂɍs����HTTP���N�G�X�g�̂��Ƃł���.
-�����Ă��̂Ƃ�HTTP�w�b�_��T�[�o����`�����ϐ�(POST�ϐ��ƌĂ�)�A�N�b�L�[�̒l�Ȃǂ����M�����.
+ここで簡単におさらいしよう.
+POSTとは掲示板などへスレ立てやレス投稿をする際に行われるHTTPリクエストのことである.
+そしてこのときHTTPヘッダやサーバが定義した変数(POST変数と呼ぶ)、クッキーの値などが送信される.
 
-config.myf����post_confirm�̒l�� on �̂Ƃ��A�����̒l�����ׂĊm�F�\�������ʂ��o�����Ƃ��ł���.
-(�ȉ��̉摜�̂悤�Ƀe�L�X�g�����̔��ɒn���ȉ�ʂł͂��邪�A���ꂩ�炻�̃T�C�g�ɉ��������邩���]�����ƂȂ��\������A
- �󋵂�c���╪�͂�����ɂ͏\�����ɗ����낤).
-���̉�ʂ��o�Ă���i�K�ł́A�܂����e�͍s���Ă��Ȃ�. ����̈�ԉ��ɂ���uSend�v�{�^�����������ƂŁA���̓��e��**���ۂ�**���e�����.
+config.myf内のpost_confirmの値が on のとき、これらの値をすべて確認表示する画面を出すことができる.
+(以下の画像のようにテキストだけの非常に地味な画面ではあるが、これからそのサイトに何が送られるかが余すことなく表示され、
+ 状況を把握や分析をするには十分役に立つだろう).
+この画面が出ている段階では、まだ投稿は行われていない. これの一番下にある「Send」ボタンを押すことで、この内容で**実際に**投稿される.
 
 ![screenshot](../imgs/screenshot_post_confirm.png)
 
-�������A���̉�ʂ��\�������̂�config.myf���ɂ���post_confirm_hosts�ɋL�ڂ��ꂽ�z�X�g�ɑ΂���POST����ꍇ�݂̂ł���.
-(�����ɋL�ڂ���Ă��Ȃ��z�X�g�ɑ΂��Ă�post_confirm��on�ł����Ă����̉�ʂ͕\������Ȃ�).
-���Ȃ݂ɂ����ł̃p�^�[���̋L�q�ɂ����Ă�target�ł̎w��Ɠ��l�̌`�Ń��C���h�J�[�h���g�����Ƃ��ł���.
+ただし、この画面が表示されるのはconfig.myf内にあるpost_confirm_hostsに記載されたホストに対してPOSTする場合のみである.
+(そこに記載されていないホストに対してはpost_confirmがonであってもこの画面は表示されない).
+ちなみにここでのパターンの記述においてはtargetでの指定と同様の形でワイルドカードを使うこともできる.
 
-post_confirm_hosts�Ȃǂł킴�킴�͈͂��i�炸�ɂ��ׂẴT�C�g��Ώۂɂ���΂悢�̂ł͂Ȃ����Ǝv����������邾�낤��
-Nico����Ȃǈꕔ�̃T�C�g�ł́A�X�N���v�g�ȂǂŎ����I��POST�������ōs���Ă���ꍇ������A
-���̂悤�ȏꍇ�����L���ɂ��Ă����Ɩ�肪�������邽�߁A���̉�ʂ���������z�X�g��I���w��ł���悤�ɂ��Ă���.
+post_confirm_hostsなどでわざわざ範囲を絞らずにすべてのサイトを対象にすればよいのではないかと思われる方もいるだろうが
+Nico動画など一部のサイトでは、スクリプトなどで自動的なPOSTが内部で行われている場合があり、
+そのような場合これを有効にしておくと問題が発生するため、この画面が発動するホストを選択指定できるようにしてある.
 
-����Apost_confirm �̒l�� off �̂Ƃ��A���ׂẴT�C�g�ɑ΂��Ă��̊m�F��ʂ͕\���͖����ƂȂ�.
+一方、post_confirm の値が off のとき、すべてのサイトに対してこの確認画面は表示は無効となる.
 
-�y���Ӂz  
-�Ⴆ�΂ӂ��Ηp�̃A�h�I���ԕ��Ȃǂ��g�p���Ă���ꍇ�A���̃��[�h��on�̏ꍇ�ɓ����������������A
-���X���M�Ȃǂ����܂��s���Ȃ��悤�ł���.
-�ԕ����L���ȏ�ԂŁA���̖������܂����������@�͍��̂Ƃ���݂����Ă��Ȃ�.
-���̏ꍇ����͂�post_confirm���̂��̂𖳌��ɂ��Ă����K�v������.
-�����Ƃ����̊m�F��ʕ\���͍��ƂȂ��Ă͉�͗p�Ɏg�p���邭�炢�ł���A���ʂ͕K�v�Ȃ����̂ł��邽�߁A
-�o�[�W����1.0���A���̎w��̓f�t�H���g�ł�off�Ƃ��Ă���.
-�ǂ����Ă��m�F��ʂ��o�������ꍇ�͐ԕ����ꎞ�I�ɖ����ɂ��ă��X���e���悤.
+【注意】  
+例えばふたば用のアドオン赤福などを使用している場合、このモードがonの場合に内部処理が競合し、
+レス送信などがうまく行えないようである.
+赤福が有効な状態で、この問題をうまく回避する方法は今のところみつかっていない.
+この場合もやはりpost_confirmそのものを無効にしておく必要がある.
+もっともこの確認画面表示は今となっては解析用に使用するくらいであり、普通は必要ないものであるため、
+バージョン1.0より、この指定はデフォルトではoffとしてある.
+どうしても確認画面を出したい場合は赤福を一時的に無効にしてレス投稿しよう.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="acceptable_host"></a>���̃}�V������̐ڑ�������/��������
+## <a name="acceptable_host"></a>他のマシンからの接続を許可/制限する
 -----------------------------------
-Moai�͑��̃}�V������̐ڑ��̎�t���T�|�[�g����.
+Moaiは他のマシンからの接続の受付もサポートする.
 
-����͂��ƒ�ɂ���Q��ڂR��ڂ̃}�V��������AMoai�̋N�����Ă���P��ڂ̃}�V���֐ڑ�����
-Moai�̒񋟂���@�\�𗘗p����Ƃ������悤�ȗp�r��z�肵�Ă���.
-�T�O�I�ɂ͈ȉ��̂悤�Ȑڑ��ɂȂ�.
+これはご家庭にある２台目３代目のマシン等から、Moaiの起動している１台目のマシンへ接続して
+Moaiの提供する機能を利用するといったような用途を想定している.
+概念的には以下のような接続になる.
 
 ~~~
-���̃}�V����ɂ���u���E�U => Moai�̋N�����Ă���}�V����ɂ���Moai => ���M��̃T�C�g
+他のマシン上にあるブラウザ => Moaiの起動しているマシン上にあるMoai => 送信先のサイト
 ~~~
 
-���̐ڑ��̋���/�s���̖h�q�@�\�Ƃ���Moai�͂Q�i�K�݂��Ă���A����IP����̐ڑ���ʉ߂�����ɂ́A
-���̑o����������K�v������.
+この接続の許可/不許の防衛機構としてMoaiは２段階設けてあり、あるIPからの接続を通過させるには、
+この双方を許可する必要がある.
 
-#### ��P�̒i�K : config.myf����acceptable_host�ɂ�����w��
-���̒l��ANY���w�肷�邱�Ƃɂ�葼�̃}�V������̐ڑ����\�ƂȂ�ALOOPBACK���w�肷�邱�Ƃɂ��A
-���}�V���ȊO�͖ⓚ���p�ŎՒf����悤�ɂȂ�.
-�f�t�H���g�ł͈��S�̂��߁A�ꉞLOOPBACK�Ƃ��Ă���.
+#### 第１の段階 : config.myf内のacceptable_hostにおける指定
+この値でANYを指定することにより他のマシンからの接続が可能となり、LOOPBACKを指定することにより、
+自マシン以外は問答無用で遮断するようになる.
+デフォルトでは安全のため、一応LOOPBACKとしてある.
 
-#### ��Q�̒i�K : config.myf����access_allow_ips �� access_deny_ips �̎w��
-access_allow_ips �ɂ����Đڑ���������IP�Q���w�肷��(�z�X�g���ł͂Ȃ��K��IP�łȂ���΂Ȃ�Ȃ�).
-access_allow_ips�ɉ����L�q���Ȃ��ꍇ�́Alocalhost���������ׂẴ}�V������̐ڑ��͕s���ƂȂ�
-(���̏ꍇ�A�ڑ����ɂ�Forbidden���b�Z�[�W��Ԃ��`�ɂȂ�).
+#### 第２の段階 : config.myf内のaccess_allow_ips と access_deny_ips の指定
+access_allow_ips において接続を許可するIP群を指定する(ホスト名ではなく必ずIPでなければならない).
+access_allow_ipsに何も記述しない場合は、localhostを除くすべてのマシンからの接続は不許となる
+(この場合、接続元にはForbiddenメッセージを返す形になる).
 
-����access_allow_ips�̎w�肾���ł��ʏ�\���ł��邪�A�������炳��ɗ�O�I�ɐڑ���s�Ƃ���
-IP�Q��access_deny_ips�ɂ����Ďw�肷�邱�Ƃ��ł���.
+このaccess_allow_ipsの指定だけでも通常十分であるが、ここからさらに例外的に接続を不可とする
+IP群をaccess_deny_ipsにおいて指定することができる.
 
-�Ⴆ��LAN������݂̂̐ڑ���������ɂ́A�T�^�I�ɂ͈ȉ��̋L�q�ł悢���낤.
-���Ȃ݂Ƀp�^�[���̋L�q�ɂ����Ă͈�s�ɂ���ӏ��݂̂Ƀ��C���h�J�[�h���g�����Ƃ��ł���.
+例えばLAN内からのみの接続を許可するには、典型的には以下の記述でよいだろう.
+ちなみにパターンの記述においては一行につき一箇所のみにワイルドカードを使うことができる.
 
 ~~~
 @@L access_allow_ips
@@ -686,8 +686,8 @@ IP�Q��access_deny_ips�ɂ����Ďw�肷�邱�Ƃ��ł���.
 @@.
 ~~~
 
-����ɗႦ��LAN����192.168.1.66�̃}�V���̂݁A���R�����Đڑ���s���Ƃ������ꍇ�́A
-access_allow_ips�Ɉȉ����L�q���Ă����Ƃ悢.
+さらに例えばLAN内の192.168.1.66のマシンのみ、理由あって接続を不許としたい場合は、
+access_allow_ipsに以下を記述しておくとよい.
 
 ~~~
 @@L access_deny_ips
@@ -695,66 +695,66 @@ access_allow_ips�Ɉȉ����L�q���Ă����Ƃ悢.
 @@.
 ~~~
 
-�ܘ_�A���[�^��OS�Ȃǂɂ���t�@�C�A�E�H�[���@�\��WAN(�O���C���^�[�l�b�g)����̃|�[�g8124�ւ�
-�s�v�Ȑڑ���h�~����̂��Z�L�����e�B���{�I�ȑ΍�.
+勿論、ルータやOSなどにあるファイアウォール機能でWAN(外部インターネット)からのポート8124への
+不要な接続を防止するのもセキュリティ上基本的な対策だ.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="proxy1"></a>�O���v���L�V���g�������ꍇ�ǂ�����̂��H
+## <a name="proxy1"></a>外部プロキシを使いたい場合どうするのか？
 -----------------------------------
 
-�u���E�U�̃v���L�V�ݒ�_�C�A���O�ɂ͊���localhost(127.0.0.1)���w�肵�Ă��܂��Ă���.
-����ł͊O���v���L�V�𗘗p�ł��Ȃ��Ȃ�̂ō���Ƃ������������悤.
+ブラウザのプロキシ設定ダイアログには既にlocalhost(127.0.0.1)を指定してしまっている.
+これでは外部プロキシを利用できなくなるので困るという方もおられよう.
 
-Moai�ł͎��̐ڑ������Ƃ��ĊO���v���L�V(parent proxy, �e�v���L�V�ȂǂƂ��Ă΂��)��ݒ肷�邱�Ƃ��ł���.
-���̂Ƃ��́A�T�O�I�Ɏ��̂悤�Ȑڑ��ɂȂ�.
-
-~~~
-���Ȃ��̃u���E�U�� => ���[�J���v���L�VMoai => �O���v���L�V => ���M��̃T�C�g
-~~~
-
-������������邽�߂ɂ� config.myf �� parent_proxy �̒l���ȉ��̌`���ŗ^����.
+Moaiでは次の接続仲介先として外部プロキシ(parent proxy, 親プロキシなどとも呼ばれる)を設定することができる.
+このときは、概念的に次のような接続になる.
 
 ~~~
-     �O���v���L�V�̃z�X�g���܂���IP:�O���v���L�V�̃|�[�g
+あなたのブラウザ環境 => ローカルプロキシMoai => 外部プロキシ => 送信先のサイト
 ~~~
 
-�Ⴆ�Έȉ��̂悤�ɋL�q���邱�ƂŊO���v���L�Vproxy.example.net:3128���o�R���ĖړI�̃T�C�g��
-�A�N�Z�X���邱�Ƃ��ł���(proxy.example.net:3128���L���ł���΂̘b����).
+これを実現するためには config.myf の parent_proxy の値を以下の形式で与える.
+
+~~~
+     外部プロキシのホスト名またはIP:外部プロキシのポート
+~~~
+
+例えば以下のように記述することで外部プロキシproxy.example.net:3128を経由して目的のサイトへ
+アクセスすることができる(proxy.example.net:3128が有効であればの話だが).
 
 ~~~
      parent_proxy = ['proxy.example.net:3128']
 ~~~
 
-�O���v���L�V���g��Ȃ��ꍇ(�ړI�̃T�C�g�֒��ڃA�N�Z�X����ꍇ)�͒l�Ƃ��Ĉȉ��̂悤��NONE���w�肷��.
-(���邢�͋�l�܂��� :0 �ł��悢)
+外部プロキシを使わない場合(目的のサイトへ直接アクセスする場合)は値として以下のようにNONEを指定する.
+(あるいは空値または :0 でもよい)
 
 ~~~
      parent_proxy = ['NONE']
 ~~~
 
-���Amoai�Ɠ��t�H���_����parent_proxy.txt�Ƃ����t�@�C�������A�����Ɏg�p�������v���L�V�̌���
-�����񋓂��Ă������ƂŁAMoai Web Configuration��ł����̃v���L�V�����j���[�\�������悤�ɂȂ�.
-���̃��j���[���A���ݎg�p����v���L�V���ȒP���u���ɐ؂�ւ����邱�Ƃ��\��.
+尚、moaiと同フォルダ内にparent_proxy.txtというファイルを作り、そこに使用したいプロキシの候補を
+複数列挙しておくことで、Moai Web Configuration上でこれらのプロキシがメニュー表示されるようになる.
+このメニューより、現在使用するプロキシを簡単かつ瞬時に切り替えすることも可能だ.
 
-�Ƃ����IP�A�h���X��ς��邾���Ȃ�ʏ�̓��[�J�`�ŏ\���ł��邵�A�L���ȊO���v���L�V��������̂������ȒP�ł͂Ȃ�.
-�Ƃ����킯�Ń��[�J�`���g����󋵂Ȃ�΂�����̎g�p�������߂���.
+ところでIPアドレスを変えるだけなら通常はルーカチで十分であるし、有効な外部プロキシを見つけるのもそう簡単ではない.
+というわけでルーカチが使える状況ならばそちらの使用をお勧めする.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="proxy2"></a>�O���v���L�V�̓K�p���ꕔ�̃T�C�g�݂̂Ɍ��肷��
+## <a name="proxy2"></a>外部プロキシの適用を一部のサイトのみに限定する
 -----------------------------------
-�Ⴆ�΁A����T�C�gdanger.net������ꍇ�̂ݗ��R�����ĊO���v���L�V���g�p�������Ƃ���.
-(���̑����ׂẴT�C�g�ł͊O���v���L�V���g�p�������Ȃ��Ƃ���).
-�O���v���L�V�����ƕ\�����x���Ȃ����肷��̂ŁA�g���K�v���Ȃ��T�C�g�Ȃ�Ύg��Ȃ��������K��.
+例えば、あるサイトdanger.netを見る場合のみ理由あって外部プロキシを使用したいとする.
+(その他すべてのサイトでは外部プロキシを使用したくないとする).
+外部プロキシを介すると表示が遅くなったりするので、使う必要がないサイトならば使わない方が快適だ.
 
-���̏ꍇ�Aconfig.myf����proxy_apply�ɊO���v���L�V���g�p�������T�C�g���L�q���Ă���.
-�܂��A������config.myf����proxy_except�ɗ�O�I�ɊO��proxy���g��Ȃ��T�C�g���L�q���Ă���.
-���Aproxy_apply�Ɣ����̂ɂ��Ă�proxy_except�̎w�肪�D�悳���.
+その場合、config.myf内のproxy_applyに外部プロキシを使用したいサイトを記述しておく.
+また、同じくconfig.myf内のproxy_exceptに例外的に外部proxyを使わないサイトを記述しておく.
+尚、proxy_applyと被るものについてはproxy_exceptの指定が優先される.
 
-�ȉ��ɗ������.
+以下に例を示す.
 
 
 ~~~
@@ -768,17 +768,17 @@ jun.2chan.net
 @@.
 ~~~
 
-��L�̂悤�ɋL�q�����ꍇ�A�ŏI�I�ɃA�N�Z�X����ړI�̃T�C�g���Ⴆ�� may.2chan.net �� img.2chan.net �̏ꍇ�́A
-proxy_apply�Ɉ�v����p�^�[�������݂���̂ŁA���݂̊O���v���L�V�𒆌p���Đڑ����s����.
-������ jun.2chan.net������ proxy_except�Ŏw�肳��Ă���̂ŗ�O�I�ɊO���v���L�V���g��Ȃ��`�ɂȂ�.
-(���Ƃ��΂���摜�������葁�����W�����������Ȃ̂ɊԂɏ������x���Ȃ�proxy�����ނ͖̂��ʂł��낤)
-��L�̋L�q�ɑ��݂��Ȃ����̑��̈�ʃT�C�g�ɃA�N�Z�X����ꍇ�͊O���v���L�V�͎g���Ȃ�.
+上記のように記述した場合、最終的にアクセスする目的のサイトが例えば may.2chan.net や img.2chan.net の場合は、
+proxy_applyに一致するパターンが存在するので、現在の外部プロキシを中継して接続が行われる.
+しかし jun.2chan.netだけは proxy_exceptで指定されているので例外的に外部プロキシを使わない形になる.
+(たとえばお宝画像を手っ取り早く収集したいだけなのに間に処理が遅くなるproxyを挟むのは無駄であろう)
+上記の記述に存在しないその他の一般サイトにアクセスする場合は外部プロキシは使われない.
 
-�܂��A���̍l�������t�ɂ����w����ł���.
+また、この考え方を逆にした指定もできる.
 
-�Ⴆ�΁A����T�C�g������ꍇ�̂݊O���v���L�V���g�p���Ȃ��Ƃ���.
-(���̑����ׂẴT�C�g�ł͊O���v���L�V���g�p�������Ƃ���).
-���̏ꍇ�͈ȉ��̂悤�ɂ���΂悢.
+例えば、あるサイトを見る場合のみ外部プロキシを使用しないとする.
+(その他すべてのサイトでは外部プロキシを使用したいとする).
+その場合は以下のようにすればよい.
 
 ~~~
 @@L proxy_apply
@@ -793,133 +793,133 @@ localhost
 @@.
 ~~~
 
-��L�̂悤�ɋL�q�����ꍇ�A�܂�proxy_apply�ɂ����đS�ẴT�C�g���O���v���L�V�̓K�p�ΏۂƂȂ�.
-����proxy_except�ɂ��A���������O�I�Ɏg�p�����O�����T�C�g���w�肳���`�ƂȂ�.
-���̗�ł́A�ŏI�I�ɃA�N�Z�X����ړI�̃T�C�g��safe.net�܂���localhost��127.0.0.1�A
-���邢��IP�� 192.168.* ��LAN��̃}�V���̏ꍇ�A�O���v���L�V�͎g���Ȃ�.
-���̑��̈�ʃT�C�g�ɃA�N�Z�X����ꍇ�͌��݂̊O���v���L�V���g����.
+上記のように記述した場合、まずproxy_applyにおいて全てのサイトが外部プロキシの適用対象となる.
+次にproxy_exceptにより、そこから例外的に使用が除外されるサイトが指定される形となる.
+この例では、最終的にアクセスする目的のサイトがsafe.netまたはlocalhostや127.0.0.1、
+あるいはIPが 192.168.* のLAN上のマシンの場合、外部プロキシは使われない.
+その他の一般サイトにアクセスする場合は現在の外部プロキシが使われる.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="proxy3"></a>���̑��̃��[�J���v���L�V�Ƀ`�F�[������ꍇ
+## <a name="proxy3"></a>その他のローカルプロキシにチェーンする場合
 -----------------------------------
 
-Moai�͂��̑��̃��[�J���v���L�V�ƒ���Ɍq���邱�Ƃ��ł���.
-�Ⴆ��Polipo�Ƃ̃R���{���\�ł��邱�Ƃ��m�F���Ă���.
-����ɂ����Polipo��Moai�̉��b�𓯎��ɋ���ł���.
-�T�O�I�Ɏ��̂悤�Ȑڑ��ɂȂ�.
+Moaiはその他のローカルプロキシと直列に繋げることもできる.
+例えばPolipoとのコラボも可能であることを確認している.
+これによってPolipoとMoaiの恩恵を同時に享受できる.
+概念的に次のような接続になる.
 
-���Ȃ��̃u���E�U�� => ���[�J���v���L�VMoai => ���[�J���v���L�VPolipo => ���M��̃T�C�g
+あなたのブラウザ環境 => ローカルプロキシMoai => ローカルプロキシPolipo => 送信先のサイト
 
-�ݒ�菇�͊O���v���L�V���w�肷��ꍇ�ƑS�����l�ɍs����.
-�����炭�f�t�H���g�ł�Polipo��8123�|�[�g���g���Ă���̂ŁAparent_proxy�ɒ���localhost:8123���w�肷�邩
-���邢�� parent_proxy.txt �� localhost:8123 ��ǉ����Ă����A�K�v�ɂȂ����� Moai Web configration�ɂ�����
-parent_proxy���炻���I�ׂ΂悢.
+設定手順は外部プロキシを指定する場合と全く同様に行える.
+おそらくデフォルトではPolipoは8123ポートを使っているので、parent_proxyに直接localhost:8123を指定するか
+あるいは parent_proxy.txt に localhost:8123 を追加しておき、必要になったら Moai Web configrationにおいて
+parent_proxyからそれを選べばよい.
 
-���邢�͈ȉ��̂悤�ɏ��Ԃ��t�ł��\�ł���.
+あるいは以下のように順番が逆でも可能である.
 
-���Ȃ��̃u���E�U�� => ���[�J���v���L�VPolipo => ���[�J���v���L�VMoai => ���M��̃T�C�g
+あなたのブラウザ環境 => ローカルプロキシPolipo => ローカルプロキシMoai => 送信先のサイト
 
-���̏ꍇ��Polipo���̐ݒ�t�@�C����ύX���AMoai(�|�[�g8124)�֐ڑ�����悤�ɂ��Ȃ���΂Ȃ�Ȃ�.
-���Ȃ킿Polipo��config.cfg�ɂ����� parentProxy��localhost:8124�Ƃ���`�ɂȂ邾�낤.
+この場合はPolipo側の設定ファイルを変更し、Moai(ポート8124)へ接続するようにしなければならない.
+すなわちPolipoのconfig.cfgにおいて parentProxyをlocalhost:8124とする形になるだろう.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
 ## <a name="web_config"></a>Moai Web Configuration
 -----------------------------------
-  �u���E�U��URL�w�藓�� http://127.0.0.1:8124/config �Ǝw�肷�邱�Ƃŕ\�������邱�Ƃ��ł���.
-  ����܂łɏq�ׂ�config.myf���̕ϐ���Web�ォ��m�F����ѐݒ�ł���Ƃ������̂ł���.
+  ブラウザのURL指定欄に http://127.0.0.1:8124/config と指定することで表示させることができる.
+  これまでに述べたconfig.myf内の変数をWeb上から確認および設定できるというものである.
 
   ![screenshot](../imgs/screenshot_config.png)
 
   **Filters and Plugins**  
-  �����ł̓v���O�C���Ƃ��ēo�^����Ă���^�[�Q�b�g��[**Virtual USERS Initiation**][2]�@�\���Ăяo��.
-  ����ɂ��A��̓I�ɉ������s����邩�̓v���O�C���ɂ�邪�A���̎��s���ʂ��������ɕ\�������.
-  �Ⴆ�΁A�f���̓��e�psend�t�B���^�̕ϐ��l�������_�}�C�Y�������艼�z��������Ȃǂ�
-  �uVirtual USERS Initiation�v�{�^���ɂ��s����.
+  ここではプラグインとして登録されているターゲットの[**Virtual USERS Initiation**][2]機能を呼び出す.
+  これにより、具体的に何が実行されるかはプラグインによるが、その実行結果がすぐ下に表示される.
+  例えば、掲示板の投稿用sendフィルタの変数値をランダマイズ化したり仮想化したりなどが
+  「Virtual USERS Initiation」ボタンにより行える.
 
   **Functional Configuration**  
-  �����ł�Moai�̋@�\�Ɋւ���ݒ���s��.
+  ここではMoaiの機能に関する設定を行う.
 ~~~
     parent_proxy:
-      ���̃��j���[�ł� parent_proxy.txt �̓��e���\�������.
-      �������猻�ݎg�p����v���L�V��I��ŁuUpdate�v�������Ύg�p����O���v���L�V�̏u���؂�ւ����ł���.  
+      このメニューでは parent_proxy.txt の内容が表示される.
+      ここから現在使用するプロキシを選んで「Update」を押せば使用する外部プロキシの瞬時切り替えができる.  
 
     post_confirm:
-      POST���̊m�F��ʕ\�����[�h��on/off��؂�ւ���.
-      �`�F�b�N�{�b�N�X���N���b�N���Ēl��؂�ւ�����ŁuUpdate�v�������ΐݒ肪���f�����.
+      POST時の確認画面表示モードのon/offを切り替える.
+      チェックボックスをクリックして値を切り替えた上で「Update」を押せば設定が反映される.
 
     enable_log_file:
-      moai_log.log�֑SLog���������o�����ۂ���؂�ւ���.
-      �`�F�b�N�{�b�N�X���N���b�N���Ēl��؂�ւ�����ŁuUpdate�v�������ΐݒ肪���f�����.
+      moai_log.logへ全Log情報を書き出すか否かを切り替える.
+      チェックボックスをクリックして値を切り替えた上で「Update」を押せば設定が反映される.
 
     enable_log_verbose:
-      Log��������ɏڍׂɏ����o�����ۂ���؂�ւ���.
-      �`�F�b�N�{�b�N�X���N���b�N���Ēl��؂�ւ�����ŁuUpdate�v�������ΐݒ肪���f�����.
+      Log情報をさらに詳細に書き出すか否かを切り替える.
+      チェックボックスをクリックして値を切り替えた上で「Update」を押せば設定が反映される.
 
     blocking_mode:
-      �\�P�b�g�ʐM�ɂ�����u���b�L���O�ڑ����[�h��on/off��؂�ւ���.
-      on�̂Ƃ��u���b�L���O�ڑ��Aoff�̂Ƃ���u���b�L���O�ڑ��ƂȂ邪�A�ʏ��҂̕������K�ɉ{�����\�ł���A
-      ���ɖ��Ȃ������off�ł悢.
-      �`�F�b�N�{�b�N�X���N���b�N���Ēl��؂�ւ�����ŁuUpdate�v�������ΐݒ肪���f�����.
+      ソケット通信におけるブロッキング接続モードのon/offを切り替える.
+      onのときブロッキング接続、offのとき非ブロッキング接続となるが、通常後者の方が快適に閲覧が可能であり、
+      特に問題ない限りはoffでよい.
+      チェックボックスをクリックして値を切り替えた上で「Update」を押せば設定が反映される.
 ~~~
 
   **System Configuration**  
-  �����ł�Moai�̒ʐM�V�X�e���̍��{�Ɋւ��ݒ���s���邪�A�ݒ��ύX�����ꍇ�͍אS�̒��ӂ��K�v�ł���. 
-  �܂����̐ݒ�ύX��Moai���N�����Ă���}�V���ォ�炵���s���Ȃ��悤�ɂȂ��Ă���.
-  (�O���}�V�����烊���[�g�ł͍s���Ȃ��Ƃ�������).
-  �uUpdate System�v�{�^�����������Ƃ�Moai���ċN������悤�������b�Z�[�W���\�������.
-  �������炳��ɁuRestart Moai�v�{�^�����������Ƃ�Moai�T�[�o���ċN������ݒ肪���f�����`�ƂȂ�.
+  ここではMoaiの通信システムの根本に関わる設定を行えるが、設定を変更される場合は細心の注意が必要である. 
+  またこの設定変更はMoaiが起動しているマシン上からしか行えないようになっている.
+  (外部マシンからリモートでは行えないということ).
+  「Update System」ボタンを押すことでMoaiを再起動するよう促すメッセージが表示される.
+  そこからさらに「Restart Moai」ボタンを押すことでMoaiサーバが再起動され設定が反映される形となる.
 ~~~
     acceptable_host:
-      ���̒l��LOOPBACK�ł���ꍇ�͖ⓚ���p�ő��}�V������̐ڑ���r������.
-      ���̂Ƃ�accept���̂��̂��s���Ȃ����߁ADOS�U���ɑ΂���h��͂͑���.
-      ����A���̒l��ANY�ł���ꍇ�͂��ׂẴ}�V������̐ڑ���F�߂�.
-      �������A���̂܂܂��Ƌɒ[�Șb�A���[�^�Ȃǂ̃t�@�C�A�E�H�[���@�\���Ȃ����ł�WAN����̐ڑ���
-      �F�߂Ă��܂����ƂɂȂ�.  �uLAN ����̐ڑ��̂݋��v�Ƃ������Ӗ��������ʂȐݒ�l��񋟂������Ƃ���ł͂��邪�A
-      �c�O�Ȃ���AOS�̃l�b�g���[�NAPI�ɂ��̂悤�Ȓl���񋟂���Ă��Ȃ����߁A���ꂪ�ł��Ȃ�.
-      Moai�ł́A����ɑΏ����邽�� config.myf���� access_allow_ips, access_deny_ips �ϐ��𓱓����A
-      �ڑ�������/�s���Ƃ���IP�Q���w��ł���悤�ɂ��Ă���.
-      ���̐ݒ�ɂ��Ă͌���Web Configuration����͍s�����Aconfig.myf�𒼐ڕҏW����K�v������.
+      この値がLOOPBACKである場合は問答無用で他マシンからの接続を排除する.
+      このときacceptそのものが行われないため、DOS攻撃に対する防御力は増す.
+      一方、この値がANYである場合はすべてのマシンからの接続を認める.
+      しかし、このままだと極端な話、ルータなどのファイアウォール機構がない環境ではWANからの接続も
+      認めてしまうことになる.  「LAN からの接続のみ許可」といった意味を持つ特別な設定値を提供したいところではあるが、
+      残念ながら、OSのネットワークAPIにそのような値が提供されていないため、それができない.
+      Moaiでは、これに対処するため config.myf内に access_allow_ips, access_deny_ips 変数を導入し、
+      接続を許可/不許とするIP群を指定できるようにしている.
+      この設定については現状Web Configurationからは行えず、config.myfを直接編集する必要がある.
 
     server_name:
-      Web Configuration�ɂ�����POST��̃z�X�g���Ƃ��Ďg����.
-      acceptable_host�̒l��LOOPBACK/ANY�ɕύX�����ꍇ�A���̒l�������I�ɕύX�����ꍇ������.
+      Web ConfigurationにおけるPOST先のホスト名として使われる.
+      acceptable_hostの値をLOOPBACK/ANYに変更した場合、この値が自動的に変更される場合がある.
 
     moai_port:
-      Moai���g�p����(���b�X������)�|�[�g�ԍ��ł���.
+      Moaiが使用する(リッスンする)ポート番号である.
 ~~~
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="plugin"></a>�v���O�C���@�\�ɂ���
+## <a name="plugin"></a>プラグイン機能について
 -----------------------------------
-  Moai�̃v���O�C���ł͌��o�[�W�����ł͎��̂悤�Ȋg�������������ł���.
+  Moaiのプラグインでは現バージョンでは次のような拡張処理を実現できる.
 
   <ul>
   <li>initiate :
-      Web Configuration��ʂ́uVirtual USERS Initiation�v�{�^�����������Ƃ��ɌĂяo�����
-      �}�V�����̉��z������у����_�}�C�Y�������̎���.</li>
+      Web Configuration画面の「Virtual USERS Initiation」ボタンを押したときに呼び出される
+      マシン環境の仮想化およびランダマイズ化処理の実現.</li>
 
   <li>on_post :
-      POST��(���X���e���Ȃ�)�ɌĂяo����Ēǉ��Ŏ��s����鏈���̎���.
-      ����͂���Ȃ鍂�x��send_filter�������v���O���~���O�Ŏ������邽�߂̋@�\�ł�����.</li>
+      POST時(レス投稿時など)に呼び出されて追加で実行される処理の実現.
+      これはさらなる高度なsend_filter処理をプログラミングで実現するための機構でもある.</li>
       
   <li>on_response :
-      ���N�G�X�g�ɑ΂��鉞��(�Ⴆ�ΒP����HTML�ɃA�N�Z�X���Ă��̓��e����M����ꍇ�Ȃ�)�ɌĂяo�����
-      �ǉ��Ŏ��s����鏈���̎���.
-      ����͂���Ȃ鍂�x��recv_filter�������v���O���~���O�Ŏ������邽�߂̋@�\�ł�����.</li>
+      リクエストに対する応答(例えば単純にHTMLにアクセスしてその内容を受信する場合など)に呼び出されて
+      追加で実行される処理の実現.
+      これはさらなる高度なrecv_filter処理をプログラミングで実現するための機構でもある.</li>
   </ul>
 
-  plugin�̎��̂�plugins�t�H���_���ɂ���**TARGET_NAME**.dll(�܂���Linux�Ȃǂ̏ꍇ**TARGET_NAME**.so)�Ƃ���
-  �t�@�C���ɂȂ�. �����̓Ǝ��ɍ���Ă݂����Ƃ����v���O���}�ȕ���[Hacking][4]�ɂ��̃q���g���L�q���Ă������̂�
-  ����������ΎQ�Ƃ��Ă�����������.
+  pluginの実体はpluginsフォルダ内にある**TARGET_NAME**.dll(またはLinuxなどの場合**TARGET_NAME**.so)という
+  ファイルになる. これらの独自に作ってみたいというプログラマな方は[Hacking][4]にそのヒントを記述しておいたので
+  興味があれば参照していただきたい.
 
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
 [1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/libZnk/myf_spec.md

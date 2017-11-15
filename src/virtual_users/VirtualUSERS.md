@@ -1,309 +1,309 @@
 # Moai/Virtual USERS
 -----------------------------------
 
-## <a name="index"></a>�ڎ�
+## <a name="index"></a>目次
 -----------------------------------
-* [Moai��Virtual USERS�@�\�Ƃ́H](#user-content-pos1)
-* [�����ł���̂��H             ](#user-content-pos2)
-* [Web�{�����ɑ��M�������Ƃ͉��Ȃ̂��H](#user-content-pos3)
-* [Moai��Virtual USERS�@�\���g��](#user-content-pos4)
-* [�����_�}�C�Y�̌��Ƃ��Ďg�p����txt�t�@�C���ɂ���](#user-content-txt_for_randomize)
-* [�ӂ��΂ɂĎ蓮�ŋU�����s���ꍇ(�Q�l)](#user-content-futaba_note)
-* [���̑��̏��                 ](#user-content-pos5)
+* [MoaiのVirtual USERS機能とは？](#user-content-pos1)
+* [何ができるのか？             ](#user-content-pos2)
+* [Web閲覧時に送信される情報とは何なのか？](#user-content-pos3)
+* [MoaiのVirtual USERS機能を使う](#user-content-pos4)
+* [ランダマイズの候補として使用するtxtファイルについて](#user-content-txt_for_randomize)
+* [ふたばにて手動で偽装を行う場合(参考)](#user-content-futaba_note)
+* [その他の情報                 ](#user-content-pos5)
 
-## <a name="pos1"></a>Moai��Virtual USERS�@�\�Ƃ́H
------------------------------------
-
-  Virtual USERS�Ƃ�Virtual User-agent Screen-size and Everything Randomize System�̗��ł���.
-  ���̋L���ł�Moai��Virtual USERS�@�\�ɂ��ē��ɏڂ����q�ׂ�.
-
-  �l�b�g��̃T�C�g�͂����鑤�ʂ��炠�Ȃ��̃}�V���ŗL�̏����W�߁A���Ȃ��l�����ʂ��悤�Ǝ��݂�.  
-  Virtual USERS�@�\�̓u���E�U�Ƒ��M��̃T�C�g�Ƃ̒ʐM�𒇉�AIP�����������S�Ă̏��Ɋւ��āA
-  ���Ȃ��̎��ۂ̃}�V�����Ƃ͈قȂ�o�[�`�����������_���Ȓl�֕ύX������ŃT�C�g�ւƑ���.  
-  ����ɂ�著�M��͂��Ȃ��𐳂������ʂł��Ȃ��Ȃ�.  
-  �܂葁���b�A����͂悭���邠�Ȃ��̃v���C�x�[�g�����Z�L�����e�B�[�@�\�̈�ł���.  
-
-  <a href="#user-content-index">�ڎ��֖߂�</a>
-
-
-## <a name="pos2"></a>�����ł���̂��H
+## <a name="pos1"></a>MoaiのVirtual USERS機能とは？
 -----------------------------------
 
-  Virtual USERS�@�\��IP���������ׂĂ̂��Ȃ��̃}�V���̏��������_���ɉ��z������.
-  ����� Moai Web Configuration���**Virtual USERS Initiation**�{�^�������������őS�Ď����I�ɍs����.
-  ����ɉ����A���[�J�`(���[�^���Z�b�g)�Ȃǂɂ��IP��ς��邱�ƂŁA�f���Ȃǂɂ�����
-  ���S�ɕʂ̃��[�U�ɐ��܂�ς�邱�Ƃ��ł���Ƃ������̂ł���.
+  Virtual USERSとはVirtual User-agent Screen-size and Everything Randomize Systemの略である.
+  この記事ではMoaiのVirtual USERS機能について特に詳しく述べる.
 
-  �܂��A�ꍇ�ɂ���Ă̓u���E�U��Cookie��Javascript�𖳌��ɂ�����Ԃł��f���Ƀ��X�o����Ƃ���
-  �قƂ�ǂ̕��ɂƂ��ċɂ߂Ăǂ��ł��悢�����I���ʂ�����.  
+  ネット上のサイトはあらゆる側面からあなたのマシン固有の情報を集め、あなた個人を識別しようと試みる.  
+  Virtual USERS機能はブラウザと送信先のサイトとの通信を仲介し、IPを除くそれら全ての情報に関して、
+  あなたの実際のマシン環境とは異なるバーチャルかつランダムな値へ変更した上でサイトへと送る.  
+  これにより送信先はあなたを正しく識別できなくなる.  
+  つまり早い話、これはよくあるあなたのプライベートを守るセキュリティー機能の一つである.  
 
-  �܂� **parent_proxy.txt** �Ɏg�p�������v���L�V�̌��𕡐��񋓂��Ă������ƂŁA
-  Moai Web Configuration��ł����̃v���L�V�����j���[�\������A���ݎg�p����v���L�V���ȒP����
-  �u���ɐ؂�ւ����ł���.  
-
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="pos3"></a>Web�{�����ɑ��M�������Ƃ͉��Ȃ̂��H
+## <a name="pos2"></a>何ができるのか？
 -----------------------------------
 
-  �ȉ��̊T�O�}�����Ă݂悤.  
+  Virtual USERS機能はIPを除くすべてのあなたのマシンの情報をランダムに仮想化する.
+  これは Moai Web Configuration上の**Virtual USERS Initiation**ボタンを押すだけで全て自動的に行われる.
+  これに加え、ルーカチ(ルータリセット)などによりIPを変えることで、掲示板などにおいて
+  完全に別のユーザに生まれ変わることができるというものである.
+
+  また、場合によってはブラウザのCookieやJavascriptを無効にした状態でも掲示板にレス出来るという
+  ほとんどの方にとって極めてどうでもよい副次的効果もある.  
+
+  また **parent_proxy.txt** に使用したいプロキシの候補を複数列挙しておくことで、
+  Moai Web Configuration上でこれらのプロキシがメニュー表示され、現在使用するプロキシを簡単かつ
+  瞬時に切り替えができる.  
+
+  <a href="#user-content-index">目次へ戻る</a>
+
+
+## <a name="pos3"></a>Web閲覧時に送信される情報とは何なのか？
+-----------------------------------
+
+  以下の概念図を見てみよう.  
 
 ~~~
-                          HTTP�w�b�_
-  ���Ȃ��̃u���E�U�� === POST�ϐ�     ===> ���M��̃T�C�g
-                          �N�b�L�[
+                          HTTPヘッダ
+  あなたのブラウザ環境 === POST変数     ===> 送信先のサイト
+                          クッキー
 ~~~
 
-  ����͈�ʂɑ��M��T�C�g�֎��ۂɉ������M����邩�����������̂ł���.  
-  ���M��̃T�C�g�ւ͂��Ȃ��̃}�V���ŗL�̗l�X�ȏ�񂪑��M�����̂ł��邪�A
-  ������IP�������΃_�C���N�g�ɑ��M�����킯�ł͂Ȃ��A���ׂď�L�ɂ���R��
-  �����̂����ꂩ�̔��e�ɂ܂��p�b�N����đ��M�����Ƃ������Ƃ�.  
-  (�����Ɍ����΃N�b�L�[���ŏI�I��HTTP�w�b�_�̔��e�ɂȂ邪�A�����ł͕ʘg�Ƃ���)  
+  これは一般に送信先サイトへ実際に何が送信されるかを示したものである.  
+  送信先のサイトへはあなたのマシン固有の様々な情報が送信されるのであるが、
+  それらはIPを除けばダイレクトに送信されるわけではなく、すべて上記にある３つの
+  うちのいずれかの範疇にまずパックされて送信されるということだ.  
+  (厳密に言えばクッキーも最終的にHTTPヘッダの範疇になるが、ここでは別枠とした)  
 
-  �Ⴆ�΂ӂ��΂����˂�͂��̎�̘b�̔��ɗǂ����ނƂȂ�.
-  �{��������у��X���e���ɑ��M����邠�Ȃ��̃}�V�����̊T�v���ȉ��Ő������悤.
+  例えばふたばちゃんねるはこの種の話の非常に良い教材となる.
+  閲覧時およびレス投稿時に送信されるあなたのマシン情報の概要を以下で説明しよう.
 
 ~~~
   1. IP  
-    �ʏ�A�v���o�C�_�����蓖�Ă����Ȃ��̓��I��IP�A�h���X�ł���.  
-    ���̏ꍇ�A���[�J�`(�ȉ��A���[�^�̃��Z�b�g�̈Ӗ��ł��̌��t���g��)�ł��̒l��
-    �ύX�\�ł���. ���̑��A�O���v���L�V�AVPN��p�����ꍇ�͂���IP�ƂȂ�.  
+    通常、プロバイダが割り当てたあなたの動的なIPアドレスである.  
+    その場合、ルーカチ(以下、ルータのリセットの意味でこの言葉を使う)でこの値を
+    変更可能である. その他、外部プロキシ、VPNを用いた場合はそのIPとなる.  
 
   2. User-Agent  
-    �ȒP�Ɍ����΁A���Ȃ��̎g���Ă���u���E�U�̎��ʖ��ł���.  
-    ���̒l��HTTP�w�b�_�Ɋi�[���ꂽ�`�ő��M�����.  
+    簡単に言えば、あなたの使っているブラウザの識別名である.  
+    この値はHTTPヘッダに格納された形で送信される.  
 
-  3. posttime����т���ɗނ����ӂ��΂�蔭�s�����l  
-    ���̒l�͂ӂ��΂ɏ��A�N�Z�X��������(����т���ɗނ����l)�ł���. ����ł�
-    �J�^���O�ɏ��߂ăA�N�Z�X���邩�A�܂��͏��߂ă��X���e�����ۂɐݒ肳���悤�ł���.
-    ���邢�� /bin/cachemt7.php �ɃA�N�Z�X�����Ƃ��ɂ���ɗނ����l�����������`�ƂȂ�.
-    ��U�ݒ肳���ƁACookie����уu���E�U�L���b�V�������localStorage �����S�Ă�
-    �������Ȃ����蓯���l���c�葱����. ���̒l��POST�ϐ� pthb, pthc, (pthd) ��Cookie��
-    posttime�l�Ƃ��đ��M�����.  
+  3. posttimeおよびそれに類したふたばより発行される値  
+    この値はふたばに初アクセスした時間(およびそれに類した値)である. 現状では
+    カタログに初めてアクセスするか、または初めてレス投稿した際に設定されるようである.
+    あるいは /bin/cachemt7.php にアクセスしたときにそれに類した値が生成される形となる.
+    一旦設定されると、CookieおよびブラウザキャッシュおよびlocalStorage これら全てを
+    消去しない限り同じ値が残り続ける. この値はPOST変数 pthb, pthc, (pthd) とCookieの
+    posttime値として送信される.  
 
   4. SCreenSiZe  
-    �ȒP�Ɍ����΁A���Ȃ��̎g���Ă��郂�j�^�̉𑜓x�ƐF�[�x�̏��ł���.
-    (Javascript�ɂ�����擾����API������A����𗘗p���Ă���悤�ł���)
-    ���̒l��POST�ϐ� scsz �Ƃ��đ��M�����.  
+    簡単に言えば、あなたの使っているモニタの解像度と色深度の情報である.
+    (Javascriptにこれを取得するAPIがあり、これを利用しているようである)
+    この値はPOST変数 scsz として送信される.  
 
   5. Fingerprint  
-    ���̒l�͂��Ȃ��̃}�V�����̗l�X�ȏ����W�߂ĕ�����Ƃ��A���������32bit������
-    �n�b�V���l���v�Z�������̂ł���.���̒l��POST�ϐ� flrv, flvv �Ƃ��đ��M�����.
+    この値はあなたのマシン環境の様々な情報を集めて文字列とし、それを元に32bit整数の
+    ハッシュ値を計算したものである.この値はPOST変数 flrv, flvv として送信される.
 
-    �n�b�V���l�����̂��Ƃ��킩��Ȃ����́A���̂悤�ɍl����΂悢.
-    �Ⴆ�΂��Ȃ��̃}�V���̓�����������񂪂R�������Ƃ��Ă�������ꂼ�ꉼ��
-    ������ 2, 4, 7 �Ƃ���. �����𑫂��Z���č��v����� 2 + 4 + 7 = 13 �ƂȂ邪�A
-    ���� 13 ���n�b�V���l�ɑ����������ł͂��ꂪ���M�����. ���ɑ�G�c�����A
-    �Ƃ肠�������̂悤�ȃC���[�W�ŏ\���ł���.
+    ハッシュ値が何のことかわからない方は、次のように考えればよい.
+    例えばあなたのマシンの特徴を示す情報が３つあったとしてそれをそれぞれ仮に
+    数字の 2, 4, 7 とする. これらを足し算して合計すると 2 + 4 + 7 = 13 となるが、
+    この 13 がハッシュ値に相当しここではこれが送信される. 非常に大雑把だが、
+    とりあえずそのようなイメージで十分である.
 
-    �����ł̃|�C���g�� 13 ���猳�̒l 2, 4, 7 ����ӂɂ͕����ł��Ȃ��Ƃ������Ƃł���.
-    ����Ă��̒l�͎��̂Ƃ���f�^�����ɐݒ肵�Ă���ʂɂ��̑Ó��������؂���p�͂Ȃ�.  
+    ここでのポイントは 13 から元の値 2, 4, 7 を一意には復元できないということである.
+    よってこの値は実のところデタラメに設定しても一般にその妥当性を検証する術はない.  
 ~~~
 
-  ��������Ղ������낤���H  
-  �J��Ԃ��ɂȂ邪�A��L��IP�������΍ŏI�I�ɂ�HTTP�w�b�_�APOST�ϐ��A������Cookie�̒l��
-  �����ꂩ�Ƃ��đ��M�����. �����Ă��Ȃ��������A���̂Ƃ����M����邱���HTTP�w�b�_��
-  POST�ϐ���Cookie�𒼐ڏC������p�����Ȃ�A��L�̒l�͂��ׂ�(�u���E�U�⃂�j�^�̉𑜓x
-  �Ȃǂ̃}�V���������ۂɕύX���邱�ƂȂ�)���R�ɉ��z�����\�z�\�ł���Ƃ������Ƃ�.
+  お分かり戴けただろうか？  
+  繰り返しになるが、上記はIPを除けば最終的にはHTTPヘッダ、POST変数、そしてCookieの値の
+  いずれかとして送信される. そしてあなたがもし、そのとき送信されるこれらHTTPヘッダや
+  POST変数やCookieを直接修正する術を持つなら、上記の値はすべて(ブラウザやモニタの解像度
+  などのマシン環境を実際に変更することなく)自由に仮想環境を構築可能であるということだ.
 
-  �ł͋�̓I�ɂǂ�����ĉ��z�����\�z����̂��H
-  ���̂Ƃ��낱��͎蓮�ł��\�ł��邵�A�v���O���~���O����ɂ��Ă���������b�ł��Ȃ���
-  Moai��Virtual USERS�@�\�͂�����{�^���ꔭ�ł��ׂĎ����ōs���A�y���ł���Ƃ������̂ł���.
+  では具体的にどうやって仮想環境を構築するのか？
+  実のところこれは手動でも可能であるし、プログラミングするにしてもそう難しい話でもないが
+  MoaiのVirtual USERS機能はそれをボタン一発ですべて自動で行い、楽ができるというものである.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="pos4"></a>Moai��Virtual USERS�@�\���g��
+## <a name="pos4"></a>MoaiのVirtual USERS機能を使う
 -----------------------------------
 
-  ���߂�Moai���g���ꍇ�́A[������][2]�ɂ���u���߂Ă�Moai�v�̍��ڂ��Q�Ƃ��Ă�����������.
+  初めてMoaiを使う場合は、[こちら][2]にある「初めてのMoai」の項目を参照していただきたい.
 
-  �J��Ԃ��ɂȂ邪�AMoai���N�����Ă���Ԃ́A���Ȃ��̃}�V���{���̎p��IP�������Ċ��S�ɉB������A
-  �ˋ�̃}�V�������𑗐M����.   ����ɂ��u���E�U��Cookie��Javascript�𖳌��ɂ����܂�
-  �f���Ȃǂ��{�����邱�Ƃ͖ܘ_�A���X��X�����Ă����邱�Ƃ���\�ƂȂ�A���ɃZ�L���A��.  
+  繰り返しになるが、Moaiが起動している間は、あなたのマシン本来の姿がIPを除いて完全に隠蔽され、
+  架空のマシン環境情報を送信する.   これによりブラウザのCookieやJavascriptを無効にしたまま
+  掲示板などを閲覧することは勿論、レスやスレ立てをすることすら可能となり、非常にセキュアだ.  
 
-> ���݃f�t�H���g�ŉ��z���̍\�z���T�|�[�g���Ă���T�C�g�͂ӂ��΂ƂQ�����˂�݂̂ł���.
-> ���̑��̃T�C�g�����R�{���⃌�X���e�ȂǕ��ʂɉ\�����A���z���̍\�z�܂ōs���ɂ́A
-> ���̃T�C�g������filter��plugin���쐬���Ēǉ����Ȃ���΂Ȃ�Ȃ�.
+> 現在デフォルトで仮想環境の構築をサポートしているサイトはふたばと２ちゃんねるのみである.
+> その他のサイトも当然閲覧やレス投稿など普通に可能だが、仮想環境の構築まで行うには、
+> そのサイト向けのfilterやpluginを作成して追加しなければならない.
 
-  ���āAVirtual USERS�̋@�\�ɉ����A���[�J�`(���[�^���Z�b�g)�Ȃǂɂ��IP��ς��邱�ƂŁA
-  �f���Ȃǂɂ����Ċ��S�ɕʂ̃��[�U�ɐ��܂�ς��ɂ͎��̂悤�ɂ���.
+  さて、Virtual USERSの機能に加え、ルーカチ(ルータリセット)などによりIPを変えることで、
+  掲示板などにおいて完全に別のユーザに生まれ変わるには次のようにする.
 
 ~~~
-  1. IP��ς��邽�߃��[�J�`����.
-     (���邢�͓��ړI�ŊO���v���L�V(parent_proxy)��ς���Ȃǂ��Ă��悢)
+  1. IPを変えるためルーカチする.
+     (あるいは同目的で外部プロキシ(parent_proxy)を変えるなどしてもよい)
 
-  2. moai(Windows�Ȃ�moai.exe)���N�����A
-     �u���E�U����http://127.0.0.1:8124�փA�N�Z�X����.
-     �ݒ�p�̓��ʂȉ�ʂ��\�������͂��ł���.
+  2. moai(Windowsならmoai.exe)を起動し、
+     ブラウザからhttp://127.0.0.1:8124へアクセスする.
+     設定用の特別な画面が表示されるはずである.
 
-  3. Moai Web Configuration��ʂ��J���A�uVirtual USERS Initiation�v�{�^��������.
-    �uInitiate futaba : Success : Virtual USERS done. Your futaba_send.myf is randomized successfully.�v
-     �Ȃǂƕ\�������ΐ����ł���. 
+  3. Moai Web Configuration画面を開き、「Virtual USERS Initiation」ボタンを押す.
+    「Initiate futaba : Success : Virtual USERS done. Your futaba_send.myf is randomized successfully.」
+     などと表示されれば成功である. 
 ~~~
 
-  �ȏ�ł���.  
-  �ȉ��͏�L�̎��s���ʁA�����_�}�C�Y���ꂽ��񂪕񍐂���Ă���l�q�ł���.  
+  以上である.  
+  以下は上記の実行結果、ランダマイズされた情報が報告されている様子である.  
 
   ![screenshot](../imgs/virtual_users_initiated_result.png)
 
-####  �Q�l
-> ��M�t�B���^�ɂ����� header_vars ����User-Agent�s���폜���邱�Ƃɂ���āA**������Moai�ɂ�����User-Agent�U�����s�킹�Ȃ�**�悤�ɂ��邱�Ƃ��ł���.
-> �Ⴆ�΁A�u���E�U��User-Agent�U���A�h�I���Ȃǂɂ���Ċ���User-Agent��C�ӂ̒l�ɋU�����Ă���ꍇ�Ȃ�
-> ���̋U���l��Moai�ōďC�����邱�ƂȂ����̂܂ܑ��M���ė~�������Ƃ�����.
-> �����Moai��Javascript�ɂ�����navigator.userAgent�̒l��HTTPS�ɂ���ĈÍ������ꂽHTTP�w�b�_�ɂ�����User-Agent�܂ł�
-> �C���ł��Ȃ��̂ŁA�ꍇ�ɂ���Ă͂��̂悤�ȃA�h�I�����g�������m���Ȃ��Ƃ����邩������Ȃ�.
-> ���ʂ�Moai�ɂ����User-Agent���U��������悤�ɂ���ɂ́AUser-Agent�s��ǉ�����΂悢(���̂Ƃ��̉E�Ӓl�͓K���Ȃ��̂ł悢).
+####  参考
+> 受信フィルタにおける header_vars 内のUser-Agent行を削除することによって、**敢えてMoaiにおいてUser-Agent偽装を行わせない**ようにすることもできる.
+> 例えば、ブラウザのUser-Agent偽装アドオンなどによって既にUser-Agentを任意の値に偽装している場合など
+> その偽装値をMoaiで再修正することなくそのまま送信して欲しいことがある.
+> 現状のMoaiはJavascriptにおけるnavigator.userAgentの値やHTTPSによって暗号化されたHTTPヘッダにおけるUser-Agentまでは
+> 修正できないので、場合によってはそのようなアドオンを使う方が確実なこともあるかもしれない.
+> 元通りMoaiによってUser-Agentを偽装させるようにするには、User-Agent行を追加すればよい(このときの右辺値は適当なものでよい).
 
-  �܂��A�g�p����O���v���L�V���قȂ���̂ɐ؂�ւ������Ƃ������͎��̂悤�ɂ���΂悢.
+  また、使用する外部プロキシを異なるものに切り替えたいという方は次のようにすればよい.
 
 ~~~
-  1. moai���N��������ԂŁA�u���E�U����http://127.0.0.1:8124�փA�N�Z�X����.
+  1. moaiを起動した状態で、ブラウザからhttp://127.0.0.1:8124へアクセスする.
 
-  2. Web Configuration��ʂ��J���Aparent_proxy����g�p����O���v���L�V��I��ŁuUpdate�v�{�^��������.
-     (IP���O���v���L�V�̂��̂ɕς���)
-     ���̂Ƃ��O���v���L�V�̃��X�g��O������parent_proxy.txt�ɋL�q���Ă����Ȃ���΂Ȃ�Ȃ�.
+  2. Web Configuration画面を開き、parent_proxyから使用する外部プロキシを選んで「Update」ボタンを押す.
+     (IPを外部プロキシのものに変える)
+     このとき外部プロキシのリストを前もってparent_proxy.txtに記述しておかなければならない.
 
-  3. Web Configuration��ʂ��uVirtual USERS Initiation�v�{�^��������.
-    �uInitiate futaba : Success : Virtual USERS done. Your futaba_send.myf is randomized successfully.�v
-     �Ȃǂƕ\�������ΐ����ł���. 
-    �uInitiate futaba : Failure : Cannot get ...�v�Ȃǂƕ\�����ꂽ�ꍇ�͎��s�ł���A
-     �����炭 2 �Ŏw�肵���v���L�V�T�[�o�������ł��邩��������G���Ă���Ȃǂ̂��߁A�ʐM�Ɏ��s���Ă���.
+  3. Web Configuration画面より「Virtual USERS Initiation」ボタンを押す.
+    「Initiate futaba : Success : Virtual USERS done. Your futaba_send.myf is randomized successfully.」
+     などと表示されれば成功である. 
+    「Initiate futaba : Failure : Cannot get ...」などと表示された場合は失敗であり、
+     おそらく 2 で指定したプロキシサーバが無効であるか回線が混雑しているなどのため、通信に失敗している.
 ~~~
 
-  �ȏ�ł���.  
+  以上である.  
 
-  �ȉ���Moai Web Configuration��ʂ̗l�q�ł���.  
+  以下はMoai Web Configuration画面の様子である.  
 
   ![screenshot](../imgs/screenshot_config.png)
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="txt_for_randomize"></a>�����_�}�C�Y�̌��Ƃ��Ďg�p����txt�t�@�C���ɂ���
+## <a name="txt_for_randomize"></a>ランダマイズの候補として使用するtxtファイルについて
 -----------------------------------
 #### user_agent.txt
-���̃t�@�C����Randomize�̍ۂɑI�������User-Agent�̌���񋓂������̂ł���.
-(��s�ɂ���L�q����)
-������User-Agent�̓l�b�g��ɓ]�����Ă�����̂�K���ɏ��񂵂ăR�s�y���������̂��̂ł���A
-���̃p�^�[���͂��Ȃ��̂��D�݂Ŏ��R�ɕς��Ă悢.
-������C�����邱�ƂȂ����̂܂܎g���Ă��悢���A�V�����u���E�U���o�ꂷ�邽�тɒi�X�Ƃ��̏��͌Â��Ȃ邵�A
-�ł���΂��Ȃ��Ǝ��̃v���C�x�[�g�� user_agent.txt�𐶐����Ă����ق����]�܂���.
-�蓮�ōD�݂̃��X�g���쐬���Ă����Ă��悢���A �J�ɂ���User-Agent�W�F�l���[�^���g���̂���̎�ł���.
-���̃t�@�C���ɂ����āA��s����� # �L���Ŏn�܂�s�͌��l�Ƃ͂Ȃ炸���������.
+このファイルはRandomizeの際に選択されるUser-Agentの候補を列挙したものである.
+(一行につき一つ記述する)
+これらのUser-Agentはネット上に転がっているものを適当に巡回してコピペしただけのものであり、
+候補のパターンはあなたのお好みで自由に変えてよい.
+これを修正することなくそのまま使ってもよいが、新しいブラウザが登場するたびに段々とその情報は古くなるし、
+できればあなた独自のプライベートな user_agent.txtを生成しておくほうが望ましい.
+手動で好みのリストを作成していってもよいし、 巷にあるUser-Agentジェネレータを使うのも一つの手である.
+このファイルにおいて、空行および # 記号で始まる行は候補値とはならず無視される.
 
 #### screen_size.txt
-���̃t�@�C����Randomize�̍ۂɑI�������scsz�̉𑜓x�̌����e�s�ŗ񋓂������̂ł���.
-���̃t�@�C���ɂ����āA��s����� # �L���Ŏn�܂�s�͌��l�Ƃ͂Ȃ炸���������.
-���̃t�@�C���͌���ł�futaba�v���O�C���ɂ����Ă̂ݎg����.
+このファイルはRandomizeの際に選択されるscszの解像度の候補を各行で列挙したものである.
+このファイルにおいて、空行および # 記号で始まる行は候補値とはならず無視される.
+このファイルは現状ではfutabaプラグインにおいてのみ使われる.
 
 #### parent_proxy.txt
-���̃t�@�C���� Web Configuration��ʏ�� parent_proxy ���j���[�Ƃ��ĕ\�������
-�O���v���L�V�̌���񋓂������̂ł��� (��s�ɂ���L�q����).
-�K���u�z�X�g��:�|�[�g�ԍ��v�Ƃ����`���ŋL�q���邱��.
-�����̃v���L�V�͉�X���J�����Ă��鎞�_�ɂ����āA�l�b�g��ɓ]�����Ă�����̂�
-�K���ɏ��񂵂ăR�s�y���������̂��̂ł���.
-���̋L�������Ȃ����ǂ�ł��邱��ɂ͂����͊��ɖ����ƂȂ��Ă���\��������.
-����Č��̃p�^�[���͕K�v�ł���΂��Ȃ����K�X�ύX�A�ǉ��A�폜���Ă�����������.
-���̃t�@�C���ɂ����āA��s����� # �L���Ŏn�܂�s�͌��l�Ƃ͂Ȃ炸���������.
+このファイルは Web Configuration画面上の parent_proxy メニューとして表示される
+外部プロキシの候補を列挙したものである (一行につき一つ記述する).
+必ず「ホスト名:ポート番号」という形式で記述すること.
+これらのプロキシは我々が開発している時点において、ネット上に転がっているものを
+適当に巡回してコピペしただけのものである.
+この記事をあなたが読んでいるころにはそれらは既に無効となっている可能性が高い.
+よって候補のパターンは必要であればあなたが適宜変更、追加、削除していただきたい.
+このファイルにおいて、空行および # 記号で始まる行は候補値とはならず無視される.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="futaba_note"></a>�ӂ��΂ɂĎ蓮�ŋU�����s���ꍇ(�Q�l)
+## <a name="futaba_note"></a>ふたばにて手動で偽装を行う場合(参考)
 -----------------------------------
 
-  �Q�l�̂��߁AMoai��Virtul USERS�̂悤�ȋ@�\���g�킸�A�蓮�ŋU��������@���L�ڂ��Ă�����.
-  ����͂ӂ��΂̗�ł��邪�A���̂悤�ȋU����S�ĘR��Ȃ��蓮�ł�낤�Ƃ����ꍇ�A
-  �ȉ��̂悤�ɂ��Ȃ�̎�ԂƂȂ�.
+  参考のため、MoaiのVirtul USERSのような機能を使わず、手動で偽装する方法も記載しておいた.
+  これはふたばの例であるが、このような偽装を全て漏れなく手動でやろうとした場合、
+  以下のようにかなりの手間となる.
 
 ~~~
-  1. �u���E�U�ŊJ���Ă���ӂ��Ί֌W�̃^�u����U����.
-     ����ɂ�肤������POST�ϐ��Ȃǂ��c�����Ă��܂��\����r������.
-     �L���b�V���������Ă����ꂪ�������Ɏc��ꍇ�����邽�߈�U���������m�����낤.
+  1. ブラウザで開いているふたば関係のタブを一旦閉じる.
+     これによりうっかりPOST変数などが残留してしまう可能性を排除する.
+     キャッシュを消してもこれが消えずに残る場合もあるため一旦閉じた方が確実だろう.
 
-  2. ���[�J�`����.
+  2. ルーカチする.
 
-  3. �u���E�U�̃N�b�L�[�A�L���b�V���AlocalStorage������.
-     localStorage�̏����ɂ��Ă̓u���E�U���ɈقȂ邪�AFirefox�̏ꍇ
-     �u�I�t���C��Web�y�[�W�ƃ��[�U�f�[�^�v�Ƃ��镔���Łu�����������v�{�^��������.
+  3. ブラウザのクッキー、キャッシュ、localStorageを消去.
+     localStorageの消去についてはブラウザ毎に異なるが、Firefoxの場合
+     「オフラインWebページとユーザデータ」とある部分で「今すぐ消去」ボタンを押す.
 
-  4. User-Agent�̒l��ύX����. 
-     �ł������ȕ��@�́A�g���u���E�U��ύX���邱�Ƃł���.
-     ���邢�͎g���Ă�u���E�U��User-Agent�U���A�h�I���Ȃǂ����݂���Ȃ炻�������
-     �ʂ̒l�ɐݒ肷��.
+  4. User-Agentの値を変更する. 
+     最も安直な方法は、使うブラウザを変更することである.
+     あるいは使ってるブラウザにUser-Agent偽装アドオンなどが存在するならそれを入れて
+     別の値に設定する.
 
-  5. �V�����^�u���J�������1�ŕ����ӂ��Ί֌W�̃y�[�W�Ȃǂɍēx�A�N�Z�X����.
-     �t�Ɍ����΂��̒i�K�ɂȂ�܂ł́A�܂��ӂ��Ί֌W�̃y�[�W���J���Ă͂����Ȃ�.
+  5. 新しいタブを開いた上で1で閉じたふたば関係のページなどに再度アクセスする.
+     逆に言えばこの段階になるまでは、まだふたば関係のページを開いてはいけない.
 
-  6. ���j�^�̉𑜓x��F�[�x��ύX����.
-     �ł������ȕ��@�́A���j�^�̃v���p�e�B���𑜓x�ƐF���c
-     �c�Ƃ������A�������ӂ��΂̂��߂ɂ���Ȃ��Ƃ܂Ŏ��ۂɂ͂���Ă��Ȃ��̂ŁA
-     �����͈ȉ��ɂ���uPOST�ϐ����蓮�ŏC��������@�v�ɂ���āAPOST�ϐ�scsz�𒼐ڕύX����.
+  6. モニタの解像度や色深度を変更する.
+     最も安直な方法は、モニタのプロパティより解像度と色ｓ…
+     …というか、たかがふたばのためにこんなことまで実際にはやってられないので、
+     ここは以下にある「POST変数を手動で修正する方法」によって、POST変数scszを直接変更する.
 
-  7. POST�ϐ� flrv, flvv(Fingerprint)�̒l��ύX����. 
-     flrv�͈ȑO�܂ł�User-Agent��u���E�U��Plugin�\����ύX����΂��̒l���ς���Ă������A
-     �����݂͂�����ύX���Ă����̒l�͕ς��Ȃ��Ȃ����i���̑��ǂ̂悤�ȗv�f�Ɉˑ����Ă��邩
-     �ɂ��Ă�fingerprint.js���Q�Ƃ��ė~����).
-     flvv��User-Agent��ύX���Ă��ς��Ȃ����u���E�U��Plugin�\����ύX����΂��̒l�͕ς��.
-     ������ɂ���A�ȉ��ɂ���uPOST�ϐ����蓮�ŏC��������@�v�ɂ���āA������POST�ϐ���
-     ���ڕύX����̂��Ó����낤.
-     �l��32bit�����Ȃ牽�ł��悢.
-     (���ł�flrv�����ڕύX���Ă����΂悩�낤. ������flvv�Ƃ͈قȂ�32bit�����l�ɂ��Ă���)
+  7. POST変数 flrv, flvv(Fingerprint)の値を変更する. 
+     flrvは以前まではUser-AgentやブラウザのPlugin構成を変更すればその値も変わっていたが、
+     今現在はそれらを変更してもその値は変わらなくなった（その他どのような要素に依存しているか
+     についてはfingerprint.jsを参照して欲しい).
+     flvvはUser-Agentを変更しても変わらないがブラウザのPlugin構成を変更すればその値は変わる.
+     いずれにせよ、以下にある「POST変数を手動で修正する方法」によって、これらのPOST変数を
+     直接変更するのが妥当だろう.
+     値は32bit整数なら何でもよい.
+     (ついでにflrvも直接変更しておけばよかろう. ただしflvvとは異なる32bit整数値にしておく)
 
-  8. js�̒l��on�ɕύX����. 
-     �ł������ȕ��@�́A���q���w����on���ĕϑԂ����c
-     �ł͂Ȃ��A���̒l��JavaScript�����s�������ǂ����𔻒f���邽�߂̂��̂ł���A
-     /bin/base4.js �����s����� on �ɐݒ肳���d�g�݂ƂȂ��Ă���.
-     ����� on �ɂ��Ă����Ȃ��Ɓu���ϐ�������܂���(JavaScript���I�t�H)�v�Ƃ���
-     �G���[���\������A���e�Ɏ��s����.
-     ����Ĉȉ��ɂ���uPOST�ϐ����蓮�ŏC��������@�v�ɂ���āAPOST�ϐ�js�̒l��on�ɕύX����.
+  8. jsの値をonに変更する. 
+     最も安直な方法は、女子小学生へonして変態すｒ…
+     ではなく、この値はJavaScriptを実行したかどうかを判断するためのものであり、
+     /bin/base4.js を実行すると on に設定される仕組みとなっている.
+     これを on にしておかないと「環境変数がありません(JavaScriptがオフ？)」という
+     エラーが表示され、投稿に失敗する.
+     よって以下にある「POST変数を手動で修正する方法」によって、POST変数jsの値をonに変更する.
 
-  9. ���X���e�܂��̓X������.
-     �uCookie��L���ɂ��Ă��������v�Əo��ꍇ�́A������x���e.
-      �{����Cookie�𖳌��ɂ��Ă��Ȃ�����́A2��ڂ͂��܂������͂��ł���.
+  9. レス投稿またはスレ立て.
+     「Cookieを有効にしてください」と出る場合は、もう一度投稿.
+      本当にCookieを無効にしていない限りは、2回目はうまくいくはずである.
 ~~~
 
-#####  �� POST�ϐ����蓮�ŏC��������@
+#####  ※ POST変数を手動で修正する方法
 ~~~html
   Step1.
-    �܂��X����HTML��ۑ�����
+    まずスレのHTMLを保存する
 
   Step2.
-    ���ɕۑ������X����HTML���e�L�X�g�G�f�B�^(�������Ȃ�)�ŊJ���A
-    ���̒��g�𒼐ڏ��������ďC������
-    <script type="text/javascript" src="/bin/base4.js?d"></script> �ȂǂƏ����ꂽ����������͂��ł���
-    ����base4.js���׈��̌����ƌ����悤. �R�C�c�����Ȃ��̃}�V�������ʂ��邽�߂̐��X�̕ϐ��̒l��ݒ肵�Ă���.
-    �����Ă��̂܂܂ł� base4.js �����s���Ă��܂��̂ŁA���ꂪ���s����Ȃ��悤�A���̕������폜����.
+    次に保存したスレのHTMLをテキストエディタ(メモ帳など)で開き、
+    その中身を直接書き換えて修正する
+    <script type="text/javascript" src="/bin/base4.js?d"></script> などと書かれた部分があるはずである
+    このbase4.jsが邪悪の元凶と言えよう. コイツがあなたのマシンを識別するための数々の変数の値を設定している.
+    そしてこのままでは base4.js を実行してしまうので、これが実行されないよう、この部分を削除する.
 
   Step3.
-    ��� <input type=hidden�c> �ȂǂƏ�����Ă��镔�����D������ς���΂悢�̂����A
-    �Ⴆ��flrv�Ȃ�΁A
+    後は <input type=hidden…> などと書かれている部分を好き放題変えればよいのだが、
+    例えばflrvならば、
 
        <input type=hidden id="flrv" name="flrv" value="">
 
-    �ȂǂƏ�����Ă��邪�A���̕�����
+    などと書かれてあるが、この部分を
 
        <input type=hidden id="flrv" name="flrv" value="77777777"> 
 
-    �Ƃ���ΐ����flrv�̒l��77777777�ɋU���ł���.
+    とすれば晴れてflrvの値を77777777に偽装できる.
 
-  ��͏C������HTML���_�u���N���b�N���āA�\������铊�e�t�H�[�����瓊�e�����
-  ��ɂ����ċU�����ꂽ�l�����M����邱�Ƃ��낤.
+  後は修正したHTMLをダブルクリックして、表示される投稿フォームから投稿すれば
+  上において偽装された値が送信されることだろう.
 ~~~
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="pos5"></a>���̑��̏��
+## <a name="pos5"></a>その他の情報
 -----------------------------------
 
-  Moai�Ɋւ��邳��Ȃ�ڍׂɂ��Ă� [���t�@�����X�}�j���A��(Reference)][1] ������������������.  
-  Moai�Ɋւ����{�����⒍�ӎ����Ɋւ��ẮA[README][2]���Q�Ƃ��đՂ�����.  
-  Moai�Ɋւ���FAQ�ɂ��Ă� [FAQ][5] ������������������.  
+  Moaiに関するさらなる詳細については [リファレンスマニュアル(Reference)][1] をご覧いただきたい.  
+  Moaiに関する基本事項や注意事項に関しては、[README][2]を参照して戴きたい.  
+  Moaiに関するFAQについては [FAQ][5] をご覧いただきたい.  
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 [1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/Reference.md
 [2]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/README.md

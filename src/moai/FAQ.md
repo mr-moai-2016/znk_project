@@ -1,237 +1,241 @@
 # FAQ
 -----------------------------------
-�����ł͂悭�s����(�s��ꂽ/���ꂩ�����s����ł��낤)����Ƃ��̉񓚂��܂Ƃ߂Ă�����.
+ここではよく行われる(行われた/これから先も行われるであろう)質問とその回答をまとめておいた.
 
-## <a name="index">�ڎ�
+## <a name="index"></a>目次
 -----------------------------------
-* [Moai���ĉ��ł����H](#Q_00)
-* [���̃c�[���Ōf���̋K���Ȃǂ�����ł���́H](#Q_02)
-* [���[�J���v���L�V�H�������proxomitron�̃t�B���^�[�ő�p�ł��ˁH](#Q_04)
-* [�����̂��|���񂾂��ǁA���̃c�[���̈��S�����ǂ��m�F����΂悢�̂��H](#Q_01)
-* [User-Agent���U������Ȃ�ΒP���Ƀu���E�U�����ς����ꂽ����g���΂悢�̂ł́H](#Q_05)
-* [(Virtual USERS�@�\�ɂ���)���ۂɂ�UA�U���ƃ��[�J�`�A�N�b�L�[�폜�ő��̏ꍇ�������ˁH](#Q_07)
-* [Android�Ŏg���ɂ́H](#Q_03)
-* [�ߑa�点�����莞������񂾂��ǂǂ����΂����́H](#Q_08)
-* [(�ӂ��΂����˂�ɂ�����)�X���ŕ\������郌�X���S���Ǘ��l�ɂȂ��Ƃ�H](#Q_09)
-* [Moai�𑼃T�C�g�ŏЉ�Ă������H](#Q_10)
-* [(�ӂ��΂����˂�ɂ�����)Moai��del�A�Ńc�[���Ƃ��Ďg�����Ƃ͂ł��܂��񂩁H](#Q_11)
-* [�摜���e���Afilename���t���p�X�̂܂܂ő��M�����̂ł͂Ȃ����H](#Q_12)
-* [���{HTTP������(NHK)�Ƃ��J���`�[���Ƃ��z���g�͂Ȃ��đS������l���Ȃ�ł���H](#Q_14)
+* [Moaiって何ですか？](#user-content-Q_00)
+* [このツールで掲示板の規制などが回避できるの？](#user-content-Q_02)
+* [ローカルプロキシ？それってproxomitronのフィルターで代用できね？](#user-content-Q_04)
+* [試すのが怖いんだけど、このツールの安全性をどう確認すればよいのか？](#user-content-Q_01)
+* [User-Agentを偽装するならば単純にブラウザいっぱい入れたり串使えばよいのでは？](#user-content-Q_05)
+* [(Virtual USERS機能について)実際にはUA偽装とルーカチ、クッキー削除で大抵の場合いけるよね？](#user-content-Q_07)
+* [Androidで使うには？](#user-content-Q_03)
+* [過疎らせたい定時があるんだけどどうやればいいの？](#user-content-Q_08)
+* [(ふたばちゃんねるにおいて)スレで表示されるレスが全部管理人になっとる？](#user-content-Q_09)
+* [Moaiを他サイトで紹介してもいい？](#user-content-Q_10)
+* [(ふたばちゃんねるにおいて)Moaiをdel連打ツールとして使うことはできませんか？](#user-content-Q_11)
+* [画像投稿時、filenameがフルパスのままで送信されるのではないか？](#user-content-Q_12)
+* [日本HTTP研究所(NHK)とか開発チームとかホントはなくて全部同一人物なんでしょ？](#user-content-Q_14)
 	
 
-## <a name="Q_00">Moai���ĉ��ł����H
+## <a name="Q_00"></a>Moaiって何ですか？
 -----------------------------------
-�����m��̌Ǔ��ɗ���̐΂��c
-�c�ł͂Ȃ���ʂɃ��[�J���v���L�V�ƌĂ΂��c�[���̈��ł���.
-���[�J���v���L�V�Ɋւ��ẮA[moai README][1] �u���[�J���v���L�V�Ƃ́H�v�������Ղ�����.
+太平洋上の孤島に立つ謎の石ｚェ…
+…ではなく一般にローカルプロキシと呼ばれるツールの一種である.
+ローカルプロキシに関しては、[moai README][1] 「ローカルプロキシとは？」をご覧戴きたい.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="Q_02">���̃c�[���Ōf���̋K���Ȃǂ�����ł���́H
+## <a name="Q_02"></a>このツールで掲示板の規制などが回避できるの？
 -----------------------------------
-����Moai���g�����ƂŁA���Ȃ��̌��Ă���f���̋K�����m���ɉ���ł���Ƃ͌���Ȃ�.
-�������AUser-Agent��Cookie�̏��AFingerprint�ȂǂƂ��������Ȃ��l�����ʂ����񂪂��̌f���֘R�k����̂�
-�\�t�g�E�F�A�I�ɉ\�Ȍ���h�~���邱�Ƃ��ł���.
-�܂�Moai��[VirtualUSERS Initiation�@�\][3]�̓{�^���ꔭ�ł����̏��������_���Ɋh������@�\�ł���.
-�����������̂悤�ȃZ�L�����e�B�Ƃ��Ă̗p�r�����̃c�[���̖{���̖����ł���.
-���̕����I�Ȍ��ʂƂ��ċK��������ł�����A�K������ɂ����Ȃ�Ƃ��������ʂ͂��邾�낤.
+このMoaiを使うことで、あなたの見ている掲示板の規制を確実に回避できるとは限らない.
+しかし、User-AgentやCookieの情報、Fingerprintなどといったあなた個人を識別する情報がその掲示板へ漏洩するのを
+ソフトウェア的に可能な限り防止することができる.
+またMoaiの[VirtualUSERS Initiation機能][3]はボタン一発でこれらの情報をランダムに撹乱する機能である.
+そもそもそのようなセキュリティとしての用途がこのツールの本来の役割である.
+その副次的な効果として規制を回避できたり、規制されにくくなるといった効果はあるだろう.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="Q_04">���[�J���v���L�V�H�������proxomitron�̃t�B���^�[�ő�p�ł��ˁH
+## <a name="Q_04"></a>ローカルプロキシ？それってproxomitronのフィルターで代用できね？
 -----------------------------------
-Moai�̓��[�J���v���L�V�ő��M/��M�f�[�^���t�B���^�����O���ĉ��H����Ƃ�������@���Ƃ�.
-�����Ă܂��ɂ����Windows�̗L���c�[���ł���Proxomitron���񋟂��邻��Ɠ������̂�.
+Moaiはローカルプロキシで送信/受信データをフィルタリングして加工するといった手法をとる.
+そしてまさにそれはWindowsの有名ツールであるProxomitronが提供するそれと同じものだ.
 
-���̂Ƃ���Moai�͋@�\�Ƃ��Ă�Proxomitron�̑����ɂ�����΂Ȃ��̂�
-(�Ƃ͂����AProxomitron�𖧂��ɖڕW�ɂ��Ă���������邗)
-���ɂ�������o���o���g�����Ȃ��Ă�����ɂƂ���Moai�͕s�v��. 
+実のところMoaiは機能としてはProxomitronの足元にもおよばないので
+(とはいえ、Proxomitronを密かに目標にしていたりもするｗ)
+既にそちらをバリバリ使いこなしている方にとってMoaiは不要だ. 
 
-�����A����ł�Moai�̗��_��������Ƃ���΁A�S�\�[�X�����J����Ă���A
-�K�v�ł���ΏC��������A����ɂ͂�������Ȃ��̖��O�ōĔz�z����Ȃǂ����R�ɍs����Ƃ������Ƃ�����.
+ただ、それでもMoaiの利点を挙げるとすれば、全ソースが公開されており、
+必要であれば修正や改造、さらにはそれをあなたの名前で再配布するなども自由に行えるということがある.
 
-�܂�Proxomitron �ɔ��POST�ϐ��̃t�B���^�[���e�Ղɍs����Ƃ����_�Ȃǂ���������.
-��̓I�ɂ� filters�t�H���_����futaba_send.myf�t�@�C����post_vars�Ƃ��������ɂ����āA
-���p���ɏC��������POST�ϐ����L�q����`�ɂȂ�.
+またProxomitron に比べPOST変数のフィルターが容易に行えるという点などが挙げられる.
+具体的には filtersフォルダ内のfutaba_send.myfファイルのpost_varsという部分において、
+中継時に修正したいPOST変数を記述する形になる.
 
-���̑��̓���/�@�\�Ɋւ��Ă�[moai��README][1]�u�����ł���̂��H �܂�����̃c�[���Ɣ�ׂ��ꍇ�̓����́H�v
-�̍������Q�Ƃ��Ă��炢����.
+その他の特徴/機能に関しては[moaiのREADME][1]「何ができるのか？ また同種のツールと比べた場合の特徴は？」
+の項をを参照してもらいたい.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="Q_01">�����̂��|���񂾂��ǁA���̃c�[���̈��S�����ǂ��m�F����΂悢�̂��H
+## <a name="Q_01"></a>試すのが怖いんだけど、このツールの安全性をどう確認すればよいのか？
 -----------------------------------
-���̊��z�͂����Ƃ���.
-�����ɑS�\�[�X�R�[�h�����J����u���b�N�{�b�N�X�ȕ������S���Ȃ��Ƃ͂����A
-�v���O���}�ł��Ȃ����ɂƂ��āA�\�[�X�R�[�h�����؂���͍̂��Ƃ������̂��낤.
-���̎�̖��͉�X�J�����ɂƂ��Ă����̒ɂ��A�����Ƃ��z�����ׂ������̈��.
+その感想はもっともだ.
+いかに全ソースコードが公開されブラックボックスな部分が全くないとはいえ、
+プログラマでもない方にとって、ソースコードを検証するのは酷というものだろう.
+この種の問題は我々開発側にとっても頭の痛い、もっとも配慮すべき事項の一つだ.
 
-�ꉞ���̂��ƂɊւ��ẮA[moai README][1] �́u�v���O���}�łȂ����� : Moai�̈��S�����ǂ��m�F����΂悢�̂��H�v
-�̍��ɉ�X�̍l�����q�ׂĂ���.
+一応このことに関しては、[moai README][1] の「プログラマでない方へ : Moaiの安全性をどう確認すればよいのか？」
+の項に我々の考えを述べてある.
 
-�����ɂ���L�q�Ŕ[�����Ă��������邩�ǂ����͂킩��Ȃ���
-��������Ȃ�̔[��������ꂽ�Ȃ琥��Ƃ����͂ł̃R���p�C���������đՂ����� 
+ここにある記述で納得していただけるかどうかはわからないが
+もしそれなりの納得が得られたなら是非とも自力でのコンパイルを試して戴きたい 
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+#### 
+moaiは現在、おかげさまで作者が当初思っていたより多くの方に使われているようで感謝感激の極みである.
+この種の質問もあまりされることなくはなったのだが、このQ and Aはそのまま残しておく.
+
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="Q_05">User-Agent���U������Ȃ�ΒP���Ƀu���E�U�����ς����ꂽ����g���΂悢�̂ł́H
+## <a name="Q_05"></a>User-Agentを偽装するならば単純にブラウザいっぱい入れたり串使えばよいのでは？
 -----------------------------------
-�ܘ_�u���E�U�������ς��C���X�R���Ă����Ă����܂�Ȃ���Moai��[VirtualUSERS Initiation�@�\][3]���g����
-user_agent.txt�ɓK����UA����񋓂��Ă������Ƃɂ��A�����㖳��������y�ɂ��ꂪ�ł���. 
+勿論ブラウザをいっぱいインスコしておいてもかまわないがMoaiの[VirtualUSERS Initiation機能][3]を使えば
+user_agent.txtに適当なUA名を列挙しておくことにより、事実上無限かつお手軽にそれができる. 
 
-�܂��A�O���v���L�V���������Ƃ�����User-Agent���ω�����Ƃ͌���Ȃ�.
-���̂悤��User-Agent�����H�C������v���L�V�����݂��邩������Ȃ����AUser-Agent�Ɋւ���
-��؎�������Ȃ��v���L�V�����������݂���.
+また、外部プロキシを介したからといってUser-Agentが変化するとは限らない.
+そのようなUser-Agentを加工修正するプロキシも存在するかもしれないが、User-Agentに関して
+一切手を加えないプロキシも数多く存在する.
 
-####�y�Q�l�z
-> IP�A�h���X���U�����邱�Ƃ�Moai�ł��ł��Ȃ�.
-> �������A�����̓��[�J�`(���[�^���Z�b�g)��O���v���L�V�AVPN�ȂǂŔ�r�I�ȒP�ɕύX�\�ł���.
+####【参考】
+> IPアドレスを偽装することはMoaiでもできない.
+> しかし、これらはルーカチ(ルータリセット)や外部プロキシ、VPNなどで比較的簡単に変更可能である.
 >
-> �����́AIP�A�h���X��v���o�C�_�̃h���C�������ŋK�����s���̂������̌f���̎嗬�ł��������A
-> ���̕����ł́i���Ƀv���o�C�_�̃h���C���ł̋K���́j�����Y�����p�ɂɔ����������ł�����.
-> �����ŁA�ŋ߂̑����̌f���ł�IP�ȊO�̃}�V���ŗL�̏����d�����闬�ꂪ�嗬�ƂȂ����.
-> (User-Agent�����̎�̏��̈��).
+> 旧来は、IPアドレスやプロバイダのドメインだけで規制を行うのが多くの掲示板の主流であったが、
+> この方式では（特にプロバイダのドメインでの規制は）巻き添えが頻繁に発生しがちであった.
+> そこで、最近の多くの掲示板ではIP以外のマシン固有の情報を重視する流れが主流となりつつある.
+> (User-Agentもこの種の情報の一つだ).
 >
-> �܂�A�f���̃T�[�o�����猩��΁A�A�N�Z�X���ė����Ώۂ�IP�Ƃ���User-Agent�̑o��������
-> (���ۂɂ�User-Agent�����łȂ�Screen-Size�ȂǑ��̃}�V���ŗL���������I�ɍl���������̂ł��邪)�A
-> ���������̂����̂����ꂩ����ł��ω����Ă��Ȃ��Ȃ�΋K���ΏۂƂ��Čp�����邩
-> �v�x���ΏۂƂ݂Ȃ��Ƃ���������.
+> つまり、掲示板のサーバ側から見れば、アクセスして来た対象のIPとそのUser-Agentの双方を見て
+> (実際にはUser-AgentだけでなくScreen-Sizeなど他のマシン固有情報も総合的に考慮したものであるが)、
+> もしそれらのうちのいずれか一方でも変化していないならば規制対象として継続するか
+> 要警戒対象とみなすという方式だ.
 >
-> ��{�I��Moai��IP�A�h���X�ȊO�̃\�t�g�E�F�A�I�Ɏ����\�Ȋ��̉��z���̑S�Ă�
-> ����y�Ɏ�������c�[���Ɗ���؂��ė~����.
-> ���̏�ŁA�ꉞIP�A�h���X�Ɋւ��邨�܂��I�ȃT�|�[�g�v�f�Ƃ͂Ȃ邪�A�O���v���L�V�̐؂�ւ��@�\������.
-> ����͊O���v���L�V�̌���parent_proxy.txt�ɗ񋓂��Ă��������̌���Web Configuration�̃��j���[����I������
-> �g�p����v���L�V���u���ɐ؂�ւ���@�\�ƂȂ�(Ver1.0��萳���ɓ���).
+> 基本的にMoaiはIPアドレス以外のソフトウェア的に実現可能な環境の仮想化の全てを
+> お手軽に実現するツールと割り切って欲しい.
+> その上で、一応IPアドレスに関するおまけ的なサポート要素とはなるが、外部プロキシの切り替え機能がある.
+> これは外部プロキシの候補をparent_proxy.txtに列挙しておきそれらの候補をWeb Configurationのメニューから選択して
+> 使用するプロキシを瞬時に切り替える機能となる(Ver1.0より正式に搭載).
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="Q_07">(VirtualUSERS Initiation�@�\�ɂ���)���ۂɂ�UA�U���ƃ��[�J�`�A�N�b�L�[�폜�ő��̏ꍇ�������ˁH
+## <a name="Q_07"></a>(VirtualUSERS Initiation機能について)実際にはUA偽装とルーカチ、クッキー削除で大抵の場合いけるよね？
 -----------------------------------
-���̂Ƃ��낻�̒ʂ�!
-����ɂ���ł��_���Ȃ�Moai��Virtual USERS�@�\�������Ă݂Ăق���
-Moai�Ȃ�΃X�N���[���T�C�Y��Fingerprint�̒l�ȂǂƂ���������ɐ[�����x���̏��������_�������邱�Ƃ��ł���.
+実のところその通り!
+さらにそれでもダメならMoaiのVirtual USERS機能を試してみてほしい
+MoaiならばスクリーンサイズやFingerprintの値などといったさらに深いレベルの情報をランダム化することもできる.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="Q_03">Android�Ŏg���ɂ́H
+## <a name="Q_03"></a>Androidで使うには？
 -----------------------------------
-Moai�͊�{�I��PC�����̃c�[���ł��邪�AAndroid�ł��g�����Ƃ��ł���.
-Android�ł̃R���p�C���͂��Ȃ��ԂȂ̂ŁAAndroid�����ɃR���p�C���ς݂̃o�C�i����bin_for_android�f�B���N�g���ɂ����Ē񋟂��Ă���.
-�ʓ|�Ȃ�΂�������g���ė~����.
-Android��Moai�̋N���Ɋւ��Ă�[Moai README][1]�́uAndroid�łɂ����鏉��N���܂ł̎菇�v�̍��ɉ�����Ă������̂ŎQ�l�ɂ��ė~����.
+Moaiは基本的にPC向けのツールであるが、Androidでも使うことができる.
+Androidでのコンパイルはかなり手間なので、Android向けにコンパイル済みのバイナリもbin_for_androidディレクトリにおいて提供してある.
+面倒ならばこちらを使って欲しい.
+Android版Moaiの起動に関しては[Moai README][1]の「Android版における初回起動までの手順」の項に解説しておいたので参考にして欲しい.
 
-�R���p�C������ꍇ�� Android NDK ���g��.
-[HowToCompile][4]�́uAndroid�ɂ��āv�̍��ɏڂ����菇��������Ă������̂ŎQ�l�ɂ��ė~����.
+コンパイルする場合は Android NDK を使う.
+[HowToCompile][4]の「Androidについて」の項に詳しい手順を解説しておいたので参考にして欲しい.
 
-���A�����_�ł͂܂��܂�Android�ł̃e�X�g���s�\����.
-��҂̊������ł͌��E�����邽�߂�.
-����񍐂�s��񍐂ȂǑ劽�}�� 
+尚、現時点ではまだまだAndroidでのテストが不十分だ.
+作者の環境だけでは限界があるためだ.
+動作報告や不具合報告など大歓迎だ 
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="Q_08">�ߑa�点�����莞������񂾂��ǂǂ����΂����́H
+## <a name="Q_08"></a>過疎らせたい定時があるんだけどどうやればいいの？
 -----------------------------------
-�c�O�Ȃ���(?)Moai�͂��������U���p�̃c�[���ł͂Ȃ��A���S�ɖh������̃c�[����.
-�܂�A����Ɋւ���Moai���T�|�[�g�ł��邱�Ƃƌ����΁A�L�~�Ƃ��̒莞�Ƃ̐킢�ɂ�����
-�L�~��HP������Ȃ����ɂ��邱�Ƃ��炢��.
+残念ながら(?)Moaiはそういう攻撃用のツールではなく、完全に防御向けのツールだ.
+つまり、それに関してMoaiがサポートできることと言えば、キミとその定時との戦いにおいて
+キミのHPを限りなく∞にすることくらいだ.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="Q_09">(�ӂ��΂����˂�ɂ�����)�X���ŕ\������郌�X���S���Ǘ��l�ɂȂ��Ƃ�H
+## <a name="Q_09"></a>(ふたばちゃんねるにおいて)スレで表示されるレスが全部管理人になっとる？
 -----------------------------------
-�Ƃ肠����Moai�͖����N�����Ă���悤���˂�
-�Ƃ������Ƃ����l��͊Ǘ��l����~�Ղ���D�����ƕ��������̂ŁA���V�тł��ׂẴX���ƃ��X�ŉ��z�I�ɍ~�Ղ����Ă݂���
+とりあえずMoaiは無事起動しているようだねｗ
+としあきという人種は管理人さん降臨が大好きだと聞いたもので、お遊びですべてのスレとレスで仮想的に降臨させてみたｗ
 
   ![screenshot](../imgs/futaba_kanrinin.png)
 
-�܂��v����ɂ���͎�M����HTML���t�B���^�ŕ�����u�����邱�Ƃɂ��������Ă���A
-���̎w������Ă���̂�filters/futaba_recv.myf �ɂȂ�.
-���̃t�@�C�����J���Ă��炤��
+まあ要するにこれは受信するHTMLをフィルタで文字列置換することにより実現しており、
+その指定をしているのがfilters/futaba_recv.myf になる.
+このファイルを開いてもらうと
 ~~~
-  replace ['<blockquote>'] ['<blockquote>[<font color="#ff0000">�Ǘ��l</font>]<br>']
+  replace ['<blockquote>'] ['<blockquote>[<font color="#ff0000">管理人</font>]<br>']
 ~~~
-�Ƃ����s�����邪�A�u����͑O�҂���҂Œu��(replace)����v�Ƃ������߂ɂȂ�.
-�Ƃ����킯�ŁA���́u�Ǘ��l�v����\�������������ꍇ�́A���̍s���܂邲�ƍ폜�����OK��.
+という行があるが、「これは前者を後者で置換(replace)せよ」という命令になる.
+というわけで、この「管理人」さん表示を消したい場合は、この行をまるごと削除すればOKだ.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="Q_10">Moai�𑼃T�C�g�ŏЉ�Ă������H
+## <a name="Q_10"></a>Moaiを他サイトで紹介してもいい？
 -----------------------------------
-�S�����Ȃ�.
-�ǂ��Ő�`���Ă�����Ă����܂�Ȃ����A�ʂ̏�ōĔz�z���邱�Ƃ��\��.
-�v���O�C�����������AMoai�{�̂������Ȃǂ��Ă��Ȃ��̖��O�Ō��J���邱�Ƃ���ł���I 
+全く問題ない.
+どこで宣伝してもらってもかまわないし、別の場で再配布することも可能だ.
+プラグインを作ったり、Moai本体を改造などしてあなたの名前で公開することすらできる！ 
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="Q_11">(�ӂ��΂����˂�ɂ�����)Moai��del�A�Ńc�[���Ƃ��Ďg�����Ƃ͂ł��܂��񂩁H
+## <a name="Q_11"></a>(ふたばちゃんねるにおいて)Moaiをdel連打ツールとして使うことはできませんか？
 -----------------------------------
-�����炭�ł��Ȃ�(�Ƃ������o���Ă��܂��悤�ł͌f���Ƃ��Ė�肾�Ƃ͎v��).
+おそらくできない(というか出来てしまうようでは掲示板として問題だとは思う).
 
-Moai���o���邱�ƂƂ����΁AUser-Agent��Screen-Size�AFingerprint�Ȃǃ\�t�g�E�F�A�I��
-���z���\�ȏ��̃����_�}�C�Y�A������IP�A�h���X�Ɋւ��Ă͕����̓o�^�v���L�V�̒�����
-���j���[�őI�����A�g�p�v���L�V���ȈՂɐ؂�ւ����s�����x�̂��Ƃ�.
+Moaiが出来ることといえば、User-AgentやScreen-Size、Fingerprintなどソフトウェア的に
+仮想化可能な情報のランダマイズ、そしてIPアドレスに関しては複数の登録プロキシの中から
+メニューで選択し、使用プロキシを簡易に切り替えを行う程度のことだ.
 
-�����̐؂�ւ�����g����΁u�������ˁv�̒l�̓J�E���g����邱�Ƃ͎��̕��ł��m�F�ł���.
-del�ɂ��Ă͌��ʂ�����̂��ǂ����͂킩��Ȃ�(�Ƃ����������܂ŏڂ����͎����Ă��Ȃ�).
-�ӂ��Α����猩��΁A���ꂪ�v���L�V�T�[�o���o�R����del�ł��邩�ۂ��͂�����x���o�ł���͂���.
-�����Ă��̂悤��del�𖳌��Ƃ��ăJ�E���g���Ă��Ȃ��\��������.
+これらの切り替えを駆使すれば「そうだね」の値はカウントされることは私の方でも確認できた.
+delについては効果があるのかどうかはわからない(というかそこまで詳しくは試していない).
+ふたば側から見れば、それがプロキシサーバを経由したdelであるか否かはある程度検出できるはずだ.
+そしてそのようなdelを無効としてカウントしていない可能性もある.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="Q_12">�摜���e���Ȃ�filename���t���p�X�̂܂܂ő��M�����̂ł͂Ȃ����H
+## <a name="Q_12"></a>画像投稿時などfilenameがフルパスのままで送信されるのではないか？
 -----------------------------------
-���̖��͎�����IE7�ȑO�̏ꍇ�݂̂ɑ��݂��邽�߁A����ȊO�̃u���E�U�����g�p�̕��ɂ͊֌W�Ȃ��b�ƂȂ�.
-�܂��AIE7�ȑO�����g�p�̕��ł��A���݃R�~�b�g����Ă���ŐV�o�[�W�����ɂ��ẮA�ⓚ���p�Ńt���p�X��
-��������悤�ɂ��Ă��邽�߁A����Ɋւ��ĐS�z����K�v�͂Ȃ�.
+この問題は事実上IE7以前の場合のみに存在するため、それ以外のブラウザをご使用の方には関係ない話となる.
+また、IE7以前をご使用の方でも、現在コミットされている最新バージョンについては、問答無用でフルパスを
+除去するようにしてあるため、これに関して心配する必要はない.
 
-�����ڍׂ��q�ׂ�ƁA��������IE�̓t�@�C���A�b�v���[�h���ɃT�[�o�ɂ��̃t���p�X�𑗂����Ƃ�����Ȏd�l�������Ă���.
-IE�ȊO�̃u���E�U�̏ꍇ�A�t���p�X�𑗂�Ƃ����d�l�����u���E�U�͌��݂̂Ƃ���m�F����Ă��Ȃ�.
-�Ⴆ��Firefox, Opera, Chrome�Ȃǂł͂������������̂̓t�@�C�����̕����݂̂ł���
-Moai�����p�i�K�ŉ��H����܂ł��Ȃ��ŏ�����t���p�X�͏�������Ă���.
+少し詳細を述べると、そもそもIEはファイルアップロード時にサーバにそのフルパスを送りつけるという奇妙な仕様を持っていた.
+IE以外のブラウザの場合、フルパスを送るという仕様を持つブラウザは現在のところ確認されていない.
+例えばFirefox, Opera, Chromeなどではいずれも送られるのはファイル名の部分のみであり
+Moaiが中継段階で加工するまでもなく最初からフルパスは除去されている.
 
-����Ɍ����Ɍ����΁A�t���p�X��������͈̂ȉ��̏ꍇ�Ɍ�����
+さらに厳密に言えば、フルパスが送られるのは以下の場合に限られる
 
 <ul>
-<li>IE6�ȑO����摜���e�����ꍇ.</li>
-<li>IE7�Łu�T�[�o�[�Ƀt�@�C�����A�b�v���[�h����Ƃ��Ƀ��[�J���f�B���N�g���̃p�X���܂߂�v
-   �Ƃ����u���E�U�̃Z�L�����e�B�ݒ��L���Ƃ��Ă��܂��Ă���ꍇ.
-   IE7�ł͂��ꂪ�f�t�H���g�ŗL���ƂȂ��Ă���.
-   ��IE8�ȍ~��肱�̐ݒ�̓f�t�H���g�Ŗ����ɂȂ��Ă���.
-   ���_�A�Z�L�����e�B�ケ��͖{�������ł���ׂ��ŁA�Ó��ȃf�t�H���g�ƌ�����.</li>
+<li>IE6以前から画像投稿した場合.</li>
+<li>IE7で「サーバーにファイルをアップロードするときにローカルディレクトリのパスを含める」
+   というブラウザのセキュリティ設定を有効としてしまっている場合.
+   IE7ではこれがデフォルトで有効となっている.
+   尚IE8以降よりこの設定はデフォルトで無効になっている.
+   無論、セキュリティ上これは本来無効であるべきで、妥当なデフォルトと言える.</li>
 </ul>
 
-��L�����킹�l����΃t���p�X��ⓚ���p�ŏ������ăt�@�C�����̕����݂̂ɂ�����ŁA
-�t����user_agent.txt�ɂ�IE6�ȑO��User-Agent���܂߂Ȃ����悤�ɂ���Ίm���ł���.
-(������Opera�ł̋[��IE User-Agent�͎c���Ă����Ă����Ȃ��낤)
-���݃R�~�b�g����Ă���user_agent.txt�́A���̓_�𓥂܂������̂ɂȂ��Ă���.
+上記を合わせ考えればフルパスを問答無用で除去してファイル名の部分のみにした上で、
+付属のuser_agent.txtにはIE6以前のUser-Agentを含めない方ようにすれば確実である.
+(ただしOperaでの擬似IE User-Agentは残しておいても問題なかろう)
+現在コミットされているuser_agent.txtは、この点を踏まえたものになっている.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="Q_14">���{HTTP������(NHK)�Ƃ��J���`�[���Ƃ��z���g�͂Ȃ��đS������l���Ȃ�ł���H
+## <a name="Q_14"></a>日本HTTP研究所(NHK)とか開発チームとかホントはなくて全部同一人物なんでしょ？
 -----------------------------------
-�n�h���[�c���̎���ɑ΂����X�̓����͏�ɂЂƂc~~�喂���l�̂���~~
-���Ȃ킿NYSK(�ς�Ȃ�Ă��Ȃ�D���ɉ��߂���)��.
+ハドラー…その質問に対する我々の答えは常にひとつ…~~大魔王様のおｋ~~
+すなわちNYSK(煮るなり焼くなり好きに解釈しろ)だ.
 
-����Ȍ�������`�[�������݂��邩������Ȃ����A�ЂƂ�Ŏ������Ă��邩������Ȃ�.
-���邢�́A�����Ƒ�l���ŕs���葽���̐l�Ԃ��������O���g���܂킵�Ă��邩������Ȃ����A
-���͒N�����Ȃ��i�I�H�jAI�̂悤�Ȃ��̂�������Ȃ��I�H
+こんな研究所やチームが存在するかもしれないし、ひとりで自演しているかもしれない.
+あるいは、もっと大人数で不特定多数の人間が同じ名前を使いまわしているかもしれないし、
+実は誰もいない（！？）AIのようなものかもしれない！？
 
-���Ȃ��������Ƃ��y���߂���߂�����΂��ꂪ��Ԃ悢�ł͂Ȃ�����.
-���Ȃ����܂߉�X�͊F�A�����f���̃��[�U(virtual users)�Ȃ̂�����.
+あなたがもっとも楽しめる解釈をすればそれが一番よいではないかｗ.
+あなたを含め我々は皆、匿名掲示板のユーザ(virtual users)なのだから.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
 [1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/README.md
