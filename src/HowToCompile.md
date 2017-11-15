@@ -1,300 +1,301 @@
-# �\�[�X�R�[�h�̃R���p�C���菇
+# ソースコードのコンパイル手順
 -----------------------------------
 
-## <a name="index"></a>�ڎ�
+## <a name="index"></a>目次
 -----------------------------------
-* [Windows�ȕ��ցA�͂��߂ẴR�}���h�v�����v�g](#user-content-windows_first)
-* [Windows�ȕ��ցA�͂��߂Ă�MinGW             ](#user-content-windows_next)
-* [MinGW�̓�����@         ](#user-content-get_mingw)
-* [Windows��MinGW���g���ꍇ](#user-content-use_mingw_on_windows)
-* [Windows��VC���g���ꍇ   ](#user-content-use_vc_on_windows)
-* [Linux�̏ꍇ    ](#user-content-compile_on_linux)
-* [Cygwin�̏ꍇ   ](#user-content-compile_on_cygwin)
-* [MSYS1.0��MinGW���g�p����ꍇ](#user-content-compile_on_msys10)
-* [Windows��BCC5.5(Borland C++ Compiler 5.5)�܂���DMC(Digital Mars C/C++)���g���ꍇ(���܂�)](#user-content-use_others_on_windows)
-* [Android�ɂ���](#user-content-about_android)
-* [MacOS�ɂ���  ](#user-content-about_macos)
+* [Windowsな方へ、はじめてのコマンドプロンプト](#user-content-windows_first)
+* [Windowsな方へ、はじめてのMinGW             ](#user-content-windows_next)
+* [MinGWの入手方法         ](#user-content-get_mingw)
+* [WindowsでMinGWを使う場合](#user-content-use_mingw_on_windows)
+* [WindowsでVCを使う場合   ](#user-content-use_vc_on_windows)
+* [Linuxの場合    ](#user-content-compile_on_linux)
+* [Cygwinの場合   ](#user-content-compile_on_cygwin)
+* [MSYS1.0でMinGWを使用する場合](#user-content-compile_on_msys10)
+* [WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使う場合(おまけ)](#user-content-use_others_on_windows)
+* [Androidについて](#user-content-about_android)
+* [MacOSについて  ](#user-content-about_macos)
 
-## <a name="windows_first"></a>Windows�ȕ��ցA�͂��߂ẴR�}���h�v�����v�g
------------------------------------
-
-  �܂��X�^�[�g���j���[����R�}���h�v�����v�g���J�����@����ł���.
-  **�������炩��b�I**���ĕ��͂��̍��̓X���[����[����](#user-content-windows_next)�i�ނ��ƁI
-
-  �u**�X�^�[�g���j���[�H�Ȃ�ł�������́H**�v�ȕ��͉�ʈ�ԍ����ɂ���Windows�̃��S��
-  �������{�^��������ł���.  �u����Ȃ��̂͌�������Ȃ��c�v�ȕ��́c��ނ𓾂܂�.
-  �u�R�}���h�v�����v�g Windows8�v���L�[���[�h�ɂ��ăO�O���ė~����.
-
-  �X�^�[�g���j���[���J������u�v���O�����v=>�u�A�N�Z�T���v=>�u�R�}���h�v�����v�g�v�̏��őI��.  
-  ����Ɛ^�����ȃE�B���h�E���\�������͂��ł���.  ���ꂪ�R�}���h�v�����v�g�ł���I
-
-  Windows7�̏ꍇ�͂��ꂪ�u���ׂẴv���O�����v=>�u�A�N�Z�T���v=>�u�R�}���h�v�����v�g�v�̏��ƂȂ�.  
-  Windows10�̏ꍇ�́u���ׂẴA�v���v=>�uWindows �V�X�e���c�[���v=>�u�R�}���h�v�����v�g�v�̏��ƂȂ�.  
-  Windows8/8.1�̏ꍇ�́A�X�^�[�g���j���[�ɊY������{�^���Ȃ��̂����A�E�N���b�N��������
-  ��ʈ�ԉE���Ɍ����u���ׂẴA�v���v�{�^���������ė~����. ����Ɖ�ʏ�Ɂu�R�}���h�v�����v�g�v
-  �̃A�C�R���������̂ł����ɂ킩��Ǝv��. �ǂ����Ă��킩��Ȃ��ꍇ�͂����ł��ꂱ�ꌾ�����
-  ��͂�O�O���Ă�����������������낤.  
-
-  �R�}���h�v�����v�g�����ɂ̓L�[�{�[�h���� exit �Ɠ��͂���Enter�L�[��������
-  ���ʂɃE�B���h�E�E��ɂ��� x �{�^��������.
-
-  �ȏオ�R�}���h�v�����v�g���J�����@���I
-  �S���̏��S�҂̕���**10�񂭂炢�J���ĕ��Ă��J��Ԃ�**�A�m���Ƀ}�X�^�[���Ă������ƃH�I
-
-  <a href="#user-content-index">�ڎ��֖߂�</a>
-
-
-## <a name="windows_next"></a>Windows�ȕ��ցA�͂��߂Ă�MinGW
+## <a name="windows_first"></a>Windowsな方へ、はじめてのコマンドプロンプト
 -----------------------------------
 
-  �R�}���h�v�����v�g���J����悤�ɂȂ����ł��낤���H
-  �܂��ȕ��͂���**10�񂭂炢**���K���Ċm���Ƀ}�X�^�[���Ă������ƃH�I
+  まずスタートメニューからコマンドプロンプトを開く方法からである.
+  **そこからかよッ！** って方はこの項はスルーして[次へ](#user-content-windows_next)進むこと！
 
-  �ł͎��ɃR���p�C�����C���X�g�[�����悤.
-  **MinGW**�ƌĂ΂�Ă���ł����W���[�Ȃ��̂̈���g��.
+  「**スタートメニュー？なんですかそれは？**」な方は画面一番左下にあるWindowsのロゴが
+  入ったボタンがそれである.  「そんなものは見当たらない…」な方は…やむを得まい.
+  「コマンドプロンプト Windows8」をキーワードにしてググって欲しい.
 
-  �u[MinGW�̓�����@](#user-content-get_mingw)�v�̍��ւƐi����.
-  (���ɃC���X�g�[�����Ă�����͂��̍��̓X���[���邱��)
+  スタートメニューを開いたら「プログラム」=>「アクセサリ」=>「コマンドプロンプト」の順で選ぶ.  
+  すると真っ黒なウィンドウが表示されるはずである.  これがコマンドプロンプトである！
 
-  ���AMinGW�ł͂Ȃ�VC���g�������Ƃ������́u[Windows��VC���g���ꍇ](#user-content-use_vc_on_windows)�v���Q�Ƃ��Ă�����������.
+  Windows7の場合はこれが「すべてのプログラム」=>「アクセサリ」=>「コマンドプロンプト」の順となる.  
+  Windows10の場合は「すべてのアプリ」=>「Windows システムツール」=>「コマンドプロンプト」の順となる.  
+  Windows8/8.1の場合は、スタートメニューに該当するボタンないのだが、右クリックした時に
+  画面一番右下に現れる「すべてのアプリ」ボタンを押して欲しい. すると画面上に「コマンドプロンプト」
+  のアイコンが現れるのですぐにわかると思う. どうしてもわからない場合はここであれこれ言うより
+  やはりググってもらった方が早いだろう.  
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  コマンドプロンプトを閉じるにはキーボードから exit と入力してEnterキーを押すか
+  普通にウィンドウ右上にある x ボタンを押す.
+
+  以上がコマンドプロンプトを開く方法だ！
+  全くの初心者の方は**10回くらい開けて閉じてを繰り返し**、確実にマスターしておくことォ！
+
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="get_mingw"></a>MinGW�̓�����@:
+## <a name="windows_next"></a>Windowsな方へ、はじめてのMinGW
 -----------------------------------
-  ���W���[�Ȃ����ɃO�O��΂�����ł����肨��уC���X�g�[�����@��������ꂽ�T�C�g�͂���̂���
-  �����ł��ȒP�ɐ������Ă���.
 
-  �܂��_�E�����[�h�T�C�g�ł��� https://sourceforge.net/projects/mingw �փA�N�Z�X.
-  ( MinGW�̌����T�C�g�� http://www.mingw.org �Ȃ̂ł��邪�_�E�����[�h����t�@�C���Q��
-   ���ׂ�sourceforge�̕��֒u����Ă��� )
-  �uDownload mingw-get-setup.exe�v�Ə����ꂽ�΂̃{�^��������̂ł�����N���b�N.
-  mingw-get-setup.exe ���_�E�����[�h����. ���Ƃ���C:\MinGW�Ƃ����t�H���_�������
-  ���̒��ɕۑ����Ă����Ƃ悢���낤(����̃t�@�C���T�C�Y��85KB�Ƌɂ߂ď�����).
+  コマンドプロンプトを開けるようになったであろうか？
+  まだな方はもう**10回くらい**練習して確実にマスターしておくことォ！
 
-  ����mingw-get-setup.exe �����s����.
-  ���̃v���O������MinGW�̃C���X�g�[���������Ń_�E�����[�h����Ƃ��������
-  **�C���X�g�[�����C���X�g�[������C���X�g�[��**�ł���(�킩��ɂ��������񂵂���).
-  ���̎菇�ōs��.
+  では次にコンパイラをインストールしよう.
+  **MinGW**と呼ばれている最もメジャーなものの一つを使う.
 
-####
-  1. �����ŏ���**�A�z��**Windows���u�Z�L�����e�B�̌x���v��\�����Ă��邩������Ȃ���
-     **MinGW�ɂ��̎�̖�肪���낤�͂����Ȃ�**�̂Łu���s�v.
+  「[MinGWの入手方法](#user-content-get_mingw)」の項へと進もう.
+  (既にインストールしてある方はこの項はスルーすること)
 
-  2. �uMinGW Installation Manager Setup Tool�v�E�B���h�E���\�������̂ŁuInstall�v������.
+  尚、MinGWではなくVCを使いたいという方は「[WindowsでVCを使う場合](#user-content-use_vc_on_windows)」を参照していただきたい.
 
-  3. ���̉�ʂŃC���X�g�[������w��ł���. �f�t�H���g�ł� C:\MinGW�ƂȂ��Ă��邪�uChange�v��
-    �����ς��邱�Ƃ��ł���(���̏ꍇ�͈ȉ��̐�����C:\MinGW�ƂȂ��Ă��镔�������̃t�H���_��
-    �ǂݑւ��ė~����). �ŏI�I��180MB���x�K�v�ł���̂ŁA����]�T���Ȃ���Α��̃h���C�u�ɕς���
-    �Ȃǂ��邱��. ���̑����ɘM��K�v�͂Ȃ��̂ł����ݒ肵�I������uContinue�v������.
-
-  4. �����C:\MinGW�z���փt�@�C���Q�������Ń_�E�����[�h�����. �����Ń_�E�����[�h�����̂�
-    MinGW�{�̂ł͂Ȃ����̃C���X�g�[���ł���A���v�T�C�Y�ɂ��Ă��悻2MB�قǂł���. 100%�ƕ\�����ꂽ��A
-   �uContinue�v������. �����ŊԈ���āuQuit�v�������ƃE�B���h�E�����Ă��܂����c
-
-    **C:\MinGW\bin\mingw-get.exe�����s����Α������\������܂�**�̂ł����S���I
-
-    ���� C:\MinGW\bin\mingw-get.exe ������MinGW�̖{���̃C���X�g�[���ł���AInstallation Manager
-    �ƌĂ΂����̂ł���.
-
-  5. �uMinGW Installation Manager�v�Ə����ꂽ�E�B���h�E���\�������̂ł�������C���X�g�[��������
-    ���ڂ�I��. �S���I��ł�����Ƃ�ł��Ȃ����ʂɂȂ邵�A���̕K�v���S���Ȃ��̂ł����ł�
-    mingw32-base �� mingw32-g++������I��(���ꂾ���ł����v180MB���x�ƂȂ�A���̂Ƃ��댋�\��
-    ���ʂɂ͂Ȃ�.
-    �܂������̃y�C���ɂ����āuBasic Setup�v��I�񂾏�Ԃɂ��A�E���̃y�C����mingw32-base�Ƃ���
-    �s�̎l�p�`�̂Ƃ�����N���b�N����(���邢�͉E�N���b�N�ł��悢).
-    ���̂Ƃ��v���_�E�����j���[���\�������̂ŁuMark for Installation�v��I��.
-    �l�p�`�̂Ƃ���ɃI�����W�F�̖��}�[�N���\�������ΑI�����ꂽ��ԂɂȂ������Ƃ��Ӗ�����.
-    mingw32-g++�ɂ��Ă����l�ɂ��đI����Ԃɂ��Ă�����.
-
-    �J��Ԃ��������ȊO�͂���Ȃ�. �K�v�ŏ���������X�̃��b�g�[�ł���.
-    �����������ꂻ�̑����K�v�ɂȂ邱�Ƃ����邩������Ȃ����c���ꂾ���Ŗ{���ɑ��v�Ȃ̂��H
-
-    **��ł�����xC:\MinGW\bin\mingw-get.exe�����s����΂��ł��ǉ��C���X�g�[���ł��܂�**�̂ł����S���I
-
-	���̂�����Ɋւ��ĐS�z�ȃv���O���}�̕��͉��L��[�⑫����1](#user-content-note1)���Q�Ƃ��ꂽ��.
-
-  6. ���āA�����͐������̂ł��悢����ۂ̃p�b�P�[�W�{�̂��_�E�����[�h����уC���X�g�[������.
-    ��ԍ���ɂ���uInstallation�v���j���[���J���A�uApply Changes�v��I��.
-    �uSchedule of Pending Actions�v�Ƃ����E�B���h�E�������̂ŁuApply�v�{�^���������Ύ��ۂ�
-    �p�b�P�[�W�Q���_�E�����[�h����уC���X�g�[�������.
-
-    �p�b�P�[�W�͖ܘ_���k����Ă���̂Ń_�E�����[�h�͑債�Ď��Ԃ͊|����Ȃ�.
-    �l�b�g���[�N�����ʍ��G���Ă��Ȃ��Ȃ�A�M�҂̕n��ȉ���ł��R���قǂŏI�镪�ʂł���.
-    �܂��C���X�g�[���Ƃ����Ă�C:\MinGW�z���ɕK�v�Ȉ��k�t�@�C�����𓀂���邾���̂��Ƃł���.
-    ��ł��q�ׂ��ʂ�Amingw32-base�����̏ꍇ�A�W�J��͍��v150MB�قǂɂȂ�.
-
-  7. �uApplying Scaduled Changes�v�Ƃ����E�B���h�E���o�āuAll changes were applied successfully;�v
-    �ȂǂƏ����Ă���ΐ����ł���. �uClose�v�{�^����������.
-    �uMinGW Installation Manager�v�E�B���h�E���܂��\������Ă���Ǝv����������E���x�{�^���ŕ��Ă悢.
-
-##
-  ����ɂĈꌏ�����C���X�g�[�������ł���.
-  �u[Windows��MinGW���g���ꍇ](#user-content-use_mingw_on_windows)�v�̍��ւƐi����.
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-<a name="note1"></a>**�y�⑫����1�z�v���O���}�ȕ���**
+## <a name="get_mingw"></a>MinGWの入手方法:
+-----------------------------------
+  メジャーなだけにググればいくらでも入手およびインストール方法が解説されたサイトはあるのだが
+  ここでも簡単に説明しておく.
+
+  まずダウンロードサイトである https://sourceforge.net/projects/mingw へアクセス.
+  ( MinGWの公式サイトは http://www.mingw.org なのであるがダウンロードするファイル群は
+   すべてsourceforgeの方へ置かれてある )
+  「Download mingw-get-setup.exe」と書かれた緑のボタンがあるのでそれをクリック.
+  mingw-get-setup.exe をダウンロードする. たとえばC:\MinGWというフォルダを作って
+  その中に保存しておくとよいだろう(これのファイルサイズは85KBと極めて小さい).
+
+  次にmingw-get-setup.exe を実行する.
+  このプログラムはMinGWのインストーラを自動でダウンロードするといういわば
+  **インストーラをインストールするインストーラ**である(わかりにくい言い回しだが).
+  次の手順で行う.
+
 ~~~
-    mingw32-base�ɂ��C���X�g�[�������͈̂ȉ��ł���.
+  1. 多分最初に**アホな**Windowsが「セキュリティの警告」を表示してくるかもしれないが
+     **MinGWにその種の問題があろうはずもない**ので「実行」.
 
-    * �R���p�C��gcc(C�̂�)
-    * �����Jld
-    * ���C�u�����A��ar�����ranlib�A
-    * make�R�}���h(MinGW�ł�mingw32-make.exe�Ƃ������O�ł���)
-    * �f�o�b�Kgdb
-    * �W��C���C�u����(���̂Ƃ����I�����N�����̂̓f�t�H���g�ł�msvcrt.dll�ł���)
-    * MinGW�p��WindowAPI SDK
-    * ���\�[�X�R���p�C��windres(icon�Ȃǂ̐ݒ�ɗ��p)
-    * �v���t�@�C��gprof
-    * ���̑��኱��GNU���[�e�B���e�B
+  2. 「MinGW Installation Manager Setup Tool」ウィンドウが表示されるので「Install」を押す.
 
-    ����Amingw32-g++�ɂ��C���X�g�[�������͈̂ȉ��ł���.
+  3. 次の画面でインストール先を指定できる. デフォルトでは C:\MinGWとなっているが「Change」で
+    これを変えることもできる(その場合は以下の説明でC:\MinGWとなっている部分をそのフォルダで
+    読み替えて欲しい). 最終的に180MB程度必要であるので、万一余裕がなければ他のドライブに変える
+    などすること. その他特に弄る必要はないのでこれを設定し終えたら「Continue」を押す.
 
-    * �R���p�C��gcc(C++�p�̓����R�}���hg++)
-    * �W��C++���C�u����(libstdc++)
+  4. するとC:\MinGW配下へファイル群が自動でダウンロードされる. ここでダウンロードされるのは
+    MinGW本体ではなくそのインストーラであり、合計サイズにしておよそ2MBほどである. 100%と表示されたら、
+   「Continue」を押す. ここで間違って「Quit」を押すとウィンドウが閉じてしまうが…
+
+    ** C:\MinGW\bin\mingw-get.exeを実行すれば続きが表示されます **のでご安心を！
+
+    この C:\MinGW\bin\mingw-get.exe こそがMinGWの本当のインストーラであり、Installation Manager
+    と呼ばれるものである.
+
+  5. 「MinGW Installation Manager」と書かれたウィンドウが表示されるのでここからインストールしたい
+    項目を選ぶ. 全部選んでいたらとんでもない分量になるし、その必要も全くないのでここでは
+    mingw32-base と mingw32-g++だけを選ぶ(これだけでも合計180MB程度となり、実のところ結構な
+    分量にはなる.
+    まず左側のペインにおいて「Basic Setup」を選んだ状態にし、右側のペインでmingw32-baseとある
+    行の四角形のところをクリックする(あるいは右クリックでもよい).
+    このときプルダウンメニューが表示されるので「Mark for Installation」を選ぶ.
+    四角形のところにオレンジ色の矢印マークが表示されれば選択された状態になったことを意味する.
+    mingw32-g++についても同様にして選択状態にしておこう.
+
+    繰り返すがこれら以外はいらない. 必要最小限こそ我々のモットーである.
+    しかし万が一その他が必要になることもあるかもしれないし…これだけで本当に大丈夫なのか？
+
+    ** 後でもう一度C:\MinGW\bin\mingw-get.exeを実行すればいつでも追加インストールできます **のでご安心を！
+
+    このあたりに関して心配なプログラマの方は下記の[補足事項1](#user-content-note1)も参照されたい.
+
+  6. さて、準備は整ったのでいよいよ実際のパッケージ本体をダウンロードおよびインストールする.
+    一番左上にある「Installation」メニューを開き、「Apply Changes」を選ぶ.
+    「Schedule of Pending Actions」というウィンドウが現れるので「Apply」ボタンを押せば実際に
+    パッケージ群がダウンロードおよびインストールされる.
+
+    パッケージは勿論圧縮されてあるのでダウンロードは大して時間は掛からない.
+    ネットワークが特別混雑していないなら、筆者の貧弱な回線でも３分ほどで終る分量である.
+    またインストールといってもC:\MinGW配下に必要な圧縮ファイルが解凍されるだけのことである.
+    上でも述べた通り、mingw32-baseだけの場合、展開後は合計150MBほどになる.
+
+  7. 「Applying Scaduled Changes」というウィンドウが出て「All changes were applied successfully;」
+    などと書いてあれば成功である. 「Close」ボタンを押そう.
+    「MinGW Installation Manager」ウィンドウがまだ表示されていると思うがこれも右上のxボタンで閉じてよい.
+
+~~~
+
+  これにて一件落着インストール完了である.
+  「[WindowsでMinGWを使う場合](#user-content-use_mingw_on_windows)」の項へと進もう.
+
+
+<a name="note1"></a>**【補足事項1】プログラマな方へ**
+~~~
+    mingw32-baseによりインストールされるのは以下である.
+
+    * コンパイラgcc(Cのみ)
+    * リンカld
+    * ライブラリアンarおよびranlib、
+    * makeコマンド(MinGWではmingw32-make.exeという名前である)
+    * デバッガgdb
+    * 標準Cライブラリ(このとき動的リンクされるのはデフォルトではmsvcrt.dllである)
+    * MinGW用のWindowAPI SDK
+    * リソースコンパイラwindres(iconなどの設定に利用)
+    * プロファイラgprof
+    * その他若干のGNUユーティリティ
+
+    一方、mingw32-g++によりインストールされるのは以下である.
+
+    * コンパイラgcc(C++用の内部コマンドg++)
+    * 標準C++ライブラリ(libstdc++)
  
-    ����Ă���C++�͑S�����킸�A�܂�{����C���ꂾ����������Ȃ��̂ł���΁A
-    ���̂Ƃ���mingw32-base�����ŏ\���ł���A�܂�mingw32-g++�͕s�v�ł���.
-    (mingw32-base�����̏ꍇ�A30MB�قǐߖ�ł��đS���ō��v150MB���x�ɂȂ�). 
-    �Ƃ͂����A���ۂɂ� C++ �̃R�[�h�� C �ƈꏏ�����ɂȂ��čJ�ɑ�����ꂩ�����Ă���A
-    ���ꂪ�R���p�C���ł��Ȃ��悤�ł͍���̂ō���͂�����K�{���ڂƂ���.
+    よってもしC++は全く扱わず、つまり本当にC言語だけしか扱わないのであれば、
+    実のところmingw32-baseだけで十分であり、つまりmingw32-g++は不要である.
+    (mingw32-baseだけの場合、30MBほど節約できて全部で合計150MB程度になる). 
+    とはいえ、実際には C++ のコードも C と一緒くたになって巷に多く溢れかえっており、
+    これがコンパイルできないようでは困るので今回はこれも必須項目とした.
 
-    ���Agcc�͗l�X�Ȍ���̃t�����g�G���h�ɂȂ��Ă���AC++���R���p�C������ۂ�
-    �R�}���h�Ƃ��Ă�gcc�R�}���h���g���΂悢(gcc�͊g���q�ɂ����C��C++���������I�ɔ��f����).
-    ����mingw32-g++���C���X�g�[�����Ă��Ȃ���Ԃ�C++���R���p�C�����悤�Ƃ����
-    gcc�͈ȉ��̔��ɂ킩��ɂ����G���[���b�Z�[�W���o���̂Œ��ӂ��K�v��. 
+    尚、gccは様々な言語のフロントエンドになっており、C++をコンパイルする際も
+    コマンドとしてはgccコマンドを使えばよい(gccは拡張子によってCかC++かを自動的に判断する).
+    もしmingw32-g++をインストールしていない状態でC++をコンパイルしようとすると
+    gccは以下の非常にわかりにくいエラーメッセージを出すので注意が必要だ. 
 
     gcc: error: CreateProcess: No such file or directory
 
-    ���������ꂪ�\�����ꂽ�Ȃ� mingw32-g++���C���X�g�[�����Y��Ă��邩�A
-    ���s���Ă��邩���Ă���̂ł�����xmingw-get.exe���N�����Ă�����ăC���X�g�[�����悤.
+    もしもこれが表示されたなら mingw32-g++をインストールし忘れているか、
+    失敗しているかしているのでもう一度mingw-get.exeを起動してこれを再インストールしよう.
 ~~~
 
 
-<a name="note2"></a>**�y�⑫����2�zMinGW�̃A���C���X�g�[���A�ړ��A�o�b�N�A�b�v�ɂ���**
+<a name="note2"></a>**【補足事項2】MinGWのアンインストール、移動、バックアップについて**
 ~~~
-    mingw32-base ����� mingw32-g++ �̓N���[�����n���f�B�ł���.
-    ����̃C���X�g�[���ɂ����Ă̓��W�X�g���Ȃǂ̏������݂Ȃǂ͍s���Ȃ�.
-    �]���ăA���C���X�g�[���������ꍇ�͒P��C:\MinGW�����̃t�H���_���폜����΂悢.
+    mingw32-base および mingw32-g++ はクリーンかつハンディである.
+    これのインストールにおいてはレジストリなどの書き込みなどは行われない.
+    従ってアンインストールしたい場合は単にC:\MinGWをそのフォルダ毎削除すればよい.
     
-    �܂��C���X�g�[��������A���̃t�H���_���ۂ��ƕʂ̏ꏊ�ֈړ����Ă����܂�Ȃ�.
-    ���邢�͂��Ȃ��̂Q��ڂ̃}�V���ɁA���̃t�H���_���R�s�[���邾���ł��̃}�V���ł�
-    �g�����Ƃ��ł���. �܂�Q��ڂ̃}�V����ōĂя�L�̎菇�ŃC���X�g�[������K�v��
-    �Ȃ��Ƃ������Ƃł���(���Ă��悢����ǂ�).
+    またインストールした後、そのフォルダを丸ごと別の場所へ移動してもかまわない.
+    あるいはあなたの２台目のマシンに、そのフォルダをコピーするだけでそのマシンでも
+    使うことができる. つまり２台目のマシン上で再び上記の手順でインストールする必要は
+    ないということである(してもよいけれども).
     
-    �����ăo�b�N�A�b�v�ɂ��Ă����l�ɍs����. �Ⴆ��MinGW���p�ς݂ɂȂ��Ă��΂炭�g��
-    �\�肪�Ȃ��̂ō���PC����폜���������A���x�܂��g�����Ƃ����邩������Ȃ��Ǝv����Ȃ�A
-    MinGW�t�H���_�S�̂��ꖇ��CD�ɏĂ��Ȃǂ��ĂƂ��Ă����Ƃ悢. ����K�v�ɂȂ�����
-    ���̃t�H���_�����̂܂܊ۂ���PC�փR�s�[����Α����ɕ����ł��邩��ł���.
+    そしてバックアップについても同様に行える. 例えばMinGWが用済みになってしばらく使う
+    予定がないので今はPCから削除したいが、今度また使うこともあるかもしれないと思われるなら、
+    MinGWフォルダ全体を一枚のCDに焼くなどしてとっておくとよい. 次回必要になった時
+    そのフォルダをそのまま丸ごとPCへコピーすれば即座に復元できるからである.
     
-    �_�E�����[�h���ꂽ�A�[�J�C�u�́AC:\MinGW\var\cache\mingw-get\packages���Ɉꎞ�ۑ�
-    ����Ă���̂ŁA�C�ɂȂ�Ȃ炻������m�F�����Ƃ悢. �C���X�g�[�������S�ɏI������ł���΁A
-    ���̃t�H���_���̃A�[�J�C�u�t�@�C��(�g���q��xz�Alzma�ƂȂ��Ă������)�͍폜���Ă��悢.
-    �܂�����A�ʐM�̉ߒ��ł����̃A�[�J�C�u�����Ă��邩�_�E�����[�h���s���S�ł������ꍇ�́A
-    �ă_�E�����[�h���K�v�ƂȂ邪�A���̏ꍇ�����̃t�H���_���̊Y���A�[�J�C�u���蓮�ŏ����K�v������.
-    ����ɂ͂��̏ꍇ�̓f�t�H���g�ł��g���̃u���E�U�̃L���b�V�����������Ă����K�v������
-    ( mingw-get.exe�̓_�E�����[�h���A���g���̃u���E�U�̋@�\������ŗ��p���Ă��邽�߂ł��� ).
+    ダウンロードされたアーカイブは、C:\MinGW\var\cache\mingw-get\packages内に一時保存
+    されているので、気になるならそちらも確認されるとよい. インストールが完全に終った後であれば、
+    このフォルダ内のアーカイブファイル(拡張子がxz、lzmaとなっているもの)は削除してもよい.
+    また万一、通信の過程でこれらのアーカイブが壊れているかダウンロードが不完全であった場合は、
+    再ダウンロードが必要となるが、その場合もこのフォルダ内の該当アーカイブを手動で消す必要がある.
+    さらにはその場合はデフォルトでお使いのブラウザのキャッシュも消去しておく必要がある
+    ( mingw-get.exeはダウンロード時、お使いのブラウザの機能を内部で利用しているためである ).
 ~~~
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="use_mingw_on_windows"></a>Windows��MinGW���g���ꍇ
+## <a name="use_mingw_on_windows"></a>WindowsでMinGWを使う場合
 -----------------------------------
 
-  src/bat_utils �t�H���_��setenv_mingw.bat �Ƃ����t�@�C��������.
-  ������e�L�X�g�G�f�B�^(�������Ȃ�)�ŊJ���A�ȉ��̍s��K�v�ɉ����ēK�؂ɏC������.
+  src/bat_utils フォルダにsetenv_mingw.bat というファイルがある.
+  これをテキストエディタ(メモ帳など)で開き、以下の行を必要に応じて適切に修正する.
 
 ~~~
     set ZNK_MINGW_DIR=C:\MinGW
 ~~~
 
-  C:\MinGW�̕��������Ȃ����C���X�g�[������MinGW�̃t�H���_�̃p�X�ɏC�����邾���ł���.
-  (C:\MinGW�ɃC���X�g�[������Ă���ꍇ�͏C���̕K�v�͂Ȃ�)
-  �C�����I�����炱����㏑���ۑ����Asrc�t�H���_�ɂ��� compile_by_mingw.bat��
-  �N���b�N���Ď��s���悤.
+  C:\MinGWの部分をあなたがインストールしたMinGWのフォルダのパスに修正するだけである.
+  (C:\MinGWにインストールされている場合は修正の必要はない)
+  修正し終ったらこれを上書き保存し、srcフォルダにある compile_by_mingw.batを
+  クリックして実行しよう.
 
-  MinGW���K�؂ɃC���X�g�[������Ă���Ȃ�΁A���ׂẴR���p�C���������ōs���A
-  ���ꂼ��̃v���W�F�N�g�̃t�H���_����out_dir�Ƃ����t�H���_�������I�ɐ�������A
-  ���̒��ɖړI��exe�t�@�C����dll����������Ă���͂��ł���.
+  MinGWが適切にインストールされているならば、すべてのコンパイルが自動で行われ、
+  それぞれのプロジェクトのフォルダ内にout_dirというフォルダも自動的に生成され、
+  その中に目的のexeファイルやdllが生成されているはずである.
 
-  ��͂�����src�t�H���_�̈��ɂ���bin_for_win32�t�H���_�ւƃR�s�[���邾���Ȃ̂���
-  �ʓ|�Ȃ� src�t�H���_�ɂ��� install_bin_for_win32.bat �����s����΂��̃R�s�[�܂Ŏ����I��
-  �s���Ă����̂Ŋ��p����Ƃ悢.
+  後はこれらをsrcフォルダの一つ上にあるbin_for_win32フォルダへとコピーするだけなのだが
+  面倒なら srcフォルダにある install_bin_for_win32.bat を実行すればこのコピーまで自動的に
+  行ってくれるので活用するとよい.
 
-  **�n�C�I���S�҂̕��͂����܂Ńb�I**
-  ����ȍ~�͒����҂̕������̓��e�ƂȂ��Ă���܂�.
+  **ハイ！初心者の方はここまでッ！**
+  これ以降は中級者の方向けの内容となっております.
 
 
-  **�y�Q�l�zcompile_by_mingw.bat �������ōs���Ă��邱��**
+  **【参考】compile_by_mingw.bat が内部で行っていること**
 
-  �����ł�compile_by_mingw.bat ���g�킸�ɐݒ肷����@���q�ׂ�.
-  ���������compile_by_mingw.bat �������ōs���Ă��邱�Ƃ̉���ł�����.
+  ここではcompile_by_mingw.bat を使わずに設定する方法を述べる.
+  換言すればcompile_by_mingw.bat が内部で行っていることの解説でもある.
 
-  ��{�I�ɂ̓R�}���h�v�����v�g���J���Amingw32-make.exe �����s�ł���悤�Ɋ��ϐ��𐮂�����ŁA
-  �ȉ������s����ƃr���h�\�ł���.
+  基本的にはコマンドプロンプトを開き、mingw32-make.exe が実行できるように環境変数を整えた上で、
+  以下を実行するとビルド可能である.
 ~~~
     mingw32-make -f Makefile_mingw.mak
 ~~~
 
-  �����Ȃ���΂Ȃ�Ȃ����ϐ��́APATH�ł���. 
+  整えなければならない環境変数は、PATHである. 
 
-  ���ϐ�PATH�Ɋւ��ẮA�ȉ��̃R�}���h�����݂���t�H���_�̃p�X�� ; ��؂�Œǉ�����.
+  環境変数PATHに関しては、以下のコマンドが存在するフォルダのパスを ; 区切りで追加する.
 ~~~
     gcc.exe  ld.exe  ar.exe  ranlib.exe  mingw32-make.exe
 ~~~
-  �Ⴆ�� ����炪 C:\MinGW\bin���ɂ���Ȃ�΁A�R�}���h�v�����v�g��ňȉ��̂悤�ɓ��͂���
-  Enter�L�[������.
+  例えば これらが C:\MinGW\bin内にあるならば、コマンドプロンプト上で以下のように入力して
+  Enterキーを押す.
 
 ~~~
     set PATH=C:\MinGW\bin;%PATH%
 ~~~
 
-  ����ŏ�ŋ����� gcc.exe �Ȃǂ��t���p�X���w�肷�邱�ƂȂ��P��gcc.exe(gcc�ł��悢)��
-  ���͂��邾���Ŏ��s�\�ƂȂ�. ���Ɏ��ۂ�gcc�Ɠ��͂���Enter�L�[�������Ă݂悤.
-  �ugcc: fatal error: no input files�v�Əo���琬���ł���.
-  ����A�ugcc�͓����R�}���h�܂��͊O���R�}���h�`�Ȃ񂽂炩�񂽂�`�Ƃ��ĔF������Ă��܂���v
-  �Əo���玸�s�ł���. ��L��PATH�̐ݒ�ɂ����ĉ������ԈႦ�Ă���(�Ⴆ�Αł��ԈႦ�Ȃ�).
+  これで上で挙げた gcc.exe などがフルパスを指定することなく単にgcc.exe(gccでもよい)と
+  入力するだけで実行可能となる. 次に実際にgccと入力してEnterキーを押してみよう.
+  「gcc: fatal error: no input files」と出たら成功である.
+  一方、「gccは内部コマンドまたは外部コマンド～なんたらかんたら～として認識されていません」
+  と出たら失敗である. 上記のPATHの設定において何かを間違えている(例えば打ち間違えなど).
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="use_vc_on_windows"></a>Windows��VC���g���ꍇ
+## <a name="use_vc_on_windows"></a>WindowsでVCを使う場合
 -----------------------------------
-  ������g���Ă���悤�ȕ��͊��ɂ�����x�킩���Ă���������Ƃ͎v����...
+  これを使われているような方は既にある程度わかっておられる方だとは思うが...
 
-  src�t�H���_�ɂ��� compile_by_vc.bat���N���b�N���Ď��s���悤.
-  VC���K�؂ɃC���X�g�[������Ă���Ȃ�΁A���ׂẴR���p�C���������ōs���A
-  out_dir���ɖړI��exe�t�@�C����dll�����������͂��ł���.
+  srcフォルダにある compile_by_vc.batをクリックして実行しよう.
+  VCが適切にインストールされているならば、すべてのコンパイルが自動で行われ、
+  out_dir内に目的のexeファイルやdllが生成されるはずである.
 
 
-  **�y�Q�l�zcompile_by_vc.bat �������ōs���Ă��邱��**
+  **【参考】compile_by_vc.bat が内部で行っていること**
 
-  �����ł�compile_by_vc.bat ���g�킸�ɐݒ肷����@���q�ׂ�.
-  ���������compile_by_vc.bat �������ōs���Ă��邱�Ƃ̉���ł�����.
+  ここではcompile_by_vc.bat を使わずに設定する方法を述べる.
+  換言すればcompile_by_vc.bat が内部で行っていることの解説でもある.
 
-  ��{�I�ɂ̓R�}���h�v�����v�g���J���A���ϐ��𐮂�����ŁA�ȉ������s�����
-  �r���h�\�ł���.
+  基本的にはコマンドプロンプトを開き、環境変数を整えた上で、以下を実行すると
+  ビルド可能である.
 
 ~~~
     nmake -f Makefile_vc.mak
 ~~~
 
-  �����Ȃ���΂Ȃ�Ȃ����ϐ��́APATH, INCLUDE, LIB�ł���.  
-  �����Ɋւ���ڍׂ̓O�O�b������������������Ȃ����A�ꉞ��������.  
+  整えなければならない環境変数は、PATH, INCLUDE, LIBである.  
+  これらに関する詳細はググッた方が早いかもしれないが、一応説明する.  
 
-  ���ϐ�PATH�Ɋւ��ẮA�ȉ��̃R�}���h�����݂���t�H���_�̃p�X�� ; ��؂�Œǉ�����.
+  環境変数PATHに関しては、以下のコマンドが存在するフォルダのパスを ; 区切りで追加する.
 ~~~
     cl.exe  link.exe  lib.exe  nmake.exe
 ~~~
   
-  ���������ꂾ���ł͎��͕s�\���ł���ɂ����̃R�}���h���ˑ�����dll���܂܂��t�H���_��
-  ���l�ɒǉ����Ȃ���΂Ȃ�Ȃ�. ���Ȃ��Ƃɂ��̃t�H���_�͂����̃R�}���h�̒u����
-  ����t�H���_�Ƃ͕�(����Common7�z���̂ǂ���)�ł������肷��.
+  しかしこれだけでは実は不十分でさらにこれらのコマンドが依存するdllが含まれるフォルダも
+  同様に追加しなければならない. 厄介なことにそのフォルダはこれらのコマンドの置いて
+  あるフォルダとは別(大抵はCommon7配下のどこか)であったりする.
 
-  �Ⴆ�� ��L�̃R�}���h�� C:\Program Files\Microsoft Visual Studio 8\VC\bin ���ɂ���Ȃ��
-  �R�}���h�v�����v�g��ňȉ��̂悤�ɓ��͂���(�s�̍Ō㖈��Enter�L�[����������).
+  例えば 上記のコマンドが C:\Program Files\Microsoft Visual Studio 8\VC\bin 内にあるならば
+  コマンドプロンプト上で以下のように入力する(行の最後毎にEnterキーを押すこと).
 
 ~~~
     set PATH=C:\Program Files\Microsoft Visual Studio 8\VC\bin;%PATH%
@@ -303,251 +304,251 @@
     set PATH=C:\Program Files\Microsoft Visual Studio 8\Common7\Tools\Bin;%PATH%
 ~~~
 
-  ����ŏ�ŋ����� cl.exe �Ȃǂ��t���p�X���w�肷�邱�ƂȂ��P��cl.exe(cl�ł��悢)��
-  ���͂��邾���Ŏ��s�\�ƂȂ�. ���ۂ�cl�Ɠ��͂���Enter�L�[�������Ă݂悤.
-  �uMicrosoft.. Optimize Compiler...���񂽂炩�񂽂�v�Əo���琬���ł���.
+  これで上で挙げた cl.exe などがフルパスを指定することなく単にcl.exe(clでもよい)と
+  入力するだけで実行可能となる. 実際にclと入力してEnterキーを押してみよう.
+  「Microsoft.. Optimize Compiler...うんたらかんたら」と出たら成功である.
 
-  �������A��L�͂��Ȃ蒷���c  
-  ����Ȃ��̖�����͂��Ă͂����Ȃ��̂ŁA�����ň�e�N�j�b�N���Љ�悤.
-  �e�L�X�g�G�f�B�^(�������Ȃ�)���J���A��L�̃R�}���h���R�s�y���āA�Ⴆ��my_set_path.bat
-  �Ƃ������O�ł����ۑ�����.
-  ���Ƃ̓R�}���h�v�����v�g�ォ��ȉ�����͂���΁A��L�̃R�}���h�Q���ꊇ���Ď��s�ł���.
+  しかし、上記はかなり長い…  
+  こんなもの毎回入力してはいられないので、ここで一つテクニックを紹介しよう.
+  テキストエディタ(メモ帳など)を開き、上記のコマンドをコピペして、例えばmy_set_path.bat
+  という名前でこれを保存する.
+  あとはコマンドプロンプト上から以下を入力すれば、上記のコマンド群を一括して実行できる.
 ~~~
     call my_set_path.bat
 ~~~
 
-  ���ϐ�INCLUDE�Ɋւ��ẮA�w�b�_�̑��݂���t�H���_�̃p�X�����ϐ�PATH�Ɠ��l�̌`���Őݒ肷��.
-  �����������ĕK�v�Ȃ͕̂W��C���C�u�����̃w�b�_(stdio.h�Ȃ�)�̑��݂���t�H���_��
-  WindowsAPI(����͈�ʂ�PlatformSDK�ƌĂ΂��)�̃w�b�_(windows.h�Ȃ�)�̑��݂���t�H���_
-  �̂Q�ł���. �Ⴆ�Έȉ��̂悤�ɂȂ�.
+  環境変数INCLUDEに関しては、ヘッダの存在するフォルダのパスを環境変数PATHと同様の形式で設定する.
+  さしあたって必要なのは標準Cライブラリのヘッダ(stdio.hなど)の存在するフォルダと
+  WindowsAPI(これは一般にPlatformSDKと呼ばれる)のヘッダ(windows.hなど)の存在するフォルダ
+  の２つである. 例えば以下のようになる.
 
 ~~~
     set INCLUDE=C:\Program Files\Microsoft Visual Studio 8\VC\include;%INCLUDE%
     set INCLUDE=C:\Program Files\Microsoft Visual Studio 8\VC\PlatformSDK\include;%INCLUDE%
 ~~~
 
-  ���ϐ�LIB�Ɋւ��ẮA���C�u����(�g���qlib)�̑��݂���t�H���_�̃p�X�����ϐ�PATH�Ɠ��l�̌`���Őݒ肷��.
-  �����������ĕK�v�Ȃ͕̂W��C���C�u����(libcmt.lib�Ȃ�)�̑��݂���t�H���_��
-  WindowsAPI(����͈�ʂ�PlatformSDK�ƌĂ΂��)�̃��C�u����(Kernel32.lib�Ȃ�)�̑��݂���t�H���_
-  �̂Q�ł���. �Ⴆ�Έȉ��̂悤�ɂȂ�.
+  環境変数LIBに関しては、ライブラリ(拡張子lib)の存在するフォルダのパスを環境変数PATHと同様の形式で設定する.
+  さしあたって必要なのは標準Cライブラリ(libcmt.libなど)の存在するフォルダと
+  WindowsAPI(これは一般にPlatformSDKと呼ばれる)のライブラリ(Kernel32.libなど)の存在するフォルダ
+  の２つである. 例えば以下のようになる.
 
 ~~~
     set LIB=C:\Program Files\Microsoft Visual Studio 8\VC\lib;%LIB%
     set LIB=C:\Program Files\Microsoft Visual Studio 8\VC\PlatformSDK\lib;%LIB%
 ~~~
 
-  �Ƃ���Œʏ�͂�������X���蓮�őS���ݒ肷��K�v�͂Ȃ��AVC�̃C���X�g�[���f�B���N�g���z����
-  �����������ݒ肷�邽�߂�bat�t�@�C�������݂���̂ł�����g��. 
-  �����VC�̃o�[�W�����ɂ���Ē��g���قȂ邪VC6.0�������Avsvars32.bat �Ƃ������O�ɂȂ��Ă���.
-  ���AVC7.0�ȍ~�AVC���C���X�g�[�����ꂽ�ꍇ�� VS??COMNTOOLS (??�ɂ̓o�[�W�����ԍ�������)�Ƃ���
-  �`���̊��ϐ����ݒ肳���. ����𗘗p����vsvars32.bat�̏ꏊ����肷�邱�Ƃ��ł���.
-  �������Ă���X�N���v�g setenv_vc.bat�͂��������������̂ł���.
-  ������compile_by_vc.bat�͓����ł�����Ăяo��.
+  ところで通常はこれらを我々が手動で全部設定する必要はなく、VCのインストールディレクトリ配下に
+  これらを自動設定するためのbatファイルが存在するのでそれを使う. 
+  これはVCのバージョンによって中身が異なるがVC6.0を除き、vsvars32.bat という名前になっている.
+  尚、VC7.0以降、VCがインストールされた場合は VS??COMNTOOLS (??にはバージョン番号が入る)という
+  形式の環境変数が設定される. これを利用してvsvars32.batの場所を特定することができる.
+  同梱してあるスクリプト setenv_vc.batはこれを実現するものである.
+  そしてcompile_by_vc.batは内部でこれを呼び出す.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="compile_on_linux"></a>Linux�̏ꍇ:
+## <a name="compile_on_linux"></a>Linuxの場合:
 -----------------------------------
-  ������g���Ă���悤�ȕ��͊��ɂ�����x�킩���Ă���������Ƃ͎v����...
+  これを使われているような方は既にある程度わかっておられる方だとは思うが...
 
-  gcc, g++, make, ld, ar, ranlib �R�}���h�����s�ł���悤�ɕK�v�ɉ����Ă������C���X�g�[������.
-  �����͂ǂ�� C/C++�ł̊J���ɂ����čŒ���K�v�ƂȂ��{�R�}���h�΂���ł���.
-  �ʂɃC���X�g�[�����Ă��悢���ADevelopment�n�̃J�e�S���ɂ����{�p�b�P�[�W���C���X�g�[�������
-  �܂����ׂĎ����ŃC���X�g�[�������Ǝv���i�Ⴆ��Arch Linux�Ȃ� pacman �� base-devel ���C���X�g�[������). 
-  ��̓I�ȃC���X�g�[�����@�͂��ꂼ���Linux�f�B�X�g���r���[�V�����ɂ���Đ獷���ʂȂ̂ł����ł͋L�ڂ��Ȃ�. 
-  �f�B�X�g���r���[�V�����ɂ���Ă͍ŏ�����C���X�g�[������Ă���\��������.
+  gcc, g++, make, ld, ar, ranlib コマンドが実行できるように必要に応じてこれらをインストールする.
+  これらはどれも C/C++での開発において最低限必要となる基本コマンドばかりである.
+  個別にインストールしてもよいが、Development系のカテゴリにある基本パッケージをインストールすれば
+  まずすべて自動でインストールされると思う（例えばArch Linuxなら pacman で base-devel をインストールする). 
+  具体的なインストール方法はそれぞれのLinuxディストリビューションによって千差万別なのでここでは記載しない. 
+  ディストリビューションによっては最初からインストールされている可能性も高い.
 
-  ���̏�Ń^�[�~�i��(xterm, urxvt�ȂǂȂ�ł��悢��)���J���A�ȉ��̃V�F���X�N���v�g�����s����.
+  その上でターミナル(xterm, urxvtなどなんでもよいが)を開き、以下のシェルスクリプトを実行する.
 
     ./compile_on_linux.sh
 
-  ���̃V�F���X�N���v�g�ɂ��AMakefile_linux.mak �̑��݂���S�f�B���N�g���֎����I�Ɉړ�����
-  make -f Makefile_linux.mak �����s�����. ���̎��_�ŃR���p�C����̃o�C�i���́A�e�f�B���N�g������
-  out_dir�Ɋi�[����Ă���.
-  (Permission denied�̂悤�ȃG���[���b�Z�[�W���\������Ă��̃V�F���X�N���v�g�����s�ł��Ȃ��ꍇ�́A
-  �܂� chmod 755 compile_on_linux.sh �Łu���s�����v��^���A�ēx�����Ă݂悤�I)
+  このシェルスクリプトにより、Makefile_linux.mak の存在する全ディレクトリへ自動的に移動しつつ
+  make -f Makefile_linux.mak が実行される. この時点でコンパイル後のバイナリは、各ディレクトリ内の
+  out_dirに格納されている.
+  (Permission deniedのようなエラーメッセージが表示されてこのシェルスクリプトが実行できない場合は、
+  まず chmod 755 compile_on_linux.sh で「実行権限」を与え、再度試してみよう！)
 
-  ���ɁA��ŃR���p�C�������S�o�C�i����ݒ�t�@�C�����C���X�g�[������ɂ́A�ȉ������s����΂悢.
+  次に、上でコンパイルした全バイナリや設定ファイルをインストールするには、以下を実行すればよい.
 
 	./install_bin_for_linux.sh
 
-  ����ɂ��A���̃f�B���N�g���̈��ɂ��� ../bin_for_linux �֕K�v�Ȃ��ׂẴt�@�C�����C���X�g�[�������.
-  (Permission denied�̂悤�ȃG���[���b�Z�[�W���\������Ă��̃V�F���X�N���v�g�����s�ł��Ȃ��ꍇ�́A
-  ��Ɠ��l�� chmod 755 install_bin_for_linux.sh �Łu���s�����v��^���A�ēx�����Ă݂悤�I)
+  これにより、このディレクトリの一つ上にある ../bin_for_linux へ必要なすべてのファイルがインストールされる.
+  (Permission deniedのようなエラーメッセージが表示されてこのシェルスクリプトが実行できない場合は、
+  上と同様に chmod 755 install_bin_for_linux.sh で「実行権限」を与え、再度試してみよう！)
 
-  �ȏ�ŃR���p�C������уC���X�g�[���͊����ł���.
+  以上でコンパイルおよびインストールは完了である.
 
-  ../bin_for_linux�ֈړ����Amoai���N�����悤.
-  �ȉ��̂悤�ȃ��b�Z�[�W���\��������moai�͖����N�����Ă���.
+  ../bin_for_linuxへ移動し、moaiを起動しよう.
+  以下のようなメッセージが表示されればmoaiは無事起動している.
 
 ~~~
   Moai : config load OK.
   Moai : target load OK.
   Moai : analysis load OK.
-  Moai : Filter Loading [filters/�c.myf]
-  Moai : Plugin Loading [plugins/�c.so]
-  �c
+  Moai : Filter Loading [filters/….myf]
+  Moai : Plugin Loading [plugins/….so]
+  …
   Moai : acceptable_host=[LOOPBACK]
   Moai : blocking_mode=[0]
-  Moai : AutoGet PrivateIP=[192.168.�c].
+  Moai : AutoGet PrivateIP=[192.168.…].
   Moai : Listen port 8124...
 
   Moai : ObserveR : 1-th sock events by select.
 ~~~
 
-  ���̏�ԂŃu���E�U�ɂ�����v���L�V�ݒ�Őڑ����127.0.0.1:8124�ɐݒ肷��΁A
-  moai�����[�J���v���L�V�Ƃ��ċ@�\�����邱�Ƃ��ł���͂��ł���.
+  この状態でブラウザにおけるプロキシ設定で接続先を127.0.0.1:8124に設定すれば、
+  moaiをローカルプロキシとして機能させることができるはずである.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="compile_on_cygwin"></a>Cygwin�̏ꍇ:
+## <a name="compile_on_cygwin"></a>Cygwinの場合:
 -----------------------------------
-  ����Cygwin�����p����Ă���AMinGW�Ȃǂ̋����J�������킴�킴�C���X�g�[���������Ȃ�����������Ǝv��.
-  ���̍��ڂ͂��̂悤�ȕ������ł���.
+  既にCygwinを愛用されており、MinGWなどの競合開発環境をわざわざインストールしたくない方もおられると思う.
+  この項目はそのような方向けである.
 
-> Cygwin�ł͂�₱�������ƂɁA���̏�œ��삷��MinGW���C���X�g�[�����邱�Ƃ��ł��A���̏ꍇgcc�I�v�V�����Ƃ���
->  -mno-cygwin���g�����Ƃ�Cygwin��gcc�ł͂Ȃ�MinGW��gcc���Ăяo�����Ƃ��ł���.
-> �����ł͐ݒ�t�@�C���Ȃǃ��_�ɂ�₱�����������Ȃ����߁A���̂悤�Ȏg�����ɂ��Ă͑Ή����Ȃ�.
-> �܂菃����Windows�v���O���������p�r�ł͂Ȃ��AUNIX�G�~�����[�^�Ƃ��ăv���O���������Ƃ���Cygwin�{����
-> ��|�Ɍ��肷����̂Ƃ���. MinGW���g�������ꍇ�́A��L�ł̐����̂悤�ɃR�}���h�v�����v�g��Ŏg�p���邩�A
-> ���邢��MSYS1.0���g���ė~����. ( �ǂ����Ă�Cygwin���MinGW���g����������Makefile_cygwin.mak���e���C������K�v������.
-> ���������dll���̔�������R�}���h���C���I�v�V���� -mno-cygwin ��ǉ�������x�̕ύX�ōςނƂ͎v�� ).
+> Cygwinではややこしいことに、この上で動作するMinGWをインストールすることもでき、その場合gccオプションとして
+>  -mno-cygwinを使うことでCygwin版gccではなくMinGW版gccを呼び出すこともできる.
+> ここでは設定ファイルなどムダにややこしくしたくないため、そのような使い方については対応しない.
+> つまり純粋なWindowsプログラムを作る用途ではなく、UNIXエミュレータとしてプログラムを作るというCygwin本来の
+> 趣旨に限定するものとする. MinGWを使いたい場合は、上記での説明のようにコマンドプロンプト上で使用するか、
+> あるいはMSYS1.0を使って欲しい. ( どうしてもCygwin上でMinGWを使いたい方はMakefile_cygwin.makを各自修正する必要がある.
+> 生成されるdll名の微調整やコマンドラインオプション -mno-cygwin を追加する程度の変更で済むとは思う ).
 
-  gcc-core, gcc-g++, make, binutils(ld, ar, ranlib, as�R�}���h�Ȃ�)���C���X�g�[������.
-  �����͂ǂ�� C/C++�ł̊J���ɂ����čŒ���K�v�ƂȂ��{�p�b�P�[�W�ł���.
-  setup-x86.exe �ɂ����Ă������ʂɃC���X�g�[�����Ă��悢���ADevel�J�e�S���ɂ����͑S�Ċ܂܂�Ă���̂�
-  �ʓ|�Ȃ炱�̃J�e�S�����ƈꊇ�ŃC���X�g�[�����Ă��悢.
+  gcc-core, gcc-g++, make, binutils(ld, ar, ranlib, asコマンドなど)をインストールする.
+  これらはどれも C/C++での開発において最低限必要となる基本パッケージである.
+  setup-x86.exe においてこれらを個別にインストールしてもよいが、Develカテゴリにこれらは全て含まれているので
+  面倒ならこのカテゴリごと一括でインストールしてもよい.
 
-  ���̏��Cygwin�^�[�~�i�����J���A�ȉ��̃V�F���X�N���v�g�����s����.
+  その上でCygwinターミナルを開き、以下のシェルスクリプトを実行する.
 
     ./compile_on_cygwin.sh
 
-  ���̃V�F���X�N���v�g�ɂ��AMakefile_cygwin.mak �̑��݂���S�f�B���N�g���֎����I�Ɉړ�����
-  make -f Makefile_cygwin.mak �����s�����. ���̎��_�ŃR���p�C����̃o�C�i���́A�e�f�B���N�g������
-  out_dir�Ɋi�[����Ă���.
-  ���ACygwin�̏ꍇ�A�o���オ��dll�̖��O�ɂ�cyg�v���t�B�b�N�X�����Ă���.
-  ����ΕʂɕK�{�Ƃ����킯�ł͂Ȃ��̂����ACygwin�p��dll��VC��MinGW�ɂ�萶�����镁�ʂ�dll�Ƃ͈ꕔ�قȂ邽�߁A
-  ��ʂ��邽�߂ɂ��̂悤�ɂ��Ă���. 
+  このシェルスクリプトにより、Makefile_cygwin.mak の存在する全ディレクトリへ自動的に移動しつつ
+  make -f Makefile_cygwin.mak が実行される. この時点でコンパイル後のバイナリは、各ディレクトリ内の
+  out_dirに格納されている.
+  尚、Cygwinの場合、出来上がるdllの名前にはcygプリフィックスをつけている.
+  これば別に必須というわけではないのだが、Cygwin用のdllはVCやMinGWにより生成する普通のdllとは一部異なるため、
+  区別するためにこのようにしてある. 
 
-  ���ɁA��ŃR���p�C�������S�o�C�i����ݒ�t�@�C�����C���X�g�[������ɂ́A�ȉ������s����΂悢.
+  次に、上でコンパイルした全バイナリや設定ファイルをインストールするには、以下を実行すればよい.
 
 	./install_bin_for_cygwin.sh
 
-  ����ɂ��A���̃f�B���N�g���̈��ɂ��� ../bin_for_cygwin �֕K�v�Ȃ��ׂẴt�@�C�����C���X�g�[�������.
+  これにより、このディレクトリの一つ上にある ../bin_for_cygwin へ必要なすべてのファイルがインストールされる.
 
-  �ȏ�ŃR���p�C������уC���X�g�[���͊����ł���.
+  以上でコンパイルおよびインストールは完了である.
 
-  ../bin_for_cygwin�ֈړ����Amoai���N�����悤.
-  �ȍ~��Linux�łƓ����ł���.
+  ../bin_for_cygwinへ移動し、moaiを起動しよう.
+  以降はLinux版と同じである.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="compile_on_msys10"></a>MSYS1.0�̏ꍇ:
+## <a name="compile_on_msys10"></a>MSYS1.0の場合:
 -----------------------------------
 
-  �쐬��.
+  作成中.
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="use_others_on_windows"></a>Windows��BCC5.5(Borland C++ Compiler 5.5)�܂���DMC(Digital Mars C/C++)���g���ꍇ(���܂�)
+## <a name="use_others_on_windows"></a>WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使う場合(おまけ)
 -----------------------------------
-  ���Ȃ���MinGW�ł�VC�ł��Ȃ������Ă�����I�ԂƂ����Ȃ�A���͂��X�͉��������܂�.
+  あなたがMinGWでもVCでもなくあえてこれらを選ぶというなら、もはや我々は何も言うまい.
 
-  ����p��makefile�́A�����΂�̂œ������Ă��Ȃ����A���̂Ƃ���\�[�X�R�[�h���̂�
-  �����ł��r���h�ł���悤�ɈڐA���Ɉꉞ�z�����Ă���.
-  �q���g�������Ă����̂ŋ������������ȕ��͊e��makefile���쐬���ė~����.
+  これ用のmakefileは、かさばるので同梱していないが、実のところソースコード自体は
+  これらでもビルドできるように移植性に一応配慮してある.
+  ヒントを示しておくので興味がある奇特な方は各自makefileを作成して欲しい.
 
   **BCC5.5**  
-  obj�����ꍇ�̎w����@:
+  objを作る場合の指定方法:
 ~~~
     bcc32 -w -RT -c -oYourFile.obj YouFile.c
 ~~~
 
-  exe�����ꍇ�̎w����@(OBJS��+�L���Ŋeobj�t�@�C����A���������̂��w�肷��Ƃ����ϑԎd�l�ł���):
+  exeを作る場合の指定方法(OBJSは+記号で各objファイルを連結したものを指定するという変態仕様である):
 ~~~
     ilink32 -w -Gn -C -Tpe -ap c0x32.obj $(OBJS) $(LFLAGS),YourApplication.exe,,import32.lib cw32mt.lib,,YourResource.res
 ~~~
 
-  �ÓI���C�u����(lib)�����ꍇ�̎w����@:
+  静的ライブラリ(lib)を作る場合の指定方法:
 ~~~
     tlib YourStaticLib.lib /P4096 $(OBJS)
 ~~~
 
-  dll����т���ɑΉ�����C���|�[�g���C�u���������ꍇ�̎w����@(���̕��@��__stdcall�ɂ͑Ή����Ȃ�):
+  dllおよびそれに対応するインポートライブラリを作る場合の指定方法(この方法は__stdcallには対応しない):
 ~~~
     ilink32 -w -Gn -C -Tpd c0d32x.obj $(OBJS) $(LFLAGS),YourDLL.dll,,import32.lib cw32mt.lib,YourDLL.def
     implib -f -a YourDLL.lib YourDLL.dll
-    �܂���
+    または
     implib -f -a YourDLL.lib YourDLL.def
 ~~~
 
-  **DMC(�ŐV�o�[�W�����̂�)**  
-  obj�����ꍇ�̎w����@:
+  **DMC(最新バージョンのみ)**  
+  objを作る場合の指定方法:
 ~~~
     dmc -HP99 -Bj -j0 -Ab -Ae -Ar -w6 -c -oYourFile.obj YouFile.c
 ~~~
 
-  exe�����ꍇ�̎w����@:
+  exeを作る場合の指定方法:
 ~~~
     LINK -EXET:NT $(OBJS),YourApplication.exe,,ws2_32.lib user32.lib kernel32.lib,,YourResource.res
 ~~~
 
-  �ÓI���C�u����(lib)�����ꍇ�̎w����@:
+  静的ライブラリ(lib)を作る場合の指定方法:
 ~~~
     lib -c -p4096 YourStaticLib.lib $(OBJS)
 ~~~
 
-  dll����т���ɑΉ�����C���|�[�g���C�u���������ꍇ�̎w����@:
+  dllおよびそれに対応するインポートライブラリを作る場合の指定方法:
 ~~~
     LINK -EXET:NT $(OBJS),YourDLL.dll,,ws2_32.lib user32.lib kernel32.lib,YourDLL.def
     implib /system YourDLL.lib YourDLL.dll
 ~~~
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="about_android"></a>Android�ɂ���:
+## <a name="about_android"></a>Androidについて:
 -----------------------------------
-  Android�͊�{�I��Linux�ł��邪�APC Linux�Ƃ͑傫���قȂ镔��������.
-  �����Ēʏ�AAndroid�ɂ�����A�v����Java VM���x�[�X�Ƃ���(�G���g���|�C���g�Ƃ���)�񋟂����.
-  Java VM�x�[�X�ȃA�v���ł́A�O���t�B�J���ȃA�C�R�����z�[����ʂɕ\������A
-  ������^�b�v���邱�ƂŋN������.
+  Androidは基本的にLinuxであるが、PC Linuxとは大きく異なる部分もある.
+  そして通常、AndroidにおけるアプリはJava VMをベースとして(エントリポイントとして)提供される.
+  Java VMベースなアプリでは、グラフィカルなアイコンがホーム画面に表示され、
+  それをタップすることで起動する.
 
-  �������Ȃ���A����r���h���� Moai for Android ��Java VM�x�[�X�ł͂Ȃ�Android��Linux���
-  ���ڑ���l�C�e�B�u�A�v���Ƃ���C����ŊJ������. ���̏ꍇ�z�[����ʂ�Moai�p�̓��ʂȃA�C�R�����\������邱�Ƃ͂Ȃ�.
-  Moai���N������ɂ́A�܂��[���G�~�����[�^���J���Acd�R�}���h�ɂ�� moai���s�o�C�i�������݂���f�B���N�g��
-  (bin_for_android)�ւƈړ����Ă���moai���s�o�C�i���𒼐ڋN������`�ɂȂ�.
-  �v����ɖ{����Linux����Windows�̃R�}���h�v�����v�g�Ȃǂ���v���O�������N������v�̂ōs��.
+  しかしながら、今回ビルドする Moai for Android はJava VMベースではなくAndroidのLinux上で
+  直接走るネイティブアプリとしてC言語で開発する. この場合ホーム画面にMoai用の特別なアイコンが表示されることはない.
+  Moaiを起動するには、まず端末エミュレータを開き、cdコマンドにより moai実行バイナリが存在するディレクトリ
+  (bin_for_android)へと移動してからmoai実行バイナリを直接起動する形になる.
+  要するに本来のLinux環境やWindowsのコマンドプロンプトなどからプログラムを起動する要領で行う.
 
-  ���āA�O�u���������Ȃ������A�l�C�e�B�u�A�v���Ƃ���C����̃\�[�X�R�[�h���R���p�C������ɂ�Android NDK���g��.
-  Android NDK�� https://developer.android.com/ndk/downloads/index.html ���_�E�����[�h�ł���.
-  �܂��J����Android��ł͍s���Ȃ����߁APC���K�v�ł���. �܂�Android NDK��PC�փ_�E�����[�h���APC��ɂĊJ�����s��.
+  さて、前置きが長くなったが、ネイティブアプリとしてC言語のソースコードをコンパイルするにはAndroid NDKを使う.
+  Android NDKは https://developer.android.com/ndk/downloads/index.html よりダウンロードできる.
+  また開発はAndroid上では行えないため、PCが必要である. つまりAndroid NDKをPCへダウンロードし、PC上にて開発を行う.
 
-  ������ Android NDK�̃t�@�C���T�C�Y�͂��Ȃ�傫���̂Œ��ӂ��Ăق���. �_�E�����[�h����zip�t�@�C���͖�750MB���x������A
-  ����ɂ�����𓀓W�J����ƁA�Ȃ��3GB�قǂɂ��Ȃ�I �܂肱����P���ɍ��v���������ł�
-  �f�B�X�N�̋󂫂�4GB���x�K�v�ƂȂ�. �����Windows��ŃR���p�C������ꍇ�A�����Cygwin���g�����Ƃ�z�肷��.
-  (Cygwin���g�킸�ɃR���p�C�����邱�Ƃ������炭�\�����A����Ɋւ��Ă͂܂�����/�������ł���)  
-  ���AAndroid Studio ����� android-sdk �͍���͑S���g��Ȃ�. �C���X�g�[���������s�v�ł���.
-  ���l��JDK(Java Development Kit)��JRE�Ȃǂ��K�v�Ȃ�.
+  しかし Android NDKのファイルサイズはかなり大きいので注意してほしい. ダウンロードするzipファイルは約750MB程度もあり、
+  さらにこれを解凍展開すると、なんと3GBほどにもなる！ つまりこれらを単純に合計しただけでも
+  ディスクの空きが4GB程度必要となる. さらにWindows上でコンパイルする場合、今回はCygwinを使うことを想定する.
+  (Cygwinを使わずにコンパイルすることもおそらく可能だが、これに関してはまだ調査/調整中である)  
+  尚、Android Studio および android-sdk は今回は全く使わない. インストールさえも不要である.
+  同様にJDK(Java Development Kit)やJREなども必要ない.
 
-  Android NDK���_�E�����[�h������A������f�B�X�N�։𓀓W�J����.
-  �����𓀂ł������낤���H�Ȃɂ��t�@�C���T�C�Y���n���f�J�C���߁A�𓀃c�[���ŃG���[�Ȃǂ��\������Ă��Ȃ����Ƃ�O�̂��ߊm�F���悤.
+  Android NDKをダウンロードしたら、これをディスクへ解凍展開する.
+  無事解凍できただろうか？なにせファイルサイズが馬鹿デカイため、解凍ツールでエラーなどが表示されていないことを念のため確認しよう.
 
-  ���� android_setting_ndk.sh ���e�L�X�g�G�f�B�^�ŊJ���AZNK_NDK_HOME�̒l��Android NDK���𓀓W�J���ꂽ�f�B���N�g��
-  �̃p�X�ɏ���������. �Ⴆ��Windows��C:\android-ndk-r12�t�H���_�ɉ𓀓W�J����Ă���Ȃ�ACygwin��ł̂���������p�X��
-  /cygdrive/c/android-ndk-r12�ƂȂ�A�ȉ��̂悤�ɏ���������`�ƂȂ�.
+  次に android_setting_ndk.sh をテキストエディタで開き、ZNK_NDK_HOMEの値をAndroid NDKが解凍展開されたディレクトリ
+  のパスに書きかえる. 例えばWindowsでC:\android-ndk-r12フォルダに解凍展開されているなら、Cygwin上でのこれを示すパスは
+  /cygdrive/c/android-ndk-r12となり、以下のように書き換える形となる.
   
 
 ~~~
    export ZNK_NDK_HOME=/cygdrive/c/android-ndk-r12
 ~~~
 
-  ��͈ȉ��̃R�}���h�����ԂɎ��s���Ă����΂悢.
-  (Windows�̏ꍇ��Cygwin���N�����Ă�������s���悤.)
+  後は以下のコマンドを順番に実行していけばよい.
+  (Windowsの場合はCygwinを起動してこれを実行しよう.)
 ~~~
   chmod 755 *.sh
   source ./android_setting_ndk.sh
@@ -555,62 +556,62 @@
   ./android_install_bin.sh
 ~~~
 
-  src/libZnk, src/moai �Ȃǂ�android�f�B���N�g�������݂��邪�A���̓����ɂ���jni�f�B���N�g����
-  Android NDK�ŃR���p�C�����邽�߂�Makefile���i�[����Ă���.
-  android_compile.sh�����s����ƁA�܂�����android �f�B���N�g���ֈړ�����ndk-build�R�}���h���Ăяo�����.
-  ���̂Ƃ��A���f�B���N�g���� libs, obj �f�B���N�g������������A�r���h�����o�C�i���⃉�C�u�����Ȃǂ�
-  �����ɏo�͂����.
-  ./android_install_bin.sh �����s���邱�ƂŁA�����̃o�C�i���� ../bin_for_android�ւƃC���X�g�[�������`�ƂȂ�.
+  src/libZnk, src/moai などにandroidディレクトリが存在するが、この内部にあるjniディレクトリに
+  Android NDKでコンパイルするためのMakefileが格納されてある.
+  android_compile.shを実行すると、まずこのandroid ディレクトリへ移動してndk-buildコマンドが呼び出される.
+  このとき、同ディレクトリに libs, obj ディレクトリが生成され、ビルドしたバイナリやライブラリなどが
+  ここに出力される.
+  ./android_install_bin.sh を実行することで、これらのバイナリが ../bin_for_androidへとインストールされる形となる.
 
 
-  �Ō�ɏo���オ���� bin_for_android �����@�ɓ]��������ł�������s����.
-  ����ɂ͐F�X���@�����邪�A�Ƃ肠������bin_for_android����Uzip�t�@�C���Ɍł߂�Web��ɃA�b�v��
-  ���@���炱����_�E�����[�h����Ƃ����N�\��肭�ǂ����@��~~�����Ő�������ɂ�~~��ԊȒP��.
-  �܂��ǂ�ȕ��@�ł��悢���Ƃ肠�����Ȃ�Ƃ���������@�ւƓ]�����ė~����.
+  最後に出来上がった bin_for_android を実機に転送した上でそれを実行する.
+  これには色々方法があるが、とりあえずはbin_for_androidを一旦zipファイルに固めてWeb上にアップし
+  実機からこれをダウンロードするというクソ回りくどい方法が~~ここで説明するには~~一番簡単だ.
+  まあどんな方法でもよいがとりあえずなんとかこれを実機へと転送して欲しい.
 
-  ���s����ɂ������Ă͎��̓_�ɒ��ӂ��Ă�����������.
+  実行するにあたっては次の点に注意していただきたい.
 
-  * �z�[���f�B���N�g���ȊO�ł͏������݌�������ю��s�����̊֌W�Ŏ��s�ł��Ȃ�.<br>
-    ����Ă܂��u�[���G�~�����[�^�v���J���Acd �R�}���h���z�[���f�B���N�g���ֈړ�����.
-    (�P��cd�Ɠ��͂���Enter�������΂悢).<br>
-    ������bin_for_android.zip���_�E�����[�h�Ȃǂ����ꍇ�́ADownload�f�B���N�g������z�[���f�B���N�g����
-    ������R�s�[���Ȃ���΂Ȃ�Ȃ�.
-    Download�f�B���N�g���͒ʏ�A/storage/sdcard0/Download �Ȃǂ̃p�X�ɑ��݂��A���̔z���Ƀ_�E�����[�h����
-    �t�@�C�����u����Ă���.
-    �ȉ��̂悤�Ɏ��s���邱�Ƃł�����z�[���f�B���N�g���փR�s�[���悤.
+  * ホームディレクトリ以外では書き込み権限および実行権限の関係で実行できない.<br>
+    よってまず「端末エミュレータ」を開き、cd コマンドよりホームディレクトリへ移動する.
+    (単にcdと入力してEnterを押せばよい).<br>
+    そしてbin_for_android.zipをダウンロードなどした場合は、Downloadディレクトリからホームディレクトリへ
+    これをコピーしなければならない.
+    Downloadディレクトリは通常、/storage/sdcard0/Download などのパスに存在し、その配下にダウンロードした
+    ファイルも置かれている.
+    以下のように実行することでこれをホームディレクトリへコピーしよう.
 ~~~
       cp /storage/sdcard0/Download/bin_for_android.zip ~/
 ~~~
-  * bin_for_android.zip ���z�[���f�B���N�g���փR�s�[������Aunzip bin_for_android.zip �ł�����𓀓W�J���悤.
-    ���� cd bin_for_android/armeabi �Ŏ��s�o�C�i���̂���f�B���N�g�����ւƈړ����A
-    moai ����� http_decorator �Ɏ��s������^����. 
-    �ȉ������s���Ă�����.
+  * bin_for_android.zip をホームディレクトリへコピーしたら、unzip bin_for_android.zip でこれを解凍展開しよう.
+    次に cd bin_for_android/armeabi で実行バイナリのあるディレクトリ内へと移動し、
+    moai および http_decorator に実行権限を与える. 
+    以下を実行しておこう.
 ~~~
       chmod 755 moai http_decorator
 ~~~
-  * moai�͋N������libZnk.so�𓮓I���[�h����.
-    ����𐬌������邽�߂�LD_LIBRARY_PATH��K�؂Ɏw�肵�Ă����Ȃ���΂Ȃ�Ȃ�.
-    �ȉ������s���Ă�����.
+  * moaiは起動時にlibZnk.soを動的ロードする.
+    これを成功させるためにLD_LIBRARY_PATHを適切に指定しておかなければならない.
+    以下を実行しておこう.
 ~~~
       export LD_LIBRARY_PATH=. 
 ~~~
 
-  ����ł悤�₭������������.
-  ./moai �Ɠ��͂��A��L�uLinux�̏ꍇ�v�Ő��������̂Ɠ��l�̃��b�Z�[�W���\�������ΐ����ł���.
+  これでようやく準備が整った.
+  ./moai と入力し、上記「Linuxの場合」で説明したのと同様のメッセージが表示されれば成功である.
 
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="about_macos"></a>MacOS�ɂ���:
+## <a name="about_macos"></a>MacOSについて:
 -----------------------------------
-  ����ł͖��T�|�[�g�ł���.
-  ���ɃR���p�C�������݂�Ȃ�(�茳�ɂȂ��̂Ŗ��m�F�ł��邪)Darwin���g�����ƂɂȂ�Ǝv��.
-  �����gcc, make�R�}���h�Ȃ�Linux�Ɠ��l�̃c�[�����܂܂�Ă���A����Makefile_linux.mak��
-  �����蒼������Γ��l�̕��@�Ńr���h�ł���͂��ł���.
-  (�_�C�i�~�b�N�����N���C�u�����̊g���q��so�ł͂Ȃ�dylib��tbd�Ƃ��������̂ɂȂ�悤�ł���.
-  ���̑������Jld�̃I�v�V�����������炭MacOS�Ǝ��̂��̂��w�肵�Ȃ���΂Ȃ�Ȃ����낤)
+  現状では未サポートである.
+  仮にコンパイルを試みるなら(手元にないので未確認であるが)Darwinを使うことになると思う.
+  これにgcc, makeコマンドなどLinuxと同様のツールが含まれており、多分Makefile_linux.makを
+  少し手直しすれば同様の方法でビルドできるはずである.
+  (ダイナミックリンクライブラリの拡張子はsoではなくdylibやtbdといったものになるようである.
+  その他リンカldのオプションもおそらくMacOS独自のものを指定しなければならないだろう)
 
-  <a href="#user-content-index">�ڎ��֖߂�</a>
+  <a href="#user-content-index">目次へ戻る</a>
 
 
