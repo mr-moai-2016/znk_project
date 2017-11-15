@@ -1,25 +1,25 @@
 # ソースコードのコンパイル手順
 -----------------------------------
 
-## <a name="index">目次
+## <a name="index"></a>目次
 -----------------------------------
-* [Windowsな方へ、はじめてのコマンドプロンプト](#windows_first)
-* [Windowsな方へ、はじめてのMinGW](#windows_next)
-* [MinGWの入手方法](#get_mingw)
-* [WindowsでMinGWを使う場合](#use_mingw_on_windows)
-* [WindowsでVCを使う場合](#use_vc_on_windows)
-* [Linuxの場合](#compile_on_linux)
-* [Cygwinの場合](#compile_on_cygwin)
-* [MSYS1.0でMinGWを使用する場合](#compile_on_msys10)
-* [WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使う場合(おまけ)](#use_others_on_windows)
-* [Androidについて](#about_android)
-* [MacOSについて](#about_macos)
+* [Windowsな方へ、はじめてのコマンドプロンプト](#user-content-windows_first)
+* [Windowsな方へ、はじめてのMinGW             ](#user-content-windows_next)
+* [MinGWの入手方法         ](#user-content-get_mingw)
+* [WindowsでMinGWを使う場合](#user-content-use_mingw_on_windows)
+* [WindowsでVCを使う場合   ](#user-content-use_vc_on_windows)
+* [Linuxの場合    ](#user-content-compile_on_linux)
+* [Cygwinの場合   ](#user-content-compile_on_cygwin)
+* [MSYS1.0でMinGWを使用する場合](#user-content-compile_on_msys10)
+* [WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使う場合(おまけ)](#user-content-use_others_on_windows)
+* [Androidについて](#user-content-about_android)
+* [MacOSについて  ](#user-content-about_macos)
 
-## <a name="windows_first">Windowsな方へ、はじめてのコマンドプロンプト
+## <a name="windows_first"></a>Windowsな方へ、はじめてのコマンドプロンプト
 -----------------------------------
 
   まずスタートメニューからコマンドプロンプトを開く方法からである.
-  (**そこからかよッ！**って方はこの項はスルーして[次へ](#windows_next)進むこと)
+  ( **そこからかよッ！**って方はこの項はスルーして[次へ](#windows_next)進むこと )
 
   「**スタートメニュー？なんですかそれは？**」な方は画面一番左下にあるWindowsのロゴが
   入ったボタンがそれである.  「そんなものは見当たらない…」な方は…やむを得まい.
@@ -44,7 +44,7 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="windows_next">Windowsな方へ、はじめてのMinGW
+## <a name="windows_next"></a>Windowsな方へ、はじめてのMinGW
 -----------------------------------
 
   コマンドプロンプトを開けるようになったであろうか？
@@ -61,7 +61,7 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="get_mingw">MinGWの入手方法:
+## <a name="get_mingw"></a>MinGWの入手方法:
 -----------------------------------
   メジャーなだけにググればいくらでも入手およびインストール方法が解説されたサイトはあるのだが
   ここでも簡単に説明しておく.
@@ -136,7 +136,7 @@
   「[WindowsでMinGWを使う場合](#use_mingw_on_windows)」の項へと進もう.
 
 
-<a name="note1">**【補足事項1】プログラマな方へ**
+<a name="note1"></a>**【補足事項1】プログラマな方へ**
 ~~~
     mingw32-baseによりインストールされるのは以下である.
 
@@ -174,7 +174,7 @@
 ~~~
 
 
-<a name="note2">**【補足事項2】MinGWのアンインストール、移動、バックアップについて**
+<a name="note2"></a>**【補足事項2】MinGWのアンインストール、移動、バックアップについて**
 ~~~
     mingw32-base および mingw32-g++ はクリーンかつハンディである.
     これのインストールにおいてはレジストリなどの書き込みなどは行われない.
@@ -202,7 +202,7 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="use_mingw_on_windows">WindowsでMinGWを使う場合
+## <a name="use_mingw_on_windows"></a>WindowsでMinGWを使う場合
 -----------------------------------
 
   src/bat_utils フォルダにsetenv_mingw.bat というファイルがある.
@@ -262,7 +262,7 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="use_vc_on_windows">WindowsでVCを使う場合
+## <a name="use_vc_on_windows"></a>WindowsでVCを使う場合
 -----------------------------------
   これを使われているような方は既にある程度わかっておられる方だとは思うが...
 
@@ -349,7 +349,7 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="compile_on_linux">Linuxの場合:
+## <a name="compile_on_linux"></a>Linuxの場合:
 -----------------------------------
   これを使われているような方は既にある程度わかっておられる方だとは思うが...
 
@@ -404,7 +404,7 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="compile_on_cygwin">Cygwinの場合:
+## <a name="compile_on_cygwin"></a>Cygwinの場合:
 -----------------------------------
   既にCygwinを愛用されており、MinGWなどの競合開発環境をわざわざインストールしたくない方もおられると思う.
   この項目はそのような方向けである.
@@ -447,7 +447,7 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="compile_on_msys10">MSYS1.0の場合:
+## <a name="compile_on_msys10"></a>MSYS1.0の場合:
 -----------------------------------
 
   作成中.
@@ -455,7 +455,7 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="use_others_on_windows">WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使う場合(おまけ)
+## <a name="use_others_on_windows"></a>WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使う場合(おまけ)
 -----------------------------------
   あなたがMinGWでもVCでもなくあえてこれらを選ぶというなら、もはや我々は何も言うまい.
 
@@ -512,7 +512,7 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="about_android">Androidについて:
+## <a name="about_android"></a>Androidについて:
 -----------------------------------
   Androidは基本的にLinuxであるが、PC Linuxとは大きく異なる部分もある.
   そして通常、AndroidにおけるアプリはJava VMをベースとして(エントリポイントとして)提供される.
@@ -609,7 +609,7 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="about_macos">MacOSについて:
+## <a name="about_macos"></a>MacOSについて:
 -----------------------------------
   現状では未サポートである.
   仮にコンパイルを試みるなら(手元にないので未確認であるが)Darwinを使うことになると思う.
