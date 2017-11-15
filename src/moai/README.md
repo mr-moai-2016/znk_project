@@ -159,43 +159,43 @@
   ただしいわゆる一般的なAndroidアプリとは起動方法が異なるため、以下にファイルのダウンロードから
   初回Moai起動までの全手順を説明する.
 
- <blockquote>
+~~~
   1. まずAndroidのWebブラウザよりznk_projectのページへアクセスし、PC版と同様にznk_project-master.zipをダウンロードする.
+
   2. Androidのホーム画面より「端末エミュレータ」を開く.
+
   3. ホームディレクトリへ移動する.
      以下のように入力しEnterを押す.
-~~~
-    cd
-~~~
+
+     cd
+
   4. ダウンロードした znk_project-master.zip は通常 /storage/sdcard0/Download ディレクトリに保存されている.
      システム構成によっては違う場所に保存されるかもしれない. その場合はその場所に読み替えて欲しい.
      ホームディレクトリ以外では書き込み権限および実行権限の関係で実行することができない.
      そのため、znk_project-master.zip をホームディレクトリへコピーする必要がある.
      以下のように入力しEnterを押す.
-~~~
-    cp /storage/sdcard0/Download/znk_project-master.zip ~/
-~~~
+
+     cp /storage/sdcard0/Download/znk_project-master.zip ~/
+
   5. znk_project-master.zip を解凍展開する.
      以下のように入力しEnterを押す.
-~~~
-    unzip znk_project-master.zip
-~~~
+
+     unzip znk_project-master.zip
+
   6. znk_project-master/bin_for_android ディレクトリへ移動する.
      以下のように入力しEnterを押す.
-~~~
-    cd znk_project-master/bin_for_android
-~~~
+
+     cd znk_project-master/bin_for_android
+
   7. moai_for_android.sh に実行権限を付与する.
      以下のように入力しEnterを押す.
-~~~
-    chmod 755 *.sh
-~~~
+
+     chmod 755 *.sh
   8. moai_for_android.sh を起動.
      以下のように入力しEnterを押す.
+
+     ./moai_for_android.sh
 ~~~
-    ./moai_for_android.sh
-~~~
- </blockquote>
 
   尚、上記 1 から 7 までの手順は最初の一回だけでよい.
   これらを一度済ませてしまえば以降は上記 8 だけでMoaiが起動可能である.
