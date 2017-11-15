@@ -92,7 +92,7 @@
      MinGW本体ではなくそのインストーラであり、合計サイズにしておよそ2MBほどである. 100%と表示されたら、
     「Continue」を押す. ここで間違って「Quit」を押すとウィンドウが閉じてしまうが…
 	
-     ** C:\MinGW\bin\mingw-get.exeを実行すれば続きが表示されます **のでご安心を！
+     **「C:\MinGW\bin\mingw-get.exeを実行すれば続きが表示されます」**のでご安心を！
 	
      この C:\MinGW\bin\mingw-get.exe こそがMinGWの本当のインストーラであり、Installation Manager
      と呼ばれるものである.
