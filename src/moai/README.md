@@ -167,43 +167,43 @@
   </li>
   <li>3. ホームディレクトリへ移動する.
          以下のように入力しEnterを押す.
+  </li>
 ~~~
     cd
 ~~~
-  </li>
   <li>4. ダウンロードした znk_project-master.zip は通常 /storage/sdcard0/Download ディレクトリに保存されている.
 		 システム構成によっては違う場所に保存されるかもしれない. その場合はその場所に読み替えて欲しい.
          ホームディレクトリ以外では書き込み権限および実行権限の関係で実行することができない.
          そのため、znk_project-master.zip をホームディレクトリへコピーする必要がある.
          以下のように入力しEnterを押す.
+  </li>
 ~~~
     cp /storage/sdcard0/Download/znk_project-master.zip ~/
 ~~~
-  </li>
   <li>5. znk_project-master.zip を解凍展開する.
          以下のように入力しEnterを押す.
+  </li>
 ~~~
     unzip znk_project-master.zip
 ~~~
-  </li>
   <li>6. znk_project-master/bin_for_android ディレクトリへ移動する.
          以下のように入力しEnterを押す.
+  </li>
 ~~~
     cd znk_project-master/bin_for_android
 ~~~
-  </li>
   <li>7. moai_for_android.sh に実行権限を付与する.
          以下のように入力しEnterを押す.
+  </li>
 ~~~
     chmod 755 *.sh
 ~~~
-  </li>
   <li>8. moai_for_android.sh を起動.
          以下のように入力しEnterを押す.
+  </li>
 ~~~
     ./moai_for_android.sh
 ~~~
-  </li>
   </ul>
 
   尚、上記 1 から 7 までの手順は最初の一回だけでよい.
