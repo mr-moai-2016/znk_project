@@ -3,20 +3,20 @@
 
 ## <a name="index">–ÚŽŸ
 -----------------------------------
-* [ƒ^[ƒQƒbƒg‚Æ‚ÍH](#target)
-* [ŽóMƒtƒBƒ‹ƒ^‚É‚Â‚¢‚Ä](#filter_recv)
-* [‘—MƒtƒBƒ‹ƒ^‚É‚Â‚¢‚Ä](#filter_send)
-* [–³—p‚ÈƒzƒXƒg‚Ö‚ÌÚ‘±‚ðƒuƒƒbƒN‚·‚é(ignore_hosts‹@”\)](#ignore_hosts) 
-* [POSTŽž‚ÌŠm”FƒƒbƒZ[ƒW•\Ž¦(post_confirm‹@”\)](#post_confirm)
-* [‘¼‚Ìƒ}ƒVƒ“‚©‚ç‚ÌÚ‘±‚ð‹–‰Â/§ŒÀ‚·‚é](#acceptable_host)
-* [ŠO•”ƒvƒƒLƒV‚ðŽg‚¢‚½‚¢ê‡‚Ç‚¤‚·‚é‚Ì‚©H](#proxy1)
-* [ŠO•”ƒvƒƒLƒV‚Ì“K—p‚ðˆê•”‚ÌƒTƒCƒg‚Ì‚Ý‚ÉŒÀ’è‚·‚é](#proxy2)
-* [‚»‚Ì‘¼‚Ìƒ[ƒJƒ‹ƒvƒƒLƒV‚Éƒ`ƒF[ƒ“‚·‚éê‡](#proxy3)
-* [Moai Web Configuration](#web_config)
-* [ƒvƒ‰ƒOƒCƒ“‹@”\‚É‚Â‚¢‚Ä](#plugin)
+* [ƒ^[ƒQƒbƒg‚Æ‚ÍH    ](#user-content-target)
+* [ŽóMƒtƒBƒ‹ƒ^‚É‚Â‚¢‚Ä](#user-content-filter_recv)
+* [‘—MƒtƒBƒ‹ƒ^‚É‚Â‚¢‚Ä](#user-content-filter_send)
+* [–³—p‚ÈƒzƒXƒg‚Ö‚ÌÚ‘±‚ðƒuƒƒbƒN‚·‚é(ignore_hosts‹@”\)](#user-content-ignore_hosts) 
+* [POSTŽž‚ÌŠm”FƒƒbƒZ[ƒW•\Ž¦(post_confirm‹@”\)](#user-content-post_confirm)
+* [‘¼‚Ìƒ}ƒVƒ“‚©‚ç‚ÌÚ‘±‚ð‹–‰Â/§ŒÀ‚·‚é](#user-content-acceptable_host)
+* [ŠO•”ƒvƒƒLƒV‚ðŽg‚¢‚½‚¢ê‡‚Ç‚¤‚·‚é‚Ì‚©H](#user-content-proxy1)
+* [ŠO•”ƒvƒƒLƒV‚Ì“K—p‚ðˆê•”‚ÌƒTƒCƒg‚Ì‚Ý‚ÉŒÀ’è‚·‚é](#user-content-proxy2)
+* [‚»‚Ì‘¼‚Ìƒ[ƒJƒ‹ƒvƒƒLƒV‚Éƒ`ƒF[ƒ“‚·‚éê‡](#user-content-proxy3)
+* [Moai Web Configuration](#user-content-web_config)
+* [ƒvƒ‰ƒOƒCƒ“‹@”\‚É‚Â‚¢‚Ä](#user-content-plugin)
 
 
-## <a name="target">ƒ^[ƒQƒbƒg‚Æ‚ÍH
+## <a name="target"></a>ƒ^[ƒQƒbƒg‚Æ‚ÍH
 -----------------------------------
 ƒ^[ƒQƒbƒg‚Æ‚ÍAˆê‚Â‚Ì’Z‚¢ƒL[ƒ[ƒh(ƒ^[ƒQƒbƒg–¼)‚É‚æ‚èA‚¢‚­‚Â‚©‚ÌƒzƒXƒg‚ÌW‡‚ðŽ¦‚·‚½‚ß‚Ì‚à‚Ì‚Å‚ ‚é.
 ˆê‚Â‚Ìƒ^[ƒQƒbƒg‚É‚Í‚¢‚­‚Â‚©‚ÌƒzƒXƒg–¼‚ð—ñ‹“‚µ‚ÄA‚»‚Ìƒ^[ƒQƒbƒg–¼‚É‚æ‚èƒOƒ‹[ƒv•ª‚¯‚·‚éŒ`‚É‚È‚é.
@@ -61,7 +61,7 @@ myf‚Æ‚¢‚¤ƒtƒ@ƒCƒ‹‚Í‚±‚ÌƒvƒƒWƒFƒNƒg‘S”Ê‚É‚¨‚¢‚ÄÝ’èƒtƒ@ƒCƒ‹‚È‚Ç‚ð‹Lq‚·‚é‚Ì‚É—p‚
   <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
-## <a name="filter_recv">ŽóMƒtƒBƒ‹ƒ^‚É‚Â‚¢‚Ä
+## <a name="filter_recv"></a>ŽóMƒtƒBƒ‹ƒ^‚É‚Â‚¢‚Ä
 -----------------------------------
 Moai‚Å‚ÍAHTTP‚É‚¨‚¯‚éGET‚É‚ÄŽóM‚³‚ê‚éHTML‚âJavascript‚âCSS‚É‚¨‚¢‚Ä
 ‚»‚ÌŽóM•¶Žš—ñ‚ðŽ©—R‚É’uŠ·(replace)‚µ‚½‚èA‰ÁH‚Å‚«‚éƒtƒBƒ‹ƒ^[‹@”\‚ð”õ‚¦‚Ä‚¢‚é.  
@@ -132,7 +132,7 @@ CSS‚Ì’mŽ¯‚ª‚ ‚é•û‚ÍAƒTƒCƒg‚É‚æ‚Á‚ÄŽw’è‚µ‚Ä‚¢‚éƒXƒ^ƒCƒ‹‚ð‚±‚Ì•”•ª‚É‚æ‚èã‘‚«‚·‚
   <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
-## <a name="filter_send">‘—MƒtƒBƒ‹ƒ^‚É‚Â‚¢‚Ä
+## <a name="filter_send"></a>‘—MƒtƒBƒ‹ƒ^‚É‚Â‚¢‚Ä
 -----------------------------------
 Moai‚Å‚ÍAHTTP‚É‚¨‚¯‚éPOST‚É‚Ä‘—M‚³‚ê‚éƒwƒbƒ_‚âPOST•Ï”AƒNƒbƒL[‚Ì’l‚É‚¨‚¢‚Ä
 ‚»‚Ì’l‚Ì“à—e‚ð‚ ‚é’ö“xŽ©—R‚É’uŠ·(replace)‚Å‚«‚éƒtƒBƒ‹ƒ^[‹@”\‚ð”õ‚¦‚Ä‚¢‚é.  
@@ -577,7 +577,7 @@ namec = ['']
   <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
-## <a name="ignore_hosts">–³—p‚ÈƒzƒXƒg‚Ö‚ÌÚ‘±‚ðƒuƒƒbƒN‚·‚é(ignore_hosts‹@”\) 
+## <a name="ignore_hosts"></a>–³—p‚ÈƒzƒXƒg‚Ö‚ÌÚ‘±‚ðƒuƒƒbƒN‚·‚é(ignore_hosts‹@”\) 
 -----------------------------------
 Moai‚Å‚ÍAconfig.myf “à‚Ì ignore_hosts ‚É‚¨‚¢‚Ä‹LÚ‚³‚ê‚Ä‚¢‚éƒzƒXƒg‚Öƒuƒ‰ƒEƒU‚ªÚ‘±‚µ‚æ‚¤‚Æ‚µ‚½ê‡
 ‚»‚ê‚ðƒuƒƒbƒN‚·‚é‚±‚Æ‚ª‚Å‚«‚é.
@@ -614,7 +614,7 @@ sock‚Ì•”•ª‚Í‹C‚É‚·‚é•K—v‚Í‚È‚¢‚ªAÚ‘±‚ÌÛ‚ÉŽg‚Á‚½ƒ\ƒPƒbƒg‚Ì”Ô†‚ðŽ¦‚µ‚Ä‚¢‚é.
   <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
-## <a name="post_confirm">POSTŽž‚ÌŠm”FƒƒbƒZ[ƒW•\Ž¦(post_confirm‹@”\) 
+## <a name="post_confirm"></a>POSTŽž‚ÌŠm”FƒƒbƒZ[ƒW•\Ž¦(post_confirm‹@”\) 
 -----------------------------------
 ‚±‚±‚ÅŠÈ’P‚É‚¨‚³‚ç‚¢‚µ‚æ‚¤.
 POST‚Æ‚ÍŒfŽ¦”Â‚È‚Ç‚ÖƒXƒŒ—§‚Ä‚âƒŒƒX“Še‚ð‚·‚éÛ‚És‚í‚ê‚éHTTPƒŠƒNƒGƒXƒg‚Ì‚±‚Æ‚Å‚ ‚é.
@@ -649,7 +649,7 @@ Nico“®‰æ‚È‚Çˆê•”‚ÌƒTƒCƒg‚Å‚ÍAƒXƒNƒŠƒvƒg‚È‚Ç‚ÅŽ©“®“I‚ÈPOST‚ª“à•”‚Ås‚í‚ê‚Ä‚¢‚éê
   <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
-## <a name="acceptable_host">‘¼‚Ìƒ}ƒVƒ“‚©‚ç‚ÌÚ‘±‚ð‹–‰Â/§ŒÀ‚·‚é
+## <a name="acceptable_host"></a>‘¼‚Ìƒ}ƒVƒ“‚©‚ç‚ÌÚ‘±‚ð‹–‰Â/§ŒÀ‚·‚é
 -----------------------------------
 Moai‚Í‘¼‚Ìƒ}ƒVƒ“‚©‚ç‚ÌÚ‘±‚ÌŽó•t‚àƒTƒ|[ƒg‚·‚é.
 
@@ -701,7 +701,7 @@ access_allow_ips‚ÉˆÈ‰º‚ð‹Lq‚µ‚Ä‚¨‚­‚Æ‚æ‚¢.
   <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
-## <a name="proxy1">ŠO•”ƒvƒƒLƒV‚ðŽg‚¢‚½‚¢ê‡‚Ç‚¤‚·‚é‚Ì‚©H
+## <a name="proxy1"></a>ŠO•”ƒvƒƒLƒV‚ðŽg‚¢‚½‚¢ê‡‚Ç‚¤‚·‚é‚Ì‚©H
 -----------------------------------
 
 ƒuƒ‰ƒEƒU‚ÌƒvƒƒLƒVÝ’èƒ_ƒCƒAƒƒO‚É‚ÍŠù‚Élocalhost(127.0.0.1)‚ðŽw’è‚µ‚Ä‚µ‚Ü‚Á‚Ä‚¢‚é.
@@ -744,7 +744,7 @@ Moai‚Å‚ÍŽŸ‚ÌÚ‘±’‡‰îæ‚Æ‚µ‚ÄŠO•”ƒvƒƒLƒV(parent proxy, eƒvƒƒLƒV‚È‚Ç‚Æ‚àŒÄ‚Î‚ê‚
   <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
-## <a name="proxy2">ŠO•”ƒvƒƒLƒV‚Ì“K—p‚ðˆê•”‚ÌƒTƒCƒg‚Ì‚Ý‚ÉŒÀ’è‚·‚é
+## <a name="proxy2"></a>ŠO•”ƒvƒƒLƒV‚Ì“K—p‚ðˆê•”‚ÌƒTƒCƒg‚Ì‚Ý‚ÉŒÀ’è‚·‚é
 -----------------------------------
 —á‚¦‚ÎA‚ ‚éƒTƒCƒgdanger.net‚ðŒ©‚éê‡‚Ì‚Ý——R‚ ‚Á‚ÄŠO•”ƒvƒƒLƒV‚ðŽg—p‚µ‚½‚¢‚Æ‚·‚é.
 (‚»‚Ì‘¼‚·‚×‚Ä‚ÌƒTƒCƒg‚Å‚ÍŠO•”ƒvƒƒLƒV‚ðŽg—p‚µ‚½‚­‚È‚¢‚Æ‚·‚é).
@@ -802,7 +802,7 @@ localhost
   <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
-## <a name="proxy3">‚»‚Ì‘¼‚Ìƒ[ƒJƒ‹ƒvƒƒLƒV‚Éƒ`ƒF[ƒ“‚·‚éê‡
+## <a name="proxy3"></a>‚»‚Ì‘¼‚Ìƒ[ƒJƒ‹ƒvƒƒLƒV‚Éƒ`ƒF[ƒ“‚·‚éê‡
 -----------------------------------
 
 Moai‚Í‚»‚Ì‘¼‚Ìƒ[ƒJƒ‹ƒvƒƒLƒV‚Æ’¼—ñ‚ÉŒq‚°‚é‚±‚Æ‚à‚Å‚«‚é.
@@ -827,7 +827,7 @@ parent_proxy‚©‚ç‚»‚ê‚ð‘I‚×‚Î‚æ‚¢.
   <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
-## <a name="web_config">Moai Web Configuration
+## <a name="web_config"></a>Moai Web Configuration
 -----------------------------------
   ƒuƒ‰ƒEƒU‚ÌURLŽw’è—“‚É http://127.0.0.1:8124/config ‚ÆŽw’è‚·‚é‚±‚Æ‚Å•\Ž¦‚³‚¹‚é‚±‚Æ‚ª‚Å‚«‚é.
   ‚±‚ê‚Ü‚Å‚Éq‚×‚½config.myf“à‚Ì•Ï”‚ðWebã‚©‚çŠm”F‚¨‚æ‚ÑÝ’è‚Å‚«‚é‚Æ‚¢‚¤‚à‚Ì‚Å‚ ‚é.
@@ -895,7 +895,7 @@ parent_proxy‚©‚ç‚»‚ê‚ð‘I‚×‚Î‚æ‚¢.
   <a href="#user-content-index">–ÚŽŸ‚Ö–ß‚é</a>
 
 
-## <a name="plugin">ƒvƒ‰ƒOƒCƒ“‹@”\‚É‚Â‚¢‚Ä
+## <a name="plugin"></a>ƒvƒ‰ƒOƒCƒ“‹@”\‚É‚Â‚¢‚Ä
 -----------------------------------
   Moai‚Ìƒvƒ‰ƒOƒCƒ“‚Å‚ÍŒ»ƒo[ƒWƒ‡ƒ“‚Å‚ÍŽŸ‚Ì‚æ‚¤‚ÈŠg’£ˆ—‚ðŽÀŒ»‚Å‚«‚é.
 
