@@ -78,7 +78,6 @@
   **インストーラをインストールするインストーラ**である(わかりにくい言い回しだが).
   次の手順で行う.
 
-~~~
   1. 多分最初に**アホな**Windowsが「セキュリティの警告」を表示してくるかもしれないが
      **MinGWにその種の問題があろうはずもない**ので「実行」.
 
@@ -128,8 +127,6 @@
   7. 「Applying Scaduled Changes」というウィンドウが出て「All changes were applied successfully;」
     などと書いてあれば成功である. 「Close」ボタンを押そう.
     「MinGW Installation Manager」ウィンドウがまだ表示されていると思うがこれも右上のxボタンで閉じてよい.
-
-~~~
 
   これにて一件落着インストール完了である.
   「[WindowsでMinGWを使う場合](#user-content-use_mingw_on_windows)」の項へと進もう.
