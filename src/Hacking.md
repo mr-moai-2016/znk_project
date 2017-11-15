@@ -54,7 +54,7 @@
 
   ![screenshot](./imgs/do_not_eat.png)
 
-  <a href="#user-content-index">目次へ戻れ！</a>
+  <a href="#user-content-index">もういい！目次へ戻れ！</a>
 
 
 ## <a name="lang_and_background"></a>開発言語および開発にあたっての背景など
