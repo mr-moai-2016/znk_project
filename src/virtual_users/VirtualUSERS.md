@@ -1,17 +1,17 @@
 # Moai/Virtual USERS
 -----------------------------------
 
-## <a name="index">目次
+## <a name="index"></a>目次
 -----------------------------------
-* [MoaiのVirtual USERS機能とは？](#pos1)
-* [何ができるのか？](#pos2)
-* [Web閲覧時に送信される情報とは何なのか？](#pos3)
-* [MoaiのVirtual USERS機能を使う](#pos4)
-* [ランダマイズの候補として使用するtxtファイルについて](#txt_for_randomize)
-* [ふたばにて手動で偽装を行う場合(参考)](#futaba_note)
-* [その他の情報](#pos5)
+* [MoaiのVirtual USERS機能とは？](#user-content-pos1)
+* [何ができるのか？             ](#user-content-pos2)
+* [Web閲覧時に送信される情報とは何なのか？](#user-content-pos3)
+* [MoaiのVirtual USERS機能を使う](#user-content-pos4)
+* [ランダマイズの候補として使用するtxtファイルについて](#user-content-txt_for_randomize)
+* [ふたばにて手動で偽装を行う場合(参考)](#user-content-futaba_note)
+* [その他の情報                 ](#user-content-pos5)
 
-## <a name="pos1">MoaiのVirtual USERS機能とは？
+## <a name="pos1"></a>MoaiのVirtual USERS機能とは？
 -----------------------------------
 
   Virtual USERSとはVirtual User-agent Screen-size and Everything Randomize Systemの略である.
@@ -26,7 +26,7 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="pos2">何ができるのか？
+## <a name="pos2"></a>何ができるのか？
 -----------------------------------
 
   Virtual USERS機能はIPを除くすべてのあなたのマシンの情報をランダムに仮想化する.
@@ -44,7 +44,7 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="pos3">Web閲覧時に送信される情報とは何なのか？
+## <a name="pos3"></a>Web閲覧時に送信される情報とは何なのか？
 -----------------------------------
 
   以下の概念図を見てみよう.  
@@ -114,7 +114,7 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="pos4">MoaiのVirtual USERS機能を使う
+## <a name="pos4"></a>MoaiのVirtual USERS機能を使う
 -----------------------------------
 
   初めてMoaiを使う場合は、[こちら][2]にある「初めてのMoai」の項目を参照していただきたい.
@@ -181,7 +181,7 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="txt_for_randomize">ランダマイズの候補として使用するtxtファイルについて
+## <a name="txt_for_randomize"></a>ランダマイズの候補として使用するtxtファイルについて
 -----------------------------------
 #### user_agent.txt
 このファイルはRandomizeの際に選択されるUser-Agentの候補を列挙したものである.
@@ -211,7 +211,7 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="futaba_note">ふたばにて手動で偽装を行う場合(参考)
+## <a name="futaba_note"></a>ふたばにて手動で偽装を行う場合(参考)
 -----------------------------------
 
   参考のため、MoaiのVirtul USERSのような機能を使わず、手動で偽装する方法も記載しておいた.
@@ -296,7 +296,7 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="pos5">その他の情報
+## <a name="pos5"></a>その他の情報
 -----------------------------------
 
   Moaiに関するさらなる詳細については [リファレンスマニュアル(Reference)][1] をご覧いただきたい.  
