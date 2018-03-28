@@ -10,13 +10,18 @@ This is Japanese overview. English version is [here][7].
 およびライブラリを開発/提供するリポジトリです.
 これらはすべてlibZnkという基本ライブラリによってWindows またはLinux向けに開発されたものであります.
 
-このページの右上にあります「Clone or download」というボタンをクリックすると
-さらに「Download ZIP」と書かれた部分が現れるので、これをクリックすれば
-プロジェクト全体をアーカイブした最新のzipファイルがダウンロードできます.
+現在の最新版Ver1.1.8はzipファイルとなっており、以下より入手できます.
 
-あるいは、以下のリンクからもこれを直接ダウンロード可能です.
+https://github.com/mr-moai-2016/znk_project/releases/latest
 
-  https://github.com/mr-moai-2016/znk_project/archive/master.zip
+実行バイナリはAssetsにあるbin_for_で始まるzipファイルです.
+
+* bin_for_win32.zip がWindows版となります.
+* bin_for_linux.zip がLinux版となります.
+* bin_for_android.zip がAndroid版となります.
+
+また全ソースコードはAssetsにあるSource code とあるzipファイルにアーカイブとしてまとめられていますので
+ご希望の方はそこからどうぞ.
 
 
 現在このリポジトリで提供しておりますものは以下の通り:
@@ -24,7 +29,7 @@ This is Japanese overview. English version is [here][7].
 * libZnk : 基本的なC/C++用ライブラリ  
 * Moai: また一つ生まれた(ばかりの)ローカルプロキシエンジン  
 * Moai plugins: 掲示板用のMoaiプラグイン.
-* http_decorator : ~~マスコット~~シンプルなHTTPクライアント.  
+* http_decorator : ~シンプルなHTTPクライアント.  
 
 以下はこれらに関するドキュメントへのリンク一覧となります: 
 
@@ -40,6 +45,10 @@ This is Japanese overview. English version is [here][7].
 
 ## What's new?
 -----------------------------------
+
+* 2018/03/28 サイト内レイアウト変更.
+  まもなくMoaiの次期バージョンMoai Ver2.0がリリースされます.
+  それに伴い、サイト内のレイアウト、特にVer1.1.8に関するドキュメントなどを一部移動しています.
 
 * 2016/10/07 Version 1.1.8 リリース.  
   ふたばのスレの下部にある[リロード]を押すと、正常に応答しなくなるバグを修正.
