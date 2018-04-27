@@ -1,4 +1,6 @@
 #include "Znk_missing_libc.h"
+#include "Znk_vsnprintf.h"
+#include "Znk_s_base.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -18,16 +20,7 @@ Znk_memrchr( const void* buf, int val, size_t size )
 int
 Znk_vsnprintf( char* dest, size_t count, const char* format, va_list argptr )
 {
-#if defined(_MSC_VER)
-	/* _snprintf and friends have broken NULL termination semantics */
-	int r = _vsnprintf(dest, count, format, argptr);
-	if (count > 0) {
-		dest[count-1] = '\0';
-	}
-	return r;
-#else
-	return vsnprintf(dest, count, format, argptr);
-#endif
+	return Znk_vsnprintf_C99( dest, count, format, argptr );
 }
 int
 Znk_snprintf( char* dest, size_t count, const char* format, ... )

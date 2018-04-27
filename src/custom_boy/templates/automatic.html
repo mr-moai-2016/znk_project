@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+	<META http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+	<META http-equiv="Content-Script-Type" content="text/javascript">
+	<META http-equiv="Content-Style-Type" content="text/css">
+	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<title>VirtualUSERS</title>
+	<script type="text/javascript" src="/cgis/custom_boy/publicbox/fp.js?Moai_AuthenticKey=#[Moai_AuthenticKey]#"></script>
+	<script type="text/javascript" src="/cgis/custom_boy/publicbox/custom_boy.js?Moai_AuthenticKey=#[Moai_AuthenticKey]#"></script>
+	
+</head>
+<body bgcolor="#EEFFFF" text="#008000" link="#0000EE" vlink="#0000EE" alink="#FF0000">
+
+<a name="user-content-index"></a>
+<font size=+2><i><b>VirtualUSERS </b></i></font> <!-- b>(negotiating target : #[cb_target]#)</b --><br>
+
+<br>
+#[SelectBar_ui]#
+<br>
+
+<a name="VirtualUSERS"></a>
+<br><b>VirtualUSERS</b><br>
+
+<form action="/cgis/custom_boy/custom_boy.cgi?cb_target=#[cb_target]#&amp;cb_type=automatic" method="POST" name=fm_main>
+<input type=hidden name=Moai_AuthenticKey value="#[Moai_AuthenticKey]#">
+
+<table class=MstyManagerTable>
+
+<tr><td>
+<div class=MstyItemOdd>
+<button class=MstyWideButton type='submit' name='cb_arg' value='main_all'>VirtualUSERS</button>
+</div>
+</td><td>
+<div class=MstyItemOdd>
+<font size=-1>すべておまかせボタンです.<br>
+	通常はこれを押すだけで必要な全ての処理が自動的に完了します.<br>
+</font>
+</div>
+</td></tr>
+
+<tr><td>
+<div class=MstyItemEvn>
+#[Category_ui]#
+</div>
+</td><td>
+<div class=MstyItemEvn>
+<font size=-1>このメニューでは仮想環境構築の際のマシン、OS、ブラウザなどの種類を明示的に選択できます.<br>
+	<!--
+CustomBoyの思考ルーチンはこの指定が示す範囲に収まるようにランダム化を行い、<br>
+しかも各値間の整合性を失うことなくUA/POST変数の仮想環境の値を自動生成します.<br>
+-->
+</font>
+</div>
+</td></tr>
+
+<tr><td colspan=2>
+&nbsp;
+</td></tr>
+
+<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>UA/POST変数の仮想環境</legend>
+<table>
+<tr><td colspan=2>
+<font size=-1>#[cb_status]#</font>
+</td></tr>
+<tr class=MstyItemOdd><td class=MstyNoneWordBreak><b>UserAgent</b></td><td><table><tr><td><font size=-1>#[user_agent]#</font></td></tr></table></td></tr>
+#[PostVars_ui]#
+</table>
+</fieldset></td></tr>
+
+<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>Cookieの仮想環境</legend>
+<table>
+#[CustomCookie_ui]#
+</table>
+<br>
+<div class=MstyComment>
+Cookieの値を直接修正したり削除したい場合はこちらから行えます.<br>
+<a class=MstyElemLink href="/cgis/custom_boy/custom_boy.cgi?cb_target=futaba&amp;cb_type=cookie" >CustomCookie</a>
+</div>
+</fieldset></td></tr>
+
+<tr><td colspan=2 bgcolor="#ccffdd"><font color="#558855"><pre>#[msg]#</pre></font></td></tr>
+
+</table>
+
+</form>
+
+<a class=MstyElemLink href="#user-content-index">一番上へ戻る</a> <a class=MstyElemLink href="/">Moaiトップページ</a>
+<br><br>
+
+</body></html>

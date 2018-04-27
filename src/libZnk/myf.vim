@@ -12,6 +12,7 @@ endif
 
 syn region  myfLinesBegin matchgroup=myfSectionStart start="^@@L" end="$" keepend
 syn region  myfVarsBegin  matchgroup=myfSectionStart start="^@@V" end="$" keepend
+syn region  myfPrimsBegin matchgroup=myfSectionStart start="^@@P" end="$" keepend
 syn match   myfSectionEnd "^@@\."
 syn region  myfDefQuote   matchgroup=myfSectionStart start="^@def_quote" end="$" keepend
 syn region  myfCommentL	  start="^#" skip="\\$" end="$" keepend
@@ -30,6 +31,7 @@ if version >= 508 || !exists("did_myf_syntax_inits")
   endif
   HiLink myfLinesBegin    Include
   HiLink myfVarsBegin     Include
+  HiLink myfPrimsBegin    Include
   HiLink myfSectionEnd    Statement
   HiLink myfDefQuote      Include
   HiLink myfSectionStart  Statement

@@ -1,0 +1,499 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<link href="/msty.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<a name=TopBar></a>
+<p><b><img src="/imgs/here_landmark.png"> インフォメーション</b></p>
+
+<a class=MstyNowSelectedLink href="/">トップページ</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/index.html">Moai2.0ドキュメント</a> &nbsp;
+<br> <br>
+
+<div class=MstyComment>
+<u><b>記事担当者</b></u> : Mr.Moai<br> 
+<br>
+<u><b>最終更新日</b></u> : 2018/04/27<br>
+<br>
+</div>
+<br>
+
+
+<a name=AtFirst></a>
+<u><b>
+はじめに
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	我々「全日本ネットワーク研究所(通称ZNK)」では、フリーなアプリケーションを開発して皆様に提供しております.<br>
+	これらはすべてオープンソースであり、またほぼすべてが Windows、Linux、そしてAndroid向けに開発されたものであります.<br>
+	現在このサイトで提供しておりますものを以下でご紹介しましょう.<br>
+</div><br>
+<br>
+
+
+<a name=Index></a>
+<u><b>目次</b></u>
+<ul>
+	<li><b><a class=MstyElemLink href=#WhatsNew>What's new?</a></b></li>
+	<li><b><a class=MstyElemLink href=#Moai_Engine>Moai Ver2.0のご紹介</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGIApp_Easter>Easterのご紹介</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGIApp_VirtualUSERS>VirtualUSERSのご紹介</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGIApp_Others>Moai上で動作するその他Webアプリケーション</a></b></li>
+	<li><b><a class=MstyElemLink href=#LibraryAndPlugins>C/C++用ライブラリ、プラグイン</a></b></li>
+	<li><b><a class=MstyElemLink href=#Moai_VerOld>Moai 旧バージョン(非推奨)</a></b></li>
+</ul><br>
+
+
+<a name=WhatsNew></a>
+<u><b>
+What's new?
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	<ul>
+		<li><b>2018/04/27 Moai Ver2.0 リリース.</b><br>
+		<br>
+		新バージョンの概要については<a class=MstyElemLink href="/moai2.0/announcement.html">アナウンスメント</a>を参照してください.<br>
+		また技術的な修正点に関しては<a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project/tree/master/src/ReleaseNote.md target=_blank>リリースノート</a>にまとめてあります.<br>
+		</li>
+		<br>
+		<li><b>2018/03/28 サイト内レイアウト変更.</b><br>
+		<br>
+		まもなくMoaiの次期バージョンMoai Ver2.0がリリースされます.<br>
+		それに伴い、サイト内のレイアウト、特にVer1.1.8に関するドキュメントなどを一部移動しています.<br>
+		</li>
+		<br>
+		<li><b>2016/10/07 Moai Ver1.1.8 リリース.</b><br>  
+		<br>
+		ふたばのスレの下部にある[リロード]を押すと、正常に応答しなくなるバグを修正.<br>
+		またFirefox+赤福においてふたばに画像レス投稿などを行うと同様に応答しなくなるか<br>
+		あるいはその応答が著しく遅くなるバグを修正.<br>
+		</li>
+		<br>
+		<li><b>2016/05/21 : Moai Ver1.0 リリース.</b><br> 
+		</li>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=Moai_Engine></a>
+<u><b>
+Moai Ver2.0のご紹介
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	<li><b>Moai Ver2.0本体</b><span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+	<div class=MstyFrame>
+		<b><u>概要</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			これはまた一つ生まれたばかりのポータブルウェブサーバエンジンです.<br>
+		</div><br>
+		<br>
+		<b><u>動作環境</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			以下の環境で動作します.<br>
+			<br>
+			<div class=MstyLogo>
+				<img src=/imgs/windows_icon.png height=48><br>
+				Windows2000以降
+			</div>
+			<div class=MstyLogo>
+				<img src=/imgs/linux_icon.png height=48><br>
+				Linux x86/x86_64
+			</div>
+			<div class=MstyLogo>
+				<img src=/imgs/android_icon.png height=48><br>
+				Android 4.0以降
+			</div>
+		</div><br>
+		<br>
+		<b><u>スクリーンショット</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			Moaiが起動中はあなたのブラウザでこのような画面を表示させることができ、<br>
+			ここからEasterやVirtualUSERSなどのWebアプリケーションをブラウザ上で利用できるようになります.<br>
+			ほとんどの方はこのEasterをメインで常時利用し、必要に応じてVirtualUSERSを使うという形になると思われます.<br>
+			(旧バージョンに引き続き、ローカルプロキシとして利用することもできます).<br>
+			<br>
+			<div class=MstyFrame>
+				<img src=/imgs/moai_top_page.png width=100%>
+			</div><br>
+		</div><br>
+		<br>
+		<b><u>インストール方法</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			基本的にはzipファイルをダウンロードして展開し、moai(実行ファイル)を実行するだけです.<br>
+			<a class=MstyElemLink href="/moai2.0/install.html">こちら</a>を参照してください.<br>
+		</div><br>
+		<br>
+		<b><u>ドキュメント</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			Moaiエンジン本体についてのリファレンスは<a class=MstyElemLink href="/moai2.0/moai_reference.html">こちら</a>になります.<br>
+		</div><br>
+	</div><br>
+	</li>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=MoaiCGIApp_Easter></a>
+<u><b>
+Easterのご紹介
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	<li><b>Easter</b><span class=MstyAuthor> (Author: Zenkaku)</span><br>
+	<div class=MstyFrame>
+		<b><u>概要</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			EasterはMoai Ver2.0上で動くウェブアプリケーションの一つです.<br>
+			あなたのブラウザ上で仮想ブラウザ環境を提供します.<br>
+		</div><br>
+		<br>
+		<b><u>動作環境</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			以下の環境で動作します.<br>
+			<br>
+			<div class=MstyLogo>
+				<img src=/imgs/moai.png height=48><br>
+				Moai CGI
+			</div>
+		</div><br>
+		<br>
+		<b><u>サポートサイト</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			以下のサイトをサポートします.<br>
+			<br>
+			<div class=MstyLogo>
+				<img src=/imgs/futaba_icon.png height=48><br>
+				ふたばちゃんねる
+			</div>
+			<div class=MstyLogo>
+				<img src=/imgs/5ch_icon.png height=48><br>
+				５ちゃんねる
+			</div>
+		</div><br>
+		<br>
+		<b><u>スクリーンショット</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			Easterの画面に入るとあなたのブラウザでこのような画面が表示され、<br>
+			ここから仮想ブラウザ環境にてリンク先のサイトを閲覧することができます.<br>
+			<br>
+			<div class=MstyFrame>
+				<img src=/imgs/easter_link_manager1.png width=100%>
+			</div><br>
+		</div><br>
+		<br>
+		<b><u>インストール方法</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			Moaiエンジン本体をインストールすればデフォルトで付属しています.<br>
+			moaiを実行してブラウザからhttp://127.0.0.1:8124を開けば、あたかもmoaiの一機能のように動作します.<br>
+		</div><br>
+		<br>
+		<b><u>ドキュメント</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			Easterについてのリファレンスは<a class=MstyElemLink href="/moai2.0/easter_reference.html">こちら</a>になります.<br>
+		</div><br>
+	</div><br>
+	</li>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=MoaiCGIApp_VirtualUSERS></a>
+<u><b>
+VirtualUSERSのご紹介
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	<li><b>VirtualUSERS</b><span class=MstyAuthor> (Author: K.Yakisoba.H and Zenkaku)</span><br>
+	<div class=MstyFrame>
+		<b><u>概要</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			VirtualUSERSはMoai Ver2.0上で動くウェブアプリケーションの一つです.<br>
+			Moai/Easterでの仮想ブラウザ情報をボタン一つで自動的に生成、再生成します.<br>
+		</div><br>
+		<br>
+		<b><u>動作環境</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			以下の環境で動作します.<br>
+			<br>
+			<div class=MstyLogo>
+				<img src=/imgs/moai.png height=48><br>
+				Moai CGI
+			</div>
+		</div><br>
+		<br>
+		<b><u>サポートサイト</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			以下のサイトをサポートします.<br>
+			<br>
+			<div class=MstyLogo>
+				<img src=/imgs/futaba_icon.png height=48><br>
+				ふたばちゃんねる
+			</div>
+			<div class=MstyLogo>
+				<img src=/imgs/5ch_icon.png height=48><br>
+				５ちゃんねる
+			</div>
+		</div><br>
+		<br>
+		<b><u>スクリーンショット</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			VirtualUSERSの画面に入るとあなたのブラウザでこのような画面が表示され、<br>
+			この画面の「VirtualUSERS」ボタンを押すだけで仮想ブラウザ環境の構築が完了します.<br>
+			設定等はほとんどなく、初心者でも簡単に使うことができます.<br>
+			<br>
+			<div class=MstyFrame>
+				<img src=/imgs/virtual_users1.png width=100%>
+			</div><br>
+		</div><br>
+		<br>
+		<b><u>インストール方法</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			Moaiエンジン本体をインストールすればデフォルトで付属しています.<br>
+			moaiを実行してブラウザから<a class=MstyAppLink href=http://127.0.0.1:8124>http://127.0.0.1:8124</a>を開けば、あたかもmoaiの一機能のように動作します.<br>
+		</div><br>
+		<br>
+		<b><u>ドキュメント</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			VirtualUSERSについてのリファレンスは<a class=MstyElemLink href="/moai2.0/virtual_users.html">こちら</a>になります.<br>
+		</div><br>
+	</div><br>
+	</li>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=MoaiCGIApp_Others></a>
+<u><b>
+Moaiで動作するその他のWebアプリケーション
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	<li><b>CustomBoy</b><span class=MstyAuthor> (Author: K.Yakisoba.H and Zenkaku)</span><br>
+	<div class=MstyComment>
+		<b><u>概要</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			Moai上で動くウェブアプリケーションの一つです.<br>
+			Moai/Easterの仮想ブラウザ情報を詳細にカスタマイズするVirtualUSERSより上級向けのツールです.<br>
+			我々が提供する仮想化ツールの中でもこれは最強のカスタマイズ性を有するものです.<br>
+			通常はVirtualUSERSで十分であり、初心者の方がこのツールを使う必要はまずないと思われます.<br>
+		</div><br>
+		<br>
+		<b><u>インストール方法</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			Moaiエンジン本体をインストールすればデフォルトで付属しています.<br>
+			moaiを実行してブラウザから<a class=MstyAppLink href=http://127.0.0.1:8124>http://127.0.0.1:8124</a>を開けば、あたかもmoaiの一機能のように動作します.<br>
+		</div><br>
+		<br>
+		<b><u>ドキュメント</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			CustomBoyについてのリファレンスは<a class=MstyElemLink href="/moai2.0/customboy_reference.html">こちら</a>になります.<br>
+			(ただし内容はエキスパート向けです)<br>
+		</div><br>
+	</div>
+	</li>
+	<br>
+	<li><b>ProxyFinder</b><span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+	<div class=MstyComment>
+		<b><u>概要</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			Moai上で動くウェブアプリケーションの一つです.<br>
+			定番のプロキシ情報提供サイトへ接続し、現在有効なプロキシサーバのリストを自動的に取得します.<br>
+			Moaiで使用するProxyサーバの候補を作成/更新できます.<br>
+		</div><br>
+		<br>
+		<b><u>インストール方法</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			Moaiエンジン本体をインストールすればデフォルトで付属しています.<br>
+			moaiを実行してブラウザから<a class=MstyAppLink href=http://127.0.0.1:8124>http://127.0.0.1:8124</a>を開けば、あたかもmoaiの一機能のように動作します.<br>
+		</div><br>
+		<br>
+		<b><u>ドキュメント</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			用意しておりません.<br>
+			しかしボタン一つしかないので迷うことはないと思います…<br>
+		</div><br>
+	</div>
+	</li>
+	<br>
+	<li><b>Moai CGI Developers</b><span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+	<div class=MstyComment>
+		<b><u>概要</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			Moai上で動くウェブアプリケーションは、あなたが独自に開発することもできるのです！<br>
+			これは単なるCGI(MoaiではMoai CGIと呼びます)であり、CGIの知識がある方なら特に難しいものではありません.<br>
+			Moai CGI DevelopersではこのようなWebアプリケーションを独自に作ってみたい方向けに、その開発方法を解説します.<br>
+		</div><br>
+		<br>
+		<b><u>内容</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			Moaiエンジン本体をインストールすればデフォルトでサンプルCGIとサンプルコード等が付属しています.<br>
+			これらのサンプルCGIはmoaiを実行してブラウザから<a class=MstyAppLink href=http://127.0.0.1:8124>http://127.0.0.1:8124</a>を開けば、<br>
+			あたかもmoaiの一機能のように動作します.<br>
+			解説記事は<a class=MstyElemLink href="/moai2.0/moai_cgi_developers.html">こちら</a>からご覧頂けます.<br>
+		</div><br>
+	</div>
+	</li>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=LibraryAndPlugins></a>
+<u><b>
+C/C++用ライブラリ、プラグイン
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	<li><b>libZnk</b><span class=MstyAuthor> (Author: Zenkaku)</span><br>
+	<div class=MstyComment>
+		<b><u>概要</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			C/C++でプログラミングする上で基本的なものを集めたライブラリです.<br>
+			このリポジトリにあるほぼすべてのプログラムはこれを使って開発されています.<br>
+		</div><br>
+		<br>
+		<b><u>インストール方法</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			Moaiのソースコード内に付属しています.<br>
+		</div><br>
+		<br>
+		<b><u>githubリポジトリ</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			znk_projectのgithubでソースコードを閲覧することもできます.<br>
+			<a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project/tree/master/src/libZnk target=_blank>こちら</a>です.<br>
+		</div><br>
+	</div>
+	<br>
+	<li><b>libZnk</b><span class=MstyAuthor> (Author: Zenkaku and Mr.Moai)</span><br>
+	<div class=MstyComment>
+		<b><u>概要</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			ウェブサーバやウェブアプリケーションの開発をサポートするC/C++用ライブラリです.<br>
+			MoaiやEaster、CustomBoyなどのMoai CGIはこれを使って開発されています.<br>
+		</div><br>
+		<br>
+		<b><u>インストール方法</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			Moaiのソースコード内に付属しています.<br>
+		</div><br>
+		<br>
+		<b><u>githubリポジトリ</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			znk_projectのgithubでソースコードを閲覧することもできます.<br>
+			<a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project/tree/master/src/libRano target=_blank>こちら</a>です.
+		</div><br>
+	</div>
+	<br>
+	<li><b>Moai plugins</b><span class=MstyAuthor> (Author: Zenkaku and Mr.Moai)</span><br>
+	<div class=MstyComment>
+		<b><u>概要</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			Moai用のプラグインで、Moaiを匿名掲示板で使うためのものとなります.<br>
+			現在提供しているのは futaba(ふたばちゃんねる用)と5ch(５ちゃんねる用)の二つです.<br>
+		</div><br>
+		<br>
+		<b><u>インストール方法</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			Moaiエンジン本体をインストールすればデフォルトで付属しています.<br>
+		</div><br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+<a name=Moai_VerOld></a>
+<u><b>
+Moai 旧バージョン(非推奨)
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	<li><b>Moai Ver1.1.8</b><span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+	<div class=MstyComment>
+		<b><u>概要</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			このツールは一言で言えばHTTPを仲介するローカルプロキシです.<br>
+			同種のツールとしてはProxomitronやPolipoなどがあり、これらをご存知の方は<br>
+			それと基本的に同じようなものです.<br>
+			<br>
+			この旧バージョンは、まもなくサポートの終了を予定しています.<br>
+			現在旧バージョンをご利用の方はMoai Ver2.0への移行を強くお勧めします.<br>
+			（互換性はまったくなく、完全に別のツールと思っていただいた方がよいです)<br>
+			ちなみにMoai Ver2.0でもMoai Ver1.1.8と同様の使い方、即ちローカルプロキシとして使用することも可能です.<br>
+		</div><br>
+		<br>
+		<b><u>ドキュメント</u></b><br>
+		<br>
+		<div class=MstyIndent>
+			Moai Ver1.1.8についての詳細は<a class=MstyElemLink href="/moai1.1/install.html">こちら</a>になります.<br>
+			これは旧バージョン時代の古いドキュメントを若干手直ししたものです.<br>
+			Moai Ver2.0を使われる方にとっては参照する必要のないものですが、<br>
+			旧バージョンをこのまま使われ続ける方向けに一応このまま残します.<br>
+		</div><br>
+	</div><br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<u><b>リンク</b></u>
+<ul>
+	<li><a class=MstyElemLink href="#TopBar">一番上へ</a></li>
+	<li><a class=MstyElemLink href="https://mr-moai-2016.github.io">Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href="https://github.com/mr-moai-2016/znk_project">znk_project(github)</a></li>
+</ul>
+
+</body>
+</html>

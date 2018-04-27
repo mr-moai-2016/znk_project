@@ -1,5 +1,0 @@
-LIBRARY "2ch.dll"
-EXPORTS
-  initiate
-  on_post
-  on_response

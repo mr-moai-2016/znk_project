@@ -1,6 +1,6 @@
 #include "Moai_fdset.h"
-#include "Moai_log.h"
 #include "Moai_connection.h"
+#include <Rano_log.h>
 #include <Znk_fdset.h>
 #include <Znk_socket_ary.h>
 #include <Znk_def_util.h>
@@ -10,7 +10,7 @@
 #include <assert.h>
 
 struct MoaiFdSetImpl {
-	ZnkSocket         listen_sock_;
+	ZnkSocketAry      listen_sockary_;
 	ZnkFdSet          fdst_read_;
 	ZnkFdSet          fdst_write_;
 	ZnkFdSet          fdst_observe_r_;
@@ -29,7 +29,11 @@ MoaiFdSet
 MoaiFdSet_create( ZnkSocket listen_sock, struct ZnkTimeval* waitval )
 {
 	MoaiFdSet mfds = Znk_malloc( sizeof( struct MoaiFdSetImpl ) );
-	mfds->listen_sock_  = listen_sock;
+
+	/* create+push_bk-one */
+	mfds->listen_sockary_ = ZnkSocketAry_create();
+	ZnkSocketAry_push_bk( mfds->listen_sockary_, listen_sock );
+
 	mfds->fdst_read_    = ZnkFdSet_create();
 	mfds->fdst_write_   = ZnkFdSet_create();
 
@@ -38,8 +42,42 @@ MoaiFdSet_create( ZnkSocket listen_sock, struct ZnkTimeval* waitval )
 	ZnkFdSet_zero( mfds->fdst_observe_r_ );
 	ZnkFdSet_zero( mfds->fdst_observe_w_ );
 
-	/* リスニングソケットを監視対象に追加 */
+	/* 単一のリスニングソケットを監視対象に追加 */
 	ZnkFdSet_set( mfds->fdst_observe_r_, listen_sock );
+
+	mfds->connecting_socks_      = ZnkSocketAry_create();
+	mfds->reserve_accept_socks_  = ZnkSocketAry_create();
+	mfds->reserve_connect_socks_ = ZnkSocketAry_create();
+	mfds->wk_sock_ary_          = ZnkSocketAry_create();
+
+	mfds->waitval_ = *waitval;
+	return mfds;
+}
+MoaiFdSet
+MoaiFdSet_create_ex( ZnkSocketAry listen_sockary, struct ZnkTimeval* waitval )
+{
+	MoaiFdSet mfds = Znk_malloc( sizeof( struct MoaiFdSetImpl ) );
+
+	/* create+copy */
+	mfds->listen_sockary_ = ZnkSocketAry_create();
+	ZnkSocketAry_copy( mfds->listen_sockary_, listen_sockary );
+
+	mfds->fdst_read_    = ZnkFdSet_create();
+	mfds->fdst_write_   = ZnkFdSet_create();
+
+	mfds->fdst_observe_r_ = ZnkFdSet_create();
+	mfds->fdst_observe_w_ = ZnkFdSet_create();
+	ZnkFdSet_zero( mfds->fdst_observe_r_ );
+	ZnkFdSet_zero( mfds->fdst_observe_w_ );
+
+	/* 複数のリスニングソケットを監視対象に追加 */
+	{
+		const size_t size = ZnkSocketAry_size( listen_sockary );
+		size_t idx;
+		for( idx=0; idx<size; ++idx ){
+			ZnkFdSet_set( mfds->fdst_observe_r_, ZnkSocketAry_at( listen_sockary, idx ) );
+		}
+	}
 
 	mfds->connecting_socks_      = ZnkSocketAry_create();
 	mfds->reserve_accept_socks_  = ZnkSocketAry_create();
@@ -53,6 +91,7 @@ void
 MoaiFdSet_destroy( MoaiFdSet mfds )
 {
 	if( mfds ){
+		ZnkSocketAry_destroy( mfds->listen_sockary_ );
 		ZnkFdSet_destroy( mfds->fdst_read_ );
 		ZnkFdSet_destroy( mfds->fdst_write_ );
 		ZnkFdSet_destroy( mfds->fdst_observe_r_ );
@@ -94,7 +133,7 @@ MoaiFdSet_addConnectingSock( MoaiFdSet mfds, ZnkSocket sock )
 	ZnkFdSet fdst_observe_w = MoaiFdSet_fdst_observe_w( mfds );
 	size_t idx = ZnkSocketAry_find( mfds->connecting_socks_, sock );
 	if( idx == Znk_NPOS ){
-		MoaiLog_printf( "  MoaiFdSet_addConnectingSock : sock=[%d]\n", sock );
+		RanoLog_printf( "  MoaiFdSet_addConnectingSock : sock=[%d]\n", sock );
 		ZnkSocketAry_push_bk( mfds->connecting_socks_, sock );
 	}
 	ZnkFdSet_set( fdst_observe_w, sock );
@@ -119,7 +158,7 @@ MoaiFdSet_procConnectionTimeout( MoaiFdSet mfds )
 	 * 例えば一度に大量の接続を行う画像掲示板などでは短くてよいが、
 	 * 動画ストリーミングの再生などでは逆に無限としたい.
 	 * (途中で接続が切断されると、また最初から再生しなければならないようなケースもあるので)
-	 * さらにこの部分に簡易人工知能を導入し、動画サイトが使用するホストを推定したい.
+	 * さらにこの部分に簡易な学習を導入し、動画サイトが使用するホストを推定したいところ.
 	 */
 	static const int connection_timeout_sec = 45;
 	for( idx=0; idx<size; ++idx ){
@@ -137,7 +176,7 @@ MoaiFdSet_procConnectionTimeout( MoaiFdSet mfds )
 			if( now - mcn->connect_begin_time_ > connection_timeout_sec ){
 				MoaiFdSet_removeConnectingSock( mfds, mcn->O_sock_ );
 				ZnkSocket_close( mcn->O_sock_ );
-				MoaiLog_printf( "procOnnectionTimeout : [%s:%d] Interrupt connecting by Timeout. close sock=[%d]\n",
+				RanoLog_printf( "procOnnectionTimeout : [%s:%u] Interrupt connecting by Timeout. close sock=[%d]\n",
 						ZnkStr_cstr(mcn->hostname_), mcn->port_, mcn->O_sock_ );
 				mcn->O_sock_ = ZnkSocket_INVALID;
 			}
@@ -222,7 +261,7 @@ adoptReserveSocks( ZnkFdSet fdst_observe_r, ZnkSocketAry reserve_socks, ZnkSocke
 		if( ZnkFdSet_set( fdst_observe_r, sock ) ){
 			/* marking erase */
 			updated = true;
-			MoaiLog_printf( "  Moai : adoptReserveSocks [%d] under fdst_observe_r.\n", sock );
+			RanoLog_printf( "  Moai : adoptReserveSocks [%d] under fdst_observe_r.\n", sock );
 			ZnkSocketAry_set( reserve_socks, idx, ZnkSocket_INVALID );
 		}
 	}
@@ -239,6 +278,60 @@ adoptReserveSocks( ZnkFdSet fdst_observe_r, ZnkSocketAry reserve_socks, ZnkSocke
 	}
 }
 
+static void
+processListenSock( MoaiFdSet mfds, ZnkSocket listen_sock,
+		ZnkFdSet fdst_read,
+		ZnkFdSet fdst_observe_r,
+		MoaiFdSetFuncArg_OnAccept* fnca_on_accept,
+		MoaiFdSetFuncT_IsAccessAllowIP is_access_allow_ip )
+{
+	uint32_t peer_ipaddr = 0;
+	/***
+	 * fdst_readにListenSocketが残っていた場合は、
+	 * ListenSocketに新規接続要求が発生したことを示す.
+	 * この場合、まずこれを優先的に処理する.
+	 */
+	ZnkSocket new_accept_sock = ZnkSocket_accept( listen_sock );
+	if( is_access_allow_ip &&
+		!is_access_allow_ip( new_accept_sock, &peer_ipaddr ) )
+	{
+		/***
+		 * 許可されないIPからの接続であった場合.
+		 */
+		char response[ 4096 ] = "";
+		char ipstr[ 64 ] = "";
+		ZnkNetIP_getIPStr_fromU32( peer_ipaddr, ipstr, sizeof(ipstr) );
+		RanoLog_printf( "Moai : peer ipaddr=[%s] is forbidden.\n", ipstr );
+		Znk_snprintf( response, sizeof(response), 
+				"HTTP/1.0 403 Forbidden\r\nContent-Type: text/html\r\n\r\n"
+				"Sorry, your IP=[%s] is forbidden for security reason.", ipstr );
+		ZnkSocket_send( new_accept_sock, (uint8_t*)response, Znk_strlen(response) );
+		ZnkSocket_close( new_accept_sock );
+	} else {
+		/***
+		 * この場合接続を許可.
+		 */
+		if( fnca_on_accept ){
+			fnca_on_accept->func_( mfds, new_accept_sock, fnca_on_accept->arg_ );
+		}
+
+		/***
+		 * 監視ソケット集合へ追加.
+		 */
+		if( !ZnkFdSet_set( fdst_observe_r, new_accept_sock ) ){
+			/***
+			 * 失敗した場合はreserve_accept_socks_へストックしておく.
+			 */
+			RanoLog_printf( "  ZnkFdSet_set failure. sock(by accept)=[%d]\n", new_accept_sock );
+			ZnkSocketAry_push_bk( mfds->reserve_accept_socks_, new_accept_sock ); 
+		}
+	}
+	/***
+	 * listen_sockに関する処理は終ったので、
+	 * fdst_readからこれは除去.
+	 */
+	ZnkFdSet_clr( fdst_read, listen_sock );
+}
 
 MoaiRASResult
 MoaiFdSet_process( MoaiFdSet mfds,
@@ -252,53 +345,22 @@ MoaiFdSet_process( MoaiFdSet mfds,
 	ZnkSocketAry wk_sock_ary = mfds->wk_sock_ary_;
 	MoaiRASResult ras_result = MoaiRASResult_e_Ignored;
 
-	if( ZnkFdSet_isset( fdst_read, mfds->listen_sock_ ) ){
-		uint32_t peer_ipaddr = 0;
-		/***
-		 * fdst_readにListenSocketが残っていた場合は、
-		 * ListenSocketに新規接続要求が発生したことを示す.
-		 * この場合、まずこれを優先的に処理する.
-		 */
-		ZnkSocket new_accept_sock = ZnkSocket_accept( mfds->listen_sock_ );
-		if( is_access_allow_ip &&
-			!is_access_allow_ip( new_accept_sock, &peer_ipaddr ) )
-		{
-			/***
-			 * 許可されないIPからの接続であった場合.
-			 */
-			char response[ 4096 ] = "";
-			char ipstr[ 64 ] = "";
-			ZnkNetIP_getIPStr_fromU32( peer_ipaddr, ipstr, sizeof(ipstr) );
-			MoaiLog_printf( "Moai : peer ipaddr=[%s] is forbidden.\n", ipstr );
-			Znk_snprintf( response, sizeof(response), 
-					"HTTP/1.0 403 Forbidden\r\nContent-Type: text/html\r\n\r\n"
-					"Sorry, your IP=[%s] is forbidden for security reason.", ipstr );
-			ZnkSocket_send( new_accept_sock, (uint8_t*)response, Znk_strlen(response) );
-			ZnkSocket_close( new_accept_sock );
-		} else {
-			/***
-			 * この場合接続を許可.
-			 */
-			if( fnca_on_accept ){
-				fnca_on_accept->func_( mfds, new_accept_sock, fnca_on_accept->arg_ );
-			}
-
-			/***
-			 * 監視ソケット集合へ追加.
-			 */
-			if( !ZnkFdSet_set( fdst_observe_r, new_accept_sock ) ){
-				/***
-				 * 失敗した場合はreserve_accept_socks_へストックしておく.
-				 */
-				MoaiLog_printf( "  ZnkFdSet_set failure. sock(by accept)=[%d]\n", new_accept_sock );
-				ZnkSocketAry_push_bk( mfds->reserve_accept_socks_, new_accept_sock ); 
+	/***
+	 * ここでは複数のlisten_sockの処理に対応する.
+	 */
+	{
+		const size_t size = ZnkSocketAry_size( mfds->listen_sockary_ );
+		size_t idx;
+		for( idx=0; idx<size; ++idx ){
+			ZnkSocket listen_sock = ZnkSocketAry_at( mfds->listen_sockary_, idx );
+			if( ZnkFdSet_isset( fdst_read, listen_sock ) ){
+				processListenSock( mfds, listen_sock,
+						fdst_read,
+						fdst_observe_r,
+						fnca_on_accept,
+						is_access_allow_ip );
 			}
 		}
-		/***
-		 * listen_sockに関する処理は終ったので、
-		 * fdst_readからこれは除去.
-		 */
-		ZnkFdSet_clr( fdst_read, mfds->listen_sock_ );
 	}
 
 	/***
@@ -314,11 +376,7 @@ MoaiFdSet_process( MoaiFdSet mfds,
 		 * mfds->connecting_socks_は MoaiConnection_invokeCallback( mcn, mfds ) 呼び出しで
 		 * 要素がeraseされる可能性があるため、一旦wk_sock_ary_に配列全体をコピーしておく.
 		 */
-		ZnkSocketAry_clear( wk_sock_ary );
-		for( cnt_idx=0; cnt_idx<cnt_size; ++cnt_idx ){
-			connecting_sock = ZnkSocketAry_at( mfds->connecting_socks_, cnt_idx );
-			ZnkSocketAry_push_bk( wk_sock_ary, connecting_sock );
-		}
+		ZnkSocketAry_copy( wk_sock_ary, mfds->connecting_socks_ );
 
 		for( cnt_idx=0; cnt_idx<cnt_size; ++cnt_idx ){
 			connecting_sock = ZnkSocketAry_at( wk_sock_ary, cnt_idx );
@@ -326,11 +384,17 @@ MoaiFdSet_process( MoaiFdSet mfds,
 				/* OK. */
 				MoaiConnection mcn = MoaiConnection_find_byOSock( connecting_sock );
 				ZnkSocketAry_set( mfds->connecting_socks_, cnt_idx, ZnkSocket_INVALID );
-				MoaiConnection_setConnectInprogress( mcn, false );
-				ZnkF_printf_e( "  Connection Inprogress Completed : sock=[%d]\n", connecting_sock );
-				MoaiConnection_invokeCallback( mcn, mfds );
+				if( mcn ){
+					MoaiConnection_setConnectInprogress( mcn, false );
+					RanoLog_printf( "  Connection Inprogress Completed : sock=[%d]\n", connecting_sock );
+					MoaiConnection_invokeCallback( mcn, mfds );
+				} else {
+					/***
+					 * 通常起こりえないがなんらかの理由でMoaiConnectionにconnecting_sockを登録しそびれている.
+					 */
+					RanoLog_printf( "  Connection Inprogress Failure : sock=[%d] does not exist in MoaiConnection\n", connecting_sock );
+				}
 				ZnkFdSet_clr( mfds->fdst_observe_w_, connecting_sock );
-				//ZnkSocketAry_set( mfds->connecting_socks_, cnt_idx, ZnkSocket_INVALID );
 			}
 		}
 
@@ -396,13 +460,13 @@ MoaiFdSet_printf_fdst_read( MoaiFdSet mfds )
 
 	ZnkFdSet_getSocketAry( fdst_read, wk_sock_ary );
 	size = ZnkSocketAry_size( wk_sock_ary );
-	MoaiLog_printf( "  fdst_read=[" );
+	RanoLog_printf( "  fdst_read=[" );
 	for( idx=0; idx<size; ++idx ){
-		MoaiLog_printf( "%d", ZnkSocketAry_at( wk_sock_ary, idx ) );
+		RanoLog_printf( "%d", ZnkSocketAry_at( wk_sock_ary, idx ) );
 		if( idx != size-1 ){
-			MoaiLog_printf( "," );
+			RanoLog_printf( "," );
 		}
 	}
-	MoaiLog_printf( "]\n" );
+	RanoLog_printf( "]\n" );
 	ZnkSocketAry_destroy( wk_sock_ary );
 }

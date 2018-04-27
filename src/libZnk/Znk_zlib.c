@@ -1,5 +1,4 @@
 #include <Znk_zlib.h>
-#include <Znk_bfr.h>
 #include <Znk_dlhlp.h>
 #include <Znk_stdc.h>
 #include <assert.h>
@@ -111,7 +110,7 @@ ZnkZStream_destroy( ZnkZStream zst )
 	}
 }
 bool
-ZnkZStream_inflateInit( ZnkZStream zst )
+ZnkZStream_inflateInit( ZnkZStream zst, ZnkStr emsg )
 {
 	int status;
 	/***
@@ -134,7 +133,9 @@ ZnkZStream_inflateInit( ZnkZStream zst )
 	status = zst->module_->inflateInit2__( &zst->zs_, windowBits,
 			ZLIB_VERSION, sizeof(z_stream) );
 	if( status != Z_OK ){
-		ZnkF_printf_e( "inflateData : inflateInit2 error : status=[%d]\n", status );
+		if( emsg ){
+			ZnkStr_addf( emsg, "ZnkZStream_inflateInit : Error : status=[%s]", getZLibStatusStr(status) );
+		}
 		return false;
 	}
 	return true;
@@ -142,7 +143,8 @@ ZnkZStream_inflateInit( ZnkZStream zst )
 bool
 ZnkZStream_inflate( ZnkZStream zst,
 		uint8_t* dst_buf, size_t dst_size, const uint8_t* src_buf, size_t src_size,
-		size_t* expanded_dst_size, size_t* expanded_src_size )
+		size_t* expanded_dst_size, size_t* expanded_src_size,
+		ZnkStr emsg )
 {
 	int status;
 	
@@ -155,11 +157,12 @@ ZnkZStream_inflate( ZnkZStream zst,
 	// Decompress data.
 	status = zst->module_->inflate_( &zst->zs_, Z_NO_FLUSH );
 	if( status == Z_STREAM_END ){
-		ZnkF_printf_e( "inflateData : Z_STREAM_END.\n" );
 		goto FUNC_END;
 	}
 	if( status != Z_OK ){
-		ZnkF_printf_e( "inflateData : Error : status is not OK [%s]\n", getZLibStatusStr( status ) );
+		if( emsg ){
+			ZnkStr_addf( emsg, "ZnkZStream_inflate : Error : status=[%s]", getZLibStatusStr(status) );
+		}
 		*expanded_dst_size = dst_size - zst->zs_.avail_out;
 		*expanded_src_size = src_size - zst->zs_.avail_in;
 		return false;
@@ -172,7 +175,8 @@ FUNC_END:
 bool
 ZnkZStream_inflate2( ZnkZStream zst,
 		uint8_t* dst_buf, size_t dst_size, ZnkZStreamIOFunc supplyDst, void* dst_arg,
-		uint8_t* src_buf, size_t src_size, ZnkZStreamIOFunc demandSrc, void* src_arg )
+		uint8_t* src_buf, size_t src_size, ZnkZStreamIOFunc demandSrc, void* src_arg,
+		ZnkStr emsg )
 {
 	int status = Z_OK;
 	
@@ -188,9 +192,10 @@ ZnkZStream_inflate2( ZnkZStream zst,
 		status = zst->module_->inflate_( &zst->zs_, Z_NO_FLUSH );
 		if( status == Z_STREAM_END ) break;
 		if( status != Z_OK ){
-			ZnkF_printf_e( "ZnkZStream_inflate2 : Error : status is not OK [%s]\n", getZLibStatusStr( status ) );
-			ZnkF_printf_e( "  msg=[%s]\n", (zst->zs_.msg) ? zst->zs_.msg : "???");
-			assert( 0 );
+			if( emsg ){
+				ZnkStr_addf( emsg, "ZnkZStream_inflate2 : Error : status=[%s]", getZLibStatusStr( status ) );
+				ZnkStr_addf( emsg, " zs.msg=[%s]", (zst->zs_.msg) );
+			}
 			return false;
 		}
 		if( zst->zs_.avail_out == 0 ){
@@ -210,12 +215,14 @@ ZnkZStream_inflate2( ZnkZStream zst,
 	return true;
 }
 bool
-ZnkZStream_inflateEnd( ZnkZStream zst )
+ZnkZStream_inflateEnd( ZnkZStream zst, ZnkStr emsg )
 {
-	// Clean up.
+	/* Clean up */
 	int status = zst->module_->inflateEnd_( &zst->zs_ );
 	if( status != Z_OK ){
-		ZnkF_printf_e( "inflateEnd error : status=[%d]\n", status );
+		if( emsg ){
+			ZnkStr_addf( emsg, "ZnkZStream_inflateEnd : Error : status=[%s]", getZLibStatusStr(status) );
+		}
 		return false;
 	}
 	return true;

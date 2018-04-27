@@ -1,6 +1,60 @@
 Release Note
 -----------------------------------
 
+## 2018/04/27 Version 2.0 リリース.  
+  大変お待たせいたしました！
+  ついに次世代のMoai Ver2.0のリリースです.
+
+  Version 1.1.8からの修正点は以下の通り.  
+
+~~~
+    Moai-Engine本体
+
+	* Moai CGIシステムの導入.
+	* Moai Web Configuration画面の刷新.
+	* 新防衛機構XhrDMZの導入(Port番号としてMoai本体の8124とは別に8125を使用).
+	* Moai認証コードの導入.
+	  Moai CGI内でこの認証コードを検査し、正規の手順で発行されたMoai CGIの命令かどうかを判定できる.
+	* moai_logの肥大化対策. 循環式ログを導入.
+	* EAGAINが連発する現象の緩和. wait間隔を調整することで対応.
+	* 旧コードのうち汎用性の高いものをlibRanoとして分離.
+	* http_decoratorを廃止し、これへの依存性も除去. 替わりにRano_htp_boyを使う形に変更.
+	* Rano_htp_modifierの導入により、HTTP系のフィルター機能において仮想アルゴリズムを大幅に強化.
+	* 各種Bug fix.
+
+    VirtualUSERS(MoaiCGIアプリケーション)
+
+	* 新規導入. 
+	* 旧バージョンのMoaiにあったVirtual USERS Initiate ボタンを廃止し、
+	  この機能を後継したMoai CGIアプリケーション.
+	* user_agent.txt および screen_size.txtを廃止.
+	  ユーザはもはやこれらに候補を記述しておく必要はなく、User-Agent、Screen-Size、そしてすべて(Everything)の情報は
+	  CustomBoy-Engineにより無の状態から自動的に構築される.
+
+    Easter(MoaiCGIアプリケーション)
+
+	* 新規導入. 
+	* ローカルプロキシの設定をせずともVirtualUSERSで構築した仮想ブラウザ環境を利用できるビューア.
+	* 画像BBSで入手した画像の分類や管理などもできる.
+
+    CustomBoy-Engine(MoaiCGIアプリケーション)
+
+	* 新規導入. 
+	* 仮想ブラウザ環境を構築するコアエンジン.
+	* 我々が提供する仮想化ツールの中でもこれは最強のカスタマイズ性を有する.
+
+    ProxyFinder(MoaiCGIアプリケーション)
+
+	* 新規導入. 
+	* プロキシ情報サイトにアクセスしプロキシのリスト(parent_proxy.txt)を自動生成する.
+
+    新ビルドシステムmkfsys
+
+	* 新規導入. 
+	* znk_projectが提唱する新しいMakefile自動生成型ビルドシステムである.
+ 	  MoaiやEasterなどはすべてこのビルドシステムを採用している.
+~~~
+
 ## 2016/10/13 Version 1.1.8 リリース.  
   以下を修正しました.
 

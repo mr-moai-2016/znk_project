@@ -1,30 +1,6 @@
 @def_quote [' ']
 
-# 以下には接続をBlockしたいホストを記述する.
-# 有害サイトには最初から接続しないようにしましょう!
-@@L ignore_hosts
-free2.jp
-api.digiket.com
-*.ad-stir.com
-aladdin.genieesspv.jp
-*.socdm.com
-j.microad.net
-www.assoc-amazon.jp
-www.google-analytics.com
-ad.doubleclick.net
-*.adingo.jp
-js.fout.jp
-ocsp.digicert.com
-spnet33.i-mobile.co.jp
-test.2chan.net
-@@.
-
-# 以下にはPOST時に確認モードを表示したいホストを記述する.
-@@L post_confirm_hosts
-*.2ch.net
-*.2chan.net
-@@.
-
+##
 # parent_proxy:
 #   現在使用中の外部プロキシ(Moaiが次に接続する先)であり、hostname:portという形式で指定する.
 #   外部プロキシを使用せず目的のサイトへ直接接続したい場合はここにNONEまたは:0または空値を設定する.
@@ -34,10 +10,14 @@ test.2chan.net
 #   これが on の場合、post_confirm_hosts によって指定されたホストにおいては
 #   POST時に確認画面が出る
 #   offの場合はいかなるホストにおいても確認画面を出さない.
+#
+#   Easterに同様のしかしさらに強力な機能が導入されたため、Moai本体としてのこの機能は非推奨となった.
+#   将来のバージョンでは廃止するかもしれない.
 # 
 # enable_log_file:
-#   これが on の場合、moai_log.log ファイルにすべてのログ情報を記録していく.
-#   off の場合、初期起動時の最低限のメッセージを除いては moai_log.log ファイルにログ情報を記録しない.
+#   これが on の場合、tmpフォルダ内の log ファイルにすべてのログ情報を記録していく.
+#   ( log ファイルは最大10個まで作られ、それを超えた場合は最も古いものからリサイクルされる )
+#   off の場合、初期起動時の最低限のメッセージを除いては log ファイルにログ情報を記録しない.
 #   動画サイトなど、ログ情報が膨大なサイトを閲覧する場合は、ログファイルも大きくなりがちだが、
 #   これが気になる場合などにoffにしておくとよい.
 #
@@ -50,12 +30,26 @@ test.2chan.net
 #   onのときブロッキング接続、offのとき非ブロッキング接続となるが、通常後者の方が快適に閲覧が可能であり、
 #   特に問題ない限りはoffでよい.
 #
+# filters_dir:
+#   Moaiが使用するフィルタファイルの置かれているディレクトリを示す.
+#   デフォルトでは filters ディレクトリ配下にこれが置かれているが
+#   その参照先を変更することができる.
+#   これは複数のフィルタを用意して適宜切り替えるなどの用途で便利である.
+#
+# profile_dir:
+#   Moaiが使用するプロファイルの置かれているディレクトリを示す.
+#   デフォルトでは ../moai_profile ディレクトリとなるが
+#   その参照先を変更することができる.
+#   プロファイルの配下にはCGIアプリケーションで使用する固有データや設定ファイルなどを格納することを想定している.
 #
 # acceptable_host:
 #   値として ANY または LOOPBACK を指定する.
 #   ANYを指定した場合、Moaiが起動している自マシン以外からの接続も許可する.
+#   正確に言えば、この場合 hosts.myf 内の access_allow_ips で指定したIPのみを受理し、それ以外からのIPの接続は拒絶する.
 #   LOOPBACKを指定した場合、それを許可せずMoaiが起動している自マシンからの自分自身への接続
 #   (Loopback接続)のみを許可する.
+#   現在のMoaiでは ANYでもなんら問題ないが、他マシンからの接続そのものを一切許可したくないなら
+#   これをLOOPBACKに指定しておいてもよい.
 #
 # server_name:
 #   acceptable_hostとして ANY を指定した場合において
@@ -63,10 +57,30 @@ test.2chan.net
 #   例えばMoaiのWeb Configuration画面などではMoaiの起動しているサーバへのPOSTの必要があるが、
 #   その際に送信先情報として使われる.
 #
+#   現在のMoaiではこの値の意義は薄れてきており、将来のバージョンでは廃止するかもしれない.
+#
 # moai_port:
 #   Moaiがリッスンするポート番号を指定する.
-#   現時点ではローカルプロキシおよびウェブサイトで同じポートを使っているが
-#   将来のバージョンではこれらを異なるポートにするかもしれない.
+#   Moaiのローカルプロキシおよび認証されたウェブアクセスにおいてはこのポートを使用する.
+#   つまりMoaiはこのポートでアクセスしてきたホストをAuthenticHostとみなす.
+#
+#   AuthenticHostでは、より高機能なCGIの実行権限を与える.
+#   またユーザにとって秘匿性の高いファイルアクセスをAuthenticKey等の付属で認める一方、
+#   どのようなXMLHttpRequest(JavascriptからHTTPを発行する機能)が含まれているか一般に予測不能な危険性のあるファイルのアクセスは
+#   AuthenticHostからは認めない.
+#
+# xhr_dmz_port:
+#   MoaiがXhrDMZ(XMLHttpRequest DMZ)として使用するポート番号を指定する.
+#   Moaiはこのポートでアクセスして来たホストをXhrDMZとみなす.
+#   その際に指定するポート番号はmoai_portとは異なるものを指定すること.
+#   これが空の場合はデフォルトで8125となる.
+#   acceptable_hostがANYの場合はプライベートIPアドレスを自動的に取得し、それをXhrDMZとして使う.
+#   acceptable_hostがLOOPBACKの場合は127.0.0.1をXhrDMZとして使う.
+#
+#   XhrDMZでは、CGIの実行がより限定されたものになる.
+#   またユーザにとって秘匿性の高いファイルアクセスを禁止する一方、
+#   どのようなXMLHttpRequest(JavascriptからHTTPを発行する機能)が含まれているか一般に予測不能な危険性のあるファイルのアクセスは
+#   XhrDMZからのみ認める.
 #
 @@V config
 parent_proxy = [':0']
@@ -74,74 +88,12 @@ post_confirm = ['off']
 enable_log_file = ['on']
 enable_log_verbose = ['off']
 blocking_mode = ['off']
+filters_dir = ['filters']
+profile_dir = ['../moai_profile']
+
 acceptable_host = ['LOOPBACK']
 server_name = ['']
 moai_port = ['8124']
+xhr_dmz_port = ['8125']
 @@.
 
-# 外部proxyが指定されている場合において
-# 以下のホストに接続する場合に外部proxyを使う.
-@@L proxy_apply
-*.2chan.net
-taruo.net
-@@.
-
-# 外部proxyが指定されている場合において
-# 以下のホストに接続する場合は例外として外部proxyを使わない.
-# proxy_applyと被るものについてはproxy_exceptの指定が優先される.
-@@L proxy_except
-127.0.0.1
-localhost
-192.168.*
-*.google.com
-*.youtube.com
-*.ytimg.com
-*.googlevideo.com
-*.googleapis.com
-*.gstatic.com
-*.ggpht.com
-*.nicovideo.jp
-*.googleusercontent.com
-*.smilevideo.jp
-*.nimg.jp
-*.twitter.com
-*.optimizely.com
-*.nicodic.jp
-*.yjtag.jp
-*.facebook.net
-*.facebook.com
-sv*.2chan.net
-jan.2chan.net
-feb.2chan.net
-mar.2chan.net
-apr.2chan.net
-jul.2chan.net
-aug.2chan.net
-sep.2chan.net
-oct.2chan.net
-@@.
-
-# peer(接続元)が以下のIPの場合のみHTTP要求を受け付ける.
-# 逆に言えばそれ以外は全て許可しない(Forbiddenメッセージを返す)ものとする.
-# 下記に何も記述しない場合はすべての外部IPからの接続を拒否する形になる.
-#
-# ただし Loopback(127.0.0.1)からの接続の場合に関しては
-# ここでの記述の如何に関わらず無条件で許可するものとする.
-#
-# ここには典型的には 192.168.* などと記述してLANからのみの接続を
-# 許可しておけばよい.
-#
-# ここで指定可能なのはIPであってホスト名は指定できないことに注意する(ワイルドカードは使用できる).
-@@L access_allow_ips
-192.168.*
-@@.
-
-# access_allow_ipsで指定したIPの中で、さらに例外的に接続を拒否したいIPの
-# パターンをここで記述できる.
-#
-# ただし Loopback(127.0.0.1)からの接続の場合に関しては
-# ここでの記述の如何に関わらず無条件で許可するものとする.
-#
-# ここで指定可能なのはIPであってホスト名は指定できないことに注意する(ワイルドカードは使用できる).
-@@L access_deny_ips
-@@.

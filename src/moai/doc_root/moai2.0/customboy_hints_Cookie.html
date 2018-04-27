@@ -1,0 +1,217 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<link href="/msty.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<a name=TopBar></a>
+<p><b><img src="/imgs/here_landmark.png"> Moai2.0ドキュメント</b></p>
+
+<a class=MstyElemLink href="/">トップページ</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index.html">Moai2.0ドキュメント</a> &nbsp;
+<a class=MstyElemLink        href="/moai1.1/index.html">Moai1.1ドキュメント</a> &nbsp;
+<br> <br>
+<a class=MstyElemLink        href="/moai2.0/install.html">インストールガイド</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/moai_reference.html">Moai本体</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/customboy_reference.html">CustomBoy</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
+<br> <br>
+<a class=MstyElemLink        href="/moai2.0/customboy_reference.html">Overview and Tutorial</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/customboy_hints_Cookie.html">Cookie Hints</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/customboy_hints_PostVars.html">PostVars Hints</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/customboy_hints_Fingerprint.html">Fingerprint Hints</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/customboy_hints_Snippet.html">Snippet Hints</a> &nbsp;
+<br> <br>
+
+<div class=MstyComment>
+<u><b>記事担当者</b></u> : 高速ヤキソバ変換<br> 
+<br>
+<u><b>最終更新日</b></u> : 2017/10/04<br>
+<br>
+</div>
+<br>
+
+<u><b>はじめに</b></u>
+<ul>
+	<font >
+		ここではCustomBoyが仮想化するCookie値のHint情報を列挙する.<br>
+		(主にふたばちゃんねるの例を題材とする).<br>
+	</font><br>
+</ul><br>
+
+
+<a name=Index></a>
+<u><b>目次</b></u>
+<ul>
+<li><b><a class=MstyElemLink href=#ck_posttime>Cookie posttime</a></b></li>
+<li><b><a class=MstyElemLink href=#ck___cfduid>Cookie __cfduid</a></b></li>
+<li><b><a class=MstyElemLink href=#ck_cxyl>Cookie cxyl</a></b></li>
+<li><b><a class=MstyElemLink href=#ck_namec>Cookie namec</a></b></li>
+<li><b><a class=MstyElemLink href=#ck_pwdc>Cookie pwdc</a></b></li>
+<li><b><a class=MstyElemLink href=#ck_verifyc>Cookie verifyc</a></b></li>
+<li><b><a class=MstyElemLink href=#ck_unknown_cookie_var>Unknown Cookie value</a></b></li>
+</ul><br>
+
+
+<a name=ck_posttime></a>
+<u><b>Cookie posttime</b></u>
+<span class=MstyAuthor> (Category: futaba)</span>
+<ul>
+	<font >
+	この値はfutaba.phpに初アクセスした時間(およびそれに類した値)である.<br>
+	現状ではカタログに初めてアクセスするか、または初めてレス投稿した際に設定されるようである.<br>
+	あるいは /bin/cachemt7.php にアクセスしたときにそれに類した値が生成される形となる.<br>
+	一旦設定されると、CookieおよびBrowser CacheおよびlocalStorage これら全てを消去しない限り同じ値が残り続ける.<br>
+	この値はPOST変数 pthb, pthc (pthd)とCookieのposttime値として送信される. <br> 
+	</font><br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
+</ul><br>
+
+
+<a name=ck___cfduid></a>
+<u><b>Cookie __cfduid</b></u>
+<span class=MstyAuthor> (Category: futaba, 5ch)</span>
+<ul>
+	<font >
+	この値はBBSに初アクセスしたときに未設定である場合は新たに設定される.<br>
+	BBSが導入しているCloudflareが発行するものであると思われる.<br>
+	一旦設定されると、Cookieを消去しない限り同じ値が残り続ける.<br>
+	またBrowser等の環境を変えない限り、同様の値が再発行される可能性もある.<br>
+	この値はCookieの__cfduid値としてBBSへも送信される. <br> 
+	</font><br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
+</ul><br>
+
+
+<a name=ck_cxyl></a>
+<u><b>Cookie cxyl</b></u>
+<span class=MstyAuthor> (Category: futaba)</span>
+<ul>
+	<font >
+	この値はカタログのフォーマットを指定するために存在する.<br>
+	これが示す内容の意味はカタログの「設定」画面から行える指定そのものである.<br>
+	<br>
+	<div class=MstyComment>
+		横のスレ個数 x 縦のスレ個数 x 各スレでの文字数 x 文字位置(0:下,1:右) x 画像サイズ(0から6までで0が最小で旧来の表示)
+	</div>
+	<br>
+	というフォーマットを持つ記述子となる.<br>
+	<br>
+	デフォルトではこの値は指定されておらず、その場合futaba.phpは '14x6x4x0x0' という値が指定されたものとみなすようである.<br>
+	基本的にはユーザが自由に設定するものであるからユーザ識別とは関係がないと思われる.<br>
+	</font><br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
+</ul><br>
+
+
+<a name=ck_namec></a>
+<u><b>Cookie namec</b></u>
+<span class=MstyAuthor> (Category: futaba)</span>
+<ul>
+	<font >
+	この値は最後のレスにおいて使用した「お名前欄」の内容を示す.<br>
+	値は全角文字などを含む可能性があり、URL Encodingされる.<br>
+	何のために使われるものかは不明であるが、コテ対策で導入したものである可能性もある.<br>
+	いずれにせよ空値以外の値を設定していても何一つ良いことはないので、基本的には消去しておくことが望ましい.<br>
+	futaba_send.myf の cookie_force において namec = [''] (空値)を指定しておくことをお勧めする.<br>
+	(futaba_send.myfのデフォルトではそうなっている).<br>
+	</font><br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
+</ul><br>
+
+
+<a name=ck_pwdc></a>
+<u><b>Cookie pwdc</b></u>
+<span class=MstyAuthor> (Category: futaba)</span>
+<ul>
+	<font >
+	名前の由来は PassWorD Cookie と思われる.<br>
+	<br>
+	この値は、レス投稿時のいわゆる「削除キー」に相当するものである.<br>
+	ユーザが明示的に指定してもよいが、空にしておけば適当な削除キー値が自動的に割り当てられる.<br>
+	このときCookieのpwdc変数にその値が格納され、レス投稿時においてはJavascriptを介してこの値がさらにPost変数pwdへセットされる.<br>
+	通常は自動的に割り当てられた値をそのまま使えばよい.<br>
+	ユーザ情報をリセットしたい場合は、Cookieのpwdc値を一旦空にしておくとよい.<br>
+	</font><br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
+</ul><br>
+
+
+<a name=ck_verifyc></a>
+<u><b>Cookie verifyc</b></u>
+<span class=MstyAuthor> (Category: futaba)</span>
+<ul>
+	<font >
+	このCookie変数は今となってはレアな変数の一つであり、大半の方は表示されないであろう.<br>
+	<br>
+	この値は筆者の知る限り、現在では「時限式の規制」において使われているようである.<br>
+	(かつては別の用途で使用されていたこともあったと記憶している).<br>
+	時限式の規制とは、「何日の何時何分何秒よりレスが出来るようになります」といった旨のメッセージが表示される規制であり、<br>
+	基本的にはISPやIPベースで行われる広域規制の一種のようである.<br>
+	<br>
+	このverifycは、ユーザがそのIPにおいて初めてレスする際に発行され、<br>
+	おそらくその値の内容はそのときの時刻とIPアドレスの情報が暗号化されて格納されたものである.<br>
+	そしてその表示の通り、その時刻からプラス何時間か経過した後にレスが可能になるといったものである.<br>
+	<br>
+	また、この値をユーザが不用意に改変したりそもそもverifyc自体を消去すると、futaba.phpはそのような改変を検出するruleを持っており、<br>
+	改変された値は破棄され、再びそのIPにおける「初めてのレス」とみなされて時刻の情報も初期化される.<br>
+	<br>
+	例えば、「３時間後にレスが可能になる」といった表示がされて２時間が経過した場合を考えよう.<br>
+	この時点で残り１時間であり、１時間経過後にレスが可能であるハズである.<br>
+	しかしそこでverifycを不用意に加工したり削除したりして再びレス投稿を試みると、新しいverifycが発行され「３時間後にレスが可能になる」状態に初期化されるということである.<br>
+	<br>
+	従って、router reset等で一旦IPアドレスを変えたらとりあえず古いverifycは消去し、次にそのIPでの「初めてのレス」で新しいverifycを発行させる.<br>
+	その後はさらなる次のIP変更まではうっかりそのverifycを消さないように配慮する必要があるということになろう.<br>
+	<br>
+	これは割と凝った規制であり、規制コレクター+マニアの筆者としては<b>面白い部類の仕組み</b>かと思うのだがいかがであろうか？<br>
+	<br>
+	ちなみにこの実験において元のverifycをbackupしておき、一旦初期化された後に再び元の値を復元すると、<br>
+	残り１時間後にレスが可能になる状態に復元できるケースもあるようである.<br>
+	</font><br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
+</ul><br>
+
+
+<a name=ck_unknown_cookie_var></a>
+<u><b>Unknown Cookie value</b></u>
+<ul>
+	<font >
+	CustomCookieにおいて、一番右の本来「Hint」と表記されるべき位置に「Unknown」と表記されている変数が表示される場合がある.<br>
+	これはCustomBoyが知らない、あるいは把握していない変数であることを意味する.<br>
+	掲示板の仕様変更による新規変数の導入、あるいはある種の特別な規制にのみ発現するレアな変数などが存在する可能性があり、<br>
+	そのようなCookie変数が検出された場合、この表示がなされる.<br>
+	<br>
+	この「Unknown」表示がされた場合、現在5chでMoaiを紹介している某スレなどでその旨を作者に報告してもらえれば幸いである.<br>
+	こういう情報は皆で共有することがとても大事である （´＞ω・`）. <br>
+	その変数が出現する詳しいメカニズムと仕様の詳細が確認できれば CustomBoyをこれに対応させ、ドキュメントも配備することができる.<br>
+	<br>
+	ユーザ情報を初期化したい場合は、この種のCookie変数の値をどう扱うべきであろうか？<br>
+	大抵の場合、とりあえず一旦空にしておくと間違いはなかろう. <br>
+	なぜなら誰でも一番初めは何もない状態なのだし、そうでなくとも少しでもセキュリティーに意識があるユーザなら、<br>
+	<b>Browserを閉じる際に全Cookieを削除する</b>設定にしておくなどは、極めて自然で妥当なことであろう.<br>
+
+	<br>
+	しかしながらCustomBoyではほとんどのCookie変数は削除されるものの、Cookie変数全体の無条件な消去は敢えて行わないようにしてある.<br>
+	色々吟味を重ねた結果、これが自動的に削除するCookie変数はいかなる場合でも問題の発生し得ないことがわかっている変数群にとりあえずは限定してある.<br>
+	例えば上記で述べたverifycは現状自動的には削除されないようにしてある. <br>
+	大抵の場合、これで何ら問題ないと思うが、必要ならCustomCookieから手動でこれを消去していただきたい.<br>
+	</font><br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
+</ul><br>
+
+
+<u><b>リンク</b></u>
+<ul>
+	<li><a class=MstyElemLink href="#TopBar">一番上へ</a></li>
+	<li><a class=MstyElemLink href="https://mr-moai-2016.github.io">Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href="https://github.com/mr-moai-2016/znk_project">znk_project(github)</a></li>
+</ul><br>
+
+</body>
+</html>

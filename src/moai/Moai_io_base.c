@@ -1,6 +1,7 @@
 #include "Moai_io_base.h"
 #include "Moai_connection.h"
-#include "Moai_log.h"
+
+#include <Rano_log.h>
 #include <Znk_net_base.h>
 #include <Znk_socket.h>
 #include <Znk_missing_libc.h>
@@ -26,7 +27,7 @@ makeResponseHdr_200( ZnkStr str, const char* content_type, int contentLength, in
 	formatTimeString( timeBuf, sizeof(timeBuf), 0 );
 
 	ZnkStr_addf( str,
-			"HTTP/1.0 200 OK\r\n"
+			"HTTP/1.1 200 OK\r\n"
 			"Date: %s\r\n"
 			"Content-Type: %s\r\n",
 			timeBuf, content_type
@@ -63,10 +64,10 @@ MoaiIO_sendTxtf( ZnkSocket sock, const char* content_type, const char* fmt, ... 
 	return ret;
 }
 bool
-MoaiIO_sendResponseFile( ZnkSocket sock, const char* filename )
+MoaiIO_sendResponseFile( ZnkSocket sock, const char* filename, MoaiIOFilterFunc io_filter_func )
 {
 	bool result = false;
-	ZnkFile fp = ZnkF_fopen( filename, "rb" );
+	ZnkFile fp = Znk_fopen( filename, "rb" );
 	if( fp ){
 		size_t read_size;
 		uint8_t buf[ 4096 ];
@@ -96,11 +97,15 @@ MoaiIO_sendResponseFile( ZnkSocket sock, const char* filename )
 		}
 
 		while( true ){
-			read_size = ZnkF_fread( buf, 1, sizeof(buf), fp );
+			read_size = Znk_fread( buf, sizeof(buf), fp );
 			if( read_size == 0 ){
 				break; /* eof */
 			}
 			ZnkBfr_append_dfr( bfr, buf, read_size );
+		}
+		Znk_fclose( fp );
+		if( io_filter_func ){
+			io_filter_func( bfr, content_type );
 		}
 		makeResponseHdr_200( str, content_type, ZnkBfr_size(bfr), 0 );
 		ZnkBfr_insert( bfr, 0, (uint8_t*)ZnkStr_cstr(str), ZnkStr_leng(str) );
@@ -108,7 +113,6 @@ MoaiIO_sendResponseFile( ZnkSocket sock, const char* filename )
 			result = false;
 		}
 		ZnkBfr_destroy( bfr );
-		ZnkF_fclose( fp );
 		result = true;
 	}
 	return result;
@@ -226,7 +230,7 @@ MoaiIO_reportFdst( const char* label, ZnkSocketAry sock_ary, ZnkFdSet fdst_obser
 		size_t    i;
 		char      buf[ 1024 ] = "";
 		ZnkObjAry repoted = ZnkObjAry_create( NULL );
-		MoaiLog_printf("%s : sock=[", label );
+		RanoLog_printf("%s : sock=[", label );
 		line_leng = Znk_strlen( label ) + 9;
 	
 		for( i=0; i<sock_ary_size; ++i ){
@@ -242,19 +246,19 @@ MoaiIO_reportFdst( const char* label, ZnkSocketAry sock_ary, ZnkFdSet fdst_obser
 			}
 	
 			if( first_printed ){
-				MoaiLog_printf(", ");
+				RanoLog_printf(", ");
 				line_leng += 2;
 			}
 			MoaiIO_makeSockStr( buf, sizeof(buf), sock, detail );
 			if( line_leng + Znk_strlen( buf ) > 80 ){
-				MoaiLog_printf( "\n    " );
+				RanoLog_printf( "\n    " );
 				line_leng = 4;
 			}
-			MoaiLog_printf( "%s", buf );
+			RanoLog_printf( "%s", buf );
 			line_leng += Znk_strlen( buf );
 			first_printed = true;
 		}
-		MoaiLog_printf("]\n" );
+		RanoLog_printf("]\n" );
 		ZnkObjAry_destroy( repoted );
 	}
 
@@ -283,7 +287,7 @@ MoaiIO_procExile( ZnkSocketAry sock_ary, ZnkFdSet fdst, MoaiFdSet mfds )
 			}
 			/* This is Exile socket */
 			if( (uint64_t)getCurrentSec() - mcn->exile_time_ > 15 ){
-				MoaiLog_printf( "Moai : Exile[%d] deletion by timeout.\n", sock );
+				RanoLog_printf( "Moai : Exile[%d] deletion by timeout.\n", sock );
 				ZnkSocket_close( sock );
 				MoaiConnection_erase( mcn, mfds );
 				ZnkFdSet_clr( fdst, sock );
@@ -298,7 +302,7 @@ void
 MoaiIO_close_ISock( const char* label, ZnkSocket sock, MoaiFdSet mfds )
 {
 	char buf[ 1024 ];
-	MoaiLog_printf( "  MoaiIO_close_ISock : %s sock=[%s]\n",
+	RanoLog_printf( "  MoaiIO_close_ISock : %s sock=[%s]\n",
 			label, MoaiIO_makeSockStr(buf,sizeof(buf),sock,true) );
 
 	if( !MoaiConnection_isListeningSock( sock ) ){
@@ -315,7 +319,7 @@ void
 MoaiIO_close_OSock( const char* label, ZnkSocket sock, MoaiFdSet mfds )
 {
 	char buf[ 1024 ];
-	MoaiLog_printf( "  MoaiIO_close_OSock : %s sock=[%s]\n",
+	RanoLog_printf( "  MoaiIO_close_OSock : %s sock=[%s]\n",
 			label, MoaiIO_makeSockStr(buf,sizeof(buf),sock,true) );
 
 	if( !MoaiConnection_isListeningSock( sock ) ){
@@ -382,14 +386,14 @@ MoaiIO_recvInPtn( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, const char* ptn
 				ZnkStr msgs = ZnkStr_new( "" );
 				ZnkNetBase_getErrMsg( errmsg_buf, sizeof(errmsg_buf), err_code );
 				MoaiIO_addAnalyzeLabel( msgs, sock, recv_size, "recvInPtn" );
-				ZnkStr_addf( msgs, "RecvError.\n" );
+				ZnkStr_add( msgs, "RecvError.\n" );
 				ZnkStr_addf( msgs, "  errmsg=[%s]\n", errmsg_buf );
-				MoaiLog_printf( "%s", ZnkStr_cstr( msgs ) );
+				RanoLog_printf( "%s", ZnkStr_cstr( msgs ) );
 				MoaiIO_close_ISock( "  RecvError", sock, mfds );
 				MoaiIO_close_OSock( "  RecvError", sock, mfds );
 				ZnkStr_delete( msgs );
 			} else {
-				MoaiLog_printf( "  recv_size=[%d]\n", recv_size );
+				RanoLog_printf( "  recv_size=[%d]\n", recv_size );
 				MoaiIO_close_ISock( "  UnexpectedRecvZero(recvInPtn)", sock, mfds );
 				MoaiIO_close_OSock( "  UnexpectedRecvZero(recvInPtn)", sock, mfds );
 			}
@@ -427,9 +431,9 @@ MoaiIO_recvByPtn( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, const char* ptn
 				ZnkStr msgs = ZnkStr_new( "" );
 				ZnkNetBase_getErrMsg( errmsg_buf, sizeof(errmsg_buf), err_code );
 				MoaiIO_addAnalyzeLabel( msgs, sock, recv_size, "recvByPtn" );
-				ZnkStr_addf( msgs, "RecvError.\n" );
+				ZnkStr_add( msgs, "RecvError.\n" );
 				ZnkStr_addf( msgs, "  errmsg=[%s]\n", errmsg_buf );
-				MoaiLog_printf( "%s", ZnkStr_cstr( msgs ) );
+				RanoLog_printf( "%s", ZnkStr_cstr( msgs ) );
 				MoaiIO_close_ISock( "  RecvError", sock, mfds );
 				MoaiIO_close_OSock( "  RecvError", sock, mfds );
 				ZnkStr_delete( msgs );
@@ -462,9 +466,9 @@ MoaiIO_recvBySize( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, size_t size, s
 				ZnkStr msgs = ZnkStr_new( "" );
 				ZnkNetBase_getErrMsg( errmsg_buf, sizeof(errmsg_buf), err_code );
 				MoaiIO_addAnalyzeLabel( msgs, sock, recv_size, "recvBySize" );
-				ZnkStr_addf( msgs, "RecvError.\n" );
+				ZnkStr_add( msgs, "RecvError.\n" );
 				ZnkStr_addf( msgs, "  errmsg=[%s]\n", errmsg_buf );
-				MoaiLog_printf( "%s", ZnkStr_cstr( msgs ) );
+				RanoLog_printf( "%s", ZnkStr_cstr( msgs ) );
 				MoaiIO_close_ISock( "  RecvError", sock, mfds );
 				MoaiIO_close_OSock( "  RecvError", sock, mfds );
 				ZnkStr_delete( msgs );
@@ -495,15 +499,15 @@ MoaiIO_recvByZero( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, size_t* result
 				ZnkStr msgs = ZnkStr_new( "" );
 				ZnkNetBase_getErrMsg( errmsg_buf, sizeof(errmsg_buf), err_code );
 				MoaiIO_addAnalyzeLabel( msgs, sock, recv_size, "recvByZero" );
-				ZnkStr_addf( msgs, "RecvError.\n" );
+				ZnkStr_add( msgs, "RecvError.\n" );
 				ZnkStr_addf( msgs, "  errmsg=[%s]\n", errmsg_buf );
-				MoaiLog_printf( "%s", ZnkStr_cstr( msgs ) );
+				RanoLog_printf( "%s", ZnkStr_cstr( msgs ) );
 				MoaiIO_close_ISock( "  RecvError", sock, mfds );
 				MoaiIO_close_OSock( "  RecvError", sock, mfds );
 				ZnkStr_delete( msgs );
 				return false;
 			}
-			MoaiLog_printf( "MoaiIO_recvByZero : RecvZero. OK.\n" );
+			RanoLog_printf( "MoaiIO_recvByZero : RecvZero. OK.\n" );
 			break; /* OK. */
 		}
 		ZnkBfr_append_dfr( stream, buf, recv_size );
@@ -533,7 +537,7 @@ MoaiIO_recvByPtn2( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, const char* pt
 		recv_size = ZnkSocket_recv( sock, buf, sizeof(buf) );
 		if( recv_size == 0 ){
 			/* RecvZero */
-			MoaiLog_printf( "  MoaiIO_recvByPtn2 : RecvZero\n" );
+			RanoLog_printf( "  MoaiIO_recvByPtn2 : RecvZero\n" );
 			/* OK : この関数ではこれは成功終了の一種であるとみなし. ここまでrecvしたサイズを返す */
 			return ZnkBfr_size( stream ) - old_bfr_size;
 		}
@@ -543,9 +547,9 @@ MoaiIO_recvByPtn2( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, const char* pt
 			ZnkStr msgs = ZnkStr_new( "" );
 			ZnkNetBase_getErrMsg( errmsg_buf, sizeof(errmsg_buf), err_code );
 			MoaiIO_addAnalyzeLabel( msgs, sock, recv_size, "recvByPtn" );
-			ZnkStr_addf( msgs, "RecvError.\n" );
+			ZnkStr_add( msgs, "RecvError.\n" );
 			ZnkStr_addf( msgs, "  errmsg=[%s]\n", errmsg_buf );
-			MoaiLog_printf( "  MoaiIO_recvByPtn2 : [%s]", ZnkStr_cstr( msgs ) );
+			RanoLog_printf( "  MoaiIO_recvByPtn2 : [%s]", ZnkStr_cstr( msgs ) );
 			ZnkStr_delete( msgs );
 			MoaiIO_close_ISock( "  MoaiIO_recvByPtn2 : Error", sock, mfds );
 			MoaiIO_close_OSock( "  MoaiIO_recvByPtn2 : Error", sock, mfds );

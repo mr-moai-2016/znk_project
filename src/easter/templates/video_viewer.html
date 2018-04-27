@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+	<META http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+	<META http-equiv="Content-Script-Type" content="text/javascript">
+	<META http-equiv="Content-Style-Type" content="text/css">
+	<link href="/msty.css" rel="stylesheet" type="text/css" />
+	<title>Easter Video Viewer</title>
+</head>
+
+<script type="text/javascript"><!--
+var previewing_img_url = "";
+var img_url_list = [ #[EstCM_img_url_list]# ];
+var st_func_tbls = [];
+#[hint_table]#
+//--></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/hint.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/assort.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/preview.js"></script>
+
+<body bgcolor="#EEFFEE" text="#808000" link="#0000EE" vlink="#0000EE" alink="#FF0000">
+
+<form action="/cgis/easter/easter.cgi?est_manager=img_viewer" method="POST" name=fm_main>
+
+<font size="-1" color="#808000">Easter Video Viewer</font> <br>
+#[topbar_ui]# &nbsp;&nbsp;
+<br>
+<input type=hidden name=Moai_AuthenticKey value="#[Moai_AuthenticKey]#">
+<input type=hidden name=file_path value="#[file_path]#">
+<input type=hidden name=cache_path value="#[cache_path]#">
+
+<a name="TagsView"></a>
+<br><b>Tagによる分類</b><br>
+<table class=MstyManagerTable>
+<tr><td colspan=2>
+
+
+<br><div class=MstyAutoLinkOther>
+<b><u>タグ一覧(カテゴリ別に表示)</u></b><br> <br>
+#[category_select_bar]#
+<div class=MstyAutoLinkOther>
+#[tags_view]#
+</div>
+
+#[assort_ui]#
+</div>
+<br> <br>
+
+<a class=MstyElemLink href="javascript:EjsAssort_submitCommandAndArg( document.fm_main, 'tag_manager', 'view', 'edit_mode=tag#TagManager' )">タグマネージャーを開く</a>
+
+</td></tr>
+
+<tr><td colspan=2>
+<br>
+<input type=checkbox id=security_verifier_cbtn onclick="EjsAssort_switchVisibility('security_verifier', '_cbtn', '_body', '_msg')">
+<b>Easter Essential File Verifier </b><br>
+<div class=security_verifier id=security_verifier_body style=display:none>#[security_verifier]#</div>
+<font size=-1 color=#8888ff><div id=security_verifier_msg>― 現在非表示です ―</div></font>
+
+<input type=checkbox id=msg_console_cbtn onclick="EjsAssort_switchVisibility('msg_console', '_cbtn', '_body', '_msg')">
+<b>Easter System Console </b><br>
+<div class=MstyMsgConsole id=msg_console_body style=display:none>#[msg]#</div>
+<font size=-1 color=#8888ff><div id=msg_console_msg>― 現在非表示です ―</div></font>
+</td></tr>
+
+</table>
+
+</form>
+
+
+<a class=MstyElemLink href="#user-content-index">一番上へ戻る</a> <a class=MstyElemLink href="/">Moaiトップページ</a>
+<br><br>
+
+</body></html>

@@ -1,0 +1,17 @@
+@def_quote [' ']
+
+@@L html_filter
+replace ['<iframe '] ['<!-- iframe ']
+replace ['</iframe>'] ['</iframe -->']
+replace ['//agree.5ch.net/mona.png'] ['/moai.png']
+@@.
+
+@@L js_filter
+replace ['<iframe '] ['<!-- iframe ']
+replace ['</iframe>'] ['</iframe -->']
+replace ['//agree.5ch.net/mona.png'] ['/moai.png']
+@@.
+
+@@L css_filter
+replace ['{background:rgb(239,239,239)}'] ['{background:rgb(240,224,214); color:rgb(127,0,0)}']
+@@.

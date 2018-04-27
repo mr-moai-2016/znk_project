@@ -38,17 +38,7 @@
  */
 
 #include "Znk_md5.h"
-
-/**
- * Message-digest routines:
- * To form the message digest for a message M
- *   (1) Initialize a context buffer mdContext using MD5Init
- *   (2) Call MD5Update on mdContext and M
- *   (3) Call MD5Final on mdContext
- * The message digest is now in mdContext->digest_[0...15]
- */
-/* forward declaration */
-static void Transform( uint32_t*, uint32_t* );
+#include "Znk_stdc.h"
 
 static const uint8_t st_padding[64] = {
 	0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -108,102 +98,16 @@ Znk_INLINE uint32_t ROTATE_LEFT(uint32_t x, int n)
    (a) += (b); \
   }
 
-/**
- * The routine MD5Init initializes the message-digest context mdContext.
- * All fields are set to zero.
- */
-void
-ZnkMD5_init( ZnkMD5_CTX* mdContext )
-{
-	mdContext->i__[0] = mdContext->i__[1] = (uint32_t)0;
-	
-	/* Load magic initialization constants. */
-	mdContext->buf__[0] = (uint32_t)0x67452301;
-	mdContext->buf__[1] = (uint32_t)0xefcdab89;
-	mdContext->buf__[2] = (uint32_t)0x98badcfe;
-	mdContext->buf__[3] = (uint32_t)0x10325476;
-}
 
 /**
- * The routine MD5Update updates the message-digest context to
- * account for the presence of each of the characters data[0..data_size-1]
- * in the message whose digest is being computed.
- */
-void
-ZnkMD5_update( ZnkMD5_CTX* mdContext, const uint8_t* data, unsigned int data_size )
-{
-	uint32_t in[16];
-	int mdi;
-	unsigned int i, ii;
-	
-	/* compute number of bytes mod 64 */
-	mdi = (int)((mdContext->i__[0] >> 3) & 0x3F);
-	
-	/* update number of bits */
-	if ((mdContext->i__[0] + ((uint32_t)data_size << 3)) < mdContext->i__[0])
-		mdContext->i__[1]++;
-	mdContext->i__[0] += ((uint32_t)data_size << 3);
-	mdContext->i__[1] += ((uint32_t)data_size >> 29);
-	
-	while (data_size--) {
-		/* add new character to buffer, increment mdi */
-		mdContext->in__[mdi++] = *data++;
-		
-		/* transform if necessary */
-		if (mdi == 0x40) {
-			for (i = 0, ii = 0; i < 16; i++, ii += 4)
-				in[i] = (((uint32_t)mdContext->in__[ii+3]) << 24) |
-				        (((uint32_t)mdContext->in__[ii+2]) << 16) |
-				        (((uint32_t)mdContext->in__[ii+1]) << 8 ) |
-				        ( (uint32_t)mdContext->in__[ii  ]);
-			Transform( mdContext->buf__, in );
-			mdi = 0;
-		}
-	}
-}
-
-/**
- * The routine MD5Final terminates the message-digest computation and
- * ends with the desired message digest in mdContext->digest_[0...15].
- */
-void
-ZnkMD5_final( ZnkMD5_CTX* mdContext )
-{
-	uint32_t in[16];
-	int mdi;
-	unsigned int i, ii;
-	unsigned int padLen;
-	
-	/* save number of bits */
-	in[14] = mdContext->i__[0];
-	in[15] = mdContext->i__[1];
-	
-	/* compute number of bytes mod 64 */
-	mdi = (int)((mdContext->i__[0] >> 3) & 0x3F);
-	
-	/* pad out to 56 mod 64 */
-	padLen = (mdi < 56) ? (56 - mdi) : (120 - mdi);
-	ZnkMD5_update( mdContext, st_padding, padLen );
-	
-	/* append length in bits and transform */
-	for (i = 0, ii = 0; i < 14; i++, ii += 4)
-		in[i] = (((uint32_t)mdContext->in__[ii+3]) << 24) |
-		        (((uint32_t)mdContext->in__[ii+2]) << 16) |
-		        (((uint32_t)mdContext->in__[ii+1]) << 8 ) |
-		        ( (uint32_t)mdContext->in__[ii  ]);
-	Transform( mdContext->buf__, in );
-	
-	/* store buffer in digest */
-	for (i = 0, ii = 0; i < 4; i++, ii += 4) {
-		mdContext->digest_[ii  ] = (uint8_t)( mdContext->buf__[i] & 0xFF );
-		mdContext->digest_[ii+1] = (uint8_t)((mdContext->buf__[i] >> 8 ) & 0xFF);
-		mdContext->digest_[ii+2] = (uint8_t)((mdContext->buf__[i] >> 16) & 0xFF);
-		mdContext->digest_[ii+3] = (uint8_t)((mdContext->buf__[i] >> 24) & 0xFF);
-	}
-}
-
-/**
+ * Message-digest routines:
  * Basic MD5 step. Transforms buf based on in.
+ *
+ * To form the message digest for a message M
+ *   (1) Initialize a context buffer mdContext using MD5Init
+ *   (2) Call MD5Update on mdContext and M
+ *   (3) Call MD5Final on mdContext
+ * The message digest is now in mdContext->digest_[0...15]
  */
 static void
 Transform( uint32_t* buf, uint32_t* in )
@@ -306,5 +210,122 @@ Transform( uint32_t* buf, uint32_t* in )
 	buf[1] += b;
 	buf[2] += c;
 	buf[3] += d;
+}
+
+
+/**
+ * The routine MD5Init initializes the message-digest context mdContext.
+ * All fields are set to zero.
+ */
+void
+ZnkMD5_init( ZnkMD5_CTX* mdContext )
+{
+	mdContext->i__[0] = mdContext->i__[1] = (uint32_t)0;
+	
+	/* Load magic initialization constants. */
+	mdContext->buf__[0] = (uint32_t)0x67452301;
+	mdContext->buf__[1] = (uint32_t)0xefcdab89;
+	mdContext->buf__[2] = (uint32_t)0x98badcfe;
+	mdContext->buf__[3] = (uint32_t)0x10325476;
+}
+
+/**
+ * The routine MD5Update updates the message-digest context to
+ * account for the presence of each of the characters data[0..data_size-1]
+ * in the message whose digest is being computed.
+ */
+void
+ZnkMD5_update( ZnkMD5_CTX* mdContext, const uint8_t* data, unsigned int data_size )
+{
+	uint32_t in[16];
+	int mdi;
+	unsigned int i, ii;
+	
+	/* compute number of bytes mod 64 */
+	mdi = (int)((mdContext->i__[0] >> 3) & 0x3F);
+	
+	/* update number of bits */
+	if ((mdContext->i__[0] + ((uint32_t)data_size << 3)) < mdContext->i__[0])
+		mdContext->i__[1]++;
+	mdContext->i__[0] += ((uint32_t)data_size << 3);
+	mdContext->i__[1] += ((uint32_t)data_size >> 29);
+	
+	while (data_size--) {
+		/* add new character to buffer, increment mdi */
+		mdContext->in__[mdi++] = *data++;
+		
+		/* transform if necessary */
+		if (mdi == 0x40) {
+			for (i = 0, ii = 0; i < 16; i++, ii += 4)
+				in[i] = (((uint32_t)mdContext->in__[ii+3]) << 24) |
+				        (((uint32_t)mdContext->in__[ii+2]) << 16) |
+				        (((uint32_t)mdContext->in__[ii+1]) << 8 ) |
+				        ( (uint32_t)mdContext->in__[ii  ]);
+			Transform( mdContext->buf__, in );
+			mdi = 0;
+		}
+	}
+}
+
+/**
+ * The routine MD5Final terminates the message-digest computation and
+ * ends with the desired message digest in mdContext->digest_[0...15].
+ */
+void
+ZnkMD5_final( ZnkMD5_CTX* mdContext )
+{
+	uint32_t in[16];
+	int mdi;
+	unsigned int i, ii;
+	unsigned int padLen;
+	
+	/* save number of bits */
+	in[14] = mdContext->i__[0];
+	in[15] = mdContext->i__[1];
+	
+	/* compute number of bytes mod 64 */
+	mdi = (int)((mdContext->i__[0] >> 3) & 0x3F);
+	
+	/* pad out to 56 mod 64 */
+	padLen = (mdi < 56) ? (56 - mdi) : (120 - mdi);
+	ZnkMD5_update( mdContext, st_padding, padLen );
+	
+	/* append length in bits and transform */
+	for (i = 0, ii = 0; i < 14; i++, ii += 4)
+		in[i] = (((uint32_t)mdContext->in__[ii+3]) << 24) |
+		        (((uint32_t)mdContext->in__[ii+2]) << 16) |
+		        (((uint32_t)mdContext->in__[ii+1]) << 8 ) |
+		        ( (uint32_t)mdContext->in__[ii  ]);
+	Transform( mdContext->buf__, in );
+	
+	/* store buffer in digest */
+	for (i = 0, ii = 0; i < 4; i++, ii += 4) {
+		mdContext->digest_[ii  ] = (uint8_t)( mdContext->buf__[i] & 0xFF );
+		mdContext->digest_[ii+1] = (uint8_t)((mdContext->buf__[i] >> 8 ) & 0xFF);
+		mdContext->digest_[ii+2] = (uint8_t)((mdContext->buf__[i] >> 16) & 0xFF);
+		mdContext->digest_[ii+3] = (uint8_t)((mdContext->buf__[i] >> 24) & 0xFF);
+	}
+}
+
+void
+ZnkMD5_getDigest_byFile( ZnkMD5_CTX* mdContext, const char* file_path )
+{
+	ZnkFile fp = Znk_fopen( file_path, "rb" );
+	if( fp ){
+		/* ‘ã“üŠm’è */
+		uint8_t buf[ 1024 ];
+		size_t  len;
+	
+		ZnkMD5_init( mdContext );
+	
+		while( true ){
+			len = Znk_fread( buf, sizeof(buf), fp );
+			if( len == 0 ){ break; } 
+			ZnkMD5_update( mdContext, buf, len );
+		}
+	
+		ZnkMD5_final( mdContext );
+		Znk_fclose( fp );
+	}
 }
 

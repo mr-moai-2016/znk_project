@@ -62,6 +62,7 @@ ZnkBfr_at_ptr( ZnkBfr bfr, size_t idx ){
 	const uintptr_t* ary = (uintptr_t*)ZnkBfr_data(bfr);
 	return (void*)( ary[ idx ] );
 }
+#define ZnkBfr_at_type( type, bfr, idx )  ( (type*)( ZnkBfr_data(bfr) + (idx) * sizeof(type) ) )
 
 size_t
 ZnkBfr_size( const ZnkBfr bfr );
@@ -94,6 +95,11 @@ ZnkBfr_replace( ZnkBfr bfr, size_t dst_pos, size_t dst_leng, const uint8_t* src,
 Znk_INLINE void
 ZnkBfr_insert( ZnkBfr bfr, size_t dst_pos, const uint8_t* src, size_t src_leng ){
 	ZnkBfr_replace( bfr, dst_pos, 0, src, src_leng );
+}
+
+Znk_INLINE void
+ZnkBfr_copy( ZnkBfr dst, const ZnkBfr src ){
+	ZnkBfr_replace( dst, 0, ZnkBfr_size(dst), ZnkBfr_data(src), ZnkBfr_size(src) );
 }
 
 Znk_INLINE void

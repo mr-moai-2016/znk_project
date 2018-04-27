@@ -1,0 +1,515 @@
+
+.MstyItemOdd {
+	padding: 4px 8px;
+	background-color: rgb(220,255,240); !important;
+}
+.MstyItemEvn {
+	padding: 4px 8px;
+	background-color: #EEFFFF; !important;
+}
+
+.MstyDmyUpdateBtn {
+	display:none !important;
+}
+
+.MstyManagerTable {
+	padding: 1px !important;
+	border: 2px solid rgb(240,235,180) !important;
+	#-moz-border-radius: 20px !important;
+	border-radius: 20px !important;
+	background-color: rgba(255,255,250,0.6) !important;
+	word-break: normal;
+}
+@media only screen and (max-device-width : 480px){
+	/* for smart-phone */
+	.MstyManagerTable {
+		padding: 1px !important;
+		border: 2px solid rgb(240,235,180) !important;
+		#-moz-border-radius: 20px !important;
+		border-radius: 20px !important;
+		background-color: rgba(255,255,250,0.6) !important;
+
+	    width:100%;
+		word-break: break-all;
+	}
+}
+
+.MstyImgPreview {
+}
+@media only screen and (max-device-width : 480px){
+	/* for smart-phone */
+	.MstyImgPreview {
+	    width:100%;
+		word-break: break-all;
+	}
+}
+.MstyImgPreviewShrinkX {
+	/*width:640px;*/
+	width:100%;
+	word-break: break-all;
+}
+@media only screen and (max-device-width : 480px){
+	/* for smart-phone */
+	.MstyImgPreviewShrinkX {
+	    width:100%;
+		word-break: break-all;
+	}
+}
+.MstyImgPreviewShrinkY {
+	height:800px;
+	/*height:100%;*/
+	word-break: break-all;
+}
+@media only screen and (max-device-width : 480px){
+	/* for smart-phone */
+	.MstyImgPreviewShrinkY {
+	    height:100%;
+		word-break: break-all;
+	}
+}
+.MstyImgPreviewShrinkXY {
+	width:100%;
+	height:100%;
+	word-break: break-all;
+}
+@media only screen and (max-device-width : 480px){
+	/* for smart-phone */
+	.MstyImgPreviewShrinkXY {
+	    width:100%;
+		height:100%;
+		word-break: break-all;
+	}
+}
+
+.MstyStdFieldSet {
+	-moz-border-radius: 5px; /* for Firefox */
+	-webkit-border-radius: 5px; /* for Chrome */
+	margin: 0.5em 0;
+	padding: 0 3px 0.5em;
+	border-radius: 0.5em;
+	box-shadow: 5px 5px 5px #AAA;
+}
+.MstyAppLink {
+	color: #000;
+	font-size: 16px;
+	font-weight: bold;
+	border: 1px solid #3D803D;
+	padding: 4px 8px;
+	display: inline-block;
+	background: #E0E0B0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 0px;
+	text-decoration: none;
+    word-break: normal;
+}
+.MstyAppLinkRed {
+	color: #000;
+	font-size: 16px;
+	font-weight: bold;
+	border: 1px solid #ff0000;
+	padding: 4px 8px;
+	display: inline-block;
+	background: #E0E0B0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 0px;
+	text-decoration: none;
+    word-break: normal;
+}
+.MstyAppLinkRed:hover {
+	color: #000;
+	font-size: 16px;
+	font-weight: bold;
+	border: 1px solid #FF0000;
+	padding: 4px 8px;
+	display: inline-block;
+	background: #B0B0E0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 0px;
+	text-decoration: none;
+    word-break: normal;
+}
+.MstyAppLink:hover {
+	color: #000;
+	font-size: 16px;
+	font-weight: bold;
+	border: 1px solid #3D803D;
+	padding: 4px 8px;
+	display: inline-block;
+	background: #B0B0E0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 0px;
+	text-decoration: none;
+    word-break: normal;
+}
+
+.MstyNowSelectedLink {
+	color: #000;
+	border: 1px solid #3D8080;
+	padding: 3px 8px;
+	display: inline-block;
+	background: #A0A0FF none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 5px;
+	text-decoration: none;
+}
+
+
+
+
+.MstyBBSOperation {
+	border: 1px solid #3D803D;
+	-moz-border-radius: 5px; /* for Firefox */
+	-webkit-border-radius: 5px; /* for Chrome */
+	display: inline-block;
+	margin: 0.5em 0;
+#	padding: 0 3px 0.5em;
+	padding: 3px 8px;
+	border-radius: 0.5em;
+	text-align: left;
+	margin-bottom: 5px;
+	text-decoration: none;
+	box-shadow: 5px 5px 5px #AAA;
+}
+
+
+
+.MstyAuthor {
+	color: #555555;
+	vertical-align:bottom;
+	font-size: small;
+	margin-bottom: 5px;
+}
+
+.MstyComment {
+	color: #000;
+	font-size: small;
+	border: 1px solid #3D803D;
+	padding: 5px 5px;
+	display: inline-block;
+	border-radius: 10px;
+	margin-bottom: 20px;
+	text-decoration: none;
+    word-break: normal;
+}
+.MstyFrame {
+	color: #000;
+	border: 1px solid #3D803D;
+	padding: 5px 5px;
+	display: inline-block;
+	border-radius: 10px;
+	margin-bottom: 20px;
+	text-decoration: none;
+    word-break: normal;
+}
+
+.MstyElemLink {
+	color: #000;
+#	font-size: 16px;
+	border: 1px solid #3D803D;
+	padding: 4px 8px;
+	display: inline-block;
+	background: #E0E0B0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 5px;
+	text-decoration: none;
+    word-break: normal;
+}
+.MstyElemLink:hover {
+	color: #000;
+#	font-size: 16px;
+	border: 1px solid #3D803D;
+	padding: 4px 8px;
+	display: inline-block;
+	background: #B0B0E0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 5px;
+	text-decoration: none;
+    word-break: normal;
+}
+.MstyElemLinkTop {
+	color: #000;
+	border: 1px solid #3D803D;
+	padding: 4px 8px;
+	display: inline-block;
+	background: #E0E0B0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+#	margin-bottom: 5px;
+	margin-bottom: 0px;
+	text-decoration: none;
+    word-break: normal;
+	vertical-align: top;
+}
+
+.MstyElemLinkRed {
+	color: #000;
+#	border: 1px solid #3D803D;
+	border: 1px solid #E080E0;
+	padding: 4px 8px;
+	display: inline-block;
+#	background: #E0B0B0 none repeat scroll 0% 0%;
+	background: #E0E0B0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 5px;
+	text-decoration: none;
+    word-break: normal;
+}
+.MstyElemLinkRed:hover {
+	color: #000;
+	border: 1px solid #3D803D;
+	padding: 4px 8px;
+	display: inline-block;
+	background: #B0B0E0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 5px;
+	text-decoration: none;
+    word-break: normal;
+}
+
+.MstyOpenLink {
+	color: #000;
+	border: 1px solid #3D803D;
+	padding: 4px 8px;
+	display: inline-block;
+	background: #E0E0B0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 0px;
+	text-decoration: none;
+    word-break: normal;
+}
+.MstyOpenLink:hover {
+	color: #000;
+	border: 1px solid #3D803D;
+	padding: 4px 8px;
+	display: inline-block;
+	background: #B0B0E0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 0px;
+	text-decoration: none;
+    word-break: normal;
+}
+
+.MstyFInfElemLink {
+	color: #000;
+	border: 1px solid #3D803D;
+	padding: 4px 8px;
+	display: inline-block;
+	background: #E0E0B0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 0px;
+	text-decoration: none;
+    word-break: break-all;
+}
+.MstyFInfElemLink:hover {
+	color: #000;
+	border: 1px solid #3D803D;
+	padding: 4px 8px;
+	display: inline-block;
+	background: #B0B0E0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 0px;
+	text-decoration: none;
+    word-break: break-all;
+}
+
+.MstyMsgConsole {
+	color: #223300;
+	padding: 4px 8px;
+	background: #909060 none repeat scroll 0% 0%;
+	border-radius: 6px;
+	margin-bottom: 5px;
+	text-decoration: none;
+	box-shadow: 5px 5px 5px #AAA;
+}
+
+.MstyQandALink {
+#	border: 1px solid #3D803D;
+#	color: #404000;
+	display: block;
+	float:   right;
+	padding: 2px 4px;
+	padding: 3px 8px;
+	font-size:14px;
+	display: inline-block;
+#	background: #FFDFBF none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 4px;
+	margin-bottom: 4px;
+	text-decoration: none;
+#	box-shadow: 2px 2px 2px #AAA;
+#	overflow: hidden;
+}
+.MstyQandABody {
+	color: #303000;
+	border: 0px;
+	padding: 3px 8px;
+	display: inline-block;
+	background: #FFDFBF none repeat scroll 0% 0%;
+	border-radius: 10px;
+	margin-bottom: 5px;
+	text-decoration: none;
+	box-shadow: 2px 2px 2px #AAA;
+}
+.MstyHintCloseButton {
+	border: 1px solid #3D803D;
+	font-weight: bold;
+	display: block;
+	float:   right;
+#	width:   16px; height: 16px;
+#	margin:  2px;
+	padding: 3px 8px;
+	text-align: center;
+#	font-size:  14px;
+	color: #505000;
+#	background: #ff8833;
+	background: #FFFFEE;
+	border-radius: 4px;
+	text-decoration: none;
+	overflow: hidden;
+}
+
+.MstyPreview {
+	color: #505000;
+	border: 0px;
+	padding: 3px 8px;
+	display: inline-block;
+	background: #F0D0B0 none repeat scroll 0% 0%;
+	border-radius: 10px;
+#	margin-bottom: 5px;
+	text-decoration: none;
+	box-shadow: 2px 2px 2px #AAA;
+}
+
+.MstyInputField {
+	color: #000;
+	border: 1px solid #3D803D;
+	padding: 0.4em 0.4em;
+	margin-bottom: 5px;
+	text-decoration: none;
+}
+
+.MstyAutoLinkTarget {
+	color: #000;
+	border: 1px solid #3D803D;
+	padding: 3px 8px;
+	display: inline-block;
+#	background: #E0E0B0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 5px;
+	text-decoration: none;
+}
+.MstyAutoLinkOther {
+	color: #000;
+	border: 1px solid #3D803D;
+	padding: 3px 8px;
+	display: inline-block;
+#	background: #E0E0B0 none repeat scroll 0% 0%;
+#	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 5px;
+	text-decoration: none;
+}
+.MstyElemLinkOther {
+	color: #000;
+	border: 1px solid #3D803D;
+	padding: 3px 8px;
+	display: inline-block;
+#	background: #E0E0B0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 5px;
+	text-decoration: none;
+}
+
+.MstySysLink {
+	color: #000;
+	#font-weight: bold;
+	font-size: 16px;
+	border: 1px solid #3D803D;
+	padding: 4px 8px;
+	display: inline-block;
+	background: #D0B0C0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 0px;
+	text-decoration: none;
+    word-break: normal;
+}
+.MstySysLink:hover {
+	color: #000;
+	#font-weight: bold;
+	font-size: 16px;
+	border: 1px solid #3D803D;
+	padding: 4px 8px;
+	display: inline-block;
+	background: #B0B0E0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 0px;
+	text-decoration: none;
+    word-break: normal;
+}
+.MstyElemLinkTip {
+	color: #000;
+	border: 1px solid #3D803D;
+	padding: 3px 8px;
+	display: inline-block;
+#	background: #E0E0B0 none repeat scroll 0% 0%;
+#	text-align: center;
+	border-radius: 10px;
+	margin-bottom: 5px;
+	text-decoration: none;
+	vertical-align: top
+}
+
+.MstyWideButton {
+	padding: 0.4em 1em;
+}
+
+.MstyNoneWordBreak {
+  word-break: normal;
+} 
+.MstyRight {
+	text-align: right;
+}
+.MstyCenter {
+	text-align: right;
+}
+.MstyFloatLeft {
+	float: left;
+}
+.MstyCode {
+	font-family:Monaco,Consolas,Courier New,Courier,monospace,sans-serif;
+}
+.MstyCodeSynConst {
+	color: #660000;
+}
+.MstyCodeSynComment {
+	color: #666666;
+}
+.MstyIndent {
+	margin-left: 30px;
+}
+.MstyLogo {
+	display: inline-block;
+	position: relative;
+	min-height: 1px;
+	padding-right: 15px;
+	padding-left: 15px;
+	text-align: center
+}
+

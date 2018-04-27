@@ -1,4 +1,5 @@
 #include "Znk_dir.h"
+#include "Znk_dir_recursive.h"
 #include "Znk_stdc.h"
 #include "Znk_s_base.h"
 #include "Znk_missing_libc.h"
@@ -18,7 +19,7 @@
 #include <ctype.h>
 
 #if   defined(Znk_TARGET_WINDOWS)
-Znk_INLINE void printWinLastError( DWORD last_err )
+Znk_INLINE void printWinLastError( DWORD last_err, ZnkStr ermsg )
 {
 	LPVOID lpMsgBuf;
 	const char* msg;
@@ -28,7 +29,7 @@ Znk_INLINE void printWinLastError( DWORD last_err )
 			NULL, last_err,
 			MAKELANGID(LANG_NEUTRAL,SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL );
 	msg = (const char*)lpMsgBuf;
-	ZnkF_printf_e( "%s", msg );
+	ZnkStr_add( ermsg, msg );
 	LocalFree(lpMsgBuf);
 }
 #endif
@@ -111,11 +112,11 @@ bool
 ZnkDir_getFileByteSize( const char* file, int64_t* file_size )
 {
 	/* かならずbinaryモードで開くこと */
-	ZnkFile fp = ZnkF_fopen( file, "rb" );
+	ZnkFile fp = Znk_fopen( file, "rb" );
 	if( fp ){
-		ZnkF_fseek_i64( fp, 0, SEEK_END );
-		*file_size = ZnkF_ftell_i64( fp );
-		ZnkF_fclose( fp );
+		Znk_fseek_i64( fp, 0, SEEK_END );
+		*file_size = Znk_ftell_i64( fp );
+		Znk_fclose( fp );
 		return true;
 	}
 	return false;
@@ -129,7 +130,7 @@ ZnkDir_getFileByteSize( const char* file, int64_t* file_size )
  * (コピー先としてディレクトリ名は指定できない)
  */
 bool
-ZnkDir_copyFile_byForce( const char* src_file, const char* dst_file )
+ZnkDir_copyFile_byForce( const char* src_file, const char* dst_file, ZnkStr ermsg )
 {
 #if   defined(Znk_TARGET_WINDOWS)
 	/***
@@ -142,8 +143,10 @@ ZnkDir_copyFile_byForce( const char* src_file, const char* dst_file )
 		/* success */
 		return true;
 	} else {
-		DWORD last_err = GetLastError();
-		printWinLastError( last_err );
+		if( ermsg ){
+			DWORD last_err = GetLastError();
+			printWinLastError( last_err, ermsg );
+		}
 	}
 	return result;
 #else
@@ -152,7 +155,11 @@ ZnkDir_copyFile_byForce( const char* src_file, const char* dst_file )
 	 * fork, execl, sendfile, mmap など色々持ち出してゴチャゴチャするよりはいい.
 	 */
 	char cmd[ 4096 ] = "";
+#  if defined(__ANDROID__)
+	Znk_snprintf( cmd, sizeof(cmd), "/system/bin/cp -p '%s' '%s'", src_file, dst_file );
+#  else
 	Znk_snprintf( cmd, sizeof(cmd), "/bin/cp -p '%s' '%s'", src_file, dst_file );
+#  endif
 	system( cmd );
 	return true;
 #endif
@@ -204,7 +211,7 @@ ZnkDir_rmdir( const char* dir )
 }
 
 bool
-ZnkDir_rename( const char* src_path, const char* dst_path )
+ZnkDir_rename( const char* src_path, const char* dst_path, ZnkStr ermsg )
 {
 #if   defined(Znk_TARGET_WINDOWS)
 	/***
@@ -221,8 +228,10 @@ ZnkDir_rename( const char* src_path, const char* dst_path )
 		/* success */
 		return true;
 	} else {
-		DWORD last_err = GetLastError();
-		printWinLastError( last_err );
+		if( ermsg ){
+			DWORD last_err = GetLastError();
+			printWinLastError( last_err, ermsg );
+		}
 	}
 	return false;
 
@@ -238,7 +247,11 @@ ZnkDir_rename( const char* src_path, const char* dst_path )
 		/* success */
 		return true;
 	} else {
-		perror( "ZnkDir_rename" );
+		if( ermsg ){
+			uint32_t sys_errno = ZnkSysErrno_errno();
+			ZnkSysErrnoInfo* einfo = ZnkSysErrno_getInfo( sys_errno );
+			ZnkStr_addf( ermsg, "Error : ZnkDir_rename src_path=[%s] dst_path=[%s] [%s]\n", src_path, dst_path, einfo->sys_errno_msg_ );
+		}
 	}
 	return false;
 #endif
@@ -260,7 +273,7 @@ ZnkDir_rename( const char* src_path, const char* dst_path )
  *
  */
 static bool
-makeDirectory( const char* dir )
+makeDirectory( const char* dir, ZnkStr ermsg )
 {
 #if   defined(Znk_TARGET_WINDOWS)
 	/***
@@ -273,15 +286,20 @@ makeDirectory( const char* dir )
 	bool result = (bool)( CreateDirectory( dir, NULL ) != 0 );
 	if( result ){
 		/* success */
-		ZnkF_printf_e( "makeDirectory[%s] result=[%d]\n", dir, result );
+		if( ermsg ){
+			ZnkStr_addf( ermsg, "makeDirectory[%s] result=[%d]\n", dir, result );
+		}
 		return true;
 	} else {
 		DWORD last_err = GetLastError();
-		/***
-		 * 既に存在する場合はエラーメッセージとして出力させない.
-		 */
-		if( last_err != ERROR_ALREADY_EXISTS ){
-			printWinLastError( last_err );
+		if( last_err == ERROR_ALREADY_EXISTS ){
+			result = true;
+		} else if( ermsg ){
+			/***
+			 * 「既に存在しています」を除いたエラーメッセージを出力.
+			 */
+			printWinLastError( last_err, ermsg );
+			ZnkStr_addf( ermsg, "makeDirectory[%s]\n", dir );
 		}
 	}
 	return result;
@@ -320,8 +338,14 @@ makeDirectory( const char* dir )
 	bool result = ( mkdir( dir, mode ) == 0 );
 	if( !result ){
 		uint32_t sys_errno = ZnkSysErrno_errno();
-		if( sys_errno != EEXIST ){
-			perror( "makeDirectory" );
+		if( sys_errno == EEXIST ){
+			result = true;
+		} else if( ermsg ){
+			/***
+			 * 「既に存在しています」を除いたエラーメッセージを出力.
+			 */
+			ZnkSysErrnoInfo* einfo = ZnkSysErrno_getInfo( sys_errno );
+			ZnkStr_addf( ermsg, "Error : makeDirectory[%s] [%s]\n", dir, einfo->sys_errno_msg_ );
 		}
 	}
 	return result;
@@ -346,7 +370,7 @@ makeDirectory( const char* dir )
  * Multibyte文字対応としなければならずコードが複雑化するので現段階ではサポートしていない.
  */
 bool
-ZnkDir_mkdirPath( const char* path, size_t path_leng, char sep )
+ZnkDir_mkdirPath( const char* path, size_t path_leng, char sep, ZnkStr ermsg )
 {
 	bool result = false;
 	size_t begin = 0;
@@ -396,12 +420,12 @@ ZnkDir_mkdirPath( const char* path, size_t path_leng, char sep )
 		 * 別の書込み可な文字列バッファに一旦全体をコピーしてそれを使う必要がある.
 		 */
 		char path_buf[ 1024 ] = "";
-		ZnkS_copy( path_buf, sizeof(path_buf), path, Znk_NPOS );
+		ZnkS_copy( path_buf, sizeof(path_buf), path, path_leng );
 
 		while( true ){
 			end = ZnkS_lfind_one_of( path_buf, begin, path_leng, sep_set, sep_set_leng );
 			if( end == Znk_NPOS ){
-				result = makeDirectory( path_buf ); /* 必ず文字列の開始位置(path_buf)から指定 */
+				result = makeDirectory( path_buf, ermsg ); /* 必ず文字列の開始位置(path_buf)から指定 */
 				break;
 			} else if( end == begin ){
 				/***
@@ -428,7 +452,7 @@ ZnkDir_mkdirPath( const char* path, size_t path_leng, char sep )
 				 * その場合でも中断せず、最後まで続ける.
 				 */
 				path_buf[ end ] = '\0'; /* 一時的にここで終端する */
-				result = makeDirectory( path_buf ); /* 必ず文字列の開始位置(path_buf)から指定 */
+				result = makeDirectory( path_buf, ermsg ); /* 必ず文字列の開始位置(path_buf)から指定 */
 				path_buf[ end ] = '/'; /* SEPに戻す */
 				begin = end + 1;
 			}
@@ -437,3 +461,64 @@ ZnkDir_mkdirPath( const char* path, size_t path_leng, char sep )
 	return result;
 }
 
+static bool rmdirAll_force_onEnterDir( ZnkDirRecursive recur, const char* top_dir, void* arg, size_t local_err_num )
+{
+	ZnkStr ermsg = Znk_force_ptr_cast( ZnkStr, arg );
+	if( ermsg ){
+		ZnkStr_addf( ermsg, "ZnkDir_rmdirAll_force : onEnterDir : [%s]\n", top_dir );
+	}
+	return true;
+}
+static bool rmdirAll_force_processFile( ZnkDirRecursive recur, const char* file_path, void* arg, size_t local_err_num )
+{
+	bool result = false;
+	ZnkStr ermsg = Znk_force_ptr_cast( ZnkStr, arg );
+	if( ZnkDir_deleteFile_byForce( file_path ) ){
+		if( ermsg ){
+			ZnkStr_addf( ermsg, "ZnkDir_rmdirAll_force : deleteFile : [%s] OK.\n", file_path );
+		}
+		result = true;
+	} else {
+		if( ermsg ){
+			ZnkStr_addf( ermsg, "ZnkDir_rmdirAll_force : deleteFile : [%s] failure.\n", file_path );
+		}
+		result = false;
+	}
+	return result;
+}
+static bool rmdirAll_force_onExitDir( ZnkDirRecursive recur, const char* top_dir, void* arg, size_t local_err_num )
+{
+	bool result = false;
+	ZnkStr ermsg = Znk_force_ptr_cast( ZnkStr, arg );
+	if( local_err_num == 0 ){
+		if( ZnkDir_rmdir( top_dir ) ){
+			if( ermsg ){
+				ZnkStr_addf( ermsg, "ZnkDir_rmdirAll_force : rmdir : [%s] OK.\n", top_dir );
+			}
+			result = true;
+		} else {
+			if( ermsg ){
+				ZnkStr_addf( ermsg, "ZnkDir_rmdirAll_force : rmdir : [%s] failure.\n", top_dir );
+			}
+			result = false;
+		}
+	} else {
+		if( ermsg ){
+			ZnkStr_addf( ermsg, "ZnkDir_rmdirAll_force : onExitDir : local_err_num = [%zu].\n", local_err_num );
+		}
+		result = false;
+	}
+	return result;
+}
+bool
+ZnkDir_rmdirAll_force( const char* dir, bool is_err_ignore, ZnkStr ermsg )
+{
+	bool result = false;
+	ZnkDirRecursive recur = ZnkDirRecursive_create( is_err_ignore,
+			rmdirAll_force_onEnterDir,  ermsg,
+			rmdirAll_force_processFile, ermsg,
+			rmdirAll_force_onExitDir,   ermsg );
+	result = ZnkDirRecursive_traverse( recur, dir, ermsg );
+	ZnkDirRecursive_destroy( recur );
+	return result;
+}

@@ -71,12 +71,32 @@ Znk_INLINE void
 ZnkVarpAry_set( ZnkVarpAry ary, size_t idx, ZnkVarp obj ){
 	ZnkObjAry_M_SET( ary, idx, obj );
 }
-ZnkVarp
-ZnkVarpAry_find_byName( ZnkVarpAry ary,
+size_t
+ZnkVarpAry_findIdx_byName( ZnkVarpAry ary,
 		const char* query_name, size_t query_name_leng, bool use_eqCase );
+Znk_INLINE ZnkVarp
+ZnkVarpAry_findObj_byName( ZnkVarpAry ary,
+		const char* query_name, size_t query_name_leng, bool use_eqCase )
+{
+	const size_t idx = ZnkVarpAry_findIdx_byName( ary, query_name, query_name_leng, use_eqCase );
+	return ( idx == Znk_NPOS ) ? NULL : ZnkVarpAry_at( ary, idx );
+}
+size_t
+ZnkVarpAry_findIdx_byStrVal( ZnkVarpAry ary,
+		const char* query_val, size_t query_val_leng );
 
+/* 他の同系統のAryモジュールに仕様にあわせるなら本来findはidxを返すようにすべきであった.
+ * 移行に時間がかかるため、しばらくこのマクロをかぶせる */
+#define ZnkVarpAry_find_byName ZnkVarpAry_findObj_byName
 #define ZnkVarpAry_find_byName_literal( ary, query_name, use_eqCase ) \
 	ZnkVarpAry_find_byName( ary, query_name, Znk_strlen_literal(query_name), use_eqCase )
+
+/* 新しく記述する場合はこちらを使うこと.
+ */
+#define ZnkVarpAry_findIdx_byName_literal( ary, query_name, use_eqCase ) \
+	ZnkVarpAry_findIdx_byName( ary, query_name, Znk_strlen_literal(query_name), use_eqCase )
+#define ZnkVarpAry_findObj_byName_literal( ary, query_name, use_eqCase ) \
+	ZnkVarpAry_findObj_byName( ary, query_name, Znk_strlen_literal(query_name), use_eqCase )
 
 Znk_EXTERN_C_END
 

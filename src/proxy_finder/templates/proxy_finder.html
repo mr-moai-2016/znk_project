@@ -1,0 +1,27 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+<META http-equiv="Content-Script-Type" content="text/javascript">
+<META http-equiv="Content-Style-Type"  content="text/css">
+<link href="/msty.css" rel="stylesheet" type="text/css">
+<title>ProxyFinder</title>
+</head>
+
+<body>
+
+<font size=+2><i><b>ProxyFinder</b></i></font><br>
+<br> 
+
+<form action="/cgis/proxy_finder/proxy_finder.cgi?command=get_proxy" method=POST>
+<input type=hidden name=Moai_AuthenticKey value="#[Moai_AuthenticKey]#">
+<input class=MstyWideButton type=submit value="Proxyを取得する">
+#[target_select_bar]#
+</form>
+
+<br>
+<div class=MstyMsgConsole><b>ProxyFinder System Console:</b><br>#[ermsg]#</div>
+<br>
+<a class=MstyElemLink href="/">Moaiトップページ</a>
+<br><br>
+</body></html>

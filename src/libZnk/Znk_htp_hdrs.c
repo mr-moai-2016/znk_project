@@ -1,6 +1,7 @@
 #include "Znk_htp_hdrs.h"
 #include "Znk_s_base.h"
 #include "Znk_varp_ary.h"
+#include "Znk_missing_libc.h"
 #include <string.h>
 
 void
@@ -12,10 +13,7 @@ ZnkHtpHdrs_registHdr1st( const ZnkStrAry hdr1st, const char* first_line, size_t 
 	const char* q = NULL;
 	const char* end = first_line + first_line_leng;
 
-	ZnkStrAry_resize( hdr1st, 3 );
-	ZnkStrAry_set( hdr1st, 0, ZnkStr_new("") );
-	ZnkStrAry_set( hdr1st, 1, ZnkStr_new("") );
-	ZnkStrAry_set( hdr1st, 2, ZnkStr_new("") );
+	ZnkStrAry_resize( hdr1st, 3, "" );
 
 	arg_pos = ZnkS_lfind_arg( p, 0, (size_t)(end-p), 0, &arg_leng, " \t\r\n", 4 );
 	p += arg_pos;
@@ -36,18 +34,17 @@ ZnkHtpHdrs_registHdr1st( const ZnkStrAry hdr1st, const char* first_line, size_t 
 ZnkVarp
 ZnkHtpHdrs_regist( ZnkVarpAry vars,
 		const char* key, size_t key_leng,
-		const char* val, size_t val_leng )
+		const char* val, size_t val_leng,
+		bool is_unique )
 {
-	/***
-	 * SetCookie: などのように複数指定可能なDirectiveも存在する.
-	 * 変数の値をZnkStrAryとすることによって一つのkey(例えばSetCookie)に対して
-	 * 複数の値を保持できるようにする.
-	 */
 	ZnkVarp varp = ZnkHtpHdrs_find( vars, key, key_leng );
 	if( varp == NULL ){
-		varp = ZnkVarp_create( "", "", 0, ZnkPrim_e_StrAry );
+		varp = ZnkVarp_create( "", "", 0, ZnkPrim_e_StrAry, NULL );
 		ZnkStr_assign( varp->name_, 0, key, key_leng );
 		ZnkVarpAry_push_bk( vars, varp );
+	}
+	if( is_unique ){
+		ZnkStrAry_clear( ZnkPrim_strAry( &varp->prim_ ) );
 	}
 	ZnkStrAry_push_bk_cstr( varp->prim_.u_.sda_, val, val_leng );
 	return varp;
@@ -74,7 +71,7 @@ ZnkHtpHdrs_regist_byLine( ZnkVarpAry vars, const char* hdr_line, size_t hdr_line
 			hdr_line+key_begin, key_end-key_begin, use_eqCase );
 	if( varp == NULL ){
 		/* 新規追加 */
-		varp = ZnkVarp_create( "", "", 0, ZnkPrim_e_StrAry );
+		varp = ZnkVarp_create( "", "", 0, ZnkPrim_e_StrAry, NULL );
 		ZnkStr_assign( varp->name_, 0, hdr_line+key_begin, key_end-key_begin );
 		ZnkVarpAry_push_bk( vars, varp );
 	}
@@ -115,33 +112,31 @@ ZnkHtpHdrs_copyVars( ZnkVarpAry dst_vars, const ZnkVarpAry src_vars )
 	for( idx=0; idx<size; ++idx ){
 		src_var = ZnkVarpAry_at( src_vars, idx );
 		dst_var = ZnkVarp_create( 
-				ZnkStr_cstr( src_var->name_ ), ZnkStr_cstr( src_var->filename_ ),
-				(int)src_var->type_, ZnkPrim_e_StrAry );
+				ZnkStr_cstr( src_var->name_ ), ZnkStr_cstr( src_var->misc_ ),
+				(int)src_var->type_, ZnkPrim_e_StrAry, NULL );
 		ZnkStrAry_copy( dst_var->prim_.u_.sda_, src_var->prim_.u_.sda_ );
 		ZnkVarpAry_push_bk( dst_vars, dst_var );
 	}
 }
 
-const char*
-ZnkHtpHdrs_scanContentType( const ZnkVarpAry vars, ZnkStr boundary_ans )
+void
+ZnkHtpHdrs_scanContentTypeVal( const char* content_type_val, ZnkStr boundary_ans )
 {
-	ZnkVarp varp = ZnkHtpHdrs_find_literal( vars, "Content-Type" );
-	if( varp ){
-		/* found */
-		const char* val = ZnkHtpHdrs_val_cstr( varp, 0 );
-		if( ZnkS_isBegin( val, "multipart/form-data" ) ){
-			const char* p = val + Znk_strlen_literal( "multipart/form-data" );
-			p = strstr( p, "boundary=" );
-			if( p ){
-				/* boundary found */
-				p += Znk_strlen_literal( "boundary=" );
+	if( boundary_ans && ZnkS_isBegin( content_type_val, "multipart/form-data" ) ){
+		const char* p = content_type_val + Znk_strlen_literal( "multipart/form-data" );
+		p = strstr( p, "boundary=" );
+		if( p ){
+			const char* q;
+			/* boundary found */
+			p += Znk_strlen_literal( "boundary=" );
+			q = strchr( p, ';' );
+			if( q ){
+				ZnkStr_append( boundary_ans, p, q-p );
+			} else {
 				ZnkStr_add( boundary_ans, p );
 			}
 		}
-		return val;
 	}
-	/* not found */
-	return NULL;
 }
 
 Znk_INLINE void

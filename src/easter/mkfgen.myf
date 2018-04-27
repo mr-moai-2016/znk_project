@@ -1,0 +1,80 @@
+@def_quote [' ']
+
+@@V config
+my_libs_root = ['..']
+template_dir = ['../../mkfsys/template']
+install_dir = ['../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter']
+special_exe_sfx = ['cgi']
+runtime_install = ['false']
+@@.
+
+@@L include_paths_common
+@{libZnk}
+@{libRano}
+@@.
+
+@@L dependency_libs_common
+rlib: @{libZnk}  Znk  $(DL_VER)
+rlib: @{libRano} Rano $(DL_VER)
+@@.
+
+@@V info_vc
+linking_libs_special = ['ws2_32']
+@@.
+
+@@V info_mingw
+linking_libs_special = ['ws2_32']
+@@.
+
+@@V info_msys
+linking_libs_special = ['ws2_32']
+@@.
+
+@@V info_linux
+linking_libs_special = ['pthread dl stdc++']
+@@.
+
+@@V info_cygwin
+linking_libs_special = ['pthread dl stdc++']
+@@.
+
+@@L mkid_list
+vc
+mingw
+msys
+linux
+cygwin
+android
+@@.
+
+@@L product_list
+exec easter main.c
+exec cache_task cache_task.c
+@@.
+
+@@L rc_list
+@@.
+
+@@L sublibs_list
+@@.
+
+@@L install_data_list
+default/*.myf
+templates/*.html
+templates/*.myf
+publicbox/*
+publicbox/icons/*.png
+publicbox/alternative/5ch/itest.5ch.net/assets/js/android/*
+publicbox/alternative/5ch/itest.5ch.net/assets/js/iphone/*
+publicbox/alternative/5ch/agree.5ch.net/js/*.js
+@@.
+
+@@L ignore_list
+ignores
+obsolete
+@@.
+
+@@L src_suffix_list
+c
+cpp
+@@.

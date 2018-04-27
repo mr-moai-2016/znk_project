@@ -1,0 +1,33 @@
+@def_quote [' ']
+
+@@V header_vars
+User-Agent = ['Mozilla/5.0 (Windows NT 6.2; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0']
+@@.
+
+@@V post_vars
+pthb = ['']
+pthc = ['']
+pthd = ['']
+flrv = ['2739407074']
+flvv = ['3792482965']
+scsz = ['1920x1080x32']
+pwd = ['']
+js = ['on']
+USERS_futabapt = ['']
+USERS_password = ['']
+USERS_ptua = ['Mozilla/5.0 (Windows NT 6.2; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0']
+@@.
+
+# Cookie値のフィルタリング
+# ここでの指定はサイトがSet-Cookieを発行した時点で自動的に書き変えられることがある.
+@@V cookie_vars
+posttime = ['']
+pwdc = ['']
+@@.
+
+# Cookie値の強制変更
+# ここでの指定はサイトがSet-Cookieを発行しても書き変えられることはない.
+@@V cookie_force
+namec = ['']
+_ga = ['']
+@@.

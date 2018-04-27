@@ -1,0 +1,75 @@
+@def_quote [' ']
+
+@@V config
+my_libs_root = ['..']
+template_dir = ['../../mkfsys/template']
+install_dir = ['../../moai-v$(REL_VER)-$(PLATFORM)/plugins']
+@@.
+
+@@L include_paths_common
+@{libZnk}
+@@.
+
+@@L dependency_libs_common
+rlib: @{libZnk}  Znk  $(DL_VER)
+@@.
+
+@@V info_vc
+linking_libs_special = ['ws2_32']
+template_lib_file_special = ['$[lib_name]$.$[lib_sfx]$']
+@@.
+
+@@V info_mingw
+linking_libs_special = ['ws2_32']
+template_lib_file_special = ['$[lib_name]$.$[lib_sfx]$']
+@@.
+
+@@V info_msys
+linking_libs_special = ['ws2_32']
+template_lib_file_special = ['$[lib_name]$.$[lib_sfx]$']
+@@.
+
+@@V info_linux
+linking_libs_special = ['pthread dl stdc++']
+template_lib_file_special = ['$[lib_name]$.$[lib_sfx]$']
+@@.
+
+# PureなWin32dllと区別するためcygプレフィックスを敢えて付ける.
+@@V info_cygwin
+linking_libs_special = ['pthread dl stdc++']
+template_lib_file_special = ['cyg$[lib_name]$.$[lib_sfx]$']
+@@.
+
+@@V info_android
+template_lib_file_special = ['$[lib_name]$.$[lib_sfx]$']
+@@.
+
+@@L mkid_list
+vc
+mingw
+msys
+linux
+cygwin
+android
+@@.
+
+@@L product_list
+dlib futaba dll_main.c
+@@.
+
+@@L rc_list
+@@.
+
+@@L sublibs_list
+@@.
+
+@@L install_data_list
+@@.
+
+@@L ignore_list
+@@.
+
+@@L src_suffix_list
+c
+cpp
+@@.

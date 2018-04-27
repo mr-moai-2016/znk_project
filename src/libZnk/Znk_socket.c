@@ -3,6 +3,7 @@
 #include "Znk_sys_errno.h"
 #include "Znk_stdc.h"
 #include "Znk_thread.h"
+#include "Znk_missing_libc.h"
 
 #if defined(Znk_TARGET_WINDOWS)
 #  include <winsock2.h>
@@ -253,11 +254,85 @@ set_errno_forWin( int winsock_err )
 }
 #endif
 
+/***
+ * 以下のようにしていた時期があったがどうやら最初の数回のwait間隔を
+ * あまりに短くするとEAGAINが連発する不具合が発生するようである.
+ * 間隔を若干長めにとるとこれが起こりにくくなる.
+ * またwaiting_countは無限に許容せず、トータルで15秒程度になる回数になったら
+ * 諦めて rc < 0 をブラウザに返す方が結局は全体的に速度が大幅に増すようである.
+ *
+ * if( waiting_count < 13 ){
+ *   ZnkThread_sleep( 200 + waiting_count*100 );
+ * } else {
+ *   ZnkThread_sleep( 1500 );
+ * }
+ */
+static void
+wait_depending_on_count( size_t waiting_count )
+{
+	if( waiting_count < 9 ){
+		ZnkThread_sleep( 200 + waiting_count*200 );
+	} else {
+		ZnkThread_sleep( 2000 );
+	}
+}
+
+static bool
+report( int rc, uint32_t sys_errno, size_t waiting_count, void* arg )
+{
+	bool is_again = false;
+
+	if( rc < 0 ){
+		if( sys_errno == EAGAIN ){
+			/***
+			 * 何回か試行してダメなら取り消し.
+			 */
+			if( waiting_count > 12 ){
+				is_again = false;
+			} else {
+				wait_depending_on_count( waiting_count );
+				if( waiting_count == 0 ){
+					const char* msg_from = Znk_force_ptr_cast( const char*, arg );
+					Znk_printf_e( "  %s : EAGAIN count=", msg_from );
+				} else {
+					Znk_printf_e( "\b\b\b\b" );
+				}
+				Znk_printf_e( "%04zu", waiting_count );
+				++waiting_count;
+				is_again = true;
+				return is_again;
+			}
+		}
+	}
+	if( waiting_count ){
+		Znk_printf_e( "\n" );
+	}
+	return is_again;
+}
+
 int
 ZnkSocket_send( ZnkSocket sock, const uint8_t* data, size_t data_size )
 {
-	int rc;
-	size_t waiting_count = 0;
+	char msg_from[ 256 ];
+	Znk_snprintf( msg_from, sizeof(msg_from), "ZnkSocket_send sock=[%d]", sock );
+	return ZnkSocket_send_ex( sock, data, data_size, report, (void*)msg_from );
+}
+
+int
+ZnkSocket_recv( ZnkSocket sock, uint8_t* buf, size_t buf_size )
+{
+	char msg_from[ 256 ];
+	Znk_snprintf( msg_from, sizeof(msg_from), "ZnkSocket_recv sock=[%d]", sock );
+	return ZnkSocket_recv_ex( sock, buf, buf_size, report, (void*)msg_from );
+}
+
+int
+ZnkSocket_send_ex( ZnkSocket sock, const uint8_t* data, size_t data_size,
+		ZnkSocketCallback cb_func, void* cb_func_arg )
+{
+	int      rc;
+	uint32_t sys_errno = 0;
+	size_t   waiting_count = 0;
 AGAIN:
 #if defined(Znk_TARGET_WINDOWS)
 	rc = send( sock, (const char*)data, (int)data_size, 0 );
@@ -269,30 +344,23 @@ AGAIN:
 	rc = send( sock, (const char*)data, data_size, 0 );
 #endif
 
-	/* とりあえず現時点では旧来のブロッキングIOの通り、完了するまで繰り返す */
-	if( rc < 0 ){
-		if( ZnkSysErrno_errno() == EAGAIN ){
-			ZnkThread_sleep( 500 );
-			if( waiting_count == 0 ){
-				ZnkF_printf_e( "  ZnkSocket_send : EAGAIN count=" );
-			} else {
-				ZnkF_printf_e( "\b\b\b\b" );
-			}
-			ZnkF_printf_e( "%04u", waiting_count );
+	if( cb_func ){
+		sys_errno = ZnkSysErrno_errno();
+		if( (*cb_func)( rc, sys_errno, waiting_count, cb_func_arg ) ){
 			++waiting_count;
 			goto AGAIN;
 		}
 	}
-	if( waiting_count ){
-		ZnkF_printf_e( "\n" );
-	}
 	return rc;
 }
+
 int
-ZnkSocket_recv( ZnkSocket sock, uint8_t* buf, size_t buf_size )
+ZnkSocket_recv_ex( ZnkSocket sock, uint8_t* buf, size_t buf_size,
+		ZnkSocketCallback cb_func, void* cb_func_arg )
 {
-	int rc;
-	size_t waiting_count = 0;
+	int      rc;
+	uint32_t sys_errno = 0;
+	size_t   waiting_count = 0;
 AGAIN:
 #if defined(Znk_TARGET_WINDOWS)
 	rc = recv( sock, (char*)buf, (int)buf_size, 0 );
@@ -304,25 +372,16 @@ AGAIN:
 	rc = recv( sock, (char*)buf, buf_size, 0 );
 #endif
 
-	/* とりあえず現時点では旧来のブロッキングIOの通り、完了するまで繰り返す */
-	if( rc < 0 ){
-		if( ZnkSysErrno_errno() == EAGAIN ){
-			ZnkThread_sleep( 500 );
-			if( waiting_count == 0 ){
-				ZnkF_printf_e( "  ZnkSocket_recv : EAGAIN count=" );
-			} else {
-				ZnkF_printf_e( "\b\b\b\b" );
-			}
-			ZnkF_printf_e( "%04u", waiting_count );
+	if( cb_func ){
+		sys_errno = ZnkSysErrno_errno();
+		if( (*cb_func)( rc, sys_errno, waiting_count, cb_func_arg ) ){
 			++waiting_count;
 			goto AGAIN;
 		}
 	}
-	if( waiting_count ){
-		ZnkF_printf_e( "\n" );
-	}
 	return rc;
 }
+
 bool
 ZnkSocket_getPeerIPandPort( ZnkSocket sock, uint32_t* ipaddr, uint16_t* port )
 {
@@ -337,7 +396,7 @@ ZnkSocket_getPeerIPandPort( ZnkSocket sock, uint32_t* ipaddr, uint16_t* port )
 	// アドレス情報取得
 	result = getpeername( sock, (struct sockaddr*)&addr, &addr_leng );
 	if( result < 0 ){
-		ZnkF_printf_e( "ZnkSocket_print_peername : getpeername error\n" );
+		Znk_printf_e( "ZnkSocket_getPeerIPandPort : getpeername error.\n" );
 		return false;
 	}
 	

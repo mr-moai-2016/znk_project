@@ -51,6 +51,9 @@ ZnkObjAry_getElemDeleter( const ZnkObjAry obj_ary );
  * @brief Aryの要素を削除する.
  *  Aryのelem_deleterが非NULLに設定されている場合は、
  *  対象要素についてこのdeleterも呼ばれる.
+ *
+ * @note
+ *  削除要素のidxが既知である場合はbyIdx版の方が探索を行わない分高速である.
  */
 bool
 ZnkObjAry_erase( ZnkObjAry obj_ary, ZnkObj obj );

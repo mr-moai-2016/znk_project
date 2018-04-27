@@ -1,8 +1,8 @@
 #ifndef INCLUDE_GUARD__Moai_info_h__
 #define INCLUDE_GUARD__Moai_info_h__
 
-#include "Moai_module_ary.h"
-#include "Moai_type.h"
+#include <Rano_type.h>
+#include <Rano_module_ary.h>
 
 #include <Znk_str.h>
 #include <Znk_str_ary.h>
@@ -59,7 +59,7 @@ typedef struct {
 	bool    is_gzip_;
 	bool    is_unlimited_;
 	size_t  content_length_;
-	MoaiTextType txt_type_;
+	RanoTextType txt_type_;
 } MoaiBodyInfo;
 
 Znk_INLINE void
@@ -86,7 +86,7 @@ void
 MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 		bool* as_local_proxy, uint16_t my_port, bool is_request,
 		const char* response_hostname,
-		MoaiModuleAry mod_ary, const char* server_name );
+		RanoModuleAry mod_ary, const char* server_name );
 
 Znk_EXTERN_C_END
 

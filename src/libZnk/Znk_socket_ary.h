@@ -75,7 +75,18 @@ ZnkSocketAry_find( ZnkSocketAry sock_ary, ZnkSocket query_sock )
 	}
 	return Znk_NPOS;
 }
-
+Znk_INLINE void
+ZnkSocketAry_copy( ZnkSocketAry dst, const ZnkSocketAry src )
+{
+	const size_t size = ZnkSocketAry_size( src );
+	size_t       idx;
+	ZnkSocket    sock;
+	ZnkSocketAry_clear( dst );
+	for( idx=0; idx<size; ++idx ){
+		sock = ZnkSocketAry_at( src, idx );
+		ZnkSocketAry_push_bk( dst, sock );
+	}
+}
 
 Znk_EXTERN_C_END
 

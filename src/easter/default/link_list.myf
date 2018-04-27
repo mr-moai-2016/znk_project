@@ -1,0 +1,66 @@
+@def_quote [' ']
+
+@@V config
+fmt_version=['1']
+@@.
+
+@@V link_0
+url =['www.2chan.net']
+name=['ふたばちゃんねる トップページ']
+@@.
+
+@@V link_1504257422
+url =['//www.2chan.net/i.htm']
+name=['ふたばちゃんねる スマホ版 トップページ']
+@@.
+
+@@V link_1504254732
+url =['may.2chan.net/b/futaba.php?mode=cat&sort=1']
+name=['ふたばちゃんねる may カタログ 新順']
+@@.
+
+@@V link_1501685160
+url =['img.2chan.net/b/futaba.php?mode=cat']
+name=['ふたばちゃんねる img カタログ']
+@@.
+
+@@V link_1501851624
+url =['menu.5ch.net/bbstable.html']
+name=['５ちゃんねる 板一覧']
+@@.
+
+@@V link_1504254933
+url =['http://itest.5ch.net/']
+name=['５ちゃんねる スマホ版 板一覧']
+@@.
+
+@@V link2
+url =['mevius.5ch.net/internet/subback.html']
+name=['５ちゃんねる インターネット板']
+@@.
+
+@@V link_1504255173
+url =['//itest.5ch.net/./subback/internet']
+name=['５ちゃんねる スマホ版 インターネット板']
+@@.
+
+@@V link_1506078163
+url =['https://mevius.5ch.net/esite/subback.html']
+name=['５ちゃんねる ネットサービス板']
+@@.
+
+@@V link_1504255258
+url =['192.168.0.1']
+name=['ルータ']
+@@.
+
+@@V link_1504255346
+url =['http://localhost:8124/cgis/custom_boy/custom_boy.cgi?cb_target=futaba&cb_type=automatic']
+name=['VirtualUSERS']
+@@.
+
+@@V link_1504534353
+url =['www.google.com']
+name=['グーグル']
+@@.
+

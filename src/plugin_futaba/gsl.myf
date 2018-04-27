@@ -1,0 +1,18 @@
+@def_quote [' ']
+
+@@V config
+dlib_filename = ['futaba.dll']
+def_filename = ['gsl.def']
+@@.
+
+@@L export_symbols
+initiate
+on_post
+on_response
+@@.
+
+@@L export_symbols_additional
+@@.
+
+@@L ignore_symbols
+@@.

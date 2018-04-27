@@ -10,6 +10,7 @@
 Znk_EXTERN_C_BEGIN
 
 typedef uintptr_t ZnkSocket;
+typedef bool (*ZnkSocketCallback)( int rc, uint32_t sys_errno, size_t waiting_count, void* arg );
 
 #define ZnkSocket_INVALID ((ZnkSocket)(-1))
 
@@ -40,6 +41,13 @@ ZnkSocket_send_ZnkStr( ZnkSocket sock, const ZnkStr zkstr ){
 }
 int
 ZnkSocket_recv( ZnkSocket sock, uint8_t* buf, size_t buf_size );
+
+int
+ZnkSocket_send_ex( ZnkSocket sock, const uint8_t* data, size_t data_size,
+		ZnkSocketCallback cb_func, void* cb_func_arg );
+int
+ZnkSocket_recv_ex( ZnkSocket sock, uint8_t* buf, size_t buf_size,
+		ZnkSocketCallback cb_func, void* cb_func_arg );
 
 bool
 ZnkSocket_getPeerIPandPort( ZnkSocket sock, uint32_t* ipaddr, uint16_t* port );

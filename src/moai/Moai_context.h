@@ -2,7 +2,8 @@
 #define INCLUDE_GUARD__Moai_context_h__
 
 #include "Moai_info.h"
-#include "Moai_module_ary.h"
+
+#include <Rano_module_ary.h>
 #include <Znk_str.h>
 #include <Znk_htp_hdrs.h>
 

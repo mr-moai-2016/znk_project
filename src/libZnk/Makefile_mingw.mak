@@ -1,27 +1,67 @@
-O = .\out_dir
+# Source directory
 S = .
-COMPILER=gcc -Wall -O2
-LINKER=gcc
-
+# Root path of common libraries
 MY_LIBS_ROOT=..
-INCLUDE_FLAG=
+ifndef MKFSYS_DIR
+  MKFSYS_DIR=$(MY_LIBS_ROOT)\..\mkfsys
+endif
+
+ifeq ($(MACHINE), x64)
+  PLATFORM=win64
+else
+  MACHINE=x86
+  PLATFORM=win32
+endif
+# Output directory
+ABINAME=mingw$(MACHINE)$(DEBUG)
+O = .\out_dir\$(ABINAME)
+
+ifeq ($(DEBUG), d)
+COMPILER=gcc -Wall -Wstrict-aliasing=2 -g
+LINKER=gcc
+DLIBS_DIR=dlib\$(PLATFORM)_mingwd
+SLIBS_DIR=slib\$(PLATFORM)_mingwd
+else
+COMPILER=gcc -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG
+LINKER=gcc
+DLIBS_DIR=dlib\$(PLATFORM)
+SLIBS_DIR=slib\$(PLATFORM)
+endif
+
+CP=xcopy /H /C /Y
+
+INCLUDE_FLAG+=  \
+
+
 include Makefile_version.mak
 
-BASENAME=Znk
-OBJS = \
-	$O\dll_main.o \
+BASENAME0=gslconv
+EXE_FILE0=$O\gslconv.exe
+OBJS0=\
+	$O\Znk_algo_vec.o \
 	$O\Znk_bfr.o \
 	$O\Znk_bfr_ary.o \
+	$O\Znk_bfr_bif.o \
+	$O\Znk_bird.o \
+	$O\Znk_bms_find.o \
 	$O\Znk_cookie.o \
+	$O\Znk_date.o \
 	$O\Znk_dir.o \
 	$O\Znk_dirent.o \
+	$O\Znk_dir_recursive.o \
+	$O\Znk_dir_type.o \
 	$O\Znk_dlink.o \
+	$O\Znk_duple_ary.o \
 	$O\Znk_envvar.o \
 	$O\Znk_err.o \
 	$O\Znk_fdset.o \
 	$O\Znk_htp_hdrs.o \
+	$O\Znk_htp_post.o \
 	$O\Znk_htp_rar.o \
+	$O\Znk_htp_util.o \
+	$O\Znk_liba_scan.o \
 	$O\Znk_math.o \
+	$O\Znk_mbc_jp.o \
 	$O\Znk_md5.o \
 	$O\Znk_mem_find.o \
 	$O\Znk_missing_libc.o \
@@ -29,8 +69,16 @@ OBJS = \
 	$O\Znk_myf.o \
 	$O\Znk_net_base.o \
 	$O\Znk_net_ip.o \
+	$O\Znk_nset.o \
 	$O\Znk_obj_ary.o \
 	$O\Znk_prim.o \
+	$O\Znk_primp_ary.o \
+	$O\Znk_process.o \
+	$O\Znk_rand.o \
+	$O\Znk_rgx.o \
+	$O\Znk_rgx_dfa.o \
+	$O\Znk_rgx_nfa.o \
+	$O\Znk_rgx_tree.o \
 	$O\Znk_server.o \
 	$O\Znk_socket.o \
 	$O\Znk_stdc.o \
@@ -39,56 +87,267 @@ OBJS = \
 	$O\Znk_str_ary.o \
 	$O\Znk_str_ex.o \
 	$O\Znk_str_fio.o \
+	$O\Znk_str_path.o \
 	$O\Znk_str_ptn.o \
 	$O\Znk_sys_errno.o \
 	$O\Znk_s_atom.o \
 	$O\Znk_s_base.o \
 	$O\Znk_s_posix.o \
 	$O\Znk_thread.o \
-	$O\Znk_txt_filter.o \
+	$O\Znk_tostr_double.o \
+	$O\Znk_tostr_int.o \
 	$O\Znk_var.o \
 	$O\Znk_varp_ary.o \
+	$O\Znk_vsnprintf.o \
 	$O\Znk_yy_base.o \
 	$O\Znk_zlib.o \
+	$O\gslconv.o \
 
-DLIB_FILE=$O\$(BASENAME)-$(DL_VER).dll
-ILIB_FILE=$O\$(BASENAME)-$(DL_VER).dll.a
-RES_FILE=$O\$(BASENAME).res
-DEF_FILE=.\$(BASENAME)_mingw.def
+BASENAME1=Znk
+DLIB_NAME1=Znk-$(DL_VER).dll
+DLIB_FILE1=$O\$(DLIB_NAME1)
+ILIB_FILE1=$O\libZnk-$(DL_VER).dll.a
+SLIB_FILE1=$O\libZnk.a
+OBJS1=\
+	$O\Znk_algo_vec.o \
+	$O\Znk_bfr.o \
+	$O\Znk_bfr_ary.o \
+	$O\Znk_bfr_bif.o \
+	$O\Znk_bird.o \
+	$O\Znk_bms_find.o \
+	$O\Znk_cookie.o \
+	$O\Znk_date.o \
+	$O\Znk_dir.o \
+	$O\Znk_dirent.o \
+	$O\Znk_dir_recursive.o \
+	$O\Znk_dir_type.o \
+	$O\Znk_dlink.o \
+	$O\Znk_duple_ary.o \
+	$O\Znk_envvar.o \
+	$O\Znk_err.o \
+	$O\Znk_fdset.o \
+	$O\Znk_htp_hdrs.o \
+	$O\Znk_htp_post.o \
+	$O\Znk_htp_rar.o \
+	$O\Znk_htp_util.o \
+	$O\Znk_liba_scan.o \
+	$O\Znk_math.o \
+	$O\Znk_mbc_jp.o \
+	$O\Znk_md5.o \
+	$O\Znk_mem_find.o \
+	$O\Znk_missing_libc.o \
+	$O\Znk_mutex.o \
+	$O\Znk_myf.o \
+	$O\Znk_net_base.o \
+	$O\Znk_net_ip.o \
+	$O\Znk_nset.o \
+	$O\Znk_obj_ary.o \
+	$O\Znk_prim.o \
+	$O\Znk_primp_ary.o \
+	$O\Znk_process.o \
+	$O\Znk_rand.o \
+	$O\Znk_rgx.o \
+	$O\Znk_rgx_dfa.o \
+	$O\Znk_rgx_nfa.o \
+	$O\Znk_rgx_tree.o \
+	$O\Znk_server.o \
+	$O\Znk_socket.o \
+	$O\Znk_stdc.o \
+	$O\Znk_stock_bio.o \
+	$O\Znk_str.o \
+	$O\Znk_str_ary.o \
+	$O\Znk_str_ex.o \
+	$O\Znk_str_fio.o \
+	$O\Znk_str_path.o \
+	$O\Znk_str_ptn.o \
+	$O\Znk_sys_errno.o \
+	$O\Znk_s_atom.o \
+	$O\Znk_s_base.o \
+	$O\Znk_s_posix.o \
+	$O\Znk_thread.o \
+	$O\Znk_tostr_double.o \
+	$O\Znk_tostr_int.o \
+	$O\Znk_var.o \
+	$O\Znk_varp_ary.o \
+	$O\Znk_vsnprintf.o \
+	$O\Znk_yy_base.o \
+	$O\Znk_zlib.o \
+	$O\dll_main.o \
 
-all: $O subdir_zlib $(DLIB_FILE)
+SUB_LIBS=\
+	zlib/$O/libzlib.a \
 
-.PHONY : subdir_zlib
-subdir_zlib:
+PRODUCT_EXECS= \
+	__mkg_sentinel_target__ \
+	$(EXE_FILE0) \
+
+PRODUCT_DLIBS= \
+	__mkg_sentinel_target__ \
+	$(DLIB_FILE1) \
+
+PRODUCT_SLIBS= \
+	__mkg_sentinel_target__ \
+	$(SLIB_FILE1) \
+
+RUNTIME_FILES= \
+	__mkg_sentinel_target__ \
+
+
+
+# Entry rule.
+all: $O submkf_zlib $(EXE_FILE0) $(DLIB_FILE1) 
+
+# Mkdir rule.
+$O:
+	if not exist $O mkdir $O
+
+
+# Product files rule.
+$(EXE_FILE0): $(OBJS0) 
+	$(LINKER) -o $(EXE_FILE0)  $(OBJS0) $(SUB_LIBS)  -lws2_32 
+
+$(SLIB_FILE1): $(OBJS1)
+	if exist $(SLIB_FILE1) del $(SLIB_FILE1)
+	ar cru $(SLIB_FILE1) $(OBJS1) $(SUB_LIBS)
+	ranlib $(SLIB_FILE1)
+
+gsl.myf: $(SLIB_FILE1)
+	@if exist $O\gslconv.exe $O\gslconv.exe -g gsl.myf $(SLIB_FILE1) $(MACHINE)
+
+gsl.def: gsl.myf
+	@if exist $O\gslconv.exe $O\gslconv.exe -d gsl.myf gsl.def
+
+$(DLIB_FILE1): $(OBJS1) $(SLIB_FILE1) gsl.def
+	gcc -static-libgcc -g -Wl,--disable-stdcall-fixup,--kill-at -shared -o $(DLIB_FILE1) $(OBJS1) $(SUB_LIBS)  -lws2_32  gsl.def
+	dlltool --kill-at --dllname $(DLIB_FILE1) -d gsl.def -l $(ILIB_FILE1)
+
+
+##
+# Pattern rule.
+# We use not suffix rule but pattern rule for dealing flexibly with files in sub-directory.
+# In this case, there is very confusing specification, that is :
+# '\' to the left hand of ':' works as escape sequence, 
+# '\' to the right hand of ':' does not work as escape sequence. 
+# Hence, we have to duplicate '\' to the left hand of ':',
+# the other way, '\' to the right hand of ':' we have to put only single '\',
+# for example $O\\%.o: $S\%.c .
+#
+$O\\%.o: $S\%.c
+	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c $<
+
+$O\\%.o: $S\%.cpp
+	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c $<
+
+
+# Rc rule.
+
+# Submkf rule.
+.PHONY : submkf_zlib
+submkf_zlib:
 	@echo ======
 	@echo === Entering [zlib] ===
 	mingw32-make -f Makefile_mingw.mak -C zlib
 	@echo === Leaving [zlib] ===
 	@echo ======
 
-SUB_LIBS=zlib\$O\zlib.a
 
-$O:
-	if not exist $O mkdir $O
+# Dummy rule.
+__mkg_sentinel_target__:
 
-$(DLIB_FILE): $(OBJS)
-	gcc -static-libgcc -g -Wl,--disable-stdcall-fixup,--kill-at -shared -o $(DLIB_FILE) $(OBJS) $(SUB_LIBS) -lws2_32 $(DEF_FILE)
-	dlltool --kill-at --dllname Znk-$(DL_VER).dll -d $(DEF_FILE) -l $(ILIB_FILE)
+# Install data rule.
+install_data:
 
-##
-# Sub-Directoryに格納されたファイルなどにも柔軟に対応するため、
-# ここではサフィックスルールではなくパターンルールを用いる.
-# このとき : より左側に関しては \ はエスケープシーケンスとして働き、
-# それより右側についてはエスケープシーケンスとして働かないという
-# 非常にややこしい仕様が存在する.
-# よって、例えば $O\\%.o: $S\%.c のように : より左側に関しては \\ と
-# 二つ重ね、それより右側については反対に \ を一つだけにしなければならない.
-#
-$O\\%.o: $S\%.c
-	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c $<
-$O\\%.o: $S\%.cpp
-	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c $<
+# Install exec rule.
+install_exec: $(EXE_FILE0)
+	@if not exist ..\..\mkfsys @mkdir ..\..\mkfsys 
+	@if exist "$(EXE_FILE0)" @$(CP) /F "$(EXE_FILE0)" ..\..\mkfsys\ $(CP_END)
+	@for %%a in ( $(RUNTIME_FILES) ) do @if exist "%%a" @$(CP) /F "%%a" ..\..\mkfsys\ $(CP_END)
 
-$(RES_FILE): $S\$(BASENAME).rc
-	windres --input-format=rc --output-format=coff -o$(RES_FILE) $S\$(BASENAME).rc
+# Install dlib rule.
+install_dlib: $(DLIB_FILE1)
+	@if not exist $(MY_LIBS_ROOT)\$(DLIBS_DIR) @mkdir $(MY_LIBS_ROOT)\$(DLIBS_DIR) 
+	@if exist "$(DLIB_FILE1)" @$(CP) /F "$(DLIB_FILE1)" $(MY_LIBS_ROOT)\$(DLIBS_DIR)\ $(CP_END)
 
+# Install slib rule.
+install_slib: $(SLIB_FILE1)
+	@if not exist $(MY_LIBS_ROOT)\$(SLIBS_DIR) @mkdir $(MY_LIBS_ROOT)\$(SLIBS_DIR) 
+	@if exist "$(SLIB_FILE1)" @$(CP) /F "$(SLIB_FILE1)" $(MY_LIBS_ROOT)\$(SLIBS_DIR)\ $(CP_END)
+
+# Install rule.
+install: all install_slib install_dlib install_exec 
+
+
+# Clean rule.
+clean:
+	del /Q $O\ 
+	@echo === Entering [zlib] ===
+	mingw32-make -f Makefile_mingw.mak clean -C zlib
+	@echo === Leaving [zlib] ===
+
+
+# Src and Headers Dependency
+dll_main.o:
+gslconv.o: Znk_myf.h Znk_str_ary.h Znk_str_ex.h Znk_str_fio.h Znk_stdc.h Znk_missing_libc.h Znk_dir.h Znk_str_path.h Znk_liba_scan.h
+Znk_algo_vec.o: Znk_algo_vec.h
+Znk_bfr.o: Znk_bfr.h Znk_stdc.h
+Znk_bfr_ary.o: Znk_bfr_ary.h
+Znk_bfr_bif.o: Znk_bfr_bif.h Znk_bfr.h
+Znk_bird.o: Znk_bird.h Znk_mem_find.h Znk_stdc.h Znk_varp_ary.h Znk_bms_find.h
+Znk_bms_find.o: Znk_bms_find.h Znk_mem_find.h Znk_s_base.h Znk_stdc.h
+Znk_cookie.o: Znk_cookie.h Znk_s_base.h Znk_stdc.h Znk_str_fio.h
+Znk_date.o: Znk_date.h Znk_base.h Znk_str.h Znk_s_base.h
+Znk_dir.o: Znk_dir.h Znk_dir_recursive.h Znk_stdc.h Znk_s_base.h Znk_missing_libc.h Znk_sys_errno.h
+Znk_dirent.o: Znk_dir.h Znk_s_base.h Znk_stdc.h
+Znk_dir_recursive.o: Znk_dir_recursive.h Znk_dir.h Znk_str.h Znk_str_ary.h Znk_err.h Znk_stdc.h
+Znk_dir_type.o: Znk_dir.h Znk_sys_errno.h Znk_stdc.h
+Znk_dlink.o: Znk_dlink.h
+Znk_duple_ary.o: Znk_duple_ary.h Znk_bfr.h Znk_stdc.h Znk_s_base.h Znk_base.h Znk_str.h Znk_obj_ary.h
+Znk_envvar.o: Znk_envvar.h Znk_missing_libc.h Znk_mutex.h
+Znk_err.o: Znk_err.h Znk_mutex.h Znk_str.h
+Znk_fdset.o: Znk_fdset.h Znk_stdc.h
+Znk_htp_hdrs.o: Znk_htp_hdrs.h Znk_s_base.h Znk_varp_ary.h Znk_missing_libc.h
+Znk_htp_post.o: Znk_htp_post.h Znk_str.h Znk_missing_libc.h
+Znk_htp_rar.o: Znk_htp_rar.h Znk_net_base.h Znk_socket.h Znk_cookie.h Znk_s_base.h Znk_str_ary.h Znk_stdc.h Znk_mem_find.h Znk_sys_errno.h Znk_str_ex.h Znk_stock_bio.h Znk_zlib.h Znk_def_util.h
+Znk_htp_util.o: Znk_htp_util.h Znk_str_ex.h Znk_mem_find.h
+Znk_liba_scan.o: Znk_stdc.h Znk_s_base.h Znk_str.h Znk_str_ary.h Znk_myf.h Znk_bfr.h Znk_vpod.h
+Znk_math.o: Znk_math.h
+Znk_mbc_jp.o: Znk_mbc_jp.h Znk_bfr_bif.h
+Znk_md5.o: Znk_md5.h Znk_stdc.h
+Znk_mem_find.o: Znk_mem_find.h Znk_stdc.h
+Znk_missing_libc.o: Znk_missing_libc.h Znk_vsnprintf.h Znk_s_base.h
+Znk_mutex.o: Znk_mutex.h Znk_bfr.h Znk_stdc.h
+Znk_myf.o: Znk_myf.h Znk_str.h Znk_str_fio.h Znk_str_ary.h Znk_stdc.h Znk_s_base.h Znk_varp_ary.h Znk_primp_ary.h
+Znk_net_base.o: Znk_net_base.h Znk_s_base.h Znk_sys_errno.h Znk_stdc.h Znk_missing_libc.h
+Znk_net_ip.o: Znk_net_ip.h Znk_stdc.h Znk_s_base.h Znk_missing_libc.h
+Znk_nset.o: Znk_nset.h Znk_vpod.h Znk_stdc.h
+Znk_obj_ary.o: Znk_obj_ary.h Znk_bfr.h Znk_stdc.h Znk_vpod.h
+Znk_prim.o: Znk_prim.h Znk_primp_ary.h
+Znk_primp_ary.o: Znk_primp_ary.h Znk_s_base.h
+Znk_process.o: Znk_process.h Znk_str.h Znk_stdc.h
+Znk_rand.o: Znk_rand.h
+Znk_rgx.o: Znk_rgx.h Znk_rgx_tree.h Znk_rgx_nfa.h Znk_rgx_dfa.h Znk_stdc.h Znk_str_fio.h Znk_s_base.h
+Znk_rgx_dfa.o: Znk_rgx_dfa.h Znk_base.h Znk_stdc.h Znk_str.h
+Znk_rgx_nfa.o: Znk_rgx_nfa.h Znk_base.h Znk_stdc.h
+Znk_rgx_tree.o: Znk_rgx_tree.h Znk_base.h Znk_stdc.h Znk_str.h
+Znk_server.o: Znk_server.h Znk_socket.h Znk_stdc.h
+Znk_socket.o: Znk_socket.h Znk_net_base.h Znk_sys_errno.h Znk_stdc.h Znk_thread.h Znk_missing_libc.h
+Znk_stdc.o: Znk_stdc.h Znk_bfr.h Znk_vsnprintf.h
+Znk_stock_bio.o: Znk_stock_bio.h Znk_stdc.h
+Znk_str.o: Znk_str.h Znk_stdc.h Znk_s_base.h Znk_vsnprintf.h
+Znk_str_ary.o: Znk_str_ary.h Znk_stdc.h Znk_s_base.h Znk_algo_vec.h
+Znk_str_ex.o: Znk_str_ex.h Znk_str_ary.h Znk_s_base.h Znk_mem_find.h Znk_def_util.h
+Znk_str_fio.o: Znk_str_fio.h Znk_stdc.h
+Znk_str_path.o: Znk_str_path.h Znk_s_base.h Znk_missing_libc.h Znk_str_ary.h Znk_str_ex.h
+Znk_str_ptn.o: Znk_str_ptn.h Znk_missing_libc.h Znk_stdc.h Znk_s_base.h Znk_mem_find.h Znk_str_ex.h
+Znk_sys_errno.o: Znk_sys_errno.h
+Znk_s_atom.o: Znk_s_atom.h Znk_str_ary.h Znk_stdc.h
+Znk_s_base.o: Znk_s_base.h Znk_mem_find.h Znk_stdc.h Znk_def_util.h Znk_s_posix.h
+Znk_s_posix.o: Znk_s_posix.h Znk_stdc.h
+Znk_thread.o: Znk_thread.h Znk_bfr.h Znk_stdc.h Znk_mutex.h
+Znk_tostr_double.o: Znk_tostr_double.h Znk_def_util.h
+Znk_tostr_int.o: Znk_tostr_int.h Znk_base.h Znk_s_base.h Znk_def_util.h Znk_stdc.h
+Znk_var.o: Znk_var.h Znk_stdc.h
+Znk_varp_ary.o: Znk_varp_ary.h Znk_s_base.h
+Znk_vsnprintf.o: Znk_vsnprintf.h Znk_stdc.h Znk_def_util.h Znk_tostr_int.h Znk_tostr_double.h
+Znk_yy_base.o: Znk_yy_base.h
+Znk_zlib.o: Znk_zlib.h Znk_dlhlp.h Znk_stdc.h

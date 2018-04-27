@@ -1,5 +1,5 @@
-#ifndef INCLUDE_GUARD__Znk_c_std_h__
-#define INCLUDE_GUARD__Znk_c_std_h__
+#ifndef INCLUDE_GUARD__Znk_stdc_h__
+#define INCLUDE_GUARD__Znk_stdc_h__
 
 #include <Znk_base.h>
 #include <stdarg.h>
@@ -38,6 +38,9 @@ size_t  Znk_strlen( const char* cstr );
 
 int Znk_strcmp(  const char* s1, const char* s2 );
 int Znk_strncmp( const char* s1, const char* s2, size_t leng );
+char* Znk_strchr( const char* cstr, char c );
+char* Znk_strrchr( const char* cstr, char c );
+char* Znk_strstr( const char* cstr, const char* ptn );
 
 char* Znk_getenv( const char* varname );
 
@@ -45,50 +48,69 @@ char* Znk_getenv( const char* varname );
 Znk_DECLARE_HANDLE( ZnkFile );
 
 ZnkFile Znk_Internal_getStdFP( int no );
+
+/***
+ * @param no:
+ *   標準入出力を示すファイルディスクリプタ番号を指定する.
+ *   すなわち、
+ *   0 は 標準入力
+ *   1 は 標準出力
+ *   2 は 標準エラー出力
+ *   を意味する.
+ *
+ * @param is_binary_mode:
+ *   noで指定した標準入出力をbinary-modeに変更するか否かを指定する.
+ *   trueならばbinary-modeに変更する.
+ *   falseならばtext-modeに変更する.
+ */
 void Znk_Internal_setMode( int no, bool is_binary_mode );
 
-Znk_INLINE ZnkFile ZnkF_stdin(  void ){ return Znk_Internal_getStdFP( 0 ); }
-Znk_INLINE ZnkFile ZnkF_stdout( void ){ return Znk_Internal_getStdFP( 1 ); }
-Znk_INLINE ZnkFile ZnkF_stderr( void ){ return Znk_Internal_getStdFP( 2 ); }
+Znk_INLINE ZnkFile Znk_stdin(  void ){ return Znk_Internal_getStdFP( 0 ); }
+Znk_INLINE ZnkFile Znk_stdout( void ){ return Znk_Internal_getStdFP( 1 ); }
+Znk_INLINE ZnkFile Znk_stderr( void ){ return Znk_Internal_getStdFP( 2 ); }
 
 
 ZnkFile
-ZnkF_fopen( const char* filename, const char* mode );
+Znk_fopen( const char* filename, const char* mode );
 void
-ZnkF_fclose( ZnkFile fp );
+Znk_fclose( ZnkFile fp );
 
 int
-ZnkF_fgetc( ZnkFile fp );
+Znk_fgetc( ZnkFile fp );
 int
-ZnkF_fputc( int c, ZnkFile fp );
+Znk_fputc( int c, ZnkFile fp );
 
 char*
-ZnkF_fgets( char* buf, size_t size, ZnkFile fp );
+Znk_fgets( char* buf, size_t size, ZnkFile fp );
 int
-ZnkF_fputs( const char* c_str, ZnkFile fp );
+Znk_fputs( const char* c_str, ZnkFile fp );
 
 size_t
-ZnkF_fread( uint8_t* buf, const size_t blk_size, const size_t nmemb, ZnkFile fp );
+Znk_fread( uint8_t* buf, const size_t req_byte_size, ZnkFile fp );
 size_t
-ZnkF_fwrite( const uint8_t* buf, const size_t blk_size, const size_t nmemb, ZnkFile fp );
+Znk_fread_blk( uint8_t* buf, const size_t blk_size, const size_t blk_num, ZnkFile fp );
+size_t
+Znk_fwrite( const uint8_t* buf, const size_t req_byte_size, ZnkFile fp );
+size_t
+Znk_fwrite_blk( const uint8_t* buf, const size_t blk_size, const size_t blk_num, ZnkFile fp );
 
-bool ZnkF_feof( ZnkFile fp );
-bool ZnkF_fflush( ZnkFile fp );
-bool ZnkF_fseek( ZnkFile fp, long offset, int whence );
-bool ZnkF_fseek_i64( ZnkFile fp, int64_t offset, int whence );
-int64_t ZnkF_ftell_i64( ZnkFile fp );
+bool Znk_feof( ZnkFile fp );
+bool Znk_fflush( ZnkFile fp );
+bool Znk_fseek( ZnkFile fp, long offset, int whence );
+bool Znk_fseek_i64( ZnkFile fp, int64_t offset, int whence );
+int64_t Znk_ftell_i64( ZnkFile fp );
 
 int
-ZnkF_vfprintf( ZnkFile fp, const char* fmt, va_list ap );
+Znk_vfprintf( ZnkFile fp, const char* fmt, va_list ap );
 int
-ZnkF_fprintf( ZnkFile fp, const char* fmt, ... );
+Znk_fprintf( ZnkFile fp, const char* fmt, ... );
 int
-ZnkF_printf( const char* fmt, ... );
+Znk_printf( const char* fmt, ... );
 int
-ZnkF_printf_e( const char* fmt, ... );
+Znk_printf_e( const char* fmt, ... );
 
 ZnkFile
-ZnkF_freopen( const char* filename, const char* mode, ZnkFile fp );
+Znk_freopen( const char* filename, const char* mode, ZnkFile fp );
 
 Znk_EXTERN_C_END
 

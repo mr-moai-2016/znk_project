@@ -5,6 +5,8 @@
 www1.axfc.net
 www.nijibox2.com
 errorcode-search.com
+192.168.1.1
+may.2chan.net
 @@.
 
 # 解析対象としたいURP(URIにおけるホスト名以降のパスの部分)を列挙
@@ -12,4 +14,7 @@ errorcode-search.com
 # /bin/cachemt7.php の部分がこれに相当する.
 @@L interest_urp
 *
+@@.
+
+@@L interest_body
 @@.

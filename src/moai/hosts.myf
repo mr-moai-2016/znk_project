@@ -1,0 +1,101 @@
+@def_quote [' ']
+
+# 以下には接続をBlockしたいホストを記述する.
+# 有害サイトには最初から接続しないようにしましょう!
+@@L ignore_hosts
+free2.jp
+api.digiket.com
+*.ad-stir.com
+aladdin.genieesspv.jp
+*.socdm.com
+j.microad.net
+www.assoc-amazon.jp
+www.google-analytics.com
+ad.doubleclick.net
+*.adingo.jp
+js.fout.jp
+ocsp.digicert.com
+spnet33.i-mobile.co.jp
+test.2chan.net
+safebrowsing.google.com
+safebrowsing-cache.google.com
+cdn.syndication.twimg.com
+mediad2.jp
+nelo2-col.linecorp.com
+*.amazon-adsystem.com
+spdeliver.i-mobile.co.jp
+js.gsspcln.jp
+@@.
+
+# 以下にはPOST時に確認モードを表示したいホストを記述する.
+@@L post_confirm_hosts
+*.5ch.net
+*.2chan.net
+@@.
+
+# 外部proxyが指定されている場合において
+# 以下のホストに接続する場合に外部proxyを使う.
+@@L proxy_apply
+*.2chan.net
+taruo.net
+@@.
+
+# 外部proxyが指定されている場合において
+# 以下のホストに接続する場合は例外として外部proxyを使わない.
+# proxy_applyと被るものについてはproxy_exceptの指定が優先される.
+@@L proxy_except
+127.0.0.1
+localhost
+192.168.*
+*.google.com
+*.youtube.com
+*.ytimg.com
+*.googlevideo.com
+*.googleapis.com
+*.gstatic.com
+*.ggpht.com
+*.nicovideo.jp
+*.googleusercontent.com
+*.smilevideo.jp
+*.nimg.jp
+*.twitter.com
+*.optimizely.com
+*.nicodic.jp
+*.yjtag.jp
+*.facebook.net
+*.facebook.com
+sv*.2chan.net
+jan.2chan.net
+feb.2chan.net
+mar.2chan.net
+apr.2chan.net
+jul.2chan.net
+aug.2chan.net
+sep.2chan.net
+oct.2chan.net
+@@.
+
+# peer(接続元)が以下のIPの場合のみHTTP要求を受け付ける.
+# 逆に言えばそれ以外は全て許可しない(Forbiddenメッセージを返す)ものとする.
+# 下記に何も記述しない場合はすべての外部IPからの接続を拒否する形になる.
+#
+# ただし Loopback(127.0.0.1)からの接続の場合に関しては
+# ここでの記述の如何に関わらず無条件で許可するものとする.
+#
+# ここには典型的には 192.168.* などと記述してLANからのみの接続を
+# 許可しておけばよい.
+#
+# ここで指定可能なのはIPであってホスト名は指定できないことに注意する(ワイルドカードは使用できる).
+@@L access_allow_ips
+192.168.*
+@@.
+
+# access_allow_ipsで指定したIPの中で、さらに例外的に接続を拒否したいIPの
+# パターンをここで記述できる.
+#
+# ただし Loopback(127.0.0.1)からの接続の場合に関しては
+# ここでの記述の如何に関わらず無条件で許可するものとする.
+#
+# ここで指定可能なのはIPであってホスト名は指定できないことに注意する(ワイルドカードは使用できる).
+@@L access_deny_ips
+@@.

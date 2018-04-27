@@ -43,6 +43,8 @@ typedef bool (*MoaiFdSetFuncT_IsAccessAllowIP)( ZnkSocket, uint32_t* ipaddr_ans 
 
 MoaiFdSet
 MoaiFdSet_create( ZnkSocket listen_sock, struct ZnkTimeval* waitval );
+MoaiFdSet
+MoaiFdSet_create_ex( ZnkSocketAry listen_sockary, struct ZnkTimeval* waitval );
 
 void
 MoaiFdSet_destroy( MoaiFdSet mfds );

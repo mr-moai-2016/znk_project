@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+	<META http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+	<META http-equiv="Content-Script-Type" content="text/javascript">
+	<META http-equiv="Content-Style-Type" content="text/css">
+	<link href="/msty.css" rel="stylesheet" type="text/css" />
+	<title>Easter BBS Operation 詳細モード</title>
+</head>
+
+<body bgcolor="#EEFFEE" text="#808000" link="#0000EE" vlink="#0000EE" alink="#FF0000">
+
+<font size="-1" color="#808000">Easter BBS Operation 詳細モード</font> <br>
+
+<a class=MstyElemLink href="#" onclick="javascript:window.history.back(-1);return false;">戻る</a>
+
+<table class=MstyManagerTable>
+
+<tr><td colspan=2>
+<font size=-1>
+<br>
+このスレッドに関して、ここでは以下の操作を行うことができます.
+</font>
+
+<ul>
+
+<li>
+<a class=MstyAppLink href="http://#[xhr_dmz]#/easter?est_reload=#[backto]#">リロード</a>
+</li>
+<div class=MstyComment>
+	このスレッドを再読み込みして最新の内容を表示します.<br>
+</div>
+
+<li>
+<a class=MstyAppLinkRed href="/easter?est_manager=cache&amp;command=favoritize&amp;cache_file=#[file_path]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#">このHTMLをお気に入りへ</a>
+</li>
+<div class=MstyComment>
+	このスレッドのHTMLをお気に入りボックスへと登録します.<br>
+	登録されたHTMLは永久保存され、自動的には削除されなくなります.
+</div>
+
+<li>
+<a class=MstyAppLinkRed href="/easter?est_manager=cache&amp;command=stock&amp;cache_file=#[file_path]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#">このHTMLをストック</a>
+</li>
+<div class=MstyComment>
+	このスレッドのHTMLをストックボックスへ登録します.<br>
+	登録されたHTMLは永久保存され、自動的には削除されなくなります.
+</div>
+
+<li>
+<a class=MstyAppLinkRed href="/easter?est_manager=cache&amp;command=recent&amp;cache_file=#[file_path]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#">最近処理したものとして扱う</a>
+</li>
+<div class=MstyComment>
+	このスレッドを「最近処理したもの」として扱います.<br>
+	「最近処理したもの」とは分類等の処理をした最近の画像やHTMLへのリンクを自動的に保持する特殊なリストで、<br>
+	これはEasterコレクションから参照することができます.<br>
+	<br>
+	非常に保持期間の短いブックマークのようなものとして使うこともできます.<br>
+	一方、このコマンドではストックやお気に入りへの登録は行われません.<br>
+	従って、規定の日数が経過するとキャッシュおよびこのリストからも削除されます.<br>
+</div>
+
+<li>
+<a class=MstyAppLinkRed href="/easter?est_get=#[original_url]#&amp;est_save_img_cache=on" >サムネ保存</a>
+</li>
+<div class=MstyComment>
+	このスレッドのすべてのサムネイル画像(即ちimgタグ)までもキャッシュに保存させます.<br>
+	これにより、このスレッドがネットBBS上で寿命で消えても、サムネイル画像を含めたHTMLとしてしばらくは見ることができます.
+</div>
+
+</ul>
+
+<font size=-1>
+以下の特殊操作は、通常は行う必要性がないメンテナンス用の用途となります.
+</font>
+
+<ul>
+
+<li>
+<a class=MstyAppLinkRed href="/easter?est_manager=cache&amp;command=remove&amp;cache_file=#[file_path]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#">キャッシュから即削除</a><br>
+</li>
+<div class=MstyComment>
+	このスレッドをキャッシュから即削除します.<br>
+	通常、放っておいてもキャッシュは古いものから順に削除されていきますが、<br>
+	明らかに保持しておく必要のないスレッドならここで直ちに削除しておいてもよいでしょう.
+</div>
+
+<li>
+<a class=MstyAppLink href="/easter?est_manager=cache&amp;command=view&amp;cache_path=#[dir_path]#&amp;est_cache_end=20&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" target=_blank>キャッシュをBoxMapビューアで開く</a>
+</li>
+<div class=MstyComment>
+	このスレッドのキャッシュが保存されている実ディレクトリを.<br>
+	BoxMapビューアより閲覧します.
+</div>
+
+<li>
+<a class=MstyAppLink href="http://#[original_url]#">オリジナルURLでダイレクトに開く</a><br>
+</li>
+<div class=MstyComment>
+	このスレッドを敢えてEasterを介さず直接開いて閲覧します.<br>
+	開いた先ではEasterの仮想環境や広告カットなどのフィルタリングなどが一切機能していませんので注意してください.
+</div>
+
+</ul>
+
+</td></tr>
+</table>
+
+<br>
+
+<b>#[original_url]# のサマリー</b><br>
+<table class=MstyManagerTable>
+<tr><td colspan=2>
+<br>
+<font size=-1>
+#[summary]#
+</font>
+<br>
+</td></tr>
+</table>
+
+<a class=MstyElemLink href="#" onclick="javascript:window.history.back(-1);return false;">戻る</a>
+
+</body></html>

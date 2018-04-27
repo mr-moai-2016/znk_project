@@ -19,7 +19,7 @@ ZnkStrFIO_fgets( ZnkStr line, size_t pos, size_t block_size, ZnkFile fp )
 	ptr = (char*)( data + pos );
 
 	while( true ){
-		if( ZnkF_fgets( ptr, block_size, fp ) == NULL ){
+		if( Znk_fgets( ptr, block_size, fp ) == NULL ){
 			return false;
 		}
 		readed_len = Znk_strlen( ptr );

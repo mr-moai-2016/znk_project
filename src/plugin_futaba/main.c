@@ -67,21 +67,11 @@ isInteger( const char* cstr )
 static bool
 isUntouchable_ptua( ZnkVarp dst_ptua )
 {
-#if 0
-	/***
-	 * dst_ptuaが以下のケースの場合、値を変更してはならない.
-	 *
-	 *   空値
-	 *   整数
-	 */
-	return ZnkVar_str_leng(dst_ptua) == 0 || isInteger(ZnkVar_cstr(dst_ptua));
-#else
-	/* 2016/10/07: 最新の仕様に対応. */
+	/* 2016/10/07: 最新の仕様においてはここはfalseでよい */
 	return false;
-#endif
 }
 
-bool
+MoaiPluginState
 on_post( ZnkMyf ftr_send, ZnkVarpAry hdr_vars, ZnkVarpAry post_vars )
 {
 	ZnkVarp USERS_futabapt = refPostVar( ftr_send, "USERS_futabapt" );
@@ -112,23 +102,12 @@ on_post( ZnkMyf ftr_send, ZnkVarpAry hdr_vars, ZnkVarpAry post_vars )
 	}
 
 	if( dst_ptua ){
-		ZnkVarp     real_ua      = ZnkHtpHdrs_find( hdr_vars, "User-Agent", Znk_strlen_literal("User-Agent") );
-		const char* real_ua_cstr = ZnkHtpHdrs_val_cstr( real_ua, 0 );
 		/* まず簡易なケースを弾く */
 		if( !isUntouchable_ptua( dst_ptua ) ){
 			/***
 			 * ptuaの実値をtransientな仕様とすることで偽装をかわす可能性がある.
 			 */
-#if 1
 			ZnkVar_set_val_Str( dst_ptua, ZnkVar_cstr(USERS_ptua), ZnkVar_str_leng(USERS_ptua) );
-#else
-			/* とりあえずbrute force algorismで十分であろう */
-			ZnkStr dst_ptua_str = ZnkVar_str( dst_ptua );
-			ZnkStrEx_replace_BF( dst_ptua_str, 0,
-					real_ua_cstr, strlen(real_ua_cstr),
-					ZnkVar_cstr(USERS_ptua), ZnkVar_str_leng(USERS_ptua),
-					Znk_NPOS );
-#endif
 		}
 	}
 
@@ -138,142 +117,6 @@ on_post( ZnkMyf ftr_send, ZnkVarpAry hdr_vars, ZnkVarpAry post_vars )
 	 */
 	update_pwd( pwd, pwdc, USERS_password );
 	return true;
-}
-
-static size_t
-replaceStr( ZnkStr str, size_t begin,
-		const char* old_ptn, size_t old_ptn_leng,
-		const char* new_ptn, size_t new_ptn_leng,
-		size_t seek_depth )
-{
-	return ZnkStrPtn_replace( str, begin,
-			(uint8_t*)old_ptn, old_ptn_leng,
-			(uint8_t*)new_ptn, new_ptn_leng,
-			seek_depth );
-}
-
-
-typedef int (*ZnkStrProcessFuncT)( ZnkStr str, void* arg );
-
-/***
- * 完成.
- * 次期メジャーバージョンリリース1.2にて
- * libZnkへ追加予定.
- */
-static void
-ZnkQuoteParser_invokeEx( ZnkStr text,
-		const char* begin_ptn, const char* end_ptn,
-		const char* coesc_ptn, const char* coend_ptn,
-		const ZnkStrProcessFuncT event_handler, void* event_arg )
-{
-	ZnkSRef sref_begin = { 0 };
-	ZnkSRef sref_end   = { 0 };
-	ZnkSRef sref_coesc = { 0 };
-	ZnkSRef sref_coend = { 0 };
-	size_t  occ_tbl_begin[ 256 ];
-	size_t  occ_tbl_end[ 256 ];
-	size_t  occ_tbl_coesc[ 256 ];
-	size_t  occ_tbl_coend[ 256 ];
-	size_t  curp = 0;
-	size_t  begp = 0;
-	size_t  endp = 0;
-	size_t  coesc = 0;
-	size_t  coend = 0;
-	size_t  text_leng = ZnkStr_leng( text );
-	ZnkStr  tmp = ZnkStr_new( "" );
-
-	sref_begin.cstr_  = begin_ptn;
-	sref_begin.leng_  = strlen( begin_ptn );
-	sref_end.cstr_    = end_ptn;
-	sref_end.leng_    = strlen( end_ptn );
-	ZnkMem_getLOccTable_forBMS( occ_tbl_begin,  (uint8_t*)sref_begin.cstr_,  sref_begin.leng_ );
-	ZnkMem_getLOccTable_forBMS( occ_tbl_end,    (uint8_t*)sref_end.cstr_,    sref_end.leng_ );
-
-	sref_coesc.cstr_ = coesc_ptn;
-	if( sref_coesc.cstr_ ){
-		sref_coesc.leng_ = strlen( coesc_ptn );
-		ZnkMem_getLOccTable_forBMS( occ_tbl_coesc, (uint8_t*)sref_coesc.cstr_, sref_coesc.leng_ );
-	}
-	sref_coend.cstr_ = coend_ptn;
-	if( sref_coend.cstr_ ){
-		sref_coend.leng_ = strlen( coend_ptn );
-		ZnkMem_getLOccTable_forBMS( occ_tbl_coend, (uint8_t*)sref_coend.cstr_, sref_coend.leng_ );
-	}
-
-	while( true ){
-		text_leng = ZnkStr_leng( text );
-		if( curp >= text_leng ){
-			break;
-		}
-
-		/* lexical-scan phase1 */
-		begp = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+curp, text_leng-curp,
-				(uint8_t*)sref_begin.cstr_, sref_begin.leng_, 1, occ_tbl_begin );
-		if( begp == Znk_NPOS ){
-			break;
-		}
-		begp += curp + sref_begin.leng_;
-
-		/* lexical-scan phase2 */
-		curp = begp;
-		while( true ){
-			endp = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+curp, text_leng-curp,
-					(uint8_t*)sref_end.cstr_, sref_end.leng_, 1, occ_tbl_end );
-			if( sref_coesc.cstr_ ){
-				coesc = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+curp, text_leng-curp,
-						(uint8_t*)sref_coesc.cstr_, sref_coesc.leng_, 1, occ_tbl_coesc );
-			} else {
-				coesc = Znk_NPOS;
-			}
-			if( endp == Znk_NPOS ){
-				endp = text_leng;
-			} else {
-				if( coend_ptn ){
-					if( coesc != Znk_NPOS && coesc < endp ){
-						curp += coesc + sref_coesc.leng_;
-						coend = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(text)+curp, text_leng-curp,
-								(uint8_t*)sref_coend.cstr_, sref_coend.leng_, 1, occ_tbl_coend );
-						if( coend == Znk_NPOS ){
-							endp = text_leng;
-							break;
-						}
-						/* Comment out is recognized. Try again. */
-						curp += coend + sref_coend.leng_;
-						continue;
-					}
-				} else {
-					if( coesc != Znk_NPOS && coesc + sref_coesc.leng_ == endp ){
-						/* Escape sequence is recognized. Try again. */
-						curp += endp + sref_end.leng_;
-						continue;
-					}
-				}
-				endp += curp;
-			}
-			break;
-		}
-
-		ZnkStr_assign( tmp, 0, ZnkStr_cstr( text ) + begp, endp-begp );
-
-		/* invoke event callback. */
-		event_handler( tmp, event_arg );
-
-		/* replace by the result */
-		ZnkBfr_replace( text, begp, endp-begp, (uint8_t*)ZnkStr_cstr(tmp), ZnkStr_leng(tmp) );
-
-		curp = begp + ZnkStr_leng(tmp) + sref_end.leng_;
-	}
-
-	ZnkStr_delete( tmp );
-}
-Znk_INLINE void
-ZnkQuoteParser_invoke( ZnkStr text,
-		const char* begin_ptn, const char* end_ptn, const char* coesc_ptn,
-		const ZnkStrProcessFuncT event_handler, void* event_arg )
-{
-	ZnkQuoteParser_invokeEx( text,
-			begin_ptn, end_ptn, coesc_ptn, NULL,
-			event_handler, event_arg );
 }
 
 
@@ -299,65 +142,87 @@ replaceStr_BMS( ZnkStr str, void* arg )
 	ZnkStrEx_replace_BMS( str, 0,
 			sref_old.cstr_, sref_old.leng_, occ_tbl_target,
 			sref_new.cstr_, sref_new.leng_,
-			Znk_NPOS );
+			Znk_NPOS, Znk_NPOS );
 	return 0;
 }
 static int
 processQuote( ZnkStr str, void* arg )
 {
-	ZnkQuoteParser_invoke( str, "\"", "\"", "\\",
-			replaceStr_BMS, arg );
-	ZnkQuoteParser_invoke( str, "\'", "\'", "\\",
-			replaceStr_BMS, arg );
+	ZnkStrPtn_invokeInQuote( str, "\"", "\"", "\\", NULL,
+			replaceStr_BMS, arg, false );
+	ZnkStrPtn_invokeInQuote( str, "\'", "\'", "\\", NULL,
+			replaceStr_BMS, arg, false );
 	return 0;
 }
 
-bool on_response( ZnkMyf ftr_send,
-		ZnkVarpAry hdr_vars, ZnkStr text, const char* req_urp )
+static const char*
+skipProtocolPrefix( const char* src )
 {
+	if( Znk_strncmp( src, "http://", Znk_strlen_literal("http://") ) == 0 ){
+		src += Znk_strlen_literal("http://");
+	} else if( Znk_strncmp( src, "https://", Znk_strlen_literal("https://") ) == 0 ){
+		src += Znk_strlen_literal("https://");
+	} else if( Znk_strncmp( src, "file://", Znk_strlen_literal("file://") ) == 0 ){
+		src += Znk_strlen_literal("file://");
+	}
+	return src;
+}
+
+MoaiPluginState
+on_response( ZnkMyf ftr_send,
+		ZnkVarpAry hdr_vars, ZnkStr text, const char* url )
+{
+	/***
+	 * TODO:
+	 * ここでMoaiインストール後、初回起動時におけるsendフィルタのVirtualUSERSのStep2処理を
+	 * 自動的に行う処理を入れるべき.
+	 *
+	 * 次のようにする.
+	 * 1. Moai起動時に通信の伴わないStep1処理は終らせておく.
+	 *    単純なGETでは当然ながらPOST変数の参照は発生せず、UserAgentのシャッフルのみでよいため.
+	 *
+	 * 2. on_response において ftr_sendで js=offの場合は まだStep2処理を未実行とみなし、
+	 *    これを実行し、初POSTに備える.
+	 */
+	ZnkVarp js = refPostVar( ftr_send, "js" );
+	if( js && !ZnkS_eq( ZnkVar_cstr( js ), "on" ) ){
+	}
+
 	if( text ){
-		const char* old_ptn = "＠ふたば</span>";
-		char new_ptn[ 4096 ];
-		Znk_snprintf( new_ptn, sizeof(new_ptn), "＠ふたば via Moai[%s]</span>", req_urp );
-		replaceStr( text, 0,
-				old_ptn, Znk_NPOS,
-				new_ptn, Znk_NPOS,
-				Znk_NPOS );
+		{
+			ZnkSRef old_ptn = { 0 };
+			ZnkSRef new_ptn = { 0 };
+			size_t  old_occ[ 256 ] = { 0 };
 
-		/***
-		 * Hi all,
-		 *
-		 * First, we search miscellaneous range, and replace evil patterns to innocences
-		 * if it exists in the range.  We use Boyer-Moore Sunday algorism for performance.
-		 * Second, adopt your myf filter to the text normally.
-		 *
-		 * Regard.
-		 */
+			ZnkSRef_set_literal( &old_ptn, "＠ふたば</span>" );
+			ZnkSRef_set_literal( &new_ptn, "＠ふたば <font size=\"-1\" color=\"#800080\">via Moai</font></span>" );
+			ZnkMem_getLOccTable_forBMS( old_occ, (uint8_t*)old_ptn.cstr_,   old_ptn.leng_ );
+			ZnkStrEx_replace_BMS( text, 0,
+					old_ptn.cstr_, old_ptn.leng_, old_occ,
+					new_ptn.cstr_, new_ptn.leng_,
+					Znk_NPOS, Znk_NPOS );
+		}
 
+		/* MoaiをLocalProxyとして使うなら、以下のfilterはとりあえずまだ必要である */
 		/* boiiinize */
 		{
 			struct PtnInfo ptn_info = { "iframe", "zenkakuboiiin" };
-			ZnkQuoteParser_invoke( text, "<!--", "-->", NULL,
-					processQuote, &ptn_info );
-			ZnkQuoteParser_invoke( text, "<script", "</script", NULL,
-					processQuote, &ptn_info );
+			ZnkStrPtn_invokeInQuote( text, "<!--", "-->", NULL, NULL,
+					processQuote, &ptn_info, false );
+			ZnkStrPtn_invokeInQuote( text, "<script", "</script", NULL, NULL,
+					processQuote, &ptn_info, false );
 		}
 
 		/* dayoonize */
-		{
-			struct PtnInfo ptn_info = { "<iframe", "<zenkakudayoon" };
-			ZnkQuoteParser_invoke( text, "<!--", "-->", NULL,
-					replaceStr_BMS, &ptn_info );
-			ZnkQuoteParser_invoke( text, "<script", "</script", NULL,
-					replaceStr_BMS, &ptn_info );
-		}
-		{
-			struct PtnInfo ptn_info = { "</iframe", "</zenkakudayoon" };
-			ZnkQuoteParser_invoke( text, "<!--", "-->", NULL,
-					replaceStr_BMS, &ptn_info );
-			ZnkQuoteParser_invoke( text, "<script", "</script", NULL,
-					replaceStr_BMS, &ptn_info );
-		}
+		ZnkStrPtn_replaceInQuote( text, "<!--", "-->", NULL, NULL,
+				"<iframe", "<zenkakudayoon", false, Znk_NPOS );
+		ZnkStrPtn_replaceInQuote( text, "<script", "</script", NULL, NULL,
+				"<iframe", "<zenkakudayoon", false, Znk_NPOS );
+
+		ZnkStrPtn_replaceInQuote( text, "<!--", "-->", NULL, NULL,
+				"</iframe", "</zenkakudayoon", false, Znk_NPOS );
+		ZnkStrPtn_replaceInQuote( text, "<script", "</script", NULL, NULL,
+				"</iframe", "</zenkakudayoon", false, Znk_NPOS );
 	
 		/* disable iframe */
 		{
@@ -368,19 +233,10 @@ bool on_response( ZnkMyf ftr_send,
 			struct PtnInfo ptn_info = { "</iframe", "</iframe --><noscript></noscript" };
 			replaceStr_BMS( text, &ptn_info );
 		}
-
-		/* omake */
-		{
-			struct PtnInfo ptn_info = { "GazouBBS", "Nakanaka yarimasune! Kanrinin-san!" };
-			replaceStr_BMS( text, &ptn_info );
-		}
 	
 		/* de-boiiinize */
-		{
-			struct PtnInfo ptn_info = { "zenkakuboiiin", "iframe" };
-			ZnkQuoteParser_invokeEx( text, "<script", "</script", "/*", "*/",
-					replaceStr_BMS, &ptn_info );
-		}
+		ZnkStrPtn_replaceInQuote( text, "<script", "</script", "/*", "*/",
+				"zenkakuboiiin", "iframe", false, Znk_NPOS );
 
 	}
 	return true;

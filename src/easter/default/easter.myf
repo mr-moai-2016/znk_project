@@ -1,0 +1,32 @@
+@def_quote [' ']
+
+##
+# 環境変数の値を変えた場合は親プロセスであるMoaiを再起動させること.
+#
+@@V config
+direct_img_link = ['on']
+auto_link = ['on']
+show_file_num = ['8']
+thumb_size = ['204']
+line_file_num = ['4']
+line_tag_num = ['4']
+preview_max_width  = ['820']
+preview_max_height = ['820']
+cache_days_ago = ['3']
+dustbox_days_ago = ['5']
+@@.
+
+@@V filter_onclick_jscall
+del = { ['replace']
+['del(']
+['Easter_del(']
+}
+sod = { ['replace']
+['sd(']
+['Easter_sd(']
+}
+@@.
+
+@@L allow_js_hosts
+code.jquery.com
+@@.

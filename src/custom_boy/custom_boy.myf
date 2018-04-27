@@ -1,0 +1,7 @@
+@def_quote [' ']
+
+@@V config
+RE_random_factor=['0.5']
+@@.
+
+

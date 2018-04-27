@@ -1,6 +1,7 @@
 #include "Znk_str.h"
 #include "Znk_stdc.h"
 #include "Znk_s_base.h"
+#include "Znk_vsnprintf.h"
 
 #include <stdarg.h>
 #include <string.h>
@@ -86,6 +87,16 @@ ZnkStr_create_ex( const char* init_data, size_t leng, ZnkBfrType type )
 	}
 	return zkbfr;
 }
+ZnkStr
+ZnkStr_newf( const char* fmt, ... )
+{
+	ZnkStr zkstr = ZnkStr_new( "" );
+	va_list ap;
+	va_start(ap, fmt);
+	ZnkStr_vsnprintf( zkstr, 0, Znk_NPOS, fmt, ap );
+	va_end(ap);
+	return zkstr;
+}
 
 void
 ZnkStr_assign( ZnkStr zkstr_dst, size_t dst_pos, const char* src, size_t src_leng )
@@ -112,6 +123,24 @@ ZnkStr_assign( ZnkStr zkstr_dst, size_t dst_pos, const char* src, size_t src_len
 }
 
 void
+ZnkStr_replace( ZnkStr str, size_t dst_pos, size_t dst_leng, const char* src, size_t src_leng )
+{
+	src_leng = ( src_leng == Znk_NPOS ) ? Znk_strlen(src) : src_leng;
+	dst_pos  = Znk_clampSize( dst_pos,  ZnkStr_leng(str) );
+	dst_leng = Znk_clampSize( dst_leng, ZnkStr_leng(str)-dst_pos );
+	ZnkBfr_replace( str, dst_pos, dst_leng, (uint8_t*)src, src_leng );
+	ZnkStr_terminate_null( str, true );
+}
+void
+ZnkStr_insert( ZnkStr str, size_t dst_pos, const char* src, size_t src_leng )
+{
+	src_leng = ( src_leng == Znk_NPOS ) ? Znk_strlen(src) : src_leng;
+	dst_pos  = Znk_clampSize( dst_pos,  ZnkStr_leng(str) );
+	ZnkBfr_replace( str, dst_pos, 0, (uint8_t*)src, src_leng );
+	ZnkStr_terminate_null( str, true );
+}
+
+void
 ZnkStr_add_c( ZnkStr zkstr, char val )
 {
 	const size_t size = ZnkBfr_size( zkstr );
@@ -129,10 +158,25 @@ ZnkStr_add_c( ZnkStr zkstr, char val )
 	data[ size   ] = '\0';
 }
 
+/* sys and C99 両対応版 */
+typedef int (*ZnkVSNPrintfFuncT)( char* buf, size_t buf_size, const char* fmt, va_list ap );
+typedef enum {
+	ZnkVSNPrintfType_e_C99=0,
+	ZnkVSNPrintfType_e_Sys
+} ZnkVSNPrintfType; 
+static ZnkVSNPrintfType st_vsnprintf_type = ZnkVSNPrintfType_e_C99;
 int
 ZnkStr_vsnprintf( ZnkStr zkstr, size_t pos, size_t size, const char* fmt, va_list ap )
 {
-	int ret_len = -1;
+	/**
+	 * ここで指定する関数は va_start <=> va_end 間における複数回呼び出しに
+	 * 対応したものでなければならない.
+	 */
+	ZnkVSNPrintfFuncT vsnprintf_func = st_vsnprintf_type == ZnkVSNPrintfType_e_C99 ?
+		Znk_vsnprintf_C99 : ZnkS_vsnprintf_sys__;
+	int  ret_len = -1;
+	bool result  = true;
+
 	if( size > 0 ){
 		int ret_len;
 		char* data;
@@ -150,29 +194,63 @@ ZnkStr_vsnprintf( ZnkStr zkstr, size_t pos, size_t size, const char* fmt, va_lis
 				ZnkBfr_reserve( zkstr, pos + backword_capacity );
 				backword_capacity_real = ZnkBfr_capacity( zkstr ) - pos;
 				data = M_c_str( zkstr ); /* Note : think realloc */
-				ret_len = ZnkS_vsnprintf_sys( data + pos, backword_capacity_real, fmt, ap );
+				ret_len = vsnprintf_func( data + pos, backword_capacity_real, fmt, ap );
+
 				/***
-				 * string is trucated. retry.
-				 * ZnkS_vsnprintf_sysの戻り値ret_lenは、C99の仕様とは異なり、
-				 * backword_capacity_realの指定値をOverした場合は-1を返す.
-				 * ここでは次回は容量を倍にして試みる.
+				 * ret_lenがret_len < backword_capacity_realの場合、指定されたバッファ内に
+				 * 展開文字列のすべてが書き込まれており完了である.
+				 * ret_lenが -1 の場合、内部エラーが発生したことを示すため、
+				 * この場合はresult=falseにした上で中止する.
 				 */
-				if( ret_len >= 0 && (size_t)ret_len < backword_capacity_real ){
+				if( (size_t)ret_len < backword_capacity_real ){
 					/* OK. */
 					break;
+				} else if( ret_len < 0 ){
+					/* 内部エラー. */
+					result = false;
+					break;
 				}
-				backword_capacity *= 2;
+				/***
+				 * string is trucated. retry.
+				 *
+				 * C99の仕様では戻り値であるret_lenは、backword_capacity_realの指定値に関わらず
+				 * 正確に展開後の文字列サイズを示す.
+				 * 一方、ZnkS_vsnprintf_sysではC99の仕様とは異なり、backword_capacity_realの指定値を
+				 * Overした場合は、その戻り値として予測文字列長を返す.
+				 * これは正確に展開後の文字列サイズであるとは限らないが、多くの場合十分なサイズである.
+				 *
+				 * いずれにせよ次回は容量をret_len + 1 として試みればよい.
+				 */
+				backword_capacity = ret_len + 1;
 			}
 
 		} else {
 			ZnkBfr_resize( zkstr, pos + size );
 			data = M_c_str( zkstr ); /* Note : think realloc */
-			ret_len = ZnkS_vsnprintf_sys( data + pos, size, fmt, ap );
+			//ret_len = Znk_vsnprintf_C99( data + pos, size, fmt, ap );
+			ret_len = vsnprintf_func( data + pos, size, fmt, ap );
 			if( ret_len < 0 ){
-				ret_len = (int)( size-1 );
+				/* 内部エラー. */
+				result = false;
 			}
 		}
-		ZnkStr_releng( zkstr, pos + ret_len );
+		/***
+		 * 上記ではZnkBfrとして処理しているため、最後にZnkStrとしてrelengしておく.
+		 */
+		if( result ){
+			ZnkStr_releng( zkstr, pos + ret_len );
+		} else {
+			/* 内部エラーが発生した場合はpos以降の内容は破壊されている可能性がある.
+			 * サイズは pos に切り詰めておくのが望ましいと思われる. */
+			ZnkStr_releng( zkstr, pos );
+		}
+		/***
+		 * 処理の性質上、無駄なメモリ確保が生じた場合、その差分サイズが大きいので、
+		 * capacityがある程度大きいケースについては shrink to fit を行っておく.
+		 */
+		if( ZnkBfr_capacity( zkstr ) > 4096 ){
+			ZnkBfr_shrink_to_fit( zkstr );
+		}
 	}
 	return ret_len;
 }

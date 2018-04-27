@@ -1,5 +1,6 @@
 #include <Znk_envvar.h>
 #include <Znk_missing_libc.h>
+#include <Znk_mutex.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -27,16 +28,15 @@ ZnkEnvVar_get( const char* varname )
 	 * よって、さらにこれを防ぐには、ここでGlobalMutexにより lock/unlockを掛ける必要がある.
 	 * その上でユーザはgetenvやputenvを直接呼び出すようなことはせず、常にZnkEnvVar_getや
 	 * ZnkEnvVar_setを使うように徹底することでようやく万全となる.
-	 * (が、とりあえず現時点ではlock/unlock機構は未実装)
 	 */
 	const char* unsafe_ptr = NULL;
 	char* ans = NULL;
-	/* lock */
+	ZnkGlobalMutex_lock();
 	unsafe_ptr = getenv( varname );
 	if( unsafe_ptr ){
 		ans = strdup( unsafe_ptr );
 	}
-	/* unlock */
+	ZnkGlobalMutex_unlock();
 	return ans;
 }
 
@@ -89,7 +89,6 @@ ZnkEnvVar_set( const char* varname, const char* val )
 	 *
 	 * また、スレッドセーフではないという問題に関してはgetenvと同様である.
 	 */
-	EnvVarInfo* info = internEnvVarInfo( varname );
 	const size_t require_size = ( strlen(varname) + 1 + (val ? strlen(val) : 0) + 1 ) / 8 * 8 + 8;
 	char* cmd_str = NULL;
 
@@ -100,14 +99,17 @@ ZnkEnvVar_set( const char* varname, const char* val )
 		/* unset */
 		Znk_snprintf( cmd_str, require_size, "%s=", varname );
 	}
-	/* lock */
-	putenv( cmd_str );
-	/* unlock */
 
-	/* 旧info->cmd_str_は、putenv内でもう参照されていないはずなので破棄し、
-	 * 今現在参照中の新しいものに置き換える */
-	if( info->cmd_str_ ){ free( info->cmd_str_ ); }
-	info->cmd_str_ = cmd_str;
+	ZnkGlobalMutex_lock();
+	{
+		EnvVarInfo* info = internEnvVarInfo( varname );
+		putenv( cmd_str );
+		/* 旧info->cmd_str_は、putenv内でもう参照されていないはずなので破棄し、
+		 * 今現在参照中の新しいものに置き換える */
+		if( info->cmd_str_ ){ free( info->cmd_str_ ); }
+		info->cmd_str_ = cmd_str;
+	}
+	ZnkGlobalMutex_unlock();
 
 	if( val == NULL ){
 		/* 本来ならst_info_aryをshrinkすべきだが、

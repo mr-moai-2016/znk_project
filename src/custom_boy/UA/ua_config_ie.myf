@@ -1,0 +1,178 @@
+@def_quote [' ']
+
+@@L moz5
+['Mozilla/5.0']
+@@.
+
+@@L moz4
+['Mozilla/4.0']
+@@.
+
+# machine
+@@L machine_win
+[''] *0.4
+['; WOW64']
+['; Win64; x64']
+@@.
+
+# 必須キーワードにつき定義しておく.
+@@L platform
+['Windows NT 6.0 $[machine_win]$']
+@@.
+
+#
+# Windows 98     : 98(IE6)
+# Windows 98; Win 9x 4.90 : ME(IE6)
+# Windows NT 4.0 : NT(IE6)
+# Windows NT 5.0 : 2000(IE6)
+# Windows NT 5.1 : XP(IE6-IE8)
+# Windows NT 5.2 : XP64 2003(IE6-IE8)
+# Windows NT 6.0 : Vista 2008(IE7-IE9)
+# Windows NT 6.1 : 7(IE8-IE11)
+# Windows NT 6.2 : 8 2012(IE10-IE11)
+# Windows NT 6.3 : 8.1(IE11)
+# Windows NT 10.0 : 10.0(IE11)
+#
+# 注:
+# IE6では画像添付時にフルパスが含まれてしまう.
+# IE6以下としては偽装すべきではないのでこの場合Windows NT 5.0以前を考慮する必要はない.
+#
+# 注:
+# 64bitがサポートされたのはWindows NT 5.2(XP64)以降である.
+# よって5.1でmachine_winを考慮する必要はない.
+#
+@@L platform_ie_7
+['Windows NT 5.1']
+['Windows NT 5.2$[machine_win]$']
+['Windows NT 6.0$[machine_win]$']
+@@.
+
+@@L platform_ie_8
+['Windows NT 5.1']
+['Windows NT 5.2$[machine_win]$']
+['Windows NT 6.0$[machine_win]$']
+['Windows NT 6.1$[machine_win]$']
+@@.
+
+@@L platform_ie_9
+['Windows NT 6.0$[machine_win]$']
+['Windows NT 6.1$[machine_win]$']
+@@.
+
+@@L platform_ie_10
+['Windows NT 6.0$[machine_win]$']
+['Windows NT 6.1$[machine_win]$']
+['Windows NT 6.2$[machine_win]$']
+@@.
+
+@@L platform_ie_11
+['Windows NT 6.1$[machine_win]$']
+['Windows NT 6.2$[machine_win]$']
+['Windows NT 6.3$[machine_win]$']
+['Windows NT 10.0$[machine_win]$']
+@@.
+
+@@L platform_edge
+['Windows NT 10.0$[machine_win]$']
+@@.
+
+# IE Trident4
+@@L ie_trident4
+['']
+['; Trident/4.0'] 
+@@.
+
+# ie_SV1
+# 強化セキュリティ機能を含む Internet Explorer 6 (Windows XP SP2 および Windows Server 2003 のみ)
+@@L ie_SV1
+['']
+['; SV1'] 
+@@.
+
+@@L ie_dot_NET_CLR
+[''] *0.3
+['; .NET CLR 1.1.4322']
+['; .NET CLR 1.1.4322; .NET CLR 2.0.50727']
+['; .NET CLR 1.1.4322; .NET CLR 2.0.50727; InfoPath.1']
+['; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30']
+['; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30; .NET CLR 3.0.04506.648']
+['; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729']
+['; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET CLR 1.1.4322']
+['; .NET CLR 1.0.3705; .NET CLR 2.0.50727; .NET CLR 1.1.4322']
+['; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.0.04506']
+['; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.0.04506; InfoPath.1']
+['; SLCC2; .NET CLR 2.0.50727; .NET4.0C; .NET4.0E']
+['; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E; YTB730; InfoPath.1']
+@@.
+
+# IE PC Maker code
+# IEにおいて Trident/*.* の後ろに存在する
+@@L ie_pcmaker_code
+[''] *0.5
+['; Touch'] *0.2
+['; Touch; MALNJS']
+['; Touch; MASPJS']
+['; LCJB']
+['; ASU2JS']
+['; MAARJS']
+['; MAFSJS']
+['; MALNJS']
+['; MAMIJS']
+['; MALCJS']
+['; MASPJS']
+['; MANM']
+['; MDDCJS']
+['; MDDSJS']
+['; NP06']
+['; EIE10;JAJPMSN']
+['; EIE10;ENUSWOL']
+['; EIE11;JAJPWOL']
+['; BOIE9;JAJP']
+['; BOIE9;ENUS']
+['; YJSG3']
+@@.
+
+#
+# 注:
+# IE8以降はTridentトークンは必ず存在するとみなしてよい.
+# IE7の場合、互換モードがOnのときTridentトークンが存在するケースがある.
+#
+@@L ie_7
+['$[moz4]$ (compatible; MSIE 7.0; $[platform_ie_7]$$[ie_trident4]$$[ie_dot_NET_CLR]$)']
+@@.
+
+@@L ie_8
+['$[moz4]$ (compatible; MSIE 8.0; $[platform_ie_8]$; Trident/4.0$[ie_dot_NET_CLR]$)']
+@@.
+
+#
+# 注:
+# IE9以降は.NET CLRなどのオプションの記載が廃止されたとドキュメントにはある.
+# ところが実際に世の中に出回っているUAを観察すると、確かにIE9には.NET CLRは見られないが
+# IE10の場合にはこれが復活しているものが散見される.
+# そこでここではIE10の場合についてはこれを付けるようにした.
+#
+@@L ie_9
+['$[moz5]$ (compatible; MSIE 9.0; $[platform_ie_9]$; Trident/5.0$[ie_pcmaker_code]$)']
+@@.
+
+@@L ie_10
+['$[moz5]$ (compatible; MSIE 10.0; $[platform_ie_10]$; Trident/6.0$[ie_pcmaker_code]$$[ie_dot_NET_CLR]$)']
+@@.
+
+@@L ie_11
+['$[moz5]$ ($[platform_ie_11]$; Trident/7.0$[ie_pcmaker_code]$; rv:11.0) like Gecko']
+@@.
+
+@@L ie
+['$[ie_7]$'] *0.1
+['$[ie_8]$'] *0.3
+['$[ie_9]$'] *0.1
+['$[ie_10]$'] *0.2
+['$[ie_11]$'] *0.3
+@@.
+
+@@L edge
+['$[moz5]$ ($[platform_edge]$) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.10240']
+@@.
+

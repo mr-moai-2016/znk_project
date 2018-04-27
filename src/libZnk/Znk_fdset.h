@@ -33,7 +33,7 @@ ZnkFdSet_clr( ZnkFdSet fdst, const ZnkSocket sock );
 bool
 ZnkFdSet_isset( const ZnkFdSet fdst, const ZnkSocket sock );
 void
-ZnkFdSet_print( const ZnkFdSet fdst );
+ZnkFdSet_print_e( const ZnkFdSet fdst );
 void
 ZnkFdSet_copy( ZnkFdSet dst, const ZnkFdSet src );
 void

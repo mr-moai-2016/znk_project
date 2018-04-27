@@ -1,0 +1,268 @@
+@def_quote [' ']
+
+@@L s
+['']
+@@.
+
+@@L ss
+['']
+@@.
+
+@@L sss
+['']
+@@.
+
+@@L moz5
+['Mozilla/5.0']
+@@.
+
+@@L khtml
+['KHTML, like Gecko']
+@@.
+
+
+# machine
+@@L machine_linux
+[' i686']
+[' i686; U']
+[' x86_64']
+[' x86_64; U']
+@@.
+
+@@L machine_mac
+['; Intel']    *0.48
+['; U; Intel'] *0.48
+['; PPC']
+['; U; PPC']
+@@.
+
+@@L machine_win
+[''] *0.4
+['; U']
+['; WOW64']
+['; Win64; x64']
+@@.
+
+# os
+@@L os_winnt
+['Windows NT 10.0'] *0.1
+['Windows NT 6.3']  *0.1
+['Windows NT 6.2']
+['Windows NT 6.1']  *0.3
+['Windows NT 6.0']
+['Windows NT 5.1']  *0.3
+@@.
+
+@@L os_win32
+['Windows NT 5.0']
+['Win 9x 4.90']
+['Win98']
+@@.
+
+
+@@L mobile
+[''] *0.8
+['Mobile ']
+@@.
+
+@@L digit0_4
+['0']
+['1']
+['2']
+['3']
+['4']
+@@.
+
+@@L digit0_9
+['0']
+['1']
+['2']
+['3']
+['4']
+['5']
+['6']
+['7']
+['8']
+['9']
+@@.
+
+@@L digit1_9
+['1']
+['2']
+['3']
+['4']
+['5']
+['6']
+['7']
+['8']
+['9']
+@@.
+
+
+@@L chr_mac_ver
+[' Mac OS X 10_6_8']
+[' Mac OS X 10_8_2']
+[' Mac OS X 10_8_5']
+[' Mac OS X 10_9_2']
+[' Mac OS X 10_9_4']
+[' Mac OS X 10_9_5']
+[' Mac OS X 10_10']
+[' Mac OS X 10_10_1']
+[' Mac OS X 10_10_2']
+@@.
+
+@@L platform_chr
+['$[os_winnt]$$[machine_win]$'] *0.6
+['$[os_win32]$']
+['X11; Linux$[machine_linux]$']
+['Macintosh$[machine_mac]$$[chr_mac_ver]$']
+@@.
+
+
+@@L la
+['']
+['; ja']
+['; en'] *0.1
+@@.
+
+@@L presto_mac_ver
+['10.5']
+['10.6']
+['10.7']
+['10.8']
+['10.9']
+['10.10']
+@@.
+
+@@L platform_presto_win
+['$[os_winnt]$$[machine_win]$'] *0.8
+['$[os_win32]$']
+@@.
+
+@@L platform_presto_linux
+['X11; U; Linux$[machine_linux]$'] *0.8
+['X11; Ubuntu; Linux$[machine_linux]$']
+['X11; Linux$[machine_linux]$']
+@@.
+
+@@L platform_presto
+['$[platform_presto_win]$'] *0.7
+['$[platform_presto_linux]$'] *0.2
+['Macintosh$[machine_mac]$ Mac OS X $[presto_mac_ver]$; U']
+@@.
+
+@@L opera_presto
+['Opera/9.80 ($[platform_presto]$$[la]$) Presto/2.6.30$[sss]$ Version/10.63']
+['Opera/9.80 ($[platform_presto]$$[la]$) Presto/2.4.13$[sss]$ Version/10.00']
+['Opera/9.80 ($[platform_presto]$$[la]$) Presto/2.7.81$[sss]$ Version/11.00']
+['Opera/9.80 ($[platform_presto]$$[la]$) Presto/2.8.119$[ss]$ Version/11.10']
+['Opera/9.80 ($[platform_presto]$$[la]$) Presto/2.9.168$[ss]$ Version/11.50']
+['Opera/9.80 ($[platform_presto]$$[la]$) Presto/2.10.229$[s]$ Version/11.60']
+['Opera/9.80 ($[platform_presto]$$[la]$) Presto/2.10.229$[s]$ Version/11.61']
+['Opera/9.80 ($[platform_presto]$$[la]$) Presto/2.10.254$[s]$ Version/12.00']
+['Opera/9.80 ($[platform_presto]$$[la]$) Presto/2.10.289$[s]$ Version/12.00']
+['Opera/9.80 ($[platform_presto]$$[la]$) Presto/2.10.289$[s]$ Version/12.01']
+['Opera/9.80 ($[platform_presto]$$[la]$) Presto/2.12.388$[s]$ Version/12.14']
+['Opera/9.80 ($[platform_presto]$$[la]$) Presto/2.12.388$[s]$ Version/12.15']
+['Opera/9.80 ($[platform_presto]$$[la]$) Presto/2.12.388$[s]$ Version/12.16']
+['Opera/9.80 ($[platform_presto]$$[la]$) Presto/2.12.388$[s]$ Version/12.17']
+['Opera/9.80 ($[platform_presto]$$[la]$) Presto/2.9.181$[ss]$ Version/12.00']
+@@.
+
+@@L opr_edition
+[''] *0.8
+[' (Edition Campaign $[digit1_9]$)']
+[' (Edition Campaign $[digit1_9]$$[digit0_9]$)']
+[' (Edition beta)']
+[' (Edition developer)']
+[' (Edition Next)']
+@@.
+
+@@L opera_gt15
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/28.0.1500.20$[ss]$ $[mobile]$Safari/537.36 OPR/15.0.1147.18$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/28.0.1500.52$[ss]$ $[mobile]$Safari/537.36 OPR/15.0.1147.130$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/29.0.1547.57$[ss]$ $[mobile]$Safari/537.36 OPR/16.0.1196.73$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/29.0.1547.72$[ss]$ $[mobile]$Safari/537.36 OPR/16.0.1212.65857$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/29.0.1547.72$[ss]$ $[mobile]$Safari/537.36 OPR/16.0.1212.64462$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/30.0.1599.69$[ss]$ $[mobile]$Safari/537.36 OPR/17.0.1241.45$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/30.0.1599.101$[s]$ $[mobile]$Safari/537.36 OPR/17.0.1241.53$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/31.0.1650.57$[ss]$ $[mobile]$Safari/537.36 OPR/18.0.1284.49$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/31.0.1650.63$[ss]$ $[mobile]$Safari/537.36 OPR/18.0.1284.68$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/32.0.1700.76$[ss]$ $[mobile]$Safari/537.36 OPR/19.0.1326.56$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/32.0.1700.102$[s]$ $[mobile]$Safari/537.36 OPR/19.0.1326.59$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/33.0.1750.46$[ss]$ $[mobile]$Safari/537.36 OPR/20.0.1387.24$[opr_edition]$'] 
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/33.0.1750.117$[s]$ $[mobile]$Safari/537.36 OPR/20.0.1387.64$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/33.0.1750.154$[s]$ $[mobile]$Safari/537.36 OPR/20.0.1387.91$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/34.0.1847.132$[s]$ $[mobile]$Safari/537.36 OPR/21.0.1432.67$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/34.0.1847.76$[ss]$ $[mobile]$Safari/537.36 OPR/21.0.1432.31$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/34.0.1847.116$[s]$ $[mobile]$Safari/537.36 OPR/21.0.1437.75439$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/35.0.1916.99$[ss]$ $[mobile]$Safari/537.36 OPR/22.0.1471.34$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/35.0.1916.114$[s]$ $[mobile]$Safari/537.36 OPR/22.0.1471.50$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/35.0.1916.153$[s]$ $[mobile]$Safari/537.36 OPR/22.0.1471.70$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/36.0.1985.49$[ss]$ $[mobile]$Safari/537.36 OPR/23.0.1522.24$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/36.0.1985.125$[s]$ $[mobile]$Safari/537.36 OPR/23.0.1522.58$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/36.0.1985.143$[s]$ $[mobile]$Safari/537.36 OPR/23.0.1522.77$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/37.0.2062.44$[ss]$ $[mobile]$Safari/537.36 OPR/24.0.1558.25$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/37.0.2062.94$[ss]$ $[mobile]$Safari/537.36 OPR/24.0.1558.53$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/37.0.2062.94$[ss]$ $[mobile]$Safari/537.36 OPR/24.0.1558.51$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/37.0.2062.122$[s]$ $[mobile]$Safari/537.36 OPR/24.0.1558.64$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/38.0.2125.101$[s]$ $[mobile]$Safari/537.36 OPR/25.0.1614.50$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/38.0.2125.111$[s]$ $[mobile]$Safari/537.36 OPR/25.0.1614.68$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/38.0.2125.122$[s]$ $[mobile]$Safari/537.36 OPR/25.0.1614.71$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/39.0.2171.95$[ss]$ $[mobile]$Safari/537.36 OPR/26.0.1656.60$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/40.0.2214.91$[ss]$ $[mobile]$Safari/537.36 OPR/27.0.1689.54$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/40.0.2214.94$[ss]$ $[mobile]$Safari/537.36 OPR/27.0.1689.66$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/40.0.2214.111$[s]$ $[mobile]$Safari/537.36 OPR/27.0.1689.69$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/40.0.2214.115$[s]$ $[mobile]$Safari/537.36 OPR/27.0.1689.76$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/41.0.2272.43$[ss]$ $[mobile]$Safari/537.36 OPR/28.0.1750.21$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/41.0.2272.76$[ss]$ $[mobile]$Safari/537.36 OPR/28.0.1750.40$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/41.0.2272.89$[ss]$ $[mobile]$Safari/537.36 OPR/28.0.1750.48$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/41.0.2272.118$[s]$ $[mobile]$Safari/537.36 OPR/28.0.1750.51$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/42.0.2311.90$[ss]$ $[mobile]$Safari/537.36 OPR/29.0.1795.47$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/43.0.2357.125$[s]$ $[mobile]$Safari/537.36 OPR/30.0.1835.88$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/43.0.2357.45$[ss]$ $[mobile]$Safari/537.36 OPR/30.0.1835.26$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/43.0.2357.130$[s]$ $[mobile]$Safari/537.36 OPR/30.0.1835.125$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/43.0.2357.81$[ss]$ $[mobile]$Safari/537.36 OPR/30.0.1835.52$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/43.0.2357.78$[ss]$ $[mobile]$Safari/537.36 OPR/30.0.1856.92967$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/44.0.2403.84$[ss]$ $[mobile]$Safari/537.36 OPR/31.0.1889.74$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/44.0.2403.107$[s]$ $[mobile]$Safari/537.36 OPR/31.0.1889.99$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/44.0.2403.130$[s]$ $[mobile]$Safari/537.36 OPR/31.0.1889.162$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/44.0.2403.155$[s]$ $[mobile]$Safari/537.36 OPR/31.0.1889.174$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/45.0.2454.85$[ss]$ $[mobile]$Safari/537.36 OPR/32.0.1948.25$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/45.0.2454.93$[ss]$ $[mobile]$Safari/537.36 OPR/32.0.1948.69$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/46.0.2490.86$[ss]$ $[mobile]$Safari/537.36 OPR/33.0.1990.115$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/46.0.2490.80$[ss]$ $[mobile]$Safari/537.36 OPR/33.0.1990.58$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/47.0.2526.111$[s]$ $[mobile]$Safari/537.36 OPR/34.0.2036.50$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/47.0.2526.73$[ss]$ $[mobile]$Safari/537.36 OPR/34.0.2036.25$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/48.0.2564.109$[s]$ $[mobile]$Safari/537.36 OPR/35.0.2066.68$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/48.0.2564.116$[s]$ $[mobile]$Safari/537.36 OPR/35.0.2066.82$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/48.0.2564.82$[ss]$ $[mobile]$Safari/537.36 OPR/35.0.2066.37$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/48.0.2564.99$[ss]$ $[mobile]$Safari/537.36 OPR/35.0.2070.100283$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/49.0.2623.75$[ss]$ $[mobile]$Safari/537.36 OPR/36.0.2130.32$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/49.0.2623.110$[s]$ $[mobile]$Safari/537.36 OPR/36.0.2130.65$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/49.0.2623.112$[s]$ $[mobile]$Safari/537.36 OPR/36.0.2130.80$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/50.0.2661.94$[ss]$ $[mobile]$Safari/537.36 OPR/37.0.2192.105088$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/50.0.2661.87$[ss]$ $[mobile]$Safari/537.36 OPR/37.0.2178.32$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/50.0.2661.94$[ss]$ $[mobile]$Safari/537.36 OPR/37.0.2178.43$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/51.0.2704.106$[s]$ $[mobile]$Safari/537.36 OPR/38.0.2220.41$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/51.0.2704.84$[ss]$ $[mobile]$Safari/537.36 OPR/38.0.2220.31$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/51.0.2704.63$[ss]$ $[mobile]$Safari/537.36 OPR/38.0.2220.29$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/52.0.2743.82$[ss]$ $[mobile]$Safari/537.36 OPR/39.0.2256.42$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/52.0.2743.82$[ss]$ $[mobile]$Safari/537.36 OPR/39.0.2256.48$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/52.0.2743.116$[s]$ $[mobile]$Safari/537.36 OPR/39.0.2256.71$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/53.0.2785.101$[s]$ $[mobile]$Safari/537.36 OPR/40.0.2308.54$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/53.0.2785.101$[s]$ $[mobile]$Safari/537.36 OPR/40.0.2308.62$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/53.0.2785.116$[s]$ $[mobile]$Safari/537.36 OPR/40.0.2308.75$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/53.0.2785.116$[s]$ $[mobile]$Safari/537.36 OPR/40.0.2308.81$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/53.0.2785.143$[s]$ $[mobile]$Safari/537.36 OPR/40.0.2308.90$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/54.0.2840.59$[ss]$ $[mobile]$Safari/537.36 OPR/41.0.2353.46$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/54.0.2840.87$[ss]$ $[mobile]$Safari/537.36 OPR/41.0.2353.56$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/54.0.2840.99$[ss]$ $[mobile]$Safari/537.36 OPR/41.0.2353.69$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/55.0.2883.75$[ss]$ $[mobile]$Safari/537.36 OPR/42.0.2393.85$[opr_edition]$']
+['$[moz5]$ ($[platform_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/55.0.2883.87$[ss]$ $[mobile]$Safari/537.36 OPR/42.0.2393.94$[opr_edition]$']
+@@.
+
+@@L opera
+['$[opera_gt15]$'] *0.7
+['$[opera_presto]$']
+@@.

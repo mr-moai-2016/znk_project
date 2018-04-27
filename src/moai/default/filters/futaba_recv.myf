@@ -1,0 +1,34 @@
+@def_quote [' ']
+
+@@L html_filter
+replace ['lists[rNo]'] ['""']
+replace ['id="foot3"'] ['id="foot4"']
+replace ['id="foot4abdef_right"'] ['id="foot5abdef_right"']
+replace ['type=password name=pwd size=8'] ['type=text name=pwd size=9']
+replace ['location.href="/"+b+"/res/"+resn+".htm";'] ['location.reload(true);']
+replace ['"https://js.ad-stir.com/js/adstir.js"'] ['""']
+@@.
+
+@@L js_filter
+@@.
+
+@@L css_filter
+@@.
+
+@@L css_additional
+table[width="100%"] {
+margin: 2px auto 4px !important;
+}
+td.rts {
+display: none !important;
+}
+td.rtd {
+padding: 1px !important;
+border: 2px solid rgb(255,180,200) !important;
+##-moz-border-radius: 20px !important;
+#border-radius: 20px !important;
+border-radius: 10px !important;
+#background-color: rgba(255,253,250,0.6) !important;
+background-color:#F0E0D6 !important;
+}
+@@.

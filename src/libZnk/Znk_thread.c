@@ -52,7 +52,7 @@ static ZnkBfr st_pair_list = NULL;
 
 struct znThreadListElem {
 	ZnkThreadInfo info_;
-	bool         used_;
+	bool          used_;
 };
 static size_t
 znThreadList_getListNum( ZnkBfr thlist )
@@ -391,7 +391,8 @@ Znk__Internal__ThreadFunc_stdcall( void* internal_info )
 #    pragma warning(push)
 #    pragma warning(disable:4311)
 #  endif
-	return (unsigned int) Znk__Internal__ThreadFunc( internal_info );
+	void* result = Znk__Internal__ThreadFunc( internal_info );
+	return Znk_force_ptr_cast( unsigned int, result );
 #  if (_MSC_VER >= 1300) && defined(_WIN32)
 #    pragma warning(pop)
 #  endif

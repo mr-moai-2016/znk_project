@@ -434,7 +434,7 @@ size_t
 ZnkBfr_transfer( ZnkBfr zkbfr_dst, size_t dst_pos, const uint8_t* src, size_t src_leng )
 {
 	const size_t dst_buf_size = zkbfr_dst->size_;
-	if( dst_pos >= dst_buf_size ){
+	if( dst_pos < dst_buf_size ){
 		return I_transfer(
 				(uint8_t*)zkbfr_dst->data_+dst_pos, dst_buf_size-dst_pos,
 				src, src_leng );

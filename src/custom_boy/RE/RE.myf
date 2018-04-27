@@ -1,0 +1,30 @@
+@def_quote [' ']
+
+@@L blink
+['RE/c056ab0212eeb2133f5253ad3c5b8095.png']
+['RE/49478887ad6f10ef7ed98d4f787ce237.png']
+@@.
+
+@@L gecko_gdi
+['RE/1efe201285ad6538f8fe6adcdd797782.png']
+@@.
+
+@@L gecko_x11
+['RE/972676fc5b01b4b6cc2caf7fb5a71b04.png']
+@@.
+
+@@L webkit
+['RE/530b7f0479f00547a72f1e9cbdc9cd53.png']
+@@.
+
+@@L webkit_mobile
+['RE/d3fd2f6d20190e2ab1e4e387d875fc61.png']
+@@.
+
+@@L ie
+['RE/49478887ad6f10ef7ed98d4f787ce237.png']
+['RE/c056ab0212eeb2133f5253ad3c5b8095.png']
+['RE/1efe201285ad6538f8fe6adcdd797782.png']
+['RE/1efe201285ad6538f8fe6adcdd797782.png']
+['']
+@@.

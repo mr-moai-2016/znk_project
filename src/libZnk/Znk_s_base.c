@@ -53,13 +53,19 @@ ZnkS_copy( char* buf, size_t buf_size, const char* cstr, size_t cstr_leng )
  * va_start <=> va_end 間における複数回呼び出しに対応.
  */
 int
-ZnkS_vsnprintf_sys( char* buf, size_t buf_size, const char* fmt, va_list ap )
+ZnkS_vsnprintf_sys__( char* buf, size_t buf_size, const char* fmt, va_list ap )
 {
 	int str_len;
 	va_list ap_copy;
+
+#ifdef _MSC_VER
 	if( buf_size == 0 ){
-		return -1;
+		if( Znk_strchr( fmt, '%' ) ){
+			return Znk_strlen( fmt ) + 512;
+		}
+		return Znk_strlen( fmt );
 	}
+#endif
 
 	/**
 	 * ap_copyを使うことによって, 
@@ -105,23 +111,28 @@ ZnkS_vsnprintf_sys( char* buf, size_t buf_size, const char* fmt, va_list ap )
 
 	va_end( ap_copy );
 
-	/**
-	 * VCの_vsnprintf に備えてNULL終端させる.
-	 */
-	if( str_len < 0 || (size_t)str_len >= buf_size ){
+#ifdef _MSC_VER
+	if( str_len < 0 || (size_t)str_len == buf_size ){
+		/**
+		 * VCの_vsnprintf に備えてNULL終端させる.
+		 */
 		buf[ buf_size-1 ] = '\0';
-		return -1;
+		str_len = Znk_strlen( fmt ) + 512;
+		if( buf_size*2 > (size_t)str_len ){
+			str_len = buf_size*2;
+		}
 	}
+#endif
 	return str_len;
 }
 
 int
-ZnkS_snprintf_sys( char* buf, size_t buf_size, const char* fmt, ... )
+ZnkS_snprintf_sys__( char* buf, size_t buf_size, const char* fmt, ... )
 {
 	int str_len;
 	va_list ap;
 	va_start(ap, fmt);
-	str_len = ZnkS_vsnprintf_sys( buf, buf_size, fmt, ap );
+	str_len = ZnkS_vsnprintf_sys__( buf, buf_size, fmt, ap );
 	va_end(ap);
 	return str_len;
 }

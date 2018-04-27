@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+	<META http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+	<META http-equiv="Content-Script-Type" content="text/javascript">
+	<META http-equiv="Content-Style-Type" content="text/css">
+	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<title>Easterコレクション</title>
+</head>
+
+<script type="text/javascript"><!--
+var previewing_img_url = "";
+var img_url_list = [ #[EstCM_img_url_list]# ];
+var st_func_tbls = [];
+#[hint_table]#
+//--></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/hint.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/assort.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/preview.js"></script>
+	
+<body bgcolor="#EEFFEE" text="#808000" link="#0000EE" vlink="#0000EE" alink="#FF0000">
+
+<form action="/cgis/easter/easter.cgi?est_manager=topic" method="POST" name=fm_main>
+
+<a name="user-content-index"></a>
+<font size=+2><i><b>Easter</b></i></font><br>
+
+<br>
+<a class=MstyElemLink  href="/easter" >仮想ブラウジング</a> &nbsp;
+<a class=MstyNowSelectedLink href="/easter?est_manager=topic&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >コレクション</a> &nbsp;
+<a class=MstyElemLink  href="/easter?est_manager=config&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >設定</a> &nbsp;
+<br>
+
+
+<input type=hidden name=Moai_AuthenticKey value="#[Moai_AuthenticKey]#">
+<button class="MstyDmyUpdateBtn" disabled></button> <!-- For disable Enter key on text field -->
+
+
+<a name="TopicList"></a>
+<br><b>TopicList</b><br>
+<table class=MstyManagerTable>
+
+<tr><td colspan=2>
+<br>
+<font size=-1>
+ここではあなたがこれまで集めたコレクションの閲覧と検索ができます.<br>
+<span style="vertical-align:-40%; margin-right:4px"><img src='/cgis/easter/publicbox/icons/question_16.png'></span>マークをクリックすると使い方のヒントが表示されます.<br> <br>
+<a class=MstyQandALink href="javascript:void(0);" onclick="displayQandA( 'Hint', 'aboutTopicList' );"><img src='/cgis/easter/publicbox/icons/question_16.png'></a>
+<br><div id=aboutTopicList></div>
+</font>
+</td></tr>
+
+<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>すべてのコレクションの一覧</legend>
+<br>
+<font size=-1>すべてのコレクションは、お気に入りボックスとストックボックスのいずれかに格納されています.<br>
+以下よりすべてのコレクションの中身を参照できます.
+<br>
+</font>
+#[EstTP_entry]#
+<br> <br>
+</fieldset></td></tr>
+
+<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>トピックス一覧</legend>
+<br>
+<font size=-1>コレクションの一覧においては、検索した結果を保存することができます.<br>
+Easterではこの検索結果をトピックスと呼びます.<br>
+言い換えれば、トピックスはコレクションの部分集合です.<br>
+以下は今まで登録されたトピックのリストです.
+<br>
+</font>
+#[EstTP_view]#
+<input type=hidden name=backto value="#[backto]#">
+<br>
+</fieldset></td></tr>
+
+<tr><td colspan=2>
+<input type=checkbox id=msg_console_cbtn onclick="EjsAssort_switchVisibility('msg_console', '_cbtn', '_body', '_msg')">
+<b>Easter System Console </b><br>
+<div class=MstyMsgConsole id=msg_console_body style=display:none><b>Easter System Console:</b><br>#[msg]#</div>
+<font size=-1 color=#8888ff><div id=msg_console_msg>― 現在非表示です ―</div></font>
+</td></tr>
+
+</table>
+
+</form>
+
+<a class=MstyElemLink href="#user-content-index">一番上へ戻る</a> <a class=MstyElemLink href="/">Moaiトップページ</a>
+<br><br>
+
+</body></html>

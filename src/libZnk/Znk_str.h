@@ -1,7 +1,6 @@
 #ifndef INCLUDE_GUARD__Znk_str_h__
 #define INCLUDE_GUARD__Znk_str_h__
 
-#include <Znk_base.h>
 #include <Znk_bfr.h>
 #include <stdarg.h>
 
@@ -92,6 +91,8 @@ Znk_INLINE ZnkStr
 ZnkStr_new( const char* init_data ){
 	return ZnkStr_create( init_data, Znk_NPOS );
 }
+ZnkStr
+ZnkStr_newf( const char* fmt, ... );
 Znk_INLINE void
 ZnkStr_delete( ZnkStr zkbfr ){
 	ZnkBfr_destroy( zkbfr );
@@ -169,6 +170,16 @@ ZnkStr_set( ZnkStr zkstr, const char* cstr )
 	ZnkStr_assign( zkstr, 0, cstr, Znk_NPOS );
 }
 
+/***
+ * @brief
+ * シュガー関数.
+ */
+Znk_INLINE void
+ZnkStr_copy( ZnkStr dst, const ZnkStr src )
+{
+	ZnkStr_assign( dst, 0, ZnkStr_cstr(src), ZnkStr_leng(src) );
+}
+
 
 /**
  * @brief
@@ -181,6 +192,11 @@ Znk_INLINE void
 ZnkStr_append( ZnkStr zkstr, const char* src, size_t src_leng ){
 	ZnkStr_assign( zkstr, Znk_NPOS, src, src_leng );
 }
+
+void
+ZnkStr_replace( ZnkStr str, size_t dst_pos, size_t dst_leng, const char* src, size_t src_leng );
+void
+ZnkStr_insert( ZnkStr str, size_t dst_pos, const char* src, size_t src_leng );
 
 /**
  * @brief
@@ -293,6 +309,12 @@ int ZnkStr_addf( ZnkStr zkstr, const char* fmt, ... );
  *  すなわち、指定した文字列をフォーマットしたものをzkstrにsetする形になる.
  */
 int ZnkStr_setf( ZnkStr zkstr, const char* fmt, ... );
+/* 復帰作業が終わるまでしばらく残す */
+#define ZnkStr_vsnprintf2 ZnkStr_vsnprintf
+#define ZnkStr_snprintf2  ZnkStr_snprintf
+#define ZnkStr_sprintf2   ZnkStr_sprintf
+#define ZnkStr_addf2 ZnkStr_addf
+#define ZnkStr_setf2 ZnkStr_setf
 
 
 /**
@@ -320,7 +342,7 @@ ZnkStr_eqEx( const ZnkStr str, size_t pos, const char* data, size_t data_leng );
  * でも構わない.
  */
 bool
-ZnkStr_isContain( const ZnkStr zkstr, size_t pos, const char* data, size_t data_size );
+ZnkStr_isContain( const ZnkStr zkstr, size_t pos, const char* data, size_t data_leng );
 /**
  * strが data で示されるバイト列から開始しているか否かを返す.
  */

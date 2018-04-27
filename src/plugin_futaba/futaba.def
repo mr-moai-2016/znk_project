@@ -1,5 +1,0 @@
-LIBRARY "futaba.dll"
-EXPORTS
-  initiate
-  on_post
-  on_response

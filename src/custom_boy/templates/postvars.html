@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+	<META http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+	<META http-equiv="Content-Script-Type" content="text/javascript">
+	<META http-equiv="Content-Style-Type" content="text/css">
+	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<title>CustomBoy</title>
+	<script type="text/javascript" src="/cgis/custom_boy/publicbox/fp.js?Moai_AuthenticKey=#[Moai_AuthenticKey]#"></script>
+	<script type="text/javascript" src="/cgis/custom_boy/publicbox/custom_boy.js?Moai_AuthenticKey=#[Moai_AuthenticKey]#"></script>
+	
+</head>
+<body bgcolor="#EEFFFF" text="#008000" link="#0000EE" vlink="#0000EE" alink="#FF0000">
+
+<a name="user-content-index"></a>
+<font size=+2><i><b>CustomBoy</b></i></font> <!-- b>(negotiating target : #[cb_target]#)</b --><br>
+
+<br>
+#[SelectBar_ui]#
+<br>
+
+<a name="CustomUSERS"></a>
+<br><b>CustomUSERS</b><br>
+
+<form action="/cgis/custom_boy/custom_boy.cgi?cb_target=#[cb_target]#&amp;cb_type=postvars#CustomUSERS" method="POST" id="fm_main">
+<input type=hidden name=Moai_AuthenticKey value="#[Moai_AuthenticKey]#">
+<button class="MstyDmyUpdateBtn" disabled></button> <!-- For disable Enter key on text field -->
+
+<table class=MstyManagerTable>
+
+<tr><td colspan=2>
+<font size=-1>
+<br><b><u>概要</u></b><br> <br>
+ここでは実際に送信されるUserAgentやPOST変数の値をダイレクトに入力することで<br>
+仮想環境の値をカスタマイズすることができます.<br>
+Step1によって自動生成された値に、さらに手動でひと味加えた修正を行うことができます.<br>
+この機能はエキスパート向けのものであり通常のユーザは VirtualUSERS の方を使用すれば十分でしょう.<br>
+<br>
+詳細については<a href="#[hint_base_Fgp]#CustomUSERS" target=_blank>こちら</a>を参照してください.<br>
+<br>
+</font>
+</td></tr>
+
+<tr class="MstyItemOdd"><td>
+<button class=MstyWideButton type='submit' name='cb_arg' value='main_all'>VirtualUSERS</button>
+</td><td>
+<font size=-1>すべておまかせボタンです.<br>
+	通常はこれを押すだけで必要な全ての処理が自動的に完了します.<br>
+	(このボタンは下記Step1とStep2を一括して行うというものです).</font>
+</td></tr>
+
+<tr class="MstyItemEvn"><td>
+#[Category_ui]#
+</td><td>
+<font size=-1>自動生成の際に参考とする環境カテゴリを指定できます.<br>
+CustomBoyの思考ルーチンはこの指定に矛盾しない範囲において、<br>
+最適なUA/POST変数の仮想環境の値をランダムに自動生成します.<br>
+</font>
+<br>
+</td></tr>
+
+<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>UA/POST変数の仮想環境</legend>
+<table>
+<tr><td colspan=2>
+<font size=-1>#[cb_status]#</font>
+</td></tr>
+<tr class="MstyItemOdd"><td><b>UserAgent</b></td><td><textarea name=UserAgent cols="60" rows="3" id="UserAgent">#[user_agent]#</textarea></td></tr>
+#[PostVars_ui]#
+</table>
+</fieldset></td></tr>
+
+<tr><td colspan=2>
+	<button class=MstyWideButton type='submit' name='cb_arg' value='main_step1'>Step1</button>
+	<font size=-1>新しい仮想環境(UA/POSTの基本値)を仮生成します(まだ完了ではありません).</font>
+</td></tr>
+<tr><td colspan=2>
+	<button class=MstyWideButton type='submit' name='cb_arg' value='main_step2'>Step2</button>
+	<font size=-1>上記の仮想環境で一旦#[cb_target]#へ初アクセスし、必要な残りの情報を取得に成功すれば完了です.</font>
+</td></tr>
+<tr><td colspan=2>
+	<button class=MstyWideButton type='submit' name='cb_arg' value='main_clear'>Step1のキャンセル</button>
+	<font size=-1>Step1で仮生成した環境をキャンセルします.(表示は現在の環境のものに戻ります).</font>
+</td></tr>
+
+<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>Cookieの仮想環境</legend>
+<table>
+#[CustomCookie_ui]#
+</table>
+</fieldset></td></tr>
+
+<tr><td colspan=2 bgcolor="#ccffdd"><font color="#558855"><pre>#[msg]#</pre></font></td></tr>
+
+</table>
+</form>
+
+<a class=MstyElemLink href="#user-content-index">一番上へ戻る</a> <a class=MstyElemLink href="/">Moaiトップページ</a>
+<br><br>
+
+</body></html>

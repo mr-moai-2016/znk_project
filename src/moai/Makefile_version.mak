@@ -1,1 +1,2 @@
-DL_VER=1.1
+REL_VER=2.0
+include ../libZnk/Makefile_version.mak

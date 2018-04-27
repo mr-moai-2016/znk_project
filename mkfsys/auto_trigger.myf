@@ -1,0 +1,51 @@
+@def_quote [' ']
+
+# %CD%ÇÕWindows2000à»ç~Ç≈égópâ¬(Windows98Ç≈ÇÕïsâ¬).
+@@L opening
+call mkf_triggers/_impl/_atr_opening.bat %CD%
+@@.
+
+@@L make
+::M 0. make
+call mkf_triggers/_impl/_atr_make.bat
+@@.
+
+@@L make_install
+::M 1. make install
+call mkf_triggers/_impl/_atr_make.bat install
+@@.
+
+@@L make_clean
+::M 2. make clean
+call mkf_triggers/_impl/_atr_make.bat clean
+@@.
+
+@@L switch_debug_mode
+::S 3. switch debug-mode
+call mkf_triggers/switch_debug_mode.bat
+@@.
+
+@@L switch_mkfid
+::S 4. switch mkfid (using compiler environment)
+call mkf_triggers/switch_mkfid.bat
+@@.
+
+@@L switch_machine
+::S 5. switch machine (target cpu type)
+call mkf_triggers/switch_machine.bat
+@@.
+
+@@L mkfgen_update
+::M 6. mkfgen_update (update your Makefiles using mkfgen)
+call mkf_triggers/mkfgen_update.bat
+@@.
+
+@@L sync
+::M 7. syncronize mkf_triggers in here from mkfsys installed dir
+call mkf_triggers/_impl/sync.bat
+@@.
+
+@@L quit
+::M Q. quit
+quit
+@@.

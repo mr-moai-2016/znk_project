@@ -5,10 +5,12 @@
 #include <Znk_str.h>
 #include <Znk_bfr_ary.h>
 #include <Znk_str_ary.h>
+#include <assert.h>
 
 Znk_EXTERN_C_BEGIN
 
-typedef void* ZnkPrimAry; /* dummy */
+Znk_DECLARE_HANDLE( ZnkPrimpAry );
+typedef struct ZnkPrim_tag* ZnkPrimp;
 
 typedef enum {
 	 ZnkPrim_e_None = 0
@@ -19,6 +21,7 @@ typedef enum {
 	,ZnkPrim_e_BfrAry
 	,ZnkPrim_e_Str
 	,ZnkPrim_e_StrAry
+	,ZnkPrim_e_ObjAry
 	,ZnkPrim_e_PrimAry
 } ZnkPrimType;
 
@@ -39,15 +42,16 @@ typedef union ZnkAlign64PtrU_tag {
  * これにより、この共用体のsizeofの値は sizeof( ZnkAlign64PtrU ) と同じとみなせる.
  */
 typedef union ZnkPrimU_tag {
-	int32_t    i32_;
-	int64_t    i64_;
-	double     r64_;
-	void*      ptr_; /* general object */
-	ZnkBfr     bfr_;
-	ZnkBfrAry  bda_;
-	ZnkStr     str_;
-	ZnkStrAry  sda_;
-	ZnkPrimAry pda_; /* reserve */
+	int32_t     i32_;
+	int64_t     i64_;
+	double      r64_;
+	void*       ptr_; /* general object */
+	ZnkBfr      bfr_;
+	ZnkBfrAry   bda_;
+	ZnkStr      str_;
+	ZnkStrAry   sda_;
+	ZnkObjAry   oda_;
+	ZnkPrimpAry pda_; /* prim ary */
 } ZnkPrimU;
 
 typedef struct ZnkPrim_tag {
@@ -57,89 +61,119 @@ typedef struct ZnkPrim_tag {
 } ZnkPrim;
 
 #define ZnkPrim_D( name ) ZnkPrim name = { { 0 }, { 0 }, { 0 } }
-Znk_INLINE void ZnkPrim_set_null( ZnkPrim* prim ){
+Znk_INLINE void ZnkPrim_set_null( ZnkPrimp prim ){
 	ZnkPrim_D( zero ); *prim = zero;
 }
 
 Znk_INLINE ZnkPrimType
-ZnkPrim_type( ZnkPrim* prim )
+ZnkPrim_type( ZnkPrimp prim )
 {
 	return (ZnkPrimType)prim->type__.u64_;
 }
-Znk_INLINE void
-ZnkPrim_set_deleter( ZnkPrim* prim, const ZnkElemDeleterFunc deleter )
+Znk_INLINE int32_t
+ZnkPrim_i32( ZnkPrimp prim )
 {
-	prim->deleter__.ptr_ = Znk_force_ptr_cast( void*, deleter );
+	assert( ZnkPrim_type(prim) == ZnkPrim_e_Int );
+	return prim->u_.i32_;
+}
+Znk_INLINE int64_t
+ZnkPrim_i64( ZnkPrimp prim )
+{
+	assert( ZnkPrim_type(prim) == ZnkPrim_e_Int );
+	return prim->u_.i64_;
+}
+Znk_INLINE double
+ZnkPrim_real( ZnkPrimp prim )
+{
+	assert( ZnkPrim_type(prim) == ZnkPrim_e_Real );
+	return prim->u_.r64_;
+}
+Znk_INLINE void*
+ZnkPrim_ptr( ZnkPrimp prim )
+{
+	assert( ZnkPrim_type(prim) == ZnkPrim_e_Ptr );
+	return prim->u_.ptr_;
+}
+Znk_INLINE ZnkStr
+ZnkPrim_str( ZnkPrimp prim )
+{
+	assert( ZnkPrim_type(prim) == ZnkPrim_e_Str );
+	return prim->u_.str_;
+}
+Znk_INLINE const char*
+ZnkPrim_cstr( ZnkPrimp prim )
+{
+	assert( ZnkPrim_type(prim) == ZnkPrim_e_Str );
+	return ZnkStr_cstr( prim->u_.str_ );
+}
+Znk_INLINE ZnkStrAry
+ZnkPrim_strAry( ZnkPrimp prim )
+{
+	assert( ZnkPrim_type(prim) == ZnkPrim_e_StrAry );
+	return prim->u_.sda_;
+}
+Znk_INLINE ZnkBfr
+ZnkPrim_bfr( ZnkPrimp prim )
+{
+	assert( ZnkPrim_type(prim) == ZnkPrim_e_Bfr );
+	return prim->u_.bfr_;
+}
+Znk_INLINE ZnkBfrAry
+ZnkPrim_bfrAry( ZnkPrimp prim )
+{
+	assert( ZnkPrim_type(prim) == ZnkPrim_e_BfrAry );
+	return prim->u_.bda_;
+}
+Znk_INLINE ZnkObjAry
+ZnkPrim_objAry( ZnkPrimp prim )
+{
+	assert( ZnkPrim_type(prim) == ZnkPrim_e_ObjAry );
+	return prim->u_.oda_;
+}
+Znk_INLINE ZnkPrimpAry
+ZnkPrim_primAry( ZnkPrimp prim )
+{
+	assert( ZnkPrim_type(prim) == ZnkPrim_e_PrimAry );
+	return prim->u_.pda_;
+}
+
+Znk_INLINE void
+ZnkPrim_set_ptr( ZnkPrimp prim, void* ptr )
+{
+	prim->u_.ptr_ = ptr;
 }
 Znk_INLINE ZnkElemDeleterFunc
-ZnkPrim_get_deleter( ZnkPrim* prim )
+ZnkPrim_get_deleter( ZnkPrimp prim )
 {
 	return (ZnkElemDeleterFunc)prim->deleter__.ptr_;
 }
 
-Znk_INLINE void
-ZnkPrim_dispose( ZnkPrim* prim )
-{
-	ZnkPrimType type = ZnkPrim_type( prim );
-	switch( type ){
-	case ZnkPrim_e_Ptr:
-	{
-		ZnkElemDeleterFunc deleter = ZnkPrim_get_deleter( prim );
-		if( deleter ){
-			deleter( prim->u_.ptr_ );
-		}
-		break;
-	}
-	case ZnkPrim_e_Bfr:
-		ZnkBfr_destroy( prim->u_.bfr_ );
-		break;
-	case ZnkPrim_e_BfrAry:
-		ZnkBfrAry_destroy( prim->u_.bda_ );
-		break;
-	case ZnkPrim_e_Str:
-		ZnkStr_destroy( prim->u_.str_ );
-		break;
-	case ZnkPrim_e_StrAry:
-		ZnkStrAry_destroy( prim->u_.sda_ );
-		break;
-	case ZnkPrim_e_PrimAry:
-		//ZnkPrimAry_destroy( prim->u_.pda_ );
-		break;
-	default:
-		/* none */
-		break;
-	}
-	ZnkPrim_set_null( prim );
-}
+void
+ZnkPrim_dispose( ZnkPrimp prim );
+
+/**
+ * @param elem_deleter:
+ *  ZnkPrim_e_Ptr と ZnkPrim_e_ObjAry の場合のみ意味を持つ.
+ *  それ以外は指定しても単に無視される.
+ */
+void
+ZnkPrim_compose( ZnkPrimp prim, ZnkPrimType type, ZnkElemDeleterFunc elem_deleter );
 
 Znk_INLINE void
-ZnkPrim_compose( ZnkPrim* prim, ZnkPrimType type )
+ZnkPrim_composePtr( ZnkPrimp prim, void* ptr, ZnkElemDeleterFunc elem_deleter )
 {
-	const bool elem_responsibility = true;
-	ZnkPrim_dispose( prim );
-
-	prim->type__.u64_ = (uint64_t)type;
-	switch( type ){
-	case ZnkPrim_e_Bfr:
-		prim->u_.bfr_ = ZnkBfr_create_null();
-		break;
-	case ZnkPrim_e_BfrAry:
-		prim->u_.bda_ = ZnkBfrAry_create( elem_responsibility );
-		break;
-	case ZnkPrim_e_Str:
-		prim->u_.str_ = ZnkStr_new( "" );
-		break;
-	case ZnkPrim_e_StrAry:
-		prim->u_.sda_ = ZnkStrAry_create( elem_responsibility );
-		break;
-	case ZnkPrim_e_PrimAry:
-		//ZnkPrimAry_create();
-		break;
-	default:
-		/* none */
-		break;
-	}
+	ZnkPrim_compose( prim, ZnkPrim_e_Ptr, elem_deleter );
+	ZnkPrim_set_ptr( prim, ptr );
 }
+
+ZnkPrimp
+ZnkPrimp_create( ZnkPrimType prim_type, ZnkElemDeleterFunc elem_deleter );
+
+ZnkPrimp
+ZnkPrimp_createPtr( void* ptr, ZnkElemDeleterFunc elem_deleter );
+
+void
+ZnkPrimp_destroy( ZnkPrimp primp );
 
 Znk_EXTERN_C_END
 

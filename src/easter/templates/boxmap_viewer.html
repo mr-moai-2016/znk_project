@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+	<META http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+	<META http-equiv="Content-Script-Type" content="text/javascript">
+	<META http-equiv="Content-Style-Type" content="text/css">
+	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<title>Easter BoxMapビューア</title>
+</head>
+
+<script type="text/javascript"><!--
+var previewing_img_url = "";
+var img_url_list = [ #[EstCM_img_url_list]# ];
+var st_func_tbls = [];
+#[hint_table]#
+//--></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/hint.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/assort.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/preview.js"></script>
+	
+<body bgcolor="#EEFFEE" text="#808000" link="#0000EE" vlink="#0000EE" alink="#FF0000">
+
+<form action="/cgis/easter/easter.cgi?est_manager=cache#CacheViewer" method="POST" name=fm_main>
+
+<a name="user-content-index"></a>
+<font size=+2><i><b>Easter</b></i></font><br>
+
+<br>
+<a class=MstyElemLink  href="/easter" >仮想ブラウジング</a> &nbsp;
+<a class=MstyElemLink  href="/easter?est_manager=topic&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >コレクション</a> &nbsp;
+<a class=MstyElemLink  href="/easter?est_manager=config&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >設定</a> &nbsp;
+<a class=MstyNowSelectedLink href="/easter?est_manager=cache&amp;command=view&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >BoxMapビューア</a> &nbsp;
+<br>
+
+<table class=MstyManagerTable>
+<tr><td colspan=2>
+<font size=-1 color=red>　注: このパネルはエキスパート向けのもので通常は利用する必要はありません。　</font>
+</td></tr>
+</table>
+
+<input type=hidden name=Moai_AuthenticKey value="#[Moai_AuthenticKey]#">
+<button class=MstyDmyUpdateBtn disabled></button> <!-- For disable Enter key on text field -->
+
+<a name="BoxMapManager"></a>
+<br><b>BoxMapビューア</b><br>
+<table class=MstyManagerTable>
+
+<tr><td colspan=2>
+</font>
+<br>
+<a name="CacheViewer"></a>
+#[caches]#
+<br>
+<a class=MstyElemLinkRed href="javascript:EjsAssort_submitCommandAndArg( document.fm_main, 'cache', 'remove', '' )">Check項目の一括削除</a> 
+<input type=hidden name=confirm id=confirm value=on >
+<input type=hidden name=md5_mode id=md5_mode value=false >
+<input type=hidden name=backto value="#[backto]#">
+<div id=js_console></div>
+
+</td></tr>
+
+<tr><td colspan=2>
+<br>
+
+<a name="TagsView"></a>
+<a class=MstyAppLinkRed href="javascript:EjsAssort_submitCommandAndArg( document.fm_main, 'cache', 'stock', 'add_tags=true' )">Check項目を一括でストック</a>
+<a class=MstyAppLinkRed href="javascript:EjsAssort_submitCommandAndArg( document.fm_main, 'cache', 'favoritize', 'add_tags=true' )">Check項目を一括でお気に入りへ</a> 
+<br><div class=MstyAutoLinkOther>
+<b><u>タグ一覧(カテゴリ別に表示)</u></b><br> <br>
+#[category_select_bar]#
+<div class=MstyAutoLinkOther>
+#[assort_ui]#
+</div>
+<br>
+<a class=MstyAppLinkRed href="javascript:EjsAssort_submitCommandAndArg( document.fm_main, 'cache', 'stock', 'add_tags=true' )">Check項目を一括でストック</a>
+<a class=MstyAppLinkRed href="javascript:EjsAssort_submitCommandAndArg( document.fm_main, 'cache', 'favoritize', 'add_tags=true' )">Check項目を一括でお気に入りへ</a> 
+</div>
+<br>
+<br> <br>
+
+<a class=MstyElemLink href="javascript:EjsAssort_submitCommandAndArg( document.fm_main, 'tag_manager', 'view', 'edit_mode=tag#TagManager' )">タグマネージャーを開く</a>
+
+</td></tr>
+
+<tr><td colspan=2>
+<input type=checkbox id=msg_console_cbtn onclick="EjsAssort_switchVisibility('msg_console', '_cbtn', '_body', '_msg')">
+<b>Easter System Console </b><br>
+<div class=MstyMsgConsole id=msg_console_body style=display:none><b>Easter System Console:</b><br>#[msg]#</div>
+<font size=-1 color=#8888ff><div id=msg_console_msg>― 現在非表示です ―</div></font>
+</td></tr>
+
+</table>
+
+</form>
+
+
+<a class=MstyElemLink href="#user-content-index">一番上へ戻る</a> <a class=MstyElemLink href="/">Moaiトップページ</a>
+<br><br>
+
+</body></html>

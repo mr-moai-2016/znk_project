@@ -1,11 +1,16 @@
 #include "Moai_info.h"
-#include "Moai_log.h"
-#include "Moai_parent_proxy.h"
-#include "Moai_post_vars.h"
-#include "Moai_myf.h"
+#include "Moai_server_info.h"
+
+#include <Rano_log.h>
+#include <Rano_parent_proxy.h>
+#include <Rano_myf.h>
+
 #include <Znk_stdc.h>
 #include <Znk_s_base.h>
 #include <Znk_missing_libc.h>
+#include <Znk_htp_post.h>
+#include <Znk_net_ip.h>
+
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
@@ -59,11 +64,11 @@ copyPostVars( ZnkVarpAry dst_vars, const ZnkVarpAry src_vars )
 	ZnkVarpAry_clear( dst_vars );
 	for( idx=0; idx<size; ++idx ){
 		src_varp = ZnkVarpAry_at( src_vars, idx );
-		dst_varp = ZnkVarp_create( "", "", (int)src_varp->type_, ZnkPrim_type(&src_varp->prim_) ); 
+		dst_varp = ZnkVarp_create( "", "", (int)src_varp->type_, ZnkPrim_type(&src_varp->prim_), ZnkPrim_get_deleter(&src_varp->prim_) ); 
 		ZnkVarpAry_push_bk( dst_vars, dst_varp );
 		ZnkStr_set( dst_varp->name_, ZnkStr_cstr(src_varp->name_) );
-		ZnkStr_set( dst_varp->filename_, ZnkStr_cstr(src_varp->filename_) );
-		if( src_varp->type_ == MoaiPostVar_e_BinaryData ){
+		ZnkStr_set( ZnkVar_misc(dst_varp), ZnkStr_cstr(ZnkVar_misc(src_varp)) );
+		if( src_varp->type_ == ZnkHtpPostVar_e_BinaryData ){
 			ZnkBfr_set_dfr( dst_varp->prim_.u_.bfr_,
 					ZnkBfr_data(src_varp->prim_.u_.bfr_), ZnkBfr_size(src_varp->prim_.u_.bfr_) );
 		} else {
@@ -180,7 +185,7 @@ MoaiInfo_erase( MoaiInfoID query_id )
 void
 MoaiInfoID_getStr( MoaiInfoID id, MoaiInfoIDStr* id_str )
 {
-	Znk_snprintf( id_str->buf_, sizeof(id_str->buf_), "%08" Znk_PFMD_64 "x", (uint64_t)id );
+	Znk_snprintf( id_str->buf_, sizeof(id_str->buf_), "%08I64x", (uint64_t)id );
 }
 MoaiInfoID
 MoaiInfoID_scanIDStr( MoaiInfoIDStr* id_str )
@@ -197,11 +202,12 @@ static bool
 isRelayToMe( const char* my_hostname, size_t my_hostname_leng,
 		uint16_t my_port, const char* host_begin )
 {
+	uint16_t xhr_dmz_port = MoaiServerInfo_XhrDMZPort();
 	if( ZnkS_isBeginEx( host_begin, Znk_NPOS, my_hostname, my_hostname_leng ) ){
 		if( host_begin[ my_hostname_leng ] == ':' ){
 			uint16_t dst_port = 80; /* default HTTP port */
 			ZnkS_getU16U( &dst_port, host_begin+my_hostname_leng+1 );
-			if( dst_port == my_port ){
+			if( dst_port == my_port || dst_port == xhr_dmz_port ){
 				/***
 				 * BrowserはこのプログラムをLocalProxyとして使っているにも関わらず
 				 * その接続先は再びlocalなこのプログラム(WebServerとして接続)である.
@@ -278,6 +284,15 @@ decideLocalProxy_or_WebServer( ZnkStr str, ZnkStr req_urp, uint16_t my_port, con
 			/* 本件はWebServerとしての受理に矯正 */
 			as_local_proxy = false;
 		}
+		{
+			char ipstr[ 64 ] = "";
+			uint32_t private_ip = MoaiServerInfo_private_ip();
+			ZnkNetIP_getIPStr_fromU32( private_ip, ipstr, sizeof(ipstr) );
+			if( isRelayToMe( ipstr, Znk_strlen(ipstr), my_port, host_begin ) ){
+				/* 本件はWebServerとしての受理に矯正 */
+				as_local_proxy = false;
+			}
+		}
 
 		/***
 		 * 最前にあるHost名の部分は除去しなければならない.
@@ -312,9 +327,9 @@ decideLocalProxy_or_WebServer( ZnkStr str, ZnkStr req_urp, uint16_t my_port, con
 			 */
 			ZnkStr_assign( req_urp, 0, end, Znk_NPOS );
 			{
-				ZnkMyf config = MoaiMyf_theConfig();
+				ZnkMyf hosts = RanoMyf_theHosts();
 				size_t hostname_leng = end - host_begin;
-				const bool is_applied_host = MoaiParentProxy_isAppliedHost( config, host_begin, hostname_leng );
+				const bool is_applied_host = RanoParentProxy_isAppliedHost2( hosts, host_begin, hostname_leng );
 				if( !is_applied_host ){
 					size_t cut_size = end - ZnkStr_cstr( str );
 					ZnkStr_erase( str, 0, cut_size );
@@ -329,7 +344,7 @@ void
 MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 		bool* as_local_proxy, uint16_t my_port, bool is_request,
 		const char* response_hostname,
-		MoaiModuleAry mod_ary, const char* server_name )
+		RanoModuleAry mod_ary, const char* server_name )
 {
 	size_t key_begin; size_t key_end;
 	size_t val_begin; size_t val_end;
@@ -343,6 +358,7 @@ MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 	size_t arg_idx = 0;
 	ZnkHtpHdrs hdrs   = &info->hdrs_;
 	ZnkBfr     stream = info->stream_;
+	bool is_exist_body = false;
 
 	/* first line */
 	line_begin = (char*)ZnkBfr_data( stream );
@@ -372,7 +388,14 @@ MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 	 */
 	if( is_request ){
 		ZnkStr str = ZnkStrAry_at( hdrs->hdr1st_, 1 );
+		if( ZnkS_eqCase( ZnkStrAry_at_cstr( hdrs->hdr1st_, 0 ), "POST" ) ){
+			is_exist_body = true;
+		} else {
+			is_exist_body = false;
+		}
 		*as_local_proxy = decideLocalProxy_or_WebServer( str, info->req_urp_, my_port, server_name );
+	} else {
+		is_exist_body = true;
 	}
 
 	while( line_begin - (char*)ZnkBfr_data( stream ) < (int)info->hdr_size_ ){
@@ -387,13 +410,13 @@ MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 				":", 1,
 				" \t", 2 );
 		if( key_begin == Znk_NPOS || key_end == Znk_NPOS || val_begin == Znk_NPOS ){
-			MoaiLog_printf( "  MoaiInfo_parseHdr : Error : key_begin=[%u] key_end=[%u] val_begin=[%u]\n",
+			RanoLog_printf( "  MoaiInfo_parseHdr : Error : key_begin=[%zu] key_end=[%zu] val_begin=[%zu]\n",
 					key_begin, key_end, val_begin );
 			break;
 		}
 		varp = ZnkHtpHdrs_regist( hdrs->vars_,
 				line_begin+key_begin, key_end-key_begin,
-				line_begin+val_begin, val_end-val_begin );
+				line_begin+val_begin, val_end-val_begin, false );
 		if( varp == NULL ){
 			/* memory error */
 			exit( EXIT_FAILURE );
@@ -403,7 +426,7 @@ MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 
 		if( ZnkS_eqCase( key, "Referer" ) ){
 			ZnkStr str = ZnkHtpHdrs_val( varp, 0 );
-			MoaiLog_printf( "  Referer=[%s]\n", ZnkStr_cstr( str ) );
+			//RanoLog_printf( "  Referer=[%s]\n", ZnkStr_cstr( str ) );
 			if( strstr( ZnkStr_cstr( str ), "web_start_page" ) ){
 				assert( 0 );
 			}
@@ -420,23 +443,23 @@ MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 		}
 		if( ZnkS_eqCase( key, "Content-Type" ) ){
 			if( ZnkS_isBegin( val, "text/html" ) ){
-				body_info->txt_type_ = MoaiText_HTML;
-				MoaiLog_printf( "  MoaiInfo_parseHdr : txt_type=HTML\n" );
+				body_info->txt_type_ = RanoText_HTML;
+				//RanoLog_printf( "  MoaiInfo_parseHdr : txt_type=HTML\n" );
 			} else if(
 			    ZnkS_isBegin( val, "text/css" )
 			){
-				body_info->txt_type_ = MoaiText_CSS;
-				MoaiLog_printf( "  MoaiInfo_parseHdr : txt_type=CSS\n" );
+				body_info->txt_type_ = RanoText_CSS;
+				//RanoLog_printf( "  MoaiInfo_parseHdr : txt_type=CSS\n" );
 			} else if(
 			    ZnkS_isBegin( val, "application/javascript" )
 			 || ZnkS_isBegin( val, "application/x-javascript" )
 			 || ZnkS_isBegin( val, "text/javascript" )
 			){
-				body_info->txt_type_ = MoaiText_JS;
-				MoaiLog_printf( "  MoaiInfo_parseHdr : txt_type=JS\n" );
+				body_info->txt_type_ = RanoText_JS;
+				//RanoLog_printf( "  MoaiInfo_parseHdr : txt_type=JS\n" );
 			} else {
-				body_info->txt_type_ = MoaiText_Binary;
-				MoaiLog_printf( "  MoaiInfo_parseHdr : txt_type=Binary\n" );
+				body_info->txt_type_ = RanoText_Binary;
+				//RanoLog_printf( "  MoaiInfo_parseHdr : txt_type=Binary\n" );
 			}
 		}
 		if( ZnkS_eqCase( key, "Content-Length" ) ){
@@ -446,36 +469,13 @@ MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 	}
 
 	/***
-	 * HtpHeadrのフィルタのタイミングをここではなく後にしたい.
-	 */
-#if 0
-	{
-		const char* hostname = NULL;
-		if( is_request ){
-			varp = ZnkHtpHdrs_find_literal( hdrs->vars_, "Host" );
-			if( varp ){
-				hostname = ZnkHtpHdrs_val_cstr( varp, 0 );
-			}
-		} else {
-			hostname = response_hostname;
-		}
-		if( hostname ){
-			MoaiModule mod = MoaiModuleAry_find_byHostname( mod_ary, hostname );
-			if( mod ){
-				MoaiModule_filtHtpHeader( mod, hdrs->vars_ );
-			}
-		}
-	}
-#endif
-
-
-	/***
 	 * www1.axfc.netでダウンロードする際など、is_unlimited_となっているCGIレスポンスがある.
 	 * しかもそれはContent-Typeも指定されていないHTMLでもある.
 	 * この場合、その内容からtxt_typeを推定しなければならない.
 	 * とはいえ、今の段階ではまだヘッダしか読み込んでいないため、この推定処理は後まわしになる.
 	 */
-	if( !body_info->is_chunked_ && body_info->content_length_ == 0 ){
+	if( is_exist_body && !body_info->is_chunked_ && body_info->content_length_ == 0 )
+	{
 		/***
 		 * chunkedかつContent-Lengthがどちらも指定されていない場合.
 		 * 残念ながら、このような行儀の悪いサーバも存在する.
@@ -483,14 +483,14 @@ MoaiInfo_parseHdr( MoaiInfo* info, MoaiBodyInfo* body_info,
 		 *
 		 * 尚、body部と思わしき余剰の存在如何を関わらず、ここではis_unlimited_をtrueとする.
 		 * (body部と思わしき余剰が存在する場合のみis_unlimited_をtrueにした場合、
-		 * ある種のProxyを介した場合にふたば内でBodyが読み込まれないことがある)
+		 * ある種のProxyを介した場合にBodyが読み込まれないことがある)
 		 */
-		MoaiLog_printf( "  Detect unlimited.\n" );
+		RanoLog_printf( "  Detect unlimited body.\n" );
 		body_info->is_unlimited_ = true;
 #if 0
 		if( line_begin - (char*)ZnkBfr_data( stream ) + 2 < (int)ZnkBfr_size( stream ) ){
 			body_info->is_unlimited_ = true;
-			MoaiLog_printf( "  It is unlimited\n" );
+			RanoLog_printf( "  It is unlimited\n" );
 		}
 #endif
 	}

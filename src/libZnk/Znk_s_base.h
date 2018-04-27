@@ -56,36 +56,70 @@ ZnkS_copy( char* buf, size_t buf_size, const char* cstr, size_t cstr_leng );
 
 /**
  * @brief
- *   いわゆるvsnprintfとsnprintf
- *   引数の与え方はおおよそ標準と同じだが、C99の新機能については
- *   サポートされていない場合もある. 戻り値についてはC99と異なる.
+ *  いわゆるvsnprintfとsnprintf
+ *  引数の与え方はおおよそ標準と同じだが、C99の新機能については
+ *  サポートされていない場合もある. 戻り値についてはC99と異なる.
  *
  * @return
- * VC の _vsnprintf の都合により、それに合わせてある.
- * すなわち以下のようになる(下記でstr_lenとは、fmt と ap による合成結果の
- * 文字列の長さを示す.)
+ *  最近のVC(というかPlatformSDKというべきか)ではvsnprintfがサポートされているが
+ *  古いPlatformSDKを使っている場合、VC では _vsnprintf を使う必要がある. 
+ *  この _vsnprintf の仕様がC99とは異なるため、ここでの戻り値は、多少工夫が必要である.
+ *  以下のように取り決める. (下記でstr_lenとは、fmt と ap による合成結果の文字列の長さを示す.)
  *
  *   buf_size == 0 の場合
- *     -1 が返る.
+ *     0 以上の予測文字列長(下記noteを参照)が返る.
  *     buf に一切触れずなにもしない.
+ *
+ *   内部エラーが発生した場合
+ *     -1 を返す.
+ *     この関数を使う側はこれ以上の処理は中断するべきである.
  *
  *   str_len < buf_size の場合
  *     str_len が返る.
  *     buf[ str_len ] の位置にNULL文字が代入される.
  *
  *   str_len >= buf_size の場合
- *     -1が返る.
- *     buf[ buf_size-1 ] の位置にNULL文字が代入される.
+ *     buf_size以上の予測文字列長(下記noteを参照)が返る.
+ *     buf[ buf_size-1 ] の位置にNULL文字が強制代入される.
  *     少なくとも1文字以上の文字列欠損が発生している.
  * 
- * 通常、C99の仕様では buf_size に敢えて 0 を指定することによって
- * 戻り値として予め知ることができる.  しかし、VCの _vsnprintf はこの機能がないため、
- * やむを得ず上記の仕様にしてある.
+ * @note:
+ *  ※1)
+ *  通常、C99の仕様では buf_size に敢えて 0 を指定することにより、文字列展開後の正確なサイズを
+ *  戻り値として予め知ることができる.
+ *  しかし、VCの _vsnprintf はこの機能がないため、やむを得ず予測文字列長という形にする.
+ *  これは次にリトライするときにbuf_sizeに指定する値として加味して欲しい予測文字列長であり、
+ *  多くの場合は次にこのサイズ + 1を指定することでうまくいくと思われるが、本当に十分であるという補償はないため、
+ *  次のリトライでもユーザはその結果の戻り値をきちんと確認する必要がある.
+ *
+ *  (実装詳細なので本来この場に書くべきではないが)参考のため、現在サポートされている各コンパイラ
+ *  環境毎にどのような値を返すかを以下に列挙しておく.
+ *
+ *  VCの場合:
+ *    buf_size = 0 を指定した場合:
+ *      まずstrchr( fmt, '%' ) により、fmt内にざっくりと%が含まれるか否かをスキャンする.
+ *      そして % が存在する場合は strlen( fmt ) + 512 を返す.
+ *      % が存在しない場合は strlen( fmt ) を返す.
+ *    buf_size > 0 を指定した場合:
+ *      展開後のOverが発生しなかった場合は、予測文字列長ではなく実際に展開され書き込まれた文字列長を返す.
+ *      (多くの場合は、プログラマのbuf_size予想は正しいとして最初の一回目は指定されたbuf_sizeをそのまま試す).
+ *      展開後のOverが発生した場合は、予測文字列長として MAX( strlen( fmt ) + 512, buf_size*2 ) を返す.
+ *      (プログラマのbuf_size予想が外れる場合は、大抵の場合は大量の文字列が与えられた場合なので
+ *      サイズは急速にgrowさせるべきと考えられる)
+ *
+ *  GCCなどC99対応しているvsnprintfが呼ばれる環境:
+ *    buf_size = 0 を指定した場合:
+ *      C99の仕様通りである.
+ *      正確に展開後のサイズを予測文字列長として返す.
+ *    buf_size > 0 を指定した場合:
+ *      C99の仕様通りである.
+ *      展開後のOverが発生しなかった場合は、実際に展開され書き込まれた文字列長を返す.
+ *      展開後のOverが発生した場合は、正確に展開後のサイズを予測文字列長として返す.
  */
+int // Znk_vsnprintf_C99 への移行が終わるまでしばらくの間、この後ろに__がついた妙な名前にしておく.
+ZnkS_vsnprintf_sys__( char* buf, size_t buf_size, const char* fmt, va_list ap );
 int
-ZnkS_vsnprintf_sys( char* buf, size_t buf_size, const char* fmt, va_list ap );
-int
-ZnkS_snprintf_sys( char* buf, size_t buf_size, const char* fmt, ... );
+ZnkS_snprintf_sys__( char* buf, size_t buf_size, const char* fmt, ... );
 
 
 /**
@@ -307,6 +341,37 @@ ZnkS_isMatchSWC( const char* ptn, size_t ptn_leng,
  *   4文字以下/8文字以下の長さの文字列sをそのままデシリアライズした32bit/64bit整数値
  *   として返す. ここではEndian等は一切考えない. したがって、取得される整数の算術的意味は、
  *   LEとBEの環境によって異なる結果になる. ここではこれを高速化のためのIDと考える.
+ *
+ * @exam
+ *   // 以下はZnkS_get_id32の場合の例であるが、ZnkS_get_id64の場合は4文字のところを8文字に読み替えて欲しい.
+ *   // type_str4は4文字以内の文字列が与えられると仮定し、万一それより長い場合は、4文字で打ち切る.
+ *   bool checkType( const char* type_str4 )
+ *   {
+ *     static uint32_t TEXT = 0; 
+ *     static uint32_t PICT = 0; 
+ *     static bool     initialized = false;
+ *
+ *     if( !initialized ){
+ *       // この関数が初めて実行される場合は、整数パターンを初期化.
+ *       TEXT = ZnkS_get_id32( "TEXT", Znk_NPOS ); 
+ *       PICT = ZnkS_get_id32( "PICT", Znk_NPOS ); 
+ *       initialized = true;
+ *     }
+ *
+ *     // 以下、整数での比較が可能(文字列比較より高速).
+ *     // この例ではパターンがTEXTとPICTの二つしかないので知れているが、
+ *     // パターンの数が大量かつ、この比較をリアルタイムに出来るだけ高速に行わなければならない場合等に効果が期待できる.
+ *     // この種の4文字IDのテクニックはAdobe Photoshop File のフォーマットなどにも見られる.
+ *     {type
+ *       const uint32_t type_id32 = ZnkS_get_id32( type_str4, Znk_NPOS ); 
+ *       if( type_id32 == TEXT ){
+ *         ...
+ *       } else if( type_id32 == PICT ){
+ *         ...
+ *       }
+ *     }
+ *   }
+ *    
  */
 uint32_t ZnkS_get_id32( const char* s, size_t leng );
 uint64_t ZnkS_get_id64( const char* s, size_t leng );
@@ -324,6 +389,24 @@ uint64_t ZnkS_get_id64( const char* s, size_t leng );
  *   ことも可能であり、strrchr関数と比べた場合の利点として挙げられる.
  */
 const char* ZnkS_get_extension( const char* str, char dot_ch );
+
+/**
+ * @brief
+ *   C文字列str内の最初に出現する改行コードを除去し
+ *   そこで強制的にNUL終端させる.
+ */
+Znk_INLINE void
+ZnkS_chompNL( char* str ){
+	while( *str ){
+		switch( *str ){
+		case '\n': case '\r':
+			*str = '\0';
+			return;
+		default: break;
+		}
+		++str;
+	}
+}
 
 /**
  * ZnkS_lfind_one_of:
@@ -380,11 +463,10 @@ const char* ZnkS_get_extension( const char* str, char dot_ch );
  *  これが見つからなかった場合や begin と end の値が例外的であった場合は Znk_NPOS を返す.
  *
  * @note
- *  旧コードからの移行のため、以下の情報をしばらく残す.
- *  ZnkS_lfind_one_of     : 旧 ZnkS_lseekWS    ( std::stringのfind_first_ofと同じ )
- *  ZnkS_lfind_one_not_of : 旧 ZnkS_lseekNonWS ( std::stringのfind_first_not_ofと同じ )
- *  ZnkS_rfind_one_of     : 旧 ZnkS_rseekWS    ( std::stringのfind_last_ofと同じ )
- *  ZnkS_rfind_one_not_of : 旧 ZnkS_rseekNonWS ( std::stringのfind_last_not_ofと同じ )
+ *  ZnkS_lfind_one_of     : std::stringのfind_first_ofと同じ
+ *  ZnkS_lfind_one_not_of : std::stringのfind_first_not_ofと同じ
+ *  ZnkS_rfind_one_of     : std::stringのfind_last_ofと同じ
+ *  ZnkS_rfind_one_not_of : std::stringのfind_last_not_ofと同じ
  */
 size_t
 ZnkS_lfind_one_of( const char* str,

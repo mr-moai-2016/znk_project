@@ -1,0 +1,714 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<title>Moai2.0ドキュメント</title>
+</head>
+<body>
+<a name=TopBar></a>
+<p><b><img src="/imgs/here_landmark.png"> Moai2.0ドキュメント</b></p>
+
+<a class=MstyElemLink href="/">トップページ</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index.html">Moai2.0ドキュメント</a> &nbsp;
+<a class=MstyElemLink        href="/moai1.1/index.html">Moai1.1ドキュメント</a> &nbsp;
+<br> <br>
+<a class=MstyElemLink        href="/moai2.0/install.html">インストールガイド</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/moai_reference.html">Moai本体</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/customboy_reference.html">CustomBoy</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
+<br> <br>
+<a class=MstyNowSelectedLink href="/moai2.0/moai_cgi_developers.html">Moai CGI 入門編</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/moai_cgi_developers_pragmatic.html">Moai CGI 実践編</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/mkfgen.html">mkfgenリファレンス</a> &nbsp;
+<br> <br>
+
+
+<div class=MstyComment>
+<u><b>記事担当者</b></u> : Mr.Moai<br> 
+<br>
+<u><b>最終更新日</b></u> : 2018/03/31<br>
+<br>
+</div>
+<br>
+
+
+<a name=AtFirst></a>
+<u><b>
+はじめに
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	この記事ではMoai CGI上で動くWebアプリケーションの開発方法について述べます.<br>
+	<br>
+	Moai CGI では基本的にApache上などで動く通常のCGIを動作させることもできます.<br>
+	MoaiのWebサーバとしての機能はApacheなどと比べ機能が限定されますが、その一方で設定等が簡易になっています.<br>
+	そして何よりMoaiフィルタリング機能との協調動作が容易に行える点がメリットとして挙げられます.<br>
+	(Easterはまさにそれを実現したツールとなります.<br>
+	しかしこの解説講座ではそこまでの説明はしませんのでご了承ください)<br>
+	<br>
+	所詮はCGIスクリプトであるため、開発はそれほど難しくありません.<br>
+	勿論使用する言語はCのみならず、あなたの得意なスクリプト言語でもOK.<br>
+	必要な知識は使用する言語における標準出力をする方法(Cならprintfなど)、基本的なHTMLやJavascriptを扱う程度で事足りるでしょう.<br>
+	(凝ったものを作ろうとすればそれなりに大変ではありましょうが…)<br>
+</div><br>
+<br>
+
+
+<a name=Index></a>
+<u><b>目次</b></u>
+<ul>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_Introduction>Moai CGI 開発入門</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_hello>Hello World!</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_evar1>Hello 環境変数!</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_query_string1>Hello Query String!</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_post1>Hello Post!</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_transfer_chunked>Transfer-Encoding: chunked転送モードに関する実験</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_futaba_php>他サイトで公開されているPHPスクリプトなどを実行させてみる(その1)</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_up_php    >他サイトで公開されているPHPスクリプトなどを実行させてみる(その2)</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_next>さて、この次は？</a></b></li>
+</ul><br>
+<br>
+
+
+<a name=MoaiCGI_Introduction></a>
+<u><b>
+Moai CGI 開発入門
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	これはCGIスクリプトなんて作ったことがない方向けのチュートリアルとなります.<br>
+	またプログラムなんて少々かじった程度である方でも大丈夫と思います(多分…).<br>
+	<br>
+	このチュートリアルではC言語(一部例外もあります)を使用し、ひたすらそのサンプルを眺めながら<br>
+	基本をミッチリ解説していくというまさに<s>クソマゾい</s>王道のスタイルになります.<br>
+	<br>
+	世の中他に便利な言語が腐るほどある中、なぜ<s>クソマゾい</s>C言語かというと、<br>
+	<ol>
+		<li>ネット上には C ベースの各種基本ライブラリが大量に溢れかえっており、必要ならそれを利用するのも(他の言語からより)容易い.</li>
+		<li>C++よりもCの方が動的リンクライブラリとの相性がよい.</li>
+		<li>出来上がるバイナリは(動的リンクライブラリを除けば)単独で実行できる(別途インタプリタを必要としない).</li>
+		<li>記述されたこと以上の余計なことをあまりしない.</li>
+		<li>Moai(正確にはlibRano)が提供するAPIがC言語で用意されているため、これらの機能と協調動作するのに親和性が良い.</li>
+	</ol>
+	などの点が挙げられます.<br>
+	特に4については、CGIが内部でどのように呼び出されどのような仕組みでサーバとデータのやり取りが行われるかを<br>
+	なるべく包み隠さず理解するのに最適で、まさに<s>ハッカー指向な方</s>チュートリアルにはうってつけではないでしょうか？<br>
+	<br>
+	やっていることはAPIの呼び出しと標準入出力をズラズラと並べる程度なので、<br>
+	C言語以外の言語を使うプログラマの方でもさほど差し支えない内容と思います.<br>
+	<br>
+	尚、以下で紹介しているサンプルコードのうち、私Mr.MoaiがAuthorとなっているもののライセンスは<a class=MstyElemLink href="http://www.kmonos.net/nysl" target=_blank>NYSL</a>とします.<br>
+	それ以外のものについては気になるようであればオリジナル配布元にてご確認ください(多分たいした制限はないと思います).<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=MoaiCGI_hello></a>
+<u><b>
+Hello World!
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	まずは Moai CGI で単純にメッセージを出力してみます.<br>
+	<br>
+	<b><u>CGIへのリンクとソースコード</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/hello.cgi">http://localhost:8124/cgis/cgi_developers/protected/hello.cgi</a> 
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/hello.c">ソースコード</a> 
+		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+		<div class=MstyComment>
+			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
+		</div>
+	</div>
+	<br>
+	<b><u>説明</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		<br>
+		上のリンクを開くといきなり次のような画面が表示されるかと思いますが、<br>
+		これはMoai CGIのセキュリティー機構が働いたためです.<br>
+		とりあえず気にせずに画面の指示に従って「Please retry this」を押してください.<br>
+		(以降のサンプルではすべてこの画面が最初に表示されます)<br>
+		<br>
+		<div class=MstyComment>
+			<img src=/imgs/cgi_unauthorized.png width=100%>
+		</div>
+		<br>
+		<div class=MstyComment>
+			<u><b>参考</b></u><br>
+			<br>
+			最初に開いたURLは http://localhost:8124/cgis/cgi_developers/protected/hello.cgi でした.<br>
+			しかし「Please retry this」ボタンを押した後では、URLが何か違っていますね？<br>
+			http://localhost:8124 と /cgis の間に、<b>/authentic/16桁の16進数列</b>というパターンが挿入された形となっています.<br>
+			この16桁の16進数列の部分を<b>Moai認証キー(Moai_AuthenticKey)</b>と呼びます.<br>
+			<br>
+			XhrDMZに隔離されたjavascriptは、このMoai認証キーの値を知ることができません.<br>
+			これを利用して、あまり安全ではないよくわからないjavascriptはXhrDMZへ置き、<br>
+			一方、安全であることがわかっていて重要な処理を行うCGIなどをMoai WebServer上で<br>
+			それぞれ分離して実行させれば互いに干渉する範囲を小さくでき、セキュリティはより強固なものになります.<br>
+			これはMoai CGI独自の機能の一つです.<br>
+			XhrDMZについて興味ある方は<a class=MstyElemLink href=/moai2.0/moai_reference.html#XhrDMZ>こちら</a>を参照してください.<br>
+			<br>
+			悪意ある外部スクリプトからこのCGIが自動実行されるのを防止するなどの効果が期待できるため、<br>
+			私は Moai CGI エンジンを開発するにあたって、この protected に置かれたCGIに関しては、<br>
+			最初にこのような画面を表示し、「Please retry this」ボタンでMoai_AuthenticKeyを付加する仕様にしました.<br>
+		</div>
+		<br>
+		さて、それでは本題に入りましょう.<br>
+		CGIスクリプトでは、標準出力を行うとそれがそのままHTMLとしてブラウザに渡される仕組みとなっています.<br>
+		そしてそのようなHTMLの出力に先立って、C言語ではまず以下のようなHTTPヘッダの出力をしておく必要があります.<br>
+		<b>HTTPヘッダの部分の改行コードは\r\n</b>としなければなりませんので注意しましょう.<br>
+		ソースコード内でこれに該当する部分を以下に示します.<br>
+		<br>
+		<div class=MstyComment>
+			<div class=MstyCode>
+				<span class=MstyCodeSynComment>/* Content-Typeの指定は必須です. */</span><br>
+				printf( <span class=MstyCodeSynConst>"Content-Type: text/html; charset=Shift_JIS\r\n"</span> );<br>
+				<span class=MstyCodeSynComment>/* ブラウザにキャッシュさせたくない場合は以下の2行を加えます. */</span><br>
+				printf( <span class=MstyCodeSynConst>"Pragma: no-cache\r\n"</span> );<br>
+				printf( <span class=MstyCodeSynConst>"Cache-Control: no-cache\r\n"</span> );<br>
+				<span class=MstyCodeSynComment>/* 以下の改行はHTTPヘッダ部の終わりを意味し、必須です. */</span><br>
+				printf( <span class=MstyCodeSynConst>"\r\n"</span> );<br>
+				<span class=MstyCodeSynComment>/* 以下、HTMLの本体を出力する処理となります. */</span><br>
+			</div>
+		</div><br>
+		CGIスクリプトを初めて作成される方はまずはこの基本中の基本を押さえておいてください.<br>
+		<br>
+		尚、このソースコード hello.c では cgi_util.h をincludeして使います.<br>
+		cgi_util.h の実装部分となるのが cgi_util.c ファイルです.<br>
+		これらは hello.c と同じディレクトリにあり、付属のMakefileでいっしょにビルドおよびリンクされるようになっています.<br>
+		以降の説明ではこれらを単に<b>cgi_util</b>と呼ぶことにします.<br>
+		cgi_utilはC言語でCGIを作るならば最低限必要な処理をまとめたものです.<br>
+	</div>
+	<br>
+	<b><u>ビルド方法</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		この記事では、あなたが既にC言語コンパイラをインストールされていることを前提として話を進めますが、<br>
+		インストールされていない方はその方法を <a class=MstyElemLink href="/moai2.0/how_to_compile.html" target=_blank>HowToコンパイル</a> で説明してありますのでよろしければ参考にしてください.<br>
+		使用するC言語コンパイラは基本的になんでもよいですが、付属のMakefileがサポートするのは、以下のものとなっています.<br>
+		<ul>
+			<li>MinGW</li>
+			<li>MSYS上のgcc(つまりMinGW)</li>
+			<li>VC(バージョン6.0以上)</li>
+			<li>Cygwin上のgcc</li>
+			<li>Linux上のgcc</li>
+			<li>Android NDKのgcc</li>
+		</ul>
+		特にVCでIDE環境を使用している方などあまりMakefileに馴染みのない方もおられるでしょう.<br>
+		VCでMakefileを使ってビルドする場合はnmakeコマンドを使いますが、整えなければならない環境変数などもあり若干面倒です.<br>
+		ここではauto_triggerというツールを使いましょう.<br>
+		<div class=MstyComment>
+			auto_trigger は特にWindows上でC言語ビルドするのを簡単にするために我々が開発したツールです.<br>
+			Moai本体やEasterを始めとしたCGIアプリケーションはすべて auto_trigger によるビルドが可能になっています.<br>
+			別にこれを使わなくてもコマンドプロンプトを自分で開いてmakeコマンドを叩けばビルドできるのですが、<br>
+			特にWindows上ではこれを使った方が圧倒的に楽だと思います.<br>
+		</div>
+		<br>
+		ソースコードと同じディレクトリに auto_trigger.batというファイルがありますのでそれをクリックして実行してください.<br>
+		<br>
+		<div class=MstyComment>
+			<img src=/imgs/auto_trigger_run_vc.png width=100%><br>
+		</div>
+		<br>
+		古き良き時代を彷彿とさせるコマンドラインベースでのメニュー選択UIが表示されるので、<br>
+		「3. switch debug-mode」を何回か選んでDEBUG_MODEを「optimize」にし、<br>
+		「4. switch mkfid」を何回か選んでMKF_IDを「vc」にし、<br>
+		「5. switch machine」を何回か選んでMACHINEを「x86」あるいは「x64」にし、<br>
+		最後に「0. make」または「1. make install」を選びましょう.<br>
+		<div class=MstyComment>
+			ここで「選ぶ」というのは、一番先頭にある数字のキーを押せばよいです.<br>
+			またはその項目までカーソルキーで移動してEnterキーを押してもよいです.<br>
+		</div>
+		<br>
+		VCの場合、auto_triggerはこれがインストールされていることを自動的に検出しますので、<br>
+		特に何の設定をすることなく自動的にMakefileによるビルドが行われます.<br>
+		<div class=MstyComment>
+			<u><b>Note</b></u><br>
+			<br>
+			ただしVS2017上では環境変数の仕様が変わり、この検出は正しく動作しません.<br>
+			環境変数 ZNK_VSCOMNTOOLS にVsDevCmd.batの存在するフォルダのフルパスを指定しておく必要があると考えられます.<br>
+			これは例えば、"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\Tools" といった値になります.<br>
+			これに関しては<a class=MstyElemLink href=/moai2.0/how_to_compile.html#compile_by_vc target=_blank>こちら</a>にも少し詳しく説明してあります.<br>
+		</div>
+		<br>
+		MinGWの場合は、環境変数 ZNK_MINGW32_DIR に MinGWのトップディレクトリのパスを正しく指定すれば、<br>
+		auto_triggerを使うことができます( つまり $ZNK_MINGW32_DIR/bin/gcc.exe が実行できるように設定する ).<br>
+		<br>
+		「0. make」を選んだ場合は、このディレクトリ内にあるすべてのCファイルについて、必要なコンパイルが行われます.<br>
+		このときout_dirディレクトリが自動的に作成され、その中にコンパイル結果(拡張子がcgiとなっているファイル)が作成されます.<br>
+		「1. make install」を選んだ場合はまずcgiファイルがコンパイルによって作成された後、<br>
+		さらにsrcディレクトリより一つ上の階層にmoaiインストール用のディレクトリが作成され、<br>
+		そこにcgiファイルがインストールされます.<br>
+		<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=MoaiCGI_evar1></a>
+<u><b>
+Hello 環境変数!
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	Moai CGI で使われる環境変数の内容をテスト出力してみます.<br>
+	<br>
+	<b><u>CGIへのリンクとソースコード</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/evar1.cgi">http://localhost:8124/cgis/cgi_developers/protected/evar1.cgi</a>
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/evar1.c">ソースコード</a> 
+		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+		<div class=MstyComment>
+			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
+		</div>
+	</div>
+	<br>
+	<b><u>説明</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		CGIスクリプトでは<b>環境変数</b>を介して、クライアントやサーバに関するさまざまな情報を取得します.<br>
+		環境変数って…OSで定義されているアレ？と思われる方もおられるかもしれませんが、その<b>アレと同じもの</b>です.<br>
+		C言語ではgetenv関数を使って環境変数を参照することができるのですが、<br>
+		次のサンプルにおいて詳しく述べますがこの関数には問題があるため、我々はこれを直接使うべきではありません.<br>
+		<br>
+		一方、CGIスクリプトの環境変数はOSで定義されてる<b>アレとは違う</b>ともいえます.<br>
+		CGIに関する重要な環境変数としては、QUERY_STRING, CONTENT_TYPE, HTTP_COOKIE, SERVER_NAME, SERVER_PORT などがあります.<br>
+		ところが実際Windowsで「システムのプロパティ」から「環境変数」のダイアログを開いてみてもこんな環境変数どこにも定義されてません.<br>
+		Linuxでも同じで、envコマンドを叩いてもそれらしき環境変数はどこにも見当たりません.<br> 
+		どういうことでしょう？<br>
+		<br>
+		からくりはCGIを呼び出すWebサーバにあります.<br>
+		WebサーバはCGIスクリプトの実行要求を受け取ると、CGI用のプロセスを一つ立ち上げます.<br>
+		そしてそれに先立ち、クライアントやサーバに関する環境変数をそのプロセス内だけから参照できる形で一時的にセットしているのです.<br>
+		そのため、OSでは定義されているはずのない環境変数がCGIスクリプト内だけからは定義されているように見えるのでした.<br>
+		OSで定義されている環境変数をグローバル変数とするなら、CGIの環境変数はローカル変数という位置づけになるでしょう.<br>
+		<br>
+		では実際にこれらを取得する方法ですが、今回も cgi_util を使いましょう！<br>
+		cgi_util が提供する関数 <span class=MstyCode>CGIEVar_create</span> によってMoai CGIが提供する全ての環境変数を即座に取得できます.<br>
+		ソースコード内でこれに該当する部分を以下に示します.<br>
+		<br>
+		<div class=MstyComment>
+			<div class=MstyCode>
+				<span class=MstyCodeSynComment>/* Moai CGIにおける全環境変数を取得します. */</span><br>
+				CGIEVar* evar = CGIEVar_create();<br>
+				...<br>
+				<span class=MstyCodeSynComment>/* CGIEVar* は使用後解放する必要があります. */</span><br>
+				CGIEVar_destroy( evar );<br>
+			</div>
+		</div>
+		<br>
+		環境変数は様々なCGIスクリプトに使われるものですので、これも押さえておいてください.<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=MoaiCGI_query_string1></a>
+<u><b>
+Hello Query String!
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	なんか<b>Helloばっかり</b>じゃん！<br>
+	<br>
+	お気づきになられましたか？<br>
+	この解説講座ではしばらくこんなタイトルが続きます.<br>
+	ここでは Moai CGI へQuery Stringを渡し、それをCGIスクリプト側から取得して内容を表示してみます.<br>
+	<br>
+	<b><u>CGIへのリンクとソースコード</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/query_string1.cgi?mode=cat&sort=1">http://localhost:8124/cgis/protected/cgi_developers/query_string1.cgi?mode=cat&sort=1</a>
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/query_string1.c">ソースコード</a> 
+		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+		<div class=MstyComment>
+			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
+		</div>
+	</div>
+	<br>
+	<b><u>説明</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		そもそも<b>Query String</b>とは何でしょうか？<br>
+		URLの後ろの方に「?」文字があるのをご覧になったことがあると思います.<br>
+		その「?」文字よりさらに後ろにある文字列の部分をQuery Stringと呼びます.<br>
+		<br>
+		Query Stringは name=val という形式のデータの羅列となっており、これが複数ある場合はさらに &amp; 文字でこれらを区切ります.<br>
+		つまり一般に、name1=val1<b>&amp;</b>name2=val2<b>&amp;</b>name3=val3 … という形式になっています.<br>
+		通常はnameの部分にそのスクリプトにとってなんらかの意味があってわかりやすい名前をつけます.<br>
+		そして = 文字に続けてそれに対する値を付加することで、CGIスクリプトに対する引数を指定する形になります.<br>
+		<br>
+		Query Stringの内容をCGIスクリプト側で獲得するにはどうすればよいでしょうか？<br>
+		これは<b>環境変数QUERY_STRING</b>を参照します. <br>
+		我々は既に一つ前のサンプルでMoai CGIにおける全環境変数を取得していました.<br>
+		今回も cgi_util にご登場願いましょう.<br>
+		<br>
+		CGIEVar_createによってCGIEVarを作成すると、これの query_string_ メンバにQuery Stringの値が格納されています.<br>
+		これを直接参照してもよいのですが、NULL値になっている場合のチェックが面倒なので、<br>
+		cgi_util が提供する関数マクロ <span class=MstyCode>CGIUtil_getQueryString</span> を使いましょう.<br>
+		この関数マクロには CGIEVar を引数として渡します.<br>
+		<br>
+		次の処理として、この query_string の解析を行います.<br>
+		これには <span class=MstyCode>CGIUtil_getQueryStringToken</span> を使いましょう.<br>
+		この関数は、query_string を &amp; 文字で分割し、それぞれの「key=val」という形式の塊(Token)において、<br>
+		そのkeyとvalにあたる部分を取得します.<br>
+		この関数の第2引数では、それらの塊(Token)の何番目を取得したいかを指定します.<br>
+		<br>
+		それでは今回も例によってキーポイントとなるコードを示して終わりとしましょう.<br>
+		<br>
+		<div class=MstyComment>
+			<div class=MstyCode>
+				<span class=MstyCodeSynComment>/* Moai CGIにおける全環境変数を取得します. */</span><br>
+				CGIEVar* evar = CGIEVar_create();<br>
+				<span class=MstyCodeSynComment>/* Query Stringを取得します. */ </span><br>
+				const char* query_string = CGIUtil_getQueryString( evar );<br>
+				...<br>
+				<span class=MstyCodeSynComment>/* query_stringの内容を解析し &amp; 文字に関して分割(split)して結果を表示します. */</span><br>
+				{<br>
+				<div class=MstyIndent>
+					size_t i = 0;<br>
+					char key[ 256 ] = "";<br> 
+					char val[ 256 ] = "";<br> 
+					for( i=0; i&lt;64; ++i ){<br>
+					<div class=MstyIndent>
+						int result = CGIUtil_getQueryStringToken( query_string, i,<br>
+						<div class=MstyIndent>
+							key, sizeof(key),<br>
+							val, sizeof(val) );<br>
+						</div>
+						if( result == 0 ){ break; }<br>
+						printf( "%s = [%s]\n", rejectHtmlTag(key), rejectHtmlTag(val) );<br>
+					</div>
+					}<br>
+				</div>
+				}<br>
+				...<br>
+				<span class=MstyCodeSynComment>/* これは使い終わった後解放しなければなりません. */ </span><br>
+				CGIEVar_destroy( evar );<br>
+			</div>
+		</div>
+		<br>
+		Query Stringについては以上となります.<br>
+		<br>
+		<div class=MstyComment>
+			<b><u>補足事項</u></b><br>
+			<br>
+			少し話が脱線しますが C言語で環境変数を取得する関数として getenv を思い浮かべる方もおられると思います.<br>
+			ですが上述した通り、我々はこの関数を直接使うべきではありません. 安易に使うと大変危険なためです. <br>
+			使うのはこの関数の特性を十分理解した上で、環境変数の取得/設定を行うラッパーを自作するような仕方のない場合に限定すべきです.<br>
+			簡単に理由を説明しましょう.<br>
+			<br>
+			例えば２つの環境変数QUERY_STRINGとHTTP_COOKIEの値を取得したいからといって以下のようなコードを記述しては<b>いけません！</b><br>
+			<br>
+			<div class=MstyComment>
+				<div class=MstyCode>
+					char* query_string = getenv( <span class=MstyCodeSynConst>"QUERY_STRING"</span> );<br>
+					char* http_cookie  = getenv( <span class=MstyCodeSynConst>"HTTP_COOKIE"</span> );<span class=MstyCodeSynComment> /* NG! */</span><br>
+					printf( <span class=MstyCodeSynConst>"query_string=[%s] http_cookie=[%s]"</span>,<br>
+					<div class=MstyIndent>
+						rejectHtmlTag(query_string), rejectHtmlTag(http_cookie) );<br>
+					</div>
+				</div>
+			</div>
+			<br>
+			パッと見では何の問題もなさそうに見えるかもしれませんが、実はgetenvを不用意に連続させていることが問題です.<br>
+			その根拠は The C Standard, 7.22.4.6, paragraph 4 [ISO/IEC 9899:2011] において getenv に関する次のような記述に拠ります.<br>
+			<br>
+			The getenv function returns a pointer to a string associated with the matched list member.<br>
+			The string pointed to shall not be modified by the program but may be overwritten by a subsequent call to the getenv function.<br>
+			<br>
+			つまり上の「NG!」の時点のgetenv呼び出しで早くもquery_stringの示すメモリ領域は無効化している恐れがあります.<br>
+			これ以降でquery_stringにアクセスすると<b>未定義の動作</b>を引き起こすことでしょう.<br>
+			従ってgetenvで取得した値は、即座に別の文字列バッファにでもコピーしておかなければなりません.<br>
+			以下にstrdupを使った修正例を示しましょう. あらかじめEnvVar_get関数を下請けとして定義しておきます.<br>
+			<br>
+			<div class=MstyComment>
+				<div class=MstyCode>
+					char* EnvVar_get( const char* varname ){<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;char* tmp = getenv( varname );<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;return tmp ? strdup( tmp ) : <span class=MstyCodeSynConst>NULL</span>;<br>
+					}<br>
+					...<br>
+					char* query_string = EnvVar_get(<span class=MstyCodeSynConst>"QUERY_STRING"</span>);<br>
+					char* http_cookie  = EnvVar_get(<span class=MstyCodeSynConst>"HTTP_COOKIE"</span>);<br>
+					printf( <span class=MstyCodeSynConst>"query_string=[%s] http_cookie=[%s]"</span>,<br>
+					<div class=MstyIndent>
+						rejectHtmlTag(query_string), rejectHtmlTag(http_cookie) );<br>
+					</div>
+					if( query_string ){ free( query_string ); } <span class=MstyCodeSynComment>/* strdupでは解放が必要です */</span> <br>
+					if( http_cookie ){  free( http_cookie );  } <span class=MstyCodeSynComment>/* strdupでは解放が必要です */</span> <br>
+				</div>
+			</div>
+			<br>
+			マルチスレッドの場合にも万全を期すなら、EnvVar_get内の開始と終わりにおいてGlobalMutexなどでlock/unlockを掛ける必要があります.<br>
+			環境変数を設定する関数にputenvというものもありますが、これも同様に(むしろgetenv以上に)深刻な問題があります.<br>
+			libZnk が提供する関数 <span class=MstyCode>ZnkEnvVar_get</span> と<span class=MstyCode>ZnkEnvVar_set</span>はgetenvとputenvに関するこの種の問題を解消したものです.<br>
+		</div>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=MoaiCGI_post1></a>
+<u><b>
+Hello Post!
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	今回はいよいよ Moai CGI へフォームの内容をPOSTしてみます.<br>
+	つまりC言語ではそれをCGI側でどうやって受信するのかを学ぶというわけです.<br>
+	<br>
+	<b><u>CGIへのリンクとソースコード</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/post1.cgi">http://localhost:8124/cgis/cgi_developers/protected/post1.cgi</a> 
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/post1.c">ソースコード</a> 
+		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+		<div class=MstyComment>
+			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
+		</div>
+	</div>
+	<br>
+	<b><u>説明</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		このCGIスクリプトは二つの仕事を同時に行っています.<br>
+		一つはクライアントが送信するためのフォームを表示することであり、<br>
+		もう一つはクライアントが送信したフォームの内容を獲得してその結果を表示することです.<br>
+		<br>
+		送信したフォームの内容をCGIスクリプト側で獲得するにはどうすればよいでしょうか？<br>
+		大抵は言語毎にそれを取得するための専用のライブラリが設けられているため、それを利用します.<br>
+		<br>
+		ではC言語の場合は？<br>
+		CGIでは<b>標準入力よりクライアントが送信したフォームの内容を獲得する</b>仕様となっています.<br>
+		(実はCに限らず、どんな言語でも裏では標準入力を分析することにより獲得処理を行っています).<br>
+		<br>
+		ですが毎回そんなことをしていては大変ですので、今回も例によって cgi_util にご登場願いましょう！<br>
+		cgi_util が提供する関数 <span class=MstyCode>CGIUtil_getStdInStr</span> がこの仕事を行ってくれます.<br>
+		ソースコード内でこれに該当する部分を以下に示します.<br>
+		<br>
+		<div class=MstyComment>
+			<div class=MstyCode>
+				CGIEVar* evar = CGIEVar_create();<br>
+				...<br>
+				char stdin_bfr[ 4096 ] = "";<br>
+				char* end = NULL;<br>
+				size_t content_length = strtoul( evar-&gt;content_length_, &amp;end, 10 );<br>
+				printf( "Content-Length = [%u]\n", content_length );<br>
+				if( evar-&gt;content_length_ != end ){<br>
+				<div class=MstyIndent>
+					size_t i = 0;<br> 
+					CGIUtil_getStdInStr( stdin_bfr, sizeof(stdin_bfr), content_length );<br>
+					printf( "Original data = [%s]\n", rejectHtmlTag(stdin_bfr) );<br>
+				</div>
+				}<br>
+				...<br>
+				CGIEVar_destroy( evar );<br>
+			</div>
+		</div>
+		<br>
+		まずはこれから受信されるデータのサイズを調べておきます.<br>
+		このサイズは環境変数 CONTENT_LENGTH に文字列として格納されています.<br>
+		CGIEVarの場合content_length_メンバの値がこれに該当します.<br>
+		C言語の標準関数 strtoul で content_length_ の値を10進数整数として解釈し、<br>
+		文字列から非負整数(size_t型)へ変換します.<br>
+		このstrtoul関数を実行した結果、第2引数で与えたポインタ値 end が第1引数と異なっていれば、<br>
+		この変換は成功しています.<br>
+		<br>
+		次に <span class=MstyCode>CGIUtil_getStdInStr</span> によって標準入力から最大content_lengthバイトだけ読み込み、<br>
+		結果を文字列バッファstdin_bfrへ格納しています.<br>
+		このとき同時にstdin_bfr_size(stdin_bfrの確保サイズ)を指定する必要があります.<br>
+		この関数は読み込みデータの大きさがstdin_bfrの確保サイズを超える場合、そこで適切に打ち切ってNull終端します.<br>
+		ちなみにこの関数の戻り値は実際に読み込まれたバイトサイズとなります.<br>
+		<br>
+		最後に取得したstdin_bfrの内容を表示しています.<br>
+		<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=MoaiCGI_transfer_chunked></a>
+<u><b>
+Transfer-Encoding: chunked転送モードに関する実験
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	今回は Moai CGI でTransfer-Encoding: chunked 転送モードがどのように機能しているかを確認してみます.<br>
+	何の暗号ですかソレは？な方もご安心ください.<br>
+	これが一体何なのか、そしてどのような場合に使うのかも説明致します.<br>
+	<br>
+	<b><u>CGIへのリンクとソースコード</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/transfer_chunked.cgi">http://localhost:8124/cgis/cgi_developers/protected/transfer_chunked.cgi</a> 
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/transfer_chunked.c">ソースコード</a> 
+		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+		<div class=MstyComment>
+			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
+		</div>
+	</div>
+	<br>
+	<b><u>説明</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		CGIスクリプトでprint(C言語ならprintf)した文字列のデータは、ブラウザ上にHTMLとして表示されるのでした.<br>
+		これはCGIスクリプトからWebServerへ、そしてWebServerからブラウザへと<br>
+		データがパイプライン方式で転送されていくことで実現します.<br>
+		このデータが大量である場合そのデータ全体が完成するのを待つのではなく、<br>
+		出来上がったものから逐次ブラウザへと運ばれていった方が効率がよいです.<br>
+		そのためにデータ全体を適切なサイズとタイミングでいくつかの断片に区切りながら転送します.<br>
+		この断片データを<b>チャンク(chunk)</b>と呼びます.<br>
+		<br>
+		Transfer-Encoding とは転送するための符号化方式といったような意味ですから、<br>
+		つまり Transfer-Encoding: chunked 転送モード とはそのようなチャンクに分けて転送する方式を意味します.<br>
+		具体的にプログラムの中でどのようにしてやってるかまでは<s>Moai_cgi.cのソースをご覧ｋ</s>ここでは詳しく説明しませんが、<br>
+		Googleで「Transfer-Encoding chunked」で検索してみれば沢山解説されていると思いますので興味ある方はご覧ください.<br>
+		基本的にはまずサイズの情報があって改行、次にデータ本体が来て改行、これが一つのチャンクデータとなります.<br>
+		あとはこの繰り返しです.<br>
+		<br>
+		さて、ここでは<b>fflush 関数の呼び出しで chunk が区切られて送信される</b>というのがポイントです.<br>
+		Moai WebServerは(というか一般的にWebServerは)、fflushを感知するとそれを即座にchunkとしてブラウザへ転送します.<br>
+		実際にサンプルを表示させてみた方がわかりやすいと思います.<br>
+		fflushを区切りとして段階的に表示されていく様子が確認できると思います.<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=MoaiCGI_futaba_php></a>
+<u><b>
+他サイトで公開されているPHPスクリプトなどを実行させてみる(その1)
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	今回はちょっと趣向を変えて、Moai CGI でPHPスクリプトを実行するデモをご紹介します.<br>
+	<br>
+	<b><u>CGIへのリンクとソースコード</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		<a class=MstyAppLink href="http://localhost:8124/cgis/protected/futaba_bbs/futaba.php">http://localhost:8124/cgis/protected/futaba_bbs/futaba.php</a>
+		<a class=MstyElemLink href="http://www.2chan.net/script" target=_blank>オリジナル配布元</a> 
+		<span class=MstyAuthor> (Author: Ms.Futaba-Kanrinin)</span><br>
+		<div class=MstyComment>
+			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
+			また、Moaiのconfig_cgi.myfにおいて、phpインタプリタのパスを正しく指定しておく必要があります.<br>
+		</div>
+	</div>
+	<br>
+	<b><u>説明</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		デモとして、ふたばちゃんねるにおいて配布されているfutaba.phpを題材にしています(若干コードを修正させて頂きました).<br>
+		ソースコードの内容についての説明はここでは致しません(あしからず).<br>
+		これを動作させるにはPHPインタプリタをインストールしておく必要があります.<br>
+		そしてそのインタプリタへのフルパスをmoaiディレクトリ直下にあるconfig_cgi.myfに記述しておく必要があります.<br>
+		これに関しては<a class=MstyElemLink href="/moai2.0/moai_reference.html#config_cgi_myf" target=_blank>こちら</a>を参照してください.<br>
+		<br>
+		筆者の環境では以下のような画面が表示されました.<br>
+		<br>
+		<div class=MstyComment>
+			<img src=/imgs/guest_futaba_bbs.png width=100%>
+		</div>
+		<br>
+		php-4.4.6-Win32を使った場合は、正常に動作することを確認しています.<br>
+		現在ふたばちゃんねるで使っているPHPはVer5.6.30のようですのでおそらくそのバージョンでも動作はするのでしょう.<br>
+		残念ながら最新バージョンのPHPではこのスクリプトは正常に動作しないようです.<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=MoaiCGI_up_php></a>
+<u><b>
+他サイトで公開されているPHPスクリプトなどを実行させてみる(その2)
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	Moai CGI でPHPスクリプトを実行するデモの続きです.<br>
+	<br>
+	<b><u>CGIへのリンクとソースコード</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		<a class=MstyAppLink href="http://localhost:8124/cgis/protected/futaba_up/up.php">http://localhost:8124/cgis/protected/futaba_up/up.php</a>
+		<a class=MstyElemLink href="http://www.2chan.net/script" target=_blank>オリジナル配布元</a> 
+		<span class=MstyAuthor> (Author: Ms.Futaba-Kanrinin)</span><br>
+		<div class=MstyComment>
+			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
+			また、Moaiのconfig_cgi.myfにおいて、phpインタプリタのパスを正しく指定しておく必要があります.<br>
+		</div>
+	</div>
+	<br>
+	<b><u>説明</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		デモとしてとして、ふたばちゃんねるにおいて配布されているup.phpを題材にしています(若干コードを修正させて頂きました).<br>
+		ソースコードの内容についての説明はここでは致しません(あしからず).<br>
+		これを動作させるにはPHPインタープリタをインストールしておく必要があります.<br>
+		<br>
+		筆者の環境では以下のような画面が表示されました.<br>
+		こちらのスクリプトもまたMoai CGIで安全に実行させることに成功したようです.<br>
+		<br>
+		<div class=MstyComment>
+			<img src=/imgs/guest_futaba_up.png width=100%>
+		</div>
+		<br>
+		php-4.4.6-Win32を使った場合は、正常に動作することを確認しています.<br>
+		現在ふたばちゃんねるで使っているPHPはVer5.6.30のようですのでおそらくそのバージョンでも動作はするのでしょう.<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=MoaiCGI_next></a>
+<u><b>
+さて、この次は？
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	これで一通りC言語によるCGI開発の入門編が終わりました.<br>
+	お疲れ様でした.<br>
+	<br>
+	お次はライブラリを使ったCGIの開発、すなわち<a class=MstyElemLink href=/moai2.0/moai_cgi_developers_pragmatic.html>MoaiCGI 実践編</a>になります.<br>
+	ですが、まだまだ先は長いのです.<br>
+	次へ進む前にここで一旦コーヒーブレークとしましょう.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<u><b>リンク</b></u>
+<ul>
+	<li><a class=MstyElemLink href="#TopBar">一番上へ</a></li>
+	<li><a class=MstyElemLink href="https://mr-moai-2016.github.io">Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href="https://github.com/mr-moai-2016/znk_project">znk_project(github)</a></li>
+</ul><br>
+
+</body>
+</html>

@@ -1,0 +1,123 @@
+@def_quote [' ']
+
+@@L s
+['']
+@@.
+
+@@L ss
+['']
+@@.
+
+@@L sss
+['']
+@@.
+
+@@L moz5
+['Mozilla/5.0']
+@@.
+
+@@L khtml
+['KHTML, like Gecko']
+@@.
+
+@@L mac_ver
+['10_2']
+['10_1_1']
+['10_0_2']
+['9_3_5']
+['9_2_1']
+['9_1']
+['9_0_2']
+['8_4_1']
+['8_3']
+['8_2']
+['8_1_3']
+['8_1_2']
+['8_1_1']
+['8_1']
+['8_0_2
+['7_1_2']
+['7_1_1']
+['7_1']
+['7_0_6']
+['7_0_4']
+['6_1_4']
+['6_1_3']
+['6_1_2']
+['6_1']
+['6_0_2']
+['6_0_1']
+['6_0']
+['5_1_1']
+['5_1']
+['4_3_5']
+['4_3_2']
+@@.
+
+@@L la
+['']
+['; ja-jp'] *0.1
+['; en-us'] *0.05
+@@.
+
+@@L cpu_os
+['iPhone; CPU iPhone OS']
+['iPhone; U; CPU iPhone OS']
+['iPad; CPU OS']
+['iPad; U; CPU OS']
+['iPod touch; CPU iPhone OS']
+@@.
+
+@@L platform
+['$[cpu_os]$ $[mac_ver]$ like Mac OS X$[la]$']
+@@.
+
+@@L mobile_info
+['Mobile/14A456']
+['Mobile/14B100']
+['Mobile/14C92']
+['Mobile/13A452']
+['Mobile/13B143']
+['Mobile/13D15']
+['Mobile/13G36']
+['Mobile/12A405']
+['Mobile/12B410']
+['Mobile/12B411']
+['Mobile/12B435']
+['Mobile/12B440']
+['Mobile/12B466']
+['Mobile/12D508']
+['Mobile/12F70']
+['Mobile/12H321']
+['Mobile/11B554a']
+['Mobile/11B651']
+['Mobile/11D167']
+['Mobile/11D201']
+['Mobile/11D257']
+['Mobile/10A403']
+['Mobile/10A525']
+['Mobile/10A551']
+['Mobile/10B142']
+['Mobile/10B143']
+['Mobile/10B146']
+['Mobile/10B329']
+['Mobile/10B350']
+['Mobile/9B176']
+['Mobile/9B206']
+['Mobile/8H7']
+['Mobile/8L1']
+@@.
+
+@@L iphone
+['$[moz5]$ ($[platform]$) AppleWebKit/602.3.12$[s]$ ($[khtml]$) Version/10.0$[ss]$ $[mobile_info]$ Safari/602.1']
+['$[moz5]$ ($[platform]$) AppleWebKit/602.2.14$[s]$ ($[khtml]$) Version/10.0$[ss]$ $[mobile_info]$ Safari/602.1']
+['$[moz5]$ ($[platform]$) AppleWebKit/602.1.50$[s]$ ($[khtml]$) Version/10.0$[ss]$ $[mobile_info]$ Safari/602.1']
+['$[moz5]$ ($[platform]$) AppleWebKit/601.1.46$[s]$ ($[khtml]$) Version/9.0$[sss]$ $[mobile_info]$ Safari/601.1']
+['$[moz5]$ ($[platform]$) AppleWebKit/600.1.4$[ss]$ ($[khtml]$) Version/8.0$[sss]$ $[mobile_info]$ Safari/600.1.4']
+['$[moz5]$ ($[platform]$) AppleWebKit/537.51.1$[s]$ ($[khtml]$) Version/7.0$[sss]$ $[mobile_info]$ Safari/9537.53']
+['$[moz5]$ ($[platform]$) AppleWebKit/537.51.2$[s]$ ($[khtml]$) Version/7.0$[sss]$ $[mobile_info]$ Safari/9537.53']
+['$[moz5]$ ($[platform]$) AppleWebKit/536.26$[sss]$ ($[khtml]$) Version/6.0$[sss]$ $[mobile_info]$ Safari/8536.25']
+['$[moz5]$ ($[platform]$) AppleWebKit/534.46$[sss]$ ($[khtml]$) Version/5.1$[sss]$ $[mobile_info]$ Safari/7534.48.3']
+['$[moz5]$ ($[platform]$) AppleWebKit/533.17.9$[s]$ ($[khtml]$) Version/5.0.2$[s]$ $[mobile_info]$ Safari/6533.18.5']
+@@.
+

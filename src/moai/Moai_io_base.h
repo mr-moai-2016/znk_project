@@ -8,10 +8,12 @@
 
 Znk_EXTERN_C_BEGIN
 
+typedef void (*MoaiIOFilterFunc)( ZnkBfr bfr, const char* content_type );
+
 int
 MoaiIO_sendTxtf( ZnkSocket sock, const char* content_type, const char* fmt, ... );
 bool
-MoaiIO_sendResponseFile( ZnkSocket sock, const char* filename );
+MoaiIO_sendResponseFile( ZnkSocket sock, const char* filename, MoaiIOFilterFunc io_filter_func );
 const char*
 MoaiIO_makeSockStr( char* buf, size_t buf_size, ZnkSocket sock, bool detail );
 void

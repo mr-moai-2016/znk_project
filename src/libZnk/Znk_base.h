@@ -454,4 +454,6 @@ typedef  unsigned long long  Znk_ULongLong;
 
 #define Znk_force_ptr_cast( dst_int_type, ptr ) ((dst_int_type)(uintptr_t)(ptr))
 
+#define Znk_FUNCARG_INIT( fnca, func, arg ) ( (fnca).func_=(func), (fnca).arg_=(arg) )
+
 #endif /* INCLUDE_GUARD */

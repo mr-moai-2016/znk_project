@@ -1,45 +1,57 @@
-# Moai/Virtual USERS
+# Moai/VirtulUSERS
 -----------------------------------
+  このドキュメントはMoaiの旧バージョン Moai Ver1.1.8 にあったものです.
+  Moaiの最新版Moai Ver2.0がリリースされたため、既にこの内容は古いものとなっている可能性がありますがしばらく残します.
 
 ## <a name="index"></a>目次
 -----------------------------------
-* [MoaiのVirtual USERS機能とは？](#user-content-pos1)
-* [何ができるのか？             ](#user-content-pos2)
+* [MoaiのVirtulUSERS機能の目的](#user-content-pos1)
+* [この機能を使うにはどうすればよいか？](#user-content-pos2)
 * [Web閲覧時に送信される情報とは何なのか？](#user-content-pos3)
-* [MoaiのVirtual USERS機能を使う](#user-content-pos4)
 * [ランダマイズの候補として使用するtxtファイルについて](#user-content-txt_for_randomize)
 * [ふたばにて手動で偽装を行う場合(参考)](#user-content-futaba_note)
-* [その他の情報                 ](#user-content-pos5)
 
-## <a name="pos1"></a>MoaiのVirtual USERS機能とは？
+## <a name="pos1"></a>MoaiのVirtulUSERS機能の目的
 -----------------------------------
 
-  Virtual USERSとはVirtual User-agent Screen-size and Everything Randomize Systemの略である.
-  この記事ではMoaiのVirtual USERS機能について特に詳しく述べる.
+  VirtulUSERSとはVirtual User-agent Screen-size and Everything Randomize Systemの略である.
+  この記事ではVirtulUSERSの目的について詳しく述べる.
 
   ネット上のサイトはあらゆる側面からあなたのマシン固有の情報を集め、あなた個人を識別しようと試みる.  
-  Virtual USERS機能はブラウザと送信先のサイトとの通信を仲介し、IPを除くそれら全ての情報に関して、
-  あなたの実際のマシン環境とは異なるバーチャルかつランダムな値へ変更した上でサイトへと送る.  
+
+  VirtulUSERS機能はIPを除くすべてのあなたのマシンの情報をランダムに仮想化する.
+  これはブラウザと送信先のサイトとの通信を仲介し、IPを除くそれら全ての情報に関して、
+  あなたの実際のマシンおよびブラウザ環境とは異なる架空かつランダムな環境へ見せかけた上でサイトと通信することで実現する. 
   これにより送信先はあなたを正しく識別できなくなる.  
   つまり早い話、これはよくあるあなたのプライベートを守るセキュリティー機能の一つである.  
 
-  <a href="#user-content-index">目次へ戻る</a>
+  これが機能するのはMoaiが起動している間である.
+  この間、あなたのマシン本来の姿がIPを除いて完全に隠蔽される.
+  これによりブラウザのCookieやJavascriptを無効にしたまま掲示板などを閲覧することは勿論、
+  レスやスレ立てをすることすら可能となり、非常にセキュアだ.  
 
+  これにルーカチ(ルータリセット)などによりIPを変える操作を加えることで、
+  掲示板などにおいて完全に別のユーザに生まれ変わるという効果もあろう.
 
-## <a name="pos2"></a>何ができるのか？
------------------------------------
-
-  Virtual USERS機能はIPを除くすべてのあなたのマシンの情報をランダムに仮想化する.
-  これは Moai Web Configuration上の**Virtual USERS Initiation**ボタンを押すだけで全て自動的に行われる.
-  これに加え、ルーカチ(ルータリセット)などによりIPを変えることで、掲示板などにおいて
-  完全に別のユーザに生まれ変わることができるというものである.
+> 現在デフォルトで仮想環境の構築をサポートしているサイトはふたばと５ちゃんねるのみである.
+> その他のサイトも当然閲覧やレス投稿など普通に可能だが、仮想環境の構築まで行うには、
+> そのサイト向けのfilterやpluginを作成して追加しなければならない.
 
   また、場合によってはブラウザのCookieやJavascriptを無効にした状態でも掲示板にレス出来るという
   ほとんどの方にとって極めてどうでもよい副次的効果もある.  
 
   また **parent_proxy.txt** に使用したいプロキシの候補を複数列挙しておくことで、
-  Moai Web Configuration上でこれらのプロキシがメニュー表示され、現在使用するプロキシを簡単かつ
+  Moai Web上でこれらのプロキシがメニュー表示され、現在使用するプロキシを簡単かつ
   瞬時に切り替えができる.  
+
+  <a href="#user-content-index">目次へ戻る</a>
+
+
+## <a name="pos2"></a>この機能を使うにはどうすればよいか？
+-----------------------------------
+
+  これはMoaiが提供するVirtulUSERSボタンを押すだけで全て自動的に行われる.
+  この方法については<a href="https://mr-moai-2016.github.io/moai1.1/local_proxy.html#FirstLocalProxy">こちら</a>を参照していただきたい.
 
   <a href="#user-content-index">目次へ戻る</a>
 
@@ -109,81 +121,18 @@
 
   では具体的にどうやって仮想環境を構築するのか？
   実のところこれは手動でも可能であるし、プログラミングするにしてもそう難しい話でもないが
-  MoaiのVirtual USERS機能はそれをボタン一発ですべて自動で行い、楽ができるというものである.
-
-  <a href="#user-content-index">目次へ戻る</a>
-
-
-## <a name="pos4"></a>MoaiのVirtual USERS機能を使う
------------------------------------
-
-  初めてMoaiを使う場合は、[こちら][2]にある「初めてのMoai」の項目を参照していただきたい.
-
-  繰り返しになるが、Moaiが起動している間は、あなたのマシン本来の姿がIPを除いて完全に隠蔽され、
-  架空のマシン環境情報を送信する.   これによりブラウザのCookieやJavascriptを無効にしたまま
-  掲示板などを閲覧することは勿論、レスやスレ立てをすることすら可能となり、非常にセキュアだ.  
-
-> 現在デフォルトで仮想環境の構築をサポートしているサイトはふたばと２ちゃんねるのみである.
-> その他のサイトも当然閲覧やレス投稿など普通に可能だが、仮想環境の構築まで行うには、
-> そのサイト向けのfilterやpluginを作成して追加しなければならない.
-
-  さて、Virtual USERSの機能に加え、ルーカチ(ルータリセット)などによりIPを変えることで、
-  掲示板などにおいて完全に別のユーザに生まれ変わるには次のようにする.
-
-~~~
-  1. IPを変えるためルーカチする.
-     (あるいは同目的で外部プロキシ(parent_proxy)を変えるなどしてもよい)
-
-  2. moai(Windowsならmoai.exe)を起動し、
-     ブラウザからhttp://127.0.0.1:8124へアクセスする.
-     設定用の特別な画面が表示されるはずである.
-
-  3. Moai Web Configuration画面を開き、「Virtual USERS Initiation」ボタンを押す.
-    「Initiate futaba : Success : Virtual USERS done. Your futaba_send.myf is randomized successfully.」
-     などと表示されれば成功である. 
-~~~
-
-  以上である.  
-  以下は上記の実行結果、ランダマイズされた情報が報告されている様子である.  
-
-  ![screenshot](../imgs/virtual_users_initiated_result.png)
-
-####  参考
-> 受信フィルタにおける header_vars 内のUser-Agent行を削除することによって、**敢えてMoaiにおいてUser-Agent偽装を行わせない**ようにすることもできる.
-> 例えば、ブラウザのUser-Agent偽装アドオンなどによって既にUser-Agentを任意の値に偽装している場合など
-> その偽装値をMoaiで再修正することなくそのまま送信して欲しいことがある.
-> 現状のMoaiはJavascriptにおけるnavigator.userAgentの値やHTTPSによって暗号化されたHTTPヘッダにおけるUser-Agentまでは
-> 修正できないので、場合によってはそのようなアドオンを使う方が確実なこともあるかもしれない.
-> 元通りMoaiによってUser-Agentを偽装させるようにするには、User-Agent行を追加すればよい(このときの右辺値は適当なものでよい).
-
-  また、使用する外部プロキシを異なるものに切り替えたいという方は次のようにすればよい.
-
-~~~
-  1. moaiを起動した状態で、ブラウザからhttp://127.0.0.1:8124へアクセスする.
-
-  2. Web Configuration画面を開き、parent_proxyから使用する外部プロキシを選んで「Update」ボタンを押す.
-     (IPを外部プロキシのものに変える)
-     このとき外部プロキシのリストを前もってparent_proxy.txtに記述しておかなければならない.
-
-  3. Web Configuration画面より「Virtual USERS Initiation」ボタンを押す.
-    「Initiate futaba : Success : Virtual USERS done. Your futaba_send.myf is randomized successfully.」
-     などと表示されれば成功である. 
-    「Initiate futaba : Failure : Cannot get ...」などと表示された場合は失敗であり、
-     おそらく 2 で指定したプロキシサーバが無効であるか回線が混雑しているなどのため、通信に失敗している.
-~~~
-
-  以上である.  
-
-  以下はMoai Web Configuration画面の様子である.  
-
-  ![screenshot](../imgs/screenshot_config.png)
+  MoaiのVirtulUSERS機能はそれをボタン一発ですべて自動で行い、楽ができるというものである.
 
   <a href="#user-content-index">目次へ戻る</a>
 
 
 ## <a name="txt_for_randomize"></a>ランダマイズの候補として使用するtxtファイルについて
 -----------------------------------
+
 #### user_agent.txt
+このファイルはMoai Ver1.1.8以前にのみ存在する.
+Moai Ver2.0では次世代の仮想化エンジンcustom_boyを導入したため、このファイルは廃止された.
+
 このファイルはRandomizeの際に選択されるUser-Agentの候補を列挙したものである.
 (一行につき一つ記述する)
 これらのUser-Agentはネット上に転がっているものを適当に巡回してコピペしただけのものであり、
@@ -194,6 +143,9 @@
 このファイルにおいて、空行および # 記号で始まる行は候補値とはならず無視される.
 
 #### screen_size.txt
+このファイルはMoai Ver1.1.8以前にのみ存在する.
+Moai Ver2.0では次世代の仮想化エンジンcustom_boyを導入したため、このファイルは廃止された.
+
 このファイルはRandomizeの際に選択されるscszの解像度の候補を各行で列挙したものである.
 このファイルにおいて、空行および # 記号で始まる行は候補値とはならず無視される.
 このファイルは現状ではfutabaプラグインにおいてのみ使われる.
@@ -296,17 +248,3 @@
   <a href="#user-content-index">目次へ戻る</a>
 
 
-## <a name="pos5"></a>その他の情報
------------------------------------
-
-  Moaiに関するさらなる詳細については [リファレンスマニュアル(Reference)][1] をご覧いただきたい.  
-  Moaiに関する基本事項や注意事項に関しては、[README][2]を参照して戴きたい.  
-  Moaiに関するFAQについては [FAQ][5] をご覧いただきたい.  
-
-  <a href="#user-content-index">目次へ戻る</a>
-
-[1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/Reference.md
-[2]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/README.md
-[3]: https://github.com/mr-moai-2016/znk_project/blob/master/src/HowToCompile.md
-[4]: https://github.com/mr-moai-2016/znk_project/blob/master/src/Hacking.md
-[5]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/FAQ.md

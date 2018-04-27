@@ -1,0 +1,569 @@
+@def_quote [' ']
+
+@@L s
+['']
+@@.
+
+@@L ss
+['']
+@@.
+
+@@L sss
+['']
+@@.
+
+@@L maker_info_1
+['101F Build/V51R40E']
+['302KC Build/101.0.2c00']
+['401SO Build/23.0.H.0.302']
+['403HW Build/HuaweiMediaPad']
+['ASUS_T00P Build/KOT49H']
+['AT500 Build/JRO03C']
+['C6833 Build/14.4.A.0.108']
+['dtab01 Build/HuaweiMediaPad']
+['EveryPad2 Build/KOT49H']
+['F-02G Build/V17R37A']
+['F-01D Build/V08R31A']
+['F-01D Build/V12R33B']
+['F-01F Build/V10R22A']
+['F-02E Build/V16R46A']
+['F-03D Build/V24R33C']
+['F-04E Build/V11R43B']
+['F-05D Build/V21R30C']
+['F-06E Build/V25R51C']
+['FT142D Build/KVT49L']
+['Galaxy Nexus Build/ITL41D']
+['HP Slate7 Extreme Build/KOT49H']
+['HP Slate 7 Build/JRO03H']
+['K00Y Build/KVT49L']
+['L-01D Build/GRJ90']
+['L-01E Build/JZO54K']
+['L-01F Build/JDQ39B']
+['L-02D Build/GWK74']
+['L-02E Build/IMM76L']
+['L-05D Build/IMM76I']
+['Lenovo B6000-F Build/KOT49H']
+['N-04C Build/A1030801']
+['N-04E Build/A1002601']
+['N-05D Build/A1001901']
+['N-06C Build/A1004001']
+['N-08D Build/A5003111']
+['Nexus 4 Build/KOT49H']
+['Nexus 5 Build/LRX22C']
+['Nexus 7 Build/LRX22G']
+['Nexus 7 Build/JDQ39']
+['P-02D Build/GRJ90']
+['P-02E Build/JZO54K']
+['P-06D Build/IMM76D']
+['P-07D Build/IMM76I']
+['SBM006SH Build/S0042']
+['SBM009SHY Build/S0028']
+['SBM101SH Build/S0030']
+['SBM106SH Build/S0028']
+['SBM107SH Build/S0006']
+['SBM204SH Build/S0022']
+['SBM206SH Build/S0018']
+['SBM302SH Build/S0018']
+['SC-01F Build/KOT49H']
+['SC-02B Build/GINGERBREAD']
+['SC-02B Build/FROYO']
+['SC-02C Build/GINGERBREAD']
+['SC-02E Build/JRO03C']
+['SC-02E Build/JSS15J']
+['SC-02F Build/KOT49H']
+['SC-03D Build/GINGERBREAD']
+['SC-03E Build/JRO03C']
+['SC-04E Build/KOT49H']
+['SC-04E Build/JDQ39']
+['SC-04F Build/KOT49H']
+['SC-06D Build/IMM76D']
+['SGP612 Build/23.0.1.A.0.167']
+['SH-01D Build/S2050']
+['SH-01F Build/SA090']
+['SH-01F Build/SB290']
+['SH-01G Build/S1160']
+['SH-02E Build/S9290']
+['SH-04E Build/S2130']
+['SH-04F Build/SB040']
+['SH-05F Build/S5140']
+['SH-06D Build/S7231']
+['SH-06E Build/SC040']
+['SH-08E Build/S8210']
+['SH-09D Build/SB220']
+['SHW-M340K Build/GINGERBREAD']
+['SO-01F Build/14.3.B.0.310']
+['SO-01G Build/23.0.B.1.38']
+['SO-02E Build/10.1.D.0.322']
+['SO-02F Build/14.3.B.0.310']
+['SO-02F Build/14.3.B.0.288']
+['SO-02G Build/23.0.B.1.13']
+['SO-02G Build/23.0.B.1.38']
+['SO-03F Build/17.1.1.B.3.195']
+['SO-04D Build/7.0.D.1.130']
+['SO-04E Build/10.1.1.D.2.31']
+['SO-04F Build/14.3.B.0.279']
+['SO-05F Build/17.1.1.B.1.53']
+['SonySO-01E Build/9.1.C.1.103']
+['SonySO-01E Build/9.0.G.1.108']
+['SonySO-02E Build/10.1.D.0.322']
+['SonySO-02F Build/14.3.B.0.310']
+['SonySO-04D Build/7.0.D.1.130']
+['SonySO-04E Build/10.3.1.B.2.13']
+['SonySO-04EM Build/10.3.1.B.2.13']
+['SonySO-05D Build/7.0.D.1.137']
+['SonyEricssonSO-03D Build/6.1.F.0.128']
+['T-01D Build/V43R41C']
+['T-02D Build/V19R50B']
+['WX10K Build/103.0.2f30']
+@@.
+
+@@L maker_info_2
+['AST21 Build/KVT49L']
+['CAL21 Build/A1000091']
+['EIS01PT Build/GINGERBREAD']
+['FJL21 Build/V07R30B']
+['FJL21 Build/V23R39X']
+['FJL21 Build/V31R42A']
+['FJL22 Build/V09R48H']
+['FJT21 Build/V09R44D']
+['PTL21 Build/JZO54K']
+['PTL21 Build/IMM76I']
+['LGL21 Build/IMM76L']
+['LGL22 Build/JDQ39B']
+['LGL22 Build/KOT49I.LGL2220c']
+['LGL23 Build/JDQ39B']
+['LGL24 Build/LRX22G']
+['LGL24 Build/KVT49L.LGL2410a']
+['LGV31 Build/LRX22G']
+['LGV31 Build/KVT49L.LGV3110d']
+['LGV32 Build/MRA58K']
+['LGV32 Build/LMY47D']
+['LGV33 Build/MXB48T']
+['LGV34 Build/NRD90U']
+['LGT31 Build/MXB48T']
+['KYF31 Build/100.1.4600']
+['KYF32 Build/100.1.2120']
+['KYL21 Build/015.3.3510']
+['KYL21 Build/018.0.3a90']
+['KYL22 Build/100.1.1f00']
+['KYL22 Build/103.0.2500']
+['KYL23 Build/100.1.2150']
+['KYT31 Build/100.0.1c10']
+['KYV31 Build/100.0.2420']
+['KYV32 Build/100.0.1e10']
+['KYV33 Build/100.0.2a10']
+['KYV34 Build/100.2.2300']
+['KYV35 Build/201.0.1f00']
+['KYV35 Build/100.4.2601']
+['KYV36 Build/100.0.2710']
+['KYV37 Build/100.0.2010']
+['KYY24 Build/100.1.1910']
+['KYY24 Build/100.1.1910']
+['KYY23 Build/100.1.2300']
+['KYY23 Build/100.1.2300']
+['KYY22 Build/100.2.0a30']
+['KYY21 Build/100.0.2480']
+['KYY21 Build/209.0.1700']
+['KYY22 Build/100.2.0a30']
+['HWT31 Build/Federer']
+['HTL21 Build/JRO03C']
+['HTL22 Build/KOT49H']
+['HTL22 Build/JDQ39']
+['HTL22 Build/JZO54K']
+['HTL23 Build/LRX22G']
+['HTL23 Build/KTU84P']
+['HTL23 Build/KOT49H']
+['HTV31 Build/LRX22G']
+['HTV31 Build/MMB29M']
+['HTV32 Build/MMB29M']
+['HTX21 Build/JRO03C']
+['INFOBAR C01 Build/S1190']
+['INFOBAR A01 Build/S6160']
+['INFOBAR A01 Build/S8020']
+['IS01 Build/S6191']
+['IS03 Build/S3251']
+['IS03 Build/SB060']
+['IS04 Build/FFK300']
+['IS05 Build/S2251']
+['IS05 Build/S9140']
+['IS05 Build/S9290']
+['IS06 Build/FRG83']
+['IS11CA Build/01.08.00']
+['IS11LG Build/GWK74']
+['IS11LG Build/IMM76L']
+['IS11N Build/01.02.00']
+['IS11PT Build/GINGERBREAD']
+['IS11T Build/FGK400']
+['IS11SH Build/S6160']
+['IS11SH Build/S8030']
+['IS12M Build/6.5.1-134_SWK-68_LE-18']
+['IS12M Build/6.7.5-25_LE-8']
+['IS12F Build/FGK600']
+['IS12SH Build/S6160']
+['IS13SH Build/SA310']
+['IS13SH Build/S9100']
+['IS14SH Build/SC100']
+['IS14SH Build/S9100']
+['IS15SH Build/S6230']
+['IS17SH Build/S7070']
+['ISW11F Build/FIK700']
+['ISW11F Build/FGK500']
+['ISW11HT Build/GRJ22']
+['ISW11HT Build/FRG83']
+['ISW11K Build/134.3.0005']
+['ISW11K Build/145.0.0002']
+['ISW11M Build/4.5.1A-1_KDI-92_LE-24']
+['ISW11SC Build/IMM76D']
+['ISW11SC Build/GINGERBREAD']
+['ISW12HT Build/IML74K']
+['ISW12HT Build/GRJ22']
+['ISW13F Build/V51R37G']
+['ISW13HT Build/IML74K']
+['ISW13HT Build/IMM76D']
+['ISW16SH Build/S6151']
+['SCL21 Build/IMM76D']
+['SCL21 Build/JZ054K']
+['SCL22 Build/JSS15J']
+['SCL22 Build/KOT49H']
+['SCL22 Build/LRX21V']
+['SCL23 Build/KOT49H']
+['SCL23 Build/LRX21T']
+['SCL23 Build/MMB29M']
+['SCL24 Build/MMB29M']
+['SCL24 Build/KTU84P']
+['SCL24 Build/LRX22C']
+['SCT21 Build/LRX22G']
+['SCT21 Build/KTU84P']
+['SCV31 Build/LRX22G']
+['SCV31 Build/MMB29K']
+['SCV32 Build/LMY47X']
+['SCV33 Build/MMB29M']
+['SHF31 Build/S2101']
+['SHF32 Build/S7031']
+['SHF33 Build/S6030']
+['SHL21 Build/S4021']
+['SHL21 Build/S5170']
+['SHL21 Build/SA132']
+['SHL22 Build/S6290']
+['SHL23 Build/SB070']
+['SHL24 Build/S2040']
+['SHL24 Build/S3310']
+['SHL25 Build/S5290']
+['SHL25 Build/SB171']
+['SHT21 Build/SB221']
+['SHT21 Build/S5140']
+['SHT22 Build/S2120']
+['SHV31 Build/S1190']
+['SHV32 Build/S5231']
+['SHV32 Build/R3242']
+['SHV33 Build/RA120']
+['SHV33 Build/SC260']
+['SHV34 Build/S5290']
+['SHV35 Build/S6020']
+['SHV36 Build/S7150']
+['SHV37 Build/SA250']
+['SOL21 Build/9.0.F.0.195']
+['SOL21 Build/9.1.D.0.395']
+['SOL21 Build/9.1.D.0.401']
+['SOL22 Build/10.2.F.3.43']
+['SOL22 Build/10.3.1.D.0.220']
+['SOL23 Build/14.1.C.0.467']
+['SOL23 Build/14.3.C.0.239']
+['SOL24 Build/14.1.K.1.217']
+['SOL24 Build/14.3.C.0.239']
+['SOL25 Build/17.1.1.C.1.64']
+['SOL25 Build/17.1.C.0.296']
+['SOL25 Build/23.1.G.2.151']
+['SOL26 Build/23.0.C.0.296']
+['SOL26 Build/23.1.G.2.155']
+['SOT21 Build/17.1.1.C.1.45']
+['SOT21 Build/23.1.G.2.151']
+['SOT31 Build/28.0.D.6.71']
+['SOT31 Build/32.1.C.0.281']
+['SOV31 Build/28.0.D.0.404']
+['SOV31 Build/32.1.C.0.281']
+['SOV32 Build/32.1.C.0.281']
+['SOV32 Build/32.0.D.0.282']
+['SOV33 Build/35.0.D.0.326']
+['SOV34 Build/39.0.C.0.282']
+['SmartTVStick Build/IMM76D']
+['SonySOL21 Build/9.0.F.0.195']
+['SonySOL21 Build/9.1.D.0.395']
+['SonySOL21 Build/9.1.D.0.401']
+['SonySOL22 Build/10.2.F.3.43']
+['SonySOL22 Build/10.3.1.D.0.220']
+['SonySOL23 Build/14.1.C.0.467']
+['SonySOL23 Build/14.3.C.0.239']
+['SonySOL24 Build/14.1.K.1.217']
+['SonySOL24 Build/14.3.C.0.239']
+['SonyEricssonIS11S Build/3.0.1.C.0.80']
+['SonyEricssonIS11S Build/4.0.1.B.0.112']
+['SonyEricssonIS11S Build/4.0.1.B.0.118']
+['SonyEricssonIS12S Build/6.0.D.0.270']
+['SonyEricssonIS12S Build/6.1.D.0.170']
+['SonyEricssonIS12S Build/6.1.D.1.91']
+['URBANO PROGRESSO Build/008.2.2400']
+['URBANO PROGRESSO Build/011.0.3100']
+@@.
+
+@@L la4
+['; ja-jp']
+['']
+@@.
+
+@@L linux_and
+['Linux; Android']
+['Linux; U; Android']
+@@.
+
+@@L digit0_4
+['0']
+['1']
+['2']
+['3']
+['4']
+@@.
+
+@@L digit0_9
+['0']
+['1']
+['2']
+['3']
+['4']
+['5']
+['6']
+['7']
+['8']
+['9']
+@@.
+
+@@L digit1_9
+['1']
+['2']
+['3']
+['4']
+['5']
+['6']
+['7']
+['8']
+['9']
+@@.
+
+@@L rv
+['$[digit0_9]$'] *0.1
+['$[digit1_9]$$[digit0_9]$']
+['1$[digit0_4]$$[digit0_9]$'] *0.1
+@@.
+
+@@L chr_gt27_ver
+['27.0.1453.$[rv]$']
+['28.0.1500.$[rv]$']
+['29.0.1547.$[rv]$']
+['30.0.1599.$[rv]$']
+['31.0.1650.$[rv]$']
+['32.0.1700.$[rv]$']
+['33.0.1750.$[rv]$']
+['34.0.1847.$[rv]$']
+['35.0.1916.$[rv]$']
+['36.0.1985.$[rv]$']
+['37.0.2062.$[rv]$']
+['38.0.2125.$[rv]$']
+['39.0.2171.$[rv]$']
+['40.0.2214.$[rv]$']
+['41.0.2272.$[rv]$']
+['42.0.2311.$[rv]$']
+['43.0.2357.$[rv]$']
+['44.0.2403.$[rv]$']
+['45.0.2454.$[rv]$']
+['46.0.2490.$[rv]$']
+['47.0.2526.$[rv]$']
+['48.0.2564.$[rv]$']
+['49.0.2623.$[rv]$']
+['50.0.2661.$[rv]$']
+['51.0.2704.$[rv]$']
+['52.0.2743.$[rv]$']
+@@.
+
+@@L moz5
+['Mozilla/5.0']
+@@.
+
+@@L khtml
+['KHTML, like Gecko']
+@@.
+
+# au WebView
+@@L wv
+[''] *0.9
+['; wv']
+@@.
+
+@@L ver
+['']
+[' Version/4.0']
+[' Version/4.2'] *0.01
+[' SamsungBrowser/4.0'] *0.01
+[' SamsungBrowser/3.5'] *0.01
+[' SamsungBrowser/3.0'] *0.01
+[' SamsungBrowser/2.1'] *0.01
+@@.
+
+@@L safari
+['Safari']
+['Mobile Safari'] *0.95
+@@.
+
+@@L and_ver
+['7.0']
+['6.0.1']
+['6.0']
+['5.1.1']
+['5.1']
+['5.0.2']
+['5.0.1']
+['5.0']
+@@.
+
+@@L and_ver4
+['4.4.4']
+['4.4.2']
+['4.3'] *0.01
+['4.2.2']
+['4.1.2']
+['4.1.1'] *0.01
+['4.0.4']
+['4.0.3']
+['2.3.7'] *0.01
+['2.3.6'] *0.01
+['2.3.5'] *0.01
+['2.3.4'] *0.01
+['2.3.3'] *0.01
+['2.2.2'] *0.01
+['2.2.1'] *0.01
+['2.1-update1'] *0.01
+['1.6'] *0.01
+@@.
+
+@@L platform
+['$[linux_and]$ $[and_ver]$; $[maker_info_1]$$[wv]$']
+['$[linux_and]$ $[and_ver]$; $[maker_info_2]$$[wv]$']
+['$[linux_and]$ $[and_ver4]$$[la4]$; $[maker_info_1]$$[wv]$']
+['$[linux_and]$ $[and_ver4]$$[la4]$; $[maker_info_2]$$[wv]$']
+@@.
+
+# Std or Chrome (Lt26)
+@@L android_std_chr_lt26
+['$[moz5]$ ($[platform]$) AppleWebKit/535.11 $[s]$($[khtml]$)$[ver]$ Chrome/17.0.963.$[rv]$ $[ss]$$[safari]$/535.11']
+['$[moz5]$ ($[platform]$) AppleWebKit/535.19 $[s]$($[khtml]$)$[ver]$ Chrome/18.0.1025.$[rv]$ $[s]$$[safari]$/535.19']
+['$[moz5]$ ($[platform]$) AppleWebKit/536.5 $[ss]$($[khtml]$)$[ver]$ Chrome/19.0.1084.$[rv]$ $[s]$$[safari]$/536.5']
+['$[moz5]$ ($[platform]$) AppleWebKit/536.11 $[s]$($[khtml]$)$[ver]$ Chrome/20.0.1132.$[rv]$ $[s]$$[safari]$/536.11']
+['$[moz5]$ ($[platform]$) AppleWebKit/537.1 $[ss]$($[khtml]$)$[ver]$ Chrome/21.0.1180.$[rv]$ $[s]$$[safari]$/537.1']
+['$[moz5]$ ($[platform]$) AppleWebKit/537.4 $[ss]$($[khtml]$)$[ver]$ Chrome/22.0.1229.$[rv]$ $[s]$$[safari]$/537.4']
+['$[moz5]$ ($[platform]$) AppleWebKit/537.11 $[s]$($[khtml]$)$[ver]$ Chrome/23.0.1271.$[rv]$ $[s]$$[safari]$/537.11']
+['$[moz5]$ ($[platform]$) AppleWebKit/537.17 $[s]$($[khtml]$)$[ver]$ Chrome/24.0.1312.$[rv]$ $[s]$$[safari]$/537.17']
+['$[moz5]$ ($[platform]$) AppleWebKit/537.22 $[s]$($[khtml]$)$[ver]$ Chrome/25.0.1364.$[rv]$ $[s]$$[safari]$/537.22']
+['$[moz5]$ ($[platform]$) AppleWebKit/537.31 $[s]$($[khtml]$)$[ver]$ Chrome/26.0.1410.$[rv]$ $[s]$$[safari]$/537.31']
+@@.
+
+# Std or Chrome (Gt27)
+@@L android_std_chr_gt27
+['$[moz5]$ ($[platform]$) AppleWebKit/537.36 ($[khtml]$)$[ver]$ Chrome/$[chr_gt27_ver]$ $[safari]$/537.36']
+@@.
+
+# Std old
+@@L android_std_old
+['$[moz5]$ ($[platform]$) AppleWebKit/533.1 ($[khtml]$) Version/4.0 $[safari]$/533.1']
+['$[moz5]$ ($[platform]$) AppleWebKit/534.13 ($[khtml]$) Version/4.0 $[safari]$/534.13']
+['$[moz5]$ ($[platform]$) AppleWebKit/534.30 ($[khtml]$) Version/4.0 $[safari]$/534.30']
+['$[moz5]$ ($[platform]$) AppleWebKit/535.19 ($[khtml]$) Version/4.0 $[safari]$/535.19']
+@@.
+
+@@L platform_opera_chr
+['Linux; Android $[and_ver]$; $[maker_info_1]$']
+['Linux; Android $[and_ver]$; $[maker_info_2]$']
+['Linux; Android $[and_ver4]$; $[maker_info_1]$']
+['Linux; Android $[and_ver4]$; $[maker_info_2]$']
+@@.
+
+@@L android_opera_chr
+['$[moz5]$ ($[platform_opera_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/48.0.2564.99$[ss]$ $[safari]$/537.36 OPR/35.0.2070.100283']
+['$[moz5]$ ($[platform_opera_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/49.0.2623.110$[s]$ $[safari]$/537.36 OPR/36.1.2126.102083']
+['$[moz5]$ ($[platform_opera_chr]$) AppleWebKit/537.36 ($[khtml]$) Chrome/49.0.2623.110$[s]$ $[safari]$/537.36 OPR/36.2.2126.102826']
+@@.
+
+@@L opera_machine_info
+['Opera Mobi/ADR-1111101157']
+['Opera Mobi/ADR-1207201819']
+['Opera Mobi/ADR-1411061201']
+['Opera Tablet/build-1203300859']
+['Opera Tablet/ADR-1301080958']
+['Opera Tablet/ADR-1502251211']
+['Opera Tablet/ADR-1411061216']
+['Opera Tablet/ADR-1411061201']
+@@.
+
+@@L platform_opera_presto
+['Android $[and_ver]$; Linux; $[opera_machine_info]$; U$[la4]$']
+['Android $[and_ver4]$; Linux; $[opera_machine_info]$; U$[la4]$']
+@@.
+
+@@L android_opera_presto
+['Opera/9.80 ($[platform_opera_presto]$) Presto/2.9.201  Version/11.50']
+['Opera/9.80 ($[platform_opera_presto]$) Presto/2.10.254 Version/12.00']
+['Opera/9.80 ($[platform_opera_presto]$) Presto/2.11.355 Version/12.10']
+['Opera/9.80 ($[platform_opera_presto]$) Presto/2.12.423 Version/12.16']
+@@.
+
+@@L platform_firefox
+['Android $[and_ver]$; Mobile']
+['Android $[and_ver]$; Tablet']
+['Android $[and_ver4]$; Mobile']
+['Android $[and_ver4]$; Tablet']
+@@.
+
+@@L fx_ver
+['20.0']
+['21.0']
+['22.0']
+['23.0']
+['24.0']
+['25.0']
+['26.0']
+['27.0']
+['28.0']
+['29.0']
+['30.0']
+['31.0']
+['32.0']
+['33.0']
+['34.0']
+['35.0']
+['36.0']
+['37.0']
+['38.0']
+['39.0']
+['40.0']
+['41.0']
+['42.0']
+['43.0']
+['45.0']
+['46.0']
+['47.0']
+['48.0']
+['49.0']
+['50.0']
+@@.
+
+@@L android_firefox
+['$[moz5]$ ($[platform_firefox]$; rv:$[fx_ver]$) Gecko/$[fx_ver]$ Firefox/$[fx_ver]$']
+@@.
+
+@@L android
+['$[android_std_chr_lt26]$']
+['$[android_std_chr_gt27]$'] *0.3
+['$[android_std_old]$']
+['$[android_firefox]$']
+['$[android_opera_presto]$']
+['$[android_opera_chr]$']
+@@.
+

@@ -7,6 +7,73 @@ Znk_EXTERN_C_BEGIN
 
 typedef struct ZnkDirInfoImpl* ZnkDirId;
 
+/**
+ * @brief
+ * パスなどで指定したオブジェクトがどのようなタイプかを示す.
+ * ここではそのタイプが不明な場合や、存在しない場合も一種のタイプとみなす.
+ *
+ * ZnkDirType_e_CannotKnow:
+ *   途中のディレクトリのサーチパーミッションに阻まれ、
+ *   パスにおけるtailの部分の存在性、属性などが現在の権限では調査不可能な場合を示す.
+ *
+ * ZnkDirType_e_NotFound:
+ *   指定したパスが示すディレクトリ/ファイルなどのオブジェクトは存在しないことが
+ *   確認されたことを示す.
+ *
+ * ZnkDirType_e_Directory:
+ *   指定したパスが示すオブジェクトはディレクトリであることが確認されたことを示す.
+ *
+ * ZnkDirType_e_File:
+ *   指定したパスが示すオブジェクトはファイルであることが確認されたことを示す.
+ *   (現状ではシンボリックリンクやパイプなどの特殊ファイルもこれに含める)
+ */
+typedef enum {
+	 ZnkDirType_e_CannotKnow=-1
+	,ZnkDirType_e_NotFound=0
+	,ZnkDirType_e_Directory
+	,ZnkDirType_e_File
+}ZnkDirType;
+
+
+/***
+ * ZnkDirIdentity_e_CannotKnow:
+ *   少なくともいずれか一方にサーチパーミッション等がなく
+ *   現在の権限では判定不能な場合.
+ *
+ * ZnkDirIdentity_e_Same:
+ *   二つのパスは同じファイルorディレクトリを示していることが
+ *   確認された場合.
+ *
+ * ZnkDirIdentity_e_DifferAndCannotKnowDevice:
+ *   二つのパスは異なるファイルorディレクトリを示していることまでが
+ *   確認されたが、デバイスが同じであるか否かまでは判定不能である場合.
+ *
+ * ZnkDirIdentity_e_DifferAndSameDevice:
+ *   二つのパスは異なるファイルorディレクトリを示しているが、
+ *   デバイスは同じであることが確認された場合.
+ *
+ * ZnkDirIdentity_e_DifferAndDifferDevice:
+ *   二つのパスは異なるファイルorディレクトリを示しており、
+ *   デバイスが異なることが確認された場合.
+ *
+ * ZnkDirIdentity_e_NotFound:
+ *   二つのパスのいずれか一方、あるいは両方が存在しないファイルorディレクトリを
+ *   示していることが確認された場合.
+ */
+typedef enum {
+	 ZnkDirIdentity_e_CannotKnow = -1
+	,ZnkDirIdentity_e_Same = 0
+	,ZnkDirIdentity_e_DifferAndCannotKnowDevice
+	,ZnkDirIdentity_e_DifferAndSameDevice
+	,ZnkDirIdentity_e_DifferAndDifferDevice
+	,ZnkDirIdentity_e_NotFound
+}ZnkDirIdentity;
+
+ZnkDirType
+ZnkDir_getType( const char* path );
+
+ZnkDirIdentity
+ZnkDir_getIdentity( const char* path1, const char* path2 );
 
 /**
  * @brief
@@ -42,9 +109,13 @@ ZnkDir_getFileByteSize( const char* file, int64_t* file_size );
  * @brief:
  *   引数で与えたファイルsrc_file を dst_file へコピーする.
  *   これらはディレクトリであってはならない(その場合何もせずエラー値を返す).
+ *
+ * @param ermsg
+ *   エラーまたはリポートメッセージ格納用.
+ *   NULLを指定することもでき、その場合は単に無視される.
  */
 bool
-ZnkDir_copyFile_byForce( const char* src_file, const char* dst_file );
+ZnkDir_copyFile_byForce( const char* src_file, const char* dst_file, ZnkStr ermsg );
 
 /**
  * @brief:
@@ -78,12 +149,16 @@ ZnkDir_rmdir( const char* dir );
  *   ただし、ディレクトリに関しては同じドライブ内の移動に限られる.
  *   UNIXに関しては、ファイル/ディレクトリともに同じマウント内の移動に限られる.
  *
+ * @param ermsg
+ *   エラーまたはリポートメッセージ格納用.
+ *   NULLを指定することもでき、その場合は単に無視される.
+ *
  * @return:
  *   移動(リネーム)に成功した場合trueを返す.
  *   さもなくばfalseを返す.
  */
 bool
-ZnkDir_rename( const char* src_path, const char* dst_path );
+ZnkDir_rename( const char* src_path, const char* dst_path, ZnkStr ermsg );
 
 
 
@@ -112,13 +187,17 @@ ZnkDir_rename( const char* src_path, const char* dst_path );
  *   その場合、これらが混合したpathを扱うことも可能であるが、
  *   pathに日本語を含めてはならない.
  *
+ * @param ermsg
+ *   エラーまたはリポートメッセージ格納用.
+ *   NULLを指定することもでき、その場合は単に無視される.
+ *
  * @return:
  *   作成に成功した場合trueを返す.
  *   あるいは指定したpathが既に存在する場合もtrueを返す.
  *   なんらかの理由で作成に失敗した場合はなにもせずfalseを返す.
  */
 bool
-ZnkDir_mkdirPath( const char* path, size_t path_leng, char sep );
+ZnkDir_mkdirPath( const char* path, size_t path_leng, char sep, ZnkStr ermsg );
 
 
 
@@ -249,6 +328,8 @@ ZnkDir_getNumOfDirList( const char* dir_path )
 	return count;
 }
 
+bool
+ZnkDir_rmdirAll_force( const char* dir, bool is_err_ignore, ZnkStr ermsg );
 
 Znk_EXTERN_C_END
 

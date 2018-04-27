@@ -8,6 +8,18 @@
 
 Znk_EXTERN_C_BEGIN
 
+Znk_INLINE char*
+ZnkStrEx_strchr( ZnkStr str, char c ){
+	return Znk_strchr( ZnkStr_cstr( str ), c );
+}
+Znk_INLINE char*
+ZnkStrEx_strrchr( ZnkStr str, char c ){
+	return Znk_strrchr( ZnkStr_cstr( str ), c );
+}
+Znk_INLINE char*
+ZnkStrEx_strstr( ZnkStr str, const char* ptn ){
+	return Znk_strstr( ZnkStr_cstr( str ), ptn );
+}
 
 void
 ZnkStrEx_addSplitC( ZnkStrAry ans_list,
@@ -28,6 +40,7 @@ ZnkStrEx_addSplitStr( ZnkStrAry ans_vstr, const char* str, size_t str_leng,
 
 void
 ZnkStrEx_addJoin( ZnkStr ans, const ZnkStrAry str_list,
+		size_t begin, size_t end,
 		const char* connector, size_t connector_leng, size_t expect_elem_leng );
 
 void
@@ -136,17 +149,98 @@ ZnkStrEx_addEmbededStr( ZnkStr ans,
 		const char* emb_str, size_t emb_str_leng,
 		char positioning_mode );
 
+/**
+ * @brief
+ *   str 内にある old_ptn を seek_depth で指定した回数分 new_ptn に置き換える.
+ *
+ * @param str:
+ *   replace対象となる文字列.
+ *
+ * @param begin:
+ *   strにおいてこの位置から最後までをreplace処理の範囲とする.
+ *   (つまりこれより前の範囲は対象外)
+ *
+ * @param old_ptn:
+ *   str内にこのパターンが出現したなら、その部分をnew_ptnで置き換える.
+ *
+ * @param old_ptn_leng:
+ *   old_ptn の文字列長.
+ *
+ * @param new_ptn:
+ *   str内にold_ptnパターンが出現した場合に置き換えるべき新しい文字列パターン.
+ *
+ * @param new_ptn_leng:
+ *   new_ptn の文字列長.
+ *
+ * @param seek_depth:
+ *   置き換え処理を左から右へ何回実行するかを指定する.
+ *   例えば 1 の場合は一番最初に現れた old_ptn しか置換されない.
+ *   Znk_NPOS を指定した場合は文字列中に出現するすべての old_ptn が置換される.
+ *
+ * @param delta_to_next:
+ *   置き換え処理を行った直後、カーソルをどれだけ右へ移動させるかを示す.
+ *   Znk_NPOS を指定した場合はnew_ptn_leng 分だけ移動する.
+ *
+ * @note:
+ *   delta_to_nextについて:
+ *   これがなぜ必要かについては、例えば以下のようなケースを考えるとわかり易い.
+ *   /../../../../ というような親ディレクトリ「..」を示すパターンが現れた場合に
+ *   それらをすべて /__/__/__/__/ のように置換したいとする. とりあえず確実に / に囲まれたパターンのみを
+ *   置換するため、old_ptnとして /../  new_ptnとして /__/ を指定したとする.
+ *   この場合、delta_to_next が new_ptn_leng では /__/../__/../ のような結果になってしまう.
+ *   つまり偶数番目のパターンが見逃されてしまう. このようなケースでは delta_to_next を new_ptn_leng-1 と
+ *   指定すればうまくいく.
+ */
 size_t
 ZnkStrEx_replace_BF( ZnkStr str, size_t begin,
 		const char* old_ptn, size_t old_ptn_leng,
 		const char* new_ptn, size_t new_ptn_leng,
-		size_t seek_depth );
+		size_t seek_depth, size_t delta_to_next );
 
+/**
+ * @brief
+ *   str 内にある old_ptn を seek_depth で指定した回数分 new_ptn に置き換える.
+ *   ZnkStrEx_replace_BF の BMSアルゴリズム使用バージョンであり、処理結果は全く同じである.
+ *
+ * @param str:
+ *   replace対象となる文字列.
+ *
+ * @param begin:
+ *   strにおいてこの位置から最後までをreplace処理の範囲とする.
+ *   (つまりこれより前の範囲は対象外)
+ *
+ * @param old_ptn:
+ *   str内にこのパターンが出現したなら、その部分をnew_ptnで置き換える.
+ *
+ * @param old_ptn_leng:
+ *   old_ptn の文字列長.
+ *
+ * @param old_ptn_occ_table:
+ *   old_ptn のocc_table(BMSアルゴリズムで使用される高速化のための補助データ).
+ *
+ * @param new_ptn:
+ *   str内にold_ptnパターンが出現した場合に置き換えるべき新しい文字列パターン.
+ *
+ * @param new_ptn_leng:
+ *   new_ptn の文字列長.
+ *
+ * @param seek_depth:
+ *   置き換え処理を左から右へ何回実行するかを指定する.
+ *   例えば 1 の場合は一番最初に現れた old_ptn しか置換されない.
+ *   Znk_NPOS を指定した場合は文字列中に出現するすべての old_ptn が置換される.
+ *
+ * @param delta_to_next:
+ *   置き換え処理を行った直後、カーソルをどれだけ右へ移動させるかを示す.
+ *   Znk_NPOS を指定した場合はnew_ptn_leng 分だけ移動する.
+ *
+ * @note
+ *   delta_to_next の存在意義については ZnkStrEx_replace_BF にある説明と全く同じである.
+ */
 size_t
 ZnkStrEx_replace_BMS( ZnkStr str, size_t begin,
 		const char* old_ptn, size_t old_ptn_leng, const size_t* old_ptn_occ_table,
 		const char* new_ptn, size_t new_ptn_leng,
-		size_t seek_depth );
+		size_t seek_depth, size_t delta_to_next );
 
 Znk_EXTERN_C_END
 

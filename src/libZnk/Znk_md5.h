@@ -39,13 +39,23 @@
 
 Znk_EXTERN_C_BEGIN
 
+/**
+ * MD5アルゴリズムにおいてこの値は常に16であるが一応名前をつけておく.
+ */
+#define ZnkMD5_DIGEST_SIZE 16
+
 /* Data structure for MD5 (Message-Digest) computation */
 typedef struct {
-	uint32_t i__[2];      /* Private : number of _bits_ handled mod 2^64 */
-	uint32_t buf__[4];    /* Private : scratch buffer */
-	uint8_t  in__[64];    /* Private : input buffer */
-	uint8_t  digest_[16]; /* Public  : actual digest after MD5Final call */
+	uint32_t i__[ 2 ];      /* Private : number of _bits_ handled mod 2^64 */
+	uint32_t buf__[ 4 ];    /* Private : scratch buffer */
+	uint8_t  in__[ 64 ];    /* Private : input buffer */
+	uint8_t  digest_[ ZnkMD5_DIGEST_SIZE ]; /* Public  : actual digest after MD5Final call */
 }ZnkMD5_CTX;
+
+Znk_INLINE const uint8_t*
+ZnkMD5_digest( const ZnkMD5_CTX* mdContext ){
+	return mdContext->digest_;
+}
 
 void ZnkMD5_init( ZnkMD5_CTX* mdContext );
 void ZnkMD5_update( ZnkMD5_CTX* mdContext, const uint8_t* data, unsigned int data_size );
@@ -57,6 +67,39 @@ ZnkMD5_getDigest_byData( ZnkMD5_CTX* mdContext, const uint8_t* data, size_t data
     ZnkMD5_init( mdContext );
     ZnkMD5_update( mdContext, data, data_size );
     ZnkMD5_final( mdContext );
+}
+
+void
+ZnkMD5_getDigest_byFile( ZnkMD5_CTX* mdContext, const char* file_path );
+
+
+/**
+ * @brief
+ *   MD5のCheckSumデータ.
+ *   一般にMD5 CheckSum と呼ばれる 32 文字のASCII文字列である.
+ *   ZnkMD5_getCheckSum関数でこれを取得した場合、常にNULL終端される.
+ *   即ちユーザはbuf_をC文字列として参照してよい.
+ */
+typedef struct {
+	/* null終端分用として+1してある */
+	char buf_[ ZnkMD5_DIGEST_SIZE*2+1 ];
+}ZnkMD5CheckSum;
+
+Znk_INLINE void
+ZnkMD5CheckSum_get_byContext( ZnkMD5CheckSum* checksum, const ZnkMD5_CTX* mdContext )
+{
+	const char* xdigit = "0123456789abcdef";
+	size_t idx;
+	char* p = checksum->buf_;
+	for( idx=0; idx<sizeof(mdContext->digest_); ++idx ){
+		*p++ = xdigit[ mdContext->digest_[ idx ] >> 4 ];
+		*p++ = xdigit[ mdContext->digest_[ idx ] & 0xf ];
+	}
+	*p = '\0';
+}
+Znk_INLINE const char*
+ZnkMD5CheckSum_cstr( const ZnkMD5CheckSum* checksum ){
+	return checksum->buf_;
 }
 
 Znk_EXTERN_C_END

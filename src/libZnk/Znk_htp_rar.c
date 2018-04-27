@@ -10,17 +10,19 @@
 #include <Znk_str_ex.h>
 #include <Znk_stock_bio.h>
 #include <Znk_zlib.h>
+#include <Znk_def_util.h>
 
 #include <stdio.h>
 #include <string.h>
 
-typedef int (*ZnkSenderFunc)( void* arg, uint8_t* buf, size_t buf_size );
-
 static void
-printLastRecvError( int line_idx )
+printLastRecvError( ZnkStr ermsg, int line_idx )
 {
-	ZnkF_printf_e( "ZnkHtpRAR : Error : line=%d : ZnkSocket_recv error : [%s]\n",
-			line_idx, ZnkNetBase_getErrKey(ZnkNetBase_getLastErrCode()) );
+	if( ermsg ){
+		ZnkStr_addf( ermsg,
+				"ZnkHtpRAR : Error : line=%d : ZnkSocket_recv error : [%s]\n",
+				line_idx, ZnkNetBase_getErrKey(ZnkNetBase_getLastErrCode()) );
+	}
 }
 
 typedef struct HeaderInfo_tag {
@@ -58,10 +60,11 @@ destroyHeaderInfo( HeaderInfo* hdr_info )
 }
 
 static bool
-appendRecvedData( ZnkStockBIO sbio, ZnkBfr dst, size_t data_size )
+appendRecvedData( ZnkStockBIO sbio, ZnkBfr dst, size_t data_size, ZnkStr ermsg )
 {
 	uint8_t buf[ 4096 ];
 	size_t readed_size;
+	size_t begin = ZnkBfr_size(dst);
 	while( data_size ){
 		if( data_size > sizeof(buf) ){
 			readed_size = ZnkStockBIO_read( sbio, buf, sizeof(buf) );
@@ -70,14 +73,20 @@ appendRecvedData( ZnkStockBIO sbio, ZnkBfr dst, size_t data_size )
 		}
 		if( readed_size == 0 ){
 			/* end of recv */
+			ZnkStr_addf( ermsg, "ZnkHtpRAR : appendRecvedData end of recv(readed_size=0)\n" );
 			return false;
 		} else if( readed_size < 0 ){
 			/* error of recv */
-			printLastRecvError( __LINE__ );
+			printLastRecvError( ermsg, __LINE__ );
 			return false;
 		}
 		data_size -= readed_size;
 		ZnkBfr_append_dfr( dst, buf, readed_size );
+	}
+	if( ermsg ){
+		ZnkStr_addf( ermsg, "ZnkHtpRAR : appendRecvedData : size=%zu : [", data_size );
+		ZnkStr_append( ermsg, (char*)ZnkBfr_data(dst)+begin, data_size );
+		ZnkStr_add( ermsg, "]\n" );
 	}
 	return true;
 }
@@ -99,7 +108,7 @@ appendRecvedData( ZnkStockBIO sbio, ZnkBfr dst, size_t data_size )
  * その後に次のchunk_sizeが来る.
  */
 static bool
-appendBody( ZnkStockBIO sbio, ZnkBfr body, const HeaderInfo* hdr_info )
+appendBody( ZnkStockBIO sbio, ZnkBfr body, const HeaderInfo* hdr_info, ZnkStr ermsg )
 {
 	/***
 	 * 注:
@@ -108,8 +117,10 @@ appendBody( ZnkStockBIO sbio, ZnkBfr body, const HeaderInfo* hdr_info )
 	 */
 	if( hdr_info->is_chunked_ ){
 		size_t chunk_size = 0;
-		char chunk_size_line[ 1024 ];
-		ZnkF_printf_e( "ZnkHtpRAR : [chunked mode]\n" );
+		char chunk_size_line[ 1024 ] = "";
+		if( ermsg ){
+			ZnkStr_addf( ermsg, "ZnkHtpRAR : [chunked mode]\n" );
+		}
 
 		while( true ){
 			/* chunk_size_lineを読み込み */
@@ -117,6 +128,8 @@ appendBody( ZnkStockBIO sbio, ZnkBfr body, const HeaderInfo* hdr_info )
 			/* chunk_size は 16進数で表記されている */
 			if( !ZnkS_getSzX( &chunk_size, chunk_size_line ) ){
 				/* error */
+				ZnkStr_addf( ermsg, "ZnkHtpRAR : Error : Invalid chunk_size_line=[%s]\n", chunk_size_line );
+				return false;
 			}
 			/***
 			 * chunkedモードにおいては、結びのchunk_sizeは必ず0になっている.
@@ -127,8 +140,9 @@ appendBody( ZnkStockBIO sbio, ZnkBfr body, const HeaderInfo* hdr_info )
 				break;
 			}
 
-			if( !appendRecvedData( sbio, body, chunk_size ) ){
+			if( !appendRecvedData( sbio, body, chunk_size, ermsg ) ){
 				/* error */
+				return false;
 			}
 
 			/* chunk dataの一番最後にもCRLFがある. これを読み飛ばす */
@@ -136,13 +150,23 @@ appendBody( ZnkStockBIO sbio, ZnkBfr body, const HeaderInfo* hdr_info )
 		}
 
 	} else if( hdr_info->content_length_ > 0 ){
-		ZnkF_printf_e( "ZnkHtpRAR : [content_length(%u) mode]\n", hdr_info->content_length_ );
-		appendRecvedData( sbio, body, hdr_info->content_length_ );
+		if( ermsg ){
+			ZnkStr_addf( ermsg, "ZnkHtpRAR : [content_length(%zu) mode]\n", hdr_info->content_length_ );
+		}
+		if( !appendRecvedData( sbio, body, hdr_info->content_length_, ermsg ) ){
+			/* error */
+			return false;
+		}
+		if( ermsg ){
+			ZnkStr_addf( ermsg, "ZnkHtpRAR : appendRecvedData result of body size=[%zu]\n", ZnkBfr_size(body) );
+		}
 
 	} else {
 		uint8_t buf[ 4096 ];
 		size_t readed_size;
-		ZnkF_printf_e( "ZnkHtpRAR : [unknown mode]\n" );
+		if( ermsg ){
+			ZnkStr_add( ermsg, "ZnkHtpRAR : [unknown mode]\n" );
+		}
 		/***
 		 * この場合、終了のタイミングはrecvからの0戻り値に頼るほかない.
 		 */
@@ -171,7 +195,7 @@ appendBody( ZnkStockBIO sbio, ZnkBfr body, const HeaderInfo* hdr_info )
  * また同時にHeaderの全文字列とHeaderの終了バイト位置も取得する.
  */
 static int
-recvHeader( ZnkStockBIO sbio, ZnkHtpHdrs recv_hdrs, HeaderInfo* hdr_info )
+recvHeader( ZnkStockBIO sbio, ZnkHtpHdrs recv_hdrs, HeaderInfo* hdr_info, ZnkStr ermsg )
 {
 	char buf[ 8192 ] = { 0 };
 	size_t readed_size;
@@ -182,7 +206,7 @@ recvHeader( ZnkStockBIO sbio, ZnkHtpHdrs recv_hdrs, HeaderInfo* hdr_info )
 		 * これが発生することはあまりないが、発生した場合は WSAECONNRESET( ピア側での接続がリセットされました ) 
 		 * が最も典型的なものである. これは通信している相手が強引に接続を断ったことを意味する.
 		 */
-		printLastRecvError( __LINE__ );
+		printLastRecvError( ermsg, __LINE__ );
 		return -1;
 	}
 
@@ -191,8 +215,10 @@ recvHeader( ZnkStockBIO sbio, ZnkHtpHdrs recv_hdrs, HeaderInfo* hdr_info )
 	/* 最初が "HTTP/" ではじまるかどうかを確認 */
 	if( !ZnkS_isBegin( buf, "HTTP/" ) ){
 		/* プロトコルがHTTPとは異なる */
-		ZnkF_printf_e( "ZnkHtpRAR : Error : recved status line : [%s]\n", (char*)buf );
-		ZnkF_printf_e( "            : This is not begun by \"HTTP/\"\n" );
+		if( ermsg ){
+			ZnkStr_addf( ermsg, "ZnkHtpRAR : Error : recved status line : [%s]\n", (char*)buf );
+			ZnkStr_add(  ermsg, "          : This is not begun by \"HTTP/\"\n" );
+		}
 		return -1;
 	}
 
@@ -209,7 +235,9 @@ recvHeader( ZnkStockBIO sbio, ZnkHtpHdrs recv_hdrs, HeaderInfo* hdr_info )
 		} else if( strncmp("1.1 ", ptr, 4) == 0 ){
 			ptr += 4;
 		} else {
-			ZnkF_printf_e( "ZnkHtpRAR : unknown HTTP version\n" );
+			if( ermsg ){
+				ZnkStr_add( ermsg, "ZnkHtpRAR : unknown HTTP version\n" );
+			}
 			return -1;
 		}
 	
@@ -219,20 +247,20 @@ recvHeader( ZnkStockBIO sbio, ZnkHtpHdrs recv_hdrs, HeaderInfo* hdr_info )
 		/***
 		 * HTTPの結果を解析
 		 */
-		{
+		if( ermsg ){
 			int status_code = 0;
 			sscanf( ptr, "%d", &status_code );
 			switch( status_code ){
 			case 200:
 				break;
 			case 302:
-				ZnkF_printf_e( "ZnkHtpRAR : This is 302 moved.\n" );
+				ZnkStr_add( ermsg, "ZnkHtpRAR : This is 302 moved.\n" );
 				break;
 			case 404:
-				ZnkF_printf_e( "ZnkHtpRAR : This is 404 not found.\n" );
+				ZnkStr_add( ermsg, "ZnkHtpRAR : This is 404 not found.\n" );
 				break;
 			default:
-				ZnkF_printf_e( "ZnkHtpRAR : This is status_code[%d].\n", status_code );
+				ZnkStr_addf( ermsg, "ZnkHtpRAR : This is status_code[%d].\n", status_code );
 				break;
 			}
 		}
@@ -243,13 +271,12 @@ recvHeader( ZnkStockBIO sbio, ZnkHtpHdrs recv_hdrs, HeaderInfo* hdr_info )
 			/* ヘッダ部終わりのCRLFであると思われる */
 			break;
 		}
-		//parseHeaderInfo( buf, hdr_info, recv_hdrs );
 		ZnkHtpHdrs_regist_byLine( recv_hdrs->vars_, buf, Znk_NPOS );
 	}
 
 	readed_size = ZnkStockBIO_getReadedSize( sbio );
 	if( readed_size < 0 ){
-		printLastRecvError( __LINE__ );
+		printLastRecvError( ermsg, __LINE__ );
 		return -1;
 	}
 
@@ -297,8 +324,71 @@ recvHeader( ZnkStockBIO sbio, ZnkHtpHdrs recv_hdrs, HeaderInfo* hdr_info )
 	return 0;
 }
 
+
+typedef struct {
+	const uint8_t* src_;
+	size_t         src_size_;
+	ZnkBfr         ans_;
+} GZipInfo;
+static unsigned int
+supplyDstBfr( uint8_t* dst_buf, size_t dst_size, void* arg )
+{
+	GZipInfo* info = Znk_force_ptr_cast( GZipInfo*, arg );
+	ZnkBfr_append_dfr( info->ans_, dst_buf, dst_size );
+	return dst_size;
+}
+static unsigned int
+demandSrc( uint8_t* src_buf, size_t src_size, void* arg )
+{
+	GZipInfo* info = Znk_force_ptr_cast( GZipInfo*, arg );
+	const size_t cpy_size = Znk_MIN( info->src_size_, src_size );
+	memmove( src_buf, info->src_, cpy_size );
+	info->src_      += cpy_size;
+	info->src_size_ -= cpy_size;
+	return (unsigned int)cpy_size;
+}
 static bool
-uncompressBfr( ZnkZStream zst, ZnkBfr dst_bfr, const ZnkBfr src_bfr )
+inflateGZipBody_toBfr( ZnkBfr ans, const uint8_t* body_data, const size_t body_size, ZnkStr emsg )
+{
+	bool result = false;
+	uint8_t dst_buf[ 4096 ];
+	ZnkZStream zst = ZnkZStream_create();
+
+	if( !ZnkZStream_inflateInit( zst, emsg ) ){
+		goto FUNC_END;
+	} else {
+		uint8_t src_buf[ 4096 ];
+		GZipInfo gzip_info = { 0 };
+
+		gzip_info.src_      = body_data;
+		gzip_info.src_size_ = body_size;
+		gzip_info.ans_      = ans;
+
+		while( gzip_info.src_size_ ){
+			if( !ZnkZStream_inflate2( zst,
+						dst_buf, sizeof(dst_buf), supplyDstBfr, &gzip_info,
+						src_buf, sizeof(src_buf), demandSrc,    &gzip_info,
+						emsg ) )
+			{
+				goto FUNC_END;
+			}
+		}
+	}
+	if( !ZnkZStream_inflateEnd( zst, emsg ) ){
+		goto FUNC_END;
+	}
+
+	result = true;
+FUNC_END:
+
+	ZnkZStream_destroy( zst );
+	return result;
+}
+
+
+#if 0
+static bool
+uncompressBfr( ZnkZStream zst, ZnkBfr dst_bfr, const ZnkBfr src_bfr, ZnkStr ermsg )
 {
 	uint8_t dst_buf[ 4096 ];
 	size_t expanded_dst_size = 0;
@@ -309,65 +399,90 @@ uncompressBfr( ZnkZStream zst, ZnkBfr dst_bfr, const ZnkBfr src_bfr )
 	src_size = ZnkBfr_size( src_bfr );
 	while( src_size ){
 		if( !ZnkZStream_inflate( zst, dst_buf, sizeof(dst_buf), src, src_size,
-				&expanded_dst_size, &expanded_src_size ) ){
-			ZnkF_printf_e( "expanded_src_size=[%zu]\n", expanded_src_size );
+				&expanded_dst_size, &expanded_src_size, ermsg ) ){
+			if( ermsg ){
+				ZnkStr_addf( ermsg, "ZnkHtpRAR : inflateGZip : Error : expanded_src_size=[%zu]\n", expanded_src_size );
+			}
 			return false;
 		}
-		assert( expanded_src_size );
+		if( expanded_src_size == 0 ){
+			if( ermsg ){
+				ZnkStr_addf( ermsg, "ZnkHtpRAR : inflateGZip : Error : expanded_src_size=0\n" );
+			}
+			return false;
+		}
 		ZnkBfr_append_dfr( dst_bfr, dst_buf, expanded_dst_size );
 		src_size -= expanded_src_size;
 		src += expanded_src_size;
 	}
 	return true;
 }
+#endif
 
 static bool
-recvHeaderAndBody( ZnkStockBIO sbio, HeaderInfo* hdr_info, ZnkHtpHdrs recv_hdrs, ZnkBfr body )
+recvHeaderAndBody( ZnkStockBIO sbio, ZnkHtpReqMethod req_method, HeaderInfo* hdr_info, ZnkHtpHdrs recv_hdrs, ZnkBfr body, ZnkStr ermsg )
 {
 	int result;
 	bool uncomp_result = true;
 
-	result = recvHeader( sbio, recv_hdrs, hdr_info );
+	result = recvHeader( sbio, recv_hdrs, hdr_info, ermsg );
 	if( result < 0 ){
 		return false;
 	}
 
-	/***
-	 * bodyを取得.
-	 * HTMLといえども圧縮されbinary状態で得られることもある.
-	 * 従ってここではZnkStrではなくZnkBfrを使う.
-	 */
-	if( !appendBody( sbio, body, hdr_info ) ){
-		return false;
-	}
-
-	/***
-	 * HTMLなどはgzip圧縮されているケースが見られる.
-	 * しかしこれは別にHTML限定というわけでなく、一般にどんなバイナリであれ
-	 * この形式で圧縮されていても構わない.
-	 * いずれの場合でも、指定された圧縮形式の指示に従い、ここで本来のバイナリイメージへ
-	 * 展開するだけである.
-	 *
-	 * 今後の課題としては、超大容量ファイルをダウンロードする場合に、少しずつファイルへ
-	 * 落とすような形で保存する処理をサポートすることだが、とりあえずそれは後回し.
-	 */
-	if( hdr_info->is_gzip_ ){
-		ZnkZStream zst = ZnkZStream_create();
-		ZnkBfr dst_bfr = ZnkBfr_create_null();
-
-		ZnkZStream_inflateInit( zst );
-
-		uncomp_result = uncompressBfr( zst, dst_bfr, body );
-
-		ZnkZStream_inflateEnd( zst );
-		ZnkZStream_destroy( zst );
-
-		if( uncomp_result ){
-			ZnkBfr_swap( dst_bfr, body );
+	if( req_method != ZnkHtpReqMethod_e_HEAD ){
+		/***
+		 * bodyを取得.
+		 * HTMLといえども圧縮されbinary状態で得られることもある.
+		 * 従ってここではZnkStrではなくZnkBfrを使う.
+		 */
+		if( !appendBody( sbio, body, hdr_info, ermsg ) ){
+			return false;
 		}
-		ZnkBfr_destroy( dst_bfr );
-	}
+	
+		/***
+		 * HTMLなどはgzip圧縮されているケースが見られる.
+		 * しかしこれは別にHTML限定というわけでなく、一般にどんなバイナリであれ
+		 * この形式で圧縮されていても構わない.
+		 * いずれの場合でも、指定された圧縮形式の指示に従い、ここで本来のバイナリイメージへ
+		 * 展開するだけである.
+		 *
+		 * 今後の課題としては、超大容量ファイルをダウンロードする場合に、少しずつファイルへ
+		 * 落とすような形で保存する処理をサポートすることだが、とりあえずそれは後回し.
+		 */
+		if( hdr_info->is_gzip_ ){
+			ZnkBfr dst_bfr = ZnkBfr_create_null();
+			ZnkStr gz_emsg = ZnkStr_new( "" );
+			const uint8_t* body_data = ZnkBfr_data( body );
+			const size_t   body_size = ZnkBfr_size( body );
+			if( !inflateGZipBody_toBfr( dst_bfr, body_data, body_size, gz_emsg ) ){
+				if( ermsg ){
+					ZnkStr_addf( ermsg, "ZnkHtpRAR : recvHeaderAndBody : [%s]\n", ZnkStr_cstr(gz_emsg) );
+				}
+			} else {
+				ZnkBfr_swap( dst_bfr, body );
+			}
+			ZnkStr_delete( gz_emsg );
+			ZnkBfr_destroy( dst_bfr );
 
+#if 0
+			ZnkZStream zst = ZnkZStream_create();
+			ZnkBfr dst_bfr = ZnkBfr_create_null();
+	
+			ZnkZStream_inflateInit( zst, ermsg );
+	
+			uncomp_result = uncompressBfr( zst, dst_bfr, body, ermsg );
+	
+			ZnkZStream_inflateEnd( zst );
+			ZnkZStream_destroy( zst );
+	
+			if( uncomp_result ){
+				ZnkBfr_swap( dst_bfr, body );
+			}
+			ZnkBfr_destroy( dst_bfr );
+#endif
+		}
+	}
 	return uncomp_result;
 }
 
@@ -382,12 +497,14 @@ static bool
 sendAndRecv_bySocket( ZnkSocket sock,
 		ZnkHtpHdrs send_hdrs, ZnkBfr send_body,
 		ZnkHtpHdrs recv_hdrs, ZnkHtpOnRecvFuncArg recv_fnca,
-		ZnkVarpAry cookie, ZnkBfr wk_bfr )
+		ZnkVarpAry cookie, ZnkBfr wk_bfr, ZnkStr ermsg )
 {
 	ZnkErr_D( err );
 	bool result = false;
 	bool internal_wk_bfr = false;
 	ZnkStockBIO sbio = ZnkStockBIO_create( 256, recvSocket, (void*)sock );
+	ZnkHtpReqMethod req_method = ZnkHtpReqMethod_getType_fromCStr(
+			ZnkStrAry_at_cstr( send_hdrs->hdr1st_, 0 ) );
 
 	if( wk_bfr == NULL ){
 		internal_wk_bfr = true;
@@ -416,8 +533,10 @@ sendAndRecv_bySocket( ZnkSocket sock,
 
 		ZnkBfr_clear( wk_bfr );
 
-		if( !recvHeaderAndBody( sbio, hdr_info, recv_hdrs, wk_bfr ) ){
-			ZnkF_printf_e( "ZnkHtpRAR : recvHeaderAndBody : [Failure].\n" );
+		if( !recvHeaderAndBody( sbio, req_method, hdr_info, recv_hdrs, wk_bfr, ermsg ) ){
+			if( ermsg ){
+				ZnkStr_add( ermsg, "ZnkHtpRAR : recvHeaderAndBody : [Failure].\n" );
+			}
 			result = false;
 		} else {
 			if( cookie ){
@@ -498,7 +617,7 @@ ZnkHtpRAR_sendAndRecv( const char* cnct_hostname, uint16_t cnct_port,
 		ZnkHtpHdrs send_hdrs, ZnkBfr send_body,
 		ZnkHtpHdrs recv_hdrs, ZnkHtpOnRecvFuncArg recv_fnca,
 		ZnkVarpAry cookie,
-		size_t try_connect_num, bool is_proxy, ZnkBfr wk_bfr )
+		size_t try_connect_num, bool is_proxy, ZnkBfr wk_bfr, ZnkStr ermsg )
 {
 	bool        result = false;
 	const char* hostname = cnct_hostname;
@@ -539,7 +658,9 @@ ZnkHtpRAR_sendAndRecv( const char* cnct_hostname, uint16_t cnct_port,
 	
 		while( try_connect_num ){
 			if( !ZnkSocket_connectToServer( sock, cnct_hostname, cnct_port, &err, &is_inprogress ) ){
-				ZnkF_printf_e( "%s (try=%u).\n", ZnkErr_cstr(err),try_connect_num );
+				if( ermsg ){
+					ZnkStr_addf( ermsg, "%s (try=%zu).\n", ZnkErr_cstr(err),try_connect_num );
+				}
 				--try_connect_num;
 				if( try_connect_num == 0 ){
 					result = false;
@@ -549,12 +670,14 @@ ZnkHtpRAR_sendAndRecv( const char* cnct_hostname, uint16_t cnct_port,
 				break;
 			}
 		}
-		ZnkF_printf_e( "ZnkHtpRAR : connectTo[%s:%hu] : [Success].\n", cnct_hostname, cnct_port );
+		if( ermsg ){
+			ZnkStr_addf( ermsg, "ZnkHtpRAR : connectTo[%s:%hu] : [Success].\n", cnct_hostname, cnct_port );
+		}
 	
 		result = sendAndRecv_bySocket( sock,
 				send_hdrs, send_body,
 				recv_hdrs, recv_fnca,
-				cookie, wk_bfr );
+				cookie, wk_bfr, ermsg );
 
 		ZnkSocket_close( sock );
 	}

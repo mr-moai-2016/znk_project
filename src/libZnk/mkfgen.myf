@@ -1,0 +1,71 @@
+@def_quote [' ']
+
+@@V config
+my_libs_root = ['..']
+template_dir = ['../../mkfsys/template']
+lib_dlver = ['$(DL_VER)']
+install_dir = ['$(MY_LIBS_ROOT)/$(DLIBS_DIR)']
+install_exec_dir = ['../../mkfsys']
+install_slib_dir = ['$(MY_LIBS_ROOT)/$(SLIBS_DIR)']
+gslconv = ['$O/gslconv.exe']
+@@.
+
+@@L include_paths_common
+@@.
+
+@@L dependency_libs_common
+@@.
+
+@@V info_vc
+compiler_option_special = ['/wd4127 /wd4996 /wd4267'] 
+linking_libs_special = ['ws2_32']
+@@.
+
+@@V info_mingw
+linking_libs_special = ['ws2_32']
+@@.
+
+@@V info_msys
+linking_libs_special = ['ws2_32']
+@@.
+
+@@V info_linux
+linking_libs_special = ['m pthread dl stdc++']
+@@.
+
+@@V info_cygwin
+linking_libs_special = ['pthread dl stdc++']
+@@.
+
+@@L mkid_list
+vc
+mingw
+msys
+linux
+cygwin
+android
+@@.
+
+@@L product_list
+exec gslconv gslconv.c
+dlib Znk dll_main.c
+@@.
+
+@@L rc_list
+@@.
+
+@@L sublibs_list
+zlib zlib
+@@.
+
+@@L install_data_list
+@@.
+
+@@L ignore_list
+zlib
+@@.
+
+@@L src_suffix_list
+c
+cpp
+@@.

@@ -1,0 +1,205 @@
+@def_quote [' ']
+
+@@L moz5
+['Mozilla/5.0']
+@@.
+
+# machine
+@@L machine_linux
+['; i686']
+['; x86_64']
+@@.
+
+@@L machine_mac
+['Intel']    *0.96
+['PPC']
+@@.
+
+@@L mac_ver
+['10.5']
+['10.6']
+['10.7']
+['10.8']
+['10.9']
+['10.10']
+@@.
+
+@@L machine_win
+[''] *0.4
+['; WOW64']
+['; Win64; x64']
+@@.
+
+@@L lang_1_0
+['ja-JP'] *0.95
+['en-US']
+@@.
+
+@@L lang_gt1_5
+['ja'] *0.95
+['en-US']
+@@.
+
+@@L lang_gt1_0_mac
+['ja-JPM'] *0.95
+['en-US']
+@@.
+
+@@L lang_gt1_5_mac
+['ja-JP-mac'] *0.95
+['en-US']
+@@.
+
+@@L os_winnt
+['Windows NT 10.0'] *0.1
+['Windows NT 6.3']  *0.1
+['Windows NT 6.2']
+['Windows NT 6.1']  *0.3
+['Windows NT 6.0']
+['Windows NT 5.1']  *0.3
+@@.
+
+@@L os_win32
+['Windows NT 5.0']
+['Win 9x 4.90']
+['Win98']
+@@.
+
+@@L platform_win
+['$[os_winnt]$$[machine_win]$'] *0.8
+['$[os_win32]$']
+@@.
+
+@@L platform_linux
+['X11; U; Linux $[machine_linux]$'] *0.8
+['X11; Ubuntu; Linux $[machine_linux]$']
+['X11; Linux $[machine_linux]$']
+@@.
+
+@@L platform
+['$[platform_win]$'] *0.7
+['$[platform_linux]$'] *0.2
+['Macintosh; $[machine_mac]$ Mac OS X $[mac_ver]$']
+@@.
+
+@@L platform_3
+['Windows; U; $[platform_win]$; $[lang_gt1_5]$'] *0.8
+['$[platform_linux]$; $[lang_gt1_5]$']
+['Macintosh; U; $[machine_mac]$ Mac OS X $[mac_ver]$; $[lang_gt1_5_mac]$']
+@@.
+
+@@L recent_version
+['59.0']
+['58.0']
+['57.0']
+['56.0']
+['55.0']
+['54.0']
+['53.0']
+['52.0']
+['51.0']
+['50.0']
+['49.0']
+['48.0']
+['47.0']
+['46.0']
+['45.0']
+['44.0']
+['43.0']
+['42.0']
+['41.0']
+['40.0']
+['39.0']
+['38.0']
+['37.0']
+['36.0']
+['35.0']
+@@.
+
+@@L senior_version
+['34.0']
+['33.0']
+['32.0']
+['31.0']
+['30.0']
+['29.0']
+['28.0']
+['27.0']
+['26.0']
+['25.0']
+['24.0']
+['23.0']
+['22.0']
+['21.0']
+['20.0']
+@@.
+
+@@L old_version
+['19.0']
+['18.0']
+['17.0']
+['16.0']
+['15.0']
+['14.0']
+['13.0']
+['12.0']
+['11.0']
+['10.0']
+['9.0.1']
+['9.0']
+['8.0.1']
+['8.0']
+['7.0.1']
+['7.0']
+['6.0.2']
+['6.0']
+['5.0.1']
+['5.0']
+['4.0']
+@@.
+
+@@L gt4_version
+['$[recent_version]$'] *0.6
+['$[senior_version]$'] *0.3
+['$[old_version]$'] *0.1
+@@.
+
+@@L firefox_gt4
+['$[moz5]$ ($[platform]$; rv:$[gt4_version]$) Gecko/20100101 Firefox/$[gt4_version]$']
+@@.
+
+#
+# 本来はOS毎に固有の値と思われるがとりあえず.
+#
+@@L appname
+[''] *0.95
+[' GTB5 (.NET CLR 3.5.30729)']
+[' GTB6 (.NET CLR 3.5.30729)']
+@@.
+
+@@L firefox_3
+['$[moz5]$ ($[platform_3]$; rv:1.9.0.11) Gecko/2009060215 Firefox/3.0.11$[appname]$']
+['$[moz5]$ ($[platform_3]$; rv:1.9.0.12) Gecko/2009070611 Firefox/3.0.12$[appname]$']
+['$[moz5]$ ($[platform_3]$; rv:1.9.0.13) Gecko/2009073022 Firefox/3.0.13$[appname]$']
+['$[moz5]$ ($[platform_3]$; rv:1.9.0.14) Gecko/2009082707 Firefox/3.0.14$[appname]$']
+['$[moz5]$ ($[platform_3]$; rv:1.9.0.15) Gecko/2009101601 Firefox/3.0.15$[appname]$']
+['$[moz5]$ ($[platform_3]$; rv:1.9.0.16) Gecko/2009120208 Firefox/3.0.16$[appname]$']
+['$[moz5]$ ($[platform_3]$; rv:1.9.0.17) Gecko/2009122116 Firefox/3.0.17$[appname]$']
+['$[moz5]$ ($[platform_3]$; rv:1.9.0.18) Gecko/2010020220 Firefox/3.0.18$[appname]$']
+['$[moz5]$ ($[platform_3]$; rv:1.9.0.19) Gecko/2010031422 Firefox/3.0.19$[appname]$']
+['$[moz5]$ ($[platform_3]$; rv:1.9.2.19) Gecko/20110707 Firefox/3.6.19$[appname]$']
+['$[moz5]$ ($[platform_3]$; rv:1.9.2.20) Gecko/20110803 Firefox/3.6.20$[appname]$']
+['$[moz5]$ ($[platform_3]$; rv:1.9.2.21) Gecko/20110830 Firefox/3.6.21$[appname]$']
+['$[moz5]$ ($[platform_3]$; rv:1.9.2.22) Gecko/20110902 Firefox/3.6.22$[appname]$']
+['$[moz5]$ ($[platform_3]$; rv:1.9.2.23) Gecko/20110920 Firefox/3.6.23$[appname]$']
+['$[moz5]$ ($[platform_3]$; rv:1.9.2.24) Gecko/20111103 Firefox/3.6.24$[appname]$']
+['$[moz5]$ ($[platform_3]$; rv:1.9.2.25) Gecko/20111212 Firefox/3.6.25$[appname]$']
+['$[moz5]$ ($[platform_3]$; rv:1.9.2.26) Gecko/20120128 Firefox/3.6.26$[appname]$']
+['$[moz5]$ ($[platform_3]$; rv:1.9.2.27) Gecko/20120216 Firefox/3.6.27$[appname]$']
+['$[moz5]$ ($[platform_3]$; rv:1.9.2.28) Gecko/20120306 Firefox/3.6.28$[appname]$']
+@@.
+
+@@L firefox
+['$[firefox_gt4]$'] *0.98
+['$[firefox_3]$']
+@@.

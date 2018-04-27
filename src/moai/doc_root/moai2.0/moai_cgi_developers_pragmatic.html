@@ -1,0 +1,1146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<title>Moai2.0ドキュメント</title>
+</head>
+<body>
+<a name=TopBar></a>
+<p><b><img src="/imgs/here_landmark.png"> Moai2.0ドキュメント</b></p>
+
+<a class=MstyElemLink href="/">トップページ</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index.html">Moai2.0ドキュメント</a> &nbsp;
+<a class=MstyElemLink        href="/moai1.1/index.html">Moai1.1ドキュメント</a> &nbsp;
+<br> <br>
+<a class=MstyElemLink        href="/moai2.0/install.html">インストールガイド</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/moai_reference.html">Moai本体</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/customboy_reference.html">CustomBoy</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
+<br> <br>
+<a class=MstyElemLink        href="/moai2.0/moai_cgi_developers.html">Moai CGI 入門編</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/moai_cgi_developers_pragmatic.html">Moai CGI 実践編</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/mkfgen.html">mkfgenリファレンス</a> &nbsp;
+<br> <br>
+
+
+<div class=MstyComment>
+<u><b>記事担当者</b></u> : Mr.Moai<br> 
+<br>
+<u><b>最終更新日</b></u> : 2018/03/31<br>
+<br>
+</div>
+<br>
+
+
+<a name=AtFirst></a>
+<u><b>
+はじめに
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	この記事ではMoai CGI上で動くWebアプリケーションの実践的な開発方法について述べます.<br>
+	<br>
+	尚、これは Moai CGI 入門編の続きです.<br>
+	C言語によるCGI開発についてご存知ない方はまずは入門編を先にお読みになった方がよいでしょう.<br>
+	<br>
+	ここではライブラリを使ったMoai CGIを開発する方法について述べます.<br>
+	そして最終課題としてproxy_finderに該当するツールを作成してみます.<br>
+	難易度はやや高めです.<br>
+	<br>
+</div><br>
+<br>
+
+
+<a name=Index></a>
+<u><b>目次</b></u>
+<ul>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_pragmatic_introduction>準備</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_evar2>Hello 環境変数!(実践バージョン)</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_query_string2>Hello Query String!(実践バージョン)</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_post2>Hello Post!(実践バージョン)</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_hello_template>テンプレートHTMLを使って表示する.</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_progress>時間のかかる処理の途中経過を表示する</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_proxy_finder>ProxyFinderを作成してみる</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_at_end>おわりに</a></b></li>
+</ul><br>
+
+
+<a name=MoaiCGI_pragmatic_introduction></a>
+<u><b>
+準備
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	ライブラリを指定するには、mkfgen.myfにその記述を追加する必要があります.<br>
+	mkfgenについては一応<a class=MstyElemLink href="/moai2.0/mkfgen.html" target=_blank>こちら</a>に作者によるリファレンスがありますが、<br>
+	この内容は大変難しいため、ムリに読む必要はないでしょう.<br>
+	<br>
+	この記事では、znk_project 内にあるlibZnkとlibRanoという二つのライブラリを使いたいと思います.<br>
+	実はcgi_developersに付属するmkfgen.myfおよびそれから生成されるMakefile群では<br>
+	既にこのための設定が記載されているので、これらに関しては何もする必要がないのですが、<br>
+	とりあえず自分でゼロから記述するための手順を以下に示しましょう.<br>
+	<ol>
+		<li>srcディレクトリ配下にあるcgi_simpleディレクトリを雛形として使います.<br>
+		これを同じくsrcディレクトリ内にコピーして、あなたの好きな名前に変えます.<br>
+		ただし名前で使う文字は半角英数字、そして使う記号も精々「-」か「_」あたりの無難なものにしておきましょう.<br>
+		そうしておかないとURLで指定するときに厄介なことになるかもしれません.<br>
+		ここでは仮に my_cgi という名前にしたとします.<br>
+		これをあなたが開発するMoai CGI用ディレクトリとします.<br>
+		</li>
+		<br>
+		<li>my_cgiディレクトリ内にあるmkfgen.myfをテキストエディタで開きます.<br>
+		</li>
+		<br>
+		<li>configセクション内のinstall_dirの指定において、cgi_simpleの部分だけをあなたのツールの名前(my_cgi)に変えます.<br>
+		<br>
+		<div class=MstyComment>
+			修正前<br>
+			install_dir = ['../../moai-v$(REL_VER)-$(PLATFORM)/cgis/protected/cgi_simple']<br>
+			<br>
+			修正後<br>
+			install_dir = ['../../moai-v$(REL_VER)-$(PLATFORM)/cgis/protected/<font color=red>my_cgi</font>']
+		</div>
+		</li>
+		<br>
+		<li>product_listセクションにも同様にcgi_simpleという文字列がありますので、<br>
+		これをあなたのツールの名前に変えます.<br>
+		<div class=MstyComment>
+			修正前<br>
+			@@L product_list<br>
+			exec cgi_simple main.c<br>
+			@@.<br>
+			<br>
+			修正後<br>
+			@@L product_list<br>
+			exec <font color=red>my_cgi</font> main.c<br>
+			@@.<br>
+		</div>
+		<br>
+		<div class=MstyComment>
+			main.c には main 関数が含まれるCファイル名を指定します.<br>
+			それが main.c とは異なる名前なら、この部分をそのファイル名に変更してください.<br>
+			尚、mkfgen.myf 内で指定する必要のあるCファイルは main 関数を含むものだけです.<br>
+			( main 関数を含まないその他のCファイルについては、mkfgen.myf 内で指定する必要はありません ).<br>
+		</div>
+		<br>
+		これで出来上がる実行ファイルの名前はmy_cgi.cgiとなります.<br>
+		またmake install時はMoai直下のcgis/protected/my_cgiディレクトリへインストールされます.<br>
+		</li>
+		<br>
+		<li>include_paths_commonセクションに以下のように二行を加えます.<br>
+		<br>
+		<div class=MstyComment>
+			修正前<br>
+			@@L include_paths_common<br>
+			@@.<br>
+			<br>
+			修正後<br>
+			@@L include_paths_common<br>
+			<font color=red>
+				@{libZnk}<br>
+				@{libRano}<br>
+			</font>
+			@@.<br>
+		</div>
+		</li>
+		<br>
+		<li>dependency_libs_commonセクションに以下のように二行を加えます.<br>
+		<br>
+		<div class=MstyComment>
+			修正前<br>
+			@@L dependency_libs_common<br>
+			@@.<br>
+			<br>
+			修正前<br>
+			@@L dependency_libs_common<br>
+			<font color=red>
+				rlib: @{libZnk}  Znk  $(DL_VER)<br>
+				rlib: @{libRano} Rano $(DL_VER)<br>
+			</font>
+			@@.<br>
+		</div>
+		<br>
+		<div class=MstyComment>
+			<u><b>Note</b></u><br>
+			<br>
+			include_paths_common と dependency_libs_common に関しては、<br>
+			今回コピー元としたcgi_simpleのmkfgen.myfでは、これは既に記述されています.<br>
+			ですから実際にはここでこれらに関しての修正を行う必要は<b>今回は</b>ないのですが、<br>
+			これらが不要な場合や他のライブラリが必要になった場合はこれを参考に同様の修正をしてみてください.<br>
+		</div><br>
+		これでmkfgen.myfの編集は終わりですので上書き保存してください.<br>
+		テキストエディタは終了して頂いて結構です.<br>
+		</li>
+		<br>
+		<li>Windowsの場合、my_cgiディレクトリ内にあるauto_trigger.batをダブルクリックして実行し、<br>
+		カーソルキーで以下を選択してEnterキーを押します.<br>
+		<br>
+		<div class=MstyComment>
+			6. mkfgen_update<br>
+		</div>
+		<br>
+		Linuxの場合はsrc/my_cgiディレクトリをカレントディレクトリにしておいてmkfgenを直接実行します.<br>
+		srcディレクトリの一つ上の階層にmkfsysというディレクトリがあり、mkfgenツールはその中にあります.<br>
+		つまりmy_cgiの中から見れば二つ上の階層になりますから、以下のように実行します.<br>
+		<br>
+		<div class=MstyComment>
+			$ ../../mkfsys/mkfgen<br>
+		</div>
+		<br>
+		これでmkfgen.myfの内容を元にmkfgenツールが実行され、あなたのMakefileが自動生成されます.<br>
+		(既にMakefileが存在する場合は更新されます.)
+		</li>
+		<br>
+		<li>この状態で試しに実際にコンパイルしてみましょう.<br>
+		Windowsの場合、my_cgiディレクトリ内にあるauto_trigger.batを実行し、<br>
+		以下を選択してEnterキーを押します.<br>
+		<br>
+		<div class=MstyComment>
+			0. make<br>
+		</div>
+		<br>
+		Linuxの場合はMakefile_linux.mak を指定してmakeします.<br>
+		つまり以下のように実行します.<br>
+		<br>
+		<div class=MstyComment>
+			$ make -f Makefile_linux.mak<br>
+		</div>
+		<br>
+		</li>
+		<br>
+		<li>最後にコンパイルしたものをインストールしてみましょう.<br>
+		Windowsの場合、auto_trigger.batを実行して以下を選択してEnterキーです.<br>
+		<br>
+		<div class=MstyComment>
+			1. make install<br>
+		</div>
+		<br>
+		Linuxの場合はMakefile_linux.mak を指定してmake installします.<br>
+		つまり以下のように実行します.<br>
+		<br>
+		<div class=MstyComment>
+			$ make -f Makefile_linux.mak install<br>
+		</div>
+		<br>
+		</li>
+	</ol>
+	<div class=MstyComment>
+		<b><u>参考：CGIのランタイムライブラリはどのようにロードされるのか？</u></b><br>
+		<br>
+		CGIのmkfgen.myf内でのconfigセクションにおいては、runtime_installがfalse指定されています.<br>
+		これはCGIのインストール先ディレクトリへ、このCGIが依存するランタイムライブラリ(DLL)を<br>
+		<b>インストールしない</b>ことを意味します.<br>
+		(今回の場合、依存するランタイムライブラリとはZnk-2.0.dllとRano-2.0.dllです).<br>
+		<br>
+		DLLの仕様に詳しい方は、このことを不思議に思われるかもしれません.<br>
+		Windowsでは特にPATH指定しない限り、このようなランタイムライブラリは、<br>
+		実行バイナリと同じディレクトリ内か、さもなくばWindowsのシステムディレクトリ内に<br>
+		存在しなければならないからです.<br>
+		しかし今回はそのどちらにも存在していません.<br>
+		<br>
+		からくりはMoaiサーバにあります.<br>
+		MoaiはCGIを子プロセスとして起動しますが、このときにDLLのためのPATHの指定も裏で自動的に行われます.<br>
+		このとき検索パスとしてMoaiディレクトリがセットされますが、ここにはZnk-2.0.dllとRano-2.0.dllが存在します.<br>
+		このようにしてCGIのDLLロードは、問題なく行われる仕組みとなっています.<br>
+		<br>
+		この仕様により各CGIディレクトリに冗長にも同じDLLをコピーせずに済むというわけです.<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+
+
+<a name=MoaiCGI_evar2></a>
+<u><b>
+Hello 環境変数!(実践バージョン)
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	なんだか見覚えのあるタイトルです.<br>
+	入門編でやった環境変数を表示するサンプルですね.<br>
+	今度はあれをlibZnkとlibRanoを使って実装してみます.<br>
+	<br>
+	<b><u>CGIへのリンクとソースコード</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/evar2.cgi">http://localhost:8124/cgis/cgi_developers/protected/evar2.cgi</a>
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/evar2.c">ソースコード</a> 
+		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+		<div class=MstyComment>
+			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
+		</div>
+	</div>
+	<br>
+	<b><u>説明</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		では実際に環境変数を取得する方法ですが、libRanoにある Rano_cgi_util を使いましょう！<br>
+		そして Rano_cgi_util が提供する関数 <span class=MstyCode>RanoCGIEVar_create</span> によってMoai CGIが提供する全ての環境変数を即座に取得できます.<br>
+		なんだか入門編でやった cgi_util や CGIEVar と名前が似ていますね(頭にRanoが付いているだけですが).<br>
+		種明かしすると入門編の cgi_util は、Rano_cgi_util から余計な機能を削ぎ落として極力簡単にしたものだったのです.<br>
+		<br>
+		既にlibZnkとlibRanoをリンクするためのmkfgen.myfの記述方法は述べました.<br>
+		これでようやくこれらのライブラリが心置きなく使えるようになりましたから、cgi_utilはもう用済みというわけです.<br>
+		<br>
+		ソースコード内でこれに該当する部分を以下に示します.<br>
+		<br>
+		<div class=MstyComment>
+			<div class=MstyCode>
+				<span class=MstyCodeSynComment>/* Moai CGIにおける全環境変数を取得します. */</span><br>
+				RanoCGIEVar* evar = RanoCGIEVar_create();<br>
+				...<br>
+				<span class=MstyCodeSynComment>/* RanoCGIEVar* は使用後解放する必要があります. */</span><br>
+				RanoCGIEVar_destroy( evar );<br>
+			</div>
+		</div>
+		<br>
+		意味はCGIEVarと全く同じですから、これ以上解説の必要もないでしょう.<br>
+		このソースコードではその他に Znk_Internal_setMode というのがあります.<br>
+		これもCGIUtil_Internal_setMode と役割は全く同じです.<br>
+		ただ第2引数は今度はbool型(true or false)で指定でき、若干分かりやすくなっています.<br>
+		<br>
+		では次に実際に環境変数を表示する部分のコードを見てみます.<br>
+		<br>
+		<div class=MstyComment>
+			<div class=MstyCode>
+				ZnkStr msg = ZnkStr_new( "" ); <span class=MstyCodeSynComment>/* libZnkが提供するString型 */</span><br>
+				ZnkStr_addf( msg, "server_name=[%s]\n", evar-&gt;server_name_ );<br>
+				...<br>
+				<span class=MstyCodeSynComment>
+				/* XSS対策. HTMLタグ(&lt;,&gt;)の効果を打ち消します. */<br>
+				</span>
+				ZnkHtpURL_negateHtmlTagEffection( msg );<br>
+				fputs( ZnkStr_cstr(msg), stdout );<br>
+				ZnkStr_delete( msg ); <span class=MstyCodeSynComment>/* 使い終わったら解放しなければなりません */</span><br>
+			</div>
+		</div>
+		<br>
+		多くの処理系で用意されているいわゆるString型はlibZnkでも提供されています.<br>
+		それが<b>ZnkStr</b>ですが、例えばZnkStr_addfでprintfライクな書式によって文字列の追加ができます.<br>
+		C文字列として直接参照するには、ZnkStr_cstr関数を使います.<br>
+		生成と破壊はそれぞれZnkStr_newとZnkStr_deleteで行います.<br>
+		<br>
+		ZnkHtpURL_negateHtmlTagEffection関数は与えられたZnkStr内にあるHTMLタグの効果を打ち消します.<br>
+		具体的には「&lt;」文字が含まれていた場合、これを「&amp;lt;」という文字に置換します.<br>
+		「&gt;」文字についても同様で、これを「&amp;gt;」という文字に置換します.<br>
+		この処理は<b>XSS対策のために重要</b>です.<br>
+		XSSについてはWebアプリケーション開発におけるセキュリティーの話題で最も有名なものですし、<br>
+		星の数ほど解説サイトがあるでしょうから、ここでの説明は割愛します.<br>
+		<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+
+
+<a name=MoaiCGI_query_string2></a>
+<u><b>
+Hello Query String!(実践バージョン)
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	なんか<b>入門編の焼き直しばっかり</b>じゃん！<br>
+	<br>
+	お気づきになられましたか？<br>
+	この解説講座ではしばらくこんなタイトルが続きます.<br>
+	ここでは入門編と同じく Moai CGI へQuery Stringを渡し、それをCGIスクリプト側から取得して内容を表示しますが、<br>
+	libZnkとlibRanoを使っています.<br>
+	<br>
+	<b><u>CGIへのリンクとソースコード</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/query_string2.cgi?mode=cat&sort=1">http://localhost:8124/cgis/cgi_developers/protected/query_string2.cgi?mode=cat&sort=1</a>
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/query_string2.c">ソースコード</a> 
+		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+		<div class=MstyComment>
+			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
+		</div>
+	</div>
+	<br>
+	<b><u>説明</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		少し復習しましょう.<br>
+		Query Stringの内容をCGIスクリプト側で獲得するには、<b>環境変数QUERY_STRING</b>を参照するのでした. <br>
+		<br>
+		ここではRano_cgi_util が提供する関数マクロ <span class=MstyCode>RanoCGIUtil_getQueryString</span> を使います.<br>
+		(cgi_utilにもそっくりな関数マクロがありましたが、あれと同じです)<br>
+		この関数マクロには RanoCGIEVar を引数として渡します.<br>
+		<br>
+		次の処理として、この query_string の解析を行いますが、<br>
+		入門編でやったCGIUtil_getQueryStringTokenのような面倒な関数はもう使いません.<br>
+		ここではlibZnkにあるもっと便利なデータ型ZnkVarpAryを使います.<br>
+		これは「変数名と値」というペアを各要素としたような配列で、例えばPOST変数群全体をこれ一つに格納できます.<br>
+		そして、RanoCGIUtil_splitQueryString 関数の呼び出し一つで query_stringを &amp; 文字について分割し、<br>
+		それを配列としてpost_varsに格納するするところまで一気に行います.<br>
+		ここまでくれば後はZnkVarpAryが提供する関数群で要素をイテレートするだけです.<br>
+		<br>
+		それでは今回も例によってキーポイントとなるコードを示して終わりとしましょう.<br>
+		<br>
+		<div class=MstyComment>
+			<div class=MstyCode>
+				<span class=MstyCodeSynComment>/* Moai CGIにおける全環境変数を取得します. */</span><br>
+				RanoCGIEVar* evar = RanoCGIEVar_create();<br>
+				<br>
+				<span class=MstyCodeSynComment>/* Query Stringを取得します. */ </span><br>
+				const char* query_string = RanoCGIUtil_getQueryString( evar );<br>
+				<br>
+				<span class=MstyCodeSynComment>/* POST変数全体を格納するための配列を作成します. */ </span><br>
+				ZnkVarpAry post_vars = ZnkVarpAry_create( true );<br>
+				<br>
+				<span class=MstyCodeSynComment>/* query_stringを &amp; 文字で分割して、配列とします */</span><br>
+				<span class=MstyCodeSynComment>/* この関数が実行された結果、その配列はpost_varsに格納されます */</span><br>
+				RanoCGIUtil_splitQueryString( post_vars, query_string, Znk_NPOS, false );<br>
+				...<br>
+				<span class=MstyCodeSynComment>/* post_varsの各要素をfor文でイテレート */</span><br>
+				{<br>
+				<div class=MstyIndent>
+					ZnkStr msg = ZnkStr_new( "" );<br>
+					size_t i;<br> 
+					for( i=0; i&lt;ZnkVarpAry_size(post_vars); ++i ){<br>
+					<div class=MstyIndent>
+						<span class=MstyCodeSynComment>
+						/* Post変数を一つ取り出します.<br>
+						* この変数の名前も得ておきます. */<br>
+						</span>
+						ZnkVarp &nbsp;&nbsp;&nbsp; var &nbsp;= ZnkVarpAry_at( post_vars, i );<br>
+						const char* name = ZnkVar_name_cstr(var);<br>
+						const char* val  = ZnkVar_cstr(var);<br>
+						ZnkStr_addf( msg, "%s = [%s]\n", name, val );
+					</div>
+					}<br>
+					ZnkHtpURL_negateHtmlTagEffection( msg ); <span class=MstyCodeSynComment>/* for XSS */</span><br>
+					fputs( ZnkStr_cstr(msg), stdout );<br>
+					ZnkStr_delete( msg );<br>
+				</div>
+				}<br>
+				...<br>
+				<span class=MstyCodeSynComment>/* これは使い終わった後解放しなければなりません. */ </span><br>
+				ZnkVarpAry_destroy( post_vars );<br>
+				CGIEVar_destroy( evar );<br>
+			</div>
+		</div>
+		<br>
+		ZnkVarpAry_size( post_vars ) は post_varsの配列としての要素数を返します.<br>
+		ZnkVarpAry_at( post_vars, i ) は post_varsの配列としての第 i 番目の要素を返します.<br>
+		ZnkVarpAryの生成と破壊については、それぞれZnkVarpAry_createとZnkVarpAry_destroyで行います.<br>
+		ZnkVar_name_cstr( var )でvar変数の名前を、ZnkVar_cstr( var )でvar変数の値をそれぞれ取得しています.<br>
+		<br>
+		Query Stringについては以上となります.<br>
+		<br>
+		<div class=MstyComment>
+			<b><u>補足事項</u></b><br>
+			<br>
+			入門編でも少し述べましたが、C言語の標準関数にある getenv と putenv を直接使うのは危険です.<br>
+			libZnk にある ZnkEnvVar_get と ZnkEnvVar_set は、この危険性を排除した改良版であり、<br>
+			単に環境変数を取得/設定するだけなら、これらの関数を使うのがお勧めです.<br>
+			これらの関数はスレッドセーフであり、マルチスレッド下でも問題なく使えます.<br>
+		</div>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+
+
+<a name=MoaiCGI_post2></a>
+<u><b>
+Hello Post!(実践バージョン)
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	今回はいよいよ Moai CGI へフォームの内容をPOSTしてみます.<br>
+	つまりlibZnkとlibRanoを使った場合、それをどうやって受信するのかを学ぶというわけです.<br>
+	<br>
+	<b><u>CGIへのリンクとソースコード</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/post2.cgi">http://localhost:8124/cgis/cgi_developers/protected/post2.cgi</a> 
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/post2.c">ソースコード</a> 
+		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+		<div class=MstyComment>
+			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
+		</div>
+	</div>
+	<br>
+	<b><u>説明</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		今回はlibRanoの Rano_cgi_util が提供するとてつもなく強力な関数を紹介します.<br>
+		(実装が大きいため、入門編の cgi_util では提供していなかった機能です)<br>
+		解説する私から見ても、ついにこの関数を紹介するときが来たか…といった感じです.<br>
+		まず書式を示しましょう.<br>
+		<br>
+		<div class=MstyComment>
+			<div class=MstyCode>
+				bool<br>
+				RanoCGIUtil_getPostedFormData( RanoCGIEVar* evar, ZnkVarpAry post_vars, RanoModule mod, ZnkHtpHdrs htp_hdrs,<br>
+				<div class=MstyIndent>
+					ZnkStr pst_str, const char* varname_of_urlenc_body, bool is_unescape_val );<br>
+				</div>
+			</div>
+		</div>
+		<br>
+		入門編の Hello Post! では文字列の受信方法しか扱っていませんでした.<br>
+		しかしこの関数を使えば<b>multipart/form-dataの形式</b>を受信することができます.<br>
+		これをわかりやすく言い換えると、フォームから<b>画像</b>を送信した場合も扱えるということです.<br>
+		というわけで今回のサンプルでは画像をアップロードする機能を実装しましょう.<br>
+		C言語で画像掲示板を実装する道が見えてきた気がしませんか？<br>
+		<br>
+		ソースコード内でこれに該当する部分を以下に示します.<br>
+		<br>
+		<div class=MstyComment>
+			<div class=MstyCode>
+				CGIEVar* evar = CGIEVar_create();<br>
+				...<br>
+				ZnkVarpAry post_vars = ZnkVarpAry_create( true );<br>
+				...<br>
+				<span class=MstyCodeSynComment>/* CGIにおけるフォームの投稿データをpost_varsへと取得します. */<br>
+				/* またこの関数においては第1引数evarの指定も必要となります. */</span><br>
+				RanoCGIUtil_getPostedFormData( evar, post_vars, NULL, NULL, NULL, NULL, true );<br>
+				...<br>
+			</div>
+		</div>
+		<br>
+		post_varsに取得結果を格納する点はQuery Stringの時とよく似ています.<br>
+		これはフォームの投稿データもQuery Stringと同様、基本的には変数の配列であるためです.<br>
+		そして肝心のRanoCGIUtil_getPostedFormDataですが、第1引数と第2引数以外はなんとほとんどNULL指定です.<br>
+		最後のみtrueですが、とりあえずそういうものだと思ってください.<br>
+		NULLで指定した部分の解説はHTTPの内部に直接関わるものなどで、この講座のレベルを超えますので割愛します.<br>
+		あしからずご了承ください.<br>
+		この関数を実行した時点でpost_varsには画像全体のバイナリイメージが既に格納された状態になっています.<br>
+		その参照方法は後述します.<br>
+		<br>
+		以下のようにすれば、Query Stringをpost_varsに取得後、フォームの投稿データを追加的にpost_varsへと取得します.<br>
+		つまりこれらを統合して取得することが出来るのです.<br>
+		<div class=MstyComment>
+			<div class=MstyCode>
+				...<br>
+				<span class=MstyCodeSynComment>/* Query Stringを取得します. */ </span><br>
+				const char* query_string = RanoCGIUtil_getQueryString( evar );<br>
+				<span class=MstyCodeSynComment>/* CGIにおけるQuery Stringとフォームの投稿データの両方をまとめてpost_varsへと取得します. */</span><br>
+				RanoCGIUtil_splitQueryString( post_vars, query_string, Znk_NPOS, false );<br>
+				RanoCGIUtil_getPostedFormData( evar, post_vars, NULL, NULL, NULL, NULL, true );<br>
+				...<br>
+			</div>
+		</div>
+		<br>
+		以降、POST変数とは、Query Stringとフォームの投稿データをまとめたこの post_vars を示すものとします.<br>
+		<br>
+		さて、ここからいよいよpost_varsをイテレートする処理に入ります.<br>
+		受信した画像を保存しそれを表示するという<b>画像掲示</b>の中核をなすコードとなります.<br>
+		<div class=MstyComment>
+			<div class=MstyCode>
+				...<br>
+				{<br>
+				<div class=MstyIndent>
+					const char* ext = NULL;<br>
+					bool is_image = false;<br>
+					<span class=MstyCodeSynComment>
+					/* ZnkStrはlibZnkが提供する文字列型です. */<br>
+					</span>
+					ZnkStr msg = ZnkStr_new( "" );<br>
+					size_t i; <br>
+					<br>
+					for( i=0; i&lt;ZnkVarpAry_size(post_vars); ++i ){<br>
+					<div class=MstyIndent>
+						<span class=MstyCodeSynComment>
+						/* Post変数を一つ取り出します.<br>
+						* この変数の名前も得ておきます. */<br>
+						</span>
+						ZnkVarp     var  = ZnkVarpAry_at( post_vars, i );<br>
+						const char* name = ZnkVar_name_cstr(var);<br>
+						<br>
+						if( ZnkVar_prim_type( var ) == ZnkPrim_e_Bfr ){<br>
+						<div class=MstyIndent>
+							<span class=MstyCodeSynComment>
+							/* ZnkVarpのタイプがZnkPrim_e_Bfr(任意のByte列).<br>
+							* これは添付ファイルを意味します. */<br>
+							</span>
+							const char*    filename  = ZnkVar_misc_cstr( var, "filename" );<br>
+							const uint8_t* data      = ZnkVar_data( var );<br>
+							const size_t   data_size = ZnkVar_data_size( var );<br>
+							<br>
+							<span class=MstyCodeSynComment>
+							/* ZnkS_get_extension の戻り値はファイルの拡張子となります. */<br>
+							/* この参照先は、post_varsの寿命が続く限りにおいては有効です. */<br>
+							</span>
+							ext = ZnkS_get_extension( filename, '.' );<br>
+							<br>
+							if( data_size &gt; 2000000 ){ /* 2000KB以上 */<br>
+							<div class=MstyIndent>
+								is_image = false;<br>
+								ZnkStr_addf( msg, "Binary : %s orinal filename=[%s] : Error : This is too large.\n", name, filename );<br>
+							</div>
+							} else {<br>
+							<div class=MstyIndent>
+								<span class=MstyCodeSynComment>
+								/* 文字列が等しいかの比較を行います. */<br>
+								/* ただし大文字小文字の区別はしません. */<br>
+								</span>
+								if(&nbsp; ZnkS_eqCase( ext, "jpg" )<br>
+								&nbsp; || ZnkS_eqCase( ext, "png" )<br>
+								&nbsp; || ZnkS_eqCase( ext, "gif" )<br>
+								&nbsp; || ZnkS_eqCase( ext, "webm" )<br>
+								){<br>
+								<div class=MstyIndent>
+									<span class=MstyCodeSynComment>
+									/* 画像ファイルの拡張子であった場合はこのデータをresult_file.ext として保存します. */<br>
+									</span>
+									saveAsResultFile( ext, data, data_size );<br>
+									is_image = true;<br>
+									ZnkStr_addf( msg, "Image : %s orinal filename=[%s]\n", name, filename );<br>
+								</div>
+								} else {<br>
+								<div class=MstyIndent>
+									is_image = false;<br>
+									ZnkStr_addf( msg, "Binary : %s orinal filename=[%s]\n", name, filename );<br>
+								</div>
+								}<br>
+							</div>
+							}<br>
+						</div>
+						} else {<br>
+						<div class=MstyIndent>
+							<span class=MstyCodeSynComment>
+							/* ZnkVarpのタイプがその他(Str).<br>
+							* これはinputタグやtextareaタグ等に由来する文字列データ. */<br>
+							</span>
+							const char* val = ZnkVar_cstr(var);<br>
+							ZnkStr_addf( msg, "%s = [%s] (size=[%u])\n", name, val, ZnkVar_str_leng(var) );<br>
+						</div>
+						}<br>
+					</div>
+					}<br>
+					<br>
+					if( is_image ){<br>
+					<div class=MstyIndent>
+						<span class=MstyCodeSynComment>
+						/* 画像ファイルであった場合はimgタグによりそれを表示します. */<br>
+						</span>
+						ZnkStr_addf( msg, "&lt;br&gt;\n" );<br>
+						ZnkStr_addf( msg, "&lt;img src=\"./result_file.%s\"&gt;\n", ext );<br>
+						ZnkStr_addf( msg, "&lt;br&gt;\n" );<br>
+					</div>
+					}<br>
+					<span class=MstyCodeSynComment>
+					/* XSS対策. msg内にある一切のHTMLタグの効果を打ち消します. */<br>
+					</span>
+					ZnkHtpURL_negateHtmlTagEffection( msg ); <span class=MstyCodeSynComment>/* for XSS */</span><br>
+					fputs( ZnkStr_cstr(msg), stdout );<br>
+					<span class=MstyCodeSynComment>
+					/* ZnkStrは使用後解放しなければなりません. */<br>
+					</span>
+					ZnkStr_delete( msg );<br>
+				</div>
+				}<br>
+				...<br>
+			</div>
+		</div>
+		<br>
+		ソースコード内のコメントを参照して頂ければ何をしているかはおおよそお分かりいただけるかとは思いますが、<br>
+		一番のポイントはPost変数のタイプを取得する関数 ZnkVar_prim_type( var ) です.<br>
+		この関数の戻り値が ZnkPrim_e_Bfr に等しい時、それは添付ファイルを意味します.<br>
+		このとき、ZnkVar_data( var ) よりそのバイナリデータ本体へのポインタが得られます.<br>
+		またZnkVar_data_size( var ) よりそのバイナリデータ全体のバイトサイズが得られます.<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+
+
+<a name=MoaiCGI_hello_template></a>
+<u><b>
+テンプレートHTMLを使って表示する.
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	今までのサンプルではCGI上で表示させるHTMLを出力させるためにprintfで一行ずつ書いていました.<br>
+	しかしこれは、内部にダブルクォートなどが含まれる場合はそれをエスケープしなければなりませんし、<br>
+	各行を書くたびに毎回最初にprintfを付けるのは煩わしいでしょう.<br>
+	特に動的な出力をさせるのでなければ別途HTMLファイルを用意し、単純にそれを読み込んで表示できれば便利です.<br>
+	テンプレートHTMLはそのためのテキストデータファイルです.<br>
+	ここではMoai CGI上でテンプレートHTMLを使って大量のHTMLを便利に表示させる方法について解説します.<br>
+	<br>
+	<b><u>CGIへのリンクとソースコード</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/hello_template.cgi">http://localhost:8124/cgis/cgi_developers/protected/hello_template.cgi</a>
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/hello_template.c">ソースコード</a> 
+		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+		<div class=MstyComment>
+			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
+		</div>
+	</div>
+	<br>
+	<b><u>説明</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		まず libRano の RanoCGIUtil_printTemplateHTML という関数をご紹介しましょう.<br>
+		これはテンプレートHTMLを読み込み、そして出力するための関数です.<br>
+		以下に書式を示しましょう.<br>
+		<br>
+		<div class=MstyComment>
+			<div class=MstyCode>
+				bool<br>
+				RanoCGIUtil_printTemplateHTML( RanoCGIEVar* evar, ZnkBird bird, const char* template_html_file );<br>
+			</div>
+		</div>
+		<br>
+		なるほど、evarはCGIの環境変数ですし、template_html_file というのが表示させたいテンプレートHTMLファイルへのパスでしょう.<br>
+		しかし第２引数の <b>ZnkBird bird</b> というのは何でしょうか？<br>
+		bird…鳥？<br>
+		<br>
+		<div class=MstyComment>
+			libZnkの作者に同じ質問を投げたら「そうだよ」と答えてくれました.<br>
+			「なぜ鳥なの？」と聞いたら、タグが「翼を広げたみたいだから」と言うことでした.<br>
+			彼はちょっと変わったセンスの持ち主です.<br>
+		</div>
+		<br>
+		実はテンプレートHTMLファイルとは、正確に言えばただのHTMLではありません.<br>
+		このファイルは内部に、<b>BIRD(Basic Intrinsic Replacement Directive)タグ</b>と呼ばれるものが埋め込まれています.<br>
+		(ちなみにこれはlibZnkが独自で提供するものであり、従って一般的な用語ではありません)<br>
+		BIRDタグは #[ と ]# で識別子を囲ったタグであり、その識別子の値(文字列)が登録されているならば、<br>
+		BIRDタグの部分はその値(文字列)に展開されます.<br>
+		ZnkBirdとはこのBIRDタグの識別子とその値を包括管理するデータ型です.<br>
+		<br>
+		まだちょっとよく意味がわからないと思いますので具体的な例を挙げて説明しましょう.<br>
+		以下のような内容を持つテンプレートHTMLを考えます.<br>
+		このテンプレートHTMLは ../publicbox/hello_template.html にあるとしましょう.<br>
+		<br>
+		<div class=MstyComment>
+			&lt;html&gt;&lt;body&gt;<br>
+			Hello #[your_name]#!&lt;br&gt;<br>
+			Your age is #[your_age]#&lt;br&gt;<br>
+			&lt;/body&gt;&lt;/html&gt;<br>
+		</div>
+		<br>
+		このHTMLテンプレートファイルを読み込んで内容を出力するコードは以下のようになります.<br>
+		<div class=MstyComment>
+			<div class=MstyCode>
+				<span class=MstyCodeSynComment>
+					/* ZnkBirdの生成. */<br>
+				</span>
+				ZnkBird bird = ZnkBird_create( "#[", "]#" );<br>
+				<span class=MstyCodeSynComment>
+					/* BIRDタグの登録. */<br>
+				</span>
+				ZnkBird_regist( bird, "your_name", "Mr.Moai" );<br>
+				<span class=MstyCodeSynComment>
+					/* テンプレートHTMLを読み込み、BIRDタグを展開して表示. */<br>
+				</span>
+				RanoCGIUtil_printTemplateHTML( evar, bird, "../publicbox/hello_template.html" );<br>
+				<span class=MstyCodeSynComment>
+					/* ZnkBirdの破棄. */<br>
+				</span>
+				ZnkBird_destroy( bird );<br>
+			</div>
+		</div>
+		<br>
+		まずZnkBird型を生成し、何やらbird の "your_name" に "Mr.Moai" という値を登録した後、<br>
+		RanoCGIUtil_printTemplateHTMLを実行し、最後にZnkBird型を解放しています.<br>
+		この結果、HTMLテンプレートファイルのBIRDタグの部分は一部展開され、<br>
+		以下のようなHTMLが与えられたのと等価になります.<br>
+		<br>
+		<div class=MstyComment>
+			&lt;html&gt;&lt;body&gt;<br>
+			Hello Mr.Moai!&lt;br&gt;<br>
+			Your age is #[your_age]#&lt;br&gt;<br>
+			&lt;/body&gt;&lt;/html&gt;<br>
+		</div>
+		<br>
+		ZnkBird において your_name という変数が登録されていて、それは Mr.Moai という値を持ちます.<br>
+		この場合はテンプレートファイル内の #[your_name]# の部分がすべて Mr.Moai という文字列で展開されるわけです.<br>
+		一方、ZnkBird において your_age という変数は登録されていません.<br>
+		この場合はテンプレートファイル内の #[your_age]# の部分は何も展開されず、#[your_age]# という文字列のままになります.<br>
+		<br>
+		BIRDタグの埋め込みと展開が出来ることで単にHTMLを読み込んだものをそのまま表示するよりも、<br>
+		より柔軟性のある表示ができるわけです.<br>
+		HTMLテンプレートについてはおおよそお分かり頂けたでしょうか？<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+
+
+
+<a name=MoaiCGI_progress></a>
+<u><b>
+時間のかかる処理の途中経過を表示する
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	Moai CGI で時間のかかる処理を行いたい場合、その途中経過を表示するサンプルです.<br>
+	大規模なデータを扱ったり検索をするなどで時間のかかる処理を Moai CGI 上から行うとき、<br>
+	その途中経過をどのように表示すればよいかのヒントとなればと思います.<br>
+	<br>
+	<b><u>CGIへのリンクとソースコード</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/progress.cgi">http://localhost:8124/cgis/cgi_developers/protected/progress.cgi</a>
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/progress.c">ソースコード</a> 
+		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+		<div class=MstyComment>
+			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
+		</div>
+	</div>
+	<br>
+	<b><u>説明</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		今回のサンプルは短いですが、内容はかなり難しいです.<br>
+		難しすぎて手に負えないようであればこのセクションは読み飛ばしても構わないでしょう.<br>
+		ではサンプルコードを一つ一つ順に見てみましょう.<br>
+		<br>
+		<div class=MstyComment>
+			<div class=MstyCode>
+			<span class=MstyCodeSynComment>
+			/* まずJavascript progress.jsを含んだHTMLを表示させる. */<br>
+			</span>
+			{<br>
+			<div class=MstyIndent>
+				ZnkBird bird = ZnkBird_create( "#[", "]#" );<br>
+				RanoCGIUtil_printTemplateHTML( evar, bird, "../publicbox/progress.html" );<br>
+				ZnkBird_destroy( bird );<br>
+			</div>
+			}<br>
+			<br>
+			Znk_fflush( Znk_stdout() );<br>
+			<span class=MstyCodeSynComment>
+			/* Broken-Pipeを強制的に引き起こし、Web Server側でのReadループを強制終了させる. */<br>
+			</span>
+			Znk_fclose( Znk_stdout() );<br>
+			<br>
+			<span class=MstyCodeSynComment>
+			/* 時間のかかる処理. */<br>
+			</span>
+			very_long_work();<br>
+			</div>
+		</div><br>
+		<br>
+		progress.html を参照してもらうとわかりますが、このHTML内ではまず ../publicbox/progress.js を読み込んでいます.<br>
+		次に ../publicbox/state.dat の内容を progress.js が提供するJavascriptの関数 set_dat_path を使って読み込みます.<br>
+		(XHtmlRequestを使います).<br>
+		set_dat_pathでは../publicbox/state.datの中身を1秒間隔で何度も読み込んで表示する仕組みになっています.<br>
+		この結果、progress.html内の divタグのidがcountとなっている部分に state.dat の内容が順次展開され、<br>
+		それがブラウザ内に表示されていきます. これが途中経過の表示そのものとなります.<br>
+		<br>
+		ところでこのset_dat_pathを始動させるには Moai CGIのHTMLとしてのブラウザ表示が完了した後でなければなりません.<br>
+		難しいのはここです.<br>
+		そこで Znk_fflush( Znk_stdout() ) を使って、まずこれを強制的にブラウザに出力させます.<br>
+		<div class=MstyComment>
+			<u><b>Note</b></u><br>
+			<br>
+			RanoCGIUtil_printTemplateHTML を使っている場合は、fflush( stdout ) ではいけません.<br>
+			fflush の替わりに Znk_fflush を使ってください.<br>
+			また stdout の替わりに Znk_stdout() を使ってください.<br>
+		</div>
+		<br>
+		また同様に Znk_fclose( Znk_stdout() ) を使って標準出力を強制的にクローズします.<br>
+		<div class=MstyComment>
+			<u><b>Note</b></u><br>
+			<br>
+			RanoCGIUtil_printTemplateHTML を使っている場合は、fclose( stdout ) ではいけません.<br>
+			fclose の替わりに Znk_fclose を使ってください.<br>
+			また stdout の替わりに Znk_stdout() を使ってください.<br>
+		</div>
+		<br>
+		<div class=MstyComment>
+			<u><b>Note</b></u><br>
+			<br>
+			標準出力をクローズすることでBroken-Pipeを強制的に引き起こし、<br>
+			Web Server側でのRead処理を確実に完了させます.<br>
+			そうしないとWeb Server側からブラウザに完了通知が送られず、<br>
+			結果的にブラウザの方が途中経過を表示中にタイムアウトを起こすかもしれません.<br>
+		</div>
+		<br>
+		最後に時間のかかる処理を行います.<br>
+		ここではvery_long_work関数としてこれを纏めています.<br>
+		この関数が中でやってる内容を見てみましょう.<br>
+		<br>
+		<div class=MstyComment>
+			<div class=MstyCode>
+				while( st_count &lt;= 100 ){<br>
+				<div class=MstyIndent>
+					ZnkFile fp = Znk_fopen( "../publicbox/state.dat", "wb" );<br>
+					if( fp ){<br>
+					<div class=MstyIndent>
+						Znk_fprintf( fp, "%zu", st_count );<br>
+						++st_count;<br>
+						Znk_fclose( fp );<br>
+					</div>
+					}<br>
+					ZnkThread_sleep( 100 ); /* 100ミリ秒Sleepする */<br>
+				</div>
+				}
+			</div>
+		</div><br>
+		progress.html内のset_dat_pathでは../publicbox/state.datの中身を何度も読み込んで表示する仕組みになっているのでした.<br>
+		一方、very_long_work関数では、そのstate.datの中身を処理の進捗に応じて上書き更新します.<br>
+		ここでは state.datの中身の値として st_count の値を書き込んでいます.<br>
+		その値が100になったところで終了です.<br>
+		この例ではダミーの処理として Sleep処理を入れてあります.<br>
+		<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+
+
+<a name=MoaiCGI_proxy_finder></a>
+<u><b>
+ProxyFinderを作成してみる
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	いよいよ卒業課題です.<br>
+	Moai CGIでProxyFinderに相当するものを作ってみましょう.<br>
+	今回はCGIへのリンクとソースコードを最初には示しません.<br>
+	最後に出来上がったところでCGIへのリンクだけ示しましょう.<br>
+	<br>
+	<b><u>新しいソースディレクトリの作成</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		これから新しいソースディレクトリを作ります.<br>
+		とはいっても cgi_simple ディレクトリをそのまま別名でコピーするだけです.<br>
+		これは一番上の「準備」でも述べましたが、ここでは復習を兼ねて改めて説明します.<br>
+		cgi_simple をコピーしたらそのディレクトリをここでは my_proxy_finder という名前にしておきます.<br>
+	</div>
+	<br>
+	<b><u>Makefile群の生成</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		次にMakefile群を生成しなければなりません.<br>
+		my_proxy_finder ディレクトリの中にある mkfgen.myf をテキストエディタで開き、以下を修正します.<br>
+		<ul>
+			<li>configセクションのinstall_dirの値におけるcgi_simpleの部分をmy_proxy_finderに修正.</li>
+			<br>
+			<li>product_listセクションのcgi_simpleの部分をmy_proxy_finderに修正.</li>
+			<br>
+			<li>include_paths_commonセクションで以下の２行が記述されていることを確認します.<br>
+			<div class=MstyComment>
+				@{libZnk}<br>
+				@{libRano}<br>
+			</div><br>
+			</li>
+			<li>dependency_libs_commonセクションで以下の２行が記述されていることを確認します.<br>
+			<div class=MstyComment>
+				rlib: @{libZnk}  Znk  $(DL_VER)<br>
+				rlib: @{libRano} Rano $(DL_VER)<br>
+			</div><br>
+			</li>
+		</ul>
+		これでmkfgen.myfの編集は終わりですので上書き保存してください.<br>
+		<br>
+		次にmkfgenを実行し、このmkfgen.myfの内容を元にMakefile群を自動生成させます.<br>
+		Windowsの場合、my_proxy_finderディレクトリ内にあるauto_trigger.batをダブルクリックして実行し、<br>
+		カーソルキーで以下を選択してEnterキーを押します.<br>
+		<br>
+		<div class=MstyComment>
+			6. mkfgen_update<br>
+		</div>
+		<br>
+		Linuxの場合はsrc/my_proxy_finderディレクトリをカレントディレクトリにしておいて<br>
+		以下のように実行します.<br>
+		<br>
+		<div class=MstyComment>
+			$ ../../mkfsys/mkfgen<br>
+		</div>
+		<br>
+		Makefile群が生成されたかと思います.<br>
+	</div>
+	<br>
+	<b><u>makeによるコンパイル(テスト)</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		この状態で試しに実際にコンパイルしてみましょう.<br>
+		Windowsの場合、auto_trigger.batを実行し、以下を選択してEnterキーを押します.<br>
+		<br>
+		<div class=MstyComment>
+			0. make<br>
+		</div>
+		<br>
+		<div class=MstyComment>
+			<u><b>Note</b></u><br>
+			<br>
+			64bit版のMoaiをお使いの場合は、まずMACHINEの値をx64にしてから<br>
+			上記(0. make)を実行してください.<br>
+			以下を押すことでMACHINEの値が循環的に変わります.<br>
+			<div class=MstyComment>
+				5. switch_machine
+			</div>
+		</div>
+		<br>
+		Linuxの場合は以下のようにコマンド実行します.<br>
+		<br>
+		<div class=MstyComment>
+			$ make -f Makefile_linux.mak<br>
+		</div><br>
+		特にエラー等表示されなければ成功です.<br>
+	</div>
+	<br>
+	<b><u>実際のコード作成作業</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		…といってもここではホンモノのproxy_finderのディレクトリからソースファイルをコピーして持ってくるだけです.<br>
+		(ソースコードの内部の解説はとりあえずナシにしましょう).<br>
+		proxy_finder ディレクトリ内で拡張子が c だとか h だとかのファイルを探します.<br>
+		よく見ると cpp というのもあります(C++ですね).<br>
+		全部で以下のものがあるようです. <br>
+		これらをすべてmy_proxy_finderへコピーしましょう.<br>
+		(main.cファイルはコピーしたもので置き換えてしまってかまいません).<br>
+		<ul>
+			<li>proxy_finder/main.c</li>
+			<li>proxy_finder/cgi_helper.c</li>
+			<li>proxy_finder/cgi_helper.h</li>
+			<li>proxy_finder/proxy_info.c</li>
+			<li>proxy_finder/proxy_info.h</li>
+			<li>proxy_finder/proxy_finder.cpp</li>
+			<li>proxy_finder/proxy_finder.h</li>
+		</ul>
+		プログラマな方は拍子抜けしたかもしれませんが、ここでは細部より全体の流れを重視した説明とするため、<br>
+		これにてコードの作成は終わったとみなしましょう.<br>
+	</div>
+	<br>
+	<b><u>Makefile群の更新</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		ソースファイルをコピーし終えたらMakefileの内容を更新しなければなりませんので、上記に述べた方法でmkfgenを再度実行します.<br>
+		この中で main 関数のあるファイルは main.c だけです.<br>
+		従って、mkfgen.myf を特に修正する必要はありません.<br>
+		このまま上記「Makefile群の生成」で述べた方法でmkfgenを実行しましょう.<br>
+		<br>
+	</div>
+	<br>
+	<b><u>makeによるコンパイル(本番)</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		では全ソースコードとMakefileが整ったところで再度コンパイルしてみましょう.<br>
+		今度は、main以外のほかのソースファイルもずらずらとコンパイルされていく様子が表示されるかと思います.<br>
+		これらのソースファイルは無事認識されたようです.<br>
+		特にエラー等表示されなければ成功です.<br>
+	</div>
+	<br>
+	<b><u>makeによるインストール(その1)</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		では、次にmakeによるインストールを行いましょう.<br>
+		インストール先は moaiのcgis/protectedディレクトリです.<br>
+		Windowsの場合、auto_trigger.batを実行して以下を選択してEnterキーです.<br>
+		<br>
+		<div class=MstyComment>
+			1. make install<br>
+		</div>
+		<br>
+		Linuxの場合はMakefile_linux.mak を指定してmake installします.<br>
+		つまり以下のように実行します.<br>
+		<br>
+		<div class=MstyComment>
+			$ make -f Makefile_linux.mak install<br>
+		</div>
+		<br>
+		無事インストールされたでしょうか？<br>
+		インストールされたcgiスクリプトは以下のリンクから実行できるはずです.<br>
+		ProxyFinderと同じような画面が表示されるかテストしてみましょう.<br>
+		<br>
+		<a class=MstyAppLink href=http://localhost:8124/cgis/protected/my_proxy_finder/my_proxy_finder.cgi>http://localhost:8124/cgis/protected/my_proxy_finder/my_proxy_finder.cgi</a><br>
+		<br>
+		cgis/protected内にあるため、最初に例の画面が表示されますが、気にせず「Please retry this」を押します.<br>
+		すると以下のようなメッセージが表示されたのではないでしょうか？<br>
+		<br>
+		<div class=MstyComment>
+			Cannot open template HTML file. [templates/proxy_finder.html] 
+		</div>
+		<br>
+		templates/proxy_finder.html がないのでこれが開けないとのことです.<br>
+		ProxyFinderではテンプレートHTMLを使っています.<br>
+		つまりテンプレートHTMLのインストールをし忘れていたということですね.<br>
+	</div>
+	<br>
+	<b><u>makeによるインストール(その2)</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		ではテンプレートHTMLもインストールできるように整備しましょう.<br>
+		proxy_finderディレクトリ内に templates というディレクトリがあります.<br>
+		まずはこれをまるごとmy_proxy_finderディレクトリ内へコピーしておきます.<br>
+		<br>
+		次に、makeによるインストール時にこのtemplatesディレクトリとその中身が<br>
+		/cgis/protected内へきちんとインストールされるようにMakefileの内容を修正する必要があります.<br>
+		といってもMakefileを直接開いて修正するのではなく、mkfgen.myfの方を修正してmkfgenを実行します.<br>
+		mkfgen.myf内の install_data_list というセクションに templates/*.html という行を追加します.<br>
+		つまり以下のようになります.<br>
+		<br>
+		<div class=MstyComment>
+			@@L install_data_list<br>
+			templates/*.html<br>
+			@@.<br>
+		</div>
+		<br>
+		mkfgen.myfを上書き保存し、再度mkfgenを実行します.<br>
+		これですべての環境のMakefileが更新されました.<br>
+		実際にもう一度 makeによるインストールを行ってみましょう.<br>
+		今度は、このtemplatesもインストールされるようになったはずです.<br>
+		<br>
+		では最後に再び下記のリンクで実際の動作を確認してみます.<br>
+		<br>
+		<a class=MstyAppLink href=http://localhost:8124/cgis/protected/my_proxy_finder/my_proxy_finder.cgi>http://localhost:8124/cgis/protected/my_proxy_finder/my_proxy_finder.cgi</a><br>
+		<br>
+		今度こそうまく表示されたのではないでしょうか？<br>
+		「Proxyを取得する」ボタンの右にあるメニューが空ですが、これはproxy_finder.myfがまだ存在してないからです.<br>
+		この中身についてはここでは解説しませんが、興味がある方はproxy_finderのproxy_finder.myfを参照してください.<br>
+	</div>
+	<br>
+	<div class=MstyComment>
+		<u><b>Note</b></u><br>
+		<br>
+		ここまでのサンプルはほとんどすべて /cgis/cgi_developers/protected または /cgis/protected へインストールされたものでした.<br>
+		しかし本物のProxyFinderやEaster、CustomBoyなどはそこではなく/cgis直下にあります.<br>
+		そして例の「Please retry this」の画面も最初に表示されません.<br>
+		どういうことでしょうか？<br>
+		<br>
+		実はこれらのツールでは適切な防御機構を自前で配備しているため、Moaiサーバが提供する protected 内へ置く必要がないのです.<br>
+		そのためには、まず現在の正しいMoai_AuthenticKeyを自力で取得する必要があります.<br>
+		これはmoaiディレクトリのauthentic_key.datに格納されており、これらのツールはこの中身を最初に調べ、<br>
+		次にpost_varsにて指定されたMoai_AuthenticKeyがこの正しいMoai_AuthenticKeyと同じ値かを調べます.<br>
+		そのテストに合格したならば、クライアントからの authenticated な要求であるとみなせますが、<br>
+		このような処理まで内部で自力で行っているということです.<br>
+		proxy_finderの main.c や cgi_helper.c がそのための処理のヒントとなると思いますので興味がある方は読んでみてください.<br>
+		<br>
+		例の「Please retry this」の画面が最初に表示されるのが気にならなければ、<br>
+		別にここまでする必要はありません.<br>
+	</div><br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+
+
+<a name=MoaiCGI_at_end></a>
+<u><b>
+おわりに
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	大変長かったですが、これでMoai CGI Developers講座も終了です.<br>
+	お疲れ様でした.<br>
+	この講座があなたのCGI開発の一助となれば幸いです.<br>
+	そしてこれをきっかけに、いつかはあなたがEasterやCustomBoyのようなツール、<br>
+	あるいはそれを超える何かを作られる日が来るのであれば、我々にとってこれ以上の喜びはありません.<br>
+	我々開発チーム一同、そんな日が来ることを心待ちにしています.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+
+<u><b>リンク</b></u>
+<ul>
+	<li><a class=MstyElemLink href="#TopBar">一番上へ</a></li>
+	<li><a class=MstyElemLink href="https://mr-moai-2016.github.io">Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href="https://github.com/mr-moai-2016/znk_project">znk_project(github)</a></li>
+</ul><br>
+
+</body>
+</html>

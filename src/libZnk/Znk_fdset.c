@@ -89,22 +89,22 @@ ZnkFdSet_isset( const ZnkFdSet fdst, const ZnkSocket sock )
 #endif
 }
 void
-ZnkFdSet_print( const ZnkFdSet fdst )
+ZnkFdSet_print_e( const ZnkFdSet fdst )
 {
 #if defined(Znk_TARGET_WINDOWS)
 	size_t idx;
 	for( idx=0; idx<fdst->fds_.fd_count; ++idx ){
-		ZnkF_printf_e( "fds.fd_array[%d]=[%d]\n", idx, fdst->fds_.fd_array[ idx ] );
+		Znk_printf_e( "fds.fd_array[%zu]=[%d]\n", idx, fdst->fds_.fd_array[ idx ] );
 	}
 #else
 	int s;
-	ZnkF_printf_e( "fds={\n" );
+	Znk_printf_e( "fds={\n" );
 	for( s=0; s<FD_SETSIZE; ++s ){
 		if( FD_ISSET( s, &fdst->fds_ ) ){
-			ZnkF_printf_e( "%d, ", s );
+			Znk_printf_e( "%d, ", s );
 		}
 	}
-	ZnkF_printf_e( "}\n" );
+	Znk_printf_e( "}\n" );
 #endif
 }
 void

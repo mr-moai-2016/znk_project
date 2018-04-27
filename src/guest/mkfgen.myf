@@ -1,0 +1,62 @@
+@def_quote [' ']
+
+@@V config
+my_libs_root = ['..']
+template_dir = ['../../mkfsys/template']
+install_dir = ['../../moai-v$(REL_VER)-$(PLATFORM)/cgis/protected']
+runtime_install = ['false']
+@@.
+
+@@L include_paths_common
+@@.
+
+@@L dependency_libs_common
+@@.
+
+@@V info_vc
+@@.
+
+@@V info_mingw
+@@.
+
+@@V info_msys
+@@.
+
+@@V info_linux
+@@.
+
+@@V info_cygwin
+@@.
+
+@@L mkid_list
+vc
+mingw
+msys
+linux
+cygwin
+android
+@@.
+
+@@L product_list
+@@.
+
+@@L rc_list
+@@.
+
+@@L sublibs_list
+@@.
+
+@@L install_data_list
+futaba_bbs/*
+futaba_up/*
+@@.
+
+@@L ignore_list
+ignores
+obsolete
+@@.
+
+@@L src_suffix_list
+c
+cpp
+@@.

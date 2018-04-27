@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+	<META http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+	<META http-equiv="Content-Script-Type" content="text/javascript">
+	<META http-equiv="Content-Style-Type" content="text/css">
+	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<title>CustomBoy</title>
+	<script type="text/javascript" src="/cgis/custom_boy/publicbox/fp.js?Moai_AuthenticKey=#[Moai_AuthenticKey]#"></script>
+	<script type="text/javascript" src="/cgis/custom_boy/publicbox/custom_boy.js?Moai_AuthenticKey=#[Moai_AuthenticKey]#"></script>
+	
+</head>
+<body bgcolor="#EEFFFF" text="#008000" link="#0000EE" vlink="#0000EE" alink="#FF0000">
+
+<a name="user-content-index"></a>
+<font size=+2><i><b>CustomBoy</b></i></font><br>
+
+<br>
+#[SelectBar_ui]#
+<br>
+
+<a name="CustomFeature"></a>
+<br><b>CustomFeature</b><br>
+
+<form action="/cgis/custom_boy/custom_boy.cgi?cb_target=#[cb_target]#&amp;cb_type=feature#CustomFeature" method="POST" id=fm_main enctype="multipart/form-data">
+<input type=hidden name=Moai_AuthenticKey value="#[Moai_AuthenticKey]#">
+<button class="MstyDmyUpdateBtn" disabled></button> <!-- For disable Enter key on text field -->
+
+<table class=MstyManagerTable>
+
+<tr><td colspan=2>
+<font size=-1>
+<br><b><u>概要</u></b><br> <br>
+ここではFingerprintやSnippetといったブラウザの特性を示す個々の情報を直接入力することで仮想環境の値を生成します.<br>
+このレベルからのカスタマイズを行えば、よりリアリティのある仮想環境の値の生成が期待できます.<br>
+この機能はエキスパート向けのものであり通常のユーザは VirtualUSERS の方を使用すれば十分でしょう.<br>
+<br>
+詳細については<a href="#[hint_base_Fgp]#CustomFeature" target=_blank>こちら</a>を参照してください.<br>
+<br>
+</font>
+</td></tr>
+
+<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>UA/POST変数の仮想環境</legend>
+<font size=-1>
+<table>
+<tr><td colspan=2>
+#[cb_status]#
+</td></tr>
+<tr class=MstyItemOdd><td class=MstyNoneWordBreak><b>UserAgent</b></td><td><table><tr><td><font size=-1>#[user_agent]#</font></td></tr></table></td></tr>
+#[PostVars_ui]#
+</table>
+</font>
+</fieldset></td></tr>
+
+<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>Cookieの仮想環境</legend>
+<font size=-1>
+<table>
+#[CustomCookie_ui]#
+</table>
+</font>
+</fieldset></td></tr>
+
+
+<tr class=MstyItemOdd><td>
+	<button class=MstyWideButton type='submit' name='cb_arg' value='fgp_step1'>Step1</button>
+	</td><td>
+	<font size=-1>新しい仮想環境(UA/POSTの基本値)を仮生成します(まだ完了ではありません).<br>
+		また同時に、これによって以下のFingerprint設定とSnippetの値も仮想環境に対応したものにセットされます.
+	</font>
+</td></tr>
+
+<tr><td>
+#[Category_ui]#
+</td><td>
+<font size=-1>Step1の処理の際に参考とする環境カテゴリを指定できます.<br>
+CustomBoyエンジンはこの指定に矛盾しない範囲において、<br>
+最適なUA/POST変数の仮想環境の値をランダムに自動生成します.<br>
+</font>
+</td></tr>
+
+<tr class=MstyItemOdd><td>
+	<button class=MstyWideButton type='submit' name='cb_arg' value='fgp_clear'>Step1のキャンセル</button>
+	</td><td>
+	<font size=-1>Step1で仮生成した環境をキャンセルします.(表示は現在の環境のものに戻ります).</font>
+</td></tr>
+
+<tr class=MstyItemEvn><td>
+	<button class=MstyWideButton type='submit' name='cb_arg' value='fgp_update'>UA/POST変数の更新</button>
+	</td><td>
+	<font size=-1>Step1で自動生成させたFingerprintとSnippetの情報をさらに手動で修正したとします.<br>
+		その場合、Step2の前にこのボタンによりUA/POST変数の仮想環境を更新させます.</font>
+</td></tr>
+
+<tr class=MstyItemOdd><td>
+	<button class=MstyWideButton type='submit' name='cb_arg' value='fgp_step2'>Step2</button>
+	</td><td>
+	<font size=-1>上記の仮想環境で一旦#[cb_target]#へ初アクセスし、必要な残りの情報を取得に成功すれば完了です.</font>
+</td></tr>
+
+<tr><td colspan=2>&nbsp;</td></tr>
+
+<tr><td colspan=2 bgcolor="#ccffdd"><font color="#558855"><pre>#[msg]#<pre></font></td></tr>
+
+<tr><td colspan=2>&nbsp;</td></tr>
+
+<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>UA/POST変数生成のためのFingerprint設定</legend>
+<table>
+
+<tr class=MstyItemEvn><td colspan=2>
+	<button class=MstyWideButton type='button' name='cb_arg' value='fgp_real' onClick="getDefaultFgp()">真のFingerprint値をセット</button>&nbsp;
+	<font size=-1>今現在お使いのブラウザ環境での真のFingerprint値で以下の全項目を初期化します(検証/比較用).</font>
+</td></tr>
+
+<tr class=MstyItemOdd><td><b><a href="#[hint_base_Fgp]#Fgp_userAgent"        target=_blank>Fgp_userAgent</a></b>
+</td><td><textarea cols="60" rows="3"         id=Fgp_userAgent                  name=Fgp_userAgent >#[Fgp_userAgent]#</textarea></td></tr>
+<tr class=MstyItemEvn><td><b><a href="#[hint_base_Fgp]#Fgp_language"         target=_blank>Fgp_language</a></b>
+</td><td><input type=text                     id=Fgp_language                   name=Fgp_language size="28" value="#[Fgp_language]#"></td></tr>
+<tr class=MstyItemOdd><td><b><a href="#[hint_base_Fgp]#Fgp_colorDepth"       target=_blank>Fgp_colorDepth</a></b>
+</td><td><input type=text                     id=Fgp_colorDepth                 name=Fgp_colorDepth size="28" value="#[Fgp_colorDepth]#"></td></tr>
+<tr class=MstyItemEvn><td><b><a href="#[hint_base_Fgp]#Fgp_ScreenResolution" target=_blank>Fgp_ScreenResolution</a></b>
+</td><td><input type=text                     id=Fgp_ScreenResolution           name=Fgp_ScreenResolution size="28" value="#[Fgp_ScreenResolution]#"></td></tr>
+<tr class=MstyItemOdd><td><b><a href="#[hint_base_Fgp]#Fgp_TimezoneOffset"   target=_blank>Fgp_TimezoneOffset</a></b>
+</td><td><input type=text                     id=Fgp_TimezoneOffset             name=Fgp_TimezoneOffset size="28" value="#[Fgp_TimezoneOffset]#"></td></tr>
+<tr class=MstyItemEvn><td><b><a href="#[hint_base_Fgp]#Fgp_SessionStorage"   target=_blank>Fgp_SessionStorage</a></b>
+</td><td><input type=text                     id=Fgp_SessionStorage             name=Fgp_SessionStorage size="28" value="#[Fgp_SessionStorage]#"></td></tr>
+<tr class=MstyItemOdd><td><b><a href="#[hint_base_Fgp]#Fgp_LocalStorage"     target=_blank>Fgp_LocalStorage</a></b>
+</td><td><input type=text                     id=Fgp_LocalStorage               name=Fgp_LocalStorage size="28" value="#[Fgp_LocalStorage]#"></td></tr>
+<tr class=MstyItemEvn><td><b><a href="#[hint_base_Fgp]#Fgp_IndexedDB"        target=_blank>Fgp_IndexedDB</a></b>
+</td><td><input type=text                     id=Fgp_IndexedDB                  name=Fgp_IndexedDB size="28" value="#[Fgp_IndexedDB]#"></td></tr>
+<tr class=MstyItemOdd><td><b><a href="#[hint_base_Fgp]#Fgp_BodyAddBehavior"  target=_blank>Fgp_BodyAddBehavior</a></b>
+</td><td><input type=text                     id=Fgp_BodyAddBehavior            name=Fgp_BodyAddBehavior size="28" value="#[Fgp_BodyAddBehavior]#"></td></tr>
+<tr class=MstyItemEvn><td><b><a href="#[hint_base_Fgp]#Fgp_OpenDatabase"     target=_blank>Fgp_OpenDatabase</a></b>
+</td><td><input type=text                     id=Fgp_OpenDatabase               name=Fgp_OpenDatabase size="28" value="#[Fgp_OpenDatabase]#"></td></tr>
+<tr class=MstyItemOdd><td><b><a href="#[hint_base_Fgp]#Fgp_CpuClass"         target=_blank>Fgp_CpuClass</a></b>
+</td><td><input type=text                     id=Fgp_CpuClass                   name=Fgp_CpuClass size="28" value="#[Fgp_CpuClass]#"></td></tr>
+<tr class=MstyItemEvn><td><b><a href="#[hint_base_Fgp]#Fgp_Platform"         target=_blank>Fgp_Platform</a></b>
+</td><td><input type=text                     id=Fgp_Platform                   name=Fgp_Platform size="28" value="#[Fgp_Platform]#"></td></tr>
+<tr class=MstyItemOdd><td><b><a href="#[hint_base_Fgp]#Fgp_doNotTrack"       target=_blank>Fgp_doNotTrack</a></b>
+</td><td><input type=text                     id=Fgp_doNotTrack                 name=Fgp_doNotTrack size="28" value="#[Fgp_doNotTrack]#"></td></tr>
+<tr class=MstyItemEvn><td><b><a href="#[hint_base_Fgp]#Fgp_PluginsString"    target=_blank>Fgp_PluginsString</a></b>
+</td><td><textarea name=Fgp_PluginsString cols="60" rows="3" id="Fgp_PluginsString">#[Fgp_PluginsString]#</textarea></td></tr>
+<tr class=MstyItemOdd><td><b><a href="#[hint_base_Fgp]#Fgp_Canvas" target=_blank>Fgp_Canvas</a></b>
+</td><td>
+	<textarea name=Fgp_Canvas cols="60" rows="3" id="Fgp_Canvas">#[Fgp_Canvas]#</textarea>
+	<br>
+	<img src="" alt="Fgp_CanvasPNG" id="Fgp_CanvasPNG" class="target-img" border=1 />
+	<br>
+	<button class=MstyWideButton type='submit' name='cb_arg' value='fgp_save_png'>Save Fgp_Canvas to PNG</button>
+</td></tr>
+<tr class=MstyItemEvn><td colspan=2>
+<b>Fgp_RE_key:</b>&nbsp;<select name="Fgp_RE_key" id="Fgp_RE_key" value="webkit" >
+<!-- <b>Fgp_RE_key</a></b></td><td><input type=text id=Fgp_RE_key name=Fgp_RE_key size="28" value="#[Fgp_RE_key]#"> -->
+#[Fgp_RE_key_select]#
+</select>
+</td></tr>
+</table>
+</fieldset></td></tr>
+
+<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>UA/POST変数生成のためのSnippet(Javascriptによる判定コード)設定</legend>
+<table>
+
+<tr class=MstyItemEvn><td colspan=2>
+	<button class=MstyWideButton type='button' name='cb_arg' value='fgp_real' onClick="getDefaultSnp()">真のSnippet値をセット</button>&nbsp;
+	<font size=-1>今現在お使いのブラウザ環境での真のSnippet値で以下の全項目を初期化します(検証/比較用).</font>
+</td></tr>
+
+#[CustomSnippet_ui]#
+</table>
+</fieldset></td></tr>
+
+<tr><td colspan=2>&nbsp;</td></tr>
+
+</table>
+</form>
+
+<script type="text/javascript">
+	document.getElementById("Fgp_CanvasPNG").src = document.getElementById("Fgp_Canvas").value;
+</script>
+
+<a class=MstyElemLink href="#user-content-index">一番上へ戻る</a> <a class=MstyElemLink href="/">Moaiトップページ</a>
+<br><br>
+
+</body></html>

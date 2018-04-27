@@ -53,10 +53,10 @@ getInfoOfNIC( void )
 		PIP_ADAPTER_INFO pAdapter;
 		for( pAdapter = pAdapterInfo; pAdapter; pAdapter = pAdapter->Next ){
 			/* Take care of only the first IP Address */
-			ZnkF_printf_e( "IpAddress=[%s]\n",   pAdapter->IpAddressList.IpAddress.String );
-			ZnkF_printf_e( "IpMask=[%s]\n",      pAdapter->IpAddressList.IpMask.String );
-			ZnkF_printf_e( "AdapterName=[%s]\n", pAdapter->AdapterName );
-			ZnkF_printf_e( "Description=[%s]\n", pAdapter->Description );
+			Znk_printf_e( "IpAddress=[%s]\n",   pAdapter->IpAddressList.IpAddress.String );
+			Znk_printf_e( "IpMask=[%s]\n",      pAdapter->IpAddressList.IpMask.String );
+			Znk_printf_e( "AdapterName=[%s]\n", pAdapter->AdapterName );
+			Znk_printf_e( "Description=[%s]\n", pAdapter->Description );
 #if 0
 			{
 				char* mac_addr = Znk_malloc(3 * pAdapter->AddressLength);
@@ -68,7 +68,7 @@ getInfoOfNIC( void )
 					sprintf( p, "-%02X", pAdapter->Address[ i ] );
 					p += 3;
 				}
-				ZnkF_printf_e( "MacAddress=[%s]\n", mac_addr );
+				Znk_printf_e( "MacAddress=[%s]\n", mac_addr );
 				Znk_free( mac_addr );
 			}
 #endif
@@ -127,13 +127,13 @@ ZnkNetIP_getPrivateIP32( uint32_t* ipaddr )
 	
 	/* output for debug */
 #if 0
-	ZnkF_printf_e("IFF_UP=[%08x]\n", IFF_UP );
-	ZnkF_printf_e("IFF_LOOPBACK=[%08x]\n", IFF_LOOPBACK );
+	Znk_printf_e("IFF_UP=[%08x]\n", IFF_UP );
+	Znk_printf_e("IFF_LOOPBACK=[%08x]\n", IFF_LOOPBACK );
 	for( n = 0; n < num_if; ++n ){
 		struct sockaddr_in *sa = (struct sockaddr_in*)&(if_list[n].iiAddress);
 		if (sa->sin_family == AF_INET) {
 			const char* addr_str = inet_ntoa(sa->sin_addr);
-			ZnkF_printf_e("Debug : address=[%s] iiFlags=[%08x]\n", addr_str, if_list[n].iiFlags);
+			Znk_printf_e("Debug : address=[%s] iiFlags=[%08x]\n", addr_str, if_list[n].iiFlags);
 		}
 	}
 #endif
@@ -157,8 +157,8 @@ ZnkNetIP_getPrivateIP32( uint32_t* ipaddr )
 		switch (sa->sin_family) {
 		case AF_INET:
 #if 0
-			ZnkF_printf_e( "IpAddress=[%s]\n", inet_ntoa(sa->sin_addr) );
-			ZnkF_printf_e( "IpMask=[%s]\n", inet_ntoa(((struct sockaddr_in*)&if_list[n].iiNetmask)->sin_addr) );
+			Znk_printf_e( "IpAddress=[%s]\n", inet_ntoa(sa->sin_addr) );
+			Znk_printf_e( "IpMask=[%s]\n", inet_ntoa(((struct sockaddr_in*)&if_list[n].iiNetmask)->sin_addr) );
 #endif
 			//ZnkS_copy( ipaddr, ipaddr_size, inet_ntoa(sa->sin_addr), Znk_NPOS );
 			*ipaddr = (uint32_t)sa->sin_addr.S_un.S_addr;
@@ -256,7 +256,7 @@ getIfName( char* ifname, size_t ifname_size )
 	
 	/* 全てのインターフェース名を調べ. とりあえずloでない最初のものを採用. */
 	for( i=0; i<numof_ifr; i++ ){
-		//ZnkF_printf_e( "getIfName ifr_name=[%s]\n", ifr[i].ifr_name );
+		//Znk_printf_e( "getIfName ifr_name=[%s]\n", ifr[i].ifr_name );
 		if( !ZnkS_eq( ifr[i].ifr_name, "lo" ) ){
 			/* found */
 			ZnkS_copy( ifname, ifname_size, ifr[i].ifr_name, Znk_NPOS );
@@ -281,15 +281,15 @@ ZnkNetIP_printTest( void )
 	ifr.ifr_addr.sa_family = AF_INET;
 	if( ioctl(sock, SIOCGIFADDR, &ifr) == 0 ){
 		sin = (struct sockaddr_in*)&ifr.ifr_addr;
-		ZnkF_printf_e( "IpAddress=[%s]\n", inet_ntoa(sin->sin_addr) );
+		Znk_printf_e( "IpAddress=[%s]\n", inet_ntoa(sin->sin_addr) );
 	}
 	if( ioctl(sock, SIOCGIFNETMASK, &ifr) == 0 ){
 		sin = (struct sockaddr_in*)&ifr.ifr_netmask;
-		ZnkF_printf_e( "IpMask=[%s]\n", inet_ntoa(sin->sin_addr) );
+		Znk_printf_e( "IpMask=[%s]\n", inet_ntoa(sin->sin_addr) );
 	}
 	if( ioctl(sock, SIOCGIFBRDADDR, &ifr) == 0 ){
 		sin = (struct sockaddr_in*)&ifr.ifr_broadaddr;
-		ZnkF_printf_e( "BroadAddr=[%s]\n", inet_ntoa(sin->sin_addr) );
+		Znk_printf_e( "BroadAddr=[%s]\n", inet_ntoa(sin->sin_addr) );
 	}
 
 	close(sock);
@@ -303,7 +303,7 @@ ZnkNetIP_getPrivateIP32( uint32_t* ipaddr )
 	int sock = socket( AF_INET, SOCK_DGRAM, 0 );
 
 	getIfName( ifname, sizeof(ifname) );
-	ZnkF_printf_e( "ZnkNetIP_getPrivateIP : ifname=[%s]\n", ifname );
+	//Znk_printf_e( "ZnkNetIP_getPrivateIP : ifname=[%s]\n", ifname );
 	strcpy(ifr.ifr_name, ifname);
 	ifr.ifr_addr.sa_family = AF_INET;
 	if( ioctl(sock, SIOCGIFADDR, &ifr) == 0 ){

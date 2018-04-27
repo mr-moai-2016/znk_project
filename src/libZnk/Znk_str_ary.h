@@ -58,14 +58,16 @@ Znk_INLINE void
 ZnkStrAry_clear( ZnkStrAry ary ){
 	ZnkObjAry_M_CLEAR( ary );
 }
-Znk_INLINE void
-ZnkStrAry_resize( ZnkStrAry ary, size_t size ){
-	ZnkObjAry_M_RESIZE( ary, size );
-}
+void
+ZnkStrAry_resize( ZnkStrAry ary, size_t size, const char* init_val );
 
 Znk_INLINE void
 ZnkStrAry_push_bk( ZnkStrAry ary, ZnkStr obj ){
 	ZnkObjAry_M_PUSH_BK( ary, obj );
+}
+Znk_INLINE void
+ZnkStrAry_pop_bk( ZnkStrAry ary ){
+	ZnkObjAry_M_POP_BK( ary );
 }
 Znk_INLINE void
 ZnkStrAry_set( ZnkStrAry ary, size_t idx, ZnkStr obj ){
@@ -117,6 +119,9 @@ ZnkStrAry_copy( ZnkStrAry dst, const ZnkStrAry src )
 		ZnkStrAry_push_bk_cstr( dst, ZnkStr_cstr( str ), ZnkStr_leng( str ) );
 	}
 }
+
+void
+ZnkStrAry_sort( ZnkStrAry ary );
 
 Znk_EXTERN_C_END
 

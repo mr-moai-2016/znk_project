@@ -1,0 +1,74 @@
+@def_quote [' ']
+
+@@V config
+my_libs_root = ['..']
+template_dir = ['../../mkfsys/template']
+lib_dlver = ['']
+install_dir = ['../../mkfsys']
+@@.
+
+@@L include_paths_common
+@{libZnk}
+@@.
+
+@@L dependency_libs_common
+slib: @{libZnk}  Znk  $(DL_VER)
+@@.
+
+@@V info_vc
+linking_libs_special = ['ws2_32']
+@@.
+
+@@V info_mingw
+linking_libs_special = ['ws2_32']
+@@.
+
+@@V info_msys
+linking_libs_special = ['ws2_32']
+@@.
+
+@@V info_linux
+linking_libs_special = ['pthread dl stdc++']
+@@.
+
+@@V info_cygwin
+linking_libs_special = ['pthread dl stdc++']
+@@.
+
+@@L mkid_list
+vc
+mingw
+msys
+linux
+cygwin
+@@.
+
+@@L product_list
+exec auto_trigger auto_trigger.c
+@@.
+
+@@L rc_list
+@@.
+
+@@L sublibs_list
+@@.
+
+@@L install_data_list
+auto_trigger.myf
+auto_trigger_run.bat
+__this_is_mkfsys_dir__
+mkf_triggers_gen.bat
+mkf_triggers/*.bat
+mkf_triggers/_impl/*.bat
+template_bat__equal
+template_bat__var0
+@@.
+
+@@L ignore_list
+ignores
+@@.
+
+@@L src_suffix_list
+c
+cpp
+@@.

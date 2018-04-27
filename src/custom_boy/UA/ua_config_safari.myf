@@ -1,0 +1,138 @@
+@def_quote [' ']
+
+@@L s
+['']
+@@.
+
+@@L ss
+['']
+@@.
+
+@@L sss
+['']
+@@.
+
+@@L ssss
+['']
+@@.
+
+@@L moz5
+['Mozilla/5.0']
+@@.
+
+@@L khtml
+['KHTML, like Gecko']
+@@.
+
+@@L machine_mac
+['; Intel']    *0.48
+['; U; Intel'] *0.48
+['; PPC']
+['; U; PPC']
+@@.
+
+@@L mac_ver
+['10_12_2']
+['10_12']
+['10_11_6']
+['10_11_4']
+['10_11_3']
+['10_11']
+['10_10_5']
+['10_10_4']
+['10_10_3']
+['10_10_2']
+['10_10_1']
+['10_10']
+['10_9_5']
+['10_9_1']
+['10_9_0']
+['10_9']
+['10_8_5']
+['10_8_3']
+['10_8_2']
+['10_8']
+['10_7_5']
+['10_7_4']
+['10_7_3']
+['10_6_8']
+['10_6_3']
+['10_6_2']
+['10_5_8']
+['10_5_6']
+['10_5_5']
+['10_5_3']
+['10_4_11']
+@@.
+
+@@L la
+['']
+['; ja-jp'] *0.1
+['; en-us'] *0.05
+@@.
+
+@@L platform
+['Macintosh$[machine_mac]$ Mac OS X $[mac_ver]$$[la]$']
+@@.
+
+@@L safari
+['$[moz5]$ ($[platform]$) AppleWebKit/602.3.12$[ss]$ ($[khtml]$) Version/10.0.2$[s]$ Safari/602.3.12']
+['$[moz5]$ ($[platform]$) AppleWebKit/602.2.14$[ss]$ ($[khtml]$) Version/10.0.1$[s]$ Safari/602.2.14']
+['$[moz5]$ ($[platform]$) AppleWebKit/602.1.50$[ss]$ ($[khtml]$) Version/10.0$[sss]$ Safari/602.1.50']
+['$[moz5]$ ($[platform]$) AppleWebKit/601.7.8$[sss]$ ($[khtml]$) Version/9.1.3$[ss]$ Safari/537.86.8']
+['$[moz5]$ ($[platform]$) AppleWebKit/601.7.7$[sss]$ ($[khtml]$) Version/9.1.2$[ss]$ Safari/601.7.7']
+['$[moz5]$ ($[platform]$) AppleWebKit/601.5.17$[ss]$ ($[khtml]$) Version/9.1$[ssss]$ Safari/601.5.17']
+['$[moz5]$ ($[platform]$) AppleWebKit/601.4.4$[sss]$ ($[khtml]$) Version/9.0.3$[ss]$ Safari/601.4.4']
+['$[moz5]$ ($[platform]$) AppleWebKit/601.1.56$[ss]$ ($[khtml]$) Version/9.0$[ssss]$ Safari/601.1.56']
+['$[moz5]$ ($[platform]$) AppleWebKit/600.8.9$[sss]$ ($[khtml]$) Version/8.0.8$[ss]$ Safari/600.8.9']
+['$[moz5]$ ($[platform]$) AppleWebKit/600.7.12$[ss]$ ($[khtml]$) Version/8.0.7$[ss]$ Safari/600.7.12']
+['$[moz5]$ ($[platform]$) AppleWebKit/600.8.9$[sss]$ ($[khtml]$) Version/8.0.6$[ss]$ Safari/533.22.3']
+['$[moz5]$ ($[platform]$) AppleWebKit/600.5.17$[ss]$ ($[khtml]$) Version/8.0.5$[ss]$ Safari/600.5.17']
+['$[moz5]$ ($[platform]$) AppleWebKit/600.4.10$[ss]$ ($[khtml]$) Version/8.0.4$[ss]$ Safari/600.4.10']
+['$[moz5]$ ($[platform]$) AppleWebKit/600.3.18$[ss]$ ($[khtml]$) Version/8.0.3$[ss]$ Safari/600.3.18']
+['$[moz5]$ ($[platform]$) AppleWebKit/600.2.5$[sss]$ ($[khtml]$) Version/8.0.2$[ss]$ Safari/600.2.5']
+['$[moz5]$ ($[platform]$) AppleWebKit/600.1.25$[ss]$ ($[khtml]$) Version/8.0$[ssss]$ Safari/600.1.25']
+['$[moz5]$ ($[platform]$) AppleWebKit/600.3.18$[ss]$ ($[khtml]$) Version/7.1.3$[ss]$ Safari/537.85.12']
+['$[moz5]$ ($[platform]$) AppleWebKit/600.2.5$[sss]$ ($[khtml]$) Version/7.1.2$[ss]$ Safari/537.85.11']
+['$[moz5]$ ($[platform]$) AppleWebKit/600.1.17$[ss]$ ($[khtml]$) Version/7.1$[ssss]$ Safari/537.85.10']
+['$[moz5]$ ($[platform]$) AppleWebKit/537.78.2$[ss]$ ($[khtml]$) Version/7.0.6$[ss]$ Safari/537.78.2']
+['$[moz5]$ ($[platform]$) AppleWebKit/537.73.11$[s]$ ($[khtml]$) Version/7.0.1$[ss]$ Safari/537.73.11']
+['$[moz5]$ ($[platform]$) AppleWebKit/537.73.11$[s]$ ($[khtml]$) Version/7.0$[ssss]$ Safari/537.73.11']
+['$[moz5]$ ($[platform]$) AppleWebKit/537.71$[ssss]$ ($[khtml]$) Version/7.0$[ssss]$ Safari/537.71']
+['$[moz5]$ ($[platform]$) AppleWebKit/533.19.4$[ss]$ ($[khtml]$) Version/7.0$[ssss]$ Safari/533.19.4']
+['$[moz5]$ ($[platform]$) AppleWebKit/600.1.25$[ss]$ ($[khtml]$) Version/7.0$[ssss]$ Safari/600.1.25']
+['$[moz5]$ ($[platform]$) AppleWebKit/600.8.9$[sss]$ ($[khtml]$) Version/6.2.8$[ss]$ Safari/537.85.17']
+['$[moz5]$ ($[platform]$) AppleWebKit/600.7.12$[ss]$ ($[khtml]$) Version/6.2.7$[ss]$ Safari/537.85.16']
+['$[moz5]$ ($[platform]$) AppleWebKit/600.7.7$[sss]$ ($[khtml]$) Version/6.2.6$[ss]$ Safari/537.85.15']
+['$[moz5]$ ($[platform]$) AppleWebKit/537.78.2$[ss]$ ($[khtml]$) Version/6.1.6$[ss]$ Safari/537.78.2']
+['$[moz5]$ ($[platform]$) AppleWebKit/537.77.4$[ss]$ ($[khtml]$) Version/6.1.5$[ss]$ Safari/537.77.4']
+['$[moz5]$ ($[platform]$) AppleWebKit/537.73.11$[s]$ ($[khtml]$) Version/6.1.1$[ss]$ Safari/537.73.11']
+['$[moz5]$ ($[platform]$) AppleWebKit/537.71$[ssss]$ ($[khtml]$) Version/6.1$[ssss]$ Safari/537.71']
+['$[moz5]$ ($[platform]$) AppleWebKit/536.30.1$[ss]$ ($[khtml]$) Version/6.0.5$[ss]$ Safari/536.30.1']
+['$[moz5]$ ($[platform]$) AppleWebKit/536.29.13$[s]$ ($[khtml]$) Version/6.0.4$[ss]$ Safari/536.29.13']
+['$[moz5]$ ($[platform]$) AppleWebKit/536.28.10$[s]$ ($[khtml]$) Version/6.0.3$[ss]$ Safari/536.28.10']
+['$[moz5]$ ($[platform]$) AppleWebKit/536.26.17$[s]$ ($[khtml]$) Version/6.0.2$[ss]$ Safari/536.26.17']
+['$[moz5]$ ($[platform]$) AppleWebKit/536.26.14$[s]$ ($[khtml]$) Version/6.0.1$[ss]$ Safari/536.26.14']
+['$[moz5]$ ($[platform]$) AppleWebKit/536.25$[ssss]$ ($[khtml]$) Version/6.0$[ssss]$ Safari/536.25']
+['$[moz5]$ ($[platform]$) AppleWebKit/534.59.10$[s]$ ($[khtml]$) Version/5.1.9$[ss]$ Safari/534.59.10']
+['$[moz5]$ ($[platform]$) AppleWebKit/534.57.2$[ss]$ ($[khtml]$) Version/5.1.7$[ss]$ Safari/534.57.2']
+['$[moz5]$ ($[platform]$) AppleWebKit/534.56.5$[ss]$ ($[khtml]$) Version/5.1.6$[ss]$ Safari/534.56.5']
+['$[moz5]$ ($[platform]$) AppleWebKit/534.55.3$[ss]$ ($[khtml]$) Version/5.1.3$[ss]$ Safari/534.53.10']
+['$[moz5]$ ($[platform]$) AppleWebKit/534.52.7$[ss]$ ($[khtml]$) Version/5.1.2$[ss]$ Safari/534.52.7']
+['$[moz5]$ ($[platform]$) AppleWebKit/534.51.22$[s]$ ($[khtml]$) Version/5.1.1$[ss]$ Safari/534.51.22']
+['$[moz5]$ ($[platform]$) AppleWebKit/534.50$[ssss]$ ($[khtml]$) Version/5.1$[ssss]$ Safari/534.50']
+['$[moz5]$ ($[platform]$) AppleWebKit/534.50.2$[ss]$ ($[khtml]$) Version/5.0.6$[ss]$ Safari/533.22.3']
+['$[moz5]$ ($[platform]$) AppleWebKit/533.21.1$[ss]$ ($[khtml]$) Version/5.0.5$[ss]$ Safari/533.21.1']
+['$[moz5]$ ($[platform]$) AppleWebKit/533.17.8$[ss]$ ($[khtml]$) Version/5.0.1$[ss]$ Safari/533.17.8']
+['$[moz5]$ ($[platform]$) AppleWebKit/533.16$[ssss]$ ($[khtml]$) Version/5.0$[ssss]$ Safari/533.16']
+['$[moz5]$ ($[platform]$) AppleWebKit/533.19.4$[ss]$ ($[khtml]$) Version/4.1.3$[ss]$ Safari/533.19.4']
+['$[moz5]$ ($[platform]$) AppleWebKit/531.21.11$[s]$ ($[khtml]$) Version/4.0.4$[ss]$ Safari/531.21.10']
+['$[moz5]$ ($[platform]$) AppleWebKit/531.21.8$[ss]$ ($[khtml]$) Version/4.0.4$[ss]$ Safari/531.21.10']
+['$[moz5]$ ($[platform]$) AppleWebKit/528.16$[ssss]$ ($[khtml]$) Version/4.0$[ssss]$ Safari/528.16']
+['$[moz5]$ ($[platform]$) AppleWebKit/525.27.1$[ss]$ ($[khtml]$) Version/3.2.1$[ss]$ Safari/525.27.1']
+['$[moz5]$ ($[platform]$) AppleWebKit/525.26.2$[ss]$ ($[khtml]$) Version/3.2$[ssss]$ Safari/525.26.12']
+['$[moz5]$ ($[platform]$) AppleWebKit/525.18$[ssss]$ ($[khtml]$) Version/3.1.2$[ss]$ Safari/525.22']
+['$[moz5]$ ($[platform]$) AppleWebKit/525.18$[ssss]$ ($[khtml]$) Version/3.1.1$[ss]$ Safari/525.20']
+['$[moz5]$ ($[platform]$) AppleWebKit/525.13$[ssss]$ ($[khtml]$) Version/3.1$[ssss]$ Safari/525.13']
+@@.
+

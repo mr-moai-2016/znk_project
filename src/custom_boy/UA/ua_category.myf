@@ -1,0 +1,20 @@
+@def_quote [' ']
+
+@@L pc
+['firefox'] *0.4
+['chrome'] *0.4
+['ie']
+['opera']
+['safari']
+@@.
+
+@@L mobile
+['android'] *0.6
+['iphone']
+@@.
+
+@@L random
+['$[pc]$']
+['$[mobile]$']
+@@.
+

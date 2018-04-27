@@ -2,10 +2,10 @@
 #include "Znk_stdc.h"
 
 ZnkVarp
-ZnkVarp_create( const char* name, const char* filename, int var_type, ZnkPrimType prim_type )
+ZnkVarp_create( const char* name, const char* misc, int var_type, ZnkPrimType prim_type, ZnkElemDeleterFunc elem_deleter )
 {
 	ZnkVarp varp = (ZnkVarp)Znk_alloc0( sizeof( struct ZnkVar_tag ) );
-	ZnkVar_compose( varp, name, filename, var_type, prim_type );
+	ZnkVar_compose( varp, name, misc, var_type, prim_type, elem_deleter );
 	return varp;
 }
 void

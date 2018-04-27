@@ -33,7 +33,12 @@ struct MoaiConnection_tag {
 	ZnkSocket       I_sock_;          /* I側sock */
 	bool            I_is_keep_alive_; /* I側sockがkeep-aliveであるか否か */
 	ZnkSocket       O_sock_;          /* O側sock */
-	size_t          content_length_remain_;
+	/***
+	 * Pipelineに対応するためには、Inner方向とOuter方向の通信用に
+	 * content_length_remain_をそれぞれ独立して用意する必要がある.
+	 */
+	size_t          req_content_length_remain_;
+	size_t          res_content_length_remain_;
 	uint64_t        exile_time_;
 	bool            is_connect_inprogress_;
 	uint64_t        connect_begin_time_;

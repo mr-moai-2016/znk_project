@@ -1,0 +1,97 @@
+@def_quote [' ']
+
+#
+# 注:
+# slib_sfxとilib_sfxは同じにすべきではない.
+# 同じにしてしまうとlib_ver_sfxが空の場合、slibとilibのファイル名も同じとなる.
+# このとき、slibを生成後、次に生成されるilibがただちにslibを上書きしてしまう.
+# makeからはslibが再び更新されたかのようにも見えるため、slib依存のgslconvなどのツールが再び稼動する.
+# gslconvは実態はilibであるこのファイルをslibとみなして処理するため、
+# 結果的に壊れたgsl.myfなどを再生成してしまう事故が起こり得る.
+#
+@@V config
+obj_sfx  = ['obj']
+exe_sfx  = ['exe']
+slib_pfx = ['']
+ilib_pfx = ['']
+dlib_pfx = ['']
+slib_sfx = ['lib']
+ilib_sfx = ['imp.lib']
+dlib_sfx = ['dll']
+template_include_path = ['-I$(MY_LIBS_ROOT)/$[lib_dir]$ \']
+template_lib_ver_sfx  = ['-$[lib_dlver]$']
+template_lib_file     = ['$[lib_pfx]$$[lib_name]$$[lib_ver_sfx]$.$[lib_sfx]$']
+template_libs_path    = ['$(MY_LIBS_ROOT)/$[lib_dir]$/out_dir/$(ABINAME)/$[lib_file]$']
+template_runtime_path = ['$(MY_LIBS_ROOT)/$(DLIBS_DIR)/$[lib_file]$']
+template_sublib       = ['$[submkf_dir]$/$O/$[lib_pfx]$$[sublib_name]$.$[slib_sfx]$']
+shell = ['dos']
+@@.
+
+@@L mkdir_rule
+$[obj_dir]$:
+	if not exist $[obj_dir]$ mkdir $[obj_dir]$
+@@.
+
+@@L exefile_rule
+$[exe_file]$: $[objs]$ $[res_file]$
+	$(LINKER) /OUT:$[exe_file]$ $[res_file]$ $[objs]$ $(SUB_LIBS) $[dep_libs]$
+@@.
+
+@@L dlibfile_rule
+$[dlib_file]$: $[objs]$ $[slib_file]$ gsl.def
+	$(LINKER) /DLL /OUT:$[dlib_file]$ /IMPLIB:$[ilib_file]$ $[objs]$ $(SUB_LIBS) $[dep_libs]$ /DEF:$[def_file]$
+@@.
+
+@@L slibfile_rule
+$[slib_file]$: $[objs]$
+	LIB /NOLOGO /OUT:$[slib_file]$ $[objs]$ $(SUB_LIBS)
+@@.
+
+@@L gsl_rule
+gsl.myf: $[slib_file]$
+	@if exist $[gslconv]$ $[gslconv]$ -g gsl.myf $[slib_file]$ $(MACHINE)
+
+gsl.def: gsl.myf
+	@if exist $[gslconv]$ $[gslconv]$ -d gsl.myf gsl.def
+@@.
+
+@@L suffix_rule
+{$[src_dir]$}.$[src_sfx]${$[obj_dir]$}.obj:
+	$(COMPILER) -I$S $(INCLUDE_FLAG) -Fo$@ -c $<
+@@.
+
+@@L rc_rule
+$[res_file]$: $[rc_file]$
+	rc /fo$[res_file]$ $[rc_file]$
+@@.
+
+@@L submkf_rule
+submkf_$[submkf_dir]$:
+	@echo ======
+	@echo === Entering [$[submkf_dir]$] ===
+	cd $[submkf_dir]$
+	nmake -f Makefile_$[mkf_id]$.mak
+	cd ..
+	@echo === Leaving [$[submkf_dir]$] ===
+	@echo ======
+@@.
+
+@@L install_rule
+install: $(PRODUCT_FILES) install_data
+	@echo:
+	@echo === Install all product files ===
+	if not exist $[install_dir]$ mkdir $[install_dir]$
+	@for %%a in ( $(PRODUCT_FILES) ) do @if exist "%%a" @$(CP) /F "%%a" $[install_dir]$\ $(CP_END)
+@@.
+
+@@L clean_here_rule
+	del /Q $O\ 
+@@.
+
+@@L clean_sub_rule
+	@echo === Entering [$[submkf_dir]$] ===
+	cd $[submkf_dir]$
+	nmake -f Makefile_$[mkf_id]$.mak clean
+	cd ..
+	@echo === Leaving [$[submkf_dir]$] ===
+@@.

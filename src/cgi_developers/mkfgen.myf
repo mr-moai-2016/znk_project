@@ -1,0 +1,82 @@
+@def_quote [' ']
+
+@@V config
+my_libs_root = ['..']
+template_dir = ['../../mkfsys/template']
+install_dir = ['../../moai-v$(REL_VER)-$(PLATFORM)/cgis/cgi_developers/protected']
+install_data_dir = ['../../moai-v$(REL_VER)-$(PLATFORM)/cgis/cgi_developers/publicbox']
+special_exe_sfx = ['cgi']
+runtime_install = ['false']
+@@.
+
+@@L include_paths_common
+@{libZnk}
+@{libRano}
+@@.
+
+@@L dependency_libs_common
+rlib: @{libZnk}  Znk  $(DL_VER)
+rlib: @{libRano} Rano $(DL_VER)
+@@.
+
+@@V info_vc
+@@.
+
+@@V info_mingw
+@@.
+
+@@V info_msys
+@@.
+
+@@V info_linux
+linking_libs_special = ['pthread dl stdc++']
+@@.
+
+@@V info_cygwin
+linking_libs_special = ['pthread dl stdc++']
+@@.
+
+@@L mkid_list
+vc
+mingw
+msys
+linux
+cygwin
+android
+@@.
+
+@@L product_list
+exec hello hello.c
+exec evar1 evar1.c
+exec evar2 evar2.c
+exec query_string1 query_string1.c
+exec query_string2 query_string2.c
+exec post1 post1.c
+exec post2 post2.c
+exec transfer_chunked transfer_chunked.c
+exec hello_template hello_template.c
+exec progress progress.c
+@@.
+
+@@L rc_list
+@@.
+
+@@L sublibs_list
+@@.
+
+@@L install_data_list
+*.c
+*.cpp
+*.html
+*.js
+@@.
+
+@@L ignore_list
+ignores
+obsolete
+@@.
+
+@@L src_suffix_list
+c
+cpp
+@@.

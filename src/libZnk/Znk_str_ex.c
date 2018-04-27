@@ -338,34 +338,39 @@ ZnkStrEx_addSplitStr( ZnkStrAry ans_vstr, const char* str, size_t str_leng,
 
 static void
 Adapter_addJoin( Adapter adp,
-		ZnkStr ans, const StrListHandle str_list, const char* connector, size_t connector_leng, size_t expect_elem_leng )
+		ZnkStr ans, const StrListHandle str_list,
+		size_t begin, size_t end,
+		const char* connector, size_t connector_leng, size_t expect_elem_leng )
 {
 	const size_t num = adp->size_( str_list );
-	if( num ){
+	end = Znk_MIN( num, end );
+	if( end > begin ){
 		size_t idx;
 
 		DECIDE_STRLENG( connector_leng, connector );
 
 		/* おおまかな予想予約サイズ */
-		ZnkBfr_reserve( ans, ZnkBfr_size(ans) + ( expect_elem_leng + connector_leng ) * num );
+		ZnkBfr_reserve( ans, ZnkBfr_size(ans) + ( expect_elem_leng + connector_leng ) * (end-begin) );
 	
 		/***
 		 * ZnkStr_add, あるいは ZnkStr_appendで十分高速である.
 		 * これらを使わずに工夫を凝らしたとしてもほとんど差はない.
 		 */
-		for( idx=0; idx<num-1; ++idx ){
+		for( idx=begin; idx<end-1; ++idx ){
 			ZnkStr_add( ans, adp->at_( str_list, idx ) );
 			ZnkStr_append( ans, connector, connector_leng );
 		}
-		ZnkStr_add( ans, adp->at_( str_list, num-1 ) );
+		ZnkStr_add( ans, adp->at_( str_list, end-1 ) );
 	}
 }
 
 void
 ZnkStrEx_addJoin( ZnkStr ans, const ZnkStrAry str_list,
+		size_t begin, size_t end,
 		const char* connector, size_t connector_leng, size_t expect_elem_leng )
 {
 	Adapter_addJoin( &st_adapter_vstr, ans, (StrListHandle)str_list,
+			begin, end,
 			connector, connector_leng, expect_elem_leng );
 }
 
@@ -755,25 +760,26 @@ size_t
 ZnkStrEx_replace_BF( ZnkStr str, size_t begin,
 		const char* old_ptn, size_t old_ptn_leng,
 		const char* new_ptn, size_t new_ptn_leng,
-		size_t seek_depth )
+		size_t seek_depth, size_t delta_to_next )
 {
 	if( seek_depth ){
 		size_t count=0;
-		size_t delta;
+		size_t pos_from_begin;
 		size_t str_leng = ZnkStr_leng(str);
 
 		DECIDE_STRLENG( old_ptn_leng, old_ptn );
 		DECIDE_STRLENG( new_ptn_leng, new_ptn );
+		if( delta_to_next == Znk_NPOS ){ delta_to_next = new_ptn_leng; }
 
 		while( begin < str_leng ){
-			delta = ZnkMem_lfind_data_BF( (uint8_t*)ZnkStr_cstr(str)+begin, str_leng-begin,
+			pos_from_begin = ZnkMem_lfind_data_BF( (uint8_t*)ZnkStr_cstr(str)+begin, str_leng-begin,
 					(uint8_t*)old_ptn, old_ptn_leng, 1 );
-			if( delta == Znk_NPOS ){ break; }
-			begin += delta;
+			if( pos_from_begin == Znk_NPOS ){ break; }
+			begin += pos_from_begin;
 			++count;
 
 			ZnkBfr_replace( str, begin, old_ptn_leng, (uint8_t*)new_ptn, new_ptn_leng );
-			begin += new_ptn_leng;
+			begin += delta_to_next;
 
 			if( count == seek_depth ){ break; }
 			str_leng = ZnkStr_leng(str);
@@ -787,25 +793,27 @@ size_t
 ZnkStrEx_replace_BMS( ZnkStr str, size_t begin,
 		const char* old_ptn, size_t old_ptn_leng, const size_t* old_ptn_occ_table,
 		const char* new_ptn, size_t new_ptn_leng,
-		size_t seek_depth )
+		size_t seek_depth, size_t delta_to_next )
 {
 	if( seek_depth ){
 		size_t count=0;
-		size_t delta;
+		size_t pos_from_begin;
 		size_t str_leng = ZnkStr_leng(str);
 
 		DECIDE_STRLENG( old_ptn_leng, old_ptn );
 		DECIDE_STRLENG( new_ptn_leng, new_ptn );
+		if( delta_to_next == Znk_NPOS ){ delta_to_next = new_ptn_leng; }
 
 		while( begin < str_leng ){
-			delta = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(str)+begin, str_leng-begin,
+			pos_from_begin = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(str)+begin, str_leng-begin,
 					(uint8_t*)old_ptn, old_ptn_leng, 1, old_ptn_occ_table );
-			if( delta == Znk_NPOS ){ break; }
-			begin += delta;
+			if( pos_from_begin == Znk_NPOS ){ break; }
+			begin += pos_from_begin;
 			++count;
 
 			ZnkBfr_replace( str, begin, old_ptn_leng, (uint8_t*)new_ptn, new_ptn_leng );
-			begin += new_ptn_leng;
+
+			begin += delta_to_next;
 
 			if( count == seek_depth ){ break; }
 			str_leng = ZnkStr_leng(str);

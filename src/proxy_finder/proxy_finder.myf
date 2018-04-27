@@ -1,0 +1,32 @@
+@def_quote [' ']
+
+@@V gatherproxy_com
+hostname       = ['www.gatherproxy.com']
+url_underpath  = ['/proxylist/country/?c=Japan']
+ip_ptn_begin   = ['PROXY_IP":"']
+ip_ptn_end     = ['","']
+port_ptn_begin = ['PROXY_PORT":"']
+port_ptn_end   = ['","']
+is_hex_port    = ['true']
+@@.
+
+@@V xroxy_com
+hostname       = ['www.xroxy.com']
+url_underpath  = ['/proxy-country-JP.htm']
+ip_ptn_begin   = ['proxy:name=XROXY proxy&host=']
+ip_ptn_end     = ['&']
+port_ptn_begin = ['port=']
+port_ptn_end   = ['&']
+is_hex_port    = ['false']
+@@.
+
+@@V magicvox_net
+hostname       = ['lab.magicvox.net']
+url_underpath  = ['/proxy/']
+ip_ptn_begin   = ['<td class="host">']
+ip_ptn_end     = ['</td>']
+port_ptn_begin = ['<td class="port">']
+port_ptn_end   = ['</td>']
+is_hex_port    = ['false']
+@@.
+

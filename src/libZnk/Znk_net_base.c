@@ -2,6 +2,7 @@
 #include "Znk_s_base.h"
 #include "Znk_sys_errno.h"
 #include "Znk_stdc.h"
+#include "Znk_missing_libc.h"
 
 #if defined(Znk_TARGET_WINDOWS)
 /***
@@ -70,11 +71,11 @@ ZnkNetBase_initiate( bool verbose )
 	WSADATA wsaData;
 
 	if( WSAStartup(MAKEWORD(2,0), &wsaData) != 0 ){
-		ZnkF_printf_e( "ZnkNetBase_initiate : WSAStartup : failure.\n" );
+		Znk_printf_e( "ZnkNetBase_initiate : WSAStartup : failure.\n" );
 		return false;
 	}
 	if( verbose ){
-		ZnkF_printf_e(
+		Znk_printf_e(
 				"ZnkNetBase_initiate : WSA Version = [%d.%d]\n"
 				"Description = [%s]\n"
 				"SystemStatus = [%s]\n",
@@ -278,7 +279,7 @@ ZnkNetBase_getErrMsg( char* errmsg_buf, size_t errmsg_buf_size, int err_code )
 {
 #if defined(Znk_TARGET_WINDOWS)
 	size_t leng;
-	ZnkS_snprintf_sys( errmsg_buf, errmsg_buf_size, "%s:", ZnkNetBase_getErrKey(err_code) );
+	Znk_snprintf( errmsg_buf, errmsg_buf_size, "%s:", ZnkNetBase_getErrKey(err_code) );
 	leng = Znk_strlen(errmsg_buf);
 	if( errmsg_buf_size > leng ){
 		getMSWinErrMsg( errmsg_buf+leng, errmsg_buf_size-leng, err_code );

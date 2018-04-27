@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<link href="/msty.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<a name=TopBar></a>
+<p><b><img src="/imgs/here_landmark.png"> Moai2.0ドキュメント</b></p>
+
+<a class=MstyElemLink href="/">トップページ</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index.html">Moai2.0ドキュメント</a> &nbsp;
+<a class=MstyElemLink        href="/moai1.1/index.html">Moai1.1ドキュメント</a> &nbsp;
+<br> <br>
+<a class=MstyElemLink        href="/moai2.0/install.html">インストールガイド</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/moai_reference.html">Moai本体</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/customboy_reference.html">CustomBoy</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
+<br> <br>
+<a class=MstyElemLink        href="/moai2.0/easter_reference.html">仮想ブラウジング</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/easter_collection.html">コレクション</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/easter_config.html">設定</a> &nbsp;
+<a class=MstyElemLink        href="/moai2.0/easter_boxmap_viewer.html">BoxMapビューア</a> &nbsp;
+<br> <br>
+
+
+<div class=MstyComment>
+<u><b>記事担当者</b></u> : 全角<br> 
+<br>
+<u><b>最終更新日</b></u> : 2018/04/11<br>
+<br>
+</div>
+<br>
+
+
+<a name=AtFirst></a>
+<u><b>
+はじめに
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	この記事ではEasterにおける「設定」画面について解説します.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=Index></a>
+<u><b>目次</b></u>
+<ul>
+	<li><b><a class=MstyElemLink href=#AboutConfig>Easterにおける設定画面の概要</a></b></li>
+	<li><b><a class=MstyElemLink href=#VirtualBrousing>仮想ブラウジングに関する設定</a></b></li>
+	<li><b><a class=MstyElemLink href=#Collection>コレクションに関する設定</a></b></li>
+	<li><b><a class=MstyElemLink href=#Cache>キャッシュに関する設定</a></b></li>
+</ul><br>
+
+
+<a name=AboutConfig></a>
+<u><b>
+Easterにおける設定画面の概要
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	Easterの一番上のバーから「設定」を選ぶと以下のような画面が表示されます.<br>
+	<br>
+	<div class=MstyComment>
+		<img src=/imgs/easter_config.png width=100%>
+	</div>
+	<br>
+	ここからEasterに関する様々な設定ができます.<br>
+	値を修正した場合は、一番下の「更新」ボタンを押すことでその設定が反映されます.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=VirtualBrousing></a>
+<u><b>
+仮想ブラウジングに関する設定
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	この項目にあるのは仮想ブラウジングに関するものです.<br>
+	<ul>
+		<li><b>ダイレクトイメージリンク</b><br>
+		このチェックがOnのとき、Easterの仮想ブラウザ環境においてサムネ画像(HTMLのimgタグ)の表示に関してはEasterを経由しません.<br>
+		これによって<b>表示の高速化が図れますので通常はこれをOnにしておくとよい</b>でしょう.<br>
+		一方、これをOffにするとサムネ画像表示に関してもEasterを経由した表示になります.<br>
+		これによりサムネ画像へのアクセスも仮想ブラウザ環境によるものになり、仮想化はより隙のないものとなります.<br>
+		(しかし、サーバ側がそのレベルまでチェックをするとなると大変な負荷になるでしょうから、<br>
+		クライアント側もまた、仮想化をそのレベルまでする必要性はないと思います)<br>
+		またOffの場合はサムネ画像もすべてEasterでキャッシュされますが、Easter BBS Operationを使えば、<br>
+		これをOffにせずともでサムネ画像まで含めた形でHTMLを保存することもできます.<br>
+		特にサムネ画像を大量に含むページを表示する際に著しい速度低下を起こす可能性があるため、<br>
+		これをOffにするのはお勧めしません.<br>
+		</li>
+		<br>
+		<li><b>オートリンク</b><br>
+		このチェックがOnのとき、Easterの仮想ブラウザ環境を経由して表示したHTML内にURLが含まれる場合、<br>
+		そのURLをEaster用のURLに変換します(これをEaster URLと呼びます).<br>
+		Easter URLの詳細については<a class=MstyElemLink href=/moai2.0/easter_reference.html#EasterURL target=_blank>こちら</a>を参照して下さい.<br>
+		これによって、例えばEasterがサポートする掲示板内に同掲示板のURLが書き込まれていた場合にも<br>
+		Easterの仮想ブラウザ環境を継続可能なリンクとして機能させることができますので、<br>
+		よほど何か不具合が生じない限りは、<b>通常これをOnにしておきましょう</b>.<br>
+		</li>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=Collection></a>
+<u><b>
+コレクションに関する設定
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	この項目にあるのはEasterコレクションに関するものです.<br>
+	<ul>
+		<li><b>１ページあたりのサムネ数</b><br>
+		Easterコレクションにおけるトピックビューアは、あなたのこれまで集めた画像をサムネ表示でリストします.<br>
+		このとき画像の数が多い場合はすべてを一気に表示せず、ページという単位に分けて表示されます.<br>
+		そしてここに指定するのは１ページあたりその画像(のサムネ表示)を何個表示するかということです.<br>
+		デフォルトでは12となっていますが、ここに設定する最適な数はあなたのモニタの解像度、<br>
+		そして「サムネサイズ」や「サムネ列数」とも関係するでしょうから、必要に応じて変更してください.<br>
+		</li>
+		<br>
+		<li><b>サムネサイズ</b><br>
+		Easterコレクションにおける画像のサムネ表示において、そのサムネ画像一つあたりのpixelサイズを指定します.<br>
+		(現時点でのEasterのサムネ表示では元画像のアスペクト比の保持はされず、サムネはすべて強制的に正方形として表示されます.<br>
+		ここでのpixelサイズはその正方形の一辺の長さに対応します)<br>
+		これをあまり大きくし過ぎるとあなたのモニタ画面に対してページが占めるpixelサイズが大きくなりますので、<br>
+		１ページ全体を見渡すにもスクロールバー等でスクロールをする必要が出てきます.<br>
+		デフォルトでは204となっていますが、ここに設定する最適なpixel数はあなたのモニタの解像度、<br>
+		そして「１ページあたりのサムネ数」や「サムネ列数」とも関係するでしょうから、必要に応じて変更してください.<br>
+		</li>
+		<br>
+		<li><b>サムネ列数</b><br>
+		Easterコレクションにおける画像のサムネ表示のリスト画面は、まずこれらを左から右へ並べていき、<br>
+		これがここで指定したサムネサイズ数だけ並んだら、次の行に折り返してまた同様に左から右へ並べるという<br>
+		構成になります.<br>
+		特にプレビュー画面はこのリスト表示よりさらに右側に表示されますので、<br>
+		これをあまり大きくし過ぎるとあなたのモニタ画面がよほど横長でない限り、<br>
+		プレビュー表示をするスペースが狭くなってしまうでしょう.<br>
+		デフォルトでは4となっていますが、ここに設定する最適なpixel数はあなたのモニタの解像度、<br>
+		そして「１ページあたりのサムネ数」や「サムネサイズ」とも関係するでしょうから、必要に応じて変更してください.<br>
+		</li>
+		<br>
+		<li><b>タグ一覧の列数</b><br>
+		Easterコレクションにおける画像分類画面やタグマネージャにおけるタグ一覧において、<br>
+		そこに表示されるタグの列数を変更できます.<br>
+		デフォルトでは4となっています.<br>
+		これで問題ないとは思いますが、万一スマホなどの環境でこれでは使いにくい場合等ありましたら、<br>
+		ここから列数を減らすなどして変更してください.<br>
+		</li>
+		<br>
+		<li><b>プレビューの最大幅(pixel)</b><br>
+		Easterコレクションにおける画像の閲覧時では、画像のプレビュー表示を行うことができます.<br>
+		プレビューはサムネリストの右側に表示されますが、ここではこのときに表示されるプレビューの最大幅をpixelで指定します.<br>
+		最適な値はお使いのモニタによっても変わってくると思いますので、<br>
+		ここから適宜変更してください.<br>
+		</li>
+		<br>
+		<li><b>プレビューの最大高(pixel)</b><br>
+		Easterコレクションにおける画像の閲覧時では、画像のプレビュー表示を行うことができます.<br>
+		プレビューはサムネリストの右側に表示されますが、ここではこのときに表示されるプレビューの最大高をpixelで指定します.<br>
+		最適な値はお使いのモニタによっても変わってくると思いますので、<br>
+		ここから適宜変更してください.<br>
+		</li>
+	</ul>
+	尚、ここにも「タグマネージャーを開く」ボタンがあり、ここからタグマネージャーを開くこともできるようになっています.<br>
+	タグマネージャーについては<a class=MstyElemLink href=/moai2.0/easter_collection.html#TagManager_RegistNewTag target=_blank>こちら</a>を参照して下さい.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=Cache></a>
+<u><b>
+キャッシュに関する設定
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	この項目にあるのはEasterのキャッシュに関するものです.<br>
+	<ul>
+		<li><b>キャッシュの保存日数</b><br>
+		Easter経由でHTMLや画像を表示した場合、それらのファイルはEasterのキャッシュ管理システムでキャッシュされます.<br>
+		ここではそのキャッシュを最大何日前までのものまで残すかを指定します.<br>
+		デフォルトでは3となっており、この場合3日前までのものがキャッシュとして残されるということです.<br>
+		それより古いキャッシュはEasterのダストボックスへと移動されます.<br>
+		</li>
+		<br>
+		<li><b>ダストボックスの保存日数</b><br>
+		Easterで画像等を削除した場合、誤操作に対する猶予を与えるため本当にそのファイルをディスクから削除するのではなく<br>
+		それをmoaiディレクトリ配下のcgi/easter/dustboxというディレクトリへ移動します.<br>
+		これをEasterでのダストボックスと呼んでいます.<br>
+		ここではそのダストボックス内でのファイルを最大何日前までのものまで残すかを指定します.<br>
+		デフォルトでは5となっており、この場合5日前までのものがダストボックス内に残されるということです.<br>
+		それより古いファイルは、今度こそ本当に削除されます.<br>
+		</li>
+	</ul>
+	尚、ここには「BoxMapビューアを開く」ボタンがあり、ここからBoxMapビューアを開くこともできるようになっています.<br>
+	BoxMapビューアについては<a class=MstyElemLink href=/moai2.0/easter_boxmap_viewer.html target=_blank>こちら</a>を参照して下さい.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<u><b>リンク</b></u>
+<ul>
+	<li><a class=MstyElemLink href="#TopBar">一番上へ</a></li>
+	<li><a class=MstyElemLink href="https://mr-moai-2016.github.io">Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href="https://github.com/mr-moai-2016/znk_project">znk_project(github)</a></li>
+</ul><br>
+
+</body>
+</html>

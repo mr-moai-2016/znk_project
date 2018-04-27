@@ -12,6 +12,7 @@ typedef enum {
 	,MoaiRASResult_e_RestartServer
 } MoaiRASResult;
 
+#if 0
 typedef enum {
 	 MoaiHtpType_e_None=0
 	,MoaiHtpType_e_Request
@@ -40,6 +41,7 @@ MoaiTextType_getCStr( MoaiTextType type )
 	}
 	return str + Znk_strlen_literal( "MoaiText_" );
 }
+#endif
 
 Znk_EXTERN_C_END
 

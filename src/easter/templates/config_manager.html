@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+	<META http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+	<META http-equiv="Content-Script-Type" content="text/javascript">
+	<META http-equiv="Content-Style-Type" content="text/css">
+	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<title>Easter 設定</title>
+</head>
+
+<script type="text/javascript"><!--
+var previewing_img_url = "";
+var st_func_tbls = [];
+#[hint_table]#
+//--></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/hint.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/assort.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/preview.js"></script>
+	
+<body bgcolor="#EEFFEE" text="#808000" link="#0000EE" vlink="#0000EE" alink="#FF0000">
+
+<form action="/cgis/easter/easter.cgi?est_manager=config" method="POST" name="fm_main">
+
+<a name="user-content-index"></a>
+<font size=+2><i><b>Easter</b></i></font><br>
+
+<br>
+<a class=MstyElemLink  href="/easter" >仮想ブラウジング</a> &nbsp;
+<a class=MstyElemLink  href="/easter?est_manager=topic&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >コレクション</a> &nbsp;
+<a class=MstyNowSelectedLink href="/easter?est_manager=config&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >設定</a> &nbsp;
+<br>
+
+<input type=hidden name=Moai_AuthenticKey value="#[Moai_AuthenticKey]#">
+<button class=MstyDmyUpdateBtn disabled></button> <!-- For disable Enter key on text field -->
+
+<a name="EasterConfig"></a>
+<br><b>設定</b><br>
+<table class=MstyManagerTable>
+
+<tr><td colspan=2>
+<font size=-1>
+<span style="vertical-align:-40%; margin-right:4px"><img src='/cgis/easter/publicbox/icons/question_16.png'></span>マークをクリックすると使い方のヒントが表示されます.<br>
+<a class=MstyQandALink href="javascript:void(0);" onclick="displayQandA( 'Hint', 'aboutConfig' );"><img src='/cgis/easter/publicbox/icons/question_16.png'></a>
+<div id=aboutConfig></div>
+</font>
+</td></tr>
+
+<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>仮想ブラウジングに関する設定</legend>
+<font size=-1>
+<br>
+<input type=checkbox name=est_direct_img_link value="on" #[direct_img_link]#>ダイレクトイメージリンク<br>
+<input type=checkbox name=est_auto_link value="on" #[auto_link]#>オートリンク<br>
+<br>
+</font>
+</fieldset></td></tr>
+
+<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>コレクションに関する設定</legend>
+<font size=-1>
+<br>
+１ページあたりのサムネ数：
+<input class=MstyInputField type=text name=show_file_num value=#[show_file_num]# size=5><br>
+サムネサイズ：
+<input class=MstyInputField type=text name=thumb_size value=#[thumb_size]# size=5><br>
+サムネ列数：
+<input class=MstyInputField type=text name=line_file_num value=#[line_file_num]# size=5><br>
+タグ一覧の列数：
+<input class=MstyInputField type=text name=line_tag_num value=#[line_tag_num]# size=5><br>
+プレビューの最大幅(pixel)：
+<input class=MstyInputField type=text name=preview_max_width value=#[preview_max_width]# size=5><br>
+プレビューの最大高(pixel)：
+<input class=MstyInputField type=text name=preview_max_height value=#[preview_max_height]# size=5><br>
+<br>
+</font>
+<a class=MstyElemLink href="javascript:EjsAssort_submitCommandAndArg( document.fm_main, 'tag_manager', 'view', 'edit_mode=tag#TagManager' )">タグマネージャーを開く</a>
+</fieldset>
+
+
+
+<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>キャッシュに関する設定</legend>
+<font size=-1>
+<br>
+キャッシュの保存日数：
+<input class=MstyInputField type=text name=cache_days_ago value=#[cache_days_ago]# size=5> 日前まで<br>
+ダストボックスの保存日数：
+<input class=MstyInputField type=text name=dustbox_days_ago value=#[dustbox_days_ago]# size=5> 日前まで<br>
+<br>
+</font>
+<a class=MstyElemLink  href="/easter?est_manager=cache&amp;command=view&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >BoxMapビューアを開く</a> &nbsp;
+</fieldset>
+
+<br>
+<button class=MstyWideButton type='submit' name='command' value='update'>更新</button><br>
+
+<br><font size=-1 color=red>#[ermsg]#</font><br>
+
+</td></tr>
+
+<tr><td colspan=2>
+<input type=checkbox id=msg_console_cbtn onclick="EjsAssort_switchVisibility('msg_console', '_cbtn', '_body', '_msg')">
+<b>Easter System Console </b><br>
+<div class=MstyMsgConsole id=msg_console_body style=display:none><b>Easter System Console:</b><br>#[msg]#</div>
+<font size=-1 color=#8888ff><div id=msg_console_msg>― 現在非表示です ―</div></font>
+</td></tr>
+
+</table>
+
+</form>
+
+<a class=MstyElemLink href="#user-content-index">一番上へ戻る</a> <a class=MstyElemLink href="/">Moaiトップページ</a>
+<br><br>
+
+</body></html>
