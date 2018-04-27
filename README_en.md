@@ -5,27 +5,29 @@
 -----------------------------------
 
 "znk_project" is a repository of free and open source applications and libraries by based on libZnk
-developed for Windows or Linux. 
+developed for Windows, Linux, Cygwin, and Android. 
 
 This repository have following :  
 * libZnk : Basically C/C++ library.  
-  Japanese Document is [here][1].
-* Moai: Yet another Local proxy engine.  
-  Japanese Document is [here][2].
-  Japanese Reference Manual is [here][3].
-* Moai/Virtual USERS : How to virtualize notice board users on Moai engine.  
-  Japanese Document is [here][4].
-* http_decorator : Simple http client.
+* Moai: Yet another Portable Web-Server and  Local-Proxy Engine.  
+* Easter : Easter is a client-viewer system on your virtual browser environment of Moai Ver2.0 filters.
+  You can also manage your image collections gotten from Image BBS,
+* CustomBoy : CustomBoy is the next-generation of USERS(User-Agent Screen-size and Everything Randomizer System)
+  based on Moai Ver2.0 and build up your virtual browser information instantly.
+  You can also create a custom detailed information about each element of browser,
+  such as Fingerprint and result values of Javascipt snippet code on Moai CGI user-interface.
 ...etc  
 
-Current version is 1.1.8.  
-Japanese Release Note is [here][5]
+Current version is 2.0.  
+Japanese Release Note is [here][1]
 
-These applications and librarys source codes are written and developed for VC(Ver6.0-Ver12.0),
-MinGW, gcc(on linux) and so on.  
-Japanese HowToCompile Document is [here][6].
+These applications and librarys source codes are written and developed for VC(Ver6.0-Ver14.0),
+MinGW, gcc(on linux), android(ndk) and so on.  
 
-Download & Support site:  
+Support site:  
+https://mr-moai-2016.github.io
+
+Github repository:
 https://github.com/mr-moai-2016/znk_project
 
 
@@ -54,7 +56,7 @@ zlib 1.2.3 :
   (README) to avoid redundancy.
 
 Otherwise all the code :  
-  Copyright (c) Nippon HTTP Kenkyujo(NHK)
+  Copyright (c) Zen-nippon Network Kenkyujo(ZNK)
   Licensed under the NYSL( see http://www.kmonos.net/nysl/index.en.html for detail ).
 
 
@@ -63,9 +65,4 @@ In no event will the authors be held liable for any damages arising
 from the use of this software.
 
 
-[1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/libZnk/README.md
-[2]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/README.md
-[3]: https://github.com/mr-moai-2016/znk_project/blob/master/src/moai/Reference.md
-[4]: https://github.com/mr-moai-2016/znk_project/blob/master/src/virtual_users/VirtualUSERS.md
-[5]: https://github.com/mr-moai-2016/znk_project/blob/master/src/ReleaseNote.md
-[6]: https://github.com/mr-moai-2016/znk_project/blob/master/src/HowToCompile.md
+[1]: https://github.com/mr-moai-2016/znk_project/blob/master/src/ReleaseNote.md
