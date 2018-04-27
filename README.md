@@ -1,7 +1,7 @@
 # znk_project
 ===================================
 
-This is Japanese overview. English version is [here][7].
+This is Japanese overview. English version is [here][1].
 
 ## znk_project‚Æ‚Í?
 -----------------------------------
@@ -27,5 +27,3 @@ https://mr-moai-2016.github.io/moai2.0/install.html
 https://github.com/mr-moai-2016/znk_project/releases/latest
 
 [1]: https://github.com/mr-moai-2016/znk_project/blob/master/README_en.md
-[2]: https://github.com/mr-moai-2016/znk_project/blob/master/src/ReleaseNote.md
-[3]: https://github.com/mr-moai-2016/znk_project/blob/master/src/libZnk/README.md
