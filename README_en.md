@@ -24,10 +24,10 @@ Japanese Release Note is [here][1]
 These applications and librarys source codes are written and developed for VC(Ver6.0-Ver14.0),
 MinGW, gcc(on linux), android(ndk) and so on.  
 
-Support site:  
+Support site: 
 https://mr-moai-2016.github.io
 
-Github repository:
+Github repository: 
 https://github.com/mr-moai-2016/znk_project
 
 

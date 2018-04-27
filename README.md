@@ -8,7 +8,7 @@ This is Japanese overview. English version is [here][1].
 
 znk_project ‚Í„‚Ç‚à‘S“ú–{ƒlƒbƒgƒ[ƒNŒ¤‹†Š(’ÊÌZNK)‚É‚æ‚éƒtƒŠ[‚©‚ÂƒI[ƒvƒ“ƒ\[ƒX‚ÈƒAƒvƒŠƒP[ƒVƒ‡ƒ“
 ‚¨‚æ‚Ñƒ‰ƒCƒuƒ‰ƒŠ‚ğŠJ”­/’ñ‹Ÿ‚·‚éƒŠƒ|ƒWƒgƒŠ‚Å‚·.
-‚±‚ÌƒŠƒ|ƒWƒgƒŠ‚ÅŠJ”­‚µ‚Ä‚¢‚é‚à‚Ì‚Ì‚²Ğ‰î‚âƒhƒLƒ…ƒƒ“ƒg—Ş‚ÍˆÈ‰º‚ÌƒTƒCƒg‚ªŒö®‚Æ‚È‚è‚Ü‚·.
+‚±‚ÌƒŠƒ|ƒWƒgƒŠ‚ÅŠJ”­‚µ‚Ä‚¢‚é‚à‚Ì‚Ì‚²Ğ‰î‚âƒhƒLƒ…ƒƒ“ƒg—Ş‚É‚Â‚¢‚Ä‚ÍˆÈ‰º‚ÌƒTƒCƒg‚ğ‚²——‰º‚³‚¢.
 
 https://mr-moai-2016.github.io
 
@@ -21,7 +21,8 @@ Moai Ver2.0‚¨‚æ‚ÑEasterƒVƒXƒeƒ€‚Ì“üè‚âƒCƒ“ƒXƒg[ƒ‹‚É‚Â‚¢‚Ä‚ÍAˆÈ‰º‚ğQÆ‚µ‚Ä‰º‚
 
 https://mr-moai-2016.github.io/moai2.0/install.html
 
-‚Ü‚½‘Sƒ\[ƒXƒR[ƒh‚ÍˆÈ‰º‚ÌƒŠƒ“ƒNæ‚ÌAssets‚É‚ ‚éSource code‚Ézipƒtƒ@ƒCƒ‹‚µ‚Ä‚Ü‚Æ‚ß‚ç‚ê‚Ä‚¢‚Ü‚·‚Ì‚Å
+‚Ü‚½ÅV”Å‚Ì‘Sƒ\[ƒXƒR[ƒh‚ÍˆÈ‰º‚ÌƒŠƒ“ƒNæ‚Ézipƒtƒ@ƒCƒ‹‚Æ‚µ‚Ä‚Ü‚Æ‚ß‚ç‚ê‚Ä‚ ‚è‚Ü‚·.
+(Assets‚É‚ ‚éSource code‚Æ‚¢‚¤•”•ª‚Å‚·).
 ‚²Šó–]‚Ì•û‚Í‚»‚±‚©‚ç‚Ç‚¤‚¼.
 
 https://github.com/mr-moai-2016/znk_project/releases/latest
