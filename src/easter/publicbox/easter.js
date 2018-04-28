@@ -147,7 +147,7 @@ function reszk(){
 	}
 }
 
-var easter_autolink_target_list = document.getElementsByClassName("easter_autolink_target");
+var easter_autolink_target_list = document.getElementsByClassName("MstyAutoLinkTarget");
 for( var i=0; i<easter_autolink_target_list.length; ++i ){
 	easter_autolink_target_list[ i ].innerHTML = "http://" + location.host + easter_autolink_target_list[ i ].innerHTML;
 }
