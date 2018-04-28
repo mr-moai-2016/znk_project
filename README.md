@@ -27,4 +27,14 @@ https://mr-moai-2016.github.io/moai2.0/install.html
 
 https://github.com/mr-moai-2016/znk_project/releases/latest
 
+## Moai Ver2.0 修正パッチ(2018/04/28)
+-----------------------------------
+
+* Easter(MoaiCGIアプリケーション)
+  赤福と一緒に使っている場合、極一部の環境でオートリンク機能がうまく機能しないケースがあることがわかりました.
+  これを修正しています.
+  以下より修正パッチを入手できます.
+
+  https://github.com/mr-moai-2016/znk_project/releases/tag/v2.0.1  
+
 [1]: https://github.com/mr-moai-2016/znk_project/blob/master/README_en.md
