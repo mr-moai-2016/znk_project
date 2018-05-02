@@ -138,18 +138,6 @@ printInputUI_SelectBox( ZnkStr html,
 	++st_input_ui_idx;
 }
 
-static void
-makeHeader( ZnkStr html, const char* title )
-{
-	ZnkStr_add(  html, "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n" );
-	ZnkStr_add(  html, "<html><head>\n" );
-	ZnkStr_add(  html, "\t<META http-equiv=\"Content-type\"        content=\"text/html; charset=Shift_JIS\">\n" );
-	ZnkStr_add(  html, "\t<META http-equiv=\"Content-Script-Type\" content=\"text/javascript\">\n" );
-	ZnkStr_add(  html, "\t<META http-equiv=\"Content-Style-Type\"  content=\"text/css\">\n" );
-	ZnkStr_add(  html, "\t<link href=\"/msty.css\" rel=\"stylesheet\" type=\"text/css\" />\n" );
-	ZnkStr_addf( html, "\t<title>%s</title>\n", title );
-	ZnkStr_add(  html, "</head>\n" );
-}
 #if 0
 static void
 makeStyleForXhrDMZ( ZnkStr html )
@@ -190,7 +178,7 @@ printConfig( ZnkSocket sock, ZnkStrAry result_msgs, uint32_t peer_ipaddr )
 	const char* profile_dir           = MoaiServerInfo_profile_dir();
 	const char* moai_authentic_key    = MoaiServerInfo_authenticKey();
 
-	makeHeader( html, "Moai Configuration" );
+	MoaiCGIManager_makeHeader( html, "Moai Configuration" );
 	ZnkStr_add( html, "<body>\n" );
 	ZnkStr_add( html, "<b><img src=\"moai.png\"> Moaiエンジン設定</b><br>\n" );
 	ZnkStr_add( html, "<a class=MstyNowSelectedLink href=/config          >Moai基本設定</a> &nbsp;\n" );
@@ -318,7 +306,7 @@ printSysConfig( ZnkSocket sock, ZnkStrAry result_msgs, uint32_t peer_ipaddr )
 	const char* acceptable_host    = MoaiServerInfo_acceptable_host();
 	const char* moai_authentic_key = MoaiServerInfo_authenticKey();
 
-	makeHeader( html, "Moai System Configuration" );
+	MoaiCGIManager_makeHeader( html, "Moai System Configuration" );
 	ZnkStr_add( html, "<body>\n" );
 
 	ZnkStr_add( html, "<b><img src=\"moai.png\"> Moaiエンジン設定</b><br>\n" );
@@ -647,9 +635,16 @@ procCGI( const ZnkStr req_urp, ZnkSocket sock, RanoModule mod,
 
 		ZnkDir_getCurrentDir( curdir_save );
 
+		/***
+		 * curdir_newへのセットは、自立実行型は勿論、interpreter型の場合でも必要.
+		 * interpreter_fullpath script_file という形式で指定した場合、
+		 * interpreter側からしてみれば、通常それはscript_fileの存在するパスがカレントディレクトリであることを前提として
+		 * 内部でscript_fileをfopenすると考えられるからである.
+		 * (phpのようにカレントディレクトリをPATH_TRANSLATEDを参照して決定するケースはむしろ特殊な例である)
+		 */
+		Znk_snprintf( curdir_new, sizeof(curdir_new), "%s/%s", ZnkStr_cstr(curdir_save), ZnkStr_cstr(dir) );
 		if( ZnkS_empty(intp_path) ){
 			/* Acceess to File resource */
-			Znk_snprintf( curdir_new, sizeof(curdir_new), "%s/%s", ZnkStr_cstr(curdir_save), ZnkStr_cstr(dir) );
 			Znk_snprintf( cmd, sizeof(cmd), "./%s", ZnkStr_cstr(filename) );
 		} else {
 			/* Moai CGI */
@@ -702,17 +697,19 @@ procCGI( const ZnkStr req_urp, ZnkSocket sock, RanoModule mod,
 		ZnkDir_getCurrentDir( curdir_save );
 		Znk_snprintf( curdir_new, sizeof(curdir_new), "%s/%s", ZnkStr_cstr(curdir_save), ZnkStr_cstr(dir) );
 		ZnkDir_changeCurrentDir( curdir_new );
+		{
 
-		if( ZnkDir_getType( ZnkStr_cstr(filename) ) != ZnkDirType_e_File ){
-			MoaiIO_sendTxtf( sock, "text/html",
-					"<p><b><img src=\"/moai.png\"> Moai WebServer : 404 Not found [%s].</b></p>\n", urp );
-		} else {
-			if( !MoaiIO_sendResponseFile( sock, ZnkStr_cstr(filename), replaceVersion ) ){
+			if( ZnkDir_getType( ZnkStr_cstr(filename) ) != ZnkDirType_e_File ){
 				MoaiIO_sendTxtf( sock, "text/html",
-						"<p><b><img src=\"/moai.png\"> Moai WebServer : 503 Service Unavaliable [%s].</b></p>\n", urp );
+						"<p><b><img src=\"/moai.png\"> Moai WebServer : 404 Not found [%s].</b></p>\n", urp );
+			} else {
+				if( !MoaiIO_sendResponseFile( sock, ZnkStr_cstr(filename), replaceVersion ) ){
+					MoaiIO_sendTxtf( sock, "text/html",
+							"<p><b><img src=\"/moai.png\"> Moai WebServer : 503 Service Unavaliable [%s].</b></p>\n", urp );
+				}
 			}
-		}
 
+		}
 		ZnkDir_changeCurrentDir( ZnkStr_cstr(curdir_save) );
 	}
 
@@ -1008,14 +1005,14 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 					ret = procCGI( req_urp, sock, mod,
 							ctx->req_method_, info, ctx->body_info_.content_length_, is_xhr_dmz );
 				} else {
-					makeHeader( msg_str, "Moai XhrDMZ Report" );
+					MoaiCGIManager_makeHeader( msg_str, "Moai XhrDMZ Report" );
 					ZnkStr_add( msg_str, "<p><b>Moai XhrDMZ get(authentic cgi) : 401 Unauthorized.</b></p>\n" );
 					ZnkStr_add( msg_str, "<p>This request is missing Moai_AuthenticKey.</p>\n" );
 					ZnkStr_add( msg_str, "<p>Sorry, this request is aborted.</p>\n" );
 					ret = MoaiIO_sendTxtf( sock, "text/html", "%s", ZnkStr_cstr( msg_str ) ); /* XSS-safe */
 				}
 			} else {
-				makeHeader( msg_str, "Moai XhrDMZ Report" );
+				MoaiCGIManager_makeHeader( msg_str, "Moai XhrDMZ Report" );
 				ZnkStr_add( msg_str, "<p><b>Moai XhrDMZ get(xhrdmz_cgi_urp) : 401 Unauthorized.</b></p>\n" );
 				ZnkStr_add( msg_str, "<p>This cgi script is invalid filename or Moai config.myf cannot be registered interpreter of this type.</p>\n" );
 				ZnkStr_add( msg_str, "<p>Sorry, this request is aborted.</p>\n" );
@@ -1049,7 +1046,7 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 			}
 		} else {
 			/* 上記以外はすべてアクセス不可. */
-			makeHeader( msg_str, "Moai XhrDMZ Report" );
+			MoaiCGIManager_makeHeader( msg_str, "Moai XhrDMZ Report" );
 			ZnkStr_addf( msg_str, "<p><b>Moai XhrDMZ get(others) : 403 Forbidden.</b></p>\n" );
 			ZnkStr_addf( msg_str, "<p><b><u>Why?</u></b></p>\n" );
 			ZnkStr_addf( msg_str, "<div class=MstyIndent>\n" );
@@ -1093,7 +1090,7 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 			 * ( Moai_AuthenticKey を指定しても不可 ).
 			 */
 			const char* xhr_dmz = MoaiServerInfo_XhrDMZ();
-			makeHeader( msg_str, "Moai WebServer Report" );
+			MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report" );
 			ZnkStr_addf( msg_str, "<p><b>Moai WebServer get(xhrdmz_only) : 403 Forbidden.</b></p>\n" );
 			ZnkStr_addf( msg_str, "<p><b><u>Why?</u></b></p>\n" );
 			ZnkStr_addf( msg_str, "<div class=MstyIndent>\n" );
@@ -1111,7 +1108,7 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 					ret = procCGI( req_urp, sock, mod,
 							ctx->req_method_, info, ctx->body_info_.content_length_, is_xhr_dmz );
 				} else {
-					makeHeader( msg_str, "Moai WebServer Report" );
+					MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report" );
 					ZnkStr_addf( msg_str, "<p><b>Moai WebServer get(authentic cgi) : 401 Unauthorized.</b></p>\n" );
 					ZnkStr_addf( msg_str, "<p><b><u>What this?</u></b></p>\n" );
 					ZnkStr_addf( msg_str, "<div class=MstyIndent>\n" );
@@ -1148,7 +1145,7 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 					}
 				} else {
 					/* Moai_AuthenticKey を付加したRetry accessが必要 */
-					makeHeader( msg_str, "Moai WebServer Report" );
+					MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report" );
 					ZnkStr_addf( msg_str, "<p><b>Moai WebServer get(authentic resource) : 401 Unauthorized.</b></p>\n" );
 					ZnkStr_addf( msg_str, "<p><b><u>What this?</u></b></p>\n" );
 					ZnkStr_addf( msg_str, "<div class=MstyIndent>\n" );
@@ -1175,7 +1172,7 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 								ZnkStr_cstr(fsys_path) ); /* XSS-safe */
 					}
 				} else {
-					makeHeader( msg_str, "Moai WebServer Report" );
+					MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report" );
 					ZnkStr_addf( msg_str, "<p><b>Moai WebServer get(protected) : 401 Unauthorized.</b></p>\n" );
 					ZnkStr_addf( msg_str, "<p><b><u>What this?</u></b></p>\n" );
 					ZnkStr_addf( msg_str, "<div class=MstyIndent>\n" );
@@ -1306,14 +1303,14 @@ do_post( ZnkSocket sock, ZnkStr req_urp,
 					ret = procCGI( req_urp, sock, mod,
 							ctx->req_method_, info, ctx->body_info_.content_length_, is_xhr_dmz );
 				} else {
-					makeHeader( msg_str, "Moai XhrDMZ Report" );
+					MoaiCGIManager_makeHeader( msg_str, "Moai XhrDMZ Report" );
 					ZnkStr_add( msg_str, "<p><b>Moai XhrDMZ post(authentic cgi) : 401 Unauthorized.</b></p>\n" );
 					ZnkStr_add( msg_str, "<p>This post is missing Moai_AuthenticKey.</p>\n" );
 					ZnkStr_add( msg_str, "<p>Sorry, this post is aborted.</p>\n" );
 					ret = MoaiIO_sendTxtf( sock, "text/html", "%s", ZnkStr_cstr( msg_str ) ); /* XSS-safe */
 				}
 			} else {
-				makeHeader( msg_str, "Moai XhrDMZ Report" );
+				MoaiCGIManager_makeHeader( msg_str, "Moai XhrDMZ Report" );
 				ZnkStr_add( msg_str, "<p><b>Moai XhrDMZ post(xhrdmz_cgi_urp) : 401 Unauthorized.</b></p>\n" );
 				ZnkStr_add( msg_str, "<p>This cgi script is invalid filename or Moai config.myf cannot be registered interpreter of this type.</p>\n" );
 				ZnkStr_add( msg_str, "<p>Sorry, this post is aborted.</p>\n" );
@@ -1371,7 +1368,7 @@ do_post( ZnkSocket sock, ZnkStr req_urp,
 		}
 
 		if( show_forbidden ){
-			makeHeader( msg_str, "Moai WebServer Report" );
+			MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report" );
 			ZnkStr_add( msg_str, "<p><b><img src=\"/moai.png\"> Moai WebServer : 403 Forbidden.</b></p>\n" );
 			ZnkStr_add( msg_str, "<p><b><u>Why?</u></b></p>\n" );
 			ZnkStr_add( msg_str, "<div class=MstyIndent>\n" );
@@ -1417,7 +1414,7 @@ do_post( ZnkSocket sock, ZnkStr req_urp,
 					}
 					ZnkStr_delete( mode );
 				} else {
-					makeHeader( msg_str, "Moai WebServer Report" );
+					MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report" );
 					ZnkStr_add( msg_str, "<p><b>Moai WebServer post(config) : 401 Unauthorized.</b></p>\n" );
 					ZnkStr_add( msg_str, "<p>This post is missing Moai_AuthenticKey.</p>\n" );
 					ZnkStr_add( msg_str, "<p>Sorry, this post is aborted.</p>\n" );
@@ -1431,7 +1428,7 @@ do_post( ZnkSocket sock, ZnkStr req_urp,
 						ret = procCGI( req_urp, sock, mod,
 								ctx->req_method_, info, ctx->body_info_.content_length_, is_xhr_dmz );
 					} else {
-						makeHeader( msg_str, "Moai WebServer Report" );
+						MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report" );
 						ZnkStr_add( msg_str, "<p><b>Moai WebServer post(authentic cgi) : 401 Unauthorized.</b></p>\n" );
 						ZnkStr_add( msg_str, "<p>This post is missing Moai_AuthenticKey.</p>\n" );
 						ZnkStr_add( msg_str, "<p>Sorry, this post is aborted.</p>\n" );
@@ -1441,7 +1438,7 @@ do_post( ZnkSocket sock, ZnkStr req_urp,
 						ret = MoaiIO_sendTxtf( sock, "text/html", "%s", ZnkStr_cstr( msg_str ) ); /* XSS-safe */
 					}
 				} else {
-					makeHeader( msg_str, "Moai WebServer Report" );
+					MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report" );
 					ZnkStr_add( msg_str, "<p><b>Moai WebServer post : 401 Unauthorized.</b></p>\n" );
 					ZnkStr_add( msg_str, "<p>This cgi script is invalid filename or Moai config.myf cannot be registered interpreter of this type.</p>\n" );
 					ZnkStr_add( msg_str, "<div class=MstyComment>\n" );
@@ -1452,7 +1449,7 @@ do_post( ZnkSocket sock, ZnkStr req_urp,
 
 			} else {
 				/* Moai Msg Responsing */
-				makeHeader( msg_str, "Moai WebServer Report" );
+				MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report" );
 				ZnkStr_add( msg_str, "<p><b><img src=\"/moai.png\"> Moai WebServer : 403 Forbidden.</b></p>\n" );
 				ZnkStr_add( msg_str, "<p>The destination of this post is invalid.</p>\n" );
 				ZnkStr_add( msg_str, "<div class=MstyComment>\n" );

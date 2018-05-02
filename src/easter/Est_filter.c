@@ -93,8 +93,15 @@ setBaseHRef( ZnkStr base_href, const char* val, const char* hostname )
 	} else {
 		/***
 		 * <base href= の指定が /で始まらない場合は何も加工せずそのままセット.
+		 * (ただしhttp:// と https:// から始まる場合はそれは除去.)
 		 */
-		ZnkStr_set( base_href, val );
+		if( ZnkS_isBegin( val, "http://" ) ){
+			ZnkStr_set( base_href, val+7 );
+		} else if( ZnkS_isBegin( val, "https://" ) ){
+			ZnkStr_set( base_href, val+8 );
+		} else {
+			ZnkStr_set( base_href, val );
+		}
 	}
 }
 

@@ -18,6 +18,9 @@ MoaiCGI_runPost( const char* cmd, const char* curdir_new, ZnkSocket sock, RanoMo
 		const size_t hdr_size, ZnkStrAry hdr1st, ZnkVarpAry hdr_vars,
 		size_t content_length, ZnkBfr stream, ZnkStr query_str, bool is_xhr_dmz );
 
+void
+MoaiCGIManager_makeHeader( ZnkStr html, const char* title );
+
 bool
 MoaiCGIManager_load( void );
 bool

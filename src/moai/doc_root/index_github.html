@@ -17,7 +17,7 @@
 <div class=MstyComment>
 <u><b>記事担当者</b></u> : Mr.Moai<br> 
 <br>
-<u><b>最終更新日</b></u> : 2018/04/28<br>
+<u><b>最終更新日</b></u> : 2018/05/02<br>
 <br>
 </div>
 <br>
@@ -56,18 +56,106 @@ What's new?
 <br>
 <div class=MstyIndent>
 	<ul>
-		<li><b>2018/04/28 Moai Ver2.0(修正パッチ).</b><br>
+		<li><b>2018/05/02 Moai Ver2.0.2 リリース.</b><br>
+		<br>
+		Moai エンジン本体<br>
+		<br>
+		Moai CGI に(自立実行形式ではない)インタープリタ型のCGIスクリプトを実行させた場合、<br>
+		カレントディレクトリのセッティングが行われていなかったため、多くのケースでこれが起動できないことがわかりました.<br>
+		(例えばphpスクリプトではこの問題が発生せず、rubyやpythonスクリプトなどではこの問題が発生します.)<br>
+		今回これを修正しています.<br>
+		<br>
+		<div class=MstyComment>
+			<b><u>Note.</u></b><br>
+			<br>
+			この問題はほとんどの通常のユーザには関係ありませんが、一部のインタープリタ型のスクリプト言語を用いて<br>
+			Moai CGIを起動ならびに開発しようと試みる方にとっては、致命的な問題となります.<br>
+			このような方で既にVer2.0(最新のVer2.0.2より前のもの)をインストールされた方には申し訳ありませんが、<br>
+			このVer2.0.2以上へバージョンアップしていただくようお願いします.<br>
+		</div><br>
+		最新バージョンは<a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project/releases/latest target=_blank>こちら</a>より入手できますが、
+		初めての方は<a class=MstyElemLink href=/moai2.0/install.html>インストールガイド</a>をまずご参照ください.<br>
+		既にMoai Ver2.0をインストールされている方は、<a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project/releases/tag/v2.0.2>修正パッチ</a> をそれに適用することにより、<br>
+		多少手早く最新のVer2.0.2へバージョンアップできます.<br>
+		(勿論、修正パッチを使わず、最新バージョンを改めて新規インストールされるならそれはそれで全く構いません).<br>
+		このパッチはこれまでの累積的な修正も全て含みます.<br>
+		<br>
+		<div class=MstyComment>
+			<b><u>修正パッチの入手と適用法</u></b><br>
+			<br>
+			修正パッチのアーカイブ名は moai-v2.0-patch-v2.0.* となっています.<br>
+			これにはすべてのプラットフォームのパッチが含まれていますので、ダウンロードはこれ一つで構いません.<br>
+			* の部分はなるべく新しいものを選択します.<br>
+			<br>
+			パッチ適用のためのスクリプトが用意されていますので、通常はそれを実行してください.<br>
+			以下の手順となります.<br>
+			<br>
+			<ol>
+				<li>まずMoaiが起動中の場合は、<b>必ず起動中のMoaiを一旦終了させておいてください</b>.<br>
+				そうしないと一部の実行形式のファイルにおいて「共有違反です」あるいは「ビージー(busy)」というメッセージが出て<br>
+				パッチの適用に失敗してしまいます.<br>
+				</li>
+				<br>
+				<li>既にインストールされた Moai Ver2.0 のディレクトリ配下に<b>tmp</b>というディレクトリがあると思います.<br>
+				(もしもこれがない場合は一度moaiを起動して<b>すぐに終了して</b>ください. これでtmpが作成されます).<br>
+				ダウンロードしたzipファイルを、このMoaiのtmpディレクトリに置いて下さい.<br>
+				そこでこの zip ファイルを展開します.<br>
+				</li>
+				<br>
+				<li>zipを展開するとmoai-v2.0-patch-v2.0.* というディレクトリが出来上がると思います.<br>
+				そのディレクトリ直下に apply_this_patch.bat または apply_this_patch.sh があることを確認してください.<br>
+				これがパッチ適用のためのスクリプトとなります.<br>
+				</li>
+				<br>
+				<li>Windowsの場合、「apply_this_patch.bat」をクリックして実行します.<br>
+				LinuxやCygwin、Androidの場合、同様に「apply_this_patch.sh」を実行します.<br>
+				即ちターミナルを開き、このファイルのあるディレクトリまで移動して「sh ./apply_this_patch.sh」を実行します.<br>
+				最後に「OK」と出ればパッチの適用は成功です.<br>
+				</li>
+			</ol>
+			<br>
+			万一、このスクリプトがうまく機能しない場合は<a class=MstyElemLink href=/moai2.0/install.html#patch>こちら</a>に記述されている方法より手動で適用することもできます.<br>
+			<br>
+			この修正パッチは既にインストールされた Moai Ver2.0 からであれば、基本的にはどのバージョンからも適用できます.<br>
+			(Ver1.1.8 以前のMoaiには適用できません).<br>
+		</div><br>
+		これまでの全修正履歴に関しては、<a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project/tree/master/src/ReleaseNote.md target=_blank>リリースノート</a>に纏めてあります.<br>
+		</li>
+		<br>
+		<li><b>2018/04/28 Moai Ver2.0 修正パッチ.</b><br>
 		<br>
 		Easter(MoaiCGIアプリケーション)<br>
 		赤福と一緒に使っている場合、極一部の環境でオートリンク機能がうまく機能しないケースがあることがわかりました.<br>
 		これを修正しています.<br>
-		<a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project/releases/tag/v2.0.1>こちら</a>より修正パッチを入手できます.<br>
+		<br>
+		この修正は最新版のリリースにおいては既に適用済みです.<br>
+		また最新版でない Ver2.0 をご利用の方は最新版の修正パッチを適用することでこの修正も反映されます.<br>
 		</li>
 		<br>
 		<li><b>2018/04/27 Moai Ver2.0 リリース.</b><br>
 		<br>
 		新バージョンと旧バージョンの比較等については<a class=MstyElemLink href="/moai2.0/announcement.html">アナウンスメント</a>を参照してください.<br>
 		また技術的な修正点に関しては<a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project/tree/master/src/ReleaseNote.md target=_blank>リリースノート</a>にまとめてあります.<br>
+		<br>
+		<div class=MstyComment>
+		<b><u>バージョンアップについてのご注意</u></b><br>
+		<br>
+		Moai Ver2.0は基本的に<b>旧バージョン1.1.8とは全く互換性がない別のアプリケーション</b>とお考え下さい.<br>
+		例えば旧バージョン1.1.8のディレクトリにそのままVer2.0のファイル群を上書きコピーなどして<br>
+		バージョンアップすることは、おそらく問題が発生するためお勧めできません.<br>
+		<br>
+		一方、既に上で述べたこととも重複しますが、Moai Ver2.0より修正パッチというものが提供されます.<br>
+		これは修正があったファイルのみを纏めた必要最小限のファイル群です.<br>
+		既にインストールされた Moai Ver2.0 からであれば、基本的にはどのバージョンからもこの修正パッチを適用でき、<br>
+		インストールされたMoaiを最新の状態に手早くアップグレードできます.<br>
+		(この修正パッチは Ver1.1.8 以前のMoaiには適用できません).<br>
+		<br>
+		将来これが不可能となるほどの大きな変更点が発生した場合は、<br>
+		そのとき改めて、Ver2.1 などにバージョン番号を大きく変更すると思います.<br>
+		<br>
+		いずれにせよ古いバージョンは完全破棄して最新バージョンを新規インストールするのが全く気にならないという方ならば、<br>
+		この種の心配は無用ですし、それが一番確実といえば確実です.<br>
+		</div><br>
 		</li>
 		<br>
 		<li><b>2018/03/28 サイト内レイアウト変更.</b><br>

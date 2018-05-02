@@ -6,6 +6,7 @@
 #include <Moai_server_info.h>
 #include <Moai_connection.h>
 
+#include <Rano_cgi_util.h>
 #include <Rano_log.h>
 
 #include <Znk_envvar.h>
@@ -14,6 +15,7 @@
 #include <Znk_str.h>
 #include <Znk_str_ex.h>
 #include <Znk_htp_hdrs.h>
+#include <Znk_htp_util.h>
 #include <Znk_mem_find.h>
 #include <Znk_net_ip.h>
 #include <Znk_dir.h>
@@ -32,6 +34,20 @@ formatTimeString( char* buf, size_t buf_size, time_t clck )
 	//strftime( buf, buf_size, "%a, %d %b %Y %T GMT", timePtr );
 	strftime( buf, buf_size, "%a, %d %b %Y %H:%M:%S GMT", timePtr );
 }
+
+static void
+send500Error( ZnkSocket sock, ZnkStr emsg )
+{
+	ZnkStr msg_str = ZnkStr_new( "" );
+	ZnkHtpURL_negateHtmlTagEffection( emsg ); /* for XSS */
+	RanoCGIUtil_replaceNLtoHtmlBR( emsg );
+	MoaiCGIManager_makeHeader( msg_str, "Moai CGI Error" );
+	ZnkStr_add( msg_str, "<p><b>Moai WebServer : 500 Internal Server Error.</b></p>\n" );
+	ZnkStr_addf( msg_str, "<div class=MstyComment>%s</div>\n", ZnkStr_cstr(emsg) );
+	MoaiIO_sendTxtf( sock, "text/html", "%s", ZnkStr_cstr( msg_str ) ); /* XSS-safe */
+	ZnkStr_delete( msg_str );
+}
+
 static int
 sendHtpHdrOfCGI_withContentLength( ZnkStr hdr_str, ZnkSocket sock, size_t content_length )
 {
@@ -570,6 +586,29 @@ printError( char* pszAPI )
 		LocalFree(lpvMessageBuffer);
 	}
 }
+static void
+printErrorEx( char* pszAPI, ZnkStr emsg )
+{
+	const int error_code = GetLastError();
+	if( error_code != 0 ){
+		LPVOID lpvMessageBuffer;
+		
+		FormatMessage(
+				FORMAT_MESSAGE_ALLOCATE_BUFFER|FORMAT_MESSAGE_FROM_SYSTEM,
+				NULL, error_code,
+				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+				(LPTSTR)&lpvMessageBuffer, 0, NULL);
+		
+		if( emsg ){
+			ZnkStr_addf( emsg, "MoaiCGI : Error: %s : error_code=[%d] message=[%s].\n",
+					pszAPI, error_code, (char *)lpvMessageBuffer );
+		}
+		RanoLog_printf( "MoaiCGI : Error: %s : error_code=[%d] message=[%s].\n",
+				pszAPI, error_code, (char *)lpvMessageBuffer );
+		
+		LocalFree(lpvMessageBuffer);
+	}
+}
 
 static BOOL
 closeHandle( HANDLE handle ){
@@ -797,7 +836,8 @@ waitForCGIEndThread( void* arg )
  * Sets up STARTUPINFO structure, and launches redirected child.
  */
 static HANDLE
-PrepAndLaunchRedirectedChild( const char* cmd, const char* curdir_new, HANDLE hChildStdOut, HANDLE hChildStdIn, HANDLE hChildStdErr )
+PrepAndLaunchRedirectedChild( const char* cmd, const char* curdir_new, HANDLE hChildStdOut, HANDLE hChildStdIn, HANDLE hChildStdErr,
+		ZnkStr emsg )
 {
 	HANDLE hChildProcess = NULL;
 	PROCESS_INFORMATION pi;
@@ -823,24 +863,31 @@ PrepAndLaunchRedirectedChild( const char* cmd, const char* curdir_new, HANDLE hC
 	 * Note that dwFlags must include STARTF_USESHOWWINDOW if you want to use the wShowWindow flags.
 	 ***/
 
-	/***
-	 * CreateProcessの第5引数にTRUEを指定すれば、ハンドルは作成したプロセスに継承される.
-	 * 第6引数に CREATE_NO_WINDOW を指定すると、作成したプロセスでコンソールが示されなくなる.
-	 *
-	 * Launch the process that you want to redirect (in this case, Child.exe).
-	 * Make sure Child.exe is in the same directory as redirect.c launch redirect
-	 * from a command line to prevent location confusion.
-	 */
+	RanoLog_printf( "MoaiCGI : Report : curdir_new=[%s]\n", curdir_new ? curdir_new : "NULL" );
 	ZnkDir_getCurrentDir( curdir_save );
 	ZnkDir_changeCurrentDir( curdir_new );
-	result = CreateProcess( NULL, (char*)cmd,
-			//NULL, NULL, TRUE, CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi );
-			NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi );
-			//NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, curdir_new, &si, &pi );
+	{
+
+		/***
+		 * CreateProcessの第5引数にTRUEを指定すれば、ハンドルは作成したプロセスに継承される.
+		 * 第6引数に CREATE_NO_WINDOW を指定すると、作成したプロセスでコンソールが示されなくなる.
+		 *
+		 * Launch the process that you want to redirect (in this case, Child.exe).
+		 * Make sure Child.exe is in the same directory as redirect.c launch redirect
+		 * from a command line to prevent location confusion.
+		 */
+		result = CreateProcess( NULL, (char*)cmd,
+				//NULL, NULL, TRUE, CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi );
+				NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi );
+				//NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, curdir_new, &si, &pi );
+
+	}
 	ZnkDir_changeCurrentDir( ZnkStr_cstr(curdir_save) );
-	RanoLog_printf( "MoaiCGI : Report : curdir_new=[%s]\n", curdir_new ? curdir_new : "NULL" );
+
 	if( !result ){
-	   printError( "CreateProcess" );
+		printErrorEx( "CreateProcess", emsg );
+		ZnkStr_addf( emsg, " cmd=[%s]\n", cmd );
+		ZnkStr_addf( emsg, " curdir_new=[%s]\n", curdir_new ? curdir_new : "NULL" );
 	}
 
 	/***
@@ -874,6 +921,7 @@ runCGIProcess_forWin32( const char* cmd, const char* curdir_new, ZnkSocket sock,
 	HANDLE hErrorWrite    = NULL;
 	HANDLE hChildProcess  = NULL;
 	SECURITY_ATTRIBUTES sa = { 0 };
+	ZnkStr emsg = ZnkStr_new( "" );
 
 	/***
 	 * Set up the security attributes struct.
@@ -972,7 +1020,10 @@ runCGIProcess_forWin32( const char* cmd, const char* curdir_new, ZnkSocket sock,
 		//printError("closeHandle:hInputWriteTmp");
 	}
 
-	hChildProcess = PrepAndLaunchRedirectedChild( cmd, curdir_new, hOutputWrite, hInputRead, hErrorWrite );
+	hChildProcess = PrepAndLaunchRedirectedChild( cmd, curdir_new, hOutputWrite, hInputRead, hErrorWrite, emsg );
+	if( hChildProcess == NULL ){
+		send500Error( sock, emsg );
+	}
 
 	/***
 	 * Close pipe handles (do not continue to modify the parent).
@@ -1052,6 +1103,7 @@ runCGIProcess_forWin32( const char* cmd, const char* curdir_new, ZnkSocket sock,
 		result = waitForCGIEnd_forWin32( hChildProcess, hOutputRead, hInputWrite, sock );
 	}
 
+	ZnkStr_delete( emsg );
 	return result;
 }
 
@@ -1305,6 +1357,7 @@ popen2( const char* cmd_file, const char** cmd_argv, const char* curdir_new, int
 		dup2( pipe_c2p[W], 1 ); /* Child2Parentで子側からは書きとなる、つまりこのパイプの入口. それを標準出力へ上書きコピー. */
 		close( pipe_p2c[R] );
 		close( pipe_c2p[W] );
+
 		ZnkDir_changeCurrentDir( curdir_new );
 		if( execvp( cmd_file, Znk_force_ptr_cast( char* const*, cmd_argv ) ) < 0 ){
 			perror( "popen2:execvp" );
@@ -1312,6 +1365,8 @@ popen2( const char* cmd_file, const char** cmd_argv, const char* curdir_new, int
 			close( pipe_c2p[W] );
 			exit( EXIT_FAILURE );
 		}
+		/* forkした子プロセスはこのまま終了するため、
+		 * ZnkDir_changeCurrentDirしたものを元に戻す必要はない. */
 	}
 	/* I'm Parent */
 	close( pipe_p2c[R] );

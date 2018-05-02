@@ -27,7 +27,7 @@
 <div class=MstyComment>
 <u><b>記事担当者</b></u> : Mr.Moai<br> 
 <br>
-<u><b>最終更新日</b></u> : 2018/03/25<br>
+<u><b>最終更新日</b></u> : 2018/05/02<br>
 <br>
 </div>
 <br>
@@ -63,7 +63,7 @@
 	<br>
 	<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a><br>
 	<br>
-	Assetsにある moai-v2.0-win32.zip もしくは moai-v2.0-win64.zip がWindows版となります.<br>
+	Assets にある moai-v2.0.2-win32.zip もしくは moai-v2.0.2-win64.zip がWindows版となります.<br>
 	32bit Windowsをお使いの方は前者を、64bit Windowsをお使いの方は後者をダウンロードしてください.<br>
 	よくわからない方は前者をダウンロードしてください.<br>
 	<br>
@@ -176,7 +176,7 @@
 	<br>
 	<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a><br>
 	<br>
-	Assetsにある moai-v2.0-linux32.zip もしくは moai-v2.0-linux64.zip がLinux版となります.<br>
+	Assetsにある moai-v2.0.2-linux32.zip もしくは moai-v2.0.2-linux64.zip がLinux版となります.<br>
 	32bit Linuxをお使いの方は前者を、64bit Linuxをお使いの方は後者をダウンロードしてください.<br>
 	どちらのLinuxをお使いであるかわからない場合は unameコマンドなどで確認できるかと思います.<br>
 	以下では64bit Linuxと仮定して説明します.
@@ -245,7 +245,7 @@
 	<br>
 	<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a><br>
 	<br>
-	Assetsにある moai-v2.0-cygwin32.zip がCygwin版となります.<br>
+	Assetsにある moai-v2.0.2-cygwin32.zip がCygwin版となります.<br>
 	64bit Windowsをお使いの方でもこれで動作するでしょう.<br>
 	</li>
 	<div class=MstyComment>
@@ -328,11 +328,11 @@
 	<br>
 	<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a><br>
 	<br>
-	Assetsにある moai-v2.0-android-armeabi.zip がAndroid版となります.<br>
+	Assetsにある moai-v2.0.2-android-armeabi.zip がAndroid版となります.<br>
 	これをダウンロードしてください.<br>
 	通常のARMベースCPUであれば動作すると思われます.<br>
 	<div class=MstyComment>
-	それ以外にも moai-v2.0-android-armeabi_v7a.zip や moai-v2.0-android-x86.zip などがあります.<br>
+	それ以外にも moai-v2.0.2-android-armeabi_v7a.zip や moai-v2.0.2-android-x86.zip などがあります.<br>
 	前者は新しいCPUに最適化されたもので場合によっては高速に動作しますが、<br>
 	古い端末(ARMv5、v6 端末など)と互換性がありません.<br>
 	また後者は、PC(x86)上のAndroidエミュレータなどで動作させるためのバイナリとなります.<br>
@@ -368,7 +368,7 @@
 	以下のように入力しEnterを押します.
 	</li><br>
 	<div class=MstyComment>
-    cp /storage/sdcard0/Download/moai-v2.0-android-armeabi.zip ~/
+    cp /storage/sdcard0/Download/moai-v2.0.2-android-armeabi.zip ~/
 	</div>
 	<br>
 	<li>5. zipファイルを展開します.<br>
@@ -376,7 +376,7 @@
 	(以降の説明でも同様に入力後にEnterを押してコマンドを実行してください).
 	</li><br>
 	<div class=MstyComment>
-    unzip moai-v2.0-android-armeabi.zip
+    unzip moai-v2.0.2-android-armeabi.zip
 	</div>
 	<br>
 	<li>6. 展開後のディレクトリの中へ移動します.<br>
@@ -465,6 +465,85 @@
 	</font><br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
 </ul><br>
+
+
+<a name=patch></a>
+<u><b>
+修正パッチの入手と適用方法について
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	修正パッチのアーカイブ名は moai-v2.0-patch-v2.0.* となっています.<br>
+	これにはすべてのプラットフォームのパッチが含まれていますので、ダウンロードはこれ一つで構いません.<br>
+	* の部分はなるべく新しいものを選択します.<br>
+	<br>
+	<b>パッチを付属スクリプトを実行して適用する方法</b><br>
+	<br>
+	<div class=MstyIndent>
+		パッチ適用のためのスクリプトが用意されていますので、通常はそれを実行してください.<br>
+		以下の手順となります.<br>
+		<ol>
+			<li>まずMoaiが起動中の場合は、<b>必ず起動中のMoaiを一旦終了させておいてください</b>.<br>
+			そうしないと一部の実行形式のファイルにおいて「共有違反です」あるいは「ビージー(busy)」というメッセージが出て<br>
+			パッチの適用に失敗してしまいます.<br>
+			</li>
+			<br>
+			<li>既にインストールされた Moai Ver2.0 のディレクトリ配下に<b>tmp</b>というディレクトリがあると思います.<br>
+			(もしもこれがない場合は一度moaiを起動して<b>すぐに終了して</b>ください. これでtmpが作成されます).<br>
+			ダウンロードしたzipファイルを、このMoaiのtmpディレクトリに置いて下さい.<br>
+			そこでこの zip ファイルを展開します.<br>
+			</li>
+			<br>
+			<li>zipを展開するとmoai-v2.0-patch-v2.0.* というディレクトリが出来上がると思います.<br>
+			そのディレクトリ直下に apply_this_patch.bat または apply_this_patch.sh があることを確認してください.<br>
+			これがパッチ適用のためのスクリプトとなります.<br>
+			</li>
+			<br>
+			<li>Windowsの場合、「apply_this_patch.bat」をクリックして実行します.<br>
+			LinuxやCygwin、Androidの場合、同様に「apply_this_patch.sh」を実行します.<br>
+			即ちターミナルを開き、このファイルのあるディレクトリまで移動して「sh ./apply_this_patch.sh」を実行します.<br>
+			最後に「OK」と出ればパッチの適用は成功です.<br>
+			</li>
+		</ol>
+	</div>
+	<br>
+	<b>パッチを手動で適用する方法</b><br>
+	<br>
+	<div class=MstyIndent>
+		万一、付属のスクリプトがうまく機能しない場合や、そんなものには頼らないといった硬派な方は<br>
+		以下の方法より手動で適用することもできます.<br>
+		<ol>
+			<li>まずMoaiが起動中の場合は、<b>必ず起動中のMoaiを一旦終了させておいてください</b>.<br>
+			そうしないと一部の実行形式のファイルにおいて「共有違反です」あるいは「ビージー(busy)」というメッセージが出て<br>
+			パッチの適用に失敗してしまいます.<br>
+			</li>
+			<br>
+			<li>ダウンロードしたzipファイルを、既にインストールされた Moai Ver2.0 のディレクトリと同列の階層に置いて頂くのが<br>
+			一番わかりやすいかと思います.<br>
+			例えば、Moai Ver2.0のディレクトリが C:\znk_project\moai-v2.0-win32 なら、<br>
+			この zip ファイルを C:\znk_project\moai-v2.0-patch-v2.0.*.zip に置きます.<br>
+			そこでこの zip ファイルを展開します.<br>
+			</li>
+			<br>
+			<li>zipを展開するとmoai-v2.0-patch-v2.0.* というディレクトリが出来上がると思います.<br>
+			Moai Ver2.0のディレクトリの名前は「moai-v2.0-platformを示す文字列」という形式になっていますが、<br>
+			このzipを展開したディレクトリの中にMoaiのディレクトリと同じの名前のディレクトリがあります.<br>
+			特に<b>platformを示す文字列</b>が同じものとなるように注意して選び、<br>
+			その中身を既にインストールされたMoai Ver2.0のディレクトリへそのまま上書きコピーしてください.<br>
+			</li>
+			<br>
+			<li>さらにzipを展開したディレクトリの中に「moai-v2.0-common」というディレクトリがあります.<br>
+			これも同様にその中身を既にインストールされたMoai Ver2.0のディレクトリへそのまま上書きコピーしてください.<br>
+			</li>
+		</ol>
+	</div><br>
+	この修正パッチは既にインストールされた Moai Ver2.0 からであれば、基本的にはどのバージョンからも適用できます.<br>
+	(Ver1.1.8 以前のMoaiには適用できません).<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
 
 <u><b>リンク</b></u>
 <ul>

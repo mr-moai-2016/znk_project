@@ -552,6 +552,7 @@ config_cgi.myfについて
 		それ以外のファイルはCGIスクリプトとはみなされません.<br>
 		左辺値が拡張子の文字列そのものとなっています.<br>
 		右辺値が空でない場合、その値はそのCGIスクリプトを実行するためのインタープリタのパスとみなされます.<br>
+		この時、インタープリタにコマンドラインオプション等がある場合はそれも含めて記述しておきます.<br>
 		右辺値が空である場合、その拡張子のCGIスクリプトはインタープリタなしで自立して実行可能であることを示します.<br>
 		<br>
 		{platform}の部分には windows, linux, android, cygwin の４つの識別子が付加され、<br>
@@ -563,6 +564,7 @@ config_cgi.myfについて
 			@@V interpreter_windows<br>
 			php = ['C:\my_interpreters\php\php-4.4.6-Win32\php.exe']<br>
 			rb  = ['C:\my_interpreters\ruby-1.8.4\bin\ruby.exe']<br>
+			go  = ['C:\my_interpreters\go\bin\go.exe run']<br>
 			cgi = ['']<br>
 			@@.<br>
 		</div>
@@ -572,6 +574,7 @@ config_cgi.myfについて
 			@@V interpreter_linux<br>
 			php = ['/usr/bin/php-cgi -q']<br>
 			rb  = ['']<br>
+			go  = ['/usr/local/bin/go run']<br>
 			cgi = ['']<br>
 			@@.<br>
 		</div>
@@ -581,6 +584,7 @@ config_cgi.myfについて
 			@@V interpreter_android<br>
 			php = ['/usr/bin/php-cgi -q']<br>
 			rb  = ['']<br>
+			go  = ['/usr/local/bin/go run']<br>
 			cgi = ['']<br>
 			@@.<br>
 		</div>
@@ -590,6 +594,7 @@ config_cgi.myfについて
 			@@V interpreter_cygwin<br>
 			php = ['/cygdrive/c/my_interpreters/php/php-4.4.6-Win32/php.exe']<br>
 			rb  = ['']<br>
+			go  = ['/usr/local/bin/go run']<br>
 			cgi = ['']<br>
 			@@.<br>
 		</div>

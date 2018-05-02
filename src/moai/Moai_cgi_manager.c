@@ -13,6 +13,19 @@
 
 static ZnkMyf st_config_cgi_myf = NULL;
 
+void
+MoaiCGIManager_makeHeader( ZnkStr html, const char* title )
+{
+	ZnkStr_add(  html, "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n" );
+	ZnkStr_add(  html, "<html><head>\n" );
+	ZnkStr_add(  html, "\t<META http-equiv=\"Content-type\"        content=\"text/html; charset=Shift_JIS\">\n" );
+	ZnkStr_add(  html, "\t<META http-equiv=\"Content-Script-Type\" content=\"text/javascript\">\n" );
+	ZnkStr_add(  html, "\t<META http-equiv=\"Content-Style-Type\"  content=\"text/css\">\n" );
+	ZnkStr_add(  html, "\t<link href=\"/msty.css\" rel=\"stylesheet\" type=\"text/css\" />\n" );
+	ZnkStr_addf( html, "\t<title>%s</title>\n", title );
+	ZnkStr_add(  html, "</head>\n" );
+}
+
 bool
 MoaiCGIManager_load( void )
 {

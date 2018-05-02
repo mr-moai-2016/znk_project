@@ -18,24 +18,28 @@
 @@V interpreter_windows
 php = ['C:\my_interpreters\php\php-4.4.6-Win32\php.exe']
 rb  = ['C:\my_interpreters\ruby-1.8.4\bin\ruby.exe']
+go  = ['C:\my_interpreters\go\bin\go.exe run']
 cgi = ['']
 @@.
 
 @@V interpreter_linux
 php = ['/usr/bin/php-cgi -q']
 rb  = ['']
+go  = ['/usr/local/bin/go run']
 cgi = ['']
 @@.
 
 @@V interpreter_cygwin
 php = ['/cygdrive/c/my_interpreters/php/php-4.4.6-Win32/php.exe']
 rb  = ['']
+go  = ['/usr/local/bin/go run']
 cgi = ['']
 @@.
 
 @@V interpreter_android
 php = ['/usr/bin/php-cgi -q']
 rb  = ['']
+go  = ['/usr/local/bin/go run']
 cgi = ['']
 @@.
 

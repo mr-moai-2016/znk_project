@@ -11,7 +11,7 @@ MkfInstall_compose( MkfInstall inst, const ZnkMyf conf_myf )
 	if( varp ){
 		inst->install_dir_ = ZnkStr_new( ZnkVar_cstr( varp ) );
 	} else {
-		inst->install_dir_ = ZnkStr_new( "out_put/test_install" );
+		inst->install_dir_ = ZnkStr_new( "out_dir/test_install" );
 	}
 
 	/* exec, dlib, slib, data */
