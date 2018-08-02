@@ -21,6 +21,12 @@ Moai Ver2.1 CipherAgent がリリースされました.
 
 https://mr-moai-2016.github.io/moai2.0/install.html
 
+また最新版の全ソースコードは以下のリンク先にzipファイルとしてまとめられてあります. 
+(AssetsにあるSource codeという部分です). 
+ご希望の方はそこからどうぞ. 
+
+https://github.com/mr-moai-2016/znk_project/releases/latest
+
 Version 2.0.2からの修正点は以下の通り.  
 
 Moai-Engine本体
@@ -74,18 +80,20 @@ Easter(MoaiCGIアプリケーション)
 ## Moai Ver2.0 (2018/04/27 リリース)
 -----------------------------------
 
-大変お待たせいたしました！ 
-Moai Ver2.0が2018/04/27についにリリースされました！ 
+このバージョンで追加された新機能については以下を参照してください.
 
-ダウンロードおよびインストールについては、以下を参照して下さい. 
+https://mr-moai-2016.github.io/announcement.html#WhatIsChanging_v2_0
 
-https://mr-moai-2016.github.io/moai2.0/install.html
+Moai Ver2.0は基本的に旧バージョン1.1.8とは全く互換性がない別のアプリケーションとお考え下さい.
 
-また最新版の全ソースコードは以下のリンク先にzipファイルとしてまとめられてあります. 
-(AssetsにあるSource codeという部分です). 
-ご希望の方はそこからどうぞ. 
+## Moai Ver1.1.8 (2016/10/07 リリース)
+-----------------------------------
 
-https://github.com/mr-moai-2016/znk_project/releases/latest
+これはVer1.1系の最終リリースとなります.
+Ver1.1系は既にサポートを終了しております.
+
+## Moai Ver1.0 (2016/05/21 リリース). 
+-----------------------------------
 
 
 [1]: https://github.com/mr-moai-2016/znk_project/blob/master/README_en.md
