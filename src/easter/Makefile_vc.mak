@@ -116,6 +116,10 @@ OBJS1=\
 
 SUB_LIBS=\
 
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
+
 PRODUCT_EXECS= \
 	__mkg_sentinel_target__ \
 	$(EXE_FILE0) \
@@ -140,10 +144,12 @@ $O:
 
 # Product files rule.
 $(EXE_FILE0): $(OBJS0) 
-	$(LINKER) /OUT:$(EXE_FILE0)  $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib 
+	@echo $(LINKER) /OUT:$(EXE_FILE0)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib 
+	@     $(LINKER) /OUT:$(EXE_FILE0)  $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib 
 
 $(EXE_FILE1): $(OBJS1) 
-	$(LINKER) /OUT:$(EXE_FILE1)  $(OBJS1) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib 
+	@echo $(LINKER) /OUT:$(EXE_FILE1)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib 
+	@     $(LINKER) /OUT:$(EXE_FILE1)  $(OBJS1) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib 
 
 
 # Suffix rule.
@@ -197,7 +203,7 @@ install: all install_exec install_data
 
 # Clean rule.
 clean:
-	del /Q $O\ 
+	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
 cache_task.obj: Est_search_manager.h Est_config.h Est_base.h Est_sqi.h Est_recentory.h Est_box.h
@@ -232,5 +238,4 @@ Est_tag_manager.obj: Est_tag_manager.h Est_config.h Est_ui.h Est_unid.h Est_hint
 Est_topic.obj: Est_topic.h Est_config.h Est_ui.h Est_ui_base.h Est_box.h Est_box_ui.h Est_base.h Est_assort.h Est_assort_ui.h Est_search_manager.h Est_recentory.h Est_finf.h Est_assort_list.h Est_hint_manager.h
 Est_ui.obj: Est_ui.h Est_ui_base.h Est_config.h Est_assort.h Est_base.h Est_box_ui.h
 Est_ui_base.obj: Est_ui_base.h Est_box_base.h
-Est_unid.obj:
 main.obj: Est_config.h Est_get.h Est_post.h Est_filter.h Est_link_manager.h Est_boxmap_viewer.h Est_search_manager.h Est_img_viewer.h Est_topic.h Est_tag_manager.h

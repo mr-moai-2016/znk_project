@@ -17,16 +17,23 @@ rlib: @{libZnk}  Znk  $(DL_VER)
 rlib: @{libRano} Rano $(DL_VER)
 @@.
 
+@@L runtime_additional
+rlib: @{libressl/tls} tls 17
+@@.
+
 @@V info_vc
 linking_libs_special = ['ws2_32']
+rlib_pfx_special = ['tls:lib']
 @@.
 
 @@V info_mingw
 linking_libs_special = ['ws2_32']
+rlib_pfx_special = ['tls:lib']
 @@.
 
 @@V info_msys
 linking_libs_special = ['ws2_32']
+rlib_pfx_special = ['tls:lib']
 @@.
 
 @@V info_linux
@@ -74,14 +81,15 @@ doc_root/*.jpg
 doc_root/*.gif
 doc_root/*.js
 doc_root/common/*.html
-doc_root/moai1.1/*.html
 doc_root/moai2.0/*.html
 doc_root/imgs/*.png
 doc_root/imgs/*.jpg
 doc_root/imgs/*.gif
 doc_root/public/moai.png
 moai_for_android.sh
+moai_for_linux.sh
 vtag
+cert.pem
 @@.
 
 @@L ignore_list

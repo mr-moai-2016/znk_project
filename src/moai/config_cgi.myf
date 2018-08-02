@@ -1,6 +1,8 @@
 @def_quote [' ']
 
 ##
+# interpreter_<platform_id> セクション
+#
 # Moaiは以下の指定で左の拡張子を持つファイルのみCGIスクリプトとみなす.
 # それ以外のファイルはCGIスクリプトとはみなされない.
 # また右辺値が空でない場合、その値はそのCGIスクリプトを実行するためのインタープリタのパスとみなされる.
@@ -44,6 +46,8 @@ cgi = ['']
 @@.
 
 ##
+# urp_alias_list セクション
+#
 # MoaiはURLの第1番目の / から第2番目の / までに続く部分の文字列を別の文字列へ置換することができる.
 # これをMoaiではURPAliasと呼ぶ.
 # これは長いURPを単に簡略化するだけのために導入された機能である.
@@ -67,6 +71,8 @@ easter = ['cgis/easter/easter.cgi']
 @@.
 
 ##
+# cgi_exec_deny_urp セクション
+#
 # Moaiは cgis/<一つ以上のディレクトリ>/CGIスクリプト というパターンが与えられた場合のみ
 # その実行が許可されている.
 # (その他のパターンでは(aliasを除いては)実行は一切許可されない)
@@ -99,9 +105,12 @@ easter = ['cgis/easter/easter.cgi']
 /cgis/custom_boy/tmp/*
 /cgis/proxy_finder/cachebox/*
 /cgis/proxy_finder/tmp/*
+/cgis/cgi_developers/publicbox/*
 @@.
 
 ##
+# xhrdmz_only_urp セクション
+#
 # Moaiは 下記で指定されたパターンについてはXhrDMZからのアクセスに限りファイル取得を認める.
 # (複数指定可能)
 # また逆に(XhrDMZではない)通常のMoai WebServerを介しては、これらを参照することは不可能であるものとする
@@ -121,6 +130,8 @@ easter = ['cgis/easter/easter.cgi']
 @@.
 
 ##
+# xhrdmz_cgi_urp セクション
+#
 # Moaiは 下記で指定されたパターンについてはXhrDMZからのCGI実行も許可する.
 # (複数指定可能)
 # また逆に言えば、これ以外のパターンについてはXhrDMZからのCGI実行は許可されない.
@@ -130,6 +141,8 @@ easter = ['cgis/easter/easter.cgi']
 @@.
 
 ##
+# public_urp セクション
+#
 # Moaiは下記で指定されたURPのパターンにマッチした場合、いかなる場合もそのURPの中身のファイル取得を認める.
 # (すなわち AuthenticHostやXhrDMZからのアクセスも可能であり、AuthenticKeyも必要としない).
 # また逆に言えば、これ以外のディレクトリ内のファイルは特別な指定がなされていない限り
@@ -145,6 +158,8 @@ easter = ['cgis/easter/easter.cgi']
 @@.
 
 ##
+# protected_urp セクション
+#
 # Moaiは下記で指定されたURPのパターンにマッチした場合、Moai_AuthenticKeyが正しく指定されている場合のみ
 # URPの中身のファイル取得を認める.
 # URPが意味するものがCGIスクリプトの場合は、Moai_AuthenticKeyが正しく指定されている場合のみ
@@ -158,6 +173,8 @@ easter = ['cgis/easter/easter.cgi']
 @@.
 
 ##
+# fsys_map_list セクション
+#
 # Moaiは 下記の右辺の文字列リストにおいて第1番目で指定されたURL上のパスへのアクセスについては
 # 第2番目で指定されたファイルシステム上の実ディレクトリに相当するようにする.
 # Moaiではこれを「第1番目が第2番目にマッピングされている」などと呼ぶ.

@@ -63,6 +63,7 @@ static size_t     st_preview_max_width  = 860;
 static size_t     st_preview_max_height = 820;
 static size_t     st_cache_days_ago   = 7;
 static size_t     st_dustbox_days_ago = 10;
+static char       st_explicit_referer[ 4096 ] = "";
 
 const char*
 EstConfig_getTmpDirPID( bool with_end_dsp )
@@ -130,6 +131,11 @@ size_t
 EstConfig_getDustboxDaysAgo( void )
 {
 	return st_dustbox_days_ago;
+}
+const char*
+EstConfig_getExplicitReferer( void )
+{
+	return st_explicit_referer;
 }
 
 ZnkStr

@@ -1,6 +1,3 @@
-/***
- * MoaiServer Ver2.0
- */
 #include "Moai_server.h"
 #include "Moai_post.h"
 #include "Moai_context.h"
@@ -39,6 +36,7 @@
 #include <Znk_net_ip.h>
 #include <Znk_dir.h>
 #include <Znk_envvar.h>
+#include <Znk_thread.h>
 
 #include <stdio.h>
 #include <assert.h>
@@ -47,7 +45,6 @@
 #include <stdlib.h>
 
 
-static const char* st_version_str = "2.0";
 static ZnkStrAry   st_access_allow_ips = NULL;
 static ZnkStrAry   st_access_deny_ips  = NULL;
 
@@ -1223,11 +1220,34 @@ MoaiServer_main( bool first_initiate, bool enable_parent_proxy )
 	ZnkMyf        hosts;
 	uint16_t      moai_port    = 8124;
 	uint16_t      xhr_dmz_port = 8125;
+	const char*   version_str = MoaiServerInfo_version( true );
+	bool          issue_new_authentic_key = true;
 
 	RanoLog_printf( "\n" );
-	RanoLog_printf( "Moai : MoaiServer_main Ver%s start.\n", st_version_str );
+	RanoLog_printf( "Moai : MoaiServer_main Ver%s start.\n", version_str );
 
-	{
+	if( ZnkDir_getType( "__authentic_key_reuse__" ) == ZnkDirType_e_File ){
+		/***
+		 * 既に存在する authentic_key.dat を読み込んでそれで初期化する.
+		 * Moaiを再起動した場合など.
+		 */
+		char moai_authentic_key[ 256 ] = "";
+		ZnkFile fp = Znk_fopen( "authentic_key.dat", "rb" );
+		if( fp ){
+			Znk_fgets( moai_authentic_key, sizeof(moai_authentic_key), fp );
+			Znk_fclose( fp );
+			ZnkS_chompNL( moai_authentic_key );
+			if( !ZnkS_empty( moai_authentic_key ) ){
+				MoaiServerInfo_set_authenticKey( moai_authentic_key );
+				issue_new_authentic_key = false;
+			}
+		}
+		ZnkDir_deleteFile_byForce( "__authentic_key_reuse__" );
+	}
+	if( issue_new_authentic_key ){
+		/***
+		 * 新規発行.
+		 */
 		const char* moai_authentic_key = MoaiServerInfo_authenticKey();
 		ZnkFile fp = Znk_fopen( "authentic_key.dat", "wb" );
 		if( fp ){
@@ -1262,23 +1282,9 @@ MoaiServer_main( bool first_initiate, bool enable_parent_proxy )
 
 	fnca_ras.arg_ = ctx;
 
-#if 0
-	/***
-	 * ここではkeep_openをtrueにする.
-	 * そうしないとCGI起動などでCurrentDirectoryが変わった場合に
-	 * 現状ではmoai_log.logファイルが余計に作られるので.
-	 */
-	{
-		bool keep_open  = true;
-		bool additional = false;
-		ZnkDir_mkdirPath( "./tmp", Znk_NPOS, '/', NULL );
-		RanoLog_open( "./tmp/moai_log.log", keep_open, additional );
-	}
-#endif
 	{
 		static const bool keep_open = true;
 		ZnkDir_mkdirPath( "./tmp", Znk_NPOS, '/', NULL );
-		//RanoCGIUtil_initLog( "./tmp/moai_log", "./tmp/moai_count.txt", 500, 10, keep_open );
 		RanoCGIUtil_initLog( "./tmp/moai_log", "./tmp/moai_count.txt", 500, 5, keep_open );
 	}
 
@@ -1525,6 +1531,11 @@ MoaiServer_main( bool first_initiate, bool enable_parent_proxy )
 		switch( ras_result ){
 		case MoaiRASResult_e_CriticalError:
 		case MoaiRASResult_e_RestartServer:
+			goto FUNC_END;
+		case MoaiRASResult_e_RestartProcess:
+			/* ブラウザ側が待機画面を受信するまで少し待つ.
+			 * (受信途中にsock等を、サーバであるこちら側からcloseしてしまってはまずい). */
+			//ZnkThread_sleep( 1000 );
 			goto FUNC_END;
 		default:
 			break;

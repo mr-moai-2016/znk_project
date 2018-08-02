@@ -1,0 +1,357 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<link href="/msty.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<a name=TopBar></a>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter アナウンスメント</b></p>
+
+<a class=MstyElemLink href="/">トップページ</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/announcement.html">アナウンスメント</a> &nbsp;
+<a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
+<br> <br>
+
+<div class=MstyComment>
+<u><b>記事担当者</b></u> : Mr.Moai<br>
+<br>
+<u><b>最終更新日</b></u> : 2018/07/25<br>
+<br>
+</div>
+<br>
+
+
+<a name=AtFirst></a>
+<u><b>
+はじめに
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	このアナウンスメントでは我々Moai開発チームより皆様へ、主に以下に関する情報をお知らせします.<br>
+	<ul>
+		<li>次期バージョンの開発状況に関する情報.</li>
+		<li>最新バージョンでの新機能に関する情報.</li>
+		<li>過去のバージョンでの主要な変更点.</li>
+		<li>その他重要な連絡事項等.</li>
+	</ul>
+	現在のMoaiの最新バージョンは2.1 です.<br>
+	(Moai Ver2.1は2018年8月1日にリリースされました).<br>
+	尚、Ver1.0系列(Ver1.1.8以前)の配布およびサポートは既に終了しております.<br>
+</div><br>
+<br>
+
+
+<a name=Index></a>
+<u><b>
+目次
+</b></u><br>
+<br>
+<ul>
+	<li><b><a class=MstyElemLink href=#NextDevelopment>Moai次期バージョンの開発状況</a></b></li>
+	<li><b><a class=MstyElemLink href=#WhatIsChanging_v2_1>Moai バージョン2.1における新機能</a></b></li>
+	<li><b><a class=MstyElemLink href=#WhatIsChanging_v2_0>Moai バージョン2.0における新機能</a></b></li>
+	<li><b><a class=MstyElemLink href=#WhatIsWebServer>Moaiがウェブサーバであるとは何を意味するのか？</a></b></li>
+	<li><b><a class=MstyElemLink href=#WhatIsWebApplication>Moai 2.0 が提供するWebアプリケーション</a></b></li>
+	<li><b><a class=MstyElemLink href=#license>ライセンス</a></b></li>
+	<li><b><a class=MstyElemLink href=#as_is>免責事項</a></b></li>
+	<li><b><a class=MstyElemLink href=#acknowledge>謝辞</a></b></li>
+</ul><br>
+
+
+<a name=NextDevelopment></a>
+<u><b>
+Moai次期バージョンの開発状況
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	Moai次期バージョン開発状況については<a class=MstyElemLink href=https://mr-moai-2016.github.io/znk_dev/>こちら</a>を参照してください.<br><br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=WhatIsChanging_v2_1></a>
+<u><b>
+Moai バージョン2.1における新機能
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	Moai Ver2.1ではhttpsに対応します.<br>
+	<br>
+	この能力をもつことにより、今までこれが足枷となりできなかった様々なことが可能となります.<br>
+	例えばMoai Ver2.1では以下の機能が追加されます.<br>
+	<ul>
+		<li><b>Moaiアップグレード</b><br>
+<br>
+		最近のアプリケーションでは良く見られるボタンを押すだけでソフトウェアを簡単に更新できる機能です.<br>
+		まずMoaiのエンジン設定画面より、「Moaiアップグレード」を選択して表示させます.<br>
+		するとアップグレードのためのウィザード画面が表示されます.<br>
+		この画面においてあなたが行うことは「最新バージョンの確認」⇒「修正パッチのダウンロード」⇒「修正パッチを適用」<br>
+		この３つのボタンを順番に押すだけです.<br>
+		これだけで簡単にMoaiを最新バージョンへアップグレードできるというものになります.<br>
+		</li>
+	<br>
+		<li><b>Easter での掲示板閲覧においてhttpsへの対応</b><br>
+<br>
+		Moaiの(というかローカルプロキシの原理的な)最大の弱点として「フィルタ機能はhttpsでは機能しない」というものがありました.<br>
+		今回httpsクライアントとしての能力をも兼ね備えたEasterがMoaiのこの弱点を替わりに克服します.<br>
+		</li>
+	<br>
+		<li><b>Easter HyperPostによるURL指定での画像投稿機能においてhttpsへの対応</b><br>
+<br>
+		Easter Ver2.0では画像の参照先URLがhttpsのサイトであった場合は、投稿に失敗するという不具合がありました.<br>
+		この不具合を解消します.<br>
+		</li>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=WhatIsChanging_v2_0></a>
+<u><b>
+Moai バージョン2.0における新機能
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	旧バージョン1.1.8 では Moai は<b>ローカルプロキシ</b>と呼ばれるツールでした.<br>
+	そして Moai のフィルタリング機能によりネット掲示板などで仮想環境を実現するには、<br>
+	ブラウザにて「プロキシの設定」を行っておく必要がありました.<br>
+	これは、慣れていない方にとっては仮想環境を実現するために行うべきステップの中では<br>
+	最も敷居の高いものであったかもしれません.<br>
+	<br>
+	一方、新しいバージョン2.0では Moai は<b>ポータブルウェブサーバシステム</b>(※1)へと進化しています.<br>
+	これにより<b>ブラウザにて特別な設定をすることなく</b>、普通にネットを見る操作のみで仮想環境を利用することができます.<br>
+	言い換えれば、<b>ブラウザにて「プロキシの設定」を行っておく必要がなくなりました</b>(※2).<br>
+	Moaiが全く初めての方でも、これまでのバージョンと比べはるかに手が付けやすいものとなっています.<br>
+	<br>
+	具体的に比較してみましょう.<br>
+	<br>
+	まず旧 Moai 1.1.8 で仮想環境を実現するためにあなたが行わなければならないステップは以下でした.<br>
+	<ol>
+		<li>最初にmoaiというプログラムを一つ起動します.</li>
+		<li>あなたの好きなブラウザにて「プロキシの設定」ダイアログを開き、ローカルプロキシを経由させるための設定を行います.</li>
+		<li>そのブラウザよりネット掲示板などへアクセスします.</li>
+	</ol>
+	一方 Moai 2.0 で仮想環境を実現するためにあなたが行わなければならないステップは以下です.<br>
+	<ol>
+		<li>最初にmoaiというプログラムを一つ起動します.</li>
+		<li>あなたの好きなブラウザより普通に http://127.0.0.1:8124 へアクセスします.</li>
+		<li>そのブラウザより表示される画面のリンク(Easter)よりネット掲示板などへアクセスします.</li>
+	</ol>
+	いかがでしょうか？<br>
+	繰り返しになりますが、Moai2.0 では<b>ブラウザにて「ローカルプロキシの設定」を行っておく必要がありません</b>(※2).<br>
+	ただし毎回必ず http://127.0.0.1:8124 というURLより開かれる画面から始める必要があります.<br>
+	毎回このURLを打ち込むのも面倒ですので、このURLをブックマークしておくとよいでしょう.<br>
+	<br>
+	<div class=MstyComment>
+		<b>※1</b><br>
+		デフォルトの設定では安全のため、あなたのマシン以外からのMoaiへの接続はすべて遮断されるようになっています.<br>
+		<br>
+		<b>※2</b><br>
+		実はバージョン2.0でも旧来通りMoaiをローカルプロキシとして使うこともできます.<br>
+		ローカルプロキシの場合は基本的にどのようなサイトにでも常に機能するという強力さがあります.<br>
+		一方、バージョン2.0で導入されたEasterを使って仮想環境を実現する場合、<br>
+		その適用範囲はEasterがサポートするサイトに限られます.<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=WhatIsWebServer></a>
+<u><b>
+Moaiがウェブサーバであるとは何を意味するのか？
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	moaiが起動中は、あなたのマシンはローカルなプロキシサーバとウェブサーバとして同時に機能します.<br>
+	特にMoai Ver2.0では後者が重要な役割を果たします.<br>
+	ウェブサーバの大きな役割は２つあります.<br>
+	<br>
+	一つ目は、ブラウザからURL指定を行うことにより、アクセス先のサーバ内に置かれたHTMLや画像などを<br>
+	閲覧できるようにすることです.<br>
+	Moaiの場合、ブラウザから例えば http://127.0.0.1:8124/*.html や http://127.0.0.1:8124/*.jpg といったURL指定により<br>
+	moaiディレクトリ配下のdoc_rootに置かれたHTMLや画像などを閲覧することができます(他にもいくつか規則があります).<br>
+	<br>
+	二つ目は、ブラウザからURL指定を行うことにより、アクセス先のサーバ内に置かれたCGIスクリプトなどを実行させ、<br>
+	その結果をブラウザへ送信することです.<br>
+	Moaiの場合でもこれが可能で、これを Moai CGI と呼び、Moaiとは独立した単独のWebアプリケーションとして機能します.<br>
+	また、その気になればあなたがCGIスクリプトを独自に開発し、それをMoai CGI上で実行させることもできます.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=WhatIsWebApplication></a>
+<u><b>
+Moai 2.0 が提供するWebアプリケーション
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下でご紹介するツール群は、Moai CGI(Webアプリケーション)の応用例です.<br>
+	<ul>
+		<li>
+		<b>Easter</b> <span class=MstyAuthor> (Author: Zenkaku)</span><br>
+		<div class=MstyComment>
+			<b><u>概要</u></b><br>
+<br>
+			Easterは仮想ブラウザ環境でネット上の匿名掲示板などを閲覧、投稿するためのツールです.<br>
+			このツールを開始すると、最初にいくつのかのネット掲示板等へのリンクが列挙されたページが開きます.<br>
+			次にそこからお好みのネット掲示板等へアクセスしましょう.<br>
+<br>
+			これにより掲示板のサーバ側へあなたの真のブラウザ環境の情報が送られることは一切なくなり、<br>
+			替りに仮想ブラウザ環境の情報が送られるようになります.<br>
+			これを<b>仮想ブラウジング</b>と呼びます.<br>
+<br>
+			<b><u>Ver1.1.8との違い</u></b><br>
+<br>
+			旧 Moai Ver1.1.8 ではまだEasterは存在せず、仮想ブラウジングを行うためにはローカルプロキシの設定が必須でした.<br>
+			Ver2.0より導入されたこのEasterを使えば、この設定をする必要がありません.<br>
+			これによりユーザのMoai利用は旧バージョンに比べ飛躍的に簡単になりました.<br>
+			<br>
+			<b><u>安全性について</u></b><br>
+<br>
+			少し技術的な話になりますが、Moai Ver2.0 では我々がXhrDMZと呼ぶ新しい防御システムが導入されています.<br>
+			あなたの閲覧するネット掲示板に万一XMLHttpRequestによる悪意あるスクリプトが仕掛けられていたとしても<br>
+			XhrDMZはその攻撃を隔離し、Easterによるウェブ閲覧の安全性にも万全を期してあります.<br>
+			Moaiが使用するポートは8124ですが、XhrDMZではこれとは別にポート8125を使用します.<br>
+		</div>
+		</li>
+	<br>
+		<li>
+		<b>VirtualUSERS</b> <span class=MstyAuthor> (Author: K.Yakisoba.H and Zenkaku)</span><br>
+		<div class=MstyComment>
+			<b><u>概要</u></b><br>
+<br>
+			VirtualUSERSは、ランダムな仮想環境を自動的に構築するツールです.<br>
+			これはボタン一つ押すだけで簡単に行えます.<br>
+			<br>
+			このボタンは別にいつ押しても構わないのですが、もっとも適切なタイミングはルータリセットなどによりIPアドレスを変更した直後です.<br>
+			また、Moaiをダウンロード後に初めて起動したなら、Moaiが提供する仮想環境は初期設定値のものになっているはずですから、<br>
+			この場合もまずはこのボタンを一回押して仮想環境の値を変更しておく方がよいでしょう.<br>
+			<br>
+			<b><u>Ver1.1.8との違い</u></b><br>
+<br>
+			旧 Moai Ver1.1.8 では、例えば User-Agent は user_agent.txt にて記載されたものからランダムに一つ選ぶという方式を採用していました.<br>
+			一方、Moai Ver2.0 では CustomBoyという新型の仮想環境構築エンジンを使ってVirtualUSERSを実現しており、<br>
+			このエンジン下では user_agent.txt は廃止され、User-Agentは CustomBoy の知識ベースおよび確率的アルゴリズムによって<br>
+			無から自動的に構築されます.<br>
+			その他の要素に関しても、そのランダム化のアルゴリズムはより強力なものに改良されています.<br>
+		</div>
+		</li>
+	<br>
+		<li>
+		<b>CustomBoy</b> <span class=MstyAuthor> (Author: K.Yakisoba.H and Zenkaku)</span><br>
+		<div class=MstyComment>
+			<b><u>概要</u></b><br>
+<br>
+			CustomBoyとは、Moai/Easterの仮想環境を詳細にカスタマイズするエキスパートユーザ向けのツールです.<br>
+			(従って初心者の方がこのツールを使う必要はまずないと思われます)<br>
+			我々が提供する仮想化ツールの中でもこれは最強のカスタマイズ性を有するものです.<br>
+		</div>
+		</li>
+	<br>
+		<li>
+		<b>ProxyFinder</b> <span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+		<div class=MstyComment>
+			<b><u>概要</u></b><br>
+<br>
+			ProxyFinderは定番のプロキシ情報提供サイトへ接続し、現在有効な外部プロキシのリストを自動的に取得するツールです.<br>
+			また、Moaiエンジン上でこのリストから一つを選択して設定することができます.<br>
+			(ここで言う「外部プロキシ」とはいわゆる一般的に言う「プロキシ」や「串」と言われるものであり、<br>
+			「ローカルプロキシ」とはその概念も使用意図も異なるものです).<br>
+<br>
+			Moaiを使うにあたって、外部プロキシを使用する必要は通常はありません.<br>
+			従ってこの機能自体はMoaiシステム全体から見ればオマケ的な位置づけとなります.<br>
+		</div>
+		</li>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=license></a>
+<u><b>
+ライセンス
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	Moai本体およびそれに付随するシステムのうち、我々Moai開発チームが開発したものに関しては、<br>
+	そのライセンスはすべて<a class=MstyElemLink href=http://www.kmonos.net/nysl target=_blank>NYSL</a>(煮るなり焼くなり好きにしろ)とします.<br>
+	厳密に言えば、このシステムに含まれるzlib、libresslについてはそれぞれが規定したライセンスに従うものとなりますが、<br>
+	これらのライセンスもNYSLと基本的に競合せず、その主張に大差はないとは思います.<br>
+<br>
+	尚、このシステム内のすべてのソースコードにおいては、そのライセンスがGPLおよびLGPLであるようなものは一切含まれておりません.<br>
+	また将来のバージョンにおいてもそのようなものを含める予定はありません.<br>
+<br>
+	現時点での公式のソースリポジトリは https://github.com/mr-moai-2016/znk_project ですが<br>
+	再配布はご自由にどうぞ.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=as_is></a>
+<u><b>
+免責事項
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	本ソフトウェアは「現状のまま」で、明示であるか暗黙であるかを問わず、<br>
+	何らの保証もなく提供されます. 本ソフトウェアの使用によって生じるいかなる損害についても、<br>
+	作者は一切の責任を負わないものとします.<br>
+	<br>
+	This software is provided 'as-is', without any express or implied warranty.<br>
+	In no event will the authors be held liable for any damages arising<br>
+	from the use of this software.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=acknowledge></a>
+<u><b>
+謝辞
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	Moai開発にあたっては、勿論参考としたツールがあります.<br>
+	Polipoというツールがそれにあたりますが、これもCで記述されたオープンソースです.<br>
+	Polipoは非常に優れたローカルプロキシであり、多くの部分を参考にさせてもらいました.<br>
+	この場を借りてJuliusz Chroboczek氏には感謝致します.<br>
+	ポート番号8123はPolipoで使われていたものであり、それに敬意を表しMoaiではこれに続く後輩という意味で<br>
+	8124をデフォルトポートとしました.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=Link></a>
+<u><b>
+リンク
+</b></u><br>
+<br>
+<ul>
+	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
+	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project>znk_project(github)</a></li>
+</ul><br>
+
+
+</body>
+</html>

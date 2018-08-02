@@ -36,12 +36,12 @@ ABINAME = cygwin$(MACHINE)$(DEBUG)
 O = ./out_dir/$(ABINAME)
 
 ifeq ($(DEBUG), d)
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)d
 SLIBS_DIR=slib/$(PLATFORM)d
 else
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)
 SLIBS_DIR=slib/$(PLATFORM)
@@ -57,6 +57,8 @@ include Makefile_version.mak
 BASENAME0=gslconv
 EXE_FILE0=$O/gslconv.exe
 OBJS0=\
+	$O/minizip/ioapi.o \
+	$O/minizip/unzip.o \
 	$O/Znk_algo_vec.o \
 	$O/Znk_bfr.o \
 	$O/Znk_bfr_ary.o \
@@ -77,6 +79,7 @@ OBJS0=\
 	$O/Znk_htp_hdrs.o \
 	$O/Znk_htp_post.o \
 	$O/Znk_htp_rar.o \
+	$O/Znk_htp_sbio.o \
 	$O/Znk_htp_util.o \
 	$O/Znk_liba_scan.o \
 	$O/Znk_math.o \
@@ -119,15 +122,18 @@ OBJS0=\
 	$O/Znk_varp_ary.o \
 	$O/Znk_vsnprintf.o \
 	$O/Znk_yy_base.o \
+	$O/Znk_zip.o \
 	$O/Znk_zlib.o \
 	$O/gslconv.o \
 
 BASENAME1=Znk
-DLIB_NAME1=cygZnk.dll
+DLIB_NAME1=cygZnk-$(DL_VER).dll
 DLIB_FILE1=$O/$(DLIB_NAME1)
-ILIB_FILE1=$O/cygZnk.dll
-SLIB_FILE1=$O/cygZnk.a
+ILIB_FILE1=$O/cygZnk-$(DL_VER).dll
+SLIB_FILE1=$O/libZnk.a
 OBJS1=\
+	$O/minizip/ioapi.o \
+	$O/minizip/unzip.o \
 	$O/Znk_algo_vec.o \
 	$O/Znk_bfr.o \
 	$O/Znk_bfr_ary.o \
@@ -148,6 +154,7 @@ OBJS1=\
 	$O/Znk_htp_hdrs.o \
 	$O/Znk_htp_post.o \
 	$O/Znk_htp_rar.o \
+	$O/Znk_htp_sbio.o \
 	$O/Znk_htp_util.o \
 	$O/Znk_liba_scan.o \
 	$O/Znk_math.o \
@@ -190,11 +197,18 @@ OBJS1=\
 	$O/Znk_varp_ary.o \
 	$O/Znk_vsnprintf.o \
 	$O/Znk_yy_base.o \
+	$O/Znk_zip.o \
 	$O/Znk_zlib.o \
 	$O/dll_main.o \
 
 SUB_LIBS=\
-	zlib/$O/cygzlib.a \
+	zlib/$O/libzlib.a \
+
+SUB_OBJS=\
+	zlib/$O/*.o \
+
+SUB_OBJS_ECHO=\
+	zlib/$O/{[objs]} \
 
 PRODUCT_EXECS= \
 	__mkg_sentinel_target__ \
@@ -214,20 +228,25 @@ RUNTIME_FILES= \
 
 
 # Entry rule.
-all: $O submkf_zlib $(EXE_FILE0) $(DLIB_FILE1) 
+all: $O/minizip $O submkf_zlib $(EXE_FILE0) $(DLIB_FILE1) $(SLIB_FILE1) 
 
 # Mkdir rule.
+$O/minizip:
+	mkdir -p $O/minizip
+
 $O:
 	mkdir -p $O
 
 
 # Product files rule.
 $(EXE_FILE0): $(OBJS0)
-	$(LINKER) -o $(EXE_FILE0) $(OBJS0) $(SUB_LIBS) -Wl,-rpath,.  -lpthread -ldl -lstdc++ 
+	@echo $(LINKER) -o $(EXE_FILE0) {[objs]} $(SUB_LIBS) -Wl,-rpath,.  -lpthread -ldl -lstdc++ 
+	@     $(LINKER) -o $(EXE_FILE0) $(OBJS0) $(SUB_LIBS) -Wl,-rpath,.  -lpthread -ldl -lstdc++ 
 
 $(SLIB_FILE1): $(OBJS1)
 	if test -e $(SLIB_FILE1) ; then rm -f $(SLIB_FILE1) ; fi
-	ar cru $(SLIB_FILE1) $(OBJS1) $(SUB_LIBS)
+	@echo ar cru $(SLIB_FILE1) {[objs]} $(SUB_OBJS_ECHO)
+	@     ar cru $(SLIB_FILE1) $(OBJS1) $(SUB_OBJS)
 	ranlib $(SLIB_FILE1)
 
 gsl.myf: $(SLIB_FILE1)
@@ -236,9 +255,10 @@ gsl.myf: $(SLIB_FILE1)
 gsl.def: gsl.myf
 	if test -e $O/gslconv.exe ; then $O/gslconv.exe -d gsl.myf gsl.def ; fi
 
-$(DLIB_FILE1): $(OBJS1)
+$(DLIB_FILE1): $(OBJS1) $(SLIB_FILE1)
 	if test -e $(DLIB_FILE1) ; then rm -f $(DLIB_FILE1); fi
-	gcc -shared -o $(DLIB_FILE1) $(OBJS1) $(SUB_LIBS)  -lpthread -ldl -lstdc++  -lc
+	@echo gcc -shared -o $(DLIB_FILE1) {[objs]} $(SUB_LIBS)  -lpthread -ldl -lstdc++  -lc
+	@     gcc -shared -o $(DLIB_FILE1) $(OBJS1) $(SUB_LIBS)  -lpthread -ldl -lstdc++  -lc
 
 
 ##
@@ -251,6 +271,12 @@ $(DLIB_FILE1): $(OBJS1)
 # the other way, '\' to the right hand of ':' we have to put only single '\',
 # for example $O\\%.o: $S\%.c .
 #
+$O/minizip/%.o: $S/minizip/%.c
+	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c $<
+
+$O/minizip/%.o: $S/minizip/%.cpp
+	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c $<
+
 $O/%.o: $S/%.c
 	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c $<
 
@@ -278,9 +304,9 @@ install_data:
 
 # Install exec rule.
 install_exec: $(EXE_FILE0)
-	mkdir -p ../../mkfsys 
-	for tgt in $(EXE_FILE0) ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../mkfsys/ ; fi ; done
-	@for tgt in $(RUNTIME_FILES) ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../mkfsys/ ; fi ; done
+	mkdir -p ../../mkfsys/$(PLATFORM) 
+	for tgt in $(EXE_FILE0) ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../mkfsys/$(PLATFORM)/ ; fi ; done
+	@for tgt in $(RUNTIME_FILES) ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../mkfsys/$(PLATFORM)/ ; fi ; done
 
 # Install dlib rule.
 install_dlib: $(DLIB_FILE1)
@@ -298,15 +324,16 @@ install: all install_slib install_dlib install_exec
 
 # Clean rule.
 clean:
-	rm -r $O/ 
+	rm -rf $O/ 
 	@echo === Entering [zlib] ===
 	make -f Makefile_cygwin.mak clean -C zlib
 	@echo === Leaving [zlib] ===
 
 
 # Src and Headers Dependency
-dll_main.o:
 gslconv.o: Znk_myf.h Znk_str_ary.h Znk_str_ex.h Znk_str_fio.h Znk_stdc.h Znk_missing_libc.h Znk_dir.h Znk_str_path.h Znk_liba_scan.h
+minizip/ioapi.o: minizip/ioapi.h
+minizip/unzip.o: minizip/unzip.h minizip/crypt.h
 Znk_algo_vec.o: Znk_algo_vec.h
 Znk_bfr.o: Znk_bfr.h Znk_stdc.h
 Znk_bfr_ary.o: Znk_bfr_ary.h
@@ -326,7 +353,8 @@ Znk_err.o: Znk_err.h Znk_mutex.h Znk_str.h
 Znk_fdset.o: Znk_fdset.h Znk_stdc.h
 Znk_htp_hdrs.o: Znk_htp_hdrs.h Znk_s_base.h Znk_varp_ary.h Znk_missing_libc.h
 Znk_htp_post.o: Znk_htp_post.h Znk_str.h Znk_missing_libc.h
-Znk_htp_rar.o: Znk_htp_rar.h Znk_net_base.h Znk_socket.h Znk_cookie.h Znk_s_base.h Znk_str_ary.h Znk_stdc.h Znk_mem_find.h Znk_sys_errno.h Znk_str_ex.h Znk_stock_bio.h Znk_zlib.h Znk_def_util.h
+Znk_htp_rar.o: Znk_htp_rar.h Znk_htp_sbio.h Znk_socket.h Znk_cookie.h Znk_s_base.h Znk_str_ary.h Znk_stdc.h Znk_sys_errno.h Znk_stock_bio.h
+Znk_htp_sbio.o: Znk_htp_sbio.h Znk_net_base.h Znk_cookie.h Znk_s_base.h Znk_str_ary.h Znk_stdc.h Znk_mem_find.h Znk_sys_errno.h Znk_stock_bio.h Znk_zlib.h Znk_def_util.h
 Znk_htp_util.o: Znk_htp_util.h Znk_str_ex.h Znk_mem_find.h
 Znk_liba_scan.o: Znk_stdc.h Znk_s_base.h Znk_str.h Znk_str_ary.h Znk_myf.h Znk_bfr.h Znk_vpod.h
 Znk_math.o: Znk_math.h
@@ -369,4 +397,5 @@ Znk_var.o: Znk_var.h Znk_stdc.h
 Znk_varp_ary.o: Znk_varp_ary.h Znk_s_base.h
 Znk_vsnprintf.o: Znk_vsnprintf.h Znk_stdc.h Znk_def_util.h Znk_tostr_int.h Znk_tostr_double.h
 Znk_yy_base.o: Znk_yy_base.h
+Znk_zip.o: Znk_zip.h Znk_stdc.h Znk_missing_libc.h Znk_dir.h minizip/unzip.h minizip/iowin32.h
 Znk_zlib.o: Znk_zlib.h Znk_dlhlp.h Znk_stdc.h

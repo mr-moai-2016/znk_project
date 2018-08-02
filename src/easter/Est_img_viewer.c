@@ -27,6 +27,7 @@
 
 #define SJIS_HYO "\x95\x5c" /* 表 */
 
+
 static void
 makeTopbarHint( ZnkStr topbar_ui )
 {
@@ -56,12 +57,22 @@ makeTopbarUIHelp_forLoading( ZnkStr topbar_ui )
 			"<div id=aboutTopbar></div>"
 			"</font>" );
 }
+static const char*
+getContentTypeName( EstViewerType viewer_type )
+{
+	switch( viewer_type ){
+	case EstViewerType_e_Img:   return "画像";
+	case EstViewerType_e_Video: return "動画";
+	default: break;
+	}
+	return "データ";
+}
 
 static void
 makeTopbarUI_forCache( ZnkStr topbar_ui,
-		bool mode_assort, const char* vpath, const char* cache_dir_path, const char* authentic_key, bool is_video, bool is_confirm )
+		bool mode_assort, const char* vpath, const char* cache_dir_path, const char* authentic_key, EstViewerType viewer_type, bool is_confirm )
 {
-	const char* content_type_name = is_video ? "動画" : "画像";
+	const char* content_type_name = getContentTypeName( viewer_type );
 	ZnkStr_clear( topbar_ui );
 	ZnkStr_addf( topbar_ui,
 			"<a class=\"MstyElemLinkRed\" "
@@ -86,10 +97,10 @@ makeTopbarUI_forCache( ZnkStr topbar_ui,
 	}
 	makeTopbarUIHelp( topbar_ui );
 }
-void
-EstImgViewer_makeTopbarUI_forLoading( ZnkStr topbar_ui, bool is_video )
+static void
+EstImgViewer_makeTopbarUI_forLoading2( ZnkStr topbar_ui, EstViewerType viewer_type )
 {
-	const char* content_type_name = is_video ? "動画" : "画像";
+	const char* content_type_name = getContentTypeName( viewer_type );
 	ZnkStr_addf( topbar_ui,
 			"<span class=\"MstyElemLink\"><font color=#888888>この%sをストック</font></span>\n", content_type_name );
 	ZnkStr_addf( topbar_ui,
@@ -115,7 +126,7 @@ EstImgViewer_makeNowLoading( ZnkStr ans, RanoTextType txt_type, const char* resu
 	
 		ZnkStr_addf( ans, "<font size=\"-1\" color=\"#808000\">Easter Image Viewer</font> <br>" );
 
-		EstImgViewer_makeTopbarUI_forLoading( ans, false );
+		EstImgViewer_makeTopbarUI_forLoading2( ans, EstViewerType_e_Img );
 		
 		ZnkStr_addf( ans, "<br>\n" );
 		ZnkStr_addf( ans, "<img src=\"/cgis/easter/%s\"><br>\n", result_filename );
@@ -158,7 +169,7 @@ EstImgViewer_makeNowLoading( ZnkStr ans, RanoTextType txt_type, const char* resu
 
 
 static void
-makeTopbarUI_forFavorite( ZnkStr topbar_ui, bool mode_assort, const char* vpath, const char* cache_dir_path, const char* authentic_key, bool is_video, bool is_confirm )
+makeTopbarUI_forFavorite( ZnkStr topbar_ui, bool mode_assort, const char* vpath, const char* cache_dir_path, const char* authentic_key, bool is_confirm )
 {
 	ZnkStr_clear( topbar_ui );
 	ZnkStr_addf( topbar_ui,
@@ -177,7 +188,7 @@ makeTopbarUI_forFavorite( ZnkStr topbar_ui, bool mode_assort, const char* vpath,
 	makeTopbarHint( topbar_ui );
 }
 static void
-makeTopbarUI_forStockbox( ZnkStr topbar_ui, bool mode_assort, const char* vpath, const char* cache_dir_path, const char* authentic_key, bool is_video, bool is_confirm )
+makeTopbarUI_forStockbox( ZnkStr topbar_ui, bool mode_assort, const char* vpath, const char* cache_dir_path, const char* authentic_key, bool is_confirm )
 {
 	ZnkStr_clear( topbar_ui );
 	ZnkStr_addf( topbar_ui,
@@ -554,6 +565,7 @@ EstImgViewer_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const ch
 	char cache_dir_path[ 256 ] = "cachebox";
 	const char* template_html_file = is_video ? "templates/video_viewer.html" :"templates/img_viewer.html";
 	bool is_exist_vbox = false;
+	EstViewerType viewer_type = is_video ? EstViewerType_e_Video : EstViewerType_e_Img;
 
 	struct ZnkHtpHdrs_tag htp_hdrs = { 0 };
 	RanoModule mod = NULL;
@@ -573,6 +585,7 @@ EstImgViewer_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const ch
 	ZnkVarp backto_varp = NULL;
 	ExistMsgType exist_msg_type = ExistMsgType_e_AlreadyExist;
 	const char* current_category_id = "category_all";
+	const char* ext = NULL;
 
 	RanoCGIUtil_getPostedFormData( evar, post_vars, mod, &htp_hdrs, pst_str, NULL, is_unescape_val );
 	command = ZnkVarpAry_find_byName_literal( post_vars, "command", false );
@@ -602,9 +615,17 @@ EstImgViewer_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const ch
 	ast_dir_type = EstBoxBase_convertBoxDir_toFSysDir( fsys_path, ZnkStr_cstr(cache_path), &box_path_offset, msg );
 	ZnkStr_copy( file_path, cache_path );
 
-	if( ZnkS_eqCase( ZnkS_get_extension(ZnkStr_cstr(cache_path),'.'), "webm" ) ){
+	ext = ZnkS_get_extension( ZnkStr_cstr(cache_path),'.');
+	if( ZnkS_eqCase( ext, "webm" )
+	 || ZnkS_eqCase( ext, "mp4" )
+	){
 		is_video = true;
 		template_html_file = "templates/video_viewer.html";
+	} else if( ZnkS_eqCase( ext, "html" )
+	  || ZnkS_eqCase( ext, "htm" )
+	){
+		viewer_type = EstViewerType_e_Data;
+		template_html_file = "templates/data_viewer.html";
 	}
 
 	if( IS_OK( backto_varp = ZnkVarpAry_find_byName_literal( post_vars, "backto", false ) )){
@@ -784,13 +805,13 @@ EstImgViewer_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const ch
 		EstBoxDirType dir_type = is_exist_vbox ? existed_ast_dir_type : ast_dir_type;
 		ZnkStr vpath = ZnkStr_new( "" );
 		ZnkStrAry tags_list = ZnkStrAry_create( true );
-		const char* content_type_name = is_video ? "動画" : "画像";
+		const char* content_type_name = getContentTypeName( viewer_type );
 
 		switch( dir_type ){
 		case EstBoxDir_e_Favorite:
 			ZnkStr_setf( vpath, "favorite/%s", ZnkStr_cstr(existed_filename) );
 			ZnkStr_setf( file_path, "%s/%s", favorite_dir, ZnkStr_cstr(existed_filename) );
-			makeTopbarUI_forFavorite( topbar_ui, true, ZnkStr_cstr(vpath), cache_dir_path, authentic_key, is_video, true );
+			makeTopbarUI_forFavorite( topbar_ui, true, ZnkStr_cstr(vpath), cache_dir_path, authentic_key, true );
 			if( ast_dir_type != EstBoxDir_e_Favorite ){
 				ZnkStr_addf( topbar_ui, "%s", ZnkStr_cstr(exist_msg) );
 			}
@@ -798,7 +819,7 @@ EstImgViewer_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const ch
 		case EstBoxDir_e_Stockbox:
 			ZnkStr_setf( vpath, "stockbox/%s", ZnkStr_cstr(existed_filename) );
 			ZnkStr_setf( file_path, "%s/%s", stockbox_dir, ZnkStr_cstr(existed_filename) );
-			makeTopbarUI_forStockbox( topbar_ui, true, ZnkStr_cstr(vpath), cache_dir_path, authentic_key, is_video, true );
+			makeTopbarUI_forStockbox( topbar_ui, true, ZnkStr_cstr(vpath), cache_dir_path, authentic_key, true );
 			if( ast_dir_type != EstBoxDir_e_Stockbox ){
 				ZnkStr_addf( topbar_ui, "%s", ZnkStr_cstr(exist_msg) );
 			}
@@ -806,7 +827,7 @@ EstImgViewer_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const ch
 		case EstBoxDir_e_Userbox:
 		{
 			const bool is_confirm = true;
-			makeTopbarUI_forCache( topbar_ui, false, ZnkStr_cstr(cache_path), cache_dir_path, authentic_key, is_video, is_confirm );
+			makeTopbarUI_forCache( topbar_ui, false, ZnkStr_cstr(cache_path), cache_dir_path, authentic_key, viewer_type, is_confirm );
 			if( is_exist_vbox ){
 				ZnkStr_addf( topbar_ui, "%s", ZnkStr_cstr(exist_msg) );
 			}
@@ -815,7 +836,7 @@ EstImgViewer_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const ch
 		default:
 		{
 			const bool is_confirm = false;
-			makeTopbarUI_forCache( topbar_ui, false, ZnkStr_cstr(cache_path), cache_dir_path, authentic_key, is_video, is_confirm );
+			makeTopbarUI_forCache( topbar_ui, false, ZnkStr_cstr(cache_path), cache_dir_path, authentic_key, viewer_type, is_confirm );
 			if( is_exist_vbox ){
 				ZnkStr_addf( topbar_ui, "%s", ZnkStr_cstr(exist_msg) );
 			}

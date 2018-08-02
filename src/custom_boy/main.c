@@ -5,7 +5,7 @@
  *  CustomBoy is the next-generation of USERS(User-Agent Screen-size and Everything Randomizer System)
  *  based on Moai Ver2.0 and build up your virtual browser information instantly.
  *  You can also create a custom detailed information about each element of browser,
- *  such as Fingerprint and result values of Javascipt snippet code on Moai CGI user-interface.
+ *  such as Fingerprint and result values of Javascript snippet code on Moai CGI user-interface.
  *
  * @auther
  *  Main Programmer : K.Yakisoba.H
@@ -147,7 +147,8 @@ parseQueryString( RanoCGIEVar* evar )
 	FormType form_type = Form_e_Get;
 	CBConfigInfo* info = NULL;
 	const char* template_html_file = NULL;
-	bool is_unescape_val = false;
+	bool is_unescape_val  = false;
+	bool all_cookie_clear = false;
 
 	RanoCGIUtil_splitQueryString( cb_vars, ZnkStr_cstr(str), ZnkStr_leng(str), is_unescape_val );
 
@@ -206,6 +207,11 @@ parseQueryString( RanoCGIEVar* evar )
 			ZnkStr_set( category, ZnkVar_cstr( varp ) );
 		}
 
+		varp = ZnkVarpAry_find_byName_literal( cb_vars, "cb_all_clear_cookie", false );
+		if( varp ){
+			all_cookie_clear = true;
+		}
+
 		varp = ZnkVarpAry_find_byName_literal( cb_vars, "Moai_AuthenticKey", false );
 		if( varp && ZnkS_eq( st_moai_authentic_key, ZnkVar_cstr(varp) ) ){
 			is_authenticated = true;
@@ -221,14 +227,14 @@ parseQueryString( RanoCGIEVar* evar )
 			cb_status = CBCustomAutomatic_main( evar, cb_vars, ZnkStr_cstr(cb_src),
 					bird, RE_key, fgp_info, &ua_info,
 					main_vars, &ptua64, msg, category, lacking_var,
-					info, is_authenticated );
+					info, is_authenticated, all_cookie_clear );
 			template_html_file = "templates/automatic.html";
 			break;
 		case Form_e_Main:
 			cb_status = CBCustomPostVars_main( evar, cb_vars, ZnkStr_cstr(cb_src),
 					bird, RE_key, fgp_info, &ua_info,
 					main_vars, &ptua64, msg, category, lacking_var,
-					info, is_authenticated );
+					info, is_authenticated, all_cookie_clear );
 			template_html_file = "templates/postvars.html";
 			break;
 		case Form_e_Cookie:
@@ -242,7 +248,7 @@ parseQueryString( RanoCGIEVar* evar )
 			cb_status = CBCustomFeature_main( evar, cb_vars, ZnkStr_cstr(cb_src),
 					bird, RE_key, fgp_info, &ua_info,
 					main_vars, &ptua64, msg, category, lacking_var,
-					info, is_authenticated );
+					info, is_authenticated, all_cookie_clear );
 			template_html_file = "templates/feature.html";
 			break;
 		case Form_e_Get:

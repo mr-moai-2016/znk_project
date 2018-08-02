@@ -1,0 +1,133 @@
+@def_quote [' ']
+
+@@V config
+doc_title = ['Moai+Easter ユーザーマニュアル']
+author = ['全角']
+update = ['2018/07/26']
+category_path = { ['moai2_0_user'] }
+urp           = ['/moai2.0/virtual_users.html']
+nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
+@@.
+
+@@L AtFirst
+ここではVirtualUSERSの使い方について説明します.
+@@.
+
+@@P Index
+{ ['#VirtualUSERS_Button'] ['ボタン一つで仮想環境を構築する'] }
+{ ['#VirtualUSERS_Menu']   ['構築するブラウザ環境の範囲を限定する'] }
+@@.
+
+
+@@L VirtualUSERS_Button
+	VirtualUSERSを使うために必要なことは、以下の二つだけです.
+	<ol>
+		<li>moai(Windowsならmoai.exe)を起動する.
+		</li>
+		
+		<li>ブラウザから http://localhost:8124 を開く.
+
+		<div class=MstyComment>
+			これでうまくいかない場合は http://127.0.0.1:8124 で試してみましょう.
+		</div>
+		</li>
+	</ol>
+	お使いのブラウザに以下のような「Welcome to Moai+Easter World」のページが表示されたでしょうか？
+	
+	<div class=MstyComment>
+		<img src=/imgs/moai_top_page.png>
+	</div>
+	
+	表示されたなら、そこから<a class=MstyAppLink href="http://127.0.0.1:8124/cgis/custom_boy/custom_boy.cgi?cb_target=futaba&cb_type=automatic" target=_blank>VirtualUSERS</a>をクリックします.
+	以下のような画面が表示されると思います.
+	
+	<div class=MstyComment>
+		<img src=/imgs/virtual_users1.png>
+	</div>
+	
+	現在２つのネット掲示板(BBS)用のものが用意されています.
+	ふたばちゃんねる向けに仮想環境を構築したいなら一番上で「for futaba」を選択します.
+	５ちゃんねる向けに構築したいならこれを「for 5ch」に選択しておきます.
+	
+	あとはこの画面で「VirtualUSERS」ボタンを押すだけで仮想環境の構築が完了です.
+	ボタンを押した後、画面下の方で以下のようなメッセージが表示されたなら仮想環境の構築が成功しています.
+	
+	<div class=MstyComment>
+		<img src=/imgs/virtual_users2.png>
+	</div>
+	
+	このボタンは別にいつ押しても構いません.
+	しかし最も適切なタイミングは<b>ルータリセットなどによりIPアドレスを変更した直後</b>です.
+	また、新しくMoaiをダウンロードした直後、初めてのMoai起動時もまずVirtualUSERSで、
+	仮想環境をあなた用に構築しておいた方がよいでしょう.
+	
+	<div class=MstyComment>
+		<u><b>補足</b></u>
+		
+		この構築は別に何回行っても構いません.
+		あなたが納得するブラウザ環境となるまで繰り返し構築し直すこともできます.
+	</div>
+	
+	<div class=MstyComment>
+		<u><b>注意：Moaiの旧バージョン1.1.8からバージョンアップされた方へ</b></u>
+		
+		Moaiの旧バージョンMoai Ver1.1.8ではMoaiのConfig画面から「VirtualUSERS Initiate」ボタンを押して仮想環境の構築を行っていました.
+		Moai Ver2.0ではこれは廃止され、VirtualUSERSは上で説明した画面のようなMoai CGIアプリケーションの一つになっています.
+		この点ご注意ください.
+	</div>
+@@.
+
+
+@@L VirtualUSERS_Menu
+	「VirtualUSERS」ボタンのすぐ下にあるメニューでは、構築される仮想ブラウザ環境の範囲を指定することができます.
+	通常、デフォルトで最適なものが選択された状態であるため、ユーザは特に気にする必要はありませんが、
+	以下にそれぞれの意味について説明しましょう.
+	<ul>
+		<li><b>PC(Windows/Linux/Mac)</b>
+		PC向けのものに限定された範囲で仮想ブラウザ環境を構築します.
+		</li>
+		
+		<li><b>Mobile(Android/iPhone)</b>
+		携帯やスマホ向けのものに限定された範囲で仮想ブラウザ環境を構築します.
+		</li>
+		
+		<li><b>All(PC/Mobile)</b>
+		すべての範囲で仮想ブラウザ環境を構築します.
+		</li>
+		
+		<li><b>Firefox</b>
+		Firefoxに限定して仮想ブラウザ環境を構築します.
+		</li>
+		
+		<li><b>Chrome</b>
+		Chromeに限定して仮想ブラウザ環境を構築します.
+		</li>
+		
+		<li><b>Opera</b>
+		Operaに限定して仮想ブラウザ環境を構築します.
+		</li>
+		
+		<li><b>Safari</b>
+		Safariに限定して仮想ブラウザ環境を構築します.
+		</li>
+		
+		<li><b>IE</b>
+		IEに限定して仮想ブラウザ環境を構築します.
+		</li>
+		
+		<li><b>Android</b>
+		Android環境向けのものに限定して仮想ブラウザ環境を構築します.
+		</li>
+		
+		<li><b>iPhone</b>
+		iPhone環境向けのものに限定して仮想ブラウザ環境を構築します.
+		</li>
+	</ul>
+@@.
+
+
+@@P Link
+{ ['#TopBar'] ['一番上へ'] }
+{ ['https://mr-moai-2016.github.io'] ['Moaiドキュメント(オンライン)'] }
+{ ['https://github.com/mr-moai-2016/znk_project'] ['znk_project(github)'] }
+@@.

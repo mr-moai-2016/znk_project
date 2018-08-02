@@ -9,6 +9,8 @@
 #include <Est_sqi.h>
 #include <Est_search_manager.h>
 
+#include <Rano_dir_util.h>
+
 #include <Znk_dir.h>
 #include <Znk_md5.h>
 #include <Znk_missing_libc.h>
@@ -98,7 +100,7 @@ EstBox_remove( ZnkVarpAry post_vars, ZnkStr msg )
 static bool
 dustize_dir_func( EstBoxDirType box_dir_type, const char* fsys_path, const char* unesc_vpath, size_t box_path_offset, ZnkStr msg, void* param )
 {
-	EstDirUtil_moveDir( fsys_path, "dustbox",
+	RanoDirUtil_moveDir( fsys_path, "dustbox",
 			"EstBox_dustize", msg,
 			NULL, NULL );
 	return true;
@@ -137,7 +139,7 @@ favoritize_dir_func( EstBoxDirType box_dir_type, const char* fsys_path, const ch
 {
 	BoxContext info = Znk_force_ptr_cast( BoxContext, param );
 	const char* box_fsys_dir = info->box_fsys_dir_;
-	EstDirUtil_moveDir( fsys_path, box_fsys_dir, "EstBox_favoritize", msg, NULL, NULL );
+	RanoDirUtil_moveDir( fsys_path, box_fsys_dir, "EstBox_favoritize", msg, NULL, NULL );
 	return true;
 }
 static bool
@@ -227,7 +229,7 @@ stock_dir_func( EstBoxDirType box_dir_type, const char* fsys_path, const char* u
 {
 	BoxContext info = Znk_force_ptr_cast( BoxContext, param );
 	const char* box_fsys_dir = info->box_fsys_dir_;
-	EstDirUtil_moveDir( fsys_path, box_fsys_dir, "EstBox_stock", msg, NULL, NULL );
+	RanoDirUtil_moveDir( fsys_path, box_fsys_dir, "EstBox_stock", msg, NULL, NULL );
 	return true;
 }
 static bool

@@ -108,16 +108,25 @@ ZnkStrAry_reserve( ZnkStrAry ary, size_t size ){
 }
 
 Znk_INLINE void
-ZnkStrAry_copy( ZnkStrAry dst, const ZnkStrAry src )
+ZnkStrAry_append( ZnkStrAry dst, const ZnkStrAry src, size_t src_begin, size_t src_end )
 {
-	const size_t size = ZnkStrAry_size( src );
 	size_t idx;
 	ZnkStr str;
-	ZnkStrAry_clear( dst );
-	for( idx=0; idx<size; ++idx ){
+	const size_t src_size = ZnkStrAry_size(src);
+	if( src_end >= src_size ){
+		src_end  = src_size;
+	}
+	for( idx=src_begin; idx<src_end; ++idx ){
 		str = ZnkStrAry_at( src, idx );
 		ZnkStrAry_push_bk_cstr( dst, ZnkStr_cstr( str ), ZnkStr_leng( str ) );
 	}
+}
+
+Znk_INLINE void
+ZnkStrAry_copy( ZnkStrAry dst, const ZnkStrAry src )
+{
+	ZnkStrAry_clear( dst );
+	ZnkStrAry_append( dst, src, 0, Znk_NPOS );
 }
 
 void

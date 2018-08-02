@@ -67,6 +67,57 @@ RanoModule_destroy( RanoModule mod )
 	}
 }
 
+static bool
+isValidSendFilter( ZnkMyf ftr_send )
+{
+	ZnkVarpAry ftr_vars = NULL;
+
+	ftr_vars = ZnkMyf_find_vars( ftr_send, "header_vars" );
+	if( ftr_vars == NULL ){
+		/* missing header_vars section */
+		return false;
+	}
+	ftr_vars = ZnkMyf_find_vars( ftr_send, "post_vars" );
+	if( ftr_vars == NULL ){
+		/* missing post_vars section */
+		return false;
+	}
+	ftr_vars = ZnkMyf_find_vars( ftr_send, "cookie_vars" );
+	if( ftr_vars == NULL ){
+		/* missing cookie_vars section */
+		return false;
+	}
+	ftr_vars = ZnkMyf_find_vars( ftr_send, "cookie_force" );
+	if( ftr_vars == NULL ){
+		/* missing cookie_force section */
+		return false;
+	}
+	return true;
+}
+static bool
+recoverSendFilter( ZnkMyf ftr_send )
+{
+	ZnkVarpAry ftr_vars = NULL;
+
+	ftr_vars = ZnkMyf_intern_vars( ftr_send, "header_vars" );
+	if( ftr_vars == NULL ){
+		return false;
+	}
+	ftr_vars = ZnkMyf_intern_vars( ftr_send, "post_vars" );
+	if( ftr_vars == NULL ){
+		return false;
+	}
+	ftr_vars = ZnkMyf_intern_vars( ftr_send, "cookie_vars" );
+	if( ftr_vars == NULL ){
+		return false;
+	}
+	ftr_vars = ZnkMyf_intern_vars( ftr_send, "cookie_force" );
+	if( ftr_vars == NULL ){
+		return false;
+	}
+	return true;
+}
+
 bool
 RanoModule_load( RanoModule mod, const char* target_name,
 		const char* filters_dir, const char* plugins_dir )
@@ -81,6 +132,9 @@ RanoModule_load( RanoModule mod, const char* target_name,
 	result = ZnkMyf_load( mod->ftr_send_, filename );
 	if( result ){
 		RanoLog_printf( "Rano : Filter Loading [%s]\n", filename );
+	}
+	if( !isValidSendFilter( mod->ftr_send_ ) ){
+		recoverSendFilter( mod->ftr_send_ );
 	}
 	RanoFileInfo_getLastUpdatedTime( filename, &mod->ftr_send_date_ );
 
@@ -162,19 +216,24 @@ updateReplaceCmdAry( ZnkMyf myf, const char* ftr_name, RanoTxtFilterAry txt_ftr_
 		ZnkStr_delete( line );
 	}
 }
+
+
 bool
 RanoModule_saveFilter( const RanoModule mod )
 {
-	bool result = false;
+	bool result_send = false;
+	bool result_recv = false;
 	char filename[ 256 ];
 
 	const char*  nl = "\n";
 	const char*  target_name = mod->target_name_;
 
-	/* Send filter */
-	Znk_snprintf( filename, sizeof(filename), "filters/%s_send.myf", target_name );
-	result = ZnkMyf_save( mod->ftr_send_, filename );
-	RanoFileInfo_getLastUpdatedTime( filename, &mod->ftr_send_date_ );
+	if( isValidSendFilter( mod->ftr_send_ ) ){
+		/* Send filter */
+		Znk_snprintf( filename, sizeof(filename), "filters/%s_send.myf", target_name );
+		result_send = ZnkMyf_save( mod->ftr_send_, filename );
+		RanoFileInfo_getLastUpdatedTime( filename, &mod->ftr_send_date_ );
+	}
 
 	/* Recv filter */
 	updateReplaceCmdAry( mod->ftr_recv_, "html_filter", mod->ftr_html_, nl );
@@ -186,10 +245,10 @@ RanoModule_saveFilter( const RanoModule mod )
 	}
 
 	Znk_snprintf( filename, sizeof(filename), "filters/%s_recv.myf", target_name );
-	result = ZnkMyf_save( mod->ftr_recv_, filename );
+	result_recv = ZnkMyf_save( mod->ftr_recv_, filename );
 	RanoFileInfo_getLastUpdatedTime( filename, &mod->ftr_recv_date_ );
 
-	return result;
+	return result_send && result_recv;
 }
 
 const char*
@@ -386,10 +445,10 @@ getExtraVars( ZnkVarpAry extra_vars, const ZnkVarpAry cok_vars, const ZnkVarpAry
 	for( cok_idx=0; cok_idx<cok_size; ++cok_idx ){
 		cok_var  = ZnkVarpAry_at( cok_vars, cok_idx );
 		var_name = ZnkVar_name_cstr( cok_var );
-		if( ZnkVarpAry_find_byName( ftr_vars, var_name, Znk_NPOS, false ) ){
+		if( ftr_vars && ZnkVarpAry_find_byName( ftr_vars, var_name, Znk_NPOS, false ) ){
 			continue;
 		}
-		if( ZnkVarpAry_find_byName( ftr_force, var_name, Znk_NPOS, false ) ){
+		if( ftr_force && ZnkVarpAry_find_byName( ftr_force, var_name, Znk_NPOS, false ) ){
 			continue;
 		}
 		{
@@ -507,8 +566,8 @@ RanoFltr_updateCookieFilter_bySetCookie( const ZnkVarpAry hdr_vars, ZnkMyf ftr_s
 	if( set_cookie ){
 		const size_t val_size = ZnkHtpHdrs_val_size( set_cookie );
 		size_t       val_idx  = 0;
-		ZnkVarpAry   ftr_vars = ZnkMyf_find_vars( ftr_send, "cookie_vars" );
-
+		//ZnkVarpAry   ftr_vars = ZnkMyf_find_vars( ftr_send, "cookie_vars" );
+		ZnkVarpAry   ftr_vars = ZnkMyf_intern_vars( ftr_send, "cookie_vars" );
 		for( val_idx=0; val_idx<val_size; ++val_idx ){
 			const char* p = ZnkHtpHdrs_val_cstr( set_cookie, val_idx );
 			const char* e = p + strlen( p );

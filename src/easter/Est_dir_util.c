@@ -1,6 +1,6 @@
 #include <Est_dir_util.h>
-
 #include <Rano_file_info.h>
+#include <Rano_dir_util.h>
 
 #include <Znk_s_base.h>
 #include <Znk_str_ex.h>
@@ -111,6 +111,7 @@ EstDirUtil_moveFile( const char* src_file, const char* dst_dir, const char* rena
 	return result;
 }
 
+#if 0
 typedef struct {
 	const char*     title_;
 	const char*     dst_topdir_;
@@ -260,6 +261,7 @@ EstDirUtil_removeDir( const char* topdir,
 	ZnkDirRecursive_traverse( recur, topdir, NULL );
 	ZnkDirRecursive_destroy( recur );
 }
+#endif
 
 
 
@@ -308,7 +310,7 @@ EstDirUtil_moveOldFile_toDustbox( const char* topdir, ZnkStr ermsg, size_t days_
 	AgoInfo ago = { 0 };
 	ago.days_ago_ = days_ago;
 	ago.sec_ago_  = sec_ago;
-	EstDirUtil_moveDir( topdir, "dustbox",
+	RanoDirUtil_moveDir( topdir, "dustbox",
 			"EstDirUtil_moveOldFile_toDustbox", ermsg,
 			isOldFile, &ago );
 }
@@ -318,7 +320,7 @@ EstDirUtil_removeOldFile( const char* topdir, ZnkStr ermsg, size_t days_ago, siz
 	AgoInfo ago = { 0 };
 	ago.days_ago_ = days_ago;
 	ago.sec_ago_  = sec_ago;
-	EstDirUtil_removeDir( topdir,
+	RanoDirUtil_removeDir( topdir,
 			"EstDirUtil_removeOldFile", ermsg,
 			isOldFile, &ago );
 }

@@ -19,12 +19,12 @@ ABINAME=mingw$(MACHINE)$(DEBUG)
 O = ./out_dir/$(ABINAME)
 
 ifeq ($(DEBUG), d)
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)_mingwd
 SLIBS_DIR=slib/$(PLATFORM)_mingwd
 else
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)
 SLIBS_DIR=slib/$(PLATFORM)
@@ -115,6 +115,10 @@ OBJS1=\
 
 SUB_LIBS=\
 
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
+
 PRODUCT_EXECS= \
 	__mkg_sentinel_target__ \
 	$(EXE_FILE0) \
@@ -138,11 +142,13 @@ $O:
 
 
 # Product files rule.
-$(EXE_FILE0): $(OBJS0)
-	$(LINKER) -o $(EXE_FILE0) $(OBJS0) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a -lws2_32 
+$(EXE_FILE0): $(OBJS0) 
+	@echo $(LINKER) -o $(EXE_FILE0)  {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a -lws2_32 
+	@     $(LINKER) -o $(EXE_FILE0)  $(OBJS0) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a -lws2_32 
 
-$(EXE_FILE1): $(OBJS1)
-	$(LINKER) -o $(EXE_FILE1) $(OBJS1) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a -lws2_32 
+$(EXE_FILE1): $(OBJS1) 
+	@echo $(LINKER) -o $(EXE_FILE1)  {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a -lws2_32 
+	@     $(LINKER) -o $(EXE_FILE1)  $(OBJS1) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a -lws2_32 
 
 
 ##
@@ -205,7 +211,7 @@ install: all install_exec install_data
 
 # Clean rule.
 clean:
-	rm -r $O/ 
+	rm -rf $O/ 
 
 # Src and Headers Dependency
 cache_task.o: Est_search_manager.h Est_config.h Est_base.h Est_sqi.h Est_recentory.h Est_box.h
@@ -240,5 +246,4 @@ Est_tag_manager.o: Est_tag_manager.h Est_config.h Est_ui.h Est_unid.h Est_hint_m
 Est_topic.o: Est_topic.h Est_config.h Est_ui.h Est_ui_base.h Est_box.h Est_box_ui.h Est_base.h Est_assort.h Est_assort_ui.h Est_search_manager.h Est_recentory.h Est_finf.h Est_assort_list.h Est_hint_manager.h
 Est_ui.o: Est_ui.h Est_ui_base.h Est_config.h Est_assort.h Est_base.h Est_box_ui.h
 Est_ui_base.o: Est_ui_base.h Est_box_base.h
-Est_unid.o:
 main.o: Est_config.h Est_get.h Est_post.h Est_filter.h Est_link_manager.h Est_boxmap_viewer.h Est_search_manager.h Est_img_viewer.h Est_topic.h Est_tag_manager.h

@@ -10,11 +10,11 @@ slib_sfx = ['a']
 ilib_sfx = ['so']
 dlib_sfx = ['so']
 template_include_path = ['-I$(MY_LIBS_ROOT)/$[lib_dir]$ \']
-template_lib_ver_sfx  = ['']
+template_lib_ver_sfx  = ['-$[lib_dlver]$']
 template_lib_file     = ['$[lib_pfx]$$[lib_name]$$[lib_ver_sfx]$.$[lib_sfx]$']
 template_libs_path    = ['$(MY_LIBS_ROOT)/$[lib_dir]$/out_dir/$(ABINAME)/$[lib_file]$']
 template_runtime_path = ['$(MY_LIBS_ROOT)/$(DLIBS_DIR)/$[lib_file]$']
-template_sublib       = ['$[submkf_dir]$/$O/$[lib_pfx]$$[sublib_name]$.$[slib_sfx]$']
+template_sublib_dir   = ['$[submkf_dir]$/$O']
 shell = ['sh']
 @@.
 
@@ -25,20 +25,23 @@ $[obj_dir]$:
 
 @@L exefile_rule
 $[exe_file]$: $[objs]$
-	$(LINKER) -o $[exe_file]$ $[objs]$ $(SUB_LIBS) -Wl,-rpath,. $[dep_libs]$
+	@echo $(LINKER) -o $[exe_file]$ {[objs]} $(SUB_LIBS) -Wl,-rpath,. $[dep_libs]$
+	@     $(LINKER) -o $[exe_file]$ $[objs]$ $(SUB_LIBS) -Wl,-rpath,. $[dep_libs]$
 @@.
 
 @@L dlibfile_rule
-$[dlib_file]$: $[objs]$
+$[dlib_file]$: $[objs]$ $[slib_file]$
 	if test -e $[dlib_file]$ ; then rm -f $[dlib_file]$; fi
-	$(GCC_CMD) -shared -Wl,-soname,$[dlib_name]$ -o $[dlib_file]$ $[objs]$ $(SUB_LIBS) $[dep_libs]$ -lc
+	@echo $(GCC_CMD) -shared -Wl,-soname,$[dlib_name]$ -o $[dlib_file]$ {[objs]} $(SUB_LIBS) $[dep_libs]$ -lc
+	@     $(GCC_CMD) -shared -Wl,-soname,$[dlib_name]$ -o $[dlib_file]$ $[objs]$ $(SUB_LIBS) $[dep_libs]$ -lc
 	if [ x"$O" != x ]; then /sbin/ldconfig -n $O; else /sbin/ldconfig -n .; fi
 @@.
 
 @@L slibfile_rule
 $[slib_file]$: $[objs]$
 	if test -e $[slib_file]$ ; then rm -f $[slib_file]$; fi
-	ar cru $[slib_file]$ $[objs]$ $(SUB_LIBS)
+	@echo ar cru $[slib_file]$ {[objs]} $(SUB_OBJS_ECHO)
+	@     ar cru $[slib_file]$ $[objs]$ $(SUB_OBJS)
 	ranlib $[slib_file]$
 @@.
 
@@ -78,7 +81,7 @@ install:
 @@.
 
 @@L clean_here_rule
-	rm -r $O/ 
+	rm -rf $O/ 
 @@.
 
 @@L clean_sub_rule

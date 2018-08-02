@@ -40,7 +40,7 @@ isExistMainSrc( ZnkVarpAry product_list, const char* mainsrc )
 bool
 MkfAndroid_generate( const ZnkMyf conf_myf, ZnkVarpAry product_list, MkfSeekFuncT_isInterestExt isSrcFileExt,
 		const ZnkStrAry include_paths_common,
-		const ZnkStrAry dependency_libs_common,
+		const ZnkStrAry dependency_libs_common, const ZnkStrAry runtime_additional,
 		const ZnkStrAry sublibs_list )
 {
 	ZnkFile fp = NULL;
@@ -50,6 +50,12 @@ MkfAndroid_generate( const ZnkMyf conf_myf, ZnkVarpAry product_list, MkfSeekFunc
 	const size_t deplib_size = ZnkStrAry_size( dependency_libs_common );
 	const size_t sublib_size = ZnkStrAry_size( sublibs_list );
 	bool is_at_notation = false;
+
+	/***
+	 * TODO: 
+	 * もう mkf_android_install.sh のようなシェルスクリプトを別途出力させるべき.
+	 * またruntime_additionalについてもそのスクリプト内にのみ反映させるべき.
+	 */
 
 	ZnkDir_mkdirPath( "mkf_android/jni", Znk_NPOS, '/', NULL );
 

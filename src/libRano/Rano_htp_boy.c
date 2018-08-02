@@ -10,6 +10,7 @@
 #include <Znk_htp_util.h>
 #include <Znk_s_base.h>
 #include <Znk_str.h>
+#include <Znk_str_ex.h>
 #include <Znk_str_fio.h>
 #include <Znk_str_path.h>
 #include <Znk_cookie.h>
@@ -19,6 +20,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include <tls_module/tls_module.h>
 
 static char st_tmpdir_common[ 256 ] = "tmp/";
 
@@ -83,9 +86,9 @@ loadBody( ZnkBfr ans, const char* body_img_filename )
 static int
 writeFP( void* arg, const uint8_t* buf, size_t buf_size )
 {
-	ZnkFile fp = (ZnkFile)arg;
+	ZnkFile fp = Znk_force_ptr_cast( ZnkFile, arg );
 	const size_t result_size = Znk_fwrite( buf, buf_size, fp );
-	return result_size;
+	return (int)result_size;
 }
 
 static bool
@@ -101,32 +104,60 @@ saveText( const char* filename, ZnkStr text )
 }
 
 bool
-RanoHtpBoy_process( const char* cnct_hostname, uint16_t cnct_port,
+RanoHtpBoy_initiateHttpsModule( const char* lib_basename, const char* cert_pem )
+{
+	return TlsModule_initiate( lib_basename, cert_pem );
+}
+
+static void
+addHdrStream( ZnkStr ans, const char* hdr_stream, const char* line_prefix )
+{
+	ZnkStrAry lines = ZnkStrAry_create( true );
+	size_t    size = 0;
+	size_t    idx  = 0;
+	ZnkStrEx_addSplitCSet( lines, hdr_stream, Znk_NPOS,
+			"\r\n", 2,
+			8 );
+	size = ZnkStrAry_size( lines );
+	for( idx=0; idx<size; ++idx ){
+		ZnkStr_addf( ans, "%s%s\n", line_prefix, ZnkStrAry_at_cstr( lines, idx ) );
+	}
+	ZnkStrAry_destroy( lines );
+}
+
+bool
+RanoHtpBoy_processEx( const char* cnct_hostname, uint16_t cnct_port,
 		const char* result_filename, const char* cookie_filename,
 		const char* send_hdr_filename, const char* body_img_filename,
-		const char* recv_hdr_filename )
+		const char* recv_hdr_filename, bool is_https,
+		ZnkHtpOnRecvFuncArg* prog_fnca, ZnkStr ermsg )
 {
 	bool result = false;
 	ZnkBfr     send_body = ZnkBfr_create_null();
 	ZnkVarpAry cookie    = ZnkVarpAry_create(true);
 	ZnkBfr     wk_bfr    = ZnkBfr_create_null();
 	ZnkFile    fp        = NULL;
-	ZnkStr     rmsg      = ZnkStr_new( "" );
 
 	struct ZnkHtpHdrs_tag send_hdrs = { 0 };
 	struct ZnkHtpHdrs_tag recv_hdrs = { 0 };
 	ZnkHtpOnRecvFuncArg recv_fnca = { 0 };
-
+	ZnkHtpOnRecvFuncArg prog_fnca_internal = { 0 };
 	bool   is_proxy = false;
-	size_t try_connect_num = 3;
 
 	ZnkCookie_load( cookie, cookie_filename );
 
 	fp = Znk_fopen( result_filename, "wb" );
 	if( fp == NULL ){
-		RanoLog_printf( "RanoHtpBoy : Cannot fopen(wb) result_filename [%s]\n", result_filename );
+		if( ermsg ){
+			ZnkStr_addf( ermsg, "RanoHtpBoy : Cannot fopen(wb) result_filename [%s]\n", result_filename );
+		}
 		goto FUNC_END;
 	}
+
+	if( prog_fnca ){
+		prog_fnca_internal = *prog_fnca;
+	}
+
 	recv_fnca.func_ = writeFP;
 	recv_fnca.arg_  = fp;
 
@@ -134,19 +165,41 @@ RanoHtpBoy_process( const char* cnct_hostname, uint16_t cnct_port,
 	ZnkHtpHdrs_compose( &recv_hdrs );
 
 	if( !loadHdrs( &send_hdrs, send_hdr_filename ) ){
-		RanoLog_printf( "RanoHtpBoy : Cannot open hdr file [%s]\n", send_hdr_filename );
+		if( ermsg ){
+			ZnkStr_addf( ermsg, "RanoHtpBoy : Cannot open hdr file [%s]\n", send_hdr_filename );
+		}
 		goto FUNC_END;
 	}
 	loadBody( send_body, body_img_filename );
 
-	result = ZnkHtpRAR_sendAndRecv( cnct_hostname, cnct_port,
-			&send_hdrs, send_body,
-			&recv_hdrs, recv_fnca,
-			cookie,
-			try_connect_num, is_proxy, wk_bfr, rmsg );
+	if( is_https ){
+		if( ermsg ){
+			ZnkStr_addf( ermsg, "RanoHtpBoy : HTTPS.\n" );
+		}
+		result = TlsModule_getHtpsProcess( cnct_hostname, cnct_port,
+					&send_hdrs, send_body,
+					&recv_hdrs, recv_fnca, prog_fnca_internal,
+					cookie,
+					is_proxy, wk_bfr, ermsg );
+		if( ermsg ){
+			ZnkStr_addf( ermsg, "\n" );
+		}
+	} else {
+		size_t try_connect_num = 3;
+		if( ermsg ){
+			ZnkStr_addf( ermsg, "RanoHtpBoy : HTTP.\n" );
+		}
+		result = ZnkHtpRAR_sendAndRecv( cnct_hostname, cnct_port,
+				&send_hdrs, send_body,
+				&recv_hdrs, recv_fnca, prog_fnca_internal,
+				cookie,
+				try_connect_num, is_proxy, wk_bfr, ermsg );
+	}
+
 	if( !result ){
-		RanoLog_printf( "RanoHtpBoy : Cannot connect [%s:%u]\n", cnct_hostname, cnct_port );
-		RanoLog_printf( "  rmsg=[[%s]]\n", ZnkStr_cstr(rmsg) );
+		if( ermsg ){
+			ZnkStr_addf( ermsg, "RanoHtpBoy : Cannot connect [%s:%u]\n", cnct_hostname, cnct_port );
+		}
 		goto FUNC_END;
 	}
 
@@ -154,17 +207,23 @@ RanoHtpBoy_process( const char* cnct_hostname, uint16_t cnct_port,
 		ZnkBfr_clear( wk_bfr );
 		ZnkHtpHdrs_extendToStream( send_hdrs.hdr1st_, send_hdrs.vars_, wk_bfr, false );
 		ZnkBfr_push_bk( wk_bfr, '\0' );
-		RanoLog_printf( "@@L send_hdrs\n" );
-		RanoLog_printf( "%s", (char*)ZnkBfr_data(wk_bfr) );
-		RanoLog_printf( "@@.\n" );
-	}
-	{
+		if( ermsg ){
+			ZnkStr_addf( ermsg, "  @@L send_hdrs\n" );
+			addHdrStream( ermsg, (char*)ZnkBfr_data(wk_bfr), "  " );
+			//ZnkStr_addf( ermsg, "%s", (char*)ZnkBfr_data(wk_bfr) );
+			ZnkStr_addf( ermsg, "  @@.\n" );
+		}
+
 		ZnkBfr_clear( wk_bfr );
 		ZnkHtpHdrs_extendToStream( recv_hdrs.hdr1st_, recv_hdrs.vars_, wk_bfr, false );
 		ZnkStr_terminate_null( wk_bfr, true );
-		RanoLog_printf( "@@L recv_hdrs\n" );
-		RanoLog_printf( "%s", (char*)ZnkBfr_data(wk_bfr) );
-		RanoLog_printf( "@@.\n" );
+		if( ermsg ){
+			ZnkStr_addf( ermsg, "  @@L recv_hdrs\n" );
+			addHdrStream( ermsg, (char*)ZnkBfr_data(wk_bfr), "  " );
+			//ZnkStr_addf( ermsg, "%s", (char*)ZnkBfr_data(wk_bfr) );
+			ZnkStr_addf( ermsg, "  @@.\n" );
+		}
+
 		if( recv_hdr_filename ){
 			saveText( recv_hdr_filename, wk_bfr );
 		}
@@ -179,8 +238,21 @@ FUNC_END:
 	Znk_fclose( fp );
 	ZnkHtpHdrs_dispose( &send_hdrs );
 	ZnkHtpHdrs_dispose( &recv_hdrs );
-	ZnkStr_delete( rmsg );
 	return result;
+}
+
+bool
+RanoHtpBoy_process( const char* cnct_hostname, uint16_t cnct_port,
+		const char* result_filename, const char* cookie_filename,
+		const char* send_hdr_filename, const char* body_img_filename,
+		const char* recv_hdr_filename )
+{
+	static const bool is_https = false;
+	return RanoHtpBoy_processEx( cnct_hostname, cnct_port,
+			result_filename, cookie_filename,
+			send_hdr_filename, body_img_filename,
+			recv_hdr_filename, is_https,
+			NULL, NULL );
 }
 
 void
@@ -316,7 +388,7 @@ RanoHtpBoy_readRecvHdrStatus( ZnkStr ans, size_t tkn_idx, const char* target, co
 }
 
 static bool
-writeSendHdrDat( struct ZnkHtpHdrs_tag* htp_hdrs, const char* tmpdir, const char* target )
+writeSendHdrDat( struct ZnkHtpHdrs_tag* htp_hdrs, const char* tmpdir, const char* target, ZnkStr ermsg )
 {
 	ZnkFile fp = NULL;
 	char http_hdr_file[ 256 ] = "";
@@ -335,15 +407,23 @@ writeSendHdrDat( struct ZnkHtpHdrs_tag* htp_hdrs, const char* tmpdir, const char
 		Znk_fclose( fp );
 		return true;
 	}
-	RanoLog_printf( "RanoHtpBoy : writeSendHdrDat : Cannot open send_hdr file [%s]\n", http_hdr_file );
+	if( ermsg ){
+		ZnkStr_addf( ermsg, "RanoHtpBoy : writeSendHdrDat : Cannot open send_hdr file [%s]\n", http_hdr_file );
+	}
 	return false;
 }
 
 static void
-getCnctHostnameAndPort( ZnkStr cnct_hostname, uint16_t* cnct_port, const char* parent_cnct )
+getCnctHostnameAndPort( ZnkStr cnct_hostname, uint16_t* cnct_port, const char* parent_cnct, bool is_https )
 {
 	const char* port_p = NULL;
 
+	/***
+	 * parent_cnct には通常プロトコルスキームは付加されていないはずで、
+	 * 以下は念のための処理である.
+	 * よってここではis_httpsであるか否かを一般に判定できない.
+	 */
+	//RanoLog_printf( "RanoHtpBoy : Report : parent_cnct=[%s]\n", parent_cnct );
 	if( ZnkS_isBegin( parent_cnct, "http://" ) ){
 		parent_cnct = parent_cnct + 7;
 	} else if( ZnkS_isBegin( parent_cnct, "https://" ) ){
@@ -357,7 +437,11 @@ getCnctHostnameAndPort( ZnkStr cnct_hostname, uint16_t* cnct_port, const char* p
 		sscanf( port_p+1, "%hd", cnct_port );
 	} else {
 		ZnkStr_assign( cnct_hostname, 0, parent_cnct, Znk_NPOS );
-		*cnct_port = 80;
+		if( is_https ){
+			*cnct_port = 443;
+		} else {
+			*cnct_port = 80;
+		}
 	}
 }
 
@@ -431,18 +515,17 @@ saveSendBody( struct ZnkHtpHdrs_tag* htp_hdrs, ZnkVarpAry post_vars, const char*
  * ボディデータとしてクエリーストリングが一行分付加されて送信される形となる.
  */
 bool
-RanoHtpBoy_do_get( const char* hostname, const char* unesc_req_urp, const char* target,
+RanoHtpBoy_cipher_get( const char* hostname, const char* unesc_req_urp, const char* target,
 		struct ZnkHtpHdrs_tag* htp_hdrs,
 		const char* parent_proxy,
 		const char* tmpdir, const char* cachebox,
-		ZnkStr result_filename )
+		ZnkStr result_filename, bool is_https, ZnkStr ermsg )
 {
 	bool     result = false;
 	uint16_t cnct_port = 80;
-	ZnkStr cnct_hostname = ZnkStr_new( "" );
-
-	char req_uri[ 1024 ] = "";
-	char parent_cnct[ 4096 ] = "";
+	ZnkStr   cnct_hostname = ZnkStr_new( "" );
+	char     req_uri[ 1024 ] = "";
+	char     parent_cnct[ 4096 ] = "";
 
 	if( ZnkS_empty( parent_proxy ) || ZnkS_eq( parent_proxy, "NONE" ) ){
 		Znk_snprintf( parent_cnct, sizeof(parent_cnct), "%s", hostname );
@@ -461,9 +544,9 @@ RanoHtpBoy_do_get( const char* hostname, const char* unesc_req_urp, const char* 
 	}
 
 	RanoHtpBoy_getResultFile( hostname, unesc_req_urp, result_filename, cachebox, target );
-	writeSendHdrDat( htp_hdrs, tmpdir, target );
+	writeSendHdrDat( htp_hdrs, tmpdir, target, ermsg );
 
-	getCnctHostnameAndPort( cnct_hostname, &cnct_port, parent_cnct );
+	getCnctHostnameAndPort( cnct_hostname, &cnct_port, parent_cnct, is_https );
 
 	{
 		char cookie_filename[ 256 ] = "";
@@ -475,20 +558,22 @@ RanoHtpBoy_do_get( const char* hostname, const char* unesc_req_urp, const char* 
 		Znk_snprintf( send_hdr_filename, sizeof(send_hdr_filename), "%s%s/send_hdr.dat",  tmpdir, target );
 		Znk_snprintf( recv_hdr_filename, sizeof(recv_hdr_filename), "%s%s/recv_hdr.dat",  tmpdir, target );
 
-		result = RanoHtpBoy_process( ZnkStr_cstr(cnct_hostname), cnct_port,
+		result = RanoHtpBoy_processEx( ZnkStr_cstr(cnct_hostname), cnct_port,
 					ZnkStr_cstr(result_filename), cookie_filename,
-					send_hdr_filename, body_img_filename, recv_hdr_filename );
+					send_hdr_filename, body_img_filename, recv_hdr_filename, is_https,
+					NULL, ermsg );
 	}
 
 	ZnkStr_delete( cnct_hostname );
 	return result;
 }
 bool
-RanoHtpBoy_do_get_with404( const char* hostname, const char* unesc_req_urp, const char* target,
+RanoHtpBoy_cipher_get_with404( const char* hostname, const char* unesc_req_urp, const char* target,
 		struct ZnkHtpHdrs_tag* htp_hdrs,
 		const char* parent_proxy,
 		const char* tmpdir, const char* cachebox,
-		ZnkStr result_filename, bool is_without_404, int* ans_status_code )
+		ZnkStr result_filename, bool is_without_404, int* ans_status_code, bool is_https,
+		ZnkHtpOnRecvFuncArg* prog_fnca, ZnkStr ermsg )
 {
 	bool     result = false;
 	uint16_t cnct_port = 80;
@@ -515,9 +600,9 @@ RanoHtpBoy_do_get_with404( const char* hostname, const char* unesc_req_urp, cons
 	}
 
 	RanoHtpBoy_getResultFile( hostname, unesc_req_urp, result_filename, cachebox, target );
-	writeSendHdrDat( htp_hdrs, tmpdir, target );
+	writeSendHdrDat( htp_hdrs, tmpdir, target, ermsg );
 
-	getCnctHostnameAndPort( cnct_hostname, &cnct_port, parent_cnct );
+	getCnctHostnameAndPort( cnct_hostname, &cnct_port, parent_cnct, is_https );
 
 	{
 		char cookie_filename[ 256 ] = "";
@@ -529,9 +614,10 @@ RanoHtpBoy_do_get_with404( const char* hostname, const char* unesc_req_urp, cons
 		Znk_snprintf( send_hdr_filename, sizeof(send_hdr_filename), "%s%s/send_hdr.dat",  tmpdir, target );
 		Znk_snprintf( recv_hdr_filename, sizeof(recv_hdr_filename), "%s%s/recv_hdr.dat",  tmpdir, target );
 
-		result = RanoHtpBoy_process( ZnkStr_cstr(cnct_hostname), cnct_port,
+		result = RanoHtpBoy_processEx( ZnkStr_cstr(cnct_hostname), cnct_port,
 					ZnkStr_cstr(result_filename_ref), cookie_filename,
-					send_hdr_filename, body_img_filename, recv_hdr_filename );
+					send_hdr_filename, body_img_filename, recv_hdr_filename, is_https,
+					prog_fnca, ermsg );
 
 		if( result && ( is_without_404 || ans_status_code ) ){
 			int    status_code = 0;
@@ -560,18 +646,17 @@ RanoHtpBoy_do_get_with404( const char* hostname, const char* unesc_req_urp, cons
 	return result;
 }
 bool
-RanoHtpBoy_do_head( const char* hostname, const char* unesc_req_urp, const char* target,
+RanoHtpBoy_cipher_head( const char* hostname, const char* unesc_req_urp, const char* target,
 		struct ZnkHtpHdrs_tag* htp_hdrs,
 		const char* parent_proxy,
 		const char* tmpdir,
-		ZnkStr result_filename )
+		ZnkStr result_filename, bool is_https, ZnkStr ermsg )
 {
 	bool     result = false;
 	uint16_t cnct_port = 80;
-	ZnkStr cnct_hostname = ZnkStr_new( "" );
-
-	char req_uri[ 1024 ] = "";
-	char parent_cnct[ 4096 ] = "";
+	ZnkStr   cnct_hostname = ZnkStr_new( "" );
+	char     req_uri[ 1024 ] = "";
+	char     parent_cnct[ 4096 ] = "";
 
 	if( ZnkS_empty( parent_proxy ) || ZnkS_eq( parent_proxy, "NONE" ) ){
 		Znk_snprintf( parent_cnct, sizeof(parent_cnct), "%s", hostname );
@@ -590,9 +675,9 @@ RanoHtpBoy_do_head( const char* hostname, const char* unesc_req_urp, const char*
 	}
 
 	ZnkStr_setf( result_filename, "%s%s/head_result.dat", tmpdir, target );
-	writeSendHdrDat( htp_hdrs, tmpdir, target );
+	writeSendHdrDat( htp_hdrs, tmpdir, target, ermsg );
 
-	getCnctHostnameAndPort( cnct_hostname, &cnct_port, parent_cnct );
+	getCnctHostnameAndPort( cnct_hostname, &cnct_port, parent_cnct, is_https );
 
 	{
 		char cookie_filename[ 256 ] = "";
@@ -604,15 +689,15 @@ RanoHtpBoy_do_head( const char* hostname, const char* unesc_req_urp, const char*
 		Znk_snprintf( send_hdr_filename, sizeof(send_hdr_filename), "%s%s/send_hdr.dat",  tmpdir, target );
 		Znk_snprintf( recv_hdr_filename, sizeof(recv_hdr_filename), "%s%s/recv_hdr.dat",  tmpdir, target );
 
-		result = RanoHtpBoy_process( ZnkStr_cstr(cnct_hostname), cnct_port,
+		result = RanoHtpBoy_processEx( ZnkStr_cstr(cnct_hostname), cnct_port,
 					ZnkStr_cstr(result_filename), cookie_filename,
-					send_hdr_filename, body_img_filename, recv_hdr_filename );
+					send_hdr_filename, body_img_filename, recv_hdr_filename, is_https,
+					NULL, ermsg );
 	}
 
 	ZnkStr_delete( cnct_hostname );
 	return result;
 }
-
 
 Znk_INLINE void
 appendBfr_byCStr( ZnkBfr bfr, const char* cstr )
@@ -622,18 +707,17 @@ appendBfr_byCStr( ZnkBfr bfr, const char* cstr )
 }
 
 bool
-RanoHtpBoy_do_post( const char* hostname, const char* unesc_req_urp, const char* target,
+RanoHtpBoy_cipher_post( const char* hostname, const char* unesc_req_urp, const char* target,
 		struct ZnkHtpHdrs_tag* htp_hdrs, ZnkVarpAry post_vars,
 		const char* parent_proxy,
 		const char* tmpdir, const char* cachebox,
-		ZnkStr result_filename )
+		ZnkStr result_filename, bool is_https, ZnkStr ermsg )
 {
 	bool     result = false;
 	uint16_t cnct_port = 80;
-	ZnkStr cnct_hostname = ZnkStr_new( "" );
-
-	char req_uri[ 1024 ] = "";
-	char parent_cnct[ 4096 ] = "";
+	ZnkStr   cnct_hostname = ZnkStr_new( "" );
+	char     req_uri[ 1024 ] = "";
+	char     parent_cnct[ 4096 ] = "";
 
 	if( ZnkS_empty( parent_proxy ) || ZnkS_eq( parent_proxy, "NONE" ) ){
 		Znk_snprintf( parent_cnct, sizeof(parent_cnct), "%s", hostname );
@@ -663,9 +747,9 @@ RanoHtpBoy_do_post( const char* hostname, const char* unesc_req_urp, const char*
 	}
 
 	RanoHtpBoy_getResultFile( hostname, unesc_req_urp, result_filename, cachebox, target );
-	writeSendHdrDat( htp_hdrs, tmpdir, target );
+	writeSendHdrDat( htp_hdrs, tmpdir, target, ermsg );
 
-	getCnctHostnameAndPort( cnct_hostname, &cnct_port, parent_cnct );
+	getCnctHostnameAndPort( cnct_hostname, &cnct_port, parent_cnct, is_https );
 
 	{
 		char cookie_filename[ 256 ] = "";
@@ -678,15 +762,77 @@ RanoHtpBoy_do_post( const char* hostname, const char* unesc_req_urp, const char*
 		Znk_snprintf( body_img_filename, sizeof(body_img_filename), "%s%s/send_body.dat", tmpdir, target );
 		Znk_snprintf( recv_hdr_filename, sizeof(recv_hdr_filename), "%s%s/recv_hdr.dat",  tmpdir, target );
 
-		result = RanoHtpBoy_process( ZnkStr_cstr(cnct_hostname), cnct_port,
+		result = RanoHtpBoy_processEx( ZnkStr_cstr(cnct_hostname), cnct_port,
 					ZnkStr_cstr(result_filename), cookie_filename,
-					send_hdr_filename, body_img_filename, recv_hdr_filename );
+					send_hdr_filename, body_img_filename, recv_hdr_filename, is_https,
+					NULL, ermsg );
 	}
 
 	ZnkStr_delete( cnct_hostname );
 
 	return result;
 }
+
+bool
+RanoHtpBoy_do_get( const char* hostname, const char* unesc_req_urp, const char* target,
+		struct ZnkHtpHdrs_tag* htp_hdrs,
+		const char* parent_proxy,
+		const char* tmpdir, const char* cachebox,
+		ZnkStr result_filename )
+{
+	static const bool is_https = false;
+	return RanoHtpBoy_cipher_get( hostname, unesc_req_urp, target,
+			htp_hdrs,
+			parent_proxy,
+			tmpdir, cachebox,
+			result_filename, is_https, NULL );
+}
+bool
+RanoHtpBoy_do_get_with404( const char* hostname, const char* unesc_req_urp, const char* target,
+		struct ZnkHtpHdrs_tag* htp_hdrs,
+		const char* parent_proxy,
+		const char* tmpdir, const char* cachebox,
+		ZnkStr result_filename, bool is_without_404, int* ans_status_code,
+		ZnkHtpOnRecvFuncArg* prog_fnca )
+{
+	static const bool is_https = false;
+	return RanoHtpBoy_cipher_get_with404( hostname, unesc_req_urp, target,
+			htp_hdrs,
+			parent_proxy,
+			tmpdir, cachebox,
+			result_filename, is_without_404, ans_status_code, is_https,
+			prog_fnca, NULL );
+}
+bool
+RanoHtpBoy_do_head( const char* hostname, const char* unesc_req_urp, const char* target,
+		struct ZnkHtpHdrs_tag* htp_hdrs,
+		const char* parent_proxy,
+		const char* tmpdir,
+		ZnkStr result_filename )
+{
+	static const bool is_https = false;
+	return RanoHtpBoy_cipher_head( hostname, unesc_req_urp, target,
+			htp_hdrs,
+			parent_proxy,
+			tmpdir,
+			result_filename, is_https, NULL );
+}
+bool
+RanoHtpBoy_do_post( const char* hostname, const char* unesc_req_urp, const char* target,
+		struct ZnkHtpHdrs_tag* htp_hdrs, ZnkVarpAry post_vars,
+		const char* parent_proxy,
+		const char* tmpdir, const char* cachebox,
+		ZnkStr result_filename )
+{
+	static const bool is_https = false;
+	return RanoHtpBoy_cipher_post( hostname, unesc_req_urp, target,
+			htp_hdrs, post_vars,
+			parent_proxy,
+			tmpdir, cachebox,
+			result_filename, is_https, NULL );
+}
+
+
 
 void
 RanoHtpBoy_seekExeDir( ZnkStr exedir, size_t depth, char dsp, const char* target_filename )

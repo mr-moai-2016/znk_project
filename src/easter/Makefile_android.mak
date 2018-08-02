@@ -33,7 +33,7 @@ COMPILER := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc \
 	-fpic -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv5te -mtune=xscale -msoft-float -mthumb -Os \
 	-g -DNDEBUG -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 \
 	-DANDROID \
-	-Wa,--noexecstack -Wformat -Werror=format-security -Wall \
+	-Wa,--noexecstack -Wformat -Werror=format-security -Wall  \
 	-I$(PLATFORMS_LEVEL)/arch-arm/usr/include
 
 LINKER   := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-g++ \
@@ -54,7 +54,7 @@ COMPILER := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc \
 	-fpic -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfpu=vfpv3-d16 -mfloat-abi=softfp -mthumb -Os \
 	-g -DNDEBUG -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 \
 	-DANDROID \
-	-Wa,--noexecstack -Wformat -Werror=format-security -Wall \
+	-Wa,--noexecstack -Wformat -Werror=format-security -Wall  \
 	-I$(PLATFORMS_LEVEL)/arch-arm/usr/include \
 
 LINKER   := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-g++ \
@@ -75,7 +75,7 @@ COMPILER := $(TOOLCHAINS_DIR)/bin/i686-linux-android-gcc \
 	-ffunction-sections -funwind-tables -no-canonical-prefixes -fstack-protector -O2 \
 	-g -DNDEBUG -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300 \
 	-DANDROID \
-	-Wa,--noexecstack -Wformat -Werror=format-security -Wall \
+	-Wa,--noexecstack -Wformat -Werror=format-security -Wall  \
 	-I$(PLATFORMS_LEVEL)/arch-x86/usr/include \
 
 LINKER   := $(TOOLCHAINS_DIR)/bin/i686-linux-android-g++ \
@@ -172,6 +172,10 @@ OBJS1=\
 
 SUB_LIBS=\
 
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
+
 PRODUCT_EXECS= \
 	__mkg_sentinel_target__ \
 	$(EXE_FILE0) \
@@ -181,8 +185,8 @@ PRODUCT_EXECS= \
 
 RUNTIME_FILES= \
 	__mkg_sentinel_target__ \
-	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/libZnk.so \
-	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/libRano.so \
+	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/libZnk-$(DL_VER).so \
+	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/libRano-$(DL_VER).so \
 
 
 
@@ -196,20 +200,16 @@ $O:
 
 # Product files rule.
 $(EXE_FILE0): $(OBJS0)
-	$(LINKER) -Wl,--gc-sections -Wl,-z,nocopyreloc $(RPATH_LINK) \
-	-lgcc \
-	$(OBJS0) $(SUB_LIBS) \
-	-Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk.so $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano.so \
-	$(LINKER_OPT) \
-	-o $(EXE_FILE0)
+	@echo $(LINKER) -Wl,--gc-sections -Wl,-z,nocopyreloc $(RPATH_LINK) \
+	-lgcc {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).so $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).so $(LINKER_OPT) -o $(EXE_FILE0)
+	@     $(LINKER) -Wl,--gc-sections -Wl,-z,nocopyreloc $(RPATH_LINK) \
+	-lgcc $(OBJS0) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).so $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).so $(LINKER_OPT) -o $(EXE_FILE0)
 
 $(EXE_FILE1): $(OBJS1)
-	$(LINKER) -Wl,--gc-sections -Wl,-z,nocopyreloc $(RPATH_LINK) \
-	-lgcc \
-	$(OBJS1) $(SUB_LIBS) \
-	-Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk.so $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano.so \
-	$(LINKER_OPT) \
-	-o $(EXE_FILE1)
+	@echo $(LINKER) -Wl,--gc-sections -Wl,-z,nocopyreloc $(RPATH_LINK) \
+	-lgcc {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).so $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).so $(LINKER_OPT) -o $(EXE_FILE1)
+	@     $(LINKER) -Wl,--gc-sections -Wl,-z,nocopyreloc $(RPATH_LINK) \
+	-lgcc $(OBJS1) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).so $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).so $(LINKER_OPT) -o $(EXE_FILE1)
 
 
 ##
@@ -270,7 +270,7 @@ install: all install_exec install_data
 
 # Clean rule.
 clean:
-	del /Q $O\ 
+	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
 cache_task.o: Est_search_manager.h Est_config.h Est_base.h Est_sqi.h Est_recentory.h Est_box.h
@@ -305,5 +305,4 @@ Est_tag_manager.o: Est_tag_manager.h Est_config.h Est_ui.h Est_unid.h Est_hint_m
 Est_topic.o: Est_topic.h Est_config.h Est_ui.h Est_ui_base.h Est_box.h Est_box_ui.h Est_base.h Est_assort.h Est_assort_ui.h Est_search_manager.h Est_recentory.h Est_finf.h Est_assort_list.h Est_hint_manager.h
 Est_ui.o: Est_ui.h Est_ui_base.h Est_config.h Est_assort.h Est_base.h Est_box_ui.h
 Est_ui_base.o: Est_ui_base.h Est_box_base.h
-Est_unid.o:
 main.o: Est_config.h Est_get.h Est_post.h Est_filter.h Est_link_manager.h Est_boxmap_viewer.h Est_search_manager.h Est_img_viewer.h Est_topic.h Est_tag_manager.h

@@ -53,6 +53,10 @@ ZnkDate_set_minute( ZnkDate* date, uint8_t  minute ){ date->d2_ &= 0xffff00ff; d
 Znk_INLINE void
 ZnkDate_set_second( ZnkDate* date, uint8_t  second ){ date->d2_ &= 0xffffff00; date->d2_ |= (uint32_t)second; }
 
+Znk_INLINE bool ZnkDate_eq( const ZnkDate* date1, const ZnkDate* date2 ){
+	return (bool)( date1->d1_ == date2->d1_ && date1->d2_ == date2->d2_ );
+}
+
 /**
  * @brief
  * ¡Œ»Ý‚Ì“ú•t‚ÆŽžŠÔ‚ð“¾‚é.

@@ -322,13 +322,27 @@ EstLink_filterLink( ZnkStr str, struct EstLinkInfo* link_info, EstLinkXhr link_x
 		 */
 		const char* r;
 		char hostname[ 1024 ] = "";
+
+		if( ZnkS_isBegin( p, "http://" ) ){
+			ZnkStr_set( src_prefix, "http://" );
+		} else if( ZnkS_isBegin( p, "https://" ) ){
+			ZnkStr_set( src_prefix, "https://" );
+		} else {
+			/* // の場合. is_https_parent_の設定を受け継ぐ */
+			if( link_info->is_https_parent_ ){
+				ZnkStr_set( src_prefix, "https://" );
+			} else {
+				ZnkStr_set( src_prefix, "http://" );
+			}
+		}
+
 		r = strchr( q, '/' );
 		if( r ){
 			ZnkS_copy( hostname, sizeof(hostname), q, r-q );
-			ZnkStr_assign( src_prefix, 0, p, r-p );
+			ZnkStr_append( src_prefix, q, r-q );
 		} else {
 			ZnkS_copy( hostname, sizeof(hostname), q, Znk_NPOS );
-			ZnkStr_assign( src_prefix, 0, p, Znk_NPOS );
+			ZnkStr_append( src_prefix, q, Znk_NPOS );
 		}
 		target = EstLink_findTargetName( link_info->mtgt_, hostname );
 		if( target == NULL ){
@@ -354,7 +368,11 @@ EstLink_filterLink( ZnkStr str, struct EstLinkInfo* link_info, EstLinkXhr link_x
 		 *   base_href_をsrc_prefixとする.
 		 */
 		if( *p == '/' ){
-			ZnkStr_set( src_prefix, ZnkStr_cstr(link_info->hostname_) );
+			/* is_https_parent_の設定を受け継ぐ */
+			if( link_info->is_https_parent_ ){
+				ZnkStr_set( src_prefix, "https://" );
+			}
+			ZnkStr_add( src_prefix, ZnkStr_cstr(link_info->hostname_) );
 		} else {
 			/***
 			 * hostnameで開始していないパターンのみbase_hrefを使う.
@@ -363,7 +381,36 @@ EstLink_filterLink( ZnkStr str, struct EstLinkInfo* link_info, EstLinkXhr link_x
 			if( ZnkStr_isBegin( str, ZnkStr_cstr(link_info->hostname_) ) ){
 				ZnkStr_clear( src_prefix );
 			} else {
-				ZnkStr_set( src_prefix, ZnkStr_cstr(link_info->base_href_) );
+				/* is_https_parent_の設定を受け継ぐ */
+				if( link_info->is_https_parent_ ){
+					if(  ZnkStr_isBegin( link_info->base_href_, "http://" ) 
+					  || ZnkStr_isBegin( link_info->base_href_, "https://" ) )
+					{
+						/* base_href_に明示的にプロトコル指定されている場合はそれに従う */
+						ZnkStr_set( src_prefix, ZnkStr_cstr(link_info->base_href_) );
+					} else if( ZnkStr_isBegin( link_info->base_href_, "//" ) ){
+						/* base_href_に//指定されている場合はそれを除去してhttps://へ */
+						ZnkStr_setf( src_prefix, "https://%s", ZnkStr_cstr(link_info->base_href_)+Znk_strlen_literal("//") );
+					} else {
+						/* base_href_にプロトコル指定されていない場合. */
+						if( ZnkStr_first( link_info->base_href_ ) == '/' ){
+							ZnkStr_setf( src_prefix, "https://%s%s",
+									ZnkStr_cstr(link_info->hostname_), ZnkStr_cstr(link_info->base_href_) );
+						} else {
+							/* 特別措置 */
+							if( ZnkStr_isBegin( link_info->base_href_, ZnkStr_cstr(link_info->hostname_) ) ){
+								/* base_href_がhostname_から始まっている場合 */
+								ZnkStr_setf( src_prefix, "https://%s", ZnkStr_cstr(link_info->base_href_) );
+							} else {
+								/* base_href_がhostname_から始まっていない場合 */
+								ZnkStr_setf( src_prefix, "https://%s/%s",
+										ZnkStr_cstr(link_info->hostname_), ZnkStr_cstr(link_info->base_href_) );
+							}
+						}
+					}
+				} else {
+					ZnkStr_set( src_prefix, ZnkStr_cstr(link_info->base_href_) );
+				}
 			}
 		}
 	}
@@ -399,93 +446,6 @@ EstLink_filterLink( ZnkStr str, struct EstLinkInfo* link_info, EstLinkXhr link_x
 				easter_prefix,
 				EstRequest_getCStr( link_info->est_req_ ), ZnkStr_cstr(src_prefix) );
 	}
-
-	ZnkHtpURL_escape_withoutSlash( esc_str, (uint8_t*)ZnkStr_cstr(str), ZnkStr_leng(str) );
-	ZnkStr_swap( str, esc_str );
-
-	ZnkStr_insert( str, 0, buf, Znk_NPOS );
-
-FUNC_END:
-	ZnkStr_delete( esc_str );
-	ZnkStr_delete( src_prefix );
-	return result;
-}
-
-int
-EstLink_filterForm( ZnkStr str, struct EstLinkInfo* link_info )
-{
-	int result = 0;
-	char buf[ 1024 ] = "";
-	const char* p = ZnkStr_cstr( str );
-	const char* q = NULL;
-	ZnkStr esc_str    = ZnkStr_new( "" );
-	ZnkStr src_prefix = ZnkStr_new( "" );
-	const char* target = NULL;
-	const char* xhr_auth_host = EstConfig_XhrAuthHost();
-
-	if( q > p ){
-		/***
-		 * このケースではstrに必ずホスト名を含む.
-		 */
-		const char* r;
-		char hostname[ 1024 ] = "";
-		r = strchr( q, '/' );
-		if( r ){
-			ZnkS_copy( hostname, sizeof(hostname), q, r-q );
-			ZnkStr_assign( src_prefix, 0, p, r-p );
-		} else {
-			ZnkS_copy( hostname, sizeof(hostname), q, Znk_NPOS );
-			ZnkStr_assign( src_prefix, 0, p, Znk_NPOS );
-		}
-		target = EstLink_findTargetName( link_info->mtgt_, hostname );
-		if( target == NULL ){
-			/* targetに存在しないlinkの場合は何も加工しない */
-			goto FUNC_END;
-		} else {
-			if( r ){
-				/* str には req_urp が残る. */
-				ZnkStr_erase( str, 0, r-p );
-			} else {
-				ZnkStr_clear( str );
-			}
-		}
-	} else {
-		/***
-		 * strが http:// などのプロトコル指定で始まっていない場合.
-		 * / で始まるリンク:
-		 *   str には req_urpだけが指定されているケースと考えられる.
-		 *   hostnameをsrc_prefixとする
-		 * / で始まらないリンク:
-		 *   str は プロトコル指定のないフルパス、または相対パスだけが指定されているケースと考えられる.
-		 *   (しかしそのどちらであるかを一般的に判断するのは難しい)
-		 *   base_href_をsrc_prefixとする.
-		 */
-		if( *p == '/' ){
-			ZnkStr_set( src_prefix, ZnkStr_cstr(link_info->hostname_) );
-		} else {
-			/***
-			 * hostnameで開始していないパターンのみbase_hrefを使う.
-			 * そうでない場合はsrc_prefixは空にしておく.
-			 */
-			if( ZnkStr_isBegin( str, ZnkStr_cstr(link_info->hostname_) ) ){
-				ZnkStr_clear( src_prefix );
-			} else {
-				ZnkStr_set( src_prefix, ZnkStr_cstr(link_info->base_href_) );
-			}
-		}
-	}
-	/***
-	 * 以後、target の範囲内にあるものであり、strはreq_urpを意味する.
-	 */
-	ZnkStrEx_replace_BF( str, 0, "&amp;", Znk_strlen_literal("&amp;"), "&", 1,
-			Znk_NPOS, Znk_NPOS );
-
-	Znk_snprintf( buf, sizeof(buf),
-			"http://%s/easter?"
-			"est_%s=%s",
-			xhr_auth_host,
-			EstRequest_getCStr( link_info->est_req_ ),
-			ZnkStr_cstr(src_prefix) );
 
 	ZnkHtpURL_escape_withoutSlash( esc_str, (uint8_t*)ZnkStr_cstr(str), ZnkStr_leng(str) );
 	ZnkStr_swap( str, esc_str );

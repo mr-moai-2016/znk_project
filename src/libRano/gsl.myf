@@ -1,7 +1,7 @@
 @def_quote [' ']
 
 @@V config
-dlib_filename = ['Rano-2.0.dll']
+dlib_filename = ['Rano-#[DL_VER]#.dll']
 def_filename = ['gsl.def']
 @@.
 
@@ -27,17 +27,27 @@ RanoCGIUtil_replaceNLtoHtmlBR
 RanoCGIUtil_skipProtocolPrefix
 RanoCGIUtil_splitQueryString
 RanoConfUtil_initByStrAry_withEnvVar
+RanoDirUtil_filterDir
+RanoDirUtil_mkdirOfTailContain
+RanoDirUtil_moveDir
+RanoDirUtil_removeDir
 RanoFileInfo_getFileSize
 RanoFileInfo_getLastUpdatedTime
 RanoFltr_updateCookieFilter_bySetCookie
 RanoHash_murmurhash3_32_gc
 RanoHtmlUI_makeSelectBox
+RanoHtpBoy_cipher_get
+RanoHtpBoy_cipher_get_with404
+RanoHtpBoy_cipher_head
+RanoHtpBoy_cipher_post
 RanoHtpBoy_do_get
 RanoHtpBoy_do_get_with404
 RanoHtpBoy_do_head
 RanoHtpBoy_do_post
 RanoHtpBoy_getResultFile
+RanoHtpBoy_initiateHttpsModule
 RanoHtpBoy_process
+RanoHtpBoy_processEx
 RanoHtpBoy_readRecvHdrStatus
 RanoHtpBoy_readRecvHdrVar
 RanoHtpBoy_seekExeDir
@@ -97,10 +107,17 @@ RanoTxtFilterAry_exec
 RanoTxtFilterAry_regist_byCommand
 RanoTxtFilterAry_size
 RanoTxtFilter_writeCommand
+RanoVTagUtil_getNewParentVer
+RanoVTagUtil_getPatchDir
+RanoVTagUtil_getPlatformID
+RanoVTagUtil_getVTagStr
 @@.
 
 @@L export_symbols_additional
 @@.
 
 @@L ignore_symbols
+TlsModule_finalize
+TlsModule_getHtpsProcess
+TlsModule_initiate
 @@.

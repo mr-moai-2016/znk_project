@@ -14,6 +14,7 @@
 
 #include <Rano_file_info.h>
 #include <Rano_html_ui.h>
+#include <Rano_dir_util.h>
 
 #include <Znk_htp_util.h>
 #include <Znk_dir.h>
@@ -329,7 +330,8 @@ static void
 removeCaches( ZnkBird bird,
 		RanoCGIEVar* evar, ZnkVarpAry post_vars,
 		const char** template_html_file, ZnkStr EstCM_img_url_list,
-		ZnkStr backto, ZnkStr assort_msg, ZnkStr msg, const char* authentic_key )
+		ZnkStr backto, ZnkStr assort_msg, ZnkStr msg, const char* authentic_key,
+		bool this_is_dustbox )
 {
 	/***
 	 * TODO:
@@ -371,7 +373,8 @@ removeCaches( ZnkBird bird,
 		ZnkStr_add( result_view, "<br>\n" );
 
 		ZnkStr_add( result_view, "<br>\n" );
-		ZnkStr_addf( result_view, "<a class=%s href=\"javascript:EjsAssort_submitCommandAndArg( document.fm_main, 'cache', 'remove', '' )\">", style_class_name );
+		ZnkStr_addf( result_view, "<a class=%s href=\"javascript:EjsAssort_submitCommandAndArg( document.fm_main, 'cache', 'remove', 'this_is_dustbox=%s' )\">",
+				style_class_name, this_is_dustbox ? "true" : "false" );
 		ZnkStr_addf( result_view, "はい、実際に削除します.</a><br>\n" );
 
 		if( ZnkStr_leng(backto) ){
@@ -393,8 +396,11 @@ removeCaches( ZnkBird bird,
 		}
 	} else {
 		ZnkVarp pwd;
-		//processed_count = EstBox_remove( post_vars, msg );
-		processed_count = EstBox_dustize( post_vars, msg );
+		if( this_is_dustbox ){
+			processed_count = EstBox_remove(  post_vars, msg );
+		} else {
+			processed_count = EstBox_dustize( post_vars, msg );
+		}
 		if( IS_OK( pwd = ZnkVarpAry_find_byName_literal( post_vars, "est_cache_pwd", false ) )){
 			size_t begin_idx = 0;
 			size_t end_idx   = Znk_NPOS;
@@ -442,6 +448,121 @@ removeCaches( ZnkBird bird,
 	ZnkStr_delete( assort_ui );
 	ZnkStr_delete( tag_editor_ui );
 }
+
+static void
+cleanCacheBox( ZnkBird bird,
+		RanoCGIEVar* evar, ZnkVarpAry post_vars,
+		const char** template_html_file, ZnkStr EstCM_img_url_list,
+		ZnkStr backto, ZnkStr assort_msg, ZnkStr msg, const char* authentic_key )
+{
+	/***
+	 * TODO:
+	 * 以下を削除します.
+	 * 本当によろしいですか？
+	 * 画面を出し、「削除」ボタンを押すとカレントのEstCacheManager画面に戻る.
+	 */
+	ZnkVarp confirm;
+	ZnkVarp varp;
+	ZnkStr  result_view = ZnkStr_new( "" );
+	ZnkStr  assort_ui = ZnkStr_new( "" );
+	ZnkStr  tag_editor_ui = ZnkStr_new( "" );
+	size_t  processed_count = 0;
+	bool    is_confirm = false;
+	const size_t show_file_num = EstConfig_getShowFileNum();
+	const char* style_class_name = "MstyElemLink";
+	const char* favorite_dir = EstConfig_favorite_dir();
+
+	*template_html_file = "templates/boxmap_viewer.html";
+
+	if( IS_OK( confirm = ZnkVarpAry_find_byName_literal( post_vars, "confirm", false ) )){
+		if( ZnkS_eq( ZnkVar_cstr(confirm), "on" ) ){
+			is_confirm = true;
+		}
+	}
+
+	if( is_confirm ){
+		const char* est_manager = "cache";
+		*template_html_file = "templates/remove_confirm.html";
+		EstUI_makeCheckedConfirmView( evar, post_vars,
+				result_view, show_file_num, authentic_key,
+				ZnkStr_cstr(assort_msg) );
+
+		ZnkStr_add( result_view, "<br>\n" );
+		ZnkStr_add( result_view, "<font size=-1>\n" );
+		ZnkStr_add( result_view, "cacheboxを全削除しようとしています.<br>\n" );
+		ZnkStr_add( result_view, "よろしいですか?<br>\n" );
+		ZnkStr_add( result_view, "</font>\n" );
+		ZnkStr_add( result_view, "<br>\n" );
+
+		ZnkStr_add( result_view, "<br>\n" );
+		ZnkStr_addf( result_view, "<a class=%s href=\"javascript:EjsAssort_submitCommandAndArg( document.fm_main, 'cache', 'clean_cachebox', '' )\">", style_class_name );
+		ZnkStr_addf( result_view, "はい、実際に削除します.</a><br>\n" );
+
+		if( ZnkStr_leng(backto) ){
+			char bkt_vpath[ 256 ] = "";
+			unsigned int bkt_begin_idx = 0;
+			unsigned int bkt_end_idx   = 0;
+			sscanf( ZnkStr_cstr(backto), "%u,%u,%s", &bkt_begin_idx, &bkt_end_idx, bkt_vpath );
+			ZnkStr_addf( result_view,
+					"<a class=%s href=\"/easter?est_manager=%s&command=view&"
+					"cache_path=%s&est_cache_begin=%u&est_cache_end=%u&Moai_AuthenticKey=%s#PageSwitcher\">いいえ、何もせずに戻ります</a><br>",
+					style_class_name, est_manager,
+					bkt_vpath, bkt_begin_idx, bkt_end_idx, authentic_key );
+		} else {
+			ZnkStr_addf( result_view,
+					"<a class=%s href=\"/easter?est_manager=%s&command=view&"
+					"Moai_AuthenticKey=%s#PageSwitcher\">いいえ、何もせず戻ります.</a><br>",
+					style_class_name, est_manager,
+					authentic_key );
+		}
+	} else {
+		ZnkVarp pwd;
+
+		{
+			ZnkDirId dirid = ZnkDir_openDir( "cachebox" );
+			if( dirid ){
+				const char* name;
+				char path[ 256 ];
+				while( true ){
+					name = ZnkDir_readDir( dirid );
+					if( name == NULL ){
+						break;
+					}
+					Znk_snprintf( path, sizeof(path), "cachebox/%s", name ); 
+					RanoDirUtil_moveDir( path, "dustbox",
+							"cleanCacheBox", msg,
+							NULL, NULL );
+				}
+				ZnkDir_closeDir( dirid );
+			}
+		}
+
+		*template_html_file = "templates/command_complete.html";
+
+		ZnkStr_addf( result_view, "cacheboxを全削除しました.\n" );
+		if( ZnkStr_leng(backto) ){
+			char bkt_vpath[ 256 ] = "";
+			unsigned int bkt_begin_idx = 0;
+			unsigned int bkt_end_idx   = 0;
+			sscanf( ZnkStr_cstr(backto), "%u,%u,%s", &bkt_begin_idx, &bkt_end_idx, bkt_vpath );
+			ZnkStr_addf( result_view, "<br><a class=%s href=\"/easter?est_manager=cache&command=view&cache_path=%s&est_cache_begin=%u&est_cache_end=%u&Moai_AuthenticKey=%s#PageSwitcher\">戻る</a>",
+					style_class_name,
+					bkt_vpath, bkt_begin_idx, bkt_end_idx, authentic_key );
+		} else {
+			ZnkStr_addf( result_view, "<br><br><font size=-1>このタブ画面はEasterではもはや使用されないため、不要ならブラウザのボタンでお閉じください.</font>" );
+		}
+	}
+
+	ZnkBird_regist( bird, "assort_ui",     ZnkStr_cstr(assort_ui) );
+	ZnkBird_regist( bird, "tag_editor_ui", ZnkStr_cstr(tag_editor_ui) );
+	ZnkBird_regist( bird, "result_view",   ZnkStr_cstr(result_view) );
+	ZnkBird_regist( bird, "backto",        ZnkStr_cstr(backto) );
+	ZnkBird_regist( bird, "manager",       "cache" );
+	ZnkStr_delete( result_view );
+	ZnkStr_delete( assort_ui );
+	ZnkStr_delete( tag_editor_ui );
+}
+
 
 static void
 getMappingStatus( ZnkStr ans )
@@ -507,12 +628,16 @@ EstCacheManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const
 	ZnkBird_regist( bird, "EstLM_url_val", "" );
 	ZnkBird_regist( bird, "EstLM_comment_val", "" );
 	ZnkBird_regist( bird, "EstLM_edit_ui", "" );
+	ZnkBird_regist( bird, "this_is_dustbox", "false" );
 
 	if( cmd == NULL ){
 		ZnkStr_add( msg, "Est_boxmap_viewer : command is null.\n" );
 	} else if( is_authenticated && ZnkS_eq( ZnkVar_cstr(cmd), "view" ) ){
 		if( IS_OK( varp = ZnkVarpAry_find_byName_literal( post_vars, "cache_path", false ) )){
+	  		const char* cache_path = ZnkVar_cstr(varp);
+			bool this_is_dustbox = ZnkS_isBegin( cache_path, "dustbox" );
 			template_html_file = "templates/boxmap_viewer.html";
+			ZnkBird_regist( bird, "this_is_dustbox", this_is_dustbox ? "true" : "false" );
 			viewCache( bird, evar, post_vars, msg, authentic_key,
 					EstCM_img_url_list, ZnkStr_cstr(assort_msg), comment );
 		} else {
@@ -529,7 +654,18 @@ EstCacheManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const
 		}
 
 	} else if( is_authenticated && ZnkS_eq( ZnkVar_cstr(cmd), "remove" ) ){
+		bool this_is_dustbox = false;
+		varp = ZnkVarpAry_find_byName_literal( post_vars, "this_is_dustbox", false );
+		if( varp && ZnkS_eq( ZnkVar_cstr( varp ), "true" ) ){
+			this_is_dustbox = true;
+		}
 		removeCaches( bird,
+				evar, post_vars,
+				&template_html_file, EstCM_img_url_list,
+				backto, assort_msg, msg, authentic_key, this_is_dustbox );
+
+	} else if( is_authenticated && ZnkS_eq( ZnkVar_cstr(cmd), "clean_cachebox" ) ){
+		cleanCacheBox( bird,
 				evar, post_vars,
 				&template_html_file, EstCM_img_url_list,
 				backto, assort_msg, msg, authentic_key );
@@ -575,25 +711,6 @@ EstCacheManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const
 		ZnkBird_regist( bird, "backto", ZnkStr_cstr(backto) );
 		ZnkStr_delete( result_view );
 		ZnkStrAry_destroy( dst_vpath_list );
-
-#if 0
-	} else if( ZnkS_eq( ZnkVar_cstr(cmd), "video_cache" ) ){
-		ZnkVarp var_cache_path = ZnkVarpAry_find_byName_literal( post_vars, "cache_path", false );
-		const char* file_path = ZnkVar_cstr( var_cache_path );
-		const char* xhr_dmz = EstConfig_XhrDMZ();
-		template_html_file = "templates/video_viewer.html";
-		ZnkBird_regist( bird, "xhr_dmz", xhr_dmz );
-		ZnkBird_regist( bird, "file_path",   file_path );
-		{
-			const char* p = file_path;
-			const char* q = Znk_strrchr( p, '/' );
-			char dir_path[ 256 ] = "cachebox";
-			if( q ){
-				ZnkS_copy( dir_path, sizeof(dir_path), p, q-p );
-			}
-			ZnkBird_regist( bird, "dir_path", dir_path );
-		}
-#endif
 
 	} else if( ZnkS_eq( ZnkVar_cstr(cmd), "bbsop" ) ){
 		ZnkVarp var_cache_path = ZnkVarpAry_find_byName_literal( post_vars, "cache_path", false );

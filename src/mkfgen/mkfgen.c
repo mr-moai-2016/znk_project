@@ -16,6 +16,7 @@
 #include "Mkf_src_depend.h"
 #include "Mkf_lib_depend.h"
 #include "Mkf_android.h"
+#include "Mkf_sset.h"
 
 static const char*
 getDSP( bool is_dos )
@@ -30,7 +31,7 @@ getSfxRuleLeftDSP( const char* mkf_id )
 {
 	if( ZnkS_eq( mkf_id, "vc" ) ){
 		return "\\";
-	} else if( ZnkS_eq( mkf_id, "mingw" ) ){
+	} else if( ZnkS_eq( mkf_id, "mingw" ) || ZnkS_eq( mkf_id, "android" ) ){
 		return "\\\\";
 	}
 	return "/";
@@ -38,7 +39,10 @@ getSfxRuleLeftDSP( const char* mkf_id )
 static const char*
 getNL( const char* mkf_id )
 {
-	if( ZnkS_eq( mkf_id, "vc" ) || ZnkS_eq( mkf_id, "mingw" ) ){
+	if(  ZnkS_eq( mkf_id, "vc" )
+	  || ZnkS_eq( mkf_id, "mingw" )
+	  || ZnkS_eq( mkf_id, "android" )
+	 ){
 		return "\r\n";
 	}
 	return "\n";
@@ -156,7 +160,7 @@ getLibFile( ZnkStr lib_file, ZnkStr template_lib_file, ZnkStr template_lib_ver_s
 	ZnkBird_regist( bird, "lib_name",   lib_name );
 	ZnkBird_regist( bird, "lib_dlver",  lib_dlver );
 	ZnkBird_regist( bird, "lib_sfx",    lib_sfx );
-	if( template_lib_ver_sfx ){
+	if( template_lib_ver_sfx && !ZnkS_empty(lib_dlver) ){
 		ZnkStr lib_ver_sfx = ZnkStr_new( "" );
 		ZnkBird_extend( bird, lib_ver_sfx,  ZnkStr_cstr(template_lib_ver_sfx), ZnkStr_leng( template_lib_ver_sfx ) * 2 );
 		ZnkBird_regist( bird, "lib_ver_sfx", ZnkStr_cstr(lib_ver_sfx) );
@@ -187,15 +191,14 @@ getObjsDefsProductFiles( ZnkStr ans, const char* defs_name, ZnkStrAry install_fi
 
 static void
 getObjsDefs( ZnkStr ans,
-		ZnkStrAry list, ZnkVarpAry product_list, ZnkStrAry rc_list, ZnkStrAry sublibs_list, ZnkStrAry runtime_list,
-		ZnkStr template_lib_file, ZnkStr template_lib_ver_sfx, ZnkStr template_sublib,
+		ZnkStrAry list, ZnkVarpAry product_list, ZnkStrAry rc_list, ZnkStrAry sublibs_list, const ZnkStrAry runtime_list,
+		ZnkStr template_lib_file, ZnkStr template_lib_ver_sfx, ZnkStr template_sublib_dir,
 		const char* obj_sfx, const char* exe_sfx,
 		const char* slib_pfx, const char* ilib_pfx, const char* dlib_pfx,
 		const char* slib_sfx, const char* ilib_sfx, const char* dlib_sfx,
-		const char* lib_dlver, MkfInstall mkf_inst, const char* mkf_id, bool is_dos )
+		const char* lib_dlver, MkfInstall mkf_inst, const char* mkf_id, bool is_dos,
+		ZnkVarpAry slib_pfx_special_vary, ZnkVarpAry rlib_pfx_special_vary )
 {
-	//const char*  out_dir = "$O\\";
-	//const char*  src_dir = "$S\\";
 	char  out_dir[ 256 ] = "$O/";
 	char  src_dir[ 256 ] = "$S/";
 	size_t       idx;
@@ -210,6 +213,7 @@ getObjsDefs( ZnkStr ans,
 	ZnkStr  ilib_file = ZnkStr_new( "" );
 	ZnkStr  slib_file = ZnkStr_new( "" );
 	ZnkStr  dlib_name = ZnkStr_new( "" );
+	//ZnkStr  basename_mod = ZnkStr_new( "" );
 	ZnkBird bird = ZnkBird_create( "$[", "]$" );
 
 	Znk_snprintf( out_dir, sizeof(out_dir), "$O%s", dsp );
@@ -228,6 +232,32 @@ getObjsDefs( ZnkStr ans,
 			ZnkS_eq( product_type, "dlib" ) ? dlib_sfx :
 			ZnkS_eq( product_type, "ilib" ) ? ilib_sfx :
 			exe_sfx ;
+
+#if 0
+		if( lib_name_special_vary ){
+			ZnkVarp lib_name_var = ZnkVarpAry_findObj_byName( lib_name_special_vary,
+					basename, Znk_strlen(basename), false );
+			if( lib_name_var ){
+				ZnkStr_set( basename_mod, ZnkVar_cstr(lib_name_var) );
+				basename = ZnkStr_cstr(basename_mod);
+			}
+		}
+#endif
+		if( slib_pfx_special_vary ){
+			ZnkVarp slib_pfx_var = ZnkVarpAry_findObj_byName( slib_pfx_special_vary,
+					basename, Znk_strlen(basename), false );
+			if( slib_pfx_var ){
+				slib_pfx = ZnkVar_cstr(slib_pfx_var);
+			}
+		}
+		if( rlib_pfx_special_vary ){
+			ZnkVarp rlib_pfx_var = ZnkVarpAry_findObj_byName( rlib_pfx_special_vary,
+					basename, Znk_strlen(basename), false );
+			if( rlib_pfx_var ){
+				ilib_pfx = ZnkVar_cstr(rlib_pfx_var);
+				dlib_pfx = ZnkVar_cstr(rlib_pfx_var);
+			}
+		}
 
 		/***
 		 * BASENAME,EXE_FILE,DLIB_FILE,SLIB_FILE
@@ -307,6 +337,7 @@ getObjsDefs( ZnkStr ans,
 	/***
 	 * SUB_LIBS
 	 */
+#if 0
 	if( sublibs_list ){
 		const size_t sublibs_size = ZnkStrAry_size( sublibs_list );
 		ZnkStr    sublib_file = ZnkStr_new( "" );
@@ -318,6 +349,7 @@ getObjsDefs( ZnkStr ans,
 					ZnkStr_cstr(sublib), ZnkStr_leng(sublib),
 					" \t", 2,
 					2 );
+			ZnkBird_regist( bird, "obj_sfx",   obj_sfx );
 			ZnkBird_regist( bird, "lib_pfx",   slib_pfx );
 			ZnkBird_regist( bird, "slib_sfx",  slib_sfx );
 			ZnkBird_regist( bird, "submkf_dir",  ZnkStrAry_at_cstr(tkns,0) );
@@ -328,6 +360,109 @@ getObjsDefs( ZnkStr ans,
 		ZnkStr_add( ans, nl );
 		ZnkStrAry_destroy( tkns );
 		ZnkStr_delete( sublib_file );
+	}
+#else
+	if( sublibs_list ){
+		const size_t sublibs_size = ZnkStrAry_size( sublibs_list );
+		ZnkStr       sublib_file  = ZnkStr_new( "" );
+		ZnkStr       sublib_dir   = ZnkStr_new( "" );
+		ZnkStrAry    tkns = ZnkStrAry_create( true );
+		ZnkStr_addf( ans, "SUB_LIBS=\\%s", nl );
+		for( idx=0; idx<sublibs_size; ++idx ){
+			const ZnkStr sublib = ZnkStrAry_at(sublibs_list,idx);
+			ZnkStrEx_addSplitCSet( tkns,
+					ZnkStr_cstr(sublib), ZnkStr_leng(sublib),
+					" \t", 2,
+					2 );
+
+			ZnkBird_regist( bird, "submkf_dir",  ZnkStrAry_at_cstr(tkns,0) );
+			ZnkBird_extend( bird, sublib_dir,  ZnkStr_cstr( template_sublib_dir ), ZnkStr_leng( template_sublib_dir ) * 2 );
+
+			getLibFile( sublib_file, template_lib_file, NULL, bird,
+					slib_pfx, ZnkStrAry_at_cstr(tkns,1), lib_dlver, slib_sfx );
+
+			ZnkStr_addf( ans, "\t%s/%s \\%s", ZnkStr_cstr( sublib_dir ), ZnkStr_cstr(sublib_file), nl );
+		}
+		ZnkStr_add( ans, nl );
+		ZnkStrAry_destroy( tkns );
+		ZnkStr_delete( sublib_dir );
+		ZnkStr_delete( sublib_file );
+	}
+#endif
+#if 0
+	/***
+	 * SUB_OBJS
+	 */
+	if( sublibs_list ){
+		static const char* template_subobjs = "$[submkf_dir]$/$O/*.$[obj_sfx]$";
+		const size_t sublibs_size = ZnkStrAry_size( sublibs_list );
+		ZnkStr    sub_objs = ZnkStr_new( "" );
+		ZnkStrAry tkns = ZnkStrAry_create( true );
+		ZnkStr_addf( ans, "SUB_OBJS=\\%s", nl );
+		for( idx=0; idx<sublibs_size; ++idx ){
+			const ZnkStr sublib = ZnkStrAry_at(sublibs_list,idx);
+			ZnkStrEx_addSplitCSet( tkns,
+					ZnkStr_cstr(sublib), ZnkStr_leng(sublib),
+					" \t", 2,
+					2 );
+			ZnkBird_regist( bird, "obj_sfx",   obj_sfx );
+			ZnkBird_regist( bird, "submkf_dir",  ZnkStrAry_at_cstr(tkns,0) );
+			ZnkBird_extend( bird, sub_objs,  template_subobjs, Znk_strlen( template_subobjs ) * 2 );
+			ZnkStr_addf( ans, "\t%s \\%s", ZnkStr_cstr( sub_objs ), nl );
+		}
+		ZnkStr_add( ans, nl );
+		ZnkStrAry_destroy( tkns );
+		ZnkStr_delete( sub_objs );
+	}
+#else
+	/***
+	 * SUB_OBJS
+	 */
+	if( sublibs_list ){
+		const size_t sublibs_size = ZnkStrAry_size( sublibs_list );
+		ZnkStr       sublib_dir   = ZnkStr_new( "" );
+		ZnkStrAry    tkns = ZnkStrAry_create( true );
+		ZnkStr_addf( ans, "SUB_OBJS=\\%s", nl );
+		for( idx=0; idx<sublibs_size; ++idx ){
+			const ZnkStr sublib = ZnkStrAry_at(sublibs_list,idx);
+			ZnkStrEx_addSplitCSet( tkns,
+					ZnkStr_cstr(sublib), ZnkStr_leng(sublib),
+					" \t", 2,
+					2 );
+
+			ZnkBird_regist( bird, "submkf_dir",  ZnkStrAry_at_cstr(tkns,0) );
+			ZnkBird_extend( bird, sublib_dir,  ZnkStr_cstr( template_sublib_dir ), ZnkStr_leng( template_sublib_dir ) * 2 );
+
+			ZnkStr_addf( ans, "\t%s/*.%s \\%s", ZnkStr_cstr( sublib_dir ), obj_sfx, nl );
+		}
+		ZnkStr_add( ans, nl );
+		ZnkStrAry_destroy( tkns );
+		ZnkStr_delete( sublib_dir );
+	}
+#endif
+	/***
+	 * SUB_OBJS_ECHO
+	 */
+	if( sublibs_list ){
+		const size_t sublibs_size = ZnkStrAry_size( sublibs_list );
+		ZnkStr       sublib_dir   = ZnkStr_new( "" );
+		ZnkStrAry    tkns = ZnkStrAry_create( true );
+		ZnkStr_addf( ans, "SUB_OBJS_ECHO=\\%s", nl );
+		for( idx=0; idx<sublibs_size; ++idx ){
+			const ZnkStr sublib = ZnkStrAry_at(sublibs_list,idx);
+			ZnkStrEx_addSplitCSet( tkns,
+					ZnkStr_cstr(sublib), ZnkStr_leng(sublib),
+					" \t", 2,
+					2 );
+
+			ZnkBird_regist( bird, "submkf_dir",  ZnkStrAry_at_cstr(tkns,0) );
+			ZnkBird_extend( bird, sublib_dir,  ZnkStr_cstr( template_sublib_dir ), ZnkStr_leng( template_sublib_dir ) * 2 );
+
+			ZnkStr_addf( ans, "\t%s/{[objs]} \\%s", ZnkStr_cstr( sublib_dir ), nl );
+		}
+		ZnkStr_add( ans, nl );
+		ZnkStrAry_destroy( tkns );
+		ZnkStr_delete( sublib_dir );
 	}
 
 	/***
@@ -414,6 +549,7 @@ getObjsDefs( ZnkStr ans,
 	ZnkStr_delete( ilib_file );
 	ZnkStr_delete( slib_file );
 	ZnkStr_delete( dlib_name );
+	//ZnkStr_delete( basename_mod );
 }
 
 static void
@@ -504,6 +640,18 @@ getAllTargetRule( ZnkStr ans, ZnkStrAry dir_list, const ZnkStrAry submkf_list, c
 	for( idx=0; idx<product_list_size; ++idx ){
 		ZnkVarp     varp = ZnkVarpAry_at( product_list, idx );
 		ZnkStr_addf( ans, "$(%s%zu) ", getProductFileVarName(varp), idx );
+
+		/***
+		 * dlibであった場合はslibもall-targetに追加.
+		 * dll系の環境ではgsl.myfで必要となるため、相当するslibは自動的に作られるが
+		 * so系の環境ではトリガーが存在しないため、all-targetで明示的に指定しておく必要がある.
+		 */
+		{
+			const char* type = getProductType( varp );
+			if( ZnkS_eq( type, "dlib" ) ){
+				ZnkStr_addf( ans, "$(SLIB_FILE%zu) ", idx );
+			}
+		}
 	}
 	ZnkStr_add( ans, nl );
 }
@@ -553,7 +701,7 @@ getMkdirRule( ZnkStr ans, ZnkMyf tmpl_myf, const char* mkf_id, ZnkStrAry dir_lis
 static void
 getProductFilesRule( ZnkStr ans, ZnkMyf tmpl_myf, const char* mkf_id,
 		ZnkVarpAry product_list, ZnkStrAry rc_list, ZnkStr dep_libs,
-		const char* ilib_sfx, const char* lib_dlver,
+		const char* ilib_sfx,
 		const char* resfile_additional, const char* gslconv )
 {
 	size_t size;
@@ -823,7 +971,8 @@ getDepLib( ZnkStr dep_libs, ZnkStrAry runtime_list, const char* dependency_lib,
 		ZnkStr template_lib_file, ZnkStr template_runtime_path, ZnkStr template_lib_ver_sfx, ZnkStr template_libs_path,
 		const char* slib_pfx, const char* ilib_pfx, const char* dlib_pfx,
 		const char* slib_sfx, const char* ilib_sfx, const char* dlib_sfx,
-		const char* mkf_id, const char* machine )
+		const char* mkf_id, const char* machine,
+		ZnkVarpAry slib_pfx_special_vary, ZnkVarpAry rlib_pfx_special_vary )
 {
 	ZnkBird bird = ZnkBird_create( "$[", "]$" );
 	ZnkStr dep_lib_type = ZnkStr_new( "" );
@@ -840,6 +989,31 @@ getDepLib( ZnkStr dep_libs, ZnkStrAry runtime_list, const char* dependency_lib,
 			lib_dlver,
 			lib_dir,
 			&is_at_notation );
+
+#if 0
+	if( lib_name_special_vary ){
+		ZnkVarp lib_name_var = ZnkVarpAry_findObj_byName( lib_name_special_vary,
+				ZnkStr_cstr(lib_name), ZnkStr_leng(lib_name), false );
+		if( lib_name_var ){
+			ZnkStr_set( lib_name, ZnkVar_cstr(lib_name_var) );
+		}
+	}
+#endif
+	if( slib_pfx_special_vary ){
+		ZnkVarp slib_pfx_var = ZnkVarpAry_findObj_byName( slib_pfx_special_vary,
+				ZnkStr_cstr(lib_name), ZnkStr_leng(lib_name), false );
+		if( slib_pfx_var ){
+			slib_pfx = ZnkVar_cstr(slib_pfx_var);
+		}
+	}
+	if( rlib_pfx_special_vary ){
+		ZnkVarp rlib_pfx_var = ZnkVarpAry_findObj_byName( rlib_pfx_special_vary,
+				ZnkStr_cstr(lib_name), ZnkStr_leng(lib_name), false );
+		if( rlib_pfx_var ){
+			ilib_pfx = ZnkVar_cstr(rlib_pfx_var);
+			dlib_pfx = ZnkVar_cstr(rlib_pfx_var);
+		}
+	}
 
 	if( ZnkStr_eq(dep_lib_type, "slib" ) ){
 		getLibFile( lib_file, template_lib_file, NULL, bird,
@@ -917,7 +1091,7 @@ getDependencyLibsSpecial( ZnkStr dep_libs, ZnkVarp dependency_libs_special, cons
 }
 
 static void
-getInstallFileRule( ZnkStr rule, ZnkMyf tmpl_myf, const char* mkf_id, ZnkStrAry install_file_list,
+getInstallFileRule( ZnkStr rule, ZnkMyf tmpl_myf, const char* mkf_id, ZnkStrAry install_file_list, ZnkStrAry explicit_dir_list,
 		char dsp, const char* target_name, const char* install_dir, bool is_suppress_rule_right, bool is_dos )
 {
 	size_t size = 0;
@@ -929,6 +1103,7 @@ getInstallFileRule( ZnkStr rule, ZnkMyf tmpl_myf, const char* mkf_id, ZnkStrAry 
 	ZnkStr    copy_cmd = ZnkStr_new( "" );
 	const char* p;
 	const char* nl = getNL( mkf_id );
+	const char* explicit_dir = NULL;
 
 	ZnkStr_clear( rule );
 	ZnkStr_add( rule, target_name );
@@ -951,11 +1126,25 @@ getInstallFileRule( ZnkStr rule, ZnkMyf tmpl_myf, const char* mkf_id, ZnkStrAry 
 		ZnkStr_setf( install_file_dir, "%s", install_dir );
 		ZnkStrPath_replaceDSP( install_file_dir, dsp );
 
+		explicit_dir = explicit_dir_list ? ZnkStrAry_at_cstr( explicit_dir_list, idx ) : "";
 		p = strrchr( ZnkStr_cstr(install_file), dsp );
 		if( p ){
-			ZnkStr_add_c( install_file_dir, dsp );
-			ZnkStr_append( install_file_dir, ZnkStr_cstr(install_file), p-ZnkStr_cstr(install_file) );
+			if( ZnkS_empty(explicit_dir) ){
+				ZnkStr_add_c( install_file_dir, dsp );
+				ZnkStr_append( install_file_dir, ZnkStr_cstr(install_file), p-ZnkStr_cstr(install_file) );
+			} else {
+				ZnkStr_add_c( install_file_dir, dsp );
+				ZnkStr_append( install_file_dir, explicit_dir, Znk_NPOS );
+			}
+		} else {
+			if( ZnkS_empty(explicit_dir) ){
+				/* none */
+			} else {
+				ZnkStr_add_c( install_file_dir, dsp );
+				ZnkStr_append( install_file_dir, explicit_dir, Znk_NPOS );
+			}
 		}
+
 		if( ZnkStrAry_find( install_file_dir_list, 0,
 					ZnkStr_cstr(install_file_dir), ZnkStr_leng(install_file_dir) ) == Znk_NPOS )
 		{
@@ -1001,12 +1190,44 @@ getInstallFileRule( ZnkStr rule, ZnkMyf tmpl_myf, const char* mkf_id, ZnkStrAry 
 	ZnkStr_delete( install_files );
 	ZnkStr_delete( copy_cmd );
 }
+
+static void
+getInstallFileAndExplicitDirList( ZnkStrAry install_data_list, ZnkStrAry install_file_list, ZnkStrAry explicit_dir_list )
+{
+	const size_t size = ZnkStrAry_size( install_data_list );
+	size_t idx;
+	ZnkStrAry tkns = ZnkStrAry_create( true );
+	ZnkStr install_data = NULL;
+	for( idx=0; idx<size; ++idx ){
+		ZnkStrAry_clear( tkns );
+		install_data = ZnkStrAry_at( install_data_list, idx );
+		ZnkStrEx_addSplitCSet( tkns,
+				ZnkStr_cstr(install_data), ZnkStr_leng(install_data),
+				" \t", 2,
+				2 );
+		if( ZnkStrAry_size(tkns) >= 2 ){
+			ZnkStrAry_push_bk_cstr( install_file_list, ZnkStrAry_at_cstr(tkns,0), Znk_NPOS );
+			ZnkStrAry_push_bk_cstr( explicit_dir_list, ZnkStrAry_at_cstr(tkns,1), Znk_NPOS );
+		} else {
+			ZnkStrAry_push_bk_cstr( install_file_list, ZnkStrAry_at_cstr(tkns,0), Znk_NPOS );
+			ZnkStrAry_push_bk_cstr( explicit_dir_list, "", 0 );
+		}
+	}
+	ZnkStrAry_destroy( tkns );
+}
 static void
 getInstallDataRule( ZnkStr rule, ZnkMyf tmpl_myf, const char* mkf_id, ZnkStrAry install_data_list,
 		const MkfInstall mkf_inst, char dsp, bool is_dos )
 {
-	getInstallFileRule( rule, tmpl_myf, mkf_id, install_data_list,
+	ZnkStrAry install_file_list = ZnkStrAry_create( true );
+	ZnkStrAry explicit_dir_list = ZnkStrAry_create( true );
+	getInstallFileAndExplicitDirList( install_data_list, install_file_list, explicit_dir_list );
+
+	getInstallFileRule( rule, tmpl_myf, mkf_id, install_file_list, explicit_dir_list,
 			dsp, "install_data", ZnkStr_cstr(mkf_inst->install_data_dir_), true, is_dos );
+
+	ZnkStrAry_destroy( explicit_dir_list );
+	ZnkStrAry_destroy( install_file_list );
 }
 static void
 getInstallExecRule( ZnkStr rule, ZnkMyf tmpl_myf, const char* mkf_id, ZnkStrAry install_exec_list,
@@ -1014,7 +1235,7 @@ getInstallExecRule( ZnkStr rule, ZnkMyf tmpl_myf, const char* mkf_id, ZnkStrAry 
 {
 	const char* nl = getNL( mkf_id );
 
-	getInstallFileRule( rule, tmpl_myf, mkf_id, install_exec_list,
+	getInstallFileRule( rule, tmpl_myf, mkf_id, install_exec_list, NULL,
 			dsp, "install_exec", ZnkStr_cstr(mkf_inst->install_exec_dir_), false, is_dos );
 
 	ZnkStrPath_replaceDSP( mkf_inst->install_exec_dir_, dsp );
@@ -1035,14 +1256,14 @@ static void
 getInstallDlibRule( ZnkStr rule, ZnkMyf tmpl_myf, const char* mkf_id, ZnkStrAry install_dlib_list,
 		const MkfInstall mkf_inst, char dsp, bool is_dos )
 {
-	getInstallFileRule( rule, tmpl_myf, mkf_id, install_dlib_list,
+	getInstallFileRule( rule, tmpl_myf, mkf_id, install_dlib_list, NULL,
 			dsp, "install_dlib", ZnkStr_cstr(mkf_inst->install_dlib_dir_), false, is_dos );
 }
 static void
 getInstallSlibRule( ZnkStr rule, ZnkMyf tmpl_myf, const char* mkf_id, ZnkStrAry install_slib_list,
 		const MkfInstall mkf_inst, char dsp, bool is_dos )
 {
-	getInstallFileRule( rule, tmpl_myf, mkf_id, install_slib_list,
+	getInstallFileRule( rule, tmpl_myf, mkf_id, install_slib_list, NULL,
 			dsp, "install_slib", ZnkStr_cstr(mkf_inst->install_slib_dir_), false, is_dos );
 }
 static void
@@ -1087,13 +1308,61 @@ createSubMkfList( ZnkStrAry sublibs_list )
 }
 
 static void
+convertNL( ZnkStr str, bool is_dos )
+{
+	/* DOS => UNIX */
+	/* DOSの改行にしたい場合も一旦UNIXの改行に変換しておく.
+	 * (さもないと改行コードが混在している場合にうまくいかない) */
+	ZnkStrEx_replace_BF( str, 0,
+			"\r\n", 2,
+			"\n", 1,
+			Znk_NPOS, Znk_NPOS );
+	if( is_dos ){
+		/* UNIX => DOS */
+		ZnkStrEx_replace_BF( str, 0,
+				"\n", 1,
+				"\r\n", 2,
+				Znk_NPOS, Znk_NPOS );
+	}
+}
+
+static void
+getLibNameSpecialVAry( ZnkVarpAry lib_name_special_vary, const char* lib_name_special )
+{
+	ZnkStrAry tkns = ZnkStrAry_create( true );
+	ZnkStr    name = ZnkStr_new ( "" );
+	size_t  size = 0;
+	size_t  idx;
+	ZnkVarp varp = NULL;
+
+	ZnkStrEx_addSplitCSet( tkns,
+			lib_name_special, Znk_strlen(lib_name_special),
+			" \t\r\n", 4,
+			4 );
+	size = ZnkStrAry_size( tkns );
+	for( idx=0; idx<size; ++idx ){
+		const char* p = ZnkStrAry_at_cstr( tkns, idx );
+		const char* q = Znk_strchr( p, ':' );
+		if( q ){
+			ZnkStr_assign( name, 0, p, q-p );
+			varp = ZnkVarp_create( ZnkStr_cstr(name), "", 0, ZnkPrim_e_Str, NULL );
+			ZnkVar_set_val_Str( varp, q+1, Znk_NPOS );
+			ZnkVarpAry_push_bk( lib_name_special_vary, varp );
+		}
+	}
+
+	ZnkStrAry_destroy( tkns );
+	ZnkStr_delete( name );
+}
+
+static void
 generateMkf( ZnkVarpAry info,
 		ZnkStrAry list, ZnkStrAry dir_list, const char* mkf_id, ZnkStrAry src_suffix_list,
-		ZnkStrAry include_paths_common, ZnkStrAry dependency_libs_common, bool is_runtime_install,
+		ZnkStrAry include_paths_common, ZnkStrAry dependency_libs_common, ZnkStrAry runtime_additional, bool is_runtime_install,
 		const char* my_libs_root, const char* template_dir,
 		ZnkVarpAry product_list, ZnkStrAry rc_list, ZnkStrAry sublibs_list,
 		const char* lib_dlver, MkfInstall mkf_inst, const char* special_exe_sfx, const char* special_lib_pfx,
-		const char* resfile_additional, ZnkStr gslconv, bool is_include_makefile_version )
+		const char* resfile_additional, const char* gslconv, bool is_include_makefile_version )
 {
 	char path[ 256 ];
 	ZnkFile fp   = NULL;
@@ -1136,9 +1405,8 @@ generateMkf( ZnkVarpAry info,
 		ZnkStr template_lib_file     = ZnkStr_new( "" );
 		ZnkStr template_libs_path    = ZnkStr_new( "" );
 		ZnkStr template_runtime_path = ZnkStr_new( "" );
-		ZnkStr template_sublib      = ZnkStr_new( "" );
+		ZnkStr template_sublib_dir   = ZnkStr_new( "" );
 
-		ZnkBird_regist( bird, "my_libs_root", my_libs_root );
 
 		{
 			ZnkVarp varp;
@@ -1153,6 +1421,11 @@ generateMkf( ZnkVarpAry info,
 			const char* dsp = NULL;
 			ZnkStr dep_template_lib_file = NULL;
 			ZnkStr new_template_lib_file = NULL;
+			ZnkStr my_libs_root_for_shell = ZnkStr_new( my_libs_root );
+			ZnkStr gslconv_for_shell      = ZnkStr_new( gslconv );
+			ZnkVarpAry lib_name_special_vary = NULL;
+			ZnkVarpAry slib_pfx_special_vary = NULL;
+			ZnkVarpAry rlib_pfx_special_vary = NULL;
 
 			varp = ZnkVarpAry_find_byName_literal( tm_conf, "obj_sfx", false );
 			if( varp ){ obj_sfx = ZnkVar_cstr( varp ); }
@@ -1203,8 +1476,8 @@ generateMkf( ZnkVarpAry info,
 			varp = ZnkVarpAry_find_byName_literal( tm_conf, "template_runtime_path", false );
 			if( varp ){ ZnkStr_set( template_runtime_path, ZnkVar_cstr( varp ) ); }
 
-			varp = ZnkVarpAry_find_byName_literal( tm_conf, "template_sublib", false );
-			if( varp ){ ZnkStr_set( template_sublib, ZnkVar_cstr( varp ) ); }
+			varp = ZnkVarpAry_find_byName_literal( tm_conf, "template_sublib_dir", false );
+			if( varp ){ ZnkStr_set( template_sublib_dir, ZnkVar_cstr( varp ) ); }
 
 			{
 				ZnkVarp shell = ZnkVarpAry_find_byName_literal( tm_conf, "shell", false );
@@ -1216,7 +1489,17 @@ generateMkf( ZnkVarpAry info,
 			}
 
 			dsp = getDSP( is_dos );
-			ZnkStrPath_replaceDSP( gslconv, dsp[0] );
+
+			/* replaceDSP : my_libs_root */
+			{
+				ZnkStrPath_replaceDSP( my_libs_root_for_shell, dsp[0] );
+				ZnkBird_regist( bird, "my_libs_root", ZnkStr_cstr(my_libs_root_for_shell) );
+			}
+
+			/* replaceDSP : gslconv */
+			{
+				ZnkStrPath_replaceDSP( gslconv_for_shell, dsp[0] );
+			}
 
 			{
 				size_t idx;
@@ -1234,6 +1517,25 @@ generateMkf( ZnkVarpAry info,
 				ZnkBird_regist( bird, "include_makefile_version", "# include Makefile_version.mak" );
 			}
 
+			if( info ){
+				ZnkVarp lib_name_special = ZnkVarpAry_findObj_byName_literal( info, "lib_name_special", false );
+				if( lib_name_special ){
+					lib_name_special_vary = ZnkVarpAry_create( true );
+					getLibNameSpecialVAry( lib_name_special_vary, ZnkVar_cstr(lib_name_special) );
+				}
+			}
+			if( info ){
+				ZnkVarp slib_pfx_special = ZnkVarpAry_findObj_byName_literal( info, "slib_pfx_special", false );
+				ZnkVarp rlib_pfx_special = ZnkVarpAry_findObj_byName_literal( info, "rlib_pfx_special", false );
+				if( slib_pfx_special ){
+					slib_pfx_special_vary = ZnkVarpAry_create( true );
+					getLibNameSpecialVAry( slib_pfx_special_vary, ZnkVar_cstr(slib_pfx_special) );
+				}
+				if( rlib_pfx_special ){
+					rlib_pfx_special_vary = ZnkVarpAry_create( true );
+					getLibNameSpecialVAry( rlib_pfx_special_vary, ZnkVar_cstr(rlib_pfx_special) );
+				}
+			}
 			{
 				size_t idx;
 				size_t size = ZnkStrAry_size( dependency_libs_common );
@@ -1243,20 +1545,40 @@ generateMkf( ZnkVarpAry info,
 							dep_template_lib_file, template_runtime_path, template_lib_ver_sfx, template_libs_path,
 							slib_pfx, ilib_pfx, dlib_pfx,
 							slib_sfx, ilib_sfx, dlib_sfx,
-							mkf_id, machine );
+							mkf_id, machine, slib_pfx_special_vary, rlib_pfx_special_vary );
 					if( idx != size-1 ){
 						ZnkStr_add( dep_libs, " " );
 					}
 				}
 			}
-			if( info ){
-				{
-					ZnkVarp compiler_option_special = ZnkVarpAry_find_byName_literal( info, "compiler_option_special", false );
-					if( compiler_option_special ){
-						ZnkBird_regist( bird, "compiler_option_special", ZnkVar_cstr(compiler_option_special) );
-					} else {
-						ZnkBird_regist( bird, "compiler_option_special", "" );
+			/***
+			 * 特殊ランタイムの追加.
+			 * (たとえばサードパーティでビルド済みなDLLなどを特別に追加したい場合.
+			 */
+			{
+				size_t idx;
+				const size_t size = runtime_additional ? ZnkStrAry_size( runtime_additional ) : 0;
+				ZnkStr dummy = ZnkStr_new( "" );
+				for( idx=0; idx<size; ++idx ){
+					const char* dependency_lib = ZnkStrAry_at_cstr( runtime_additional, idx );
+					getDepLib( dummy, runtime_list, dependency_lib,
+							dep_template_lib_file, template_runtime_path, template_lib_ver_sfx, template_libs_path,
+							slib_pfx, ilib_pfx, dlib_pfx,
+							slib_sfx, ilib_sfx, dlib_sfx,
+							mkf_id, machine, slib_pfx_special_vary, rlib_pfx_special_vary );
+					if( idx != size-1 ){
+						ZnkStr_add( dep_libs, " " );
 					}
+				}
+				ZnkStr_delete( dummy );
+			}
+
+			ZnkBird_regist( bird, "compiler_option_special", "" );
+			if( info ){
+				ZnkVarp compiler_option_special = ZnkVarpAry_find_byName_literal( info, "compiler_option_special", false );
+				if( compiler_option_special ){
+					convertNL( ZnkVar_str( compiler_option_special ), is_dos );
+					ZnkBird_regist( bird, "compiler_option_special", ZnkVar_cstr(compiler_option_special) );
 				}
 				{
 					ZnkVarp linking_libs_special = ZnkVarpAry_find_byName_literal( info, "linking_libs_special", false );
@@ -1280,15 +1602,17 @@ generateMkf( ZnkVarpAry info,
 
 			getObjsDefs( rule,
 					list, product_list, rc_list, sublibs_list, runtime_list,
-					new_template_lib_file, template_lib_ver_sfx, template_sublib,
+					new_template_lib_file, template_lib_ver_sfx, template_sublib_dir,
 					obj_sfx, exe_sfx,
 					slib_pfx, ilib_pfx, dlib_pfx, slib_sfx, ilib_sfx, dlib_sfx,
-					lib_dlver, mkf_inst, mkf_id, is_dos );
+					lib_dlver, mkf_inst, mkf_id, is_dos,
+					slib_pfx_special_vary, rlib_pfx_special_vary );
 			ZnkBird_regist( bird, "objs_defs", ZnkStr_cstr(rule) );
 
 			getProductFilesRule( rule, tmpl_myf, mkf_id,
 					product_list, rc_list, dep_libs,
-					ilib_sfx, lib_dlver, resfile_additional, ZnkStr_cstr(gslconv) );
+					ilib_sfx,
+					resfile_additional, ZnkStr_cstr(gslconv_for_shell) );
 			ZnkBird_regist( bird, "product_files_rule", ZnkStr_cstr(rule) );
 
 			getRcRule( rule, tmpl_myf, mkf_id, rc_list );
@@ -1331,7 +1655,12 @@ generateMkf( ZnkVarpAry info,
 			ZnkStr_delete( template_lib_file );
 			ZnkStr_delete( template_libs_path );
 			ZnkStr_delete( template_runtime_path );
-			ZnkStr_delete( template_sublib );
+			ZnkStr_delete( template_sublib_dir );
+			ZnkStr_delete( my_libs_root_for_shell );
+			ZnkStr_delete( gslconv_for_shell );
+			ZnkVarpAry_destroy( lib_name_special_vary );
+			ZnkVarpAry_destroy( slib_pfx_special_vary );
+			ZnkVarpAry_destroy( rlib_pfx_special_vary );
 
 			ZnkStr_addf( text, "# Src and Headers Dependency%s", nl );
 			MkfSrcDepend_get( text, list, obj_sfx, nl, isSrcFileExt );
@@ -1374,6 +1703,25 @@ generateMkfVersion( const char* makefile_version_landmark )
 	}
 }
 
+/**
+ * src_ary を except_ary を除き dst_aryへ追加.
+ * except_aryがNULLの場合はそのまま追加.
+ */
+static void
+addStrAry_withExcept( ZnkStrAry dst_ary, const ZnkStrAry src_ary, const ZnkStrAry except_ary )
+{
+	const size_t size = ZnkStrAry_size( src_ary );
+	size_t idx;
+	for( idx=0; idx<size; ++idx ){
+		const char*  src      = ZnkStrAry_at_cstr( src_ary, idx );
+		const size_t src_leng = ZnkStrAry_at_leng( src_ary, idx );
+		if( except_ary == NULL || ZnkStrAry_find( except_ary, 0, src, src_leng ) == Znk_NPOS ){
+			ZnkStrAry_push_bk_cstr( dst_ary, src, src_leng );
+		}
+	}
+}
+
+
 int main(int argc, char **argv)
 {
 	ZnkMyf conf_myf = ZnkMyf_create();
@@ -1389,6 +1737,7 @@ int main(int argc, char **argv)
 		ZnkStrAry  lines = NULL;
 		ZnkStrAry  include_paths_common   = NULL;
 		ZnkStrAry  dependency_libs_common = NULL;
+		ZnkStrAry  runtime_additional = NULL;
 		ZnkStrAry  src_suffix_list = NULL;
 		ZnkStrAry  rc_list = NULL;
 		ZnkStrAry  sublibs_list = NULL;
@@ -1405,11 +1754,15 @@ int main(int argc, char **argv)
 		bool is_include_makefile_version = true;
 		size_t size;
 		size_t idx;
-		ZnkStr info_name = ZnkStr_new( "" );
+		ZnkStr info_name      = ZnkStr_new( "" );
+		ZnkStr only_list_name = ZnkStr_new( "" );
 		ZnkStrAry dir_list = ZnkStrAry_create( true );
-		ZnkStrAry list = ZnkStrAry_create( true );
-		ZnkStrAry ignore_list = ZnkMyf_find_lines( conf_myf, "ignore_list" );
-		ZnkStr gslconv          = ZnkStr_new( "$(MKFSYS_DIR)/gslconv.exe" );
+		ZnkStrAry list     = ZnkStrAry_create( true );
+		ZnkStrAry list_mdf = ZnkStrAry_create( true );
+		ZnkStrAry ignore_list   = ZnkMyf_find_lines( conf_myf, "ignore_list" );
+		ZnkStrAry only_list     = NULL;
+		ZnkStrAry only_list_all = ZnkStrAry_create( true );
+		const char* gslconv = "$(MKFSYS_DIR)/$(PLATFORM)/gslconv.exe";
 		ZnkStr makefile_version_landmark = ZnkStr_new( "libZnk" );
 
 		MkfSeek_listDir( list, dir_list, ".", ignore_list, isInterestExt );
@@ -1458,13 +1811,15 @@ int main(int argc, char **argv)
 		 */
 		varp = ZnkVarpAry_find_byName_literal( vars, "gslconv", false );
 		if( varp ){
-			ZnkStr_set( gslconv, ZnkVar_cstr( varp ) );
+			//ZnkStr_set( gslconv, ZnkVar_cstr( varp ) );
+			gslconv = ZnkVar_cstr( varp );
 		}
 
 		MkfInstall_compose( &mkf_inst, conf_myf );
 
 		include_paths_common   = ZnkMyf_find_lines( conf_myf, "include_paths_common" );
 		dependency_libs_common = ZnkMyf_find_lines( conf_myf, "dependency_libs_common" );
+		runtime_additional     = ZnkMyf_find_lines( conf_myf, "runtime_additional" );
 
 		src_suffix_list   = ZnkMyf_find_lines( conf_myf, "src_suffix_list" );
 		rc_list           = ZnkMyf_find_lines( conf_myf, "rc_list" );
@@ -1495,23 +1850,55 @@ int main(int argc, char **argv)
 
 		lines = ZnkMyf_find_lines( conf_myf, "mkid_list" );
 		size = ZnkStrAry_size( lines );
+
+		/* init only_list_all */
 		for( idx=0; idx<size; ++idx ){
 			const char* mkf_id = ZnkStrAry_at_cstr( lines, idx );
+			ZnkStr_setf( only_list_name, "only_list_%s", mkf_id );
+			only_list = ZnkMyf_find_lines( conf_myf, ZnkStr_cstr(only_list_name) );
+			if( only_list ){
+				size_t only_idx;
+				size_t only_size = ZnkStrAry_size( only_list );
+				for( only_idx=0; only_idx<only_size; ++only_idx ){
+					const char* only = ZnkStrAry_at_cstr( only_list, only_idx );
+					MkfSSet_add( only_list_all, only );
+				}
+			}
+		}
+
+		for( idx=0; idx<size; ++idx ){
+			const char* mkf_id = ZnkStrAry_at_cstr( lines, idx );
+
 			ZnkStr_setf( info_name, "info_%s", mkf_id );
 			info = ZnkMyf_find_vars( conf_myf, ZnkStr_cstr(info_name) );
+
+			/* list から only_list_all を除き、list_mdfへコピー. */
+			ZnkStrAry_clear( list_mdf );
+			addStrAry_withExcept( list_mdf, list, only_list_all );
+
+			/* list_mdfへ only_list を追加. */
+			ZnkStr_setf( only_list_name, "only_list_%s", mkf_id );
+			only_list = ZnkMyf_find_lines( conf_myf, ZnkStr_cstr(only_list_name) );
+			if( only_list ){
+				addStrAry_withExcept( list_mdf, only_list, NULL );
+			}
+
+			ZnkStr_setf( only_list_name, "only_list_%s", mkf_id );
+			only_list = ZnkMyf_find_lines( conf_myf, ZnkStr_cstr(only_list_name) );
 
 			MkfInstall_clearList_atMkfGenerate( &mkf_inst );
 			if( ZnkS_eq( mkf_id, "android" ) ){
 				MkfAndroid_generate( conf_myf, product_list, isSrcFileExt,
 						include_paths_common,
-						dependency_libs_common,
+						dependency_libs_common, runtime_additional,
 						sublibs_list );
 			}
-			generateMkf( info, list, dir_list, mkf_id, src_suffix_list,
-					include_paths_common, dependency_libs_common, is_runtime_install,
+			generateMkf( info, list_mdf, dir_list, mkf_id, src_suffix_list,
+					include_paths_common, dependency_libs_common, runtime_additional, is_runtime_install,
 					my_libs_root, template_dir, product_list, rc_list, sublibs_list,
 					lib_dlver, &mkf_inst, special_exe_sfx, special_lib_pfx,
 					resfile_additional, gslconv, is_include_makefile_version );
+
 		}
 
 		if( is_include_makefile_version ){
@@ -1521,9 +1908,11 @@ int main(int argc, char **argv)
 		ZnkVarpAry_destroy( product_list );
 		ZnkStrAry_destroy( tkns );
 		ZnkStr_delete( info_name );
-		ZnkStr_delete( gslconv );
+		ZnkStr_delete( only_list_name );
 		ZnkStr_delete( makefile_version_landmark );
 		ZnkStrAry_destroy( list );
+		ZnkStrAry_destroy( list_mdf );
+		ZnkStrAry_destroy( only_list_all );
 		ZnkStrAry_destroy( dir_list );
 		MkfInstall_dispose( &mkf_inst );
 	}

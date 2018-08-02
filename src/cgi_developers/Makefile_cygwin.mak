@@ -36,12 +36,12 @@ ABINAME = cygwin$(MACHINE)$(DEBUG)
 O = ./out_dir/$(ABINAME)
 
 ifeq ($(DEBUG), d)
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)d
 SLIBS_DIR=slib/$(PLATFORM)d
 else
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)
 SLIBS_DIR=slib/$(PLATFORM)
@@ -118,6 +118,10 @@ OBJS9=\
 
 SUB_LIBS=\
 
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
+
 PRODUCT_EXECS= \
 	__mkg_sentinel_target__ \
 	$(EXE_FILE0) \
@@ -151,8 +155,8 @@ PRODUCT_EXECS= \
 
 RUNTIME_FILES= \
 	__mkg_sentinel_target__ \
-	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/cygZnk.dll \
-	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/cygRano.dll \
+	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/cygZnk-$(DL_VER).dll \
+	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/cygRano-$(DL_VER).dll \
 
 
 
@@ -166,34 +170,44 @@ $O:
 
 # Product files rule.
 $(EXE_FILE0): $(OBJS0)
-	$(LINKER) -o $(EXE_FILE0) $(OBJS0) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk.dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano.dll -lpthread -ldl -lstdc++ 
+	@echo $(LINKER) -o $(EXE_FILE0) {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
+	@     $(LINKER) -o $(EXE_FILE0) $(OBJS0) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
 
 $(EXE_FILE1): $(OBJS1)
-	$(LINKER) -o $(EXE_FILE1) $(OBJS1) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk.dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano.dll -lpthread -ldl -lstdc++ 
+	@echo $(LINKER) -o $(EXE_FILE1) {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
+	@     $(LINKER) -o $(EXE_FILE1) $(OBJS1) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
 
 $(EXE_FILE2): $(OBJS2)
-	$(LINKER) -o $(EXE_FILE2) $(OBJS2) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk.dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano.dll -lpthread -ldl -lstdc++ 
+	@echo $(LINKER) -o $(EXE_FILE2) {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
+	@     $(LINKER) -o $(EXE_FILE2) $(OBJS2) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
 
 $(EXE_FILE3): $(OBJS3)
-	$(LINKER) -o $(EXE_FILE3) $(OBJS3) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk.dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano.dll -lpthread -ldl -lstdc++ 
+	@echo $(LINKER) -o $(EXE_FILE3) {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
+	@     $(LINKER) -o $(EXE_FILE3) $(OBJS3) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
 
 $(EXE_FILE4): $(OBJS4)
-	$(LINKER) -o $(EXE_FILE4) $(OBJS4) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk.dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano.dll -lpthread -ldl -lstdc++ 
+	@echo $(LINKER) -o $(EXE_FILE4) {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
+	@     $(LINKER) -o $(EXE_FILE4) $(OBJS4) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
 
 $(EXE_FILE5): $(OBJS5)
-	$(LINKER) -o $(EXE_FILE5) $(OBJS5) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk.dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano.dll -lpthread -ldl -lstdc++ 
+	@echo $(LINKER) -o $(EXE_FILE5) {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
+	@     $(LINKER) -o $(EXE_FILE5) $(OBJS5) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
 
 $(EXE_FILE6): $(OBJS6)
-	$(LINKER) -o $(EXE_FILE6) $(OBJS6) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk.dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano.dll -lpthread -ldl -lstdc++ 
+	@echo $(LINKER) -o $(EXE_FILE6) {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
+	@     $(LINKER) -o $(EXE_FILE6) $(OBJS6) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
 
 $(EXE_FILE7): $(OBJS7)
-	$(LINKER) -o $(EXE_FILE7) $(OBJS7) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk.dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano.dll -lpthread -ldl -lstdc++ 
+	@echo $(LINKER) -o $(EXE_FILE7) {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
+	@     $(LINKER) -o $(EXE_FILE7) $(OBJS7) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
 
 $(EXE_FILE8): $(OBJS8)
-	$(LINKER) -o $(EXE_FILE8) $(OBJS8) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk.dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano.dll -lpthread -ldl -lstdc++ 
+	@echo $(LINKER) -o $(EXE_FILE8) {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
+	@     $(LINKER) -o $(EXE_FILE8) $(OBJS8) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
 
 $(EXE_FILE9): $(OBJS9)
-	$(LINKER) -o $(EXE_FILE9) $(OBJS9) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk.dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano.dll -lpthread -ldl -lstdc++ 
+	@echo $(LINKER) -o $(EXE_FILE9) {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
+	@     $(LINKER) -o $(EXE_FILE9) $(OBJS9) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/cygRano-$(DL_VER).dll -lpthread -ldl -lstdc++ 
 
 
 ##
@@ -223,10 +237,13 @@ __mkg_sentinel_target__:
 # Install data rule.
 install_data:
 	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/cgi_developers/publicbox 
+	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/cgi_developers/protected 
 	for tgt in *.c ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/cgi_developers/publicbox/ ; fi ; done
 	for tgt in *.cpp ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/cgi_developers/publicbox/ ; fi ; done
 	for tgt in *.html ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/cgi_developers/publicbox/ ; fi ; done
 	for tgt in *.js ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/cgi_developers/publicbox/ ; fi ; done
+	for tgt in *.go ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/cgi_developers/publicbox/ ; fi ; done
+	for tgt in *.go ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/cgi_developers/protected/ ; fi ; done
 
 # Install exec rule.
 install_exec: $(EXE_FILE0) $(EXE_FILE1) $(EXE_FILE2) $(EXE_FILE3) $(EXE_FILE4) $(EXE_FILE5) $(EXE_FILE6) $(EXE_FILE7) $(EXE_FILE8) $(EXE_FILE9)
@@ -254,17 +271,12 @@ install: all install_exec install_data
 
 # Clean rule.
 clean:
-	rm -r $O/ 
+	rm -rf $O/ 
 
 # Src and Headers Dependency
 cgi_util.o: cgi_util.h
 evar1.o: cgi_util.h
-evar2.o:
 hello.o: cgi_util.h
-hello_template.o:
 post1.o: cgi_util.h
-post2.o:
-progress.o:
 query_string1.o: cgi_util.h
-query_string2.o:
 transfer_chunked.o: cgi_util.h

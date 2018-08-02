@@ -8,31 +8,31 @@
 </head>
 <body>
 <a name=TopBar></a>
-<p><b><img src="/imgs/here_landmark.png"> Moai2.0ドキュメント</b></p>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter ユーザーマニュアル</b></p>
 
 <a class=MstyElemLink href="/">トップページ</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/index.html">Moai2.0ドキュメント</a> &nbsp;
-<a class=MstyElemLink        href="/moai1.1/index.html">Moai1.1ドキュメント</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
+<a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
-<a class=MstyElemLink        href="/moai2.0/install.html">インストールガイド</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_reference.html">Moai本体</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">ご案内</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/install.html">インストールガイド</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_feature.html">Moaiの特徴</a> &nbsp;
 <a class=MstyNowSelectedLink href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/customboy_reference.html">CustomBoy</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/upgrade.html">Moaiのアップグレード方法</a> &nbsp;
 <br> <br>
 <a class=MstyNowSelectedLink href="/moai2.0/easter_reference.html">仮想ブラウジング</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/easter_collection.html">コレクション</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/easter_config.html">設定</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/easter_boxmap_viewer.html">BoxMapビューア</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/easter_collection.html">コレクション</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/easter_config.html">設定</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/easter_boxmap_viewer.html">BoxMapビューア</a> &nbsp;
 <br> <br>
 
-
 <div class=MstyComment>
-<u><b>記事担当者</b></u> : 全角<br> 
+<u><b>記事担当者</b></u> : 全角<br>
 <br>
-<u><b>最終更新日</b></u> : 2018/04/12<br>
+<u><b>最終更新日</b></u> : 2018/05/23<br>
 <br>
 </div>
 <br>
@@ -47,21 +47,15 @@
 	Easterは仮想ブラウザ環境(以降、単に仮想環境と呼ぶ)を利用するツールです.<br>
 	これはMoai CGI上でWebアプリケーションとして動作します.<br>
 	ここではEasterに関する全機能を詳細に解説します.<br>
-	<br>
-	<div class=MstyComment>
-		<u><b>Note</b></u><br>
-		<br>
-		Moai Ver1.1.x系まではこの仮想環境を利用するには、ブラウザにて「ローカルプロキシの設定」を行っておく必要がありました.<br>
-		Ver2.0以降で導入されたEasterを使えば、この設定を行うことなく即座に仮想環境を利用することができます.<br>
-	</div>
-	<br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 </div><br>
 <br>
 
 
 <a name=Index></a>
-<u><b>目次</b></u>
+<u><b>
+目次
+</b></u><br>
+<br>
 <ul>
 	<li><b><a class=MstyElemLink href=#FirstEaster>初めてのEaster</a></b></li>
 	<li><b><a class=MstyElemLink href=#EasterLinkManager>Easter リンクマネージャー</a></b></li>
@@ -69,6 +63,7 @@
 	<li><b><a class=MstyElemLink href=#EasterURL_Mechanism>仮想環境が継続的に維持される仕組み</a></b></li>
 	<li><b><a class=MstyElemLink href=#EasterBBSOperation>Easter BBS Operation</a></b></li>
 	<li><b><a class=MstyElemLink href=#EasterHyperPost>Easter HyperPost</a></b></li>
+	<li><b><a class=MstyElemLink href=#CooperateOthersViewers>その他の専ブラとの連携動作について</a></b></li>
 </ul><br>
 
 
@@ -79,28 +74,28 @@
 <br>
 <div class=MstyIndent>
 	Easterを使うために必要なことは、以下の二つだけです.<br>
-	<br>
 	<ol>
 		<li>moai(Windowsならmoai.exe)を起動する.<br>
 		</li>
 		<br>
 		<li>ブラウザから http://localhost:8124 を開く.<br>
+<br>
 		<div class=MstyComment>
-			これでうまくいかない場合は http://127.0.0.1:8124 で試してみましょう.
+			これでうまくいかない場合は http://127.0.0.1:8124 で試してみましょう.<br>
 		</div>
 		</li>
 	</ol>
 	お使いのブラウザに以下のような「Welcome to Moai+Easter World」のページが表示されたでしょうか？<br>
 	<br>
 	<div class=MstyComment>
-		<img src=/imgs/moai_top_page.png>
+		<img src=/imgs/moai_top_page.png width=100%><br>
 	</div>
 	<br>
 	表示されたなら、そこから<a class=MstyAppLink href="http://127.0.0.1:8124/easter" target=_blank>Easter</a>をクリックします.<br>
 	以下のような画面が表示されると思います.<br>
 	<br>
 	<div class=MstyComment>
-		<img src=/imgs/easter_link_manager1.png>
+		<img src=/imgs/easter_link_manager1.png width=100%><br>
 	</div>
 	<br>
 	各リンクの先頭にある「Open」をクリックすると、そのリンク先のサイトを仮想環境で閲覧します.<br>
@@ -174,12 +169,12 @@ Easter リンクマネージャー
 		「チェックしたリンクを一番上へ」ボタンを押すと、<br>
 		「仮想環境のスタート」でチェックを入れた項目が並びとして一番上へ移動します.<br>
 		このボタンだけでも一応任意の並び替えはできます.<br>
-	
+	<br>
 		リンクにはサイト毎にカテゴリが設定されています.<br>
 		これはURLのホスト名よりEasterが自動判断します.<br>
 		例えば *.2chan.net ならカテゴリは「ふたばちゃんねる」であるといった具合です.<br>
 		現在Easterが用意しているサイト毎のカテゴリは「ふたばちゃんねる」、「５ちゃんねる」、「その他」の３つがあります.<br>
-	
+	<br>
 		「カテゴリ毎に集める」ボタンを使うとリンクを簡単にカテゴリ毎に揃えることができます.<br>
 		たとえば「５ちゃんねる」のカテゴリに属するリンクをすべて一番上方へと移動して揃えたいとしましょう.<br>
 		以下の手順になります.<br>
@@ -220,15 +215,16 @@ Easter リンクマネージャー
 
 <a name=EasterURL></a>
 <u><b>
-EasterURL
+Easter URL
 </b></u><br>
 <br>
 <div class=MstyIndent>
 	以下の例でEaster URLの構造を簡単に説明しましょう.<br>
 	<br>
 	<div class=MstyComment>
-	http://192.168.0.1:8125/easter?est_view=may.2chan.net/b/futaba.php?mode=cat&amp;sort=1<br>
-	</div><br>
+		http://192.168.0.1:8125/easter?est_view=may.2chan.net/b/futaba.php?mode=cat&amp;sort=1<br>
+	</div>
+<br>
 	<ul>
 		<li><b>192.168.0.1:8125</b><br>
 		あなたのマシンで今起動しているMoaiへの接続を意味します.<br>
@@ -272,7 +268,7 @@ EasterURL
 	<br>
 	何が起きているのか詳しく説明しましょう.<br>
 	通常、Easterで閲覧したページ内に子となるページへのリンクが含まれていた場合、<br>
-	そのリンク先もEasterを介する閲覧となるようにEaster URLへの変換が自動的に行われます.<br> 
+	そのリンク先もEasterを介する閲覧となるようにEaster URLへの変換が自動的に行われます. <br>
 	さらにその子を閲覧したタイミングで、同様の変換がその孫へのリンクに対しても行われ、<br>
 	この連鎖によりEasterによる仮想状態を子孫へ継続させる仕組みとなっています.<br>
 	<br>
@@ -295,18 +291,19 @@ Easter BBS Operation
 	<br>
 	<div class=MstyComment>
 		例. ふたばちゃんねる用 Easter BBS Operation<br>
-		<img src="/imgs/easter_bbs_operation_futaba.png"><br>
-	</div><br>
+		<img src="/imgs/easter_bbs_operation_futaba.png" width=100%><br>
+	</div>
+<br>
 	<div class=MstyComment>
 		例. 5ちゃんねる用 Easter BBS Operation<br>
-		<img src="/imgs/easter_bbs_operation_5ch.png"><br>
-	</div><br>
+		<img src="/imgs/easter_bbs_operation_5ch.png" width=100%><br>
+	</div>
 	<br>
 	この操作パネルでは、現在閲覧中のスレッドに関して次のような操作が行えます.<br>
 	これらのうちリロード以外の操作については、まず「詳細モード」を押して専用の画面を出してから行います.<br>
 	<ul>
 		<li><b>リロード</b><br>
-		このスレッドを再読み込みして最新の内容を表示します.
+		このスレッドを再読み込みして最新の内容を表示します.<br>
 		</li>
 		<br>
 		<li><b>このHTMLをお気に入りへ</b><br>
@@ -329,11 +326,12 @@ Easter BBS Operation
 		非常に保持期間の短いブックマークのようなものとして使うこともできます.<br>
 		一方、このコマンドではストックやお気に入りへの登録は行われません.<br>
 		従って、規定の日数が経過するとキャッシュおよびこのリストからも削除されます.<br>
+<br>
 		<div class=MstyComment>
 			この「最近処理したもの」のリストは、Easterの内部実装ではRecentoryと呼ばれます.<br>
 			これは「Recent」と「Directory」を合わせた完全な造語です.<br>
 			このリストの実体はrecentory.myfファイルとなります.<br>
-		</div><br>
+		</div>
 		</li>
 		<br>
 		<li><b>サムネ保存</b><br>
@@ -350,15 +348,14 @@ Easter BBS Operation
 		</li>
 		<br>
 		<li><b>キャッシュをBoxMapビューアで開く</b><br>
-		このスレッドのキャッシュが保存されている実ディレクトリをBoxMapビューアより閲覧します.
+		このスレッドのキャッシュが保存されている実ディレクトリをBoxMapビューアより閲覧します.<br>
 		</li>
 		<br>
 		<li><b>オリジナルURLでダイレクトに開く</b><br>
 		このスレッドを敢えてEasterを介さず直接開いて閲覧します.<br>
-		開いた先ではEasterの仮想環境や広告カットなどのフィルタリングなどが一切機能していませんので注意してください.
+		開いた先ではEasterの仮想環境や広告カットなどのフィルタリングなどが一切機能していませんので注意してください.<br>
 		</li>
 	</ul>
-
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 </div><br>
@@ -379,7 +376,7 @@ Easter HyperPost
 	<br>
 	<div class=MstyComment>
 		例. ふたばちゃんねるの標準の投稿画面<br>
-		<img src="/imgs/easter_hyper_post_for_futaba_entry.png"><br>
+		<img src="/imgs/easter_hyper_post_for_futaba_entry.png" width=100%><br>
 	</div>
 	<br>
 	この通常のフォームからの場合でもEasterの仮想環境は機能しますので一向に構わないのですが、<br>
@@ -387,7 +384,7 @@ Easter HyperPost
 	<br>
 	<div class=MstyComment>
 		例. ふたばちゃんねる用 Easter HyperPost<br>
-		<img src="/imgs/easter_hyper_post_for_futaba.png"><br>
+		<img src="/imgs/easter_hyper_post_for_futaba.png" width=100%><br>
 	</div>
 	<br>
 	通常の投稿フォームと似ている部分もありますし、いくつか追加された入力フィールドも見られます.<br>
@@ -404,12 +401,13 @@ Easter HyperPost
 		<br>
 		一方、Easter HyperPostでは、「添付URL」欄にネット上にある画像のURLをダイレクトに指定することができます.<br>
 		URLをこの欄にコピペして「返信する」ボタンを押すだけで直ちにその画像を投稿することができるわけです.<br>
+<br>
 		<div class=MstyComment>
 			指定するURLはEasterコレクション上の画像のURLでも構いません.<br>
 			これについては詳しくは<a class=MstyElemLink href=/moai2.0/easter_collection.html#HyperPost target=_blank>こちら</a>を参照してください.<br>
 			これはいわばEasterコレクションとEaster HyperPostの両方の機能をフルに活用した奥義的な使い方です.<br>
-			あなたが画像BBSから収集した画像コレクションと、それを再び画像BBSに投稿するという一連の流れが、<br>
-			ブラウザ内のみで完結するその感覚と醍醐味を味わって頂ければ幸いです.<br>
+			あなたが画像BBSから収集した画像コレクションと、それを再び画像BBSに投稿するという一連の流れを<br>
+			ブラウザ内のみで完結させることができます.<br>
 		</div>
 		</li>
 		<br>
@@ -428,7 +426,6 @@ Easter HyperPost
 		このあたりの知識がある方は参考にしてください.<br>
 		Easterによって仮想化された送信情報のすべての内容を確認できると思います.<br>
 		</li>
-		<br>
 	</ul>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
@@ -436,12 +433,79 @@ Easter HyperPost
 <br>
 
 
-<u><b>リンク</b></u>
+<a name=CooperateOthersViewers></a>
+<u><b>
+その他の専ブラとの連携動作について
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	このセクションでは Easter とその他の専ブラを同時に使う方向けに、<br>
+	その方法について説明します.<br>
+	<ul>
+		<li><b>ふたばちゃんねる:赤福</b><br>
+		<br>
+		赤福の設定で「外部の板」パネルを開き、「外部の板でも動作させる」にチェックを入れます.<br>
+		「パターン」に以下をコピペし、「追加」ボタンを押します.<br>
+		<br>
+		<div class=MstyComment>
+			^http://.+:8125/easter\?est_.*=(.*)\.2chan\.net/([^/]+)/([^#]*)<br>
+		</div>
+<br>
+		「monaca.php」と「前方一致」のチェックは<b>Off</b>にしておきます.<br>
+		下部にある「適用」ボタンを押して、赤福の設定ウィンドウを閉じます.<br>
+		これでEasterで閲覧中も赤福の機能が有効になります.<br>
+		(ただし一部の赤福の機能は動作しないかもしれません).<br>
+		<br>
+		<div class=MstyComment>
+			Easter用の赤福設定ウィンドウ画面<br>
+			<img src="/imgs/easter_akahuku_config.png" width=100%><br>
+		</div>
+		</li>
+		<br>
+		<li><b>ふたばちゃんねる:ふたクロ</b><br>
+		<br>
+		ChromeのExtentions内にあるふたクロのソース(viewer.js等)を拝見させて頂いた限りでは、<br>
+		ふたクロが認識するURLは *.2chan.net というサーバ名で固定となっているようです.<br>
+		つまり赤福とは異なり、ふたクロではふたばちゃんねる以外の(ふたばライクなサーバの)URLを<br>
+		認識させる手段がユーザ側では用意されていないということです.<br>
+		そのため、ふたクロとEasterを<b>同時に</b>使用することは現状できません.<br>
+		<br>
+		<div class=MstyComment>
+			ふたクロをインストールしている状態でもEaster自体は支障なく使えるのですが、<br>
+			Easterで閲覧中はふたクロの機能の方が発動されていない状態になります.<br>
+			一方、Easterを使わずに通常のURLでふたばにアクセスした場合はふたクロが発動します.<br>
+		</div>
+<br>
+		ではふたクロを使いつつMoaiのフィルタ機能の恩恵をも享受するにはどうしたらよいでしょうか？<br>
+		一つの答えとして、Moaiをローカルプロキシとして使う方法があります.<br>
+		即ちChrome側でローカルプロキシとして、アドレスを127.0.0.1、ポートを8124に設定します.<br>
+		これならば通常のURLでふたばにアクセスしてもMoaiのフィルタ機能が働き、<br>
+		またふたクロをも発動させることができます.<br>
+		<br>
+		<div class=MstyComment>
+			…と、まあここまで設定しなくとも、Easterとふたクロの一方だけならどちらも支障なく動作するのですから、<br>
+			閲覧専用(ROM)時はふたクロを使って通常のURLでアクセスし、<br>
+			書き込みが必要になった時だけEasterを使うという割り切った使い方でも意外と良い気もします.<br>
+		</div>
+		</li>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=Link></a>
+<u><b>
+リンク
+</b></u><br>
+<br>
 <ul>
-	<li><a class=MstyElemLink href="#TopBar">一番上へ</a></li>
-	<li><a class=MstyElemLink href="https://mr-moai-2016.github.io">Moaiドキュメント(オンライン)</a></li>
-	<li><a class=MstyElemLink href="https://github.com/mr-moai-2016/znk_project">znk_project(github)</a></li>
+	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
+	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project>znk_project(github)</a></li>
 </ul><br>
+
 
 </body>
 </html>

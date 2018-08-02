@@ -1,7 +1,7 @@
 # Source directory
 S = .
 # Root path of common libraries
-MY_LIBS_ROOT=../..
+MY_LIBS_ROOT=..\..
 !IFNDEF MKFSYS_DIR
 MKFSYS_DIR=$(MY_LIBS_ROOT)\..\mkfsys
 !ENDIF
@@ -56,6 +56,10 @@ OBJS0=\
 
 SUB_LIBS=\
 
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
+
 PRODUCT_SLIBS= \
 	__mkg_sentinel_target__ \
 	$(SLIB_FILE0) \
@@ -75,7 +79,8 @@ $O:
 
 # Product files rule.
 $(SLIB_FILE0): $(OBJS0)
-	LIB /NOLOGO /OUT:$(SLIB_FILE0) $(OBJS0) $(SUB_LIBS)
+	@echo LIB /NOLOGO /OUT:$(SLIB_FILE0) {[objs]} $(SUB_LIBS)
+	@     LIB /NOLOGO /OUT:$(SLIB_FILE0) $(OBJS0) $(SUB_LIBS)
 
 
 # Suffix rule.
@@ -114,7 +119,7 @@ install: all install_slib
 
 # Clean rule.
 clean:
-	del /Q $O\ 
+	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
 adler32.obj: zlib.h

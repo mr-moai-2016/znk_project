@@ -5,34 +5,32 @@
 	<meta http-equiv="Content-Script-Type" content="text/javascript">
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	<link href="/msty.css" rel="stylesheet" type="text/css">
-	<title>Moai2.0ドキュメント</title>
 </head>
 <body>
 <a name=TopBar></a>
-<p><b><img src="/imgs/here_landmark.png"> Moai2.0ドキュメント</b></p>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter エキスパートマニュアル</b></p>
 
 <a class=MstyElemLink href="/">トップページ</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/index.html">Moai2.0ドキュメント</a> &nbsp;
-<a class=MstyElemLink        href="/moai1.1/index.html">Moai1.1ドキュメント</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
+<a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
-<a class=MstyElemLink        href="/moai2.0/install.html">インストールガイド</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_reference.html">Moai本体</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/customboy_reference.html">CustomBoy</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index_expert.html">ご案内</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_reference.html">Moaiエンジン</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/customboy_reference.html">CustomBoyエンジン</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
 <a class=MstyNowSelectedLink href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
 <br> <br>
-<a class=MstyElemLink        href="/moai2.0/moai_cgi_developers.html">Moai CGI 入門編</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_cgi_developers_pragmatic.html">Moai CGI 実践編</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_cgi_developers.html">Moai CGI 入門編</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_cgi_developers_pragmatic.html">Moai CGI 実践編</a> &nbsp;
 <a class=MstyNowSelectedLink href="/moai2.0/mkfgen.html">mkfgenリファレンス</a> &nbsp;
 <br> <br>
 
-
 <div class=MstyComment>
-<u><b>記事担当者</b></u> : 全角<br> 
+<u><b>記事担当者</b></u> : 全角<br>
 <br>
-<u><b>最終更新日</b></u> : 2018/02/14<br>
+<u><b>最終更新日</b></u> : 2018/07/24<br>
 <br>
 </div>
 <br>
@@ -49,7 +47,7 @@
 	この記事はまた、現在のznk_projectのファイル+ディレクトリ構造全体がどのようになっているかを解説するものでもあります.<br>
 	<br>
 	出来るだけ平易な説明を心がけたつもりですが、それでもかなり専門的な内容であることに変わりはなく、<br>
-	おそらくこれはMoai2.0ドキュメント群の中でも最も難しいのものでしょう.<br>
+	おそらくこれはエキスパートマニュアルの中でも最も難しい内容のものでしょう.<br>
 	マルチプラットフォームの静的ライブラリ、動的ライブラリ、そしてツールの開発に相当に慣れたプログラマの方を対象に<br>
 	この種のビルドシステムの一形態としてznk_projectが提供する抽象化モデルをご紹介します.<br>
 </div><br>
@@ -57,20 +55,25 @@
 
 
 <a name=Index></a>
-<u><b>目次</b></u>
+<u><b>
+目次
+</b></u><br>
+<br>
 <ul>
-	<li><b><a class=MstyElemLink href=#ProjectModel     >mkfgenが扱うプロジェクトモデル</a></b></li>
-	<li><b><a class=MstyElemLink href=#config           >configセクション</a></b></li>
-	<li><b><a class=MstyElemLink href=#include_paths_common  >include_paths_commonセクション</a></b></li>
+	<li><b><a class=MstyElemLink href=#ProjectModel>mkfgenが扱うプロジェクトモデル</a></b></li>
+	<li><b><a class=MstyElemLink href=#config>configセクション</a></b></li>
+	<li><b><a class=MstyElemLink href=#include_paths_common>include_paths_commonセクション</a></b></li>
 	<li><b><a class=MstyElemLink href=#dependency_libs_common>dependency_libs_commonセクション</a></b></li>
-	<li><b><a class=MstyElemLink href=#info_COMPILER    >info_{COMPILER}セクション</a></b></li>
-	<li><b><a class=MstyElemLink href=#mkid_list        >mkid_listセクション</a></b></li>
-	<li><b><a class=MstyElemLink href=#product_list     >product_listセクション</a></b></li>
-	<li><b><a class=MstyElemLink href=#rc_list          >rc_listセクション</a></b></li>
-	<li><b><a class=MstyElemLink href=#sublibs_list     >sublibs_listセクション</a></b></li>
+	<li><b><a class=MstyElemLink href=#runtime_additional>runtime_additionalセクション</a></b></li>
+	<li><b><a class=MstyElemLink href=#info_COMPILER>info_{COMPILER}セクション</a></b></li>
+	<li><b><a class=MstyElemLink href=#mkid_list>mkid_listセクション</a></b></li>
+	<li><b><a class=MstyElemLink href=#product_list>product_listセクション</a></b></li>
+	<li><b><a class=MstyElemLink href=#rc_list>rc_listセクション</a></b></li>
+	<li><b><a class=MstyElemLink href=#sublibs_list>sublibs_listセクション</a></b></li>
 	<li><b><a class=MstyElemLink href=#install_data_list>install_data_listセクション</a></b></li>
-	<li><b><a class=MstyElemLink href=#ignore_list      >ignore_listセクション</a></b></li>
-	<li><b><a class=MstyElemLink href=#src_suffix_list  >src_suffix_listセクション</a></b></li>
+	<li><b><a class=MstyElemLink href=#ignore_list>ignore_listセクション</a></b></li>
+	<li><b><a class=MstyElemLink href=#only_list>only_list_{COMPILER}セクション</a></b></li>
+	<li><b><a class=MstyElemLink href=#src_suffix_list>src_suffix_listセクション</a></b></li>
 </ul><br>
 
 
@@ -86,7 +89,7 @@ mkfgenが扱うプロジェクトモデル
 	<br>
 	次に、以下のようなディレクトリ構造のモデルを考えましょう.<br>
 	そしてあなたの my_tool ディレクトリはこのモデルの配下に内包されていると考えます.<br>
-
+<br>
 	<ul>
 		<li><b>my_project ディレクトリ</b><br>
 		<br>
@@ -95,12 +98,12 @@ mkfgenが扱うプロジェクトモデル
 		すべてが格納されているものとします.<br>
 		Moaiではznk_projectというディレクトリに相当するものと考えていいでしょう.<br>
 		</li>
-		<br>
+<br>
 		<li><b>my_project/mkfsys ディレクトリ</b><br>
 		<br>
 		このディレクトリ内には mkfgen ツールの本体やそれに関係するその他のビルド支援系ファイルが存在します(詳しくは後述).<br>
 		</li>
-		<br>
+<br>
 		<li><b>my_project/src ディレクトリ</b><br>
 		<br>
 		このディレクトリにあなたのソースファイルがすべて格納されているものとします.<br>
@@ -122,14 +125,14 @@ mkfgenが扱うプロジェクトモデル
 		それぞれslibとdlibというディレクトリ配下へ、一応コピーする処理を行います.<br>
 		一方、インポートライブラリとヘッダについてはそのようなコピーを行いません.<br>
 		</li>
-		<br>
+<br>
 		<li><b>my_project/my_tool-vX.Y-platform</b><br>
 		<br>
 		このディレクトリはあなたが開発を行ったツール(my_tool)のインストール先です.<br>
 		実行バイナリやランタイムライブラリ、必要な設定データなど一式が格納されているものとします.<br>
 		ここで my_tool や X, Y, platform の部分はツールやそのバージョン、プラットフォームなどによって変わる文字列です.<br>
 		</li>
-		<br>
+<br>
 		<li><b>my_project/my_profile</b><br>
 		<br>
 		このディレクトリでは、my_projectにおけるツールが共通して使うプロファイルデータが格納されているものとします.<br>
@@ -137,14 +140,13 @@ mkfgenが扱うプロジェクトモデル
 		FirefoxなどにもProfileがありますが、イメージとしてはあれを意識したものです.<br>
 		これはツールの種類やバージョンを超えて共通して参照される場合もあり得るものとします.<br>
 		</li>
-		<br>
+<br>
 		<li><b>my_project/src/my_tool ディレクトリ</b><br>
 		<br>
 		このディレクトリはsrc配下にあり、あなたが開発を行っているツールmy_toolのソースディレクトリです. <br>
-		この中に上記のCファイルに加え、mkfgen.myf が存在するものとします.<br>
+		この中に上記のCファイルに加え、mkfgen.myf が存在するものとします. <br>
 		</li>
 	</ul>
-	<br>
 	複雑ですか？<br>
 	<br>
 	しかし競合するその他の同様のツールと比べればはるかに単純ともいえます.<br>
@@ -156,7 +158,6 @@ mkfgenが扱うプロジェクトモデル
 	(例えば、vc用の場合、Makefile_vc.mak といった名前のMakefileになります).<br>
 	<br>
 	まずは最も簡単な mkfgen.myf の例を示しましょう.<br>
-	<br>
 	<br>
 	<div class=MstyComment>
 		<div class=MstyCode style='background-color:#cccccc;padding:4px 8px'>
@@ -270,12 +271,12 @@ mkfgenが扱うプロジェクトモデル
 
 <a name=config></a>
 <u><b>
-configセクション<span class=MstyAuthor> (Section Type : @@V 変数リスト)</span>
-</b></u><br>
+configセクション
+</b></u><span class=MstyAuthor> (Section Type: @@V 変数リスト)</span><br>
 <br>
 <div class=MstyIndent>
 	このセクションでは基本的なパスの指定など、この mkfgen.myf全体に関わる設定を行います.<br>
-
+	ディレクトリ区切り文字(以降これをDSPと呼びます)は、Windowsにおいても / を使用して構いません.<br>
 	<ul>
 		<li><b>my_libs_root</b>(String型)<br>
 		すべてのライブラリのルートとなるディレクトリを指定します.<br>
@@ -324,6 +325,7 @@ configセクション<span class=MstyAuthor> (Section Type : @@V 変数リスト
 		生成物(product)がライブラリの場合で、かつそのlibプレフィックスを特別に変更したい場合<br>
 		そのプレフィックスを指定します.<br>
 		例えばlibプレフィックスを付けないようにしたい場合は、これに明示的に空値を指定します.<br>
+		あるいはlibプレフィックスを必ず付けるようにしたい場合は、これに明示的にlibを指定します.<br>
 		</li>
 		<br>
 		<li><b>resfile_additional</b>(String型)<br>
@@ -365,10 +367,9 @@ configセクション<span class=MstyAuthor> (Section Type : @@V 変数リスト
 		(ちなみに gslconv 自体のソースコードはlibZnkに含まれており、libZnkとこのツールは同時にビルドされます).<br>
 		<br>
 		前置きが長くなりましたが、ここではgslconvの実行バイナリのパスを指定します.<br>
-		<br>
 		</li>
 	</ul>
-
+<br>
 	<div class=MstyComment>
 		<b><u>gslconvについての補足</u></b><br>
 		<br>
@@ -417,8 +418,8 @@ configセクション<span class=MstyAuthor> (Section Type : @@V 変数リスト
 
 <a name=include_paths_common></a>
 <u><b>
-include_paths_commonセクション<span class=MstyAuthor> (Section Type : @@L ラインリスト)</span>
-</b></u><br>
+include_paths_commonセクション
+</b></u><span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><br>
 <br>
 <div class=MstyIndent>
 	ここではヘッダをインクルードするためのパス群を一行につき一つずつ指定します.<br>
@@ -426,17 +427,32 @@ include_paths_commonセクション<span class=MstyAuthor> (Section Type : @@L �
 	<br>
 	<div class=MstyComment>
 		<div class=MstyCode>
-			@{X}
+			@{X}<br>
 		</div>
 	</div>
 	<br>
 	これはコンパイルオプション上では INCLUDE_FLAG として次のように展開されます.<br>
 	<br>
 	<div class=MstyComment>
-		-I$(MY_LIBS_ROOT)/X 
+		-I$(MY_LIBS_ROOT)/X <br>
 	</div>
 	<br>
 	ここで $(MY_LIBS_ROOT) は configセクションのmy_libs_rootにおいて指定したパスに展開されます.<br>
+	<br>
+	この@記法では都合の悪い場合は、これを使わずに直接記述することもできます.<br>
+	例えば以下のようになります.<br>
+	<br>
+	<div class=MstyComment>
+		<div class=MstyCode>
+			../include<br>
+		</div>
+	</div>
+	<br>
+	この場合、INCLUDE_FLAG としては次のように展開されます.<br>
+	<br>
+	<div class=MstyComment>
+		-I../include<br>
+	</div>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 </div><br>
@@ -445,15 +461,15 @@ include_paths_commonセクション<span class=MstyAuthor> (Section Type : @@L �
 
 <a name=dependency_libs_common></a>
 <u><b>
-dependency_libs_commonセクション<span class=MstyAuthor> (Section Type : @@L ラインリスト)</span>
-</b></u><br>
+dependency_libs_commonセクション
+</b></u><span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><br>
 <br>
 <div class=MstyIndent>
 	ここでは依存ライブラリのリストを一行につき一つずつ指定します.<br>
 	この指定では、シンタクスシュガーとして以下のような<b>@記法</b>を使うことができます.<br>
 	<br>
 	<div class=MstyComment>
-		rlib: @{X} Y $(DL_VER)
+		rlib: @{X} Y $(DL_VER)<br>
 	</div>
 	<br>
 	この記法により my_libs_rootからの相対位置 X にある libY-$(DL_VER) というライブラリを指定することができます.<br>
@@ -462,25 +478,25 @@ dependency_libs_commonセクション<span class=MstyAuthor> (Section Type : @@L
 	VCでリンクする際にはこれは次のように展開されます.<br>
 	<br>
 	<div class=MstyComment>
-		$(MY_LIBS_ROOT)/X/out_dir/$(ABINAME)/Y-$(DL_VER).imp.lib 
+		$(MY_LIBS_ROOT)/X/out_dir/$(ABINAME)/Y-$(DL_VER).imp.lib <br>
 	</div>
 	<br>
 	MinGWでリンクする際にはこれは次のように展開されます.<br>
 	<br>
 	<div class=MstyComment>
-		$(MY_LIBS_ROOT)/X/out_dir/$(ABINAME)/libY-$(DL_VER).dll.a
+		$(MY_LIBS_ROOT)/X/out_dir/$(ABINAME)/libY-$(DL_VER).dll.a<br>
 	</div>
 	<br>
 	Linux(gcc)でリンクする際にはこれは次のように展開されます.<br>
 	<br>
 	<div class=MstyComment>
-		$(MY_LIBS_ROOT)/X/out_dir/$(ABINAME)/libY.so
+		$(MY_LIBS_ROOT)/X/out_dir/$(ABINAME)/libY.so<br>
 	</div>
 	<br>
 	Cygwin(gcc)でリンクする際にはこれは次のように展開されます.<br>
 	<br>
 	<div class=MstyComment>
-		$(MY_LIBS_ROOT)/X/out_dir/$(ABINAME)/cygY.dll
+		$(MY_LIBS_ROOT)/X/out_dir/$(ABINAME)/cygY.dll<br>
 	</div>
 	<br>
 	また、実行バイナリを構築する場合にはさらに動的リンクライブラリをランタイムライブラリとして、<br>
@@ -489,19 +505,19 @@ dependency_libs_commonセクション<span class=MstyAuthor> (Section Type : @@L
 	Windowsの場合、この動的リンクライブラリの位置は次のようになります.<br>
 	<br>
 	<div class=MstyComment>
-		$(MY_LIBS_ROOT)/$(DLIBS_DIR)/Y-$(DL_VER).dll
+		$(MY_LIBS_ROOT)/$(DLIBS_DIR)/Y-$(DL_VER).dll<br>
 	</div>
 	<br>
 	Linuxの場合、この動的リンクライブラリの位置は次のようになります.<br>
 	<br>
 	<div class=MstyComment>
-		$(MY_LIBS_ROOT)/$(DLIBS_DIR)/libY.so
+		$(MY_LIBS_ROOT)/$(DLIBS_DIR)/libY.so<br>
 	</div>
 	<br>
 	Cygwinの場合、この動的リンクライブラリの位置は次のようになります.<br>
 	<br>
 	<div class=MstyComment>
-		$(MY_LIBS_ROOT)/$(DLIBS_DIR)/cygY.so
+		$(MY_LIBS_ROOT)/$(DLIBS_DIR)/cygY.so<br>
 	</div>
 	<br>
 	いかがでしょうか？<br>
@@ -520,7 +536,7 @@ dependency_libs_commonセクション<span class=MstyAuthor> (Section Type : @@L
 		libRanoのmkfgen.myf より抜粋したものです.<br>
 		この例では my_libs_root/libZnk という動的ライブラリを指定したことになります.<br>
 		(libRanoはlibZnkに依存するということです)<br>
-	</div><br>
+	</div>
 	<br>
 	<div class=MstyComment>
 		<u><b>例</b></u><br>
@@ -533,7 +549,7 @@ dependency_libs_commonセクション<span class=MstyAuthor> (Section Type : @@L
 		moaiのmkfgen.myf より抜粋したものです.<br>
 		この例では my_libs_root/libZnk および my_libs_root/libRano の二つの動的ライブラリを指定したことになります.<br>
 		(moaiはlibRanoとlibZnkに依存するということです)<br>
-	</div><br>
+	</div>
 	<br>
 	<div class=MstyComment>
 		<u><b>例</b></u><br>
@@ -547,7 +563,90 @@ dependency_libs_commonセクション<span class=MstyAuthor> (Section Type : @@L
 		rlib: は動的なランタイムライブラリであることを示すのに対し、slibは静的ライブラリであることを示します.<br>
 		この例では my_libs_root/libZnk という静的ライブラリを指定したことになります.<br>
 		(auto_triggerはlibZnkを静的にリンクするということです)<br>
-	</div><br>
+	</div>
+	<br>
+	<div class=MstyComment>
+		<u><b>例</b></u><br>
+		<br>
+		slib: $(MY_LIBS_ROOT)/$(SLIBS_DIR) crypto $(DL_VER)<br>
+		<br>
+		<u><b>説明</b></u><br>
+		<br>
+		@記法を使わない例も挙げておきます.<br>
+		この例では $(MY_LIBS_ROOT)/$(SLIBS_DIR)/libcrypto という静的ライブラリを指定したことになります.<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=runtime_additional></a>
+<u><b>
+runtime_additionalセクション
+</b></u><span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><br>
+<br>
+<div class=MstyIndent>
+	ここでは、動的にロードしたい依存ライブラリのリストをdependency_libs_commonと同様の形式で追加指定します.<br>
+	dependency_libs_commonと違い、ここに指定されたものはこのMakefileでのコンパイルおよびリンクでの直接の対象とはなりません.<br>
+	(つまり仮にここに指定したものが存在しなくとも、とりあえずそれらの処理に直接支障は及ばないないということです).<br>
+	<br>
+	ここに指定されたものはMakefileでのinstallにおいてのみ意味を持ちます.<br>
+	つまりこれらは単にインストールディレクトリへのコピーだけが行われるということです.<br>
+	また仮にこれらが存在しない場合はエラーとはならず単に無視されます.<br>
+	<br>
+	例えば、既にビルド済みのサードパーティ製の動的ライブラリなどをここに指定するとよいでしょう.<br>
+	これらを実行時(ランタイム)に動的にロードしたいケース等に対応できます.<br>
+	(この実行時動的ロードを行うためには、WindowsならばLoadLibrary関数、Linuxならばdlopen関数を使います.)<br>
+	<br>
+	その他、孫受け的な動的ライブラリもここで指定します.<br>
+	これはこのMakefileがビルドするソースコードからは直接は必要ない(ヘッダのincludeやインポートライブラリのリンクの必要がない)が、<br>
+	下請けの動的ライブラリからはそれが必要となる、つまり「下請けの下請け」の動的ライブラリを意味します.<br>
+	動的ロードの依存性をすべて解決するには、これらも最終的なインストールディレクトリ内に存在する必要があるわけです.<br>
+	<br>
+	<div class=MstyComment>
+		rlib: @{X} Y V<br>
+	</div>
+	<br>
+	この記法において、libY-V というライブラリを指定することができます.<br>
+	(Ver2.1より Linux系でもsoファイル名にこのVが付加される仕様に変更されました.)<br>
+	runtime_additionalセクションでは、Xの部分はダミー指定となり特に効果を持ちません.<br>
+	<br>
+	Windowsの場合、この動的リンクライブラリの位置は次のようになります.<br>
+	<br>
+	<div class=MstyComment>
+		$(MY_LIBS_ROOT)/$(DLIBS_DIR)/Y-V.dll<br>
+	</div>
+	<br>
+	Linuxの場合、この動的リンクライブラリの位置は次のようになります.<br>
+	<br>
+	<div class=MstyComment>
+		$(MY_LIBS_ROOT)/$(DLIBS_DIR)/libY-V.so<br>
+	</div>
+	<br>
+	Cygwinの場合、この動的リンクライブラリの位置は次のようになります.<br>
+	<br>
+	<div class=MstyComment>
+		$(MY_LIBS_ROOT)/$(DLIBS_DIR)/cygY-V.so<br>
+	</div>
+	<br>
+	ではさらに実際の使用例も見てみましょう.<br>
+	<br>
+	<div class=MstyComment>
+		<u><b>例</b></u><br>
+		<br>
+		rlib: @{libressl/tls} tls 17<br>
+		<br>
+		<u><b>説明</b></u><br>
+		<br>
+		moaiのmkfgen.myf より抜粋したものです.<br>
+		この例では libressl/tlsはダミー指定です.<br>
+		<br>
+		Windowsでは $(MY_LIBS_ROOT)/$(DLIBS_DIR)/tls-17.dllを指定したことになります.<br>
+		(Moaiの実際の例では、さらにlibtls-17.dllとなるようinfo_vc、info_mingw、info_msysセクション等で、<br>
+		特殊な指定が加えられています).<br>
+		Linuxでは $(MY_LIBS_ROOT)/$(DLIBS_DIR)/libtls-17.soとなります.<br>
+	</div>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 </div><br>
@@ -556,8 +655,8 @@ dependency_libs_commonセクション<span class=MstyAuthor> (Section Type : @@L
 
 <a name=info_COMPILER></a>
 <u><b>
-info_{COMPILER}セクション<span class=MstyAuthor> (Section Type : @@V 変数リスト)</span>
-</b></u><br>
+info_{COMPILER}セクション
+</b></u><span class=MstyAuthor> (Section Type: @@V 変数リスト)</span><br>
 <br>
 <div class=MstyIndent>
 	{COMPILER}にはmkid_listで列挙したコンパイル環境を示すidを指定します.<br>
@@ -576,7 +675,17 @@ info_{COMPILER}セクション<span class=MstyAuthor> (Section Type : @@V 変数
 			<br>
 			libZnkのmkfgen.myf内info_vc より抜粋したものです.<br>
 			VCにおいて警告を抑制するオプションを指定しています.<br>
-		</div><br>
+		</div>
+		<br>
+		<div class=MstyComment>
+			<u><b>例</b></u><br>
+			<pre>['-D_POSIX -D_WIN32_WINNT=0x0500 \&#x0009;-DWIN32_LEAN_AND_MEAN \&#x0009;-D_REENTRANT']</pre><br>
+			<u><b>説明</b></u><br>
+			<br>
+			-Dはdefineすべきマクロ変数をコンパイラに指定するためのオプションです.<br>
+			この例では４つの変数を定義しています.<br>
+			また、Makefileでは途中で改行する場合は改行の直前に \ でエスケープする必要があります.<br>
+		</div>
 		</li>
 		<br>
 		<li><b>linking_libs_special(String型)</b><br>
@@ -591,7 +700,7 @@ info_{COMPILER}セクション<span class=MstyAuthor> (Section Type : @@V 変数
 			<br>
 			libZnkのmkfgen.myf内info_vc より抜粋したものです.<br>
 			VCにおいて ws2_32.lib ライブラリのリンクを指定しています.<br>
-		</div><br>
+		</div>
 		<br>
 		<div class=MstyComment>
 			<u><b>例</b></u><br>
@@ -602,7 +711,7 @@ info_{COMPILER}セクション<span class=MstyAuthor> (Section Type : @@V 変数
 			<br>
 			moaiのmkfgen.myf内info_linux より抜粋したものです.<br>
 			linux(gcc)において -lpthread -ldl -lstdc++ に該当する指定を行っています.<br>
-		</div><br>
+		</div>
 		</li>
 		<br>
 		<li><b>dependency_libs_special(String型)</b><br>
@@ -616,7 +725,7 @@ info_{COMPILER}セクション<span class=MstyAuthor> (Section Type : @@V 変数
 			<u><b>説明</b></u><br>
 			<br>
 			gcc で C++をコンパイルする場合にこの指定が必要になる場合があります.<br>
-		</div><br>
+		</div>
 		</li>
 		<br>
 		<li><b>shell(String型)</b><br>
@@ -636,7 +745,45 @@ info_{COMPILER}セクション<span class=MstyAuthor> (Section Type : @@V 変数
 			<br>
 			plugin_5ch のmkfgen.myf内 info_cygwinより抜粋したものです.<br>
 			生成される動的リンクライブラリをplugin用に強制的に名前変更しています.<br>
-		</div><br>
+		</div>
+		</li>
+		<br>
+		<li><b>slib_pfx_special(String型)</b><br>
+		このコンパイラ環境で用いられる slib_pfx の値を特別に上書き指定する.<br>
+		<br>
+		<div class=MstyComment>
+			<u><b>例</b></u><br>
+			<br>
+			['crypto:lib ssl:lib']<br>
+			<br>
+			<u><b>説明</b></u><br>
+			<br>
+			この例では、lib_nameがcryptoの場合はそれに付け加えるslib_pfxをlibに強制的に置き換えます.<br>
+			また、lib_nameがsslの場合も同様にslib_pfxをlibに置き換えます.<br>
+<br>
+			例えばVCの場合、デフォルトではslib_pfxは空となっています.<br>
+			このままでは crypto.lib などといったファイル名になってしまいますが、<br>
+			これを特別に libcrypto.lib に変更するなどといったことが出来ます.<br>
+		</div>
+		</li>
+		<br>
+		<li><b>rlib_pfx_special(String型)</b><br>
+		このコンパイラ環境で用いられる ilib_pfx と dlib_pfx の値を特別に上書き指定する.<br>
+		<br>
+		<div class=MstyComment>
+			<u><b>例</b></u><br>
+			<br>
+			['crypto:lib ssl:lib']<br>
+			<br>
+			<u><b>説明</b></u><br>
+			<br>
+			この例では、lib_nameがcryptoの場合はそれに付け加えるilib_pfxとdlib_pfxをlibに強制的に置き換えます.<br>
+			また、lib_nameがsslの場合も同様にilib_pfxとdlib_pfxをlibに置き換えます.<br>
+<br>
+			例えばVCの場合、デフォルトではilib_pfxやdlib_pfxは空となっています.<br>
+			このままでは crypto-17.dll などといったファイル名になってしまいますが、<br>
+			これを特別に libcrypto-17.dll に変更するなどといったことが出来ます.<br>
+		</div>
 		</li>
 	</ul>
 	<br>
@@ -647,8 +794,8 @@ info_{COMPILER}セクション<span class=MstyAuthor> (Section Type : @@V 変数
 
 <a name=mkid_list></a>
 <u><b>
-mkid_listセクション<span class=MstyAuthor> (Section Type : @@L ラインリスト)</span>
-</b></u><br>
+mkid_listセクション
+</b></u><span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><br>
 <br>
 <div class=MstyIndent>
 	このセクションには有効にしたいコンパイル環境を示すidを列挙します.<br>
@@ -665,16 +812,16 @@ mkid_listセクション<span class=MstyAuthor> (Section Type : @@L ラインリ
 
 <a name=product_list></a>
 <u><b>
-product_listセクション<span class=MstyAuthor> (Section Type : @@L ラインリスト)</span>
-</b></u><br>
+product_listセクション
+</b></u><span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><br>
 <br>
 <div class=MstyIndent>
 	このセクションにはこのmkfgenによって生成するプロダクトとその種類を列挙します.<br>
 	複数指定可能であり、以下のような記法になります.<br>
 	<br>
 	<div class=MstyComment>
-		product_type product_name product_mainsrc
-	</div><br>
+		product_type product_name product_mainsrc<br>
+	</div>
 	<br>
 	<div class=MstyComment>
 		<u><b>例</b></u><br>
@@ -684,7 +831,7 @@ product_listセクション<span class=MstyAuthor> (Section Type : @@L ライン
 		<u><b>説明</b></u><br>
 		<br>
 		playerという実行ファイルを作り、そのmain関数の存在するソースファイルはmain.cppであることを示す.<br>
-	</div><br>
+	</div>
 	<br>
 	<div class=MstyComment>
 		<u><b>例</b></u><br>
@@ -694,7 +841,7 @@ product_listセクション<span class=MstyAuthor> (Section Type : @@L ライン
 		<u><b>説明</b></u><br>
 		<br>
 		Znkというdlibファイルを作り、そのmain関数の存在するソースファイルはdll_main.cであることを示す.<br>
-	</div><br>
+	</div>
 	<br>
 	<div class=MstyComment>
 		<u><b>例</b></u><br>
@@ -704,7 +851,7 @@ product_listセクション<span class=MstyAuthor> (Section Type : @@L ライン
 		<u><b>説明</b></u><br>
 		<br>
 		zlibというslibファイルを作り、その代表となるソースファイル(何でもよい一つを指定)はzutil.cであることを示す.<br>
-	</div><br>
+	</div>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 </div><br>
@@ -713,8 +860,8 @@ product_listセクション<span class=MstyAuthor> (Section Type : @@L ライン
 
 <a name=rc_list></a>
 <u><b>
-rc_listセクション<span class=MstyAuthor> (Section Type : @@L ラインリスト)</span>
-</b></u><br>
+rc_listセクション
+</b></u><span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><br>
 <br>
 <div class=MstyIndent>
 	このセクションではこのmkfgenによって扱うrcファイル(Windowsのリソースファイル)の名前を明示的に列挙できます.<br>
@@ -728,8 +875,8 @@ rc_listセクション<span class=MstyAuthor> (Section Type : @@L ラインリ�
 
 <a name=sublibs_list></a>
 <u><b>
-sublibs_listセクション<span class=MstyAuthor> (Section Type : @@L ラインリスト)</span>
-</b></u><br>
+sublibs_listセクション
+</b></u><span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><br>
 <br>
 <div class=MstyIndent>
 	このセクションはサブディレクトリにサブライブラリがある場合にのみ使用します.<br>
@@ -739,8 +886,9 @@ sublibs_listセクション<span class=MstyAuthor> (Section Type : @@L ライン
 	以下の記法になります.<br>
 	<br>
 	<div class=MstyComment>
-		submkf_dir sublib_name
-	</div><br>
+		submkf_dir sublib_name<br>
+	</div>
+<br>
 	左側はサブディレクトリの名前です.<br>
 	右側はサブディレクトリ内に生成されるサブライブラリの名前です.<br>
 	<br>
@@ -751,7 +899,7 @@ sublibs_listセクション<span class=MstyAuthor> (Section Type : @@L ライン
 		この実行のトリガーとなるtarget名を親となるMakefile内で指定しておかなければなりません.<br>
 		mkfgenでは、このtarget名を submkf_{X} という形式でMakefile内に作り出すルールとなっています.<br>
 		このXに相当する部分としてsubmkf_dirが使われます.<br>
-	</div><br>
+	</div>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 </div><br>
@@ -760,18 +908,27 @@ sublibs_listセクション<span class=MstyAuthor> (Section Type : @@L ライン
 
 <a name=install_data_list></a>
 <u><b>
-install_data_listセクション<span class=MstyAuthor> (Section Type : @@L ラインリスト)</span>
-</b></u><br>
+install_data_listセクション
+</b></u><span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><br>
 <br>
 <div class=MstyIndent>
 	単にコピーしてインストールするデータファイル群を指定できます.<br>
 	次のようにサブディレクトリやワイルドカードを指定することもできます.<br>
 	<br>
 	<div class=MstyComment>
-		template/*.mak
+		template/*.mak<br>
 	</div>
 	<br>
 	このときinstall_dir配下にtemplateディレクトリが自動的に生成され、<br>
+	拡張子がmakの全ファイルがそこへコピーインストールされます.<br>
+	<br>
+	また、以下のようにスペース区切りでインストール先のディレクトリを明示的に与えることもできます.<br>
+	<br>
+	<div class=MstyComment>
+		template/*.mak share<br>
+	</div>
+	<br>
+	このときinstall_dir配下に(templateディレクトリではなく)shareディレクトリが自動的に生成され、<br>
 	拡張子がmakの全ファイルがそこへコピーインストールされます.<br>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
@@ -781,8 +938,8 @@ install_data_listセクション<span class=MstyAuthor> (Section Type : @@L ラ�
 
 <a name=ignore_list></a>
 <u><b>
-ignore_listセクション<span class=MstyAuthor> (Section Type : @@L ラインリスト)</span>
-</b></u><br>
+ignore_listセクション
+</b></u><span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><br>
 <br>
 <div class=MstyIndent>
 	自動認識において無視するディレクトリまたはファイルを指定します.<br>
@@ -793,7 +950,8 @@ ignore_listセクション<span class=MstyAuthor> (Section Type : @@L ライン�
 		example.c<br>
 		ignores<br>
 		obsolete<br>
-	</div><br>
+	</div>
+<br>
 	これにより、たとえignoresディレクトリやobsoleteディレクトリ内に拡張子が c のファイルがあったとしても、<br>
 	それはコンパイル対象として無視されます.<br>
 	<br>
@@ -802,10 +960,51 @@ ignore_listセクション<span class=MstyAuthor> (Section Type : @@L ライン�
 <br>
 
 
+<a name=only_list></a>
+<u><b>
+only_list_{COMPILER}セクション
+</b></u><span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><br>
+<br>
+<div class=MstyIndent>
+	このコンパイラにおいてのみ使用するソースファイルを指定します.<br>
+	例えば名前が example_win.c と thread_win.c というソースファイルについてはvcとmingwにおいてのみ、<br>
+	名前が example_unix.c と thread_pthread.c というソースファイルについてはlinuxとcygwinにおいてのみとして<br>
+	それぞれ使用したい場合は次のように指定します.<br>
+	<br>
+	<div class=MstyComment>
+		@@L only_list_vc<br>
+		example_win.c<br>
+		thread_win.c<br>
+		@@.<br>
+		<br>
+		@@L only_list_mingw<br>
+		example_win.c<br>
+		thread_win.c<br>
+		@@.<br>
+		<br>
+		@@L only_list_linux<br>
+		example_unix.c<br>
+		thread_pthread.c<br>
+		@@.<br>
+		<br>
+		@@L only_list_cygwin<br>
+		example_unix.c<br>
+		thread_pthread.c<br>
+		@@.<br>
+	</div>
+<br>
+	このようにプラットフォーム依存のファイルの指定などでこのセクションを使いますが、<br>
+	特に指定するファイルがない場合はこのセクションは省略することが可能です.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
 <a name=src_suffix_list></a>
 <u><b>
-src_suffix_listセクション<span class=MstyAuthor> (Section Type : @@L ラインリスト)</span>
-</b></u><br>
+src_suffix_listセクション
+</b></u><span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><br>
 <br>
 <div class=MstyIndent>
 	srcファイルとして使われる拡張子を列挙しておきます.<br>
@@ -814,19 +1013,24 @@ src_suffix_listセクション<span class=MstyAuthor> (Section Type : @@L ライ
 	<div class=MstyComment>
 		c<br>
 		cpp<br>
-	</div><br>
+	</div>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 </div><br>
 <br>
 
 
-<u><b>リンク</b></u>
+<a name=Link></a>
+<u><b>
+リンク
+</b></u><br>
+<br>
 <ul>
-	<li><a class=MstyElemLink href="#TopBar">一番上へ</a></li>
-	<li><a class=MstyElemLink href="https://mr-moai-2016.github.io">Moaiドキュメント(オンライン)</a></li>
-	<li><a class=MstyElemLink href="https://github.com/mr-moai-2016/znk_project">znk_project(github)</a></li>
+	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
+	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project>znk_project(github)</a></li>
 </ul><br>
+
 
 </body>
 </html>

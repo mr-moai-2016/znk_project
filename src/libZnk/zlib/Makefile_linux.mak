@@ -36,12 +36,12 @@ ABINAME = linux$(MACHINE)$(DEBUG)
 O = ./out_dir/$(ABINAME)
 
 ifeq ($(DEBUG), d)
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)d
 SLIBS_DIR=slib/$(PLATFORM)d
 else
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)
 SLIBS_DIR=slib/$(PLATFORM)
@@ -72,6 +72,10 @@ OBJS0=\
 
 SUB_LIBS=\
 
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
+
 PRODUCT_SLIBS= \
 	__mkg_sentinel_target__ \
 	$(SLIB_FILE0) \
@@ -92,7 +96,8 @@ $O:
 # Product files rule.
 $(SLIB_FILE0): $(OBJS0)
 	if test -e $(SLIB_FILE0) ; then rm -f $(SLIB_FILE0); fi
-	ar cru $(SLIB_FILE0) $(OBJS0) $(SUB_LIBS)
+	@echo ar cru $(SLIB_FILE0) {[objs]} $(SUB_OBJS_ECHO)
+	@     ar cru $(SLIB_FILE0) $(OBJS0) $(SUB_OBJS)
 	ranlib $(SLIB_FILE0)
 
 
@@ -141,7 +146,7 @@ install: all install_slib
 
 # Clean rule.
 clean:
-	rm -r $O/ 
+	rm -rf $O/ 
 
 # Src and Headers Dependency
 adler32.o: zlib.h

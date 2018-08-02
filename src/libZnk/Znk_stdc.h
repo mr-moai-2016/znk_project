@@ -80,6 +80,12 @@ Znk_fgetc( ZnkFile fp );
 int
 Znk_fputc( int c, ZnkFile fp );
 
+Znk_INLINE int
+Znk_getchar( void )
+{
+	return Znk_fgetc( Znk_stdin() );
+}
+
 char*
 Znk_fgets( char* buf, size_t size, ZnkFile fp );
 int

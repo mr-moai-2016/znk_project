@@ -5,34 +5,32 @@
 	<meta http-equiv="Content-Script-Type" content="text/javascript">
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	<link href="/msty.css" rel="stylesheet" type="text/css">
-	<title>Moai2.0ドキュメント</title>
 </head>
 <body>
 <a name=TopBar></a>
-<p><b><img src="/imgs/here_landmark.png"> Moai2.0ドキュメント</b></p>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter エキスパートマニュアル</b></p>
 
 <a class=MstyElemLink href="/">トップページ</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/index.html">Moai2.0ドキュメント</a> &nbsp;
-<a class=MstyElemLink        href="/moai1.1/index.html">Moai1.1ドキュメント</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
+<a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
-<a class=MstyElemLink        href="/moai2.0/install.html">インストールガイド</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_reference.html">Moai本体</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/customboy_reference.html">CustomBoy</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index_expert.html">ご案内</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_reference.html">Moaiエンジン</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/customboy_reference.html">CustomBoyエンジン</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
 <a class=MstyNowSelectedLink href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
 <br> <br>
 <a class=MstyNowSelectedLink href="/moai2.0/moai_cgi_developers.html">Moai CGI 入門編</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_cgi_developers_pragmatic.html">Moai CGI 実践編</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/mkfgen.html">mkfgenリファレンス</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_cgi_developers_pragmatic.html">Moai CGI 実践編</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/mkfgen.html">mkfgenリファレンス</a> &nbsp;
 <br> <br>
 
-
 <div class=MstyComment>
-<u><b>記事担当者</b></u> : Mr.Moai<br> 
+<u><b>記事担当者</b></u> : Mr.Moai<br>
 <br>
-<u><b>最終更新日</b></u> : 2018/03/31<br>
+<u><b>最終更新日</b></u> : 2018/05/04<br>
 <br>
 </div>
 <br>
@@ -61,7 +59,10 @@
 
 
 <a name=Index></a>
-<u><b>目次</b></u>
+<u><b>
+目次
+</b></u><br>
+<br>
 <ul>
 	<li><b><a class=MstyElemLink href=#MoaiCGI_Introduction>Moai CGI 開発入門</a></b></li>
 	<li><b><a class=MstyElemLink href=#MoaiCGI_hello>Hello World!</a></b></li>
@@ -69,11 +70,11 @@
 	<li><b><a class=MstyElemLink href=#MoaiCGI_query_string1>Hello Query String!</a></b></li>
 	<li><b><a class=MstyElemLink href=#MoaiCGI_post1>Hello Post!</a></b></li>
 	<li><b><a class=MstyElemLink href=#MoaiCGI_transfer_chunked>Transfer-Encoding: chunked転送モードに関する実験</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_post_go>Hello Post!(GO言語版)</a></b></li>
 	<li><b><a class=MstyElemLink href=#MoaiCGI_futaba_php>他サイトで公開されているPHPスクリプトなどを実行させてみる(その1)</a></b></li>
 	<li><b><a class=MstyElemLink href=#MoaiCGI_up_php    >他サイトで公開されているPHPスクリプトなどを実行させてみる(その2)</a></b></li>
 	<li><b><a class=MstyElemLink href=#MoaiCGI_next>さて、この次は？</a></b></li>
 </ul><br>
-<br>
 
 
 <a name=MoaiCGI_Introduction></a>
@@ -122,8 +123,8 @@ Hello World!
 	<b><u>CGIへのリンクとソースコード</u></b><br>
 	<br>
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/hello.cgi">http://localhost:8124/cgis/cgi_developers/protected/hello.cgi</a> 
-		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/hello.c">ソースコード</a> 
+		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/hello.cgi">http://localhost:8124/cgis/cgi_developers/protected/hello.cgi</a>
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/hello.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
 			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
@@ -133,14 +134,13 @@ Hello World!
 	<b><u>説明</u></b><br>
 	<br>
 	<div class=MstyIndent>
-		<br>
 		上のリンクを開くといきなり次のような画面が表示されるかと思いますが、<br>
 		これはMoai CGIのセキュリティー機構が働いたためです.<br>
 		とりあえず気にせずに画面の指示に従って「Please retry this」を押してください.<br>
 		(以降のサンプルではすべてこの画面が最初に表示されます)<br>
 		<br>
 		<div class=MstyComment>
-			<img src=/imgs/cgi_unauthorized.png width=100%>
+			<img src=/imgs/cgi_unauthorized.png width=100%><br>
 		</div>
 		<br>
 		<div class=MstyComment>
@@ -180,7 +180,8 @@ Hello World!
 				printf( <span class=MstyCodeSynConst>"\r\n"</span> );<br>
 				<span class=MstyCodeSynComment>/* 以下、HTMLの本体を出力する処理となります. */</span><br>
 			</div>
-		</div><br>
+		</div>
+<br>
 		CGIスクリプトを初めて作成される方はまずはこの基本中の基本を押さえておいてください.<br>
 		<br>
 		尚、このソースコード hello.c では cgi_util.h をincludeして使います.<br>
@@ -207,6 +208,7 @@ Hello World!
 		特にVCでIDE環境を使用している方などあまりMakefileに馴染みのない方もおられるでしょう.<br>
 		VCでMakefileを使ってビルドする場合はnmakeコマンドを使いますが、整えなければならない環境変数などもあり若干面倒です.<br>
 		ここではauto_triggerというツールを使いましょう.<br>
+<br>
 		<div class=MstyComment>
 			auto_trigger は特にWindows上でC言語ビルドするのを簡単にするために我々が開発したツールです.<br>
 			Moai本体やEasterを始めとしたCGIアプリケーションはすべて auto_trigger によるビルドが可能になっています.<br>
@@ -225,6 +227,7 @@ Hello World!
 		「4. switch mkfid」を何回か選んでMKF_IDを「vc」にし、<br>
 		「5. switch machine」を何回か選んでMACHINEを「x86」あるいは「x64」にし、<br>
 		最後に「0. make」または「1. make install」を選びましょう.<br>
+<br>
 		<div class=MstyComment>
 			ここで「選ぶ」というのは、一番先頭にある数字のキーを押せばよいです.<br>
 			またはその項目までカーソルキーで移動してEnterキーを押してもよいです.<br>
@@ -232,6 +235,7 @@ Hello World!
 		<br>
 		VCの場合、auto_triggerはこれがインストールされていることを自動的に検出しますので、<br>
 		特に何の設定をすることなく自動的にMakefileによるビルドが行われます.<br>
+<br>
 		<div class=MstyComment>
 			<u><b>Note</b></u><br>
 			<br>
@@ -269,7 +273,7 @@ Hello 環境変数!
 	<br>
 	<div class=MstyIndent>
 		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/evar1.cgi">http://localhost:8124/cgis/cgi_developers/protected/evar1.cgi</a>
-		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/evar1.c">ソースコード</a> 
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/evar1.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
 			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
@@ -287,7 +291,7 @@ Hello 環境変数!
 		一方、CGIスクリプトの環境変数はOSで定義されてる<b>アレとは違う</b>ともいえます.<br>
 		CGIに関する重要な環境変数としては、QUERY_STRING, CONTENT_TYPE, HTTP_COOKIE, SERVER_NAME, SERVER_PORT などがあります.<br>
 		ところが実際Windowsで「システムのプロパティ」から「環境変数」のダイアログを開いてみてもこんな環境変数どこにも定義されてません.<br>
-		Linuxでも同じで、envコマンドを叩いてもそれらしき環境変数はどこにも見当たりません.<br> 
+		Linuxでも同じで、envコマンドを叩いてもそれらしき環境変数はどこにも見当たりません. <br>
 		どういうことでしょう？<br>
 		<br>
 		からくりはCGIを呼び出すWebサーバにあります.<br>
@@ -334,7 +338,7 @@ Hello Query String!
 	<br>
 	<div class=MstyIndent>
 		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/query_string1.cgi?mode=cat&sort=1">http://localhost:8124/cgis/protected/cgi_developers/query_string1.cgi?mode=cat&sort=1</a>
-		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/query_string1.c">ソースコード</a> 
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/query_string1.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
 			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
@@ -382,8 +386,8 @@ Hello Query String!
 				{<br>
 				<div class=MstyIndent>
 					size_t i = 0;<br>
-					char key[ 256 ] = "";<br> 
-					char val[ 256 ] = "";<br> 
+					char key[ 256 ] = ""; <br>
+					char val[ 256 ] = ""; <br>
 					for( i=0; i&lt;64; ++i ){<br>
 					<div class=MstyIndent>
 						int result = CGIUtil_getQueryStringToken( query_string, i,<br>
@@ -479,7 +483,7 @@ Hello Post!
 	<br>
 	<div class=MstyIndent>
 		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/post1.cgi">http://localhost:8124/cgis/cgi_developers/protected/post1.cgi</a> 
-		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/post1.c">ソースコード</a> 
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/post1.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
 			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
@@ -514,7 +518,7 @@ Hello Post!
 				printf( "Content-Length = [%u]\n", content_length );<br>
 				if( evar-&gt;content_length_ != end ){<br>
 				<div class=MstyIndent>
-					size_t i = 0;<br> 
+					size_t i = 0; <br>
 					CGIUtil_getStdInStr( stdin_bfr, sizeof(stdin_bfr), content_length );<br>
 					printf( "Original data = [%s]\n", rejectHtmlTag(stdin_bfr) );<br>
 				</div>
@@ -560,8 +564,8 @@ Transfer-Encoding: chunked転送モードに関する実験
 	<b><u>CGIへのリンクとソースコード</u></b><br>
 	<br>
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/transfer_chunked.cgi">http://localhost:8124/cgis/cgi_developers/protected/transfer_chunked.cgi</a> 
-		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/transfer_chunked.c">ソースコード</a> 
+		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/transfer_chunked.cgi">http://localhost:8124/cgis/cgi_developers/protected/transfer_chunked.cgi</a>
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/transfer_chunked.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
 			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
@@ -597,19 +601,56 @@ Transfer-Encoding: chunked転送モードに関する実験
 <br>
 
 
+<a name=MoaiCGI_post_go></a>
+<u><b>
+Hello Post!(GO言語版)
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	今回はちょっと趣向を変えて、Moai CGI でGO言語を実行するデモをご紹介します.<br>
+	<br>
+	<b><u>CGIへのリンクとソースコード</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/post_go.go">http://localhost:8124/cgis/cgi_developers/protected/post_go.go</a>
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/post_go.go">ソースコード</a>
+		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+		<div class=MstyComment>
+			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
+			また、Moaiのconfig_cgi.myfにおいて、GOインタプリタのパスを正しく指定しておく必要があります.<br>
+		</div>
+	</div>
+	<br>
+	<b><u>説明</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		ソースコードの内容についての説明はここでは致しません(あしからず).<br>
+		これを動作させるにはGOインタプリタをインストールしておく必要があります.<br>
+		そしてそのインタプリタへのフルパスをmoaiディレクトリ直下にあるconfig_cgi.myfに記述しておく必要があります.<br>
+		これに関しては<a class=MstyElemLink href="/moai2.0/moai_reference.html#config_cgi_myf" target=_blank>こちら</a>を参照してください.<br>
+		<br>
+		GO1.10.1 を使った場合は、正常に動作することを確認していますが、<br>
+		もっと古いバージョンでも大丈夫だと思います.<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
 <a name=MoaiCGI_futaba_php></a>
 <u><b>
 他サイトで公開されているPHPスクリプトなどを実行させてみる(その1)
 </b></u><br>
 <br>
 <div class=MstyIndent>
-	今回はちょっと趣向を変えて、Moai CGI でPHPスクリプトを実行するデモをご紹介します.<br>
+	今回は Moai CGI でPHPスクリプトを実行するデモをご紹介します.<br>
 	<br>
 	<b><u>CGIへのリンクとソースコード</u></b><br>
 	<br>
 	<div class=MstyIndent>
 		<a class=MstyAppLink href="http://localhost:8124/cgis/protected/futaba_bbs/futaba.php">http://localhost:8124/cgis/protected/futaba_bbs/futaba.php</a>
-		<a class=MstyElemLink href="http://www.2chan.net/script" target=_blank>オリジナル配布元</a> 
+		<a class=MstyElemLink href="http://www.2chan.net/script" target=_blank>オリジナル配布元</a>
 		<span class=MstyAuthor> (Author: Ms.Futaba-Kanrinin)</span><br>
 		<div class=MstyComment>
 			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
@@ -629,55 +670,12 @@ Transfer-Encoding: chunked転送モードに関する実験
 		筆者の環境では以下のような画面が表示されました.<br>
 		<br>
 		<div class=MstyComment>
-			<img src=/imgs/guest_futaba_bbs.png width=100%>
+			<img src=/imgs/guest_futaba_bbs.png width=100%><br>
 		</div>
 		<br>
 		php-4.4.6-Win32を使った場合は、正常に動作することを確認しています.<br>
 		現在ふたばちゃんねるで使っているPHPはVer5.6.30のようですのでおそらくそのバージョンでも動作はするのでしょう.<br>
 		残念ながら最新バージョンのPHPではこのスクリプトは正常に動作しないようです.<br>
-	</div>
-	<br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
-<br>
-
-
-<a name=MoaiCGI_up_php></a>
-<u><b>
-他サイトで公開されているPHPスクリプトなどを実行させてみる(その2)
-</b></u><br>
-<br>
-<div class=MstyIndent>
-	Moai CGI でPHPスクリプトを実行するデモの続きです.<br>
-	<br>
-	<b><u>CGIへのリンクとソースコード</u></b><br>
-	<br>
-	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/protected/futaba_up/up.php">http://localhost:8124/cgis/protected/futaba_up/up.php</a>
-		<a class=MstyElemLink href="http://www.2chan.net/script" target=_blank>オリジナル配布元</a> 
-		<span class=MstyAuthor> (Author: Ms.Futaba-Kanrinin)</span><br>
-		<div class=MstyComment>
-			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
-			また、Moaiのconfig_cgi.myfにおいて、phpインタプリタのパスを正しく指定しておく必要があります.<br>
-		</div>
-	</div>
-	<br>
-	<b><u>説明</u></b><br>
-	<br>
-	<div class=MstyIndent>
-		デモとしてとして、ふたばちゃんねるにおいて配布されているup.phpを題材にしています(若干コードを修正させて頂きました).<br>
-		ソースコードの内容についての説明はここでは致しません(あしからず).<br>
-		これを動作させるにはPHPインタープリタをインストールしておく必要があります.<br>
-		<br>
-		筆者の環境では以下のような画面が表示されました.<br>
-		こちらのスクリプトもまたMoai CGIで安全に実行させることに成功したようです.<br>
-		<br>
-		<div class=MstyComment>
-			<img src=/imgs/guest_futaba_up.png width=100%>
-		</div>
-		<br>
-		php-4.4.6-Win32を使った場合は、正常に動作することを確認しています.<br>
-		現在ふたばちゃんねるで使っているPHPはVer5.6.30のようですのでおそらくそのバージョンでも動作はするのでしょう.<br>
 	</div>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
@@ -703,12 +701,17 @@ Transfer-Encoding: chunked転送モードに関する実験
 <br>
 
 
-<u><b>リンク</b></u>
+<a name=Link></a>
+<u><b>
+リンク
+</b></u><br>
+<br>
 <ul>
-	<li><a class=MstyElemLink href="#TopBar">一番上へ</a></li>
-	<li><a class=MstyElemLink href="https://mr-moai-2016.github.io">Moaiドキュメント(オンライン)</a></li>
-	<li><a class=MstyElemLink href="https://github.com/mr-moai-2016/znk_project">znk_project(github)</a></li>
+	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
+	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project>znk_project(github)</a></li>
 </ul><br>
+
 
 </body>
 </html>

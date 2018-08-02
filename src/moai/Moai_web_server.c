@@ -44,13 +44,15 @@
 #include <Znk_envvar.h>
 #include <Znk_htp_util.h>
 #include <Znk_net_ip.h>
+#include <Znk_thread.h>
+#include <Znk_process.h>
+
 #include <string.h>
 
 #define SJIS_HYO "\x95\x5c" /* 表 */
 #define SJIS_NOU "\x94\x5c" /* 能 */
 
-static const char* st_version_str = "2.0";
-static size_t      st_input_ui_idx = 0;
+static size_t     st_input_ui_idx = 0;
 
 static void
 printInputUI_Text( ZnkStr html,
@@ -178,11 +180,12 @@ printConfig( ZnkSocket sock, ZnkStrAry result_msgs, uint32_t peer_ipaddr )
 	const char* profile_dir           = MoaiServerInfo_profile_dir();
 	const char* moai_authentic_key    = MoaiServerInfo_authenticKey();
 
-	MoaiCGIManager_makeHeader( html, "Moai Configuration" );
+	MoaiCGIManager_makeHeader( html, "Moai Configuration", false );
 	ZnkStr_add( html, "<body>\n" );
 	ZnkStr_add( html, "<b><img src=\"moai.png\"> Moaiエンジン設定</b><br>\n" );
-	ZnkStr_add( html, "<a class=MstyNowSelectedLink href=/config          >Moai基本設定</a> &nbsp;\n" );
-	ZnkStr_add( html, "<a class=MstyElemLink        href=/config?mode=sys >Moaiセキュリティ設定</a> &nbsp;\n" );
+	ZnkStr_add( html, "<a class=MstyNowSelectedLink href=/config              >Moai基本設定</a> &nbsp;\n" );
+	ZnkStr_add( html, "<a class=MstyElemLink        href=/config?mode=sys     >Moaiセキュリティ設定</a> &nbsp;\n" );
+	ZnkStr_add( html, "<a class=MstyElemLink        href=/config?mode=upgrade >Moaiアップグレード</a> &nbsp;\n" );
 	ZnkStr_add( html, "<br> <br>\n" );
 
 	/* ==== Instantly Updatable variables ==== */
@@ -241,7 +244,7 @@ printConfig( ZnkSocket sock, ZnkStrAry result_msgs, uint32_t peer_ipaddr )
 	ZnkStr_add(  html, "<tr colspan=4><td><br>\n" );
 	ZnkStr_add(  html, "<input type=hidden name=Moai_Update       value=\"update\">\n" );
 	ZnkStr_addf( html, "<input type=hidden name=Moai_AuthenticKey value=\"%s\">\n", moai_authentic_key );
-	ZnkStr_add(  html, "<input class=MstyWideButton type=submit value=\"更新\">\n" );
+	ZnkStr_add(  html, "<input class=MstyWideButton type=submit value=\"設定の確定\">\n" );
 	ZnkStr_add(  html, "</td></tr>\n" );
 
 	ZnkStr_add( html, "</tbody>\n" );
@@ -306,12 +309,13 @@ printSysConfig( ZnkSocket sock, ZnkStrAry result_msgs, uint32_t peer_ipaddr )
 	const char* acceptable_host    = MoaiServerInfo_acceptable_host();
 	const char* moai_authentic_key = MoaiServerInfo_authenticKey();
 
-	MoaiCGIManager_makeHeader( html, "Moai System Configuration" );
+	MoaiCGIManager_makeHeader( html, "Moai System Configuration", false );
 	ZnkStr_add( html, "<body>\n" );
 
 	ZnkStr_add( html, "<b><img src=\"moai.png\"> Moaiエンジン設定</b><br>\n" );
-	ZnkStr_add( html, "<a class=MstyElemLink        href=/config          >Moai基本設定</a> &nbsp;\n" );
-	ZnkStr_add( html, "<a class=MstyNowSelectedLink href=/config?mode=sys >Moaiセキュリティ設定</a> &nbsp;\n" );
+	ZnkStr_add( html, "<a class=MstyElemLink        href=/config              >Moai基本設定</a> &nbsp;\n" );
+	ZnkStr_add( html, "<a class=MstyNowSelectedLink href=/config?mode=sys     >Moaiセキュリティ設定</a> &nbsp;\n" );
+	ZnkStr_add( html, "<a class=MstyElemLink        href=/config?mode=upgrade >Moaiアップグレード</a> &nbsp;\n" );
 	ZnkStr_add( html, "<br> <br>\n" );
 
 	/* ==== Security Configuration( 外部マシンからの更新は不可とする ) ==== */
@@ -364,7 +368,7 @@ printSysConfig( ZnkSocket sock, ZnkStrAry result_msgs, uint32_t peer_ipaddr )
 		ZnkStr_add(  html, "<tr colspan=4><td><br>\n" );
 		ZnkStr_add(  html, "<input type=hidden name=Moai_UpdateSys    value=\"update_sys\">\n" );
 		ZnkStr_addf( html, "<input type=hidden name=Moai_AuthenticKey value=\"%s\">\n", moai_authentic_key );
-		ZnkStr_add(  html, "<input class=MstyWideButton type=submit value=\"更新\">\n" );
+		ZnkStr_add(  html, "<input class=MstyWideButton type=submit value=\"設定の確定\">\n" );
 		ZnkStr_add(  html, "</td></tr>\n" );
 	}
 
@@ -391,6 +395,222 @@ printSysConfig( ZnkSocket sock, ZnkStrAry result_msgs, uint32_t peer_ipaddr )
 
 	ZnkStr_add( html, "<br>\n" );
 
+	ZnkStr_add( html, "<a class=MstyElemLink href=\"/\">Moaiトップページ</a>\n" );
+	ZnkStr_add(  html, "</body></html>\n" );
+
+	ret = MoaiIO_sendTxtf( sock, "text/html", ZnkStr_cstr(html) );
+	ZnkStr_delete( html );
+	ZnkStrAry_destroy( str_list );
+	return ret;
+}
+
+static int
+printUpgrade( ZnkSocket sock, ZnkStrAry result_msgs, uint32_t peer_ipaddr, bool is_query, bool inline_script )
+{
+	int         ret                = 0;
+	bool        sys_config_enable  = true;
+	ZnkStr      html               = ZnkStr_new( "" );
+	ZnkStrAry   str_list           = ZnkStrAry_create( true );
+	const char* moai_authentic_key = MoaiServerInfo_authenticKey();
+
+	MoaiCGIManager_makeHeader( html, "Moai Upgrade", inline_script );
+
+	ZnkStr_add( html, "<body>\n" );
+
+	if( inline_script ){
+		/**
+		 * Moai processが一時終了中に他ファイルを新規に読み込もうとするブラウザがある.
+		 * (例えばlinuxでのfirefoxなど)
+		 * しかしネットワーク的に応答はないためロード待ち状態となり、サーバ側のsocketも既に存在しないため、
+		 * このロード待ちが終わらない状況となる.
+		 * これを回避するため、ルートとなるトップページで、通常なら他ファイルでまかなう仕事をすべてを完結しておく必要がある.
+		 */
+
+		/* css */
+		ZnkStr_add( html, "<style type=\"text/css\" ><!--\n" ); 
+		ZnkStr_add( html, ".MstyManagerTable {\n" );
+		ZnkStr_add( html, "	padding: 1px !important;\n" );
+		ZnkStr_add( html, "	border: 2px solid rgb(240,235,180) !important;\n" );
+		ZnkStr_add( html, "	#-moz-border-radius: 20px !important;\n" );
+		ZnkStr_add( html, "	border-radius: 20px !important;\n" );
+		ZnkStr_add( html, "	background-color: rgba(255,255,250,0.6) !important;\n" );
+		ZnkStr_add( html, "	word-break: normal;\n" );
+		ZnkStr_add( html, "}\n" );
+		ZnkStr_add( html, "@media only screen and (max-device-width : 480px){\n" );
+		ZnkStr_add( html, "	/* for smart-phone */\n" );
+		ZnkStr_add( html, "	.MstyManagerTable {\n" );
+		ZnkStr_add( html, "		padding: 1px !important;\n" );
+		ZnkStr_add( html, "		border: 2px solid rgb(240,235,180) !important;\n" );
+		ZnkStr_add( html, "		#-moz-border-radius: 20px !important;\n" );
+		ZnkStr_add( html, "		border-radius: 20px !important;\n" );
+		ZnkStr_add( html, "		background-color: rgba(255,255,250,0.6) !important;\n" );
+		ZnkStr_add( html, "\n" );
+		ZnkStr_add( html, "	    width:100%;\n" );
+		ZnkStr_add( html, "		word-break: break-all;\n" );
+		ZnkStr_add( html, "	}\n" );
+		ZnkStr_add( html, "}\n" );
+		ZnkStr_add( html, ".MstyElemLink {\n" );
+		ZnkStr_add( html, "	color: #000;\n" );
+		ZnkStr_add( html, "#	font-size: 16px;\n" );
+		ZnkStr_add( html, "	border: 1px solid #3D803D;\n" );
+		ZnkStr_add( html, "	padding: 4px 8px;\n" );
+		ZnkStr_add( html, "	display: inline-block;\n" );
+		ZnkStr_add( html, "	background: #E0E0B0 none repeat scroll 0% 0%;\n" );
+		ZnkStr_add( html, "	text-align: center;\n" );
+		ZnkStr_add( html, "	border-radius: 10px;\n" );
+		ZnkStr_add( html, "	margin-bottom: 5px;\n" );
+		ZnkStr_add( html, "	text-decoration: none;\n" );
+		ZnkStr_add( html, "    word-break: normal;\n" );
+		ZnkStr_add( html, "}\n" );
+		ZnkStr_add( html, ".MstyElemLink:hover {\n" );
+		ZnkStr_add( html, "	color: #000;\n" );
+		ZnkStr_add( html, "#	font-size: 16px;\n" );
+		ZnkStr_add( html, "	border: 1px solid #3D803D;\n" );
+		ZnkStr_add( html, "	padding: 4px 8px;\n" );
+		ZnkStr_add( html, "	display: inline-block;\n" );
+		ZnkStr_add( html, "	background: #B0B0E0 none repeat scroll 0% 0%;\n" );
+		ZnkStr_add( html, "	text-align: center;\n" );
+		ZnkStr_add( html, "	border-radius: 10px;\n" );
+		ZnkStr_add( html, "	margin-bottom: 5px;\n" );
+		ZnkStr_add( html, "	text-decoration: none;\n" );
+		ZnkStr_add( html, "    word-break: normal;\n" );
+		ZnkStr_add( html, "}\n" );
+		ZnkStr_add( html, ".MstyNowSelectedLink {\n" );
+		ZnkStr_add( html, "	color: #000;\n" );
+		ZnkStr_add( html, "	border: 1px solid #3D8080;\n" );
+		ZnkStr_add( html, "	padding: 3px 8px;\n" );
+		ZnkStr_add( html, "	display: inline-block;\n" );
+		ZnkStr_add( html, "	background: #A0A0FF none repeat scroll 0% 0%;\n" );
+		ZnkStr_add( html, "	text-align: center;\n" );
+		ZnkStr_add( html, "	border-radius: 10px;\n" );
+		ZnkStr_add( html, "	margin-bottom: 5px;\n" );
+		ZnkStr_add( html, "	text-decoration: none;\n" );
+		ZnkStr_add( html, "}\n" );
+		ZnkStr_add( html, ".MstyWideButton {\n" );
+		ZnkStr_add( html, "	padding: 0.4em 1em;\n" );
+		ZnkStr_add( html, "}\n" );
+		ZnkStr_add( html, "</style>\n" );
+
+		/* javascript */
+		ZnkStr_add( html, "<script type=\"text/javascript\" >\n" ); 
+		ZnkStr_add( html, "var count = 0;\n" );
+		ZnkStr_add( html, "var st_dat_path = '';\n" );
+		ZnkStr_add( html, "function set_dat_path( dat_path ){\n" );
+		ZnkStr_add( html, "	st_dat_path = dat_path;\n" );
+		ZnkStr_add( html, "}\n" );
+		ZnkStr_add( html, "function refer_state(){\n" );
+		ZnkStr_add( html, "	var xmlhttp = false;\n" );
+		ZnkStr_add( html, "	if( typeof ActiveXObject != 'undefined' ){\n" );
+		ZnkStr_add( html, "		try {\n" );
+		ZnkStr_add( html, "			xmlhttp = new ActiveXObject( 'Microsoft.XMLHTTP' );\n" );
+		ZnkStr_add( html, "		} catch (e) {\n" );
+		ZnkStr_add( html, "			xmlhttp = false;\n" );
+		ZnkStr_add( html, "		}\n" );
+		ZnkStr_add( html, "	}\n" );
+		ZnkStr_add( html, "	if( !xmlhttp && typeof XMLHttpRequest != 'undefined' ){\n" );
+		ZnkStr_add( html, "		xmlhttp = new XMLHttpRequest();\n" );
+		ZnkStr_add( html, "	}\n" );
+		ZnkStr_add( html, "	xmlhttp.open( 'GET', st_dat_path + '?date=' + new Date().getTime() );\n" );
+		ZnkStr_add( html, "	xmlhttp.onreadystatechange = function() {\n" );
+		ZnkStr_add( html, "		if( xmlhttp.readyState == 4 && xmlhttp.status == 200 ){\n" );
+		ZnkStr_add( html, "			var ary = xmlhttp.responseText.split( ' ' );\n" );
+		ZnkStr_add( html, "			if( ary.length >= 2 ){\n" );
+		ZnkStr_add( html, "				count = parseInt( ary[ 0 ], 10 );\n" );
+		ZnkStr_add( html, "				ary.shift();\n" );
+		ZnkStr_add( html, "				var msg = ary.join( ' ' );\n" );
+		ZnkStr_add( html, "				if( isNaN(count) ){ count=100; }\n" );
+		ZnkStr_add( html, "				document.getElementById( 'progress_state_msg' ).innerHTML = msg;\n" );
+		ZnkStr_add( html, "			} else {\n" );
+		ZnkStr_add( html, "				count = parseInt( xmlhttp.responseText, 10 );\n" );
+		ZnkStr_add( html, "				if( isNaN(count) ){ count=100; }\n" );
+		ZnkStr_add( html, "				document.getElementById( 'progress_state_msg' ).innerHTML = '[' + count + ']';\n" );
+		ZnkStr_add( html, "			}\n" );
+		ZnkStr_add( html, "		} else {\n" );
+		ZnkStr_add( html, "			document.getElementById( 'progress_state_msg' ).innerHTML = '[' + count + ']';\n" );
+		ZnkStr_add( html, "			++count;\n" );
+		ZnkStr_add( html, "		}\n" );
+		ZnkStr_add( html, "	};\n" );
+		ZnkStr_add( html, "	xmlhttp.send( null );\n" );
+		ZnkStr_add( html, "	return false;\n" );
+		ZnkStr_add( html, "}\n" );
+		ZnkStr_add( html, "var id = setInterval( function(){\n" );
+		ZnkStr_add( html, "	refer_state();\n" );
+		ZnkStr_add( html, "	if(count >= 100){\n" );
+		ZnkStr_add( html, "		clearInterval(id);\n" );
+		ZnkStr_add( html, "		}}, 1000 );\n" );
+		ZnkStr_add( html, "set_dat_path(\"/state.dat\");\n" );
+		ZnkStr_add( html, "</script>\n" );
+	} else {
+		ZnkStr_add( html, "<script type=\"text/javascript\" src=\"/progress.js\" ></script>\n" );
+		ZnkStr_add( html, "<script type=\"text/javascript\"> set_dat_path(\"/state.dat\"); </script>\n" );
+	}
+
+	if( inline_script ){
+		ZnkStr_add( html, "<b>Moai Upgrade</b><br>\n" );
+	} else {
+		ZnkStr_add( html, "<b><img src=\"moai.png\"> Moai Upgrade</b><br>\n" );
+	}
+	ZnkStr_add( html, "<a class=MstyElemLink        href=/config              >Moai基本設定</a> &nbsp;\n" );
+	ZnkStr_add( html, "<a class=MstyElemLink        href=/config?mode=sys     >Moaiセキュリティ設定</a> &nbsp;\n" );
+	ZnkStr_add( html, "<a class=MstyNowSelectedLink href=/config?mode=upgrade >Moaiアップグレード</a> &nbsp;\n" );
+	ZnkStr_add( html, "<br> <br>\n" );
+
+#if 0
+	/* ==== Security Configuration( 外部マシンからのアップグレードは不可とする ) ==== */
+	if( peer_ipaddr == 0x0100007f || peer_ipaddr == MoaiServerInfo_private_ip() ){
+		/* Loopback接続 */
+		sys_config_enable = true;
+	} else {
+		/* 他のマシンからの接続 */
+		sys_config_enable = false;
+	}
+#endif
+	ZnkStr_add( html, "<b>Birdman Console</b><br>\n" );
+	ZnkStr_add( html, "<table class=MstyManagerTable>\n" );
+	ZnkStr_add( html, "<tr><td colspan=2>\n" );
+	//ZnkStr_add( html, "<font size=-1 color=red>　注: Moai Upgradeは、セキュリティー上の理由でlocalhostからのみ可" SJIS_NOU "です.</font>\n" );
+	ZnkStr_add( html, "<font size=-1 color=red>　この画面ではMoaiシステム全体をアップグレードします.</font>\n" );
+	ZnkStr_add( html, "</td></tr>\n" );
+	ZnkStr_add( html, "</table>\n" );
+
+	if( sys_config_enable ){
+		/* ==== Restart ==== */
+		if( MoaiServerInfo_you_need_to_restart_moai() ){
+			ZnkStr_add( html, "<table class=MstyManagerTable>\n" );
+			ZnkStr_add( html, "<tr><td colspan=2>\n" );
+			ZnkStr_add( html, "<font size=-1 color=red>　この設定の変更を反映させるにはMoaiを再起動させる必要があります.</font>\n" );
+			ZnkStr_add( html, "</td></tr>\n" );
+			ZnkStr_add( html, "</table>\n" );
+		}
+		{
+			ZnkStr_add( html, "<table class=MstyManagerTable>\n" );
+			ZnkStr_add( html, "<tr><td colspan=2>\n" );
+			ZnkStr_add( html, "<div id=progress_state_msg></div>\n" );
+			ZnkStr_add( html, "</td></tr>\n" );
+			ZnkStr_add( html, "</table>\n" );
+			ZnkStr_add( html, "<br>\n" );
+		}
+	
+		if( is_query ){
+			ZnkStr_add(  html, "<form action=\"/config?mode=upgrade\" method=\"POST\" enctype=\"multipart/form-data\">\n" );
+			ZnkStr_addf( html, "<input type=hidden name=Moai_AuthenticKey  value=\"%s\">\n", moai_authentic_key );
+			ZnkStr_addf( html, "<input type=hidden name=Moai_UpgradeCmd    value=\"query\">\n" );
+			ZnkStr_add(  html, "<input class=MstyWideButton type=submit value=\"最新バージョンの確認\">\n" );
+			ZnkStr_add(  html, "</form>\n" );
+		}
+		/* TEST */
+#if 0
+		{
+			ZnkStr_add(  html, "<form action=\"/config?mode=upgrade\" method=\"POST\" enctype=\"multipart/form-data\">\n" );
+			ZnkStr_addf( html, "<input type=hidden name=Moai_AuthenticKey  value=\"%s\">\n", moai_authentic_key );
+			ZnkStr_addf( html, "<input type=hidden name=Moai_UpgradeCmd    value=\"apply\">\n" );
+			ZnkStr_add(  html, "<input class=MstyWideButton type=submit value=\"Moai_UpgradeCmd_apply\">\n" );
+			ZnkStr_add(  html, "</form>\n" );
+		}
+#endif
+	}
+
+	ZnkStr_add( html, "<br>\n" );
 	ZnkStr_add( html, "<a class=MstyElemLink href=\"/\">Moaiトップページ</a>\n" );
 	ZnkStr_add(  html, "</body></html>\n" );
 
@@ -1005,14 +1225,14 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 					ret = procCGI( req_urp, sock, mod,
 							ctx->req_method_, info, ctx->body_info_.content_length_, is_xhr_dmz );
 				} else {
-					MoaiCGIManager_makeHeader( msg_str, "Moai XhrDMZ Report" );
+					MoaiCGIManager_makeHeader( msg_str, "Moai XhrDMZ Report", false );
 					ZnkStr_add( msg_str, "<p><b>Moai XhrDMZ get(authentic cgi) : 401 Unauthorized.</b></p>\n" );
 					ZnkStr_add( msg_str, "<p>This request is missing Moai_AuthenticKey.</p>\n" );
 					ZnkStr_add( msg_str, "<p>Sorry, this request is aborted.</p>\n" );
 					ret = MoaiIO_sendTxtf( sock, "text/html", "%s", ZnkStr_cstr( msg_str ) ); /* XSS-safe */
 				}
 			} else {
-				MoaiCGIManager_makeHeader( msg_str, "Moai XhrDMZ Report" );
+				MoaiCGIManager_makeHeader( msg_str, "Moai XhrDMZ Report", false );
 				ZnkStr_add( msg_str, "<p><b>Moai XhrDMZ get(xhrdmz_cgi_urp) : 401 Unauthorized.</b></p>\n" );
 				ZnkStr_add( msg_str, "<p>This cgi script is invalid filename or Moai config.myf cannot be registered interpreter of this type.</p>\n" );
 				ZnkStr_add( msg_str, "<p>Sorry, this request is aborted.</p>\n" );
@@ -1046,7 +1266,7 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 			}
 		} else {
 			/* 上記以外はすべてアクセス不可. */
-			MoaiCGIManager_makeHeader( msg_str, "Moai XhrDMZ Report" );
+			MoaiCGIManager_makeHeader( msg_str, "Moai XhrDMZ Report", false );
 			ZnkStr_addf( msg_str, "<p><b>Moai XhrDMZ get(others) : 403 Forbidden.</b></p>\n" );
 			ZnkStr_addf( msg_str, "<p><b><u>Why?</u></b></p>\n" );
 			ZnkStr_addf( msg_str, "<div class=MstyIndent>\n" );
@@ -1068,6 +1288,16 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 			if( mode && ZnkStr_eq( mode, "sys" ) ){
 				/* Moai-SysConfig */
 				ret = printSysConfig( sock, NULL, peer_ipaddr );
+			} else if( mode && ZnkStr_eq( mode, "upgrade" ) ){
+				/* Moai-Upgrade */
+				{
+					ZnkFile fp = Znk_fopen( "doc_root/state.dat", "wb" );
+					if( fp ){
+						Znk_fprintf( fp, "100 None." );
+						Znk_fclose( fp );
+					}
+				}
+				ret = printUpgrade( sock, NULL, peer_ipaddr, true, false );
 			} else if( mode && ZnkStr_eq( mode, "init_mode" ) ){
 				/* Moai-InitCommand */
 				if( is_authenticated ){
@@ -1090,7 +1320,7 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 			 * ( Moai_AuthenticKey を指定しても不可 ).
 			 */
 			const char* xhr_dmz = MoaiServerInfo_XhrDMZ();
-			MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report" );
+			MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report", false );
 			ZnkStr_addf( msg_str, "<p><b>Moai WebServer get(xhrdmz_only) : 403 Forbidden.</b></p>\n" );
 			ZnkStr_addf( msg_str, "<p><b><u>Why?</u></b></p>\n" );
 			ZnkStr_addf( msg_str, "<div class=MstyIndent>\n" );
@@ -1108,7 +1338,7 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 					ret = procCGI( req_urp, sock, mod,
 							ctx->req_method_, info, ctx->body_info_.content_length_, is_xhr_dmz );
 				} else {
-					MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report" );
+					MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report", false );
 					ZnkStr_addf( msg_str, "<p><b>Moai WebServer get(authentic cgi) : 401 Unauthorized.</b></p>\n" );
 					ZnkStr_addf( msg_str, "<p><b><u>What this?</u></b></p>\n" );
 					ZnkStr_addf( msg_str, "<div class=MstyIndent>\n" );
@@ -1145,7 +1375,7 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 					}
 				} else {
 					/* Moai_AuthenticKey を付加したRetry accessが必要 */
-					MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report" );
+					MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report", false );
 					ZnkStr_addf( msg_str, "<p><b>Moai WebServer get(authentic resource) : 401 Unauthorized.</b></p>\n" );
 					ZnkStr_addf( msg_str, "<p><b><u>What this?</u></b></p>\n" );
 					ZnkStr_addf( msg_str, "<div class=MstyIndent>\n" );
@@ -1172,7 +1402,7 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 								ZnkStr_cstr(fsys_path) ); /* XSS-safe */
 					}
 				} else {
-					MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report" );
+					MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report", false );
 					ZnkStr_addf( msg_str, "<p><b>Moai WebServer get(protected) : 401 Unauthorized.</b></p>\n" );
 					ZnkStr_addf( msg_str, "<p><b><u>What this?</u></b></p>\n" );
 					ZnkStr_addf( msg_str, "<div class=MstyIndent>\n" );
@@ -1303,14 +1533,14 @@ do_post( ZnkSocket sock, ZnkStr req_urp,
 					ret = procCGI( req_urp, sock, mod,
 							ctx->req_method_, info, ctx->body_info_.content_length_, is_xhr_dmz );
 				} else {
-					MoaiCGIManager_makeHeader( msg_str, "Moai XhrDMZ Report" );
+					MoaiCGIManager_makeHeader( msg_str, "Moai XhrDMZ Report", false );
 					ZnkStr_add( msg_str, "<p><b>Moai XhrDMZ post(authentic cgi) : 401 Unauthorized.</b></p>\n" );
 					ZnkStr_add( msg_str, "<p>This post is missing Moai_AuthenticKey.</p>\n" );
 					ZnkStr_add( msg_str, "<p>Sorry, this post is aborted.</p>\n" );
 					ret = MoaiIO_sendTxtf( sock, "text/html", "%s", ZnkStr_cstr( msg_str ) ); /* XSS-safe */
 				}
 			} else {
-				MoaiCGIManager_makeHeader( msg_str, "Moai XhrDMZ Report" );
+				MoaiCGIManager_makeHeader( msg_str, "Moai XhrDMZ Report", false );
 				ZnkStr_add( msg_str, "<p><b>Moai XhrDMZ post(xhrdmz_cgi_urp) : 401 Unauthorized.</b></p>\n" );
 				ZnkStr_add( msg_str, "<p>This cgi script is invalid filename or Moai config.myf cannot be registered interpreter of this type.</p>\n" );
 				ZnkStr_add( msg_str, "<p>Sorry, this post is aborted.</p>\n" );
@@ -1321,6 +1551,7 @@ do_post( ZnkSocket sock, ZnkStr req_urp,
 			ret = MoaiIO_sendTxtf( sock, "text/html", "%s", ZnkStr_cstr( msg_str ) ); /* XSS-safe */
 		}
 	} else {
+		const char* upgrade_cmd = "";
 		if( info->vars_ ){
 			ZnkVarp var = NULL;
 	
@@ -1347,8 +1578,8 @@ do_post( ZnkSocket sock, ZnkStr req_urp,
 			var = ZnkVarpAry_find_byName_literal( info->vars_, "Moai_RestartServer", false );
 			if( var ){
 				if( is_authenticated ){
-					MoaiServerInfo_set_you_need_to_restart_moai( false );
 					ras_result = MoaiRASResult_e_RestartServer;
+					MoaiServerInfo_set_you_need_to_restart_moai( false );
 				} else {
 					show_forbidden = true;
 				}
@@ -1364,11 +1595,21 @@ do_post( ZnkSocket sock, ZnkStr req_urp,
 					show_forbidden = true;
 				}
 			}
+
+			var = ZnkVarpAry_find_byName_literal( info->vars_, "Moai_UpgradeCmd", false );
+			if( var ){
+				if( is_authenticated ){
+					ras_result = MoaiRASResult_e_OK;
+					upgrade_cmd = ZnkVar_cstr( var );
+				} else {
+					show_forbidden = true;
+				}
+			}
 	
 		}
 
 		if( show_forbidden ){
-			MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report" );
+			MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report", false );
 			ZnkStr_add( msg_str, "<p><b><img src=\"/moai.png\"> Moai WebServer : 403 Forbidden.</b></p>\n" );
 			ZnkStr_add( msg_str, "<p><b><u>Why?</u></b></p>\n" );
 			ZnkStr_add( msg_str, "<div class=MstyIndent>\n" );
@@ -1392,7 +1633,7 @@ do_post( ZnkSocket sock, ZnkStr req_urp,
 			ZnkStr_add( msg_str, "<body>Moai Server is Restarted.<br>\n" );
 			ZnkStr_add( msg_str, "<a class=MstyElemLink href=\"/config\">Moaiエンジン設定に戻る</a></body></html>\n" );
 			ret = MoaiIO_sendTxtf( sock, "text/html", ZnkStr_cstr( msg_str ) ); /* XSS-safe */
-	
+
 		} else {
 			/***
 			 * Unaliasing.
@@ -1404,6 +1645,26 @@ do_post( ZnkSocket sock, ZnkStr req_urp,
 					if( mode && ZnkStr_eq( mode, "sys" ) ){
 						/* Moai-SysConfig */
 						ret = printSysConfig( sock, result_msgs, peer_ipaddr );
+					} else if( mode && ZnkStr_eq( mode, "upgrade" ) ){
+						/* Moai-Upgrade */
+						ZnkStr curdir_save = ZnkStr_new( "" );
+						ZnkDir_getCurrentDir( curdir_save );
+						ZnkDir_changeCurrentDir( "birdman" );
+						if( ZnkS_eq( upgrade_cmd, "query" ) ){
+							const char* birdman[] = { "birdman", "upgrade_query" };
+							ret = printUpgrade( sock, NULL, peer_ipaddr, false, false );
+							ZnkProcess_execChild( 2, birdman, false, ZnkProcessConsole_e_Detached );
+						} else if( ZnkS_eq( upgrade_cmd, "download" ) ){
+							const char* birdman[] = { "birdman", "upgrade_download" };
+							ret = printUpgrade( sock, NULL, peer_ipaddr, false, false );
+							ZnkProcess_execChild( 2, birdman, false, ZnkProcessConsole_e_Detached );
+						} else if( ZnkS_eq( upgrade_cmd, "apply" ) ){
+							ret = printUpgrade( sock, NULL, peer_ipaddr, false, true );
+							ras_result = MoaiRASResult_e_RestartProcess;
+						}
+						ZnkDir_changeCurrentDir( ZnkStr_cstr(curdir_save) );
+						ZnkStr_delete( curdir_save );
+
 					} else if( mode && ZnkStr_eq( mode, "init_mode" ) ){
 						/* Moai-InitCommand */
 						MoaiServerInfo_initiate_mod_ary();
@@ -1414,7 +1675,7 @@ do_post( ZnkSocket sock, ZnkStr req_urp,
 					}
 					ZnkStr_delete( mode );
 				} else {
-					MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report" );
+					MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report", false );
 					ZnkStr_add( msg_str, "<p><b>Moai WebServer post(config) : 401 Unauthorized.</b></p>\n" );
 					ZnkStr_add( msg_str, "<p>This post is missing Moai_AuthenticKey.</p>\n" );
 					ZnkStr_add( msg_str, "<p>Sorry, this post is aborted.</p>\n" );
@@ -1428,7 +1689,7 @@ do_post( ZnkSocket sock, ZnkStr req_urp,
 						ret = procCGI( req_urp, sock, mod,
 								ctx->req_method_, info, ctx->body_info_.content_length_, is_xhr_dmz );
 					} else {
-						MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report" );
+						MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report", false );
 						ZnkStr_add( msg_str, "<p><b>Moai WebServer post(authentic cgi) : 401 Unauthorized.</b></p>\n" );
 						ZnkStr_add( msg_str, "<p>This post is missing Moai_AuthenticKey.</p>\n" );
 						ZnkStr_add( msg_str, "<p>Sorry, this post is aborted.</p>\n" );
@@ -1438,7 +1699,7 @@ do_post( ZnkSocket sock, ZnkStr req_urp,
 						ret = MoaiIO_sendTxtf( sock, "text/html", "%s", ZnkStr_cstr( msg_str ) ); /* XSS-safe */
 					}
 				} else {
-					MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report" );
+					MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report", false );
 					ZnkStr_add( msg_str, "<p><b>Moai WebServer post : 401 Unauthorized.</b></p>\n" );
 					ZnkStr_add( msg_str, "<p>This cgi script is invalid filename or Moai config.myf cannot be registered interpreter of this type.</p>\n" );
 					ZnkStr_add( msg_str, "<div class=MstyComment>\n" );
@@ -1449,7 +1710,7 @@ do_post( ZnkSocket sock, ZnkStr req_urp,
 
 			} else {
 				/* Moai Msg Responsing */
-				MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report" );
+				MoaiCGIManager_makeHeader( msg_str, "Moai WebServer Report", false );
 				ZnkStr_add( msg_str, "<p><b><img src=\"/moai.png\"> Moai WebServer : 403 Forbidden.</b></p>\n" );
 				ZnkStr_add( msg_str, "<p>The destination of this post is invalid.</p>\n" );
 				ZnkStr_add( msg_str, "<div class=MstyComment>\n" );
@@ -1495,7 +1756,10 @@ MoaiWebServer_do( const MoaiContext ctx, ZnkSocket sock, MoaiConnection mcn, Moa
 	 */
 	if( st_bird == NULL ){
 		st_bird = ZnkBird_create( "$[", "]$" );
-		ZnkBird_regist( st_bird, "MoaiVersion", st_version_str );
+	}
+	{
+		const char* version_str = MoaiServerInfo_version( false );
+		ZnkBird_regist( st_bird, "MoaiVersion", version_str );
 	}
 
 	switch( ctx->req_method_ ){
@@ -1532,7 +1796,8 @@ MoaiWebServer_do( const MoaiContext ctx, ZnkSocket sock, MoaiConnection mcn, Moa
 		 * MoaiSeverをRestartする場合も、一旦コネクトをクロースした方がよい.
 		 * さもないとブラウザ側で「接続がリセットされました」が表示されることがあり不恰好である.
 		 */
-		if( ret < 0 || !mcn->I_is_keep_alive_ || ras_result == MoaiRASResult_e_RestartServer ){
+		if( ret < 0 || !mcn->I_is_keep_alive_ ||
+				ras_result == MoaiRASResult_e_RestartServer || ras_result == MoaiRASResult_e_RestartProcess ){
 			MoaiIO_close_ISock( "  WebServerPOST", sock, mfds );
 		}
 		/***

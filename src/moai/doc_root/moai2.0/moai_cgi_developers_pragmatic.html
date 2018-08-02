@@ -5,32 +5,30 @@
 	<meta http-equiv="Content-Script-Type" content="text/javascript">
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	<link href="/msty.css" rel="stylesheet" type="text/css">
-	<title>Moai2.0ドキュメント</title>
 </head>
 <body>
 <a name=TopBar></a>
-<p><b><img src="/imgs/here_landmark.png"> Moai2.0ドキュメント</b></p>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter エキスパートマニュアル</b></p>
 
 <a class=MstyElemLink href="/">トップページ</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/index.html">Moai2.0ドキュメント</a> &nbsp;
-<a class=MstyElemLink        href="/moai1.1/index.html">Moai1.1ドキュメント</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
+<a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
-<a class=MstyElemLink        href="/moai2.0/install.html">インストールガイド</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_reference.html">Moai本体</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/customboy_reference.html">CustomBoy</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index_expert.html">ご案内</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_reference.html">Moaiエンジン</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/customboy_reference.html">CustomBoyエンジン</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
 <a class=MstyNowSelectedLink href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
 <br> <br>
-<a class=MstyElemLink        href="/moai2.0/moai_cgi_developers.html">Moai CGI 入門編</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_cgi_developers.html">Moai CGI 入門編</a> &nbsp;
 <a class=MstyNowSelectedLink href="/moai2.0/moai_cgi_developers_pragmatic.html">Moai CGI 実践編</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/mkfgen.html">mkfgenリファレンス</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/mkfgen.html">mkfgenリファレンス</a> &nbsp;
 <br> <br>
 
-
 <div class=MstyComment>
-<u><b>記事担当者</b></u> : Mr.Moai<br> 
+<u><b>記事担当者</b></u> : Mr.Moai<br>
 <br>
 <u><b>最終更新日</b></u> : 2018/03/31<br>
 <br>
@@ -52,13 +50,15 @@
 	ここではライブラリを使ったMoai CGIを開発する方法について述べます.<br>
 	そして最終課題としてproxy_finderに該当するツールを作成してみます.<br>
 	難易度はやや高めです.<br>
-	<br>
 </div><br>
 <br>
 
 
 <a name=Index></a>
-<u><b>目次</b></u>
+<u><b>
+目次
+</b></u><br>
+<br>
 <ul>
 	<li><b><a class=MstyElemLink href=#MoaiCGI_pragmatic_introduction>準備</a></b></li>
 	<li><b><a class=MstyElemLink href=#MoaiCGI_evar2>Hello 環境変数!(実践バージョン)</a></b></li>
@@ -104,12 +104,13 @@
 			install_dir = ['../../moai-v$(REL_VER)-$(PLATFORM)/cgis/protected/cgi_simple']<br>
 			<br>
 			修正後<br>
-			install_dir = ['../../moai-v$(REL_VER)-$(PLATFORM)/cgis/protected/<font color=red>my_cgi</font>']
+			install_dir = ['../../moai-v$(REL_VER)-$(PLATFORM)/cgis/protected/<font color=red>my_cgi</font>']<br>
 		</div>
 		</li>
 		<br>
 		<li>product_listセクションにも同様にcgi_simpleという文字列がありますので、<br>
 		これをあなたのツールの名前に変えます.<br>
+<br>
 		<div class=MstyComment>
 			修正前<br>
 			@@L product_list<br>
@@ -142,10 +143,10 @@
 			<br>
 			修正後<br>
 			@@L include_paths_common<br>
-			<font color=red>
+			<font color=red><br>
 				@{libZnk}<br>
 				@{libRano}<br>
-			</font>
+			</font><br>
 			@@.<br>
 		</div>
 		</li>
@@ -159,10 +160,10 @@
 			<br>
 			修正前<br>
 			@@L dependency_libs_common<br>
-			<font color=red>
+			<font color=red><br>
 				rlib: @{libZnk}  Znk  $(DL_VER)<br>
 				rlib: @{libRano} Rano $(DL_VER)<br>
-			</font>
+			</font><br>
 			@@.<br>
 		</div>
 		<br>
@@ -173,7 +174,8 @@
 			今回コピー元としたcgi_simpleのmkfgen.myfでは、これは既に記述されています.<br>
 			ですから実際にはここでこれらに関しての修正を行う必要は<b>今回は</b>ないのですが、<br>
 			これらが不要な場合や他のライブラリが必要になった場合はこれを参考に同様の修正をしてみてください.<br>
-		</div><br>
+		</div>
+<br>
 		これでmkfgen.myfの編集は終わりですので上書き保存してください.<br>
 		テキストエディタは終了して頂いて結構です.<br>
 		</li>
@@ -194,7 +196,7 @@
 		</div>
 		<br>
 		これでmkfgen.myfの内容を元にmkfgenツールが実行され、あなたのMakefileが自動生成されます.<br>
-		(既にMakefileが存在する場合は更新されます.)
+		(既にMakefileが存在する場合は更新されます.)<br>
 		</li>
 		<br>
 		<li>この状態で試しに実際にコンパイルしてみましょう.<br>
@@ -211,7 +213,6 @@
 		<div class=MstyComment>
 			$ make -f Makefile_linux.mak<br>
 		</div>
-		<br>
 		</li>
 		<br>
 		<li>最後にコンパイルしたものをインストールしてみましょう.<br>
@@ -227,7 +228,6 @@
 		<div class=MstyComment>
 			$ make -f Makefile_linux.mak install<br>
 		</div>
-		<br>
 		</li>
 	</ol>
 	<div class=MstyComment>
@@ -254,6 +254,7 @@
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 </div><br>
+<br>
 
 
 <a name=MoaiCGI_evar2></a>
@@ -270,7 +271,7 @@ Hello 環境変数!(実践バージョン)
 	<br>
 	<div class=MstyIndent>
 		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/evar2.cgi">http://localhost:8124/cgis/cgi_developers/protected/evar2.cgi</a>
-		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/evar2.c">ソースコード</a> 
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/evar2.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
 			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
@@ -312,9 +313,9 @@ Hello 環境変数!(実践バージョン)
 				ZnkStr msg = ZnkStr_new( "" ); <span class=MstyCodeSynComment>/* libZnkが提供するString型 */</span><br>
 				ZnkStr_addf( msg, "server_name=[%s]\n", evar-&gt;server_name_ );<br>
 				...<br>
-				<span class=MstyCodeSynComment>
+				<span class=MstyCodeSynComment><br>
 				/* XSS対策. HTMLタグ(&lt;,&gt;)の効果を打ち消します. */<br>
-				</span>
+				</span><br>
 				ZnkHtpURL_negateHtmlTagEffection( msg );<br>
 				fputs( ZnkStr_cstr(msg), stdout );<br>
 				ZnkStr_delete( msg ); <span class=MstyCodeSynComment>/* 使い終わったら解放しなければなりません */</span><br>
@@ -332,11 +333,11 @@ Hello 環境変数!(実践バージョン)
 		この処理は<b>XSS対策のために重要</b>です.<br>
 		XSSについてはWebアプリケーション開発におけるセキュリティーの話題で最も有名なものですし、<br>
 		星の数ほど解説サイトがあるでしょうから、ここでの説明は割愛します.<br>
-		<br>
 	</div>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 </div><br>
+<br>
 
 
 <a name=MoaiCGI_query_string2></a>
@@ -348,7 +349,7 @@ Hello Query String!(実践バージョン)
 	なんか<b>入門編の焼き直しばっかり</b>じゃん！<br>
 	<br>
 	お気づきになられましたか？<br>
-	この解説講座ではしばらくこんなタイトルが続きます.<br>
+	この解説講座ではしばらくこんな<s>コピペ</s>タイトルが続きます.<br>
 	ここでは入門編と同じく Moai CGI へQuery Stringを渡し、それをCGIスクリプト側から取得して内容を表示しますが、<br>
 	libZnkとlibRanoを使っています.<br>
 	<br>
@@ -356,7 +357,7 @@ Hello Query String!(実践バージョン)
 	<br>
 	<div class=MstyIndent>
 		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/query_string2.cgi?mode=cat&sort=1">http://localhost:8124/cgis/cgi_developers/protected/query_string2.cgi?mode=cat&sort=1</a>
-		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/query_string2.c">ソースコード</a> 
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/query_string2.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
 			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
@@ -402,17 +403,17 @@ Hello Query String!(実践バージョン)
 				{<br>
 				<div class=MstyIndent>
 					ZnkStr msg = ZnkStr_new( "" );<br>
-					size_t i;<br> 
+					size_t i; <br>
 					for( i=0; i&lt;ZnkVarpAry_size(post_vars); ++i ){<br>
 					<div class=MstyIndent>
-						<span class=MstyCodeSynComment>
+						<span class=MstyCodeSynComment><br>
 						/* Post変数を一つ取り出します.<br>
 						* この変数の名前も得ておきます. */<br>
-						</span>
+						</span><br>
 						ZnkVarp &nbsp;&nbsp;&nbsp; var &nbsp;= ZnkVarpAry_at( post_vars, i );<br>
 						const char* name = ZnkVar_name_cstr(var);<br>
 						const char* val  = ZnkVar_cstr(var);<br>
-						ZnkStr_addf( msg, "%s = [%s]\n", name, val );
+						ZnkStr_addf( msg, "%s = [%s]\n", name, val );<br>
 					</div>
 					}<br>
 					ZnkHtpURL_negateHtmlTagEffection( msg ); <span class=MstyCodeSynComment>/* for XSS */</span><br>
@@ -446,6 +447,7 @@ Hello Query String!(実践バージョン)
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 </div><br>
+<br>
 
 
 <a name=MoaiCGI_post2></a>
@@ -460,8 +462,8 @@ Hello Post!(実践バージョン)
 	<b><u>CGIへのリンクとソースコード</u></b><br>
 	<br>
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/post2.cgi">http://localhost:8124/cgis/cgi_developers/protected/post2.cgi</a> 
-		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/post2.c">ソースコード</a> 
+		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/post2.cgi">http://localhost:8124/cgis/cgi_developers/protected/post2.cgi</a>
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/post2.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
 			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
@@ -541,35 +543,35 @@ Hello Post!(実践バージョン)
 				<div class=MstyIndent>
 					const char* ext = NULL;<br>
 					bool is_image = false;<br>
-					<span class=MstyCodeSynComment>
+					<span class=MstyCodeSynComment><br>
 					/* ZnkStrはlibZnkが提供する文字列型です. */<br>
-					</span>
+					</span><br>
 					ZnkStr msg = ZnkStr_new( "" );<br>
 					size_t i; <br>
 					<br>
 					for( i=0; i&lt;ZnkVarpAry_size(post_vars); ++i ){<br>
 					<div class=MstyIndent>
-						<span class=MstyCodeSynComment>
+						<span class=MstyCodeSynComment><br>
 						/* Post変数を一つ取り出します.<br>
 						* この変数の名前も得ておきます. */<br>
-						</span>
+						</span><br>
 						ZnkVarp     var  = ZnkVarpAry_at( post_vars, i );<br>
 						const char* name = ZnkVar_name_cstr(var);<br>
 						<br>
 						if( ZnkVar_prim_type( var ) == ZnkPrim_e_Bfr ){<br>
 						<div class=MstyIndent>
-							<span class=MstyCodeSynComment>
+							<span class=MstyCodeSynComment><br>
 							/* ZnkVarpのタイプがZnkPrim_e_Bfr(任意のByte列).<br>
 							* これは添付ファイルを意味します. */<br>
-							</span>
+							</span><br>
 							const char*    filename  = ZnkVar_misc_cstr( var, "filename" );<br>
 							const uint8_t* data      = ZnkVar_data( var );<br>
 							const size_t   data_size = ZnkVar_data_size( var );<br>
 							<br>
-							<span class=MstyCodeSynComment>
+							<span class=MstyCodeSynComment><br>
 							/* ZnkS_get_extension の戻り値はファイルの拡張子となります. */<br>
 							/* この参照先は、post_varsの寿命が続く限りにおいては有効です. */<br>
-							</span>
+							</span><br>
 							ext = ZnkS_get_extension( filename, '.' );<br>
 							<br>
 							if( data_size &gt; 2000000 ){ /* 2000KB以上 */<br>
@@ -579,19 +581,19 @@ Hello Post!(実践バージョン)
 							</div>
 							} else {<br>
 							<div class=MstyIndent>
-								<span class=MstyCodeSynComment>
+								<span class=MstyCodeSynComment><br>
 								/* 文字列が等しいかの比較を行います. */<br>
 								/* ただし大文字小文字の区別はしません. */<br>
-								</span>
+								</span><br>
 								if(&nbsp; ZnkS_eqCase( ext, "jpg" )<br>
 								&nbsp; || ZnkS_eqCase( ext, "png" )<br>
 								&nbsp; || ZnkS_eqCase( ext, "gif" )<br>
 								&nbsp; || ZnkS_eqCase( ext, "webm" )<br>
 								){<br>
 								<div class=MstyIndent>
-									<span class=MstyCodeSynComment>
+									<span class=MstyCodeSynComment><br>
 									/* 画像ファイルの拡張子であった場合はこのデータをresult_file.ext として保存します. */<br>
-									</span>
+									</span><br>
 									saveAsResultFile( ext, data, data_size );<br>
 									is_image = true;<br>
 									ZnkStr_addf( msg, "Image : %s orinal filename=[%s]\n", name, filename );<br>
@@ -607,10 +609,10 @@ Hello Post!(実践バージョン)
 						</div>
 						} else {<br>
 						<div class=MstyIndent>
-							<span class=MstyCodeSynComment>
+							<span class=MstyCodeSynComment><br>
 							/* ZnkVarpのタイプがその他(Str).<br>
 							* これはinputタグやtextareaタグ等に由来する文字列データ. */<br>
-							</span>
+							</span><br>
 							const char* val = ZnkVar_cstr(var);<br>
 							ZnkStr_addf( msg, "%s = [%s] (size=[%u])\n", name, val, ZnkVar_str_leng(var) );<br>
 						</div>
@@ -620,22 +622,22 @@ Hello Post!(実践バージョン)
 					<br>
 					if( is_image ){<br>
 					<div class=MstyIndent>
-						<span class=MstyCodeSynComment>
+						<span class=MstyCodeSynComment><br>
 						/* 画像ファイルであった場合はimgタグによりそれを表示します. */<br>
-						</span>
+						</span><br>
 						ZnkStr_addf( msg, "&lt;br&gt;\n" );<br>
 						ZnkStr_addf( msg, "&lt;img src=\"./result_file.%s\"&gt;\n", ext );<br>
 						ZnkStr_addf( msg, "&lt;br&gt;\n" );<br>
 					</div>
 					}<br>
-					<span class=MstyCodeSynComment>
+					<span class=MstyCodeSynComment><br>
 					/* XSS対策. msg内にある一切のHTMLタグの効果を打ち消します. */<br>
-					</span>
+					</span><br>
 					ZnkHtpURL_negateHtmlTagEffection( msg ); <span class=MstyCodeSynComment>/* for XSS */</span><br>
 					fputs( ZnkStr_cstr(msg), stdout );<br>
-					<span class=MstyCodeSynComment>
+					<span class=MstyCodeSynComment><br>
 					/* ZnkStrは使用後解放しなければなりません. */<br>
-					</span>
+					</span><br>
 					ZnkStr_delete( msg );<br>
 				</div>
 				}<br>
@@ -652,6 +654,7 @@ Hello Post!(実践バージョン)
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 </div><br>
+<br>
 
 
 <a name=MoaiCGI_hello_template></a>
@@ -671,7 +674,7 @@ Hello Post!(実践バージョン)
 	<br>
 	<div class=MstyIndent>
 		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/hello_template.cgi">http://localhost:8124/cgis/cgi_developers/protected/hello_template.cgi</a>
-		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/hello_template.c">ソースコード</a> 
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/hello_template.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
 			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
@@ -723,21 +726,21 @@ Hello Post!(実践バージョン)
 		このHTMLテンプレートファイルを読み込んで内容を出力するコードは以下のようになります.<br>
 		<div class=MstyComment>
 			<div class=MstyCode>
-				<span class=MstyCodeSynComment>
+				<span class=MstyCodeSynComment><br>
 					/* ZnkBirdの生成. */<br>
-				</span>
+				</span><br>
 				ZnkBird bird = ZnkBird_create( "#[", "]#" );<br>
-				<span class=MstyCodeSynComment>
+				<span class=MstyCodeSynComment><br>
 					/* BIRDタグの登録. */<br>
-				</span>
+				</span><br>
 				ZnkBird_regist( bird, "your_name", "Mr.Moai" );<br>
-				<span class=MstyCodeSynComment>
+				<span class=MstyCodeSynComment><br>
 					/* テンプレートHTMLを読み込み、BIRDタグを展開して表示. */<br>
-				</span>
+				</span><br>
 				RanoCGIUtil_printTemplateHTML( evar, bird, "../publicbox/hello_template.html" );<br>
-				<span class=MstyCodeSynComment>
+				<span class=MstyCodeSynComment><br>
 					/* ZnkBirdの破棄. */<br>
-				</span>
+				</span><br>
 				ZnkBird_destroy( bird );<br>
 			</div>
 		</div>
@@ -766,7 +769,7 @@ Hello Post!(実践バージョン)
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 </div><br>
-
+<br>
 
 
 <a name=MoaiCGI_progress></a>
@@ -783,7 +786,7 @@ Hello Post!(実践バージョン)
 	<br>
 	<div class=MstyIndent>
 		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/progress.cgi">http://localhost:8124/cgis/cgi_developers/protected/progress.cgi</a>
-		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/progress.c">ソースコード</a> 
+		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/progress.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
 			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
@@ -799,9 +802,9 @@ Hello Post!(実践バージョン)
 		<br>
 		<div class=MstyComment>
 			<div class=MstyCode>
-			<span class=MstyCodeSynComment>
+			<span class=MstyCodeSynComment><br>
 			/* まずJavascript progress.jsを含んだHTMLを表示させる. */<br>
-			</span>
+			</span><br>
 			{<br>
 			<div class=MstyIndent>
 				ZnkBird bird = ZnkBird_create( "#[", "]#" );<br>
@@ -811,17 +814,17 @@ Hello Post!(実践バージョン)
 			}<br>
 			<br>
 			Znk_fflush( Znk_stdout() );<br>
-			<span class=MstyCodeSynComment>
+			<span class=MstyCodeSynComment><br>
 			/* Broken-Pipeを強制的に引き起こし、Web Server側でのReadループを強制終了させる. */<br>
-			</span>
+			</span><br>
 			Znk_fclose( Znk_stdout() );<br>
 			<br>
-			<span class=MstyCodeSynComment>
+			<span class=MstyCodeSynComment><br>
 			/* 時間のかかる処理. */<br>
-			</span>
+			</span><br>
 			very_long_work();<br>
 			</div>
-		</div><br>
+		</div>
 		<br>
 		progress.html を参照してもらうとわかりますが、このHTML内ではまず ../publicbox/progress.js を読み込んでいます.<br>
 		次に ../publicbox/state.dat の内容を progress.js が提供するJavascriptの関数 set_dat_path を使って読み込みます.<br>
@@ -877,19 +880,19 @@ Hello Post!(実践バージョン)
 					}<br>
 					ZnkThread_sleep( 100 ); /* 100ミリ秒Sleepする */<br>
 				</div>
-				}
+				}<br>
 			</div>
-		</div><br>
+		</div>
 		progress.html内のset_dat_pathでは../publicbox/state.datの中身を何度も読み込んで表示する仕組みになっているのでした.<br>
 		一方、very_long_work関数では、そのstate.datの中身を処理の進捗に応じて上書き更新します.<br>
 		ここでは state.datの中身の値として st_count の値を書き込んでいます.<br>
 		その値が100になったところで終了です.<br>
 		この例ではダミーの処理として Sleep処理を入れてあります.<br>
-		<br>
 	</div>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 </div><br>
+<br>
 
 
 <a name=MoaiCGI_proxy_finder></a>
@@ -923,16 +926,19 @@ ProxyFinderを作成してみる
 			<li>product_listセクションのcgi_simpleの部分をmy_proxy_finderに修正.</li>
 			<br>
 			<li>include_paths_commonセクションで以下の２行が記述されていることを確認します.<br>
+<br>
 			<div class=MstyComment>
 				@{libZnk}<br>
 				@{libRano}<br>
-			</div><br>
+			</div>
 			</li>
+<br>
 			<li>dependency_libs_commonセクションで以下の２行が記述されていることを確認します.<br>
+<br>
 			<div class=MstyComment>
 				rlib: @{libZnk}  Znk  $(DL_VER)<br>
 				rlib: @{libRano} Rano $(DL_VER)<br>
-			</div><br>
+			</div>
 			</li>
 		</ul>
 		これでmkfgen.myfの編集は終わりですので上書き保存してください.<br>
@@ -972,7 +978,7 @@ ProxyFinderを作成してみる
 			上記(0. make)を実行してください.<br>
 			以下を押すことでMACHINEの値が循環的に変わります.<br>
 			<div class=MstyComment>
-				5. switch_machine
+				5. switch_machine<br>
 			</div>
 		</div>
 		<br>
@@ -980,7 +986,8 @@ ProxyFinderを作成してみる
 		<br>
 		<div class=MstyComment>
 			$ make -f Makefile_linux.mak<br>
-		</div><br>
+		</div>
+<br>
 		特にエラー等表示されなければ成功です.<br>
 	</div>
 	<br>
@@ -1054,7 +1061,7 @@ ProxyFinderを作成してみる
 		すると以下のようなメッセージが表示されたのではないでしょうか？<br>
 		<br>
 		<div class=MstyComment>
-			Cannot open template HTML file. [templates/proxy_finder.html] 
+			Cannot open template HTML file. [templates/proxy_finder.html] <br>
 		</div>
 		<br>
 		templates/proxy_finder.html がないのでこれが開けないとのことです.<br>
@@ -1113,10 +1120,11 @@ ProxyFinderを作成してみる
 		<br>
 		例の「Please retry this」の画面が最初に表示されるのが気にならなければ、<br>
 		別にここまでする必要はありません.<br>
-	</div><br>
+	</div>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 </div><br>
+<br>
 
 
 <a name=MoaiCGI_at_end></a>
@@ -1134,13 +1142,20 @@ ProxyFinderを作成してみる
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 </div><br>
+<br>
 
-<u><b>リンク</b></u>
+
+<a name=Link></a>
+<u><b>
+リンク
+</b></u><br>
+<br>
 <ul>
-	<li><a class=MstyElemLink href="#TopBar">一番上へ</a></li>
-	<li><a class=MstyElemLink href="https://mr-moai-2016.github.io">Moaiドキュメント(オンライン)</a></li>
-	<li><a class=MstyElemLink href="https://github.com/mr-moai-2016/znk_project">znk_project(github)</a></li>
+	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
+	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project>znk_project(github)</a></li>
 </ul><br>
+
 
 </body>
 </html>

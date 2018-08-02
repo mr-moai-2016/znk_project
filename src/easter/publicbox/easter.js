@@ -6,12 +6,14 @@ function Easter_reload( url_src, bbs_id_name )
 	location.href="/easter?est_reload="+url_src;
 	return false;
 }
+
 function Easter_del( d )
 {
 	/* self.location.href="/del.php?b="+b+"&d="+d; */
 	/* & : %26 */
 	self.location.href="/easter?est_get=" + Easter_hostname + "/del.php?b="+b+"%26d="+d;
 }
+
 function Easter_sd( sno )
 {
 	var xmlhttp = false;
@@ -55,6 +57,7 @@ function getDocCookieNameArray()
 	}
 	return name_ary;
 }
+
 function clearAllCookie()
 {
 	var name_ary = getDocCookieNameArray();
@@ -91,6 +94,7 @@ function Easter_scroll( bbs_id_name ){
 }
 
 var dispdel = 0;
+
 function ddrefl(){
   var c=0;
   var ddtags=document.getElementsByTagName("table");
@@ -100,12 +104,14 @@ function ddrefl(){
     }
   }
 }
+
 function onddbut(){
 	dispdel=1-dispdel;
-	document.getElementById("ddbut").innerHTML=dispdel?"‚©‚­‚·":"Œ©‚é";
+	document.getElementById("ddbut").innerHTML=dispdel?"‰B‚·":"Œ©‚é";
 	ddrefl();
 	reszk();
 }
+
 function reszt(){
 	var ofm=document.getElementById("ftbl");
 	var oufm=document.getElementById("ufm");
@@ -116,6 +122,7 @@ function reszt(){
 	ofm.style.marginLeft="auto";
 	ofm.style.visibility="visible";
 }
+
 function reszu(){
 	var ofm=document.getElementById("ftbl");
 	var oufm=document.getElementById("ufm");
@@ -128,6 +135,7 @@ function reszu(){
 	ofm.style.top=(document.body.offsetTop+oufm.offsetTop)+"px";
 	ofm.style.visibility="visible";
 }
+
 function reszk(){
 	if(document.getElementById("ftbl")==null){
 		tmpobj=document.getElementById("reszb");

@@ -31,6 +31,8 @@ size_t
 EstConfig_getCacheDaysAgo( void );
 size_t
 EstConfig_getDustboxDaysAgo( void );
+const char*
+EstConfig_getExplicitReferer( void );
 
 ZnkStr
 EstConfig_getMoaiDir( void );

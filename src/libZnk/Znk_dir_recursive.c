@@ -11,6 +11,7 @@ struct ZnkDirRecursiveImpl {
 	ZnkDirRecursiveFuncArg funcarg_onEnterDir_;
 	ZnkDirRecursiveFuncArg funcarg_processFile_;
 	ZnkDirRecursiveFuncArg funcarg_onExitDir_;
+	ZnkDirRecursiveFuncArg funcarg_isIgnoreDir_;
 	int       level_;
 	bool      is_err_ignore_;
 };
@@ -25,10 +26,10 @@ ZnkDirRecursive_create( bool is_err_ignore,
 	ZnkDirRecursive recur = Znk_malloc( sizeof( struct ZnkDirRecursiveImpl ) );
 	recur->name_stack_ = ZnkStrAry_create( true );
 	recur->wkstr_         = ZnkStr_new( "" );
-	//recur->err_id_list_   = ZnkBfr_create_null();
 	Znk_FUNCARG_INIT( recur->funcarg_onEnterDir_,  func_onEnterDir,  arg_onEnterDir );
 	Znk_FUNCARG_INIT( recur->funcarg_processFile_, func_processFile, arg_processFile );
 	Znk_FUNCARG_INIT( recur->funcarg_onExitDir_,   func_onExitDir,   arg_onExitDir );
+	Znk_FUNCARG_INIT( recur->funcarg_isIgnoreDir_, NULL,             NULL );
 	recur->level_         = 0;
 	recur->is_err_ignore_ = is_err_ignore;
 	return recur;
@@ -39,7 +40,6 @@ ZnkDirRecursive_destroy( ZnkDirRecursive recur )
 	if( recur ){
 		ZnkStrAry_destroy( recur->name_stack_ );
 		ZnkStr_destroy( recur->wkstr_ );
-		//ZnkBfr_destroy( recur->err_id_list_ );
 		recur->level_ = 0;
 		Znk_free( recur );
 	}
@@ -70,6 +70,7 @@ ZnkDirRecursive_configFnca( ZnkDirRecursive recur, ZnkDirRecursiveFncaType fnca_
 	case ZnkDirRecursiveFnca_e_onEnterDir:  return &recur->funcarg_onEnterDir_;
 	case ZnkDirRecursiveFnca_e_processFile: return &recur->funcarg_processFile_;
 	case ZnkDirRecursiveFnca_e_onExitDir:   return &recur->funcarg_onExitDir_;
+	case ZnkDirRecursiveFnca_e_isIgnoreDir: return &recur->funcarg_isIgnoreDir_;
 	default: break;
 	}
 	return NULL;
@@ -93,6 +94,14 @@ ZnkDirRecursive_traverse( ZnkDirRecursive recur, const char* top_dir, ZnkStr erm
 	char      last_ch;
 	ZnkDirType dir_type;
 	ZnkDirId   dir_id;
+
+	if( recur->funcarg_isIgnoreDir_.func_ ){
+		last_result = recur->funcarg_isIgnoreDir_.func_( recur,
+				top_dir, recur->funcarg_isIgnoreDir_.arg_, local_err_num );
+		if( last_result ){
+			return true;
+		}
+	}
 	
 	if( recur->funcarg_onEnterDir_.func_ ){
 		last_result = recur->funcarg_onEnterDir_.func_( recur,

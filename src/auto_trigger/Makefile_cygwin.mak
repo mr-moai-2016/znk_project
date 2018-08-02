@@ -36,12 +36,12 @@ ABINAME = cygwin$(MACHINE)$(DEBUG)
 O = ./out_dir/$(ABINAME)
 
 ifeq ($(DEBUG), d)
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)d
 SLIBS_DIR=slib/$(PLATFORM)d
 else
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)
 SLIBS_DIR=slib/$(PLATFORM)
@@ -62,6 +62,10 @@ OBJS0=\
 
 SUB_LIBS=\
 
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
+
 PRODUCT_EXECS= \
 	__mkg_sentinel_target__ \
 	$(EXE_FILE0) \
@@ -81,7 +85,8 @@ $O:
 
 # Product files rule.
 $(EXE_FILE0): $(OBJS0)
-	$(LINKER) -o $(EXE_FILE0) $(OBJS0) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk.a -lpthread -ldl -lstdc++ 
+	@echo $(LINKER) -o $(EXE_FILE0) {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk.a -lpthread -ldl -lstdc++ 
+	@     $(LINKER) -o $(EXE_FILE0) $(OBJS0) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk.a -lpthread -ldl -lstdc++ 
 
 
 ##
@@ -124,9 +129,9 @@ install_data:
 
 # Install exec rule.
 install_exec: $(EXE_FILE0)
-	mkdir -p ../../mkfsys 
-	for tgt in $(EXE_FILE0) ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../mkfsys/ ; fi ; done
-	@for tgt in $(RUNTIME_FILES) ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../mkfsys/ ; fi ; done
+	mkdir -p ../../mkfsys/$(PLATFORM) 
+	for tgt in $(EXE_FILE0) ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../mkfsys/$(PLATFORM)/ ; fi ; done
+	@for tgt in $(RUNTIME_FILES) ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../mkfsys/$(PLATFORM)/ ; fi ; done
 
 # Install dlib rule.
 install_dlib:
@@ -140,7 +145,6 @@ install: all install_exec install_data
 
 # Clean rule.
 clean:
-	rm -r $O/ 
+	rm -rf $O/ 
 
 # Src and Headers Dependency
-auto_trigger.o:

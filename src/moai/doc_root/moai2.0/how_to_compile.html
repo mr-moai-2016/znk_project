@@ -8,52 +8,59 @@
 </head>
 <body>
 <a name=TopBar></a>
-<p><b><img src="/imgs/here_landmark.png"> Moai2.0ドキュメント</b></p>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter エキスパートマニュアル</b></p>
 
-<a class=MstyElemLink        href="/">トップページ</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/index.html">Moai2.0ドキュメント</a> &nbsp;
-<a class=MstyElemLink        href="/moai1.1/index.html">Moai1.1ドキュメント</a> &nbsp;
+<a class=MstyElemLink href="/">トップページ</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
+<a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
-<a class=MstyElemLink        href="/moai2.0/install.html">インストールガイド</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_reference.html">Moai本体</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/customboy_reference.html">CustomBoy</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index_expert.html">ご案内</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_reference.html">Moaiエンジン</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/customboy_reference.html">CustomBoyエンジン</a> &nbsp;
 <a class=MstyNowSelectedLink href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
 <br> <br>
 
 <div class=MstyComment>
-<u><b>記事担当者</b></u> : Mr.Moai ＆ 全角<br> 
+<u><b>記事担当者</b></u> : Mr.Moai ＆ 全角<br>
 <br>
 <u><b>最終更新日</b></u> : 2018/03/30<br>
 <br>
 </div>
 <br>
 
+
 <a name=AtFirst></a>
-<u><b>はじめに</b></u>
-<ul>
-	<font >
-		この記事では、Moaiのソースコードから実行バイナリ(exeファイル等)を作る手順について、<br>
-		全くの初心者でもできるように丁寧に説明します.<br>
-		この作業を<b>コンパイル</b>、これを行うためのツールを<b>コンパイラ</b>と呼びます.<br>
-	</font><br>
-</ul><br>
+<u><b>
+はじめに
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	この記事では、Moaiのソースコードから実行バイナリ(exeファイル等)を作る手順について、<br>
+	全くの初心者でもできるように丁寧に説明します.<br>
+	この作業を<b>コンパイル</b>、これを行うためのツールを<b>コンパイラ</b>と呼びます.<br>
+	(この解説記事の作成にあたっては、一部は全角君にも協力頂きました)<br>
+</div><br>
+<br>
 
 
 <a name=Index></a>
-<u><b>目次</b></u>
+<u><b>
+目次
+</b></u><br>
+<br>
 <ul>
-	<li><b><a class=MstyElemLink href=#WhyWeCompile >なぜソースコードからコンパイルするのか？</a></b></li>
+	<li><b><a class=MstyElemLink href=#WhyWeCompile>なぜソースコードからコンパイルするのか？</a></b></li>
 	<li><b><a class=MstyElemLink href=#get_source_code>Moaiのソースコードの入手方法</a></b></li>
-	<li><b><a class=MstyElemLink href=#windows_next >Windowsな方へ、はじめてのコンパイル</a></b></li>
-	<li><b><a class=MstyElemLink href=#get_mingw    >MinGWの入手およびインストール方法</a></b></li>
-	<li><b><a class=MstyElemLink href=#compile_by_mingw >WindowsでMinGWを使ってコンパイルする</a></b></li>
-	<li><b><a class=MstyElemLink href=#compile_by_vc    >WindowsでVCを使ってコンパイルする</a></b></li>
-	<li><b><a class=MstyElemLink href=#compile_on_linux >Linuxを使ってコンパイルする</a></b></li>
+	<li><b><a class=MstyElemLink href=#windows_next>Windowsな方へ、はじめてのコンパイル</a></b></li>
+	<li><b><a class=MstyElemLink href=#get_mingw>MinGWの入手およびインストール方法</a></b></li>
+	<li><b><a class=MstyElemLink href=#compile_by_mingw>WindowsでMinGWを使ってコンパイルする</a></b></li>
+	<li><b><a class=MstyElemLink href=#compile_by_vc>WindowsでVCを使ってコンパイルする</a></b></li>
+	<li><b><a class=MstyElemLink href=#compile_on_linux>Linuxを使ってコンパイルする</a></b></li>
 	<li><b><a class=MstyElemLink href=#compile_on_cygwin>Cygwinでコンパイルする</a></b></li>
-	<li><b><a class=MstyElemLink href=#compile_on_msys>  MSYSを使ってコンパイルする</a></b></li>
+	<li><b><a class=MstyElemLink href=#compile_on_msys>MSYSを使ってコンパイルする</a></b></li>
 	<li><b><a class=MstyElemLink href=#compile_on_others_windows>WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使ってコンパイルする</a></b></li>
 	<li><b><a class=MstyElemLink href=#compile_on_android>Android版をコンパイルする</a></b></li>
 	<li><b><a class=MstyElemLink href=#about_macos>MacOSについて</a></b></li>
@@ -62,7 +69,7 @@
 
 <a name=WhyWeCompile></a>
 <u><b>
-なぜソースコードからコンパイルして使うのか？
+なぜソースコードからコンパイルするのか？
 </b></u><br>
 <br>
 <div class=MstyIndent>
@@ -122,7 +129,7 @@ Moaiのソースコードの入手方法
 </b></u><br>
 <br>
 <div class=MstyIndent>
-	現在の最新版Ver(2.0)はzipファイルとなっており、以下より入手できます.<br>
+	現在の最新版はzipファイルとなっており、以下より入手できます.<br>
 	<br>
 	<a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a><br>
 	<br>
@@ -135,34 +142,37 @@ Moaiのソースコードの入手方法
 
 
 <a name=windows_next></a>
-<u><b>Windowsな方へ、はじめてのコンパイル</b></u>
-<ul>
-	<font >
-		ソースコードからのコンパイルなどやったことがない、<br>
-		あるいは何から手をつければよいかわからない、と言う方も多いことでしょう.<br>
-		<br>
-		Windowsを使っている方ならば、まずはC言語のコンパイラをインストールする必要があります.<br>
-		この記事では<b>MinGW</b>と呼ばれている最もメジャーなものの一つを使います.<br>
-		もちろんフリーウェアです.<br>
-		<br>
-		<a class=MstyElemLink href=#get_mingw>MinGWの入手方法</a>の項へと進みましょう.<br>
-		既にMinGWをインストールしてある方はこれをスルーして<a class=MstyElemLink href=#compile_by_mingw>WindowsでMinGWを使ってコンパイルする</a>を参照して下さい.<br>
-		<br>
-		尚、MinGWではなくVC(Visual C++)を使いたいという方は<a class=MstyElemLink href=#compile_by_vc>WindowsでVCを使ってコンパイルする</a>を参照して下さい.<br>
-		<div class=MstyComment>
+<u><b>
+Windowsな方へ、はじめてのコンパイル
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	ソースコードからのコンパイルなどやったことがない、<br>
+	あるいは何から手をつければよいかわからない、と言う方も多いことでしょう.<br>
+	<br>
+	Windowsを使っている方ならば、まずはC言語のコンパイラをインストールする必要があります.<br>
+	この記事では<b>MinGW</b>と呼ばれている最もメジャーなものの一つを使います.<br>
+	もちろんフリーウェアです.<br>
+	<br>
+	<a class=MstyElemLink href=#get_mingw>MinGWの入手方法</a>の項へと進みましょう.<br>
+	既にMinGWをインストールしてある方はこれをスルーして<a class=MstyElemLink href=#compile_by_mingw>WindowsでMinGWを使ってコンパイルする</a>を参照して下さい.<br>
+	<br>
+	尚、MinGWではなくVC(Visual C++)を使いたいという方は<a class=MstyElemLink href=#compile_by_vc>WindowsでVCを使ってコンパイルする</a>を参照して下さい.<br>
+<br>
+	<div class=MstyComment>
 		VCの入手とインストール方法についてはここでは解説しません. <br>
 		(多分、こちらを選ばれる方は、ある程度わかっている方だと思うので)<br>
 		Microsoftよりフリーで提供されているVCとして Visual Studio Express がありますが、通常はそれで十分です.<br>
-		</div>
-		<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=get_mingw></a>
 <u><b>
-MinGWの入手方法
+MinGWの入手およびインストール方法
 </b></u><br>
 <br>
 <div class=MstyIndent>
@@ -194,7 +204,7 @@ MinGWの入手方法
 		<b>MinGWにその種の問題があろうはずもない</b>ので、構わず「実行」します.<br>
 		</li>
 		<br>
-		<li>「MinGW Installation Manager Setup Tool」ウィンドウが表示されるので「Install」を押します.
+		<li>「MinGW Installation Manager Setup Tool」ウィンドウが表示されるので「Install」を押します.<br>
 		</li>
 		<br>
 		<li>次の画面でインストール先を指定できます. <br>
@@ -202,7 +212,7 @@ MinGWの入手方法
 			デフォルトでは C:\MinGWとなっていますが「Change」でこれを変えることもできます.<br>
 			(その場合は以下の説明でC:\MinGWとなっている部分をそのフォルダで読み替えて下さい).<br>
 			最終的に180MB程度必要ですので、万一余裕がなければ他のドライブに変えるなどしてください.<br>
-		</div><br>
+		</div>
 		その他特に弄る必要はないのでこの指定を終えたら「Continue」を押します.<br>
 		</li>
 		<br>
@@ -264,7 +274,7 @@ MinGWの入手方法
 	<a class=MstyElemLink href=#compile_by_mingw>WindowsでMinGWを使ってコンパイルする</a>の項へと進みましょう.<br>
 	<br>
 	<div class=MstyComment>
-		<u><b>補足1 : インストールされるものの内訳</b></u><br> <br>
+		<u><b>補足1 : インストールされるものの内訳</b></u> <br>
 		<b>mingw32-base</b>によりインストールされるのは以下です.<br>
 		<br>
 		<ul>
@@ -300,7 +310,7 @@ MinGWの入手方法
 		このときgccは以下のような非常にわかりにくいエラーメッセージを出すので注意が必要です. <br>
 		<br>
 		<div class=MstyCode>
-			gcc: error: CreateProcess: No such file or directory
+			gcc: error: CreateProcess: No such file or directory<br>
 		</div>
 		<br>
 		もしもこれが表示されたなら mingw32-g++をインストールし忘れているか、<br>
@@ -334,7 +344,6 @@ MinGWの入手方法
 		再ダウンロードが必要となりますが、その場合もこのフォルダ内の該当アーカイブを手動で消す必要があります.<br>
 		さらにその場合はデフォルトでお使いのブラウザのキャッシュも消去しておく必要があります<br>
 		( mingw-get.exeはダウンロード時、お使いのブラウザの機能を内部で利用しているためです ).<br>
-		<br>
 	</div>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
@@ -508,7 +517,7 @@ WindowsでVCを使ってコンパイルする
 
 <a name=compile_on_linux></a>
 <u><b>
-Linuxでコンパイルする
+Linuxを使ってコンパイルする
 </b></u><br>
 <br>
 <div class=MstyIndent>
@@ -535,7 +544,7 @@ Linuxでコンパイルする
 	<br>
 	<div class=MstyComment>
 		<div class=MstyCode>
-			sh ./make_world.sh install
+			sh ./make_world.sh install<br>
 		</div>
 	</div>
 	<br>
@@ -544,7 +553,7 @@ Linuxでコンパイルする
 	<div class=MstyComment>
 		このシェルスクリプトにより、Makefile_linux.mak の存在する各ディレクトリへ自動的に移動しつつ<br>
 		make -f Makefile_linux.mak が実行されます.<br>
-		コンパイル後の実行バイナリは各ディレクトリ内のout_dirに格納されます.
+		コンパイル後の実行バイナリは各ディレクトリ内のout_dirに格納されます.<br>
 	</div>
 	<br>
 	尚、環境変数MACHINEに「x86」または「x64」を明示的に設定して上記を実行した場合は、<br>
@@ -560,7 +569,7 @@ Linuxでコンパイルする
 	以上でMoaiのコンパイルとインストールはすべて完了です.<br>
 	<br>
 	<div class=MstyComment>
-		Ver1.1.8以前にあった compile_on_linux.bat と install_bin_for_linux.bat は<br>
+		Ver1.1.8以前にあった compile_on_linux.sh と install_bin_for_linux.sh は<br>
 		Ver2.0では廃止/削除されました.<br>
 	</div>
 	<br>
@@ -627,7 +636,7 @@ Cygwinでコンパイルする
 	<br>
 	<div class=MstyComment>
 		<div class=MstyCode>
-			sh ./make_world.sh install
+			sh ./make_world.sh install<br>
 		</div>
 	</div>
 	<br>
@@ -636,7 +645,7 @@ Cygwinでコンパイルする
 	<div class=MstyComment>
 		このシェルスクリプトにより、Makefile_cygwin.mak の存在する各ディレクトリへ自動的に移動しつつ<br>
 		make -f Makefile_cygwin.mak が実行されます.<br>
-		コンパイル後の実行バイナリは各ディレクトリ内のout_dirに格納されます.
+		コンパイル後の実行バイナリは各ディレクトリ内のout_dirに格納されます.<br>
 	</div>
 	<br>
 	尚、Cygwinの場合、出来上がるdllの名前にはcygプリフィックスをつける仕様としてあります.<br>
@@ -856,7 +865,7 @@ MSYSを使ってコンパイルする
 	<br>
 	<div class=MstyComment>
 		<div class=MstyCode>
-			sh ./make_world.sh install
+			sh ./make_world.sh install<br>
 		</div>
 	</div>
 	<br>
@@ -865,7 +874,7 @@ MSYSを使ってコンパイルする
 	<div class=MstyComment>
 		このシェルスクリプトにより、Makefile_msys.mak の存在する各ディレクトリへ自動的に移動しつつ<br>
 		make -f Makefile_msys.mak が実行されます.<br>
-		コンパイル後の実行バイナリは各ディレクトリ内のout_dirに格納されます.
+		コンパイル後の実行バイナリは各ディレクトリ内のout_dirに格納されます.<br>
 	</div>
 	<br>
 	さらに、srcディレクトリの一つ上の階層にmoai-v2.0-win32ディレクトリが生成され、<br>
@@ -901,7 +910,7 @@ WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使
 	<br>
 	こんな変態御用達なmakefileまで用意してはかさばるのでソースコードに同梱はしていない.<br>
 	だが実のところlibZnkやMoaiのソースコード自体はこれらでもコンパイルできるように移植性に一応配慮してある.<br>
-	興味がある<b>奇特な方</b>は、以下を参考に各自makefileを作成して欲しい.<br>
+	興味がある<b>変態野郎な方</b>は、以下を参考に各自makefileを作成して欲しい.<br>
 	<br>
 	<ul>
 		<li><b>BCC5.5(Borland C++ Compiler 5.5)</b><br>
@@ -941,7 +950,7 @@ WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使
 		</div>
 		</li>
 		<br>
-		<li><b>DMC(Digital Mars C/C++)</b><br> 
+		<li><b>DMC(Digital Mars C/C++)</b> <br>
 		<br>
 		我々が実際にテストしたのは最新バージョン(Ver8.57)のみである.<br>
 		<br>
@@ -955,7 +964,7 @@ WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使
 		exeを作る場合の指定方法(リンカはlinkとなる)<br>
 		<div class=MstyComment>
 			<div class=MstyCode>
-				link -EXET:NT $(OBJS),YourApplication.exe,,ws2_32.lib user32.lib kernel32.lib,,YourResource.res
+				link -EXET:NT $(OBJS),YourApplication.exe,,ws2_32.lib user32.lib kernel32.lib,,YourResource.res<br>
 			</div>
 		</div>
 		<br>
@@ -963,7 +972,7 @@ WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使
 		オプション -p4096 はページサイズとなり、OMF形式ではこれを明示的に指定する必要がある.<br>
 		<div class=MstyComment>
 			<div class=MstyCode>
-				lib -c -p4096 YourStaticLib.lib $(OBJS)
+				lib -c -p4096 YourStaticLib.lib $(OBJS)<br>
 			</div>
 		</div>
 		<br>
@@ -1087,7 +1096,7 @@ Android版をコンパイルする
 		<br>
 		<div class=MstyComment>
 			<div class=MstyCode>
-				export NK_NDK_DIR=/cygdrive/c/android-ndk-r10e
+				export NK_NDK_DIR=/cygdrive/c/android-ndk-r10e<br>
 			</div>
 		</div>
 		<br>
@@ -1096,7 +1105,7 @@ Android版をコンパイルする
 		<br>
 		<div class=MstyComment>
 			<div class=MstyCode>
-				export PATH=$PATH:$ZNK_NDK_DIR:$ZNK_NDK_DIR/build
+				export PATH=$PATH:$ZNK_NDK_DIR:$ZNK_NDK_DIR/build<br>
 			</div>
 		</div>
 		<br>
@@ -1144,7 +1153,7 @@ Android版をコンパイルする
 			<br>
 			<div class=MstyComment>
 				<div class=MstyCode>
-					cp /storage/sdcard0/Download/moai-v2.0-android-armeabi.zip ~/
+					cp /storage/sdcard0/Download/moai-v2.0-android-armeabi.zip ~/<br>
 				</div>
 			</div>
 		</li>
@@ -1153,7 +1162,7 @@ Android版をコンパイルする
 			<br>
 			<div class=MstyComment>
 				<div class=MstyCode>
-					unzip moai-v2.0-android-armeabi.zip
+					unzip moai-v2.0-android-armeabi.zip<br>
 				</div>
 			</div>
 			<br>
@@ -1162,7 +1171,7 @@ Android版をコンパイルする
 			<br>
 			<div class=MstyComment>
 				<div class=MstyCode>
-					sh ./moai_for_android.sh
+					sh moai_for_android.sh<br>
 				</div>
 			</div>
 		</li>
@@ -1194,12 +1203,17 @@ MacOSについて
 <br>
 
 
-<u><b>リンク</b></u>
+<a name=Link></a>
+<u><b>
+リンク
+</b></u><br>
+<br>
 <ul>
-	<li><a class=MstyElemLink href="#TopBar">一番上へ</a></li>
-	<li><a class=MstyElemLink href="https://mr-moai-2016.github.io">Moaiドキュメント(オンライン)</a></li>
-	<li><a class=MstyElemLink href="https://github.com/mr-moai-2016/znk_project">znk_project(github)</a></li>
+	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
+	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project>znk_project(github)</a></li>
 </ul><br>
+
 
 </body>
 </html>

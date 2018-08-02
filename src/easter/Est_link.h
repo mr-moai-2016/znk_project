@@ -49,6 +49,7 @@ struct EstLinkInfo {
 	ZnkMyf     mtgt_;
 	bool       img_link_direct_;
 	bool       css_link_done_;
+	bool       is_https_parent_;
 };
 
 typedef int (*EstLinkProcessFuncT)( ZnkVarpAry str, void* arg );
@@ -66,8 +67,8 @@ int
 EstLink_filterScript( ZnkStr str, struct EstLinkInfo* link_info );
 int
 EstLink_filterLink( ZnkStr str, struct EstLinkInfo* link_info, EstLinkXhr link_xhr );
-int
-EstLink_filterForm( ZnkStr str, struct EstLinkInfo* link_info );
+//int
+//EstLink_filterForm( ZnkStr str, struct EstLinkInfo* link_info );
 bool
 EstLink_filterOnclickJSCall( ZnkVarpAry varp_ary, ZnkVarpAry onclick_jscall );
 

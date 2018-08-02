@@ -1,0 +1,24 @@
+@def_quote [' ']
+
+@@V config
+doc_title = ['特殊リンク']
+category_path = {}
+urp           = ['/common/index.html']
+nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['table'] ['tr'] ['td'] }
+@@.
+
+@@L AtFirst
+This is special links.
+@@.
+
+@@P Index
+{ ['/index_github.html'] ['index_github'] }
+{ ['/common/complementary.html'] ['complementary'] }
+{ ['/common/myf_spec.html'] ['myf_spec'] }
+@@.
+
+@@P Link
+{ ['#TopBar'] ['一番上へ'] }
+{ ['https://mr-moai-2016.github.io'] ['Moaiドキュメント(オンライン)'] }
+{ ['https://github.com/mr-moai-2016/znk_project'] ['znk_project(github)'] }
+@@.

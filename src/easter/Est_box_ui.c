@@ -26,11 +26,18 @@ renderThumbA( ZnkStr ans, const char* unesc_url, const char* esc_url,
 		const char* xhr_dmz, bool is_target_blank,
 		size_t width, size_t height, bool is_thumbnail )
 {
+	const char* ext = ZnkS_get_extension( unesc_url,'.' );
 	ZnkStr_addf( ans, "<a href='http://%s/cgis/easter/%s' %s>", xhr_dmz, esc_url,
 			is_target_blank ? "target=_blank" : "" );
 
-	if( ZnkS_eqCase( ZnkS_get_extension(unesc_url,'.'), "webm" ) ){
+	if( ZnkS_eqCase( ext, "webm" ) ){
 		ZnkStr_addf( ans, "<img src='http://%s/cgis/easter/publicbox/icons/webm.png' width=%zu height=%zu>",
+				xhr_dmz, width, height );
+	} else if( ZnkS_eqCase( ext, "mp4" ) ){
+		ZnkStr_addf( ans, "<img src='http://%s/cgis/easter/publicbox/icons/mp4.png' width=%zu height=%zu>",
+				xhr_dmz, width, height );
+	} else if( ZnkS_eqCase( ext, "htm" ) || ZnkS_eqCase( ext, "html" ) ){
+		ZnkStr_addf( ans, "<img src='http://%s/cgis/easter/publicbox/icons/html.png' width=%zu height=%zu>",
 				xhr_dmz, width, height );
 	} else if( is_thumbnail ){
 		ZnkStr_addf( ans, "<img src='http://%s/cgis/easter/%s' width=%zu height=%zu>",
@@ -402,7 +409,6 @@ viewLinks( ZnkStr ans, void* inf_ptr,
 	if( target ){
 		ZnkStr_addf( ans, "href=\"%s%s\" %s>",
 				url_prefix, esc_url,
-				//url_prefix, url,
 				is_target_blank ? "target=_blank" : "" );
 		ZnkStr_add(  ans, " <font color=\"#404000\"> Open </font></a>" );
 		ZnkStr_add(  ans, "<span class=MstyAutoLinkOther>" );

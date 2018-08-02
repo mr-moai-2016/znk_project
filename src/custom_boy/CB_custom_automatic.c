@@ -73,7 +73,7 @@ CBStatus
 CBCustomAutomatic_main( RanoCGIEVar* evar, ZnkVarpAry cb_vars, const char* cb_src,
 		ZnkBird bird, ZnkStr RE_key, CBFgpInfo fgp_info, struct CBUAInfo_tag* ua_info,
 		ZnkVarpAry main_vars, uint64_t* ptua64, ZnkStr msg, ZnkStr category, ZnkStr lacking_var,
-		CBConfigInfo* info, bool is_authenticated )
+		CBConfigInfo* info, bool is_authenticated, bool all_cookie_clear )
 {
 	const char* moai_dir = CBConfig_moai_dir();
 	const char* target = CBConfig_theNegotiatingTarget();
@@ -95,7 +95,7 @@ CBCustomAutomatic_main( RanoCGIEVar* evar, ZnkVarpAry cb_vars, const char* cb_sr
 	switch( cmd_type ){
 	case Cmd_e_MainAll:
 		CBVirtualizer_doMainProc( evar, cb_vars, cb_src, bird, true, true,
-				RE_key, fgp_info, ua_info, main_vars, ptua64, msg, category, lacking_var, moai_dir );
+				RE_key, fgp_info, ua_info, main_vars, ptua64, msg, category, lacking_var, moai_dir, all_cookie_clear );
 		fgp_state_mode = CBFgpStateMode_e_SaveFile;
 		CBVirtualizer_save( main_vars, info->ua_state_filename_, "MainContext" );
 		CBVirtualizer_registBird_byVars( bird, main_vars );

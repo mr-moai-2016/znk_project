@@ -41,7 +41,7 @@ send500Error( ZnkSocket sock, ZnkStr emsg )
 	ZnkStr msg_str = ZnkStr_new( "" );
 	ZnkHtpURL_negateHtmlTagEffection( emsg ); /* for XSS */
 	RanoCGIUtil_replaceNLtoHtmlBR( emsg );
-	MoaiCGIManager_makeHeader( msg_str, "Moai CGI Error" );
+	MoaiCGIManager_makeHeader( msg_str, "Moai CGI Error", false );
 	ZnkStr_add( msg_str, "<p><b>Moai WebServer : 500 Internal Server Error.</b></p>\n" );
 	ZnkStr_addf( msg_str, "<div class=MstyComment>%s</div>\n", ZnkStr_cstr(emsg) );
 	MoaiIO_sendTxtf( sock, "text/html", "%s", ZnkStr_cstr( msg_str ) ); /* XSS-safe */
@@ -1321,7 +1321,7 @@ makeCmdList( const char* cmd, const char*** cmd_argv_and )
 	return cmd_list;
 }
 
-int
+static int
 popen2( const char* cmd_file, const char** cmd_argv, const char* curdir_new, int* fd_r, int* fd_w )
 {
 	int pipe_c2p[ 2 ];
@@ -1391,6 +1391,11 @@ runCGIProcess_forUNIX( const char* cmd, const char* curdir_new, ZnkSocket sock,
 	ZnkStrAry    cmd_list = makeCmdList( cmd, &cmd_argv );
 
 	child_process_pid = popen2( cmd_argv[0], cmd_argv, curdir_new, &fd_r, &fd_w );
+	if( child_process_pid == -1 ){
+		ZnkStr emsg = ZnkStr_newf( "popen2 error : cmd=[%s] curdir_new=[%s]", cmd, curdir_new );
+		send500Error( sock, emsg );
+		ZnkStr_delete( emsg );
+	}
 
 	/***
 	 * ç≈å„ÇÃterminate nulÇÕïKóv.

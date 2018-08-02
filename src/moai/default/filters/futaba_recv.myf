@@ -7,6 +7,7 @@ replace ['id="foot4abdef_right"'] ['id="foot5abdef_right"']
 replace ['type=password name=pwd size=8'] ['type=text name=pwd size=9']
 replace ['location.href="/"+b+"/res/"+resn+".htm";'] ['location.reload(true);']
 replace ['"https://js.ad-stir.com/js/adstir.js"'] ['""']
+replace ['ucount();'] ['']
 @@.
 
 @@L js_filter

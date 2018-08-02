@@ -47,6 +47,7 @@ SLIB_FILE0=$O\Rano.lib
 OBJS0=\
 	$O\Rano_cgi_util.obj \
 	$O\Rano_conf_util.obj \
+	$O\Rano_dir_util.obj \
 	$O\Rano_file_info.obj \
 	$O\Rano_hash.obj \
 	$O\Rano_html_ui.obj \
@@ -59,9 +60,15 @@ OBJS0=\
 	$O\Rano_post.obj \
 	$O\Rano_sset.obj \
 	$O\Rano_txt_filter.obj \
+	$O\Rano_vtag_util.obj \
+	$O\tls_module/tls_module.obj \
 	$O\dll_main.obj \
 
 SUB_LIBS=\
+
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
 
 PRODUCT_DLIBS= \
 	__mkg_sentinel_target__ \
@@ -78,28 +85,39 @@ RUNTIME_FILES= \
 
 
 # Entry rule.
-all: $O $(DLIB_FILE0) 
+all: $O\tls_module $O $(DLIB_FILE0) $(SLIB_FILE0) 
 
 # Mkdir rule.
+$O\tls_module:
+	if not exist $O\tls_module mkdir $O\tls_module
+
 $O:
 	if not exist $O mkdir $O
 
 
 # Product files rule.
 $(SLIB_FILE0): $(OBJS0)
-	LIB /NOLOGO /OUT:$(SLIB_FILE0) $(OBJS0) $(SUB_LIBS)
+	@echo LIB /NOLOGO /OUT:$(SLIB_FILE0) {[objs]} $(SUB_LIBS)
+	@     LIB /NOLOGO /OUT:$(SLIB_FILE0) $(OBJS0) $(SUB_LIBS)
 
 gsl.myf: $(SLIB_FILE0)
-	@if exist $(MKFSYS_DIR)\gslconv.exe $(MKFSYS_DIR)\gslconv.exe -g gsl.myf $(SLIB_FILE0) $(MACHINE)
+	@if exist $(MKFSYS_DIR)\$(PLATFORM)\gslconv.exe $(MKFSYS_DIR)\$(PLATFORM)\gslconv.exe -g gsl.myf $(SLIB_FILE0) $(MACHINE)
 
 gsl.def: gsl.myf
-	@if exist $(MKFSYS_DIR)\gslconv.exe $(MKFSYS_DIR)\gslconv.exe -d gsl.myf gsl.def
+	@if exist $(MKFSYS_DIR)\$(PLATFORM)\gslconv.exe $(MKFSYS_DIR)\$(PLATFORM)\gslconv.exe -d gsl.myf gsl.def
 
 $(DLIB_FILE0): $(OBJS0) $(SLIB_FILE0) gsl.def
-	$(LINKER) /DLL /OUT:$(DLIB_FILE0) /IMPLIB:$(ILIB_FILE0) $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib ws2_32.lib  /DEF:gsl.def
+	@echo $(LINKER) /DLL /OUT:$(DLIB_FILE0) /IMPLIB:$(ILIB_FILE0) {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib ws2_32.lib  /DEF:gsl.def
+	@     $(LINKER) /DLL /OUT:$(DLIB_FILE0) /IMPLIB:$(ILIB_FILE0) $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib ws2_32.lib  /DEF:gsl.def
 
 
 # Suffix rule.
+{$S\tls_module}.c{$O\tls_module}.obj:
+	$(COMPILER) -I$S $(INCLUDE_FLAG) -Fo$@ -c $<
+
+{$S\tls_module}.cpp{$O\tls_module}.obj:
+	$(COMPILER) -I$S $(INCLUDE_FLAG) -Fo$@ -c $<
+
 {$S}.c{$O}.obj:
 	$(COMPILER) -I$S $(INCLUDE_FLAG) -Fo$@ -c $<
 
@@ -137,16 +155,15 @@ install: all install_slib install_dlib
 
 # Clean rule.
 clean:
-	del /Q $O\ 
+	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-dll_main.obj:
 Rano_cgi_util.obj: Rano_cgi_util.h Rano_type.h Rano_log.h Rano_post.h
 Rano_conf_util.obj: Rano_conf_util.h
+Rano_dir_util.obj: Rano_dir_util.h Rano_file_info.h
 Rano_file_info.obj: Rano_file_info.h
 Rano_hash.obj: Rano_hash.h
-Rano_html_ui.obj:
-Rano_htp_boy.obj: Rano_htp_boy.h Rano_log.h Rano_post.h
+Rano_htp_boy.obj: Rano_htp_boy.h Rano_log.h Rano_post.h tls_module/tls_module.h
 Rano_htp_modifier.obj: Rano_htp_modifier.h
 Rano_log.obj: Rano_log.h
 Rano_module.obj: Rano_module.h Rano_module_ary.h Rano_log.h Rano_myf.h Rano_txt_filter.h Rano_plugin_dev.h Rano_parent_proxy.h Rano_file_info.h
@@ -155,3 +172,5 @@ Rano_parent_proxy.obj: Rano_parent_proxy.h Rano_log.h
 Rano_post.obj: Rano_post.h
 Rano_sset.obj: Rano_sset.h
 Rano_txt_filter.obj: Rano_txt_filter.h
+Rano_vtag_util.obj: Rano_vtag_util.h
+tls_module/tls_module.obj: tls_module/tls.h

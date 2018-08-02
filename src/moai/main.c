@@ -1,10 +1,19 @@
+/***
+ * Moai-Engine Ver2.1
+ * -- CipherAgent --
+ */
 #include "Moai_server.h"
+
+#include <Rano_vtag_util.h>
 
 #include <Znk_zlib.h>
 #include <Znk_stdc.h>
 #include <Znk_bfr.h>
 #include <Znk_s_base.h>
 #include <Znk_htp_util.h>
+#include <Znk_process.h>
+#include <Znk_dir.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -41,7 +50,7 @@ dumpFile_toBase64( const char* in_filename, const char* out_filename )
 	}
 }
 
-int main(int argc, char **argv)
+int main( int argc, char** argv )
 {
 	int           result              = EXIT_FAILURE;
 	MoaiRASResult ras_result          = MoaiRASResult_e_Ignored;
@@ -93,6 +102,53 @@ int main(int argc, char **argv)
 			break;
 		}
 	}
+
+	/***
+	 * 代替プロセス birdman に制御を移す.
+	 * birdman では主にMoai本体のアップグレードに伴うバージョンのチェック、
+	 * zipファイルのダウンロードと解凍、ファイルのコピーを行い、
+	 * それが完了したらMoaiプロセスを復活させる.
+	 * (このとき moai 本体をも書き換える状況に対応するため、moaiプロセスを一旦終了する必要がある)
+	 */
+	if( ras_result == MoaiRASResult_e_RestartProcess ){
+		ZnkStr curdir_save = ZnkStr_new( "" );
+		ZnkDir_getCurrentDir( curdir_save );
+		ZnkDir_changeCurrentDir( "birdman" );
+		{
+			ZnkStr birdman_path = ZnkStr_new( "" );
+			ZnkStr ermsg = ZnkStr_new( "" );
+			if( RanoVTagUtil_getPatchDir( birdman_path, "moai", true, "birdman", "tmp/" ) ){
+				/* この辺りの不統一性は美しくないがとりあえず */
+				ZnkStr_add( birdman_path, "/birdman/birdman.exe" );
+				if( ZnkDir_getType( ZnkStr_cstr(birdman_path) ) == ZnkDirType_e_File ){
+					if( ZnkDir_copyFile_byForce( ZnkStr_cstr(birdman_path), "birdman.exe", ermsg ) ){
+					}
+				}
+				ZnkStr_add( birdman_path, "/birdman/birdman" );
+				if( ZnkDir_getType( ZnkStr_cstr(birdman_path) ) == ZnkDirType_e_File ){
+					if( ZnkDir_copyFile_byForce( ZnkStr_cstr(birdman_path), "birdman", ermsg ) ){
+						system( "chmod 755 birdman" );
+					}
+				}
+			}
+			ZnkStr_delete( birdman_path );
+			ZnkStr_delete( ermsg );
+		}
+		ZnkDir_changeCurrentDir( ZnkStr_cstr(curdir_save) );
+		ZnkStr_delete( curdir_save );
+
+		/* authentic_key.datの内容の継続を要求する */
+		{
+			ZnkFile fp = Znk_fopen( "__authentic_key_reuse__", "wb" );
+			if( fp ){
+				Znk_fputs( "__authentic_key_reuse__", fp );
+				Znk_fflush( fp );
+				Znk_fclose( fp );
+			}
+		}
+		goto FUNC_END;
+	}
+
 	if( ras_result != MoaiRASResult_e_CriticalError ){
 		result = EXIT_SUCCESS;
 	}
@@ -103,6 +159,13 @@ FUNC_END:
 		CloseHandle( hmtx );
 	}
 #endif
+
+	/* このプロセスそのものを入れ替える(子プロセスを起動するのではない) */
+	if( ras_result == MoaiRASResult_e_RestartProcess ){
+		const char* birdman[] = { "birdman", "upgrade_apply" };
+		ZnkDir_changeCurrentDir( "birdman" );
+		ZnkProcess_execRestart( 2, birdman, ZnkProcessConsole_e_Detached );
+	}
 
 	return result;
 }

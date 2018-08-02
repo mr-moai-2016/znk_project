@@ -36,12 +36,12 @@ ABINAME = cygwin$(MACHINE)$(DEBUG)
 O = ./out_dir/$(ABINAME)
 
 ifeq ($(DEBUG), d)
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)d
 SLIBS_DIR=slib/$(PLATFORM)d
 else
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)
 SLIBS_DIR=slib/$(PLATFORM)
@@ -67,13 +67,17 @@ OBJS0=\
 
 SUB_LIBS=\
 
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
+
 PRODUCT_DLIBS= \
 	__mkg_sentinel_target__ \
 	$(DLIB_FILE0) \
 
 RUNTIME_FILES= \
 	__mkg_sentinel_target__ \
-	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/cygZnk.dll \
+	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/cygZnk-$(DL_VER).dll \
 
 
 
@@ -88,18 +92,20 @@ $O:
 # Product files rule.
 $(SLIB_FILE0): $(OBJS0)
 	if test -e $(SLIB_FILE0) ; then rm -f $(SLIB_FILE0) ; fi
-	ar cru $(SLIB_FILE0) $(OBJS0) $(SUB_LIBS)
+	@echo ar cru $(SLIB_FILE0) {[objs]} $(SUB_OBJS_ECHO)
+	@     ar cru $(SLIB_FILE0) $(OBJS0) $(SUB_OBJS)
 	ranlib $(SLIB_FILE0)
 
 gsl.myf: $(SLIB_FILE0)
-	if test -e $(MKFSYS_DIR)/gslconv.exe ; then $(MKFSYS_DIR)/gslconv.exe -g gsl.myf $(SLIB_FILE0) $(MACHINE) ; fi
+	if test -e $(MKFSYS_DIR)/$(PLATFORM)/gslconv.exe ; then $(MKFSYS_DIR)/$(PLATFORM)/gslconv.exe -g gsl.myf $(SLIB_FILE0) $(MACHINE) ; fi
 
 gsl.def: gsl.myf
-	if test -e $(MKFSYS_DIR)/gslconv.exe ; then $(MKFSYS_DIR)/gslconv.exe -d gsl.myf gsl.def ; fi
+	if test -e $(MKFSYS_DIR)/$(PLATFORM)/gslconv.exe ; then $(MKFSYS_DIR)/$(PLATFORM)/gslconv.exe -d gsl.myf gsl.def ; fi
 
-$(DLIB_FILE0): $(OBJS0)
+$(DLIB_FILE0): $(OBJS0) $(SLIB_FILE0)
 	if test -e $(DLIB_FILE0) ; then rm -f $(DLIB_FILE0); fi
-	gcc -shared -o $(DLIB_FILE0) $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk.dll -lpthread -ldl -lstdc++  -lc
+	@echo gcc -shared -o $(DLIB_FILE0) {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll -lpthread -ldl -lstdc++  -lc
+	@     gcc -shared -o $(DLIB_FILE0) $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll -lpthread -ldl -lstdc++  -lc
 
 
 ##
@@ -147,9 +153,8 @@ install: all install_dlib
 
 # Clean rule.
 clean:
-	rm -r $O/ 
+	rm -rf $O/ 
 
 # Src and Headers Dependency
-dll_main.o:
 init.o: Moai_plugin_dev.h
 main.o: Moai_plugin_dev.h

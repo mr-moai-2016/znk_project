@@ -19,12 +19,12 @@ ABINAME=mingw$(MACHINE)$(DEBUG)
 O = ./out_dir/$(ABINAME)
 
 ifeq ($(DEBUG), d)
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)_mingwd
 SLIBS_DIR=slib/$(PLATFORM)_mingwd
 else
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)
 SLIBS_DIR=slib/$(PLATFORM)
@@ -50,6 +50,10 @@ OBJS0=\
 
 SUB_LIBS=\
 
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
+
 PRODUCT_DLIBS= \
 	__mkg_sentinel_target__ \
 	$(DLIB_FILE0) \
@@ -71,17 +75,19 @@ $O:
 # Product files rule.
 $(SLIB_FILE0): $(OBJS0)
 	if test -e $(SLIB_FILE0) ; then rm -f $(SLIB_FILE0); fi
-	ar cru $(SLIB_FILE0) $(OBJS0) $(SUB_LIBS)
+	@echo ar cru $(SLIB_FILE0) {[objs]} $(SUB_OBJS_ECHO)
+	@     ar cru $(SLIB_FILE0) $(OBJS0) $(SUB_OBJS)
 	ranlib $(SLIB_FILE0)
 
 gsl.myf: $(SLIB_FILE0)
-	if test -e $(MKFSYS_DIR)/gslconv.exe ; then $(MKFSYS_DIR)/gslconv.exe -g gsl.myf $(SLIB_FILE0) $(MACHINE) ; fi
+	if test -e $(MKFSYS_DIR)/$(PLATFORM)/gslconv.exe ; then $(MKFSYS_DIR)/$(PLATFORM)/gslconv.exe -g gsl.myf $(SLIB_FILE0) $(MACHINE) ; fi
 
 gsl.def: gsl.myf
-	if test -e $(MKFSYS_DIR)/gslconv.exe ; then $(MKFSYS_DIR)/gslconv.exe -d gsl.myf gsl.def ; fi
+	if test -e $(MKFSYS_DIR)/$(PLATFORM)/gslconv.exe ; then $(MKFSYS_DIR)/$(PLATFORM)/gslconv.exe -d gsl.myf gsl.def ; fi
 
 $(DLIB_FILE0): $(OBJS0) $(SLIB_FILE0) gsl.def
-	gcc -static-libgcc -g -Wl,--disable-stdcall-fixup,--kill-at -shared -o $(DLIB_FILE0) $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a -lws2_32  gsl.def
+	@echo gcc -static-libgcc -g -Wl,--disable-stdcall-fixup,--kill-at -shared -o $(DLIB_FILE0) {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a -lws2_32  gsl.def
+	@     gcc -static-libgcc -g -Wl,--disable-stdcall-fixup,--kill-at -shared -o $(DLIB_FILE0) $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a -lws2_32  gsl.def
 	dlltool --kill-at --dllname $(DLIB_FILE0) -d gsl.def -l $(ILIB_FILE0)
 
 
@@ -130,9 +136,8 @@ install: all install_dlib
 
 # Clean rule.
 clean:
-	rm -r $O/ 
+	rm -rf $O/ 
 
 # Src and Headers Dependency
-dll_main.o:
 init.o: Moai_plugin_dev.h
 main.o: Moai_plugin_dev.h

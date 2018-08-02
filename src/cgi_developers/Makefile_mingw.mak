@@ -17,12 +17,12 @@ ABINAME=mingw$(MACHINE)$(DEBUG)
 O = .\out_dir\$(ABINAME)
 
 ifeq ($(DEBUG), d)
-COMPILER=gcc -Wall -Wstrict-aliasing=2 -g
+COMPILER=gcc -Wall -Wstrict-aliasing=2 -g 
 LINKER=gcc
 DLIBS_DIR=dlib\$(PLATFORM)_mingwd
 SLIBS_DIR=slib\$(PLATFORM)_mingwd
 else
-COMPILER=gcc -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG
+COMPILER=gcc -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG 
 LINKER=gcc
 DLIBS_DIR=dlib\$(PLATFORM)
 SLIBS_DIR=slib\$(PLATFORM)
@@ -99,6 +99,10 @@ OBJS9=\
 
 SUB_LIBS=\
 
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
+
 PRODUCT_EXECS= \
 	__mkg_sentinel_target__ \
 	$(EXE_FILE0) \
@@ -147,34 +151,44 @@ $O:
 
 # Product files rule.
 $(EXE_FILE0): $(OBJS0) 
-	$(LINKER) -o $(EXE_FILE0)  $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@echo $(LINKER) -o $(EXE_FILE0)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@     $(LINKER) -o $(EXE_FILE0)  $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
 
 $(EXE_FILE1): $(OBJS1) 
-	$(LINKER) -o $(EXE_FILE1)  $(OBJS1) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@echo $(LINKER) -o $(EXE_FILE1)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@     $(LINKER) -o $(EXE_FILE1)  $(OBJS1) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
 
 $(EXE_FILE2): $(OBJS2) 
-	$(LINKER) -o $(EXE_FILE2)  $(OBJS2) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@echo $(LINKER) -o $(EXE_FILE2)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@     $(LINKER) -o $(EXE_FILE2)  $(OBJS2) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
 
 $(EXE_FILE3): $(OBJS3) 
-	$(LINKER) -o $(EXE_FILE3)  $(OBJS3) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@echo $(LINKER) -o $(EXE_FILE3)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@     $(LINKER) -o $(EXE_FILE3)  $(OBJS3) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
 
 $(EXE_FILE4): $(OBJS4) 
-	$(LINKER) -o $(EXE_FILE4)  $(OBJS4) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@echo $(LINKER) -o $(EXE_FILE4)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@     $(LINKER) -o $(EXE_FILE4)  $(OBJS4) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
 
 $(EXE_FILE5): $(OBJS5) 
-	$(LINKER) -o $(EXE_FILE5)  $(OBJS5) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@echo $(LINKER) -o $(EXE_FILE5)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@     $(LINKER) -o $(EXE_FILE5)  $(OBJS5) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
 
 $(EXE_FILE6): $(OBJS6) 
-	$(LINKER) -o $(EXE_FILE6)  $(OBJS6) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@echo $(LINKER) -o $(EXE_FILE6)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@     $(LINKER) -o $(EXE_FILE6)  $(OBJS6) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
 
 $(EXE_FILE7): $(OBJS7) 
-	$(LINKER) -o $(EXE_FILE7)  $(OBJS7) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@echo $(LINKER) -o $(EXE_FILE7)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@     $(LINKER) -o $(EXE_FILE7)  $(OBJS7) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
 
 $(EXE_FILE8): $(OBJS8) 
-	$(LINKER) -o $(EXE_FILE8)  $(OBJS8) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@echo $(LINKER) -o $(EXE_FILE8)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@     $(LINKER) -o $(EXE_FILE8)  $(OBJS8) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
 
 $(EXE_FILE9): $(OBJS9) 
-	$(LINKER) -o $(EXE_FILE9)  $(OBJS9) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@echo $(LINKER) -o $(EXE_FILE9)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
+	@     $(LINKER) -o $(EXE_FILE9)  $(OBJS9) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a
 
 
 ##
@@ -204,10 +218,13 @@ __mkg_sentinel_target__:
 # Install data rule.
 install_data:
 	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\cgi_developers\publicbox @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\cgi_developers\publicbox 
+	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\cgi_developers\protected @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\cgi_developers\protected 
 	@if exist "*.c" @$(CP) /F "*.c" ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\cgi_developers\publicbox\ $(CP_END)
 	@if exist "*.cpp" @$(CP) /F "*.cpp" ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\cgi_developers\publicbox\ $(CP_END)
 	@if exist "*.html" @$(CP) /F "*.html" ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\cgi_developers\publicbox\ $(CP_END)
 	@if exist "*.js" @$(CP) /F "*.js" ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\cgi_developers\publicbox\ $(CP_END)
+	@if exist "*.go" @$(CP) /F "*.go" ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\cgi_developers\publicbox\ $(CP_END)
+	@if exist "*.go" @$(CP) /F "*.go" ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\cgi_developers\protected\ $(CP_END)
 
 # Install exec rule.
 install_exec: $(EXE_FILE0) $(EXE_FILE1) $(EXE_FILE2) $(EXE_FILE3) $(EXE_FILE4) $(EXE_FILE5) $(EXE_FILE6) $(EXE_FILE7) $(EXE_FILE8) $(EXE_FILE9)
@@ -235,17 +252,12 @@ install: all install_exec install_data
 
 # Clean rule.
 clean:
-	del /Q $O\ 
+	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
 cgi_util.o: cgi_util.h
 evar1.o: cgi_util.h
-evar2.o:
 hello.o: cgi_util.h
-hello_template.o:
 post1.o: cgi_util.h
-post2.o:
-progress.o:
 query_string1.o: cgi_util.h
-query_string2.o:
 transfer_chunked.o: cgi_util.h

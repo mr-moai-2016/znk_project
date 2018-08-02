@@ -8,29 +8,30 @@
 </head>
 <body>
 <a name=TopBar></a>
-<p><b><img src="/imgs/here_landmark.png"> Moai2.0ドキュメント</b></p>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter エキスパートマニュアル</b></p>
 
 <a class=MstyElemLink href="/">トップページ</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/index.html">Moai2.0ドキュメント</a> &nbsp;
-<a class=MstyElemLink        href="/moai1.1/index.html">Moai1.1ドキュメント</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
+<a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
-<a class=MstyElemLink        href="/moai2.0/install.html">インストールガイド</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_reference.html">Moai本体</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/customboy_reference.html">CustomBoy</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index_expert.html">ご案内</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_reference.html">Moaiエンジン</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/customboy_reference.html">CustomBoyエンジン</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
 <br> <br>
 <a class=MstyNowSelectedLink href="/moai2.0/customboy_reference.html">Overview and Tutorial</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/customboy_hints_Cookie.html">Cookie Hints</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/customboy_hints_PostVars.html">PostVars Hints</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/customboy_hints_Fingerprint.html">Fingerprint Hints</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/customboy_hints_Snippet.html">Snippet Hints</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/customboy_hints_Cookie.html">Cookie Hints</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/customboy_hints_PostVars.html">PostVars Hints</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/customboy_hints_Fingerprint.html">Fingerprint Hints</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/customboy_hints_Snippet.html">Snippet Hints</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/futaba_note.html">Futaba Note</a> &nbsp;
 <br> <br>
 
 <div class=MstyComment>
-<u><b>記事担当者</b></u> : 高速ヤキソバ変換<br> 
+<u><b>記事担当者</b></u> : 高速ヤキソバ変換<br>
 <br>
 <u><b>最終更新日</b></u> : 2017/12/29<br>
 <br>
@@ -51,7 +52,10 @@
 
 
 <a name=Index></a>
-<u><b>目次</b></u>
+<u><b>
+目次
+</b></u><br>
+<br>
 <ul>
 	<li><b><a class=MstyElemLink href=#CustomBoy>Overview of CustomBoy</a></b></li>
 	<li><b><a class=MstyElemLink href=#CustomUSERS>CustomUSERS：Tutorial of Customize for your User-Agent and all Post variables</a></b></li>
@@ -72,10 +76,14 @@ Overview of CustomBoy
 	さらにCustomFeatureでは、その際に参照するMachine/Browser固有の各要素値をexplicitに上書き指定可能であり、生成されるFingerprint値の究極なるCutomizeを行うができる.<br>
 	CustomBoyは以下の３つのUIをあなたに提供する.<br>
 	<ul>
-		<li>CustomUSERS</li>
-		<li>CustomCookie</li>
-		<li>CustomFeature</li>
+		<li>CustomUSERS<br>
+		</li>
+		<li>CustomCookie<br>
+		</li>
+		<li>CustomFeature<br>
+		</li>
 	</ul>
+	<br>
 	<div class=MstyComment>
 		正確に言えばVirtualUSERSもCustomBoyの一機能として実装されていますが、ここでは別枠扱いとします.<br>
 	</div>
@@ -98,14 +106,17 @@ CustomUSERS：Tutorial of Customize for your User-Agent and all Post variables
 	<ol>
 		<li><b>Step1</b>ボタンにより仮想環境を構築する.<br>
 		このときCustomUSERSにおいてほぼすべての情報の構築は自動的に完了しており、<br>
-		一連の情報は選択された環境Categoryに矛盾しないよう適切にセットされている.</li>
+		一連の情報は選択された環境Categoryに矛盾しないよう適切にセットされている.<br>
+		</li>
 		<br>
 		<li>このままの状態でも全く構わないと思うが、さらに各固有の値に拘りのある方は、<br>
 		これを微調整して修正した上で<b>UA/Post変数の更新</b>ボタンを押す.<br>
-		これによりその調整が反映されたUA/Post変数がセットされる.<br></li>
+		これによりその調整が反映されたUA/Post変数がセットされる.<br>
+		</li>
 		<br>
 		<li><b>Step2</b>ボタンを押すことで最終状態を確定させる.<br>
-		これで完了である.</li>
+		これで完了である.<br>
+		</li>
 	</ol>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
@@ -129,7 +140,8 @@ CustomCookie：Tutorial of Customize for your all Cookie values
 		<li>Cookie値の書き換えが終わったら、<b>上記で強制書き換え</b>ボタンを押す.<br>
 		「空値のものは項目自体を消去」にチェックを入れてこのボタンを押せば、<br>
 		読んで字のごとく値が空のCookieの項目については、その項目そのものを消去できる.<br>
-		これで完了である.</li>
+		これで完了である.<br>
+		</li>
 	</ol>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
@@ -147,17 +159,20 @@ CustomFeature：Tutorial of Customize for your all Fingerprint values
 	Tutorialとして次の手順をご紹介しよう.<br>
 	<ol>
 		<li><b>Step1</b>ボタンにより仮想環境を構築する.<br>
-		このときCustomFeatureにおいてほぼすべての情報の構築は自動的に完了しており、
-		一連の情報は選択された環境Categoryに矛盾しないよう適切にセットされている.</li>
+		このときCustomFeatureにおいてほぼすべての情報の構築は自動的に完了しており、<br>
+		一連の情報は選択された環境Categoryに矛盾しないよう適切にセットされている.<br>
+		</li>
 		<br>
 		<li>このままの状態でも全く構わないと思うが、さらに各固有の値に拘りのある方は、<br>
 		画面の下の方にある<b>UA/POST変数生成のためのFingerprint設定</b>と<b>UA/POST変数生成のためのSnippet(Javascriptによる判定コード)設定</b>の各値を修正する.<br>
 		これらの値の意味は、各値のリンクをクリックしていだだければヒントページが表示されるので参考にして頂きたい.<br>
 		これを微調整して修正した上で<b>UA/Post変数の更新</b>ボタンを押す.<br>
-		これによりその調整が反映されたUA/Post変数がセットされる.<br></li>
+		これによりその調整が反映されたUA/Post変数がセットされる.<br>
+		</li>
 		<br>
 		<li><b>Step2</b>ボタンを押すことで最終状態を確定させよう.<br>
-		これで完了である.</li>
+		これで完了である.<br>
+		</li>
 	</ol>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
@@ -165,12 +180,17 @@ CustomFeature：Tutorial of Customize for your all Fingerprint values
 <br>
 
 
-<u><b>リンク</b></u>
+<a name=Link></a>
+<u><b>
+リンク
+</b></u><br>
+<br>
 <ul>
-	<li><a class=MstyElemLink href="#TopBar">一番上へ</a></li>
-	<li><a class=MstyElemLink href="https://mr-moai-2016.github.io">Moaiドキュメント(オンライン)</a></li>
-	<li><a class=MstyElemLink href="https://github.com/mr-moai-2016/znk_project">znk_project(github)</a></li>
+	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
+	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project>znk_project(github)</a></li>
 </ul><br>
+
 
 </body>
 </html>

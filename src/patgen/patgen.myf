@@ -1,0 +1,30 @@
+@def_quote [' ']
+
+@@L platform_deps
+*.exe
+*.dll
+*.so
+*.cgi
+moai
+birdman/birdman
+@@.
+
+@@L ignore_list
+*.suo
+*.swp
+authentic_key.dat
+tmp
+filters
+filters/*.myf
+doc_root/state.dat
+cgis/easter/cache_task_lasttime.dat
+cgis/easter/recentory.myf
+cgis/easter/tmp
+cgis/easter/publicbox/state/*
+cgis/easter/dustbox
+cgis/easter/cachebox
+cgis/custom_boy/tmp
+cgis/custom_boy/cachebox
+cgis/cgi_developers/publicbox/state.dat
+birdman/tmp
+@@.

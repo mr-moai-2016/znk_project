@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<link href="/msty.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<a name=TopBar></a>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter ユーザーマニュアル</b></p>
+
+<a class=MstyElemLink href="/">トップページ</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
+<a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
+<br> <br>
+<a class=MstyElemLink href="/moai2.0/index.html">ご案内</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/install.html">インストールガイド</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/moai_feature.html">Moaiの特徴</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/upgrade.html">Moaiのアップグレード方法</a> &nbsp;
+<br> <br>
+
+<div class=MstyComment>
+<u><b>記事担当者</b></u> : Mr.Moai<br>
+<br>
+<u><b>最終更新日</b></u> : 2018/03/25<br>
+<br>
+</div>
+<br>
+
+
+<a name=AtFirst></a>
+<u><b>
+はじめに
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	この記事ではMoaiの特徴について列挙してあります.<br>
+</div><br>
+<br>
+
+
+<a name=Index></a>
+<u><b>
+目次
+</b></u><br>
+<br>
+<ul>
+	<li><b><a class=MstyElemLink href=#AboutFunctions>機能面</a></b></li>
+	<li><b><a class=MstyElemLink href=#AboutSecurity>安全性</a></b></li>
+	<li><b><a class=MstyElemLink href=#AboutTransparency>処理の透明性、移植性、および動作環境</a></b></li>
+</ul><br>
+
+
+<a name=AboutFunctions></a>
+<u><b>
+機能面
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	機能的な面に関しては以下の点が挙げられます.<br>
+	<ul>
+		<li><b>MoaiCGI</b><br>
+		以下に挙げるCGIアプリケーションを実現するための下地となるWebサーバ機能を提供します.<br>
+		(Moaiエンジンの機能)<br>
+		</li>
+<br>
+		<li><b>仮想ブラウザ環境を瞬時に構築</b><br>
+		あなたのブラウザ環境を瞬時に仮想化、ランダマイズ化できます.<br>
+		(VirtualUSERSの機能) <a class=MstyElemLink href=/moai2.0/virtual_users.html>詳細</a><br>
+		</li>
+<br>
+		<li><b>仮想ブラウジング</b><br>
+		VirtualUSERSにより仮想化したブラウザ環境にて掲示板などを閲覧、レス投稿やスレ立てができます.<br>
+		Moai Ver2.1以降ではHTTPSのサイトでも閲覧が可能になりました.<br>
+		(Easterの機能) <a class=MstyElemLink href=/moai2.0/easter_reference.html>詳細</a><br>
+		</li>
+<br>
+		<li><b>添付URL</b><br>
+		画像掲示板への添付画像の投稿時、ネット上に存在する画像のURLを指定してその画像を直接投稿することができます.<br>
+		(Easter HyperPostの機能) <a class=MstyElemLink href=/moai2.0/easter_reference.html#EasterHyperPost>詳細</a><br>
+		</li>
+<br>
+		<li><b>Moaiアップグレード</b><br>
+		Moai Ver2.1からの新機能となります.<br>
+		Moaiエンジン設定より、ボタン一つで最新バージョンへアップグレード可能かどうかの確認が行えます.<br>
+		またそれが可能ならば、Moaiシステム全体の自動的なアップグレードも行います.<br>
+		(Birdmanの機能).<br>
+		</li>
+<br>
+		<li><b>画像管理</b><br>
+		画像掲示板で閲覧した画像の一時キャッシュ機能(デフォルトでは３日程度保持)、<br>
+		画像のお気に入りへの分類やタグ付け、重複保存のチェック、保存した大量の画像の中から所望の画像を検索、<br>
+		検索により抽出した画像をページ毎に閲覧するなど各種画像管理が行えます.<br>
+		(Easterコレクションの機能) <a class=MstyElemLink href=/moai2.0/easter_collection.html>詳細</a><br>
+		</li>
+		<br>
+		<li><b>広告のブロック</b><br>
+		GET時(単純にページ閲覧時など)における文字列置換フィルタリングが容易に行えます.<br>
+		hosts.myfによりignore_hostsに通信をブロックしたいホストを記述しておくことで余計な通信を未然に防ぎます.<br>
+		結果的に表示が高速化される効果もあります. <a class=MstyElemLink href=/moai2.0/moai_reference.html#ignore_hosts>詳細</a><br>
+		これらを応用し、広告ブロックなどが実現できます(デフォルトではブロックされるように設定してあります).<br>
+		またpluginを導入することによりさらに高度で自由なフィルタリングを行うこともできます.<br>
+		(Moaiエンジンの機能).<br>
+		</li>
+		<br>
+		<li><b>POSTデータの解析と究極的なカスタマイズ</b><br>
+		POST時(掲示板投稿時など)、送信される全ヘッダおよびPOST変数データの確認表示が可能で<br>
+		そのとき実際に何が送信されているのかを解析するのに最適です.<br>
+		(Easter HyperPostの機能).<br>
+		また、POST時における HTTPヘッダ、クッキー、POST変数に関する値を改変するなどが容易に行えます.<br>
+		(CustomBoy CustomUSERS、CustomCookieの機能).<br>
+		pluginを導入することによりさらに高度で自由なフィルタリングを行うこともできます.<br>
+		(Moaiエンジンの機能).<br>
+		</li>
+<br>
+		<li><b>外部プロキシの指定</b><br>
+		Moaiエンジン設定より、外部プロキシサーバを経由して接続するようMoaiに指示することができます.<br>
+		(Moaiエンジン本体の機能)<br>
+		またこのとき指定する外部プロキシサーバのいくつかの候補を自動的に取得することもできます.<br>
+		(ProxyFinderの機能)<br>
+		</li>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=AboutSecurity></a>
+<u><b>
+安全性
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	Moai+Easterでは、その安全性にも万全を期してあります.<br>
+<br>
+	Easterは一般のブラウザが行うような外部サイトへのアクセスならびにキャッシュ管理システムを完備しています.<br>
+	キャッシュとはつまり外部サイトにあるHTMLをそのまま持ってきたものですから、その内容には危険性を孕みます.<br>
+	そこでMoai+Easterでは、このような危険性を孕むHTMLについてはXhrDMZと呼ばれるオリジンに隔離して表示します.<br>
+	これによりこの種の危険性がMoai+Easterシステム全体に波及する可能性を確実に排除できます.<br>
+<br>
+	XhrDMZの詳細については<a class=MstyElemLink href=/moai2.0/moai_reference.html#XhrDMZ>こちら</a>をご覧下さい.<br>
+	ただしこの記事の内容はかなり難しいですし、Moaiを普通に使う上でXhrDMZの詳細を知っておく必要も全くありません.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=AboutTransparency></a>
+<u><b>
+処理の透明性、移植性、および動作環境
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	処理の透明性、安全性、移植性、および動作環境に関して以下の点が挙げられます.<br>
+	<ul>
+		<li>Moaiは完全なオープンソースであり、ブラックボックスな部分は一切存在しません.<br>
+		</li>
+		<br>
+		<li>使用ライセンスは<a class=MstyElemLink href=http://www.kmonos.net/nysl target=_blank>NYSL</a>(煮るなり焼くなり好きにしろ)となります.<br>
+		このライセンスは多分世の中に存在するあらゆるライセンスの中でもっとも制限のないものと思われます.<br>
+		</li>
+		<br>
+		<li>この種の処理を実現するためのコードとしては同種のものと比べかなりコンパクトです.<br>
+		必要最小限に絞られており見通しが立ちやすいと思われます.<br>
+		これにより、未知の不具合により潜在的なセキュリティーホールを含むリスクを抑えられます.<br>
+		</li>
+		<br>
+		<li>コードはCで記述されており、使用している外部のライブラリは基本ライブラリであるlibZnkとlibRanoです.<br>
+		(これらのライブラリもすべてオープンソースです). 従って問題発生時に比較的追跡がしやすいと思われます.<br>
+		</li>
+		<br>
+		<li>コンパイルが比較的容易です(VCのほぼ全バージョン、MinGW、gccなどでコンパイル可能).<br>
+		</li>
+		<br>
+		<li>実行バイナリはWindowsやLinuxやAndroidで動作します.<br>
+		Cygwinでもコンパイル可能です.<br>
+		MacOSやiPhoneでは残念ながらサポートされていません.<br>
+		</li>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=Link></a>
+<u><b>
+リンク
+</b></u><br>
+<br>
+<ul>
+	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
+	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project>znk_project(github)</a></li>
+</ul><br>
+
+
+</body>
+</html>

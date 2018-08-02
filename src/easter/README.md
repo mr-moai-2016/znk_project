@@ -3,7 +3,7 @@
 
 ## brief
 -----------------------------------
-  Easter is a client-viewer system on your virtual browser environment of Moai Ver2.0 filters.
+  Easter is a client-viewer system on your virtual browser environment of Moai Ver2.1 filters.
   You can also manage your image collections gotten from Image BBS,
 
 ## auther

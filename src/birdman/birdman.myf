@@ -1,0 +1,7 @@
+@def_quote [' ']
+
+@@V config
+tls_module = ['../libtls-17']
+cert_pem   = ['../cert.pem']
+@@.
+

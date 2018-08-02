@@ -57,6 +57,27 @@ ZnkStrPath_convertCygDrive_toDosDrive( ZnkStr path );
 bool
 ZnkStrPath_searchParentDir( ZnkStr ans_dir, size_t depth, const char* landmark, ZnkDirType landmark_type, char dsp );
 
+/**
+ * @brief:
+ * ans_dirの最後の文字列が dsp である場合はそれをカットする.
+ * dsp が連続して続く場合にも対応する.
+ */
+Znk_INLINE void
+ZnkStrPath_cutLastDSP( ZnkStr ans_dir ){
+	while( ZnkStr_last( ans_dir ) == '/' || ZnkStr_last( ans_dir ) == '\\' ){
+		ZnkStr_cut_back_c( ans_dir );
+	}
+}
+/**
+ * @brief:
+ * ans_dirの最後の文字列、指定した dsp となるように矯正する.
+ */
+Znk_INLINE void
+ZnkStrPath_appendLastDSP( ZnkStr ans_dir, char dsp ){
+	ZnkStrPath_cutLastDSP( ans_dir );
+	ZnkStr_add_c( ans_dir, dsp );
+}
+
 Znk_EXTERN_C_END
 
 #endif /* INCLUDE_GUARD */

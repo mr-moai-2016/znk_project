@@ -51,6 +51,10 @@ OBJS0=\
 
 SUB_LIBS=\
 
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
+
 PRODUCT_DLIBS= \
 	__mkg_sentinel_target__ \
 	$(DLIB_FILE0) \
@@ -71,16 +75,18 @@ $O:
 
 # Product files rule.
 $(SLIB_FILE0): $(OBJS0)
-	LIB /NOLOGO /OUT:$(SLIB_FILE0) $(OBJS0) $(SUB_LIBS)
+	@echo LIB /NOLOGO /OUT:$(SLIB_FILE0) {[objs]} $(SUB_LIBS)
+	@     LIB /NOLOGO /OUT:$(SLIB_FILE0) $(OBJS0) $(SUB_LIBS)
 
 gsl.myf: $(SLIB_FILE0)
-	@if exist $(MKFSYS_DIR)\gslconv.exe $(MKFSYS_DIR)\gslconv.exe -g gsl.myf $(SLIB_FILE0) $(MACHINE)
+	@if exist $(MKFSYS_DIR)\$(PLATFORM)\gslconv.exe $(MKFSYS_DIR)\$(PLATFORM)\gslconv.exe -g gsl.myf $(SLIB_FILE0) $(MACHINE)
 
 gsl.def: gsl.myf
-	@if exist $(MKFSYS_DIR)\gslconv.exe $(MKFSYS_DIR)\gslconv.exe -d gsl.myf gsl.def
+	@if exist $(MKFSYS_DIR)\$(PLATFORM)\gslconv.exe $(MKFSYS_DIR)\$(PLATFORM)\gslconv.exe -d gsl.myf gsl.def
 
 $(DLIB_FILE0): $(OBJS0) $(SLIB_FILE0) gsl.def
-	$(LINKER) /DLL /OUT:$(DLIB_FILE0) /IMPLIB:$(ILIB_FILE0) $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib ws2_32.lib  /DEF:gsl.def
+	@echo $(LINKER) /DLL /OUT:$(DLIB_FILE0) /IMPLIB:$(ILIB_FILE0) {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib ws2_32.lib  /DEF:gsl.def
+	@     $(LINKER) /DLL /OUT:$(DLIB_FILE0) /IMPLIB:$(ILIB_FILE0) $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib ws2_32.lib  /DEF:gsl.def
 
 
 # Suffix rule.
@@ -119,9 +125,8 @@ install: all install_dlib
 
 # Clean rule.
 clean:
-	del /Q $O\ 
+	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-dll_main.obj:
 init.obj: Moai_plugin_dev.h
 main.obj: Moai_plugin_dev.h

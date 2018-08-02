@@ -1,6 +1,7 @@
 #include <Znk_str_ary.h>
 #include <Znk_missing_libc.h>
 #include <Znk_myf.h>
+#include <Znk_dir.h>
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -115,6 +116,14 @@ test_curpos( int* ans_selected_idx )
 			if( p ){
 				*p = '\0';
 				Znk_snprintf( myf_filename, sizeof(myf_filename), "%s\\auto_trigger.myf", execfile_path );
+				if( ZnkDir_getType( myf_filename ) != ZnkDirType_e_File ){
+					/* ‚à‚¤ˆê‚Âã‚ÌŠK‘w‚ÅƒŠƒgƒ‰ƒC */
+					p = strrchr( execfile_path, '\\' );
+					if( p ){
+						*p = '\0';
+						Znk_snprintf( myf_filename, sizeof(myf_filename), "%s\\auto_trigger.myf", execfile_path );
+					}
+				}
 			}
 		}
 	}

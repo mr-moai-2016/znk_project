@@ -8,29 +8,30 @@
 </head>
 <body>
 <a name=TopBar></a>
-<p><b><img src="/imgs/here_landmark.png"> Moai2.0ドキュメント</b></p>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter エキスパートマニュアル</b></p>
 
 <a class=MstyElemLink href="/">トップページ</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/index.html">Moai2.0ドキュメント</a> &nbsp;
-<a class=MstyElemLink        href="/moai1.1/index.html">Moai1.1ドキュメント</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
+<a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
-<a class=MstyElemLink        href="/moai2.0/install.html">インストールガイド</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_reference.html">Moai本体</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/customboy_reference.html">CustomBoy</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index_expert.html">ご案内</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_reference.html">Moaiエンジン</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/customboy_reference.html">CustomBoyエンジン</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
 <br> <br>
-<a class=MstyElemLink        href="/moai2.0/customboy_reference.html">Overview and Tutorial</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/customboy_hints_Cookie.html">Cookie Hints</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/customboy_hints_PostVars.html">PostVars Hints</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/customboy_reference.html">Overview and Tutorial</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/customboy_hints_Cookie.html">Cookie Hints</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/customboy_hints_PostVars.html">PostVars Hints</a> &nbsp;
 <a class=MstyNowSelectedLink href="/moai2.0/customboy_hints_Fingerprint.html">Fingerprint Hints</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/customboy_hints_Snippet.html">Snippet Hints</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/customboy_hints_Snippet.html">Snippet Hints</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/futaba_note.html">Futaba Note</a> &nbsp;
 <br> <br>
 
 <div class=MstyComment>
-<u><b>記事担当者</b></u> : 高速ヤキソバ変換<br> 
+<u><b>記事担当者</b></u> : 高速ヤキソバ変換<br>
 <br>
 <u><b>最終更新日</b></u> : 2017/10/05<br>
 <br>
@@ -50,274 +51,315 @@
 
 
 <a name=Index></a>
-<u><b>目次</b></u>
+<u><b>
+目次
+</b></u><br>
+<br>
 <ul>
-<li><b><a class=MstyElemLink href=#Fgp_userAgent>Fgp_userAgent</a></b></li>
-<li><b><a class=MstyElemLink href=#Fgp_language>Fgp_language</a></b></li>
-<li><b><a class=MstyElemLink href=#Fgp_colorDepth>Fgp_colorDepth</a></b></li>
-<li><b><a class=MstyElemLink href=#Fgp_ScreenResolution>Fgp_ScreenResolution</a></b></li>
-<li><b><a class=MstyElemLink href=#Fgp_TimezoneOffset>Fgp_TimezoneOffset</a></b></li>
-<li><b><a class=MstyElemLink href=#Fgp_SessionStorage>Fgp_SessionStorage</a></b></li>
-<li><b><a class=MstyElemLink href=#Fgp_LocalStorage>Fgp_LocalStorage</a></b></li>
-<li><b><a class=MstyElemLink href=#Fgp_IndexedDB>Fgp_IndexedDB</a></b></li>
-<li><b><a class=MstyElemLink href=#Fgp_BodyAddBehavior>Fgp_BodyAddBehavior</a></b></li>
-<li><b><a class=MstyElemLink href=#Fgp_OpenDatabase>Fgp_OpenDatabase</a></b></li>
-<li><b><a class=MstyElemLink href=#Fgp_CpuClass>Fgp_CpuClass</a></b></li>
-<li><b><a class=MstyElemLink href=#Fgp_Platform>Fgp_Platform</a></b></li>
-<li><b><a class=MstyElemLink href=#Fgp_doNotTrack>Fgp_doNotTrack</a></b></li>
-<li><b><a class=MstyElemLink href=#Fgp_PluginsString>Fgp_PluginsString</a></b></li>
-<li><b><a class=MstyElemLink href=#Fgp_Canvas>Fgp_Canvas</a></b></li>
+	<li><b><a class=MstyElemLink href=#Fgp_userAgent>Fgp_userAgent</a></b></li>
+	<li><b><a class=MstyElemLink href=#Fgp_language>Fgp_language</a></b></li>
+	<li><b><a class=MstyElemLink href=#Fgp_colorDepth>Fgp_colorDepth</a></b></li>
+	<li><b><a class=MstyElemLink href=#Fgp_ScreenResolution>Fgp_ScreenResolution</a></b></li>
+	<li><b><a class=MstyElemLink href=#Fgp_TimezoneOffset>Fgp_TimezoneOffset</a></b></li>
+	<li><b><a class=MstyElemLink href=#Fgp_SessionStorage>Fgp_SessionStorage</a></b></li>
+	<li><b><a class=MstyElemLink href=#Fgp_LocalStorage>Fgp_LocalStorage</a></b></li>
+	<li><b><a class=MstyElemLink href=#Fgp_IndexedDB>Fgp_IndexedDB</a></b></li>
+	<li><b><a class=MstyElemLink href=#Fgp_BodyAddBehavior>Fgp_BodyAddBehavior</a></b></li>
+	<li><b><a class=MstyElemLink href=#Fgp_OpenDatabase>Fgp_OpenDatabase</a></b></li>
+	<li><b><a class=MstyElemLink href=#Fgp_CpuClass>Fgp_CpuClass</a></b></li>
+	<li><b><a class=MstyElemLink href=#Fgp_Platform>Fgp_Platform</a></b></li>
+	<li><b><a class=MstyElemLink href=#Fgp_doNotTrack>Fgp_doNotTrack</a></b></li>
+	<li><b><a class=MstyElemLink href=#Fgp_PluginsString>Fgp_PluginsString</a></b></li>
+	<li><b><a class=MstyElemLink href=#Fgp_Canvas>Fgp_Canvas</a></b></li>
 </ul><br>
 
 
 <a name=Fgp_userAgent></a>
-<u><b>Fgp_userAgent</b></u>
-<span class=MstyAuthor> (Category: fingerprint)</span>
-<ul>
-	<font>
+<u><b>
+Fgp_userAgent
+</b></u><span class=MstyAuthor> (Category: fingerprint)</span><br>
+<br>
+<div class=MstyIndent>
 	<span class=MstyCode>navigator.userAgent</span>より取得されるいわゆるUser-Agent文字列である.<br>
+<br>
 	<div class=MstyComment>
 		現状のふたばのFingerprintの導出計算においてはこれは加味されていない.<br>
-		しかしUser-Agentの情報自体が参照されていないというわけではない.
+		しかしUser-Agentの情報自体が参照されていないというわけではない.<br>
 	</div>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Fgp_language></a>
-<u><b>Fgp_language</b></u>
-<span class=MstyAuthor> (Category: fingerprint)</span>
-<ul>
-	<font>
+<u><b>
+Fgp_language
+</b></u><span class=MstyAuthor> (Category: fingerprint)</span><br>
+<br>
+<div class=MstyIndent>
 	<span class=MstyCode>navigator.language</span>より取得されるいわゆるBrouserの言語情報を示す文字列である.<br>
 	日本語環境のBrowserの場合、ja、ja-JP、ja-jp、ja-JP-macなどの値を取るが、<br>
-	実際どのような値になるかはBrowserやその設定、システムのlocale設定などによっても様々となる場合がある.<br>
+	実際どのような値になるかはBrowserやその設定、システムのlocale設定などによっても様々となる.<br>
 	<br>
 	勿論例外もあるがおおよそ以下が目安である.<br>
+	<ul>
+		<li>Android: ja-JP</li>
+		<li>iPhone: ja-jp</li>
+		<li>Mac Firefox: ja-JP-mac</li>
+		<li>Mac safari: ja-jp</li>
+		<li>その他: ja</li>
+	</ul>
 	<br>
-	<li>Android: ja-JP</li>
-	<li>iPhone: ja-jp</li>
-	<li>Mac Firefox: ja-JP-mac</li>
-	<li>Mac safari: ja-jp</li>
-	<li>その他: ja</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Fgp_colorDepth></a>
-<u><b>Fgp_colorDepth</b></u>
-<span class=MstyAuthor> (Category: fingerprint)</span>
-<ul>
-	<font>
+<u><b>
+Fgp_colorDepth
+</b></u><span class=MstyAuthor> (Category: fingerprint)</span><br>
+<br>
+<div class=MstyIndent>
 	<span class=MstyCode>screen.colorDepth</span>より取得されるBrowserの色深度bit数を示す文字列である.<br>
-	32、24、16などの値を取るが、実際どのような値になるかはBrowserやその設定などによっても様々となる場合がある.<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	32、24、16などの値を取るが、実際どのような値になるかはBrowserやその設定などによっても様々となる.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Fgp_ScreenResolution></a>
-<u><b>Fgp_ScreenResolution</b></u>
-<span class=MstyAuthor> (Category: fingerprint)</span>
-<ul>
-	<font>
+<u><b>
+Fgp_ScreenResolution
+</b></u><span class=MstyAuthor> (Category: fingerprint)</span><br>
+<br>
+<div class=MstyIndent>
 	<span class=MstyCode>screen.width, screen.height</span>より取得されるモニタの解像度を示す二つの数字を文字xで連結した文字列である.<br>
 	順番はこれとは逆順になることもある.<br>
+<br>
 	<div class=MstyComment>
 		現状のふたばのFingerprintの導出計算においてはこれは加味されていない.<br>
 		しかしモニタの解像度情報が参照されていないというわけではない.<br>
 		Fingerprintとは別にscszというPost変数が存在しており、そちらを介して参照される.<br>
 	</div>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Fgp_TimezoneOffset></a>
-<u><b>Fgp_TimezoneOffset</b></u>
-<span class=MstyAuthor> (Category: fingerprint)</span>
-<ul>
-	<font>
+<u><b>
+Fgp_TimezoneOffset
+</b></u><span class=MstyAuthor> (Category: fingerprint)</span><br>
+<br>
+<div class=MstyIndent>
 	<span class=MstyCode>new Date().getTimezoneOffset()</span> により取得されるタイムゾーンを意味する(世界標準時からの)オフセット値を示す文字列である.<br>
-	日本ではこの値は必ず -540 固定と考えてよい.<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	日本ではこの値は必ず -540 になると考えてよい.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Fgp_SessionStorage></a>
-<u><b>Fgp_SessionStorage</b></u>
-<span class=MstyAuthor> (Category: fingerprint)</span>
-<ul>
-	<font>
+<u><b>
+Fgp_SessionStorage
+</b></u><span class=MstyAuthor> (Category: fingerprint)</span><br>
+<br>
+<div class=MstyIndent>
 	<span class=MstyCode>!!window.sessionStorage</span> というコードSnippetを実行した結果を示し、trueまたはfalseという文字列となる.<br>
 	そのBrowserにsessionStorage機構が存在するか否かを示す.<br>
 	Browserの対応状況は以下が目安である(MDNによる).<br>
+	<ul>
+		<li>Chrome: 5以上</li>
+		<li>Firefox(Gecko): 2以上</li>
+		<li>IE: 8以上</li>
+		<li>Opera: 10.50以上</li>
+		<li>Safari(Webkit): 4以上</li>
+		<li>Android: 2.1以上</li>
+		<li>Opera Mobile: 11以上</li>
+		<li>Safari Mobile: iOS 3.2以上</li>
+	</ul>
 	<br>
-	<li>Chrome: 5以上</li>
-	<li>Firefox(Gecko): 2以上</li>
-	<li>IE: 8以上</li>
-	<li>Opera: 10.50以上</li>
-	<li>Safari(Webkit): 4以上</li>
-	<li>Android: 2.1以上</li>
-	<li>Opera Mobile: 11以上</li>
-	<li>Safari Mobile: iOS 3.2以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Fgp_LocalStorage></a>
-<u><b>Fgp_LocalStorage</b></u>
-<span class=MstyAuthor> (Category: fingerprint)</span>
-<ul>
-	<font>
+<u><b>
+Fgp_LocalStorage
+</b></u><span class=MstyAuthor> (Category: fingerprint)</span><br>
+<br>
+<div class=MstyIndent>
 	<span class=MstyCode>!!window.localStorage</span> というコードSnippetを実行した結果を示し、trueまたはfalseという文字列となる.<br>
 	そのBrowserにlocalStorage機構が存在するか否かを示す.<br>
 	Browserの対応状況は以下が目安である(MDNによる).<br>
+	<ul>
+		<li>Chrome: 4以上</li>
+		<li>Firefox(Gecko): 3.5以上</li>
+		<li>IE: 8以上</li>
+		<li>Opera: 10.50以上</li>
+		<li>Safari(Webkit): 4以上</li>
+		<li>Android: 2.1以上</li>
+		<li>Opera Mobile: 11以上</li>
+		<li>Safari Mobile: iOS 3.2以上</li>
+	</ul>
 	<br>
-	<li>Chrome: 4以上</li>
-	<li>Firefox(Gecko): 3.5以上</li>
-	<li>IE: 8以上</li>
-	<li>Opera: 10.50以上</li>
-	<li>Safari(Webkit): 4以上</li>
-	<li>Android: 2.1以上</li>
-	<li>Opera Mobile: 11以上</li>
-	<li>Safari Mobile: iOS 3.2以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Fgp_IndexedDB></a>
-<u><b>Fgp_IndexedDB</b></u>
-<span class=MstyAuthor> (Category: fingerprint)</span>
-<ul>
-	<font>
+<u><b>
+Fgp_IndexedDB
+</b></u><span class=MstyAuthor> (Category: fingerprint)</span><br>
+<br>
+<div class=MstyIndent>
 	<span class=MstyCode>!!window.indexedDB</span> というコードSnippetを実行した結果を示し、trueまたはfalseという文字列となる.<br>
 	そのBrowserにindexedDB機構が存在するか否かを示す.<br>
 	Browserの対応状況は以下が目安である(MDNによる).<br>
+	<ul>
+		<li>Chrome: 23以上</li>
+		<li>Firefox(Gecko): 10以上</li>
+		<li>IE: 10以上</li>
+		<li>Opera: 15以上</li>
+		<li>Safari(Webkit): 7.1以上</li>
+		<li>Edge: OK</li>
+		<li>Android: 4.4以上</li>
+		<li>Firefox Mobile: 22以上</li>
+		<li>Firefox OS: 1.0.1以上</li>
+		<li>Opera Mobile: 22以上</li>
+		<li>Safari Mobile: 8以上</li>
+	</ul>
 	<br>
-	<li>Chrome: 23以上</li>
-	<li>Firefox(Gecko): 10以上</li>
-	<li>IE: 10以上</li>
-	<li>Opera: 15以上</li>
-	<li>Safari(Webkit): 7.1以上</li>
-	<li>Edge: OK</li>
-	<li>Android: 4.4以上</li>
-	<li>Firefox Mobile: 22以上</li>
-	<li>Firefox OS: 1.0.1以上</li>
-	<li>Opera Mobile: 22以上</li>
-	<li>Safari Mobile: 8以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Fgp_BodyAddBehavior></a>
-<u><b>Fgp_BodyAddBehavior</b></u>
-<span class=MstyAuthor> (Category: fingerprint)</span>
-<ul>
-	<font>
+<u><b>
+Fgp_BodyAddBehavior
+</b></u><span class=MstyAuthor> (Category: fingerprint)</span><br>
+<br>
+<div class=MstyIndent>
 	<span class=MstyCode>typeof(document.body.addBehavior)</span> というコードSnippetを実行した結果を示し、functionまたはobjectまたはundefinedという文字列となる.<br>
 	そのBrowserに<span class=MstyCode>document.body.addBehavior</span> メソッドが存在するか否かを示す.<br>
 	これはおそらくIE10以上にしか存在しない.<br>
+	<ul>
+		<li>IE10以上: functionを返す.</li>
+		<li>IE9以下: objectを返す.</li>
+		<li>その他: undefinedを返す.</li>
+	</ul>
 	<br>
-	<li>IE10以上: functionを返す.</li>
-	<li>IE9以下: objectを返す.</li>
-	<li>その他: undefinedを返す.</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Fgp_OpenDatabase></a>
-<u><b>Fgp_OpenDatabase</b></u>
-<span class=MstyAuthor> (Category: fingerprint)</span>
-<ul>
-	<font>
+<u><b>
+Fgp_OpenDatabase
+</b></u><span class=MstyAuthor> (Category: fingerprint)</span><br>
+<br>
+<div class=MstyIndent>
 	<span class=MstyCode>typeof(window.openDatabase)</span> というコードSnippetを実行した結果を示し、functionまたはundefinedという文字列となる.<br>
 	そのBrowserにHTML5 WebSQL Databaseがサポートされているか否かを示す.<br>
+	<ul>
+		<li>Chrome: 8以上か?</li>
+		<li>Firefox(Gecko): 未サポート(undefinedを返す)</li>
+		<li>IE: 未サポート(undefinedを返す)</li>
+		<li>Opera: 10.6以上か?</li>
+		<li>Safari: 3.1以上</li>
+		<li>Android: 2.1以上</li>
+	</ul>
 	<br>
-	<li>Chrome: 8以上か?</li>
-	<li>Firefox(Gecko): 未サポート(undefinedを返す)</li>
-	<li>IE: 未サポート(undefinedを返す)</li>
-	<li>Opera: 10.6以上か?</li>
-	<li>Safari: 3.1以上</li>
-	<li>Android: 2.1以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Fgp_CpuClass></a>
-<u><b>Fgp_CpuClass</b></u>
-<span class=MstyAuthor> (Category: fingerprint)</span>
-<ul>
-	<font>
+<u><b>
+Fgp_CpuClass
+</b></u><span class=MstyAuthor> (Category: fingerprint)</span><br>
+<br>
+<div class=MstyIndent>
 	<span class=MstyCode>navigator.cpuClass</span> より取得されるこのBrowserの動作しているMachineのCPU情報を示す文字列である.<br>
 	x86、PPC などを返すと言われているが、実際のところほとんどのケースで空値となっている.<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Fgp_Platform></a>
-<u><b>Fgp_Platform</b></u>
-<span class=MstyAuthor> (Category: fingerprint)</span>
-<ul>
-	<font>
+<u><b>
+Fgp_Platform
+</b></u><span class=MstyAuthor> (Category: fingerprint)</span><br>
+<br>
+<div class=MstyIndent>
 	<span class=MstyCode>navigator.platform</span> より取得されるこのBrowserの動作しているOS環境を示す文字列である.<br>
 	おおよそ以下が目安である.<br>
+	<ul>
+		<li>Windows32/WOW : Win32</li>
+		<li>Windows64     : Win64</li>
+		<li>Linux32   : Linux i686</li>
+		<li>Linux64   : Linux x86_64</li>
+		<li>android   : Linux armv7l</li>
+		<li>iPhone    : iPhone</li>
+		<li>Mac       : MacIntel</li>
+	</ul>
 	<br>
-	<li>Windows32/WOW : Win32</li>
-	<li>Windows64     : Win64</li>
-	<li>Linux32   : Linux i686</li>
-	<li>Linux64   : Linux x86_64</li>
-	<li>android   : Linux armv7l</li>
-	<li>iPhone    : iPhone</li>
-	<li>Mac       : MacIntel</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Fgp_doNotTrack></a>
-<u><b>Fgp_doNotTrack</b></u>
-<span class=MstyAuthor> (Category: fingerprint)</span>
-<ul>
-	<font>
+<u><b>
+Fgp_doNotTrack
+</b></u><span class=MstyAuthor> (Category: fingerprint)</span><br>
+<br>
+<div class=MstyIndent>
 	<span class=MstyCode>navigator.doNotTrack</span> より取得されるこのBrowserがTrackingを拒否しているか否か(DNT機能がOnか否か)を示す文字列である.<br>
 	Firefox9以降より導入された.<br>
 	Firefox9以降の場合、プライバシーの設定画面において「トラッキングの拒否をサイトに通知する」にチェックを入れるとこれが有効になり、この値は 1 となる.<br>
 	チェックがOFFの場合 unspecified という値となる。<br>
 	それ以外の環境では空値を返すとみなしてよい.<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Fgp_PluginsString></a>
-<u><b>Fgp_PluginsString</b></u>
-<span class=MstyAuthor> (Category: fingerprint)</span>
-<ul>
-	<font>
+<u><b>
+Fgp_PluginsString
+</b></u><span class=MstyAuthor> (Category: fingerprint)</span><br>
+<br>
+<div class=MstyIndent>
 	<span class=MstyCode>navigator.plugins</span> の値を元に取得されるこのBrowserにインストールされているPlugin群を示す文字列である.<br>
 	環境によって様々なPluginやそのVersionがインストールされており、従ってほぼ自由文字列と考えてよく、<br>
 	リアルに偽装したところであまり意味がないと思われる.<br>
 	ただしIEの場合はこれは空値である.<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Fgp_Canvas></a>
-<u><b>Fgp_Canvas</b></u>
-<span class=MstyAuthor> (Category: fingerprint)</span>
-<ul>
-	<font>
+<u><b>
+Fgp_Canvas
+</b></u><span class=MstyAuthor> (Category: fingerprint)</span><br>
+<br>
+<div class=MstyIndent>
 	いわゆるCanvas Fingerprintと呼ばれる値である.<br>
 	この値は fp.js における getCanvasFingerprint関数によって取得される文字列である.<br>
 	getCanvasFingerprintでは HTML5のCanvas APIを使い図形や文字などを描き、次にその結果をPNG画像とし、<br>
@@ -328,17 +370,23 @@
 	それを考慮すると全体としてそこそこ自由度の高い文字列とみなすこともできる.<br>
 	よって、実のところ単純にデタラメな値を設定しても偽装か否かを見破るのはそこそこ困難であると考えられるが、<br>
 	このあたりをどう評価するかは人によって判断が分れるところであろう.<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
-<u><b>リンク</b></u>
+<a name=Link></a>
+<u><b>
+リンク
+</b></u><br>
+<br>
 <ul>
-	<li><a class=MstyElemLink href="#TopBar">一番上へ</a></li>
-	<li><a class=MstyElemLink href="https://mr-moai-2016.github.io">Moaiドキュメント(オンライン)</a></li>
-	<li><a class=MstyElemLink href="https://github.com/mr-moai-2016/znk_project">znk_project(github)</a></li>
+	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
+	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project>znk_project(github)</a></li>
 </ul><br>
+
 
 </body>
 </html>

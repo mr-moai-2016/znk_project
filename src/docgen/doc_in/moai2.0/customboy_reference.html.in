@@ -1,0 +1,136 @@
+@def_quote [' ']
+
+##
+# doc_title:
+#   この記事のタイトル.
+#
+# author:
+#   記事担当者.
+#
+# update:
+#   最終更新日.
+#
+# category_path:
+#   ガイドメニューにおけるカテゴリを示す.
+#
+# urp:
+#   ガイドメニューのリンク先.
+#
+# nb_tags:
+#   ここで指定した tag が行末に現れた場合は <br> の自動付加を行わない.
+#
+# title_attr_fmt:
+#   各Sectionのタイトルの部分に続けて付加的な文字列を挿入することができる.
+#   これをTitle Attributeと呼び、ここではそのformat文字列を指定する.
+#   またこのformat文字列に %s を一つ含めることにより、Indexセクションの第3カラム要素をそこに挿入させることができる.
+#
+# 行末における<\>:
+#   これが行末に指定されている場合は <br> の自動付加を行わない.
+# 
+#
+@@V config
+doc_title = ['Moai+Easter エキスパートマニュアル']
+author = ['高速ヤキソバ変換']
+update = ['2017/12/29']
+category_path = { ['moai2_0_exp'] ['customboy'] }
+urp           = ['/moai2.0/customboy_reference.html']
+nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
+@@.
+
+@@L AtFirst
+	ここではCustomBoyに関する機能を簡易に解説する.
+	尚、この記事およびこのCustomBoyというツールはエキスパートな方向けのものである.
+@@.
+
+@@P Index
+{ ['#CustomBoy']     ['Overview of CustomBoy'] }
+{ ['#CustomUSERS']   ['CustomUSERS：Tutorial of Customize for your User-Agent and all Post variables'] }
+{ ['#CustomCookie']  ['CustomCookie：Tutorial of Customize for your all Cookie values'] }
+{ ['#CustomFeature'] ['CustomFeature：Tutorial of Customize for your all Fingerprint values'] }
+@@.
+
+@@L CustomBoy
+	通常、CustomBoyの思考routineは与えられた環境Categoryを入力として、それに矛盾しない範囲において最適なUA/Post変数をランダムに出力する.
+	このランダマイズはCustomBoyの持つKnowledge-Baseを基にした確率的アルゴリズムによって行われる.
+	このアルゴリズムを一言で総括すると確率が付加されたBNF上で展開を行い、結果としてUA/Post変数として有意なMarkov chain的なシーケンスを無数に決定できるというものである.
+	さらにCustomFeatureでは、その際に参照するMachine/Browser固有の各要素値をexplicitに上書き指定可能であり、生成されるFingerprint値の究極なるCutomizeを行うができる.
+	CustomBoyは以下の３つのUIをあなたに提供する.
+	<ul>
+		<li>CustomUSERS
+		</li>
+		<li>CustomCookie
+		</li>
+		<li>CustomFeature
+		</li>
+	</ul>
+	
+	<div class=MstyComment>
+		正確に言えばVirtualUSERSもCustomBoyの一機能として実装されていますが、ここでは別枠扱いとします.
+	</div>
+	
+	以下ではこれら３つについてのTutorialを述べる.
+@@.
+
+@@L CustomUSERS
+	CustomUSERSはUA(User-Agent)およびPost変数値を直接設定可能なinterfaceである.
+	Tutorialとして次の手順をご紹介しよう.
+	<ol>
+		<li><b>Step1</b>ボタンにより仮想環境を構築する.
+		このときCustomUSERSにおいてほぼすべての情報の構築は自動的に完了しており、
+		一連の情報は選択された環境Categoryに矛盾しないよう適切にセットされている.
+		</li>
+		
+		<li>このままの状態でも全く構わないと思うが、さらに各固有の値に拘りのある方は、
+		これを微調整して修正した上で<b>UA/Post変数の更新</b>ボタンを押す.
+		これによりその調整が反映されたUA/Post変数がセットされる.
+		</li>
+		
+		<li><b>Step2</b>ボタンを押すことで最終状態を確定させる.
+		これで完了である.
+		</li>
+	</ol>
+@@.
+
+@@L CustomCookie
+	CustomCookieはCookie値を直接設定可能なinterfaceである.
+	Tutorialとして次の手順をご紹介しよう.
+	<ol>
+		<li><b>Cookieの仮想環境</b>フレームには現在のあなたの環境の仮想的なCookie値が設定されてある.
+		このフレームではここにリストされた任意の項目を直接書き換え可能である.
+		</li>
+		
+		<li>Cookie値の書き換えが終わったら、<b>上記で強制書き換え</b>ボタンを押す.
+		「空値のものは項目自体を消去」にチェックを入れてこのボタンを押せば、
+		読んで字のごとく値が空のCookieの項目については、その項目そのものを消去できる.
+		これで完了である.
+		</li>
+	</ol>
+@@.
+
+@@L CustomFeature
+	CustomFeatureはFingerprint値およびSnippet(javascriptによる判定コード)の値を直接設定可能なinterfaceである.
+	Tutorialとして次の手順をご紹介しよう.
+	<ol>
+		<li><b>Step1</b>ボタンにより仮想環境を構築する.
+		このときCustomFeatureにおいてほぼすべての情報の構築は自動的に完了しており、
+		一連の情報は選択された環境Categoryに矛盾しないよう適切にセットされている.
+		</li>
+		
+		<li>このままの状態でも全く構わないと思うが、さらに各固有の値に拘りのある方は、
+		画面の下の方にある<b>UA/POST変数生成のためのFingerprint設定</b>と<b>UA/POST変数生成のためのSnippet(Javascriptによる判定コード)設定</b>の各値を修正する.
+		これらの値の意味は、各値のリンクをクリックしていだだければヒントページが表示されるので参考にして頂きたい.
+		これを微調整して修正した上で<b>UA/Post変数の更新</b>ボタンを押す.
+		これによりその調整が反映されたUA/Post変数がセットされる.
+		</li>
+		
+		<li><b>Step2</b>ボタンを押すことで最終状態を確定させよう.
+		これで完了である.
+		</li>
+	</ol>
+@@.
+
+@@P Link
+{ ['#TopBar'] ['一番上へ'] }
+{ ['https://mr-moai-2016.github.io'] ['Moaiドキュメント(オンライン)'] }
+{ ['https://github.com/mr-moai-2016/znk_project'] ['znk_project(github)'] }
+@@.

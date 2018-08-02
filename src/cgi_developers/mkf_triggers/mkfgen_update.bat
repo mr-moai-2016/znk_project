@@ -10,7 +10,9 @@ call mkf_triggers\_impl\_detect_mkfsys_dir.bat
 if "%MKFSYS_DIR%" == ""   goto Error_InvalidMkfSysDir
 if not exist %MKFSYS_DIR% goto Error_InvalidMkfSysDir
 
-%MKFSYS_DIR%\mkfgen.exe
+if exist %MKFSYS_DIR%\win32\mkfgen.exe set MKFSYS_PLATFORM=win32
+if exist %MKFSYS_DIR%\win64\mkfgen.exe set MKFSYS_PLATFORM=win64
+%MKFSYS_DIR%\%MKFSYS_PLATFORM%\mkfgen.exe
 goto End
 
 :Error_InvalidTrigger

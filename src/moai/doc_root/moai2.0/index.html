@@ -5,114 +5,103 @@
 	<meta http-equiv="Content-Script-Type" content="text/javascript">
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	<link href="/msty.css" rel="stylesheet" type="text/css">
-	<title>Moai2.0ドキュメント</title>
 </head>
 <body>
 <a name=TopBar></a>
-<p><b><img src="/imgs/here_landmark.png"> Moai2.0ドキュメント</b></p>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter ユーザーマニュアル</b></p>
 
 <a class=MstyElemLink href="/">トップページ</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/index.html">Moai2.0ドキュメント</a> &nbsp;
-<a class=MstyElemLink        href="/moai1.1/index.html">Moai1.1ドキュメント</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
+<a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
-<a class=MstyElemLink        href="/moai2.0/install.html">インストールガイド</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_reference.html">Moai本体</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/customboy_reference.html">CustomBoy</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index.html">ご案内</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/install.html">インストールガイド</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_feature.html">Moaiの特徴</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/upgrade.html">Moaiのアップグレード方法</a> &nbsp;
 <br> <br>
 
 <div class=MstyComment>
-<u><b>記事担当者</b></u> : Mr.Moai<br> 
+<u><b>記事担当者</b></u> : Mr.Moai<br>
 <br>
-<u><b>最終更新日</b></u> : 2018/04/15<br>
+<u><b>最終更新日</b></u> : 2018/07/25<br>
 <br>
 </div>
 <br>
 
 
-<a name=AtFirst></a>
+<a name=Information></a>
 <u><b>
-Moai 2.0ドキュメントのご案内
+ユーザーマニュアルのご案内
 </b></u><br>
 <br>
 <div class=MstyIndent>
-	ここではMoai Ver2.0とそれに付随するシステムすべてに関するドキュメントが掲載されています.<br>
-	上のリンクは階層構造となっており、現在あなたは「Moai2.0ドキュメント」の「入り口」を閲覧されている状態です.<br>
-	<br>
-	「Moai2.0ドキュメント」には多くの記事があり、上のリンクの２段目に列挙されているものたちがそれに該当します.<br>
+	この<b>ユーザーマニュアル</b>では、ほとんどの方にとって有用なMoaiの機能に限定して、<br>
+	<b>チュートリアル的な解説記事</b>を掲載しています.<br>
+<br>
+	上のリンクは階層構造となっており、現在あなたは「ユーザーマニュアル」の「入り口」を閲覧されている状態です.<br>
+	「ユーザーマニュアル」には多くの記事があり、上のリンクの２段目に列挙されているものたちがそれに該当します.<br>
 	ここではそれらの概要を紹介しましょう.<br>
 	<ul>
 		<li><b>インストールガイド</b><br>
-		Moai Ver2.0をインストールしてそれを初めて起動するまでを解説してあります.<br>
+		まずはMoaiをインストールしなければ何も始まりませんね！<br>
+		ここでは最新版のMoaiをインストールしてそれを初めて起動するまでを解説してあります.<br>
+<br>
 		インストールといっても、Moai公式サイトより配布されている実行バイナリのzipファイルをダウンロードし、<br>
 		それを展開してmoaiという実行ファイルを実行するだけの単純なものです.<br>
-		しかし、Moaiはマルチプラットフォームであるため、それらはWindows, Linux, Androidなど環境によって異なります.<br>
-		よってそれぞれの環境について別途解説してあります.<br>
+<br>
+		<div class=MstyComment>
+			Moaiはマルチプラットフォームであるため、それらはWindows, Linux, Androidなど環境によって異なります.<br>
+			よってそれぞれの環境について別途解説してあります.<br>
+		</div>
 		</li>
-		<br>
-		<li><b>Moai本体</b><br>
-		Moai Ver2.0 のエンジン本体に関して説明したリファレンスです.<br>
-		主にMoaiエンジンの設定画面に関するものや、フィルタ機能、MoaiCGIおよびその認証、新防御システムXhrDMZ、<br>
-		不要な接続のブロック機能(広告のカットにも応用できます)、その他の応用的な機能についてです.<br>
-		若干難易度が高い内容であり、またこれを知らなくてもさしあたって困らないと思われるため、<br>
-		<b>初心者の方はEasterの方をまず読む</b>ことをお勧めします</b>.<br>
+<br>
+		<li><b>Moaiの特徴</b><br>
+		他ツールと比べた場合におけるMoaiの特徴について端的にまとめてあります.<br>
 		</li>
 		<br>
 		<li><b>Easter</b><br>
-		Easterは仮想環境を利用してサイトを閲覧するためのクライアントビューアであり、<br>
-		これはこのツールの全機能を解説したリファレンスとなります.<br>
-		EasterによってユーザのMoai利用は旧バージョンに比べて飛躍的に簡単になりました.<br>
-		(Easterを使えば、旧バージョンのMoaiでは必須であったローカルプロキシの設定をする必要がありません).<br>
-		ほとんどの方はこの<b>Easterの「仮想ブラウジング」機能をメインで使う形になる</b>と思います</b>.<br>
-		Easterにはさらに画像分類機能等がありますが、これを使わない方は「コレクション」の項目は気にする必要はありません.<br>
+		Easterは仮想環境を利用してサイトを閲覧するためのビューアです.<br>
+		これを<b>仮想ブラウジング</b>と呼びます.<br>
+		ここではEasterの仮想ブラウジングやその他の機能について解説しています.<br>
+		<br>
+		ほとんどの方はこの仮想ブラウジング機能をメインで使う形になると思います.<br>
+		他にも画像の分類や管理を提供する<b>コレクション</b>機能がありますが、<br>
+		これを使わない方は気にする必要はありません.<br>
 		</li>
 		<br>
 		<li><b>VirtualUSERS</b><br>
-		VirtualUSERSは仮想環境を初心者でもボタン一発で簡単に構築するためのツールであり、<br>
-		これはこのツールの使い方を解説したものです.<br>
-		ほとんどの方はこの<b>VirtualUSERSをMoaiをインストール直後最初に一回実行</b>し、<br>
+		VirtualUSERSは<b>仮想環境をボタン一発で簡単構築</b>するためのツールです.<br>
+		ここではこのツールの使い方を解説しています.<br>
+<br>
+		ほとんどの方はこのVirtualUSERSを<b>Moaiをインストール直後最初に一回実行</b>し、<br>
 		以降は必要に応じて、主に<b>ルータリセット等でIPアドレスを変更した直後に実行</b>する形になると思います.<br>
 		</li>
-		<br>
-		<li><b>CustomBoy</b><br>
-		CustomBoyとは、Moai/Easterの仮想環境を詳細にカスタマイズするエキスパートユーザ向けのツールです.<br>
-		(従って初心者の方がこのツールを使う必要はまずないと思われます)<br>
-		我々が提供する仮想化ツールの中でもこれは最強のカスタマイズ性を有するものです.<br>
-		ここではこのツールの使い方のガイドラインを示し、またUIのおける各項目の意味について辞書的なリファレンスを掲載しています.<br>
-		（このツールの開発と各種情報の提供は高速ヤキソバ変換氏にご協力頂きました. 彼女にはこの場を借りてお礼申し上げます)<br>
-		</li>
-		<br>
-		<li><b>HowToコンパイル</b><br>
-		Moaiを公式サイトより配布されている実行バイナリではなく、<br>
-		githubにあるソースコードからビルドして使いたいといった潔癖な方、あるいは技術派な方もおられると思います.<br>
-		これはそんな方向けのドキュメントです.<br>
-		Moaiの全ソースコード(ライブラリも含む)をコンパイルする方法について、割とゼロベースから解説してあります.<br>
-		コンパイラ(MinGWを使用)のインストール方法から解説している徹底ぶりですので、<br>
-		コンパイルなんてしたことない方でも根気よく読めば出来ると思います(多分)<br>
-		またVCプログラマの方向けにVCでコンパイルする方法、CygwinやMSYS、LinuxやAndroid向けに<br>
-		コンパイルする方法も記載してあります.<br>
-		</li>
-		<br>
-		<li><b>Moai CGI Developers</b><br>
-		Moai CGI は Moaiとは独立した単独のCGIスクリプトを実行します.<br>
-		従って、あなたがCGIスクリプトを独自に開発し、それをMoai CGI上で実行させることもできるのです！<br>
-		ここではこのようなWebアプリケーションを独自に作ってみたい野心溢れる方向けに、その開発方法を解説します.<br>
-		そして最終課題としてProxyFinderを例として挙げ、このようなツールが開発できるレベルを目指します.<br>
+<br>
+		<li><b>Moaiのアップグレード方法</b><br>
+		Moai Ver2.1より導入された「Moaiアップグレード」は<b>ボタンを押すだけでMoaiシステム全体を簡単アップグレード</b>するための機能です.<br>
+		ここではこれについて解説しています.<br>
+		また、Moai Ver2.0から Moai Ver2.1へアップグレードする方法についても説明してあります.<br>
 		</li>
 	</ul>
 </div><br>
 <br>
 
 
-<u><b>リンク</b></u>
+<a name=Link></a>
+<u><b>
+リンク
+</b></u><br>
+<br>
 <ul>
-	<li><a class=MstyElemLink href="#TopBar">一番上へ</a></li>
-	<li><a class=MstyElemLink href="https://mr-moai-2016.github.io">Moaiドキュメント(オンライン)</a></li>
-	<li><a class=MstyElemLink href="https://github.com/mr-moai-2016/znk_project">znk_project(github)</a></li>
-</ul>
+	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
+	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project>znk_project(github)</a></li>
+</ul><br>
+
 
 </body>
 </html>

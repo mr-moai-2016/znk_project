@@ -1,5 +1,5 @@
 /***
- * Easter : Web Proxy System (introduced by Ver2.0)
+ * Easter : CGI Proxy System (introduced by Ver2.0)
  */
 #include <Est_config.h>
 #include <Est_get.h>
@@ -14,6 +14,7 @@
 
 #include <Rano_log.h>
 #include <Rano_cgi_util.h>
+#include <Rano_htp_boy.h>
 
 #include <Znk_str.h>
 #include <Znk_s_base.h>
@@ -192,6 +193,16 @@ int main( int argc, char** argv )
 	if( !ZnkNetBase_initiate( false ) ){
 		RanoLog_printf( "Easter : ZnkNetBase_initiate is failure.\n" );
 		goto FUNC_END;
+	}
+
+	{
+		char cert_pem_path[ 256 ] = "";
+		Znk_snprintf( cert_pem_path, sizeof(cert_pem_path), "%s/cert.pem", ZnkStr_cstr(moai_dir) );
+#if defined(__CYGWIN__)
+		RanoHtpBoy_initiateHttpsModule( "cygtls-17", cert_pem_path );
+#else
+		RanoHtpBoy_initiateHttpsModule( "libtls-17", cert_pem_path );
+#endif
 	}
 
 	EstConfig_initiate( evar, ZnkStr_cstr(moai_dir), count );

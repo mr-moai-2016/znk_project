@@ -19,7 +19,7 @@ MoaiCGI_runPost( const char* cmd, const char* curdir_new, ZnkSocket sock, RanoMo
 		size_t content_length, ZnkBfr stream, ZnkStr query_str, bool is_xhr_dmz );
 
 void
-MoaiCGIManager_makeHeader( ZnkStr html, const char* title );
+MoaiCGIManager_makeHeader( ZnkStr html, const char* title, bool inline_script );
 
 bool
 MoaiCGIManager_load( void );
@@ -40,13 +40,6 @@ bool
 MoaiCGIManager_isValidReqUrp_forRun( const char* req_urp );
 bool
 MoaiCGIManager_isValidReqUrp_forPathBegin( const char* req_urp, const char* path_list_name );
-
-#if 0
-bool
-MoaiCGIManager_isAuthenticReqUrp( const char* req_urp );
-bool
-MoaiCGIManager_isValidReqUrp_forBox( const char* req_urp, const char* box_list_name );
-#endif
 
 /**
  * @note

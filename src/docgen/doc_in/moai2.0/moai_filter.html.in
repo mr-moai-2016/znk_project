@@ -1,0 +1,594 @@
+@def_quote [' ']
+
+@@V config
+doc_title = ['Moai+Easter エキスパートマニュアル']
+author = ['Mr.Moai ＆ 高速ヤキソバ変換']
+update = ['2018/07/17']
+category_path = { ['moai2_0_exp'] ['moai_engine'] }
+urp           = ['/moai2.0/moai_filter.html']
+nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['table'] ['tr'] ['td'] }
+@@.
+
+@@L AtFirst
+この記事ではMoaiエンジン本体のフィルター機能についての詳細に解説します.
+また高速ヤキソバ変換氏による例題や実践的な適用例も紹介します.
+@@.
+
+@@P Index
+{ ['#filter_recv_section1']       ['受信フィルタ : 受信したHTML、Javascript、CSSの修正'] }
+{ ['#filter_recv_section2']       ['受信フィルタ : 独自のCSSを付け加える'] }
+{ ['#filter_recv_exam']           ['受信フィルタ : 例題その1'] }
+{ ['#filter_send_header_vars']    ['送信フィルタ : HTTPヘッダの値の修正'] }
+{ ['#filter_send_post_vars']      ['送信フィルタ : POST変数の値の修正'] }
+{ ['#filter_send_post_vars_exam'] ['送信フィルタ : 例題その1'] }
+{ ['#filter_send_cookie']         ['送信フィルタ : Cookieの値の修正'] }
+{ ['#filter_send_cookie_exam']    ['送信フィルタ : 例題その2'] }
+{ ['#filter_send_pragmatic_exam'] ['送信フィルタ : 実践例題'] }
+@@.
+
+
+@@L filter_recv_section1
+	<b>TARGET_NAME</b>_recv.myf ファイル内の html_filter、js_filter、css_filterという部分で
+	それぞれHTML、Javascript、CSSにおける文字列の置換を行うことができる.
+	この部分にはfiltersコマンドと呼ばれる命令列を記述する.
+	現在サポートされているコマンドはreplaceのみで、以下の形式で記述する.
+	
+	<div class=MstyComment>
+	    replace ['置換前の文字列'] ['置換後の文字列']
+	</div>
+	
+	これは「前者を後者で置換(replace)せよ」という命令になる.
+	これをhtml_filter内で書いておけば、<b>TARGET_NAME</b>で指定されたホストにおいて
+	拡張子がHTMLのファイルのすべての行に対し、この文字列置換が行われる.
+	js_filter、css_filterについても同様である.
+	
+	置換前の文字列と置換後の文字列は必ず<b>['</b> と <b>']</b>　というクォーティング記号で囲う必要があることに注意すること.
+	大抵の用途では、このクォーティング記号で問題は起こらないと思われるが、
+	置換対象文字列内にこの記号が含まれるなどで、この記号だと都合が悪い場合は、
+	ファイルの最初の行にある @def_quote ディレクティブでこの記号を自由に変更することもできる.
+	例えば [' と '] の替わりに -[ と ]- を使いたいといった場合は、myfファイルの一番最初の行に
+	
+	<div class=MstyComment>
+	    @def_quote -[ ]-
+	</div>
+	
+	と書いておく( -[ と ]- の間には必ずスペースを入れること ).
+@@.
+
+
+@@L filter_recv_section2
+	<b>TARGET_NAME</b>_recv.myf ファイル内の css_additional という部分で、
+	複数行に渡るユーザ独自のcssの記述を追加することができる.
+	CSSの知識がある方は、サイトによって指定しているスタイルをこの部分により上書きするなどすることで
+	独自のページデザインにカスタマイズするなどといったことが可能だ.
+@@.
+
+@@L filter_recv_exam
+	例えば掲示板「５ちゃんねる」を対象として、その受信HTMLとCSSを加工したいとしよう.
+	target.myf内で例えば5chという名前のtargetを定義し、filters/5ch_recv.myfというファイルを作成する.
+	このファイル内で以下のフィルタコマンドを指定する.
+	
+	<div class=MstyComment>
+		@@L html_filter
+		replace ['デフォルトの名無しさん'] ['デフォルトのモアイさん']
+		@@.
+		
+		@@L css_filter
+		replace ['{background:rgb(239,239,239)}'] ['{background:rgb(240,224,214); color:rgb(127,0,0)}']
+		@@.
+	</div>
+	
+	ファイルが作成できたら、Moaiを起動(再起動)し、この状態で普通に「５ちゃんねる」へとアクセスする.
+	
+	HTMLの内容が加工されて、名前欄の文字列が「デフォルトのモアイさん」へ変更されていることだろう.
+	またCSSの内容が加工されて、背景色と文字色も変更されているはずである. 
+	もしも正しく設定したにもかかわらず表示が変わらないなら、ブラウザのキャッシュに古い情報が残っている可能性がある.
+	キャッシュをクリアしてからもう一度目的のサイトへアクセスしよう.
+@@.
+
+
+@@L filter_send_header_vars
+	一般にHTTPにおいてサイトへアクセスする場合、送信や受信されるデータ本体の直前に
+	HTTPヘッダと呼ばれるものが付加されて通信される.
+	例えば単純にブラウザから http://may.2chan.net/b/res/77777777.htm へURL指定したり、
+	そのページで「再読み込み」ボタンなどを押した場合は、概念的には以下のようなヘッダが送られる
+	（実際はもっと複雑であるかもしれない).
+	
+	<div class=MstyComment>
+		GET /b/res/77777777.htm HTTP/1.1
+		Host: may.2chan.net
+		User-Agent: My Sexy Browser
+		Accept: */*
+		Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+		Accept-Language: ja,en-US;q=0.7,en;q=0.3
+		Accept-Encoding: gzip, deflate
+		Referer: may.2chan.net/b/res/77777777.htm
+		Cookie: posttime=1464336000000; uuc=1
+		Connection: keep-alive
+	</div>
+	
+	あるいは http://may.2chan.net/b/futaba.php?guid=on があて先となっているような掲示板へ
+	投稿しようとした場合、概念的には以下のようなヘッダが送られる
+	（実際はもっと複雑であるかもしれない).
+	
+	<div class=MstyComment>
+		POST /b/futaba.php?guid=on HTTP/1.1
+		Host: may.2chan.net
+		User-Agent: Mozilla/5.0 Gecko/20041122 Firefox/1.0
+		Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+		Accept-Language: ja,en-US;q=0.7,en;q=0.3
+		Accept-Encoding: gzip, deflate
+		Referer: http://may.2chan.net/b/res/77777777.htm
+		Cookie: posttime=1464336000000; uuc=1
+		Connection: keep-alive
+		Content-Type: multipart/form-data; boundary=---------------------------134281275020820
+		Content-Length: 2050
+		
+		(以下、Content-Lengthで指定されたバイト(ここでは2050バイト)の
+		POSTデータ本体(これをHTTPのBody部と呼ぶ)が続く)
+	</div>
+	
+	Host や User-Agent といった <b>「:」 記号</b>の前にある部分がHTTPヘッダーの変数名となり、
+	それより後にある部分がその値を意味する.
+	上記よりお分かり戴けると思うが、いわゆるUser-Agentの値はHTTPヘッダーの変数の一種として格納される形になる.
+	従って、このヘッダー変数の値を修正することで、サイトに送られるUser-Agentを偽装することができる.
+	これを行うには、<b>TARGET_NAME</b>_send.myf ファイル内の<b>header_vars</b>において以下のように記述する.
+	
+	<div class=MstyComment>
+		@@V header_vars
+		User-Agent = ['My Sexy Browser']
+		@@.
+	</div>
+	
+	これによってUser-Agentの変数値が本来の値である Mozilla/5.0 Gecko/20041122 Firefox/1.0 から
+	My Sexy Browserという値に書き換えられた形でサイトへ送信される形となる.
+	以上がUser-Agent偽装の詳しいメカニズムとなる.
+	
+	まとめると、概念的にHTTPヘッダーの値は以下のような順番でフィルタリングされ、サイトへと流れていく.
+	
+	<span class=MstyComment>ブラウザにおける真のHTTPヘッダーの値</span> ⇒<\>
+	<span class=MstyComment>header_varsによる強制変更</span> ⇒<\>
+	<span class=MstyComment>目的のサイトへ送信</span>
+	
+	<div class=MstyComment>
+		<u><b>参考</b></u>  
+		
+		header_vars 内のUser-Agent行を削除することによって、
+		<b>敢えてMoaiにおいてUser-Agent偽装を行わせない</b>ようにすることもできる.
+		例えば、ブラウザのUser-Agent偽装アドオンなどによって既にUser-Agentを任意の値に偽装している場合など
+		その偽装値をMoaiで再修正することなくそのまま送信して欲しいことがある.
+		
+		現状のMoaiはJavascriptにおけるnavigator.userAgentの値や
+		HTTPSによって暗号化されたHTTPヘッダにおけるUser-Agentまでは修正できないので、
+		場合によってはそのようなアドオンを使う方が偽装がより確実となることもあるかもしれない.
+		元通りMoaiによってUser-Agentを偽装させるようにするには、
+		User-Agent行を追加すればよい(このときの右辺値は適当なものでよい).
+	</div>
+	
+	尚、User-Agent以外のその他のヘッダー変数の値も同様に変更することができるが
+	通常その必要はない上、不用意に変えると通信そのものが不可能になる恐れがあるので、
+	深い知識のある方以外はそれらを変更しない方がよい.
+@@.
+
+
+@@L filter_send_post_vars
+	投稿が可能な掲示板のHTMLのソースなどを開いてもらうと、
+	まず以下のように formタグで囲まれた領域がある.
+	
+	<div class=MstyComment>
+		&lt;form action=... &gt;
+		...
+		&lt;/form&gt;
+	</div>
+	
+	さらにその部分をよく観察すると以下のようなinputタグがいくつか書かれていることがわかる.
+	
+	<div class=MstyComment>
+		&lt;input type=… name=... value=... &gt;
+		&lt;input type=… name=... value=... &gt;
+		...
+	</div>
+	
+	この<b>inputタグに書かれた内容</b>が最終的にはPOST変数となり、
+	POSTを行う場合(レス送信時など)に送信されるデータの本体に相当する.
+	実際のHTTP通信においてPOST変数はHTTP Body部のデータとしてHTTPヘッダーより後ろに配置される.
+	
+	POST変数がどういったものであるかは、これでお分かり頂けただろうか？
+	POST変数のさらなる具体例は以下の「例題」でも挙げて解説してあるので参照してほしい.
+	概念的にPOST変数の値は以下のような順番でフィルタリングされ、サイトへと流れていく.
+	
+	<span class=MstyComment>ブラウザにおける真のPOST変数値</span> ⇒<\>
+	<span class=MstyComment>post_varsによる強制変更</span> ⇒<\>
+	<span class=MstyComment>目的のサイトへ送信</span>
+	
+@@.
+	
+
+@@L filter_send_post_vars_exam
+	例えば、ある架空の匿名掲示板のHTMLのソースに以下のような部分が含まれていたとしよう.
+	
+	<div class=MstyComment>
+		&lt;form action="http://www.example.net/bbs.php" method="POST" enctype="multipart/form-data"&gt;
+		
+		&lt;input type=hidden name="himitu_no_data" value="12345678"&gt;
+		&lt;input type=hidden name="thread"         value="1000"&gt;
+		
+		&lt;b&gt;コメント&lt;/b&gt;&lt;textarea name="comment" cols="48" rows="4"&gt;&lt;/textarea&gt;&lt;br&gt;&lt;br&gt;
+		
+		&lt;b&gt;添付File&lt;/b&gt;&lt;input type=file name="upload_file" size="35"&gt;&lt;br&gt;&lt;br&gt;
+		
+		&lt;input type=checkbox name="text_only" value=on&gt;画像なし
+		
+		&lt;/form&gt;
+	</div>
+	
+	これを実際にブラウザで開くと、以下のように表示されるはずである.
+	
+	<div class=MstyComment>
+		<img src=/imgs/post_example_01.png width=100%>
+	</div>
+	
+	<div class=MstyComment>
+		<uL<b>このHTMLの意味についてのヒント</b></u>
+
+		<ul>
+			<li>レスの送信先はformのactionの値に記述されており、この例だと、http://www.example.net/bbs.php となる.</li>
+			
+			<li>method、enctypeの部分はとりあえず気にしなくてよい(このあたりの指定はMoaiが適切に取り計らう).</li>
+			
+			<li>inputタグ内のtype=hiddenという指定は、これが実際の画面には表示されない<b>隠されたPOST変数</b>であることを意味する.
+			この例では <b>himitu_no_data</b> と <b>thread</b> が該当する.</li>
+			
+			<li>textareaタグ内の<b>comment</b>が文字列レスの内容となり、画面上ではテキスト入力フォームに相当する.
+			inputタグではないが、特例として<b>これもPOST変数</b>となる.</li>
+			
+			<li>inputタグ内のtype=fileという指定は、画面上では添付ファイル用のダイアログを出すためのボタンに相当する.
+			この例では<b>upload_file</b>という名前の<b>POST変数</b>となり、<b>その値は添付ファイル</b>の全内容である.
+			(尚、この際に添付ファイルのファイル名も、そのフルパスが除去された形で付加される)</li>
+			
+			<li>inputタグ内のtype=checkboxという指定は、画面上では文字通りチェックボックスに相当する.
+			この<b>チェックボックスにチェックを入れた場合のみPOST変数text_onlyが付加される</b>.
+			(チェックを入れてない場合はその変数は付加されない).
+		</ul>
+	</div>
+	
+	まとめると、このフォームによって送られるすべてのPOST変数は以下となり、
+	これらが、http://www.example.net/bbs.php に送信される.
+	
+	<table>
+		<tr class=MstyItemEvn><td>変数名        </td><td>値</td></tr>
+		<tr class=MstyItemOdd><td>himitu_no_data</td><td>12345678</td></tr>
+		<tr class=MstyItemOdd><td>thread        </td><td>1000</td></tr>
+		<tr class=MstyItemOdd><td>comment       </td><td>ユーザがテキストフォームより入力したコメント文字列</td></tr>
+		<tr class=MstyItemOdd><td>upload_file   </td><td>添付ファイルの全内容(ファイルを添付していない場合は空値となる)</td></tr>
+		<tr class=MstyItemOdd><td>text_only     </td><td>on(ただしチェックを入れていない場合はこの変数そのものが存在しない)</td></tr>
+	</table>
+	
+	さて、前置きが長くなったが、この掲示板exampleではhimitu_no_dataというPOST変数により、
+	ユーザの識別を行っているものとしよう.
+	<b>Moaiによってこの値を適当な値に偽装せよ.</b>
+	
+	<b>【例題の解答】</b>
+	
+	まずtarget.myf内で例えばexampleという名前(この名前は自由に決めてよい)のtargetを定義する.
+	このファイルに以下のような指定を書き加えればよいだろう.
+	
+	<div class=MstyComment>
+		@@L example
+		www.example.net
+		@@.
+	</div>
+	
+	次に <b>TARGET_NAME</b>_send.myf に相当するものを作成する.
+	この例では、filters/example_send.myfというファイルを作成し、その内容を以下のようにする.
+	POST変数himitu_no_dataの真の値(12345678)を覆い隠して偽の値(87654321)で置換するため、
+	post_varsセクションにそれ用の行を設けた.
+	
+	<div class=MstyComment>
+		@def_quote [' ']
+		
+		@@V header_vars
+		@@.
+		
+		@@V post_vars
+		himitu_no_data = ['87654321']
+		@@.
+		
+		@@V cookie_vars
+		@@.
+		
+		@@V cookie_force
+		@@.
+	</div>
+	
+	最後に既にMoaiを起動している場合はtarget.myfとフィルタファイルfilters/example_send.myfをリロードしなければならない.
+	一度Moaiを終了してそれをもう一度起動するか、あるいはWeb Configuration画面で「Restart Moai」ボタンを押せばよい.
+	
+	以上である.
+	これで以降のMoaiを介した通信では、このターゲットのサイトのPOST変数himitu_no_dataに関しては、
+	常に上記の偽の値に置換される.
+@@.
+
+
+@@L filter_send_cookie
+	Cookieについては知っている方も多いであろう.
+	ブラウザの設定画面からも簡単に確認できるし、その内容を消去するのも同様に簡単である.
+	一般にこの値はサイト毎に別に記録される.
+	
+	例えば www.example.net と www.moai-chan.net という二つの異なるサイトがあったとすれば、
+	これらのCookieは別のカテゴリとして分離して記録される. 
+	このとき、ある一つのカテゴリにあるサイトからは、それとは別のカテゴリにあるサイトのCookieの値を見ることはできない.
+	また同様に更新することもできない.
+	
+	また、大規模な匿名掲示板ではサーバが複数存在するようなサイトがある.
+	このような場合、サイト内のサーバ全体で共通して使われるCookie というものがある.
+	たとえばふたばちゃんねるでは、カテゴリ名が 2chan.net となっているCookieがあり、
+	このCookieはドメイン名が *.2chan.net となっているサーバからならばどのサーバからも参照可能である.
+	一方、カテゴリ名が may.2chan.net となっているCookieならば、ふたばちゃんねるのmayサーバだけから参照可能である.
+	このようにCookieはそのカテゴリー名にドメイン的な構造を持っており、
+	それによって参照可能な範囲が変わる場合がある.
+	
+	<div class=MstyComment>
+		<u><b>Note.</b></u>
+		
+		ところで気づかれたかもしれないが、上記HTTPヘッダー変数の解説においても
+		<b>Cookieという名前の変数</b>が現れている.
+		実は Cookieデータというものは最終的には<b>HTTPヘッダ内のCookie変数</b>にパックされて送信が行われており、
+		つまり上記で説明したheader_varsによってCookie変数を修正することも面倒だが不可能ではない.
+		また一方、HTTPヘッダ変数Set-Cookieによって、Cookieデータの新規作成や更新などが行われ、
+		これも同様の考え方で修正することもできる.
+		
+		しかし、ヘッダ変数CookieまたはSet-Cookieの値は複雑なフォーマットを持っており、
+		仮にheader_varsによってこの値を修正するとなれば、このフォーマットを自力で解釈するプログラムが別途必要となる.
+		cookie_vars および cookie_force を用いればその作業は不要となり、簡易にCookie値の加工が可能となる.
+	</div>
+	
+	cookie_vars において指定された変数は、ブラウザにおける真の値を上書きする.
+	ただしtargetとなるサイトがSet-Cookieによって新たなCookie値を設定して来た場合、
+	cookie_varsの変数値はその値で自動的に書き換えられる. 
+	あるいはcookie_varsにまだその変数が存在しない場合は自動的に新規追加される.
+	
+	この辺りはheader_varsやpost_varsに比べ、やや複雑な仕様である.
+	しかし、<b>サイトがSet-Cookieを発行するまでの間、
+	ある種のCookie変数の値を一時的に空にしておきたいケース</b>は割とあり、
+	この仕様ならそれが自然に実現できるのである.
+	
+	一方、cookie_force において指定された変数は、ブラウザにおける真の値を上書きし、
+	さらにcookie_varsにおける指定さえも強制的に上書きする.
+	また、cookie_forceにおける指定はcookie_varsと異なり、基本的に書き換えられることはない.
+	例えばあるCookie変数を問答無用で常に削除しておきたい場合は、
+	cookie_forceにおいてその変数を空値に指定しておけばよい.
+	
+	まとめると、概念的にCookieの値は以下のような順番でフィルタリングされ、サイトへと流れていく.
+	
+	<span class=MstyComment>ブラウザにおける真のCookie値</span> ⇒<\>
+	<span class=MstyComment>cookie_varsによる変更</span> ⇒<\>
+	<span class=MstyComment>cookie_forceによる強制変更</span> ⇒<\>
+	<span class=MstyComment>目的のサイトへ送信</span>
+@@.
+
+@@L filter_send_cookie_exam
+	例えば、掲示板moai-chanという架空の掲示板を考えよう.
+	この掲示板には mei.moai-chan.net と imoge.moai-chan.netという二つのサーバが存在し、
+	これらのHTMLのソースはいずれも以下のような部分が含まれているものとする.
+	
+	<div class=MstyComment>
+		&lt;head&gt;
+		&lt;base href="http://mei.moai-chan.net/"&gt;
+		&lt;/head&gt;
+		
+		&lt;form action="moai.php" method="POST"&gt;
+		
+		&lt;input type=hidden name="entry_time"     value="2016/06/01/12:05:25"&gt;
+		&lt;input type=hidden name="secret_of_fing" value="192837465"&gt;
+		
+		&lt;b&gt;おなまえ&lt;/b&gt;&lt;input type=text name="your_name" size="28"&gt;&lt;br&gt;&lt;br&gt;
+		&lt;b&gt;メール欄&lt;/b&gt;&lt;input type=text name="your_mail" size="28"&gt;&lt;br&gt;&lt;br&gt;
+		&lt;b&gt;コメント&lt;/b&gt;&lt;textarea name="comment" cols="48" rows="4"&gt;&lt;/textarea&gt;&lt;br&gt;&lt;br&gt;
+		
+		&lt;b&gt;添付File&lt;/b&gt;&lt;input type=file name="upload_file" size="35"&gt;&lt;br&gt;&lt;br&gt;
+		
+		&lt;input type=checkbox name="text_only" value=on&gt;画像なし
+		
+		&lt;/form&gt;
+	</div>
+	
+	２つ目の例題なので、解説はある程度省略しよう.
+	ちなみに、この例は我々Moai開発チームの１人である高速ヤキソバ変換氏が作成したものだ.
+	氏によれば、この例は大分ふたばちゃんねるの状況に近いとのことである.
+	
+	以下に簡単にこのHTMLに関するヒントを列挙しておく.
+	<ul>
+		<li>この例のformタグ内のactionでは、URLがフルパスで記述されていないが、
+		これはすぐ上のbaseタグによってこの指定より上に来るべきパスを指定しているためである.
+		尚、ここでのbaseタグの値は、mei.moai-chan.net 向けのものとなっているが、
+		もう一つのサーバimoge.moai-chan.netの場合は同様にここがそれ向けの値になっていると考えればよい.</li>
+		
+		<li>この例ではformタグ内にenctypeが指定されていないが、
+		この場合application/x-www-form-urlencodedが指定されたのと同じになる.
+		いずれにせよこれに関して気にする必要はない.</li>
+		
+		<li>inputタグ内のtype=textは、画面上では「おなまえ」や「メール欄」などの一行文字列入力フォームに相当する.
+		勿論これもPOST変数となる.</li>
+	</ul>
+	
+	さて、この架空の掲示板moai-chanでは<b>secret_of_fing</b>において、
+	あなたのマシン環境のFingerprint値を設定しているものとしよう.
+	Fingerprintとはマシン固有の色々な情報をかき集めて足し合わせ、それをハッシュ値としたものである.
+	
+	また、あなたが初めてこの掲示板に入場した場合、moai-chanは <b>cok_entry_time</b> というCookie変数を作って
+	その初入場の時刻の情報をあなたのブラウザのCookieに保存しているものとする.
+	逆に言えば、もしcok_entry_timeがあなたのブラウザのCookieに既に存在するなら、
+	あなたのブラウザは以前にもその掲示板に入場したことがあると判断されるのである.
+	
+	そして、この掲示板では入場後のレス投稿の際Javascriptが実行されて
+	あなたのブラウザのCookie内のcok_entry_timeの値を参照し、
+	<b>POST変数entry_time</b>にその値を設定した上で、それをレス内容とともに送信する仕組みになっているものとしよう.
+	つまりあなたの初入場の時刻が一種のユーザ識別IDとなって随時送信される仕組みとなっている.
+	moai-chanでは、secret_of_fing と entry_time の二つをもってユーザの識別を行っているものとする.
+	
+	まず<b>cok_entry_timeを空値で覆い隠し、あたかも初めてこの掲示板に入場したかのような状況</b>をシミュレートせよ.
+	次に<b>入場後のレス投稿の際、Cookie値とPOST変数値をどのように偽装しておくべきか</b>を考えよ.</b>
+	
+	<b>【例題の解答】</b>
+	
+	まず、moai-chanという名前(この名前は自由に決めてよい)のtargetを定義する.
+	target.myfファイルに以下のような指定を書き加えればよいだろう.
+	
+	<div class=MstyComment>
+		@@L moai-chan
+		*.moai-chan.net
+		@@.
+	</div>
+	
+	次に <b>TARGET_NAME</b>_send.myf に相当するものを作成する.
+	この例では、filters/moai-chan_send.myfというファイルを作成し、その内容を以下のようにする.
+	
+	<div class=MstyComment>
+		@def_quote [' ']
+		
+		@@V header_vars
+		@@.
+		
+		@@V post_vars
+		entry_time = ['']
+		secret_of_fing = ['07210721']
+		@@.
+		
+		# Cookie値のフィルタリング
+		# ここでの指定はサイトがSet-Cookieを発行した時点で自動的に書き変えられることがある.
+		@@V cookie_vars
+		cok_entry_time = ['']
+		@@.
+		
+		# Cookie値の強制変更
+		# ここでの指定はサイトがSet-Cookieを発行しても書き変えられることはない.
+		@@V cookie_force
+		@@.
+	</div>
+	
+	変数cok_entry_timeを空値に設定することにより、moai-chan.netがこれに新たな値を明示的に設定するまで
+	このCookieの値は存在していないのと同じになる.
+	(この変数に関して、ブラウザに実際に設定されている真の値を覆い隠す.)
+	また、moai-chan.netがこれに新たな値を明示的に設定した瞬間、Moaiは filters/moai-chan_send.myfを更新し、
+	上記cookie_vars内のcok_entry_timeの値は、自動的にその新しい値に更新される.
+	
+	少し難しいだろうか？
+	この辺りの処理はMoaiがすべてうまく取り計らってくれる.
+	まあこの場合、素直に実際のブラウザのCookieを削除した方が早いだろうが、
+	ここではcookie_varsフィルタの練習例として、このような方法を紹介している.
+	
+	この状態でmoai-chan.netにアクセスすると、moai-chan.net から見ればあたかも
+	cok_entry_time の値が空であるかのように見えるのである.
+	つまり、あたかも初入場であるかのごとき状況をシミュレートできるだろう.
+	そして初入場とみなされたのであるから、cok_entry_timeにはあなたの入場時刻がセットされることだろう.
+	Moaiはそれを見逃さずキャッチし、filters/moai-chan_send.myfにその値を記録する.
+	
+	では次に、レス投稿する際のCookieとPOST変数の偽装すべき値について考える.
+	POST変数secret_of_fingの値はあらかじめ適当な値にでっちあげておけばよい.
+	一方、cok_entry_time については、moai-chan.netのJavascriptがあなたのブラウザのCookieへと直接参照しにいく.
+	filters/moai-chan_send.myf内のcok_entry_timeには、上記の手法でうまく偽装が完了した入場時刻がセットされてはいるのだが、
+	残念ながらJavascriptはこれを参照しない.
+	cookie_varsフィルターで偽装できるのはHTTPヘッダへCookie値を乗せて送る場合に限られるのである.
+	このままではブラウザにある真のcok_entry_timeの値がPOST変数entry_timeに乗せて送られてしまう.
+	どうすればよいだろうか？
+	
+	視点を変えよう.
+	最終的にはPOST変数entry_timeに乗せて送られるのであるから、Cookieそのものではなく、
+	POST変数の方をフィルターすればよいのである.
+	つまりpost_vars内のentry_timeの値を書き換える.
+	具体的にはcookie_vars内のcok_entry_timeに記録されている値で書き換えればいいだろう.
+	
+	問題はどうやって書き換えるかだが、手動でやるならfilters/moai-chan_send.myfをテキストエディターで開き、
+	cok_entry_timeに今どのような値が設定されたかを見て、その値をPOST変数entry_timeの値として書き換えることになる.
+	(この辺りはplugin等のツールを用いれば自動化できるが、ここではそこまでは踏み込まない.)
+	
+	最後に既にMoaiを起動している場合はtarget.myfとフィルタファイルfilters/moai-chan_send.myfをリロードしなければならない.
+	一度Moaiを終了してそれをもう一度起動するか、あるいはWeb Configuration画面で「Restart Moai」ボタンを押せばよい.
+	
+	以上である.
+	これで以降のMoaiを介した通信では、このターゲットのサイトのPOST変数secret_of_fingとentry_timeに関しては、
+	常に上記の偽の値に置換される.
+@@.
+
+
+@@L filter_send_pragmatic_exam
+	最後に実際の適用例も出しておこう.
+	ちなみに、この例も我々Moai開発チームの１人である高速ヤキソバ変換氏が作成したものだ.
+	(pluginは用いない方法なので一部面倒だが)
+	
+	例えば掲示板「ふたばちゃんねる」を対象として、その送信ヘッダとPOST変数とCookieの値を加工したいとしよう.
+	target.myf内で例えばfutabaという名前のtargetを定義し、filters/futaba_send.myfというファイルを作成する.
+	このファイル内で以下の指定を行う.
+	
+	<div class=MstyComment>
+		@@V header_vars
+		User-Agent = ['Mozilla/5.0 MyBrowser_MoreMoreFireSexy']
+		@@.
+		
+		@@V post_vars
+		pthb = ['']
+		pthc = ['']
+		pthd = ['']
+		flrv = ['2739407074']
+		flvv = ['3792482965']
+		scsz = ['800x600x32']
+		pwd = ['']
+		js = ['on']
+		@@.
+		
+		# Cookie値のフィルタリング
+		# ここでの指定はサイトがSet-Cookieを発行した時点で自動的に書き変えられることがある.
+		@@V cookie_vars
+		posttime = ['']
+		pwdc = ['']
+		cxyl = ['5x3x2x0x2']
+		@@.
+		
+		# Cookie値の強制変更
+		# ここでの指定はサイトがSet-Cookieを発行しても書き変えられることはない.
+		@@V cookie_force
+		namec = ['']
+		@@.
+	</div>
+	
+	この例では、HTTPヘッダ変数のうち、User-Agent の値を「Mozilla/5.0 MyBrowser_MoreMoreFireSexy」へと変更している.
+	また、flrv, flvv, scszの値も適当な値にでっちあげておく.
+	ファイルが作成できたら、Moaiを起動(再起動)し、この状態で普通に「ふたばちゃんねる」のカタログ(要はfutaba.php)を開く.
+	
+	初回のカタログアクセスにおいて、上記のうちcookie_vars内のposttimeの値が、
+	ふたばによって発行された値に書き換わるはずである.
+	この後もう一度 filters/futaba_send.myf を開き、pthbとpthcの値を新しいposttimeの値に書き直しておく.
+	(pthbとpthcを空のままにしておいてもいけるケースもあるかもしれない.
+	また厳密に言えばpthcに設定すべき値は/bin/cachemt7.phpによって発行される最新の値である必要があるが、
+	この練習用例題ではとりあえずそこは妥協する)
+	
+	以上でフィルタの初期化が完了である.
+	これに加えIPも変更しておけば、以降はMoai起動中は特に何もせずとも普通にレスやスレ立てが出来るようになっているハズだ.
+	
+	尚、ここでは練習用例題としてこのような方法を紹介したが、普通はこんなことをしなくても「Virtual USERS Initiation」
+	ボタンを押せば一発で初期化完了である.
+	このボタンによりMoaiに付属しているfutabaプラグインが呼び出され、まさに上記の処理を内部で瞬時に行ってくれる.
+	
+	<div class=MstyComment>
+		<u><b>おまけ</b></u>
+		
+		上記でcxylというのは、
+		
+		<div class=MstyComment>
+			横のスレ個数 x 縦のスレ個数 x 各スレでの文字数 x 文字位置(0:下,1:右) x 画像サイズ(0から6までで0が最小で旧来の表示)
+		</div>
+		
+		というフォーマットを持つ記述子であり、これを指定しない場合、
+		futaba.phpはデフォルトとして ['14x6x4x0x0'] を指定したものとみなすようである.
+		
+		またnamecというのは、最後のレスにおいて使用したお名前欄の内容であり、
+		ここではこれを強制的に空値へとリセット(Cookie変数を削除)している.
+	</div>
+@@.
+
+@@P Link
+{ ['#TopBar'] ['一番上へ'] }
+{ ['https://mr-moai-2016.github.io'] ['Moaiドキュメント(オンライン)'] }
+{ ['https://github.com/mr-moai-2016/znk_project'] ['znk_project(github)'] }
+@@.

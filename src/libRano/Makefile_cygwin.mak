@@ -36,12 +36,12 @@ ABINAME = cygwin$(MACHINE)$(DEBUG)
 O = ./out_dir/$(ABINAME)
 
 ifeq ($(DEBUG), d)
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)d
 SLIBS_DIR=slib/$(PLATFORM)d
 else
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)
 SLIBS_DIR=slib/$(PLATFORM)
@@ -56,13 +56,14 @@ INCLUDE_FLAG+=  \
 include Makefile_version.mak
 
 BASENAME0=Rano
-DLIB_NAME0=cygRano.dll
+DLIB_NAME0=cygRano-$(DL_VER).dll
 DLIB_FILE0=$O/$(DLIB_NAME0)
-ILIB_FILE0=$O/cygRano.dll
-SLIB_FILE0=$O/cygRano.a
+ILIB_FILE0=$O/cygRano-$(DL_VER).dll
+SLIB_FILE0=$O/libRano.a
 OBJS0=\
 	$O/Rano_cgi_util.o \
 	$O/Rano_conf_util.o \
+	$O/Rano_dir_util.o \
 	$O/Rano_file_info.o \
 	$O/Rano_hash.o \
 	$O/Rano_html_ui.o \
@@ -75,9 +76,15 @@ OBJS0=\
 	$O/Rano_post.o \
 	$O/Rano_sset.o \
 	$O/Rano_txt_filter.o \
+	$O/Rano_vtag_util.o \
+	$O/tls_module/tls_module.o \
 	$O/dll_main.o \
 
 SUB_LIBS=\
+
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
 
 PRODUCT_DLIBS= \
 	__mkg_sentinel_target__ \
@@ -89,14 +96,17 @@ PRODUCT_SLIBS= \
 
 RUNTIME_FILES= \
 	__mkg_sentinel_target__ \
-	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/cygZnk.dll \
+	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/cygZnk-$(DL_VER).dll \
 
 
 
 # Entry rule.
-all: $O $(DLIB_FILE0) 
+all: $O/tls_module $O $(DLIB_FILE0) $(SLIB_FILE0) 
 
 # Mkdir rule.
+$O/tls_module:
+	mkdir -p $O/tls_module
+
 $O:
 	mkdir -p $O
 
@@ -104,18 +114,20 @@ $O:
 # Product files rule.
 $(SLIB_FILE0): $(OBJS0)
 	if test -e $(SLIB_FILE0) ; then rm -f $(SLIB_FILE0) ; fi
-	ar cru $(SLIB_FILE0) $(OBJS0) $(SUB_LIBS)
+	@echo ar cru $(SLIB_FILE0) {[objs]} $(SUB_OBJS_ECHO)
+	@     ar cru $(SLIB_FILE0) $(OBJS0) $(SUB_OBJS)
 	ranlib $(SLIB_FILE0)
 
 gsl.myf: $(SLIB_FILE0)
-	if test -e $(MKFSYS_DIR)/gslconv.exe ; then $(MKFSYS_DIR)/gslconv.exe -g gsl.myf $(SLIB_FILE0) $(MACHINE) ; fi
+	if test -e $(MKFSYS_DIR)/$(PLATFORM)/gslconv.exe ; then $(MKFSYS_DIR)/$(PLATFORM)/gslconv.exe -g gsl.myf $(SLIB_FILE0) $(MACHINE) ; fi
 
 gsl.def: gsl.myf
-	if test -e $(MKFSYS_DIR)/gslconv.exe ; then $(MKFSYS_DIR)/gslconv.exe -d gsl.myf gsl.def ; fi
+	if test -e $(MKFSYS_DIR)/$(PLATFORM)/gslconv.exe ; then $(MKFSYS_DIR)/$(PLATFORM)/gslconv.exe -d gsl.myf gsl.def ; fi
 
-$(DLIB_FILE0): $(OBJS0)
+$(DLIB_FILE0): $(OBJS0) $(SLIB_FILE0)
 	if test -e $(DLIB_FILE0) ; then rm -f $(DLIB_FILE0); fi
-	gcc -shared -o $(DLIB_FILE0) $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk.dll -lpthread -ldl -lstdc++  -lc
+	@echo gcc -shared -o $(DLIB_FILE0) {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll -lpthread -ldl -lstdc++  -lc
+	@     gcc -shared -o $(DLIB_FILE0) $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk-$(DL_VER).dll -lpthread -ldl -lstdc++  -lc
 
 
 ##
@@ -128,6 +140,12 @@ $(DLIB_FILE0): $(OBJS0)
 # the other way, '\' to the right hand of ':' we have to put only single '\',
 # for example $O\\%.o: $S\%.c .
 #
+$O/tls_module/%.o: $S/tls_module/%.c
+	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c $<
+
+$O/tls_module/%.o: $S/tls_module/%.cpp
+	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c $<
+
 $O/%.o: $S/%.c
 	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c $<
 
@@ -165,16 +183,15 @@ install: all install_slib install_dlib
 
 # Clean rule.
 clean:
-	rm -r $O/ 
+	rm -rf $O/ 
 
 # Src and Headers Dependency
-dll_main.o:
 Rano_cgi_util.o: Rano_cgi_util.h Rano_type.h Rano_log.h Rano_post.h
 Rano_conf_util.o: Rano_conf_util.h
+Rano_dir_util.o: Rano_dir_util.h Rano_file_info.h
 Rano_file_info.o: Rano_file_info.h
 Rano_hash.o: Rano_hash.h
-Rano_html_ui.o:
-Rano_htp_boy.o: Rano_htp_boy.h Rano_log.h Rano_post.h
+Rano_htp_boy.o: Rano_htp_boy.h Rano_log.h Rano_post.h tls_module/tls_module.h
 Rano_htp_modifier.o: Rano_htp_modifier.h
 Rano_log.o: Rano_log.h
 Rano_module.o: Rano_module.h Rano_module_ary.h Rano_log.h Rano_myf.h Rano_txt_filter.h Rano_plugin_dev.h Rano_parent_proxy.h Rano_file_info.h
@@ -183,3 +200,5 @@ Rano_parent_proxy.o: Rano_parent_proxy.h Rano_log.h
 Rano_post.o: Rano_post.h
 Rano_sset.o: Rano_sset.h
 Rano_txt_filter.o: Rano_txt_filter.h
+Rano_vtag_util.o: Rano_vtag_util.h
+tls_module/tls_module.o: tls_module/tls.h

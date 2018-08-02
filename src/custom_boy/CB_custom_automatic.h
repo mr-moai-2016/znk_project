@@ -14,7 +14,7 @@ CBStatus
 CBCustomAutomatic_main( RanoCGIEVar* evar, ZnkVarpAry cb_vars, const char* cb_src,
 		ZnkBird bird, ZnkStr RE_key, CBFgpInfo fgp_info, struct CBUAInfo_tag* ua_info,
 		ZnkVarpAry main_vars, uint64_t* ptua64, ZnkStr msg, ZnkStr category, ZnkStr lacking_var,
-		CBConfigInfo* info, bool is_authenticated );
+		CBConfigInfo* info, bool is_authenticated, bool all_cookie_clear );
 
 Znk_EXTERN_C_END
 

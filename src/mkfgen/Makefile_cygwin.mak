@@ -36,12 +36,12 @@ ABINAME = cygwin$(MACHINE)$(DEBUG)
 O = ./out_dir/$(ABINAME)
 
 ifeq ($(DEBUG), d)
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)d
 SLIBS_DIR=slib/$(PLATFORM)d
 else
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)
 SLIBS_DIR=slib/$(PLATFORM)
@@ -64,9 +64,14 @@ OBJS0=\
 	$O/Mkf_lib_depend.o \
 	$O/Mkf_seek.o \
 	$O/Mkf_src_depend.o \
+	$O/Mkf_sset.o \
 	$O/mkfgen.o \
 
 SUB_LIBS=\
+
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
 
 PRODUCT_EXECS= \
 	__mkg_sentinel_target__ \
@@ -74,7 +79,6 @@ PRODUCT_EXECS= \
 
 RUNTIME_FILES= \
 	__mkg_sentinel_target__ \
-	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/cygZnk.dll \
 
 
 
@@ -88,7 +92,8 @@ $O:
 
 # Product files rule.
 $(EXE_FILE0): $(OBJS0)
-	$(LINKER) -o $(EXE_FILE0) $(OBJS0) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/cygZnk.dll -lpthread -ldl -lstdc++ 
+	@echo $(LINKER) -o $(EXE_FILE0) {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk.a -lpthread -ldl -lstdc++ 
+	@     $(LINKER) -o $(EXE_FILE0) $(OBJS0) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk.a -lpthread -ldl -lstdc++ 
 
 
 ##
@@ -123,9 +128,9 @@ install_data:
 
 # Install exec rule.
 install_exec: $(EXE_FILE0)
-	mkdir -p ../../mkfsys 
-	for tgt in $(EXE_FILE0) ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../mkfsys/ ; fi ; done
-	@for tgt in $(RUNTIME_FILES) ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../mkfsys/ ; fi ; done
+	mkdir -p ../../mkfsys/$(PLATFORM) 
+	for tgt in $(EXE_FILE0) ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../mkfsys/$(PLATFORM)/ ; fi ; done
+	@for tgt in $(RUNTIME_FILES) ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../mkfsys/$(PLATFORM)/ ; fi ; done
 
 # Install dlib rule.
 install_dlib:
@@ -142,10 +147,11 @@ clean:
 	rm -r $O/ 
 
 # Src and Headers Dependency
-mkfgen.o: Mkf_install.h Mkf_include.h Mkf_seek.h Mkf_src_depend.h Mkf_lib_depend.h Mkf_android.h
+mkfgen.o: Mkf_install.h Mkf_include.h Mkf_seek.h Mkf_src_depend.h Mkf_lib_depend.h Mkf_android.h Mkf_sset.h
 Mkf_android.o: Mkf_android.h Mkf_seek.h Mkf_lib_depend.h Mkf_include.h
 Mkf_include.o: Mkf_include.h
 Mkf_install.o: Mkf_install.h
 Mkf_lib_depend.o: Mkf_lib_depend.h
 Mkf_seek.o: Mkf_seek.h
 Mkf_src_depend.o: Mkf_src_depend.h Mkf_seek.h
+Mkf_sset.o: Mkf_sset.h

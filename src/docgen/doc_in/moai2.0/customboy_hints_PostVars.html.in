@@ -1,0 +1,177 @@
+@def_quote [' ']
+
+@@V config
+doc_title = ['Moai+Easter エキスパートマニュアル']
+author = ['高速ヤキソバ変換']
+update = ['2017/10/04']
+category_path = { ['moai2_0_exp'] ['customboy'] }
+urp           = ['/moai2.0/customboy_hints_PostVars.html']
+nb_tags = { ['div'] ['ul'] ['li'] }
+title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
+@@.
+
+@@L AtFirst
+	ここではCustomBoyが仮想化するPost変数のHint情報を列挙する.
+	(主にふたばちゃんねるの例を題材とする).
+@@.
+
+@@P Index
+{ ['#pv_js']   ['Post variable : js']   ['futaba'] }
+{ ['#pv_pthb'] ['Post variable : pthb'] ['futaba'] }
+{ ['#pv_pthc'] ['Post variable : pthc'] ['futaba'] }
+{ ['#pv_pthd'] ['Post variable : pthd'] ['futaba'] }
+{ ['#pv_ptua'] ['Post variable : ptua'] ['futaba'] }
+{ ['#pv_scsz'] ['Post variable : scsz'] ['futaba'] }
+{ ['#pv_pwd']  ['Post variable : pwd']  ['futaba'] }
+{ ['#pv_flrv'] ['Post variable : flrv'] ['futaba'] }
+{ ['#pv_flvv'] ['Post variable : flvv'] ['futaba'] }
+@@.
+
+
+@@L pv_js
+	この値は必ず on にしておかなければならない.
+	
+	名前の由来は<s><b>女子小学s</b></s>無論<b>J</b>ava<b>S</b>criptである.
+	Javascriptを実行したかどうかを判断するためのものであり、
+	/bin/base4.js を実行すると on に設定される仕組みとなっている.
+	( 無論、Javascriptの/bin/base4.jsを実行させずとも、最初からこのPost変数 に on 値を設定しておけば良い. )
+	ふたばにおいてはこれを on にしておかないと「環境変数がありません(Javascriptがオフ？)」というエラーが表示され、
+	投稿に失敗するのは周知の通りである.
+@@.
+
+@@L pv_pthb
+	これについては<a class=MstyElemLink href=#pv_pthc>pthc</a>のセクションを参照して頂きたい.
+@@.
+
+@@L pv_pthc
+	ptは<b>P</b>os<b>T</b>(あるいは<b>P</b>ost <b>T</b>ime) の意味であろう. h は不明である.
+	( <b>P</b>a<b>T</b><b>H</b> の可能性もありそうだが、現状の仕様とは意味が合わない. )
+	他にも類似したものとして pthb や pthd などがあるが、なぜ a からではなく b から始まるのかも不明である.
+	(筆者が知るよりさらに昔の仕様に由来するのかもしれない)
+	
+	この値はfutaba.phpに初アクセスした時間(およびそれに類した値)である.
+	現状ではカタログに初めてアクセスするか、または初めてレス投稿した際にまずpthcに設定されるようである.
+	あるいは /bin/cachemt7.php にアクセスしたときにそれに類した値が生成される形となる.
+	おそらくワンタイムパスワードならぬ、ワンタイムユーザIDとでも呼ぶべき用途として発行し、
+	futaba.php内部で使っているのだろう.
+
+	<b>一度目の投稿</b>においては、localStorage(futabapt)にpthcのコピー値も設定される.
+	また<b>二度目の投稿</b>において、さらにそのlocalStorage(futabapt)のコピー値がpthbへと設定される.
+	おそらくpthbの値の存在によってlocalStorageに確実に値が設定されたことを確認する意図があると思われる.
+	
+	一旦設定されると、CookieおよびBrowser CacheおよびlocalStorageこれら全てを消去しない限り同じ値が残り続ける.
+@@.
+
+@@L pv_pthd
+	現状では使用されている気配はない(かつては使用されていたこともある).
+@@.
+
+@@L pv_ptua
+	ptは<b>P</b>os<b>T</b>(あるいは<b>P</b>ost <b>T</b>ime) の意味であろう.
+	uaは<b>U</b>ser<b>A</b>gentである.
+	この値は頻繁にその意味が変更される歴史を持つ.
+	最初期はnavigator.userAgentの文字列値をそのまま格納していたため、名前に ua という文字が含まれているのであろう.
+	
+	現状での意味は、33個のものBrowserとそのVersion固有の真偽値をとるJavascriptコード片(Snippetと呼ぶ)の結果値を、
+	33bitのflag値にpackした上で10進数変換したものである.
+	この計算はレス投稿時に毎回 /bin/base4.js におけるptfk function内で行われており、
+	sphという名前の配列変数を検索すると該当処理を行っている行を見つけることができる.
+	まあ派手に長い行なので目視でもすぐわかるが…
+	(尚、最大値は32bit非負整数のMaxを超える可能性があるため、浮動小数点数をベースとして行われている模様).
+	
+	要はBrowserとそのVersion固有の値の寄せ集めであるため、Browserそのもの(あるいは場合によってはそのVersionのみでも良いが)
+	を変更しない限り基本的に同じ値をとり続ける.
+	
+	尚、この値を乱数生成器などで出力される完全なrandomな整数値として割り当てても、少なくとも筆者の環境では現状問題ないようである.
+	しかしこの値からinvertすれば元のBrowser環境を(ある程度の範囲はあるとは言え)一意に推定することが可能である.
+	つまりfutaba.php側でptuaの値より、あなたの使っているBrowserが何であるのかの推定が行われている可能性は十分にある.
+	(というより、わざわざfutaba.phpがこのようなPost変数を導入した理由はそれしか考えられまい)
+	よってより万全を期すなら、このptuaの値を<b>それらしく</b>偽装する方が望ましいといえる.
+	
+	例えば下位8bitはIE(Edge)に関するものであるため、IE(Edge)以外のBrowserとして偽装したいなら、
+	その数字を必ず<b>256の倍数</b>にすれば「それらしく」偽装できる.
+	それ以外にも各Snippetの意味を事細かに調べてBrowserとVersion毎に反映させていけば値の精度はより高まるであろう.
+	自力でツールなどを作ってこの値を偽装される方で、この辺りに拘りのある方は参考にされてはどうだろうか？
+	各Snippetの意味については、<a class=MstyElemLink href=/moai2.0/customboy_hints_Snippet.html>こちら</a>に完全なリファレンスを作成したので参照していただきたい.
+
+	尚、CustomBoyエンジンではKnowledge-Baseによりこの値を自動的に生成する.
+@@.
+
+
+@@L pv_scsz
+	名前の由来は <b>SC</b>reen<b>S</b>i<b>Z</b>e であろう. 
+	
+	この値は、あなたの使っているモニタの解像度と色深度の情報を示す.
+	(Javascriptにこれを取得するAPIがあり、レス投稿(ptfk function)時に毎回 /bin/base4.jsでこれを取得しているようである)
+	
+	<div class=MstyComment>
+    	モニタ解像度の幅 x モニタ解像度の高さ x モニタの色深度ビット数
+	</div>
+
+	というフォーマットを持つ記述子となる.
+	例えば、640x480x24、1024x768x32といった値をとる.
+
+	尚、CustomBoyエンジンではKnowledge-Baseによりこの値を自動的に生成する.
+@@.
+
+
+@@L pv_pwd
+	名前の由来は <b>P</b>ass<b>W</b>or<b>D</b> である.
+	
+	この値は、レス投稿時のいわゆる「削除キー」に相当するものである.
+	ユーザが明示的に指定してもよいが、空にしておけば適当な削除キー値が自動的に割り当てられる.
+	このときCookieのpwdc項目にその値が格納され、レス投稿時においてはJavascriptを介してこの値がさらにPost変数 pwdへセットされる.
+
+	通常はふたばより自動的に割り当てられた値をそのまま使えばよい.
+	ただしユーザ情報を初期化したい場合は、Cookieのpwdc値を一旦空にしておくとよい.
+@@.
+
+
+@@L pv_flrv
+	この値は、Fingerprint値と呼ばれるものが格納される.
+	
+	少し歴史を述べると、当初これにはFingerprint値ではなくAdobe FlashのReVision番号が格納されていた.
+	しかしそれだと値が被り過ぎるためか、あるいはFlashに見切りをつけたためかは知らないが、
+	ある時ふたばはその仕様を廃止した.
+	そしてこの変数名だけをそのまま流用して、替わりにここにFingerprint値を格納するようになった経緯がある.
+	名前に含まれる謎の「l」の文字はその名残である.
+	
+	Fingerprint値の導出方法について簡単に解説しよう.
+	この値は /bin/fp.js というJavascript内で以下のalgorithmによって計算される.
+	<ol>
+		<li>まずあなたのBrowser環境やMachine環境の様々な情報をJavascriptにより取得する.</li>
+		<li>次にそれらを集めて連結し、一つの巨大文字列を作る.</li>
+		<li>最後にその巨大文字列を元に32bit整数のHash値を計算する.</li>
+	</ol>
+	このHash値がFingerprint値である.
+	BrowserやMachine環境に依存した情報であるため、これらが変わればこのFingerprint値は変化する.
+
+	具体的にどのような情報が取得されるのかを知りたい方は<a class=MstyElemLink href=/moai2.0/customboy_hints_Fingerprint.html>こちら</a>を参照されるとよい.
+	
+	Hash値が何のことかわからない方は、次のように考えればよい.
+	例えばあなたのMachineの特徴を示す情報が３つあったとしてそれをそれぞれ仮に数字の 2, 4, 7 とする.
+	これらを足し算して合計すると 2 + 4 + 7 = 13 となるが、この 13 がHash値に相当し、即ちここではflrvやflvvの値として送信される.
+	非常に大雑把だが、とりあえずそのようなイメージで十分である.
+	
+	ここでのポイントは<b>13 から元の値 2, 4, 7 を一意には復元できない</b>ということである.
+	( この特性をirreversiveと言う. あるいは数学的には「injectiveではない」と言う. )
+	よってこの値は実のところデタラメに設定しても一般にその妥当性を検証する術はない.
+	この点はptuaとは大きく異なる. (futaba.phpがFingerprintに加え、新しいptuaの仕様を追加的に導入した経緯もそれによる).
+
+	尚、CustomBoyエンジンではKnowledge-Baseによりこの値を自動的に生成する.
+@@.
+
+@@L pv_flvv
+	この値も<a class=MstyElemLink href=#pv_flrv>flrv</a>と同じくFingerprint値と呼ばれるものが格納される.
+	flrvとflvvの違いはその取得する情報の種類だけである.
+	flrvが取得する全情報に加え、BrowserのPlugin情報文字列まで加味したものがflvvである.
+
+	尚、CustomBoyエンジンではKnowledge-Baseによりこの値を自動的に生成する.
+@@.
+
+
+@@P Link
+{ ['#TopBar'] ['一番上へ'] }
+{ ['https://mr-moai-2016.github.io'] ['Moaiドキュメント(オンライン)'] }
+{ ['https://github.com/mr-moai-2016/znk_project'] ['znk_project(github)'] }
+@@.

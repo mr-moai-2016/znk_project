@@ -1,0 +1,75 @@
+@def_quote [' ']
+
+@@V config
+my_libs_root = ['..']
+template_dir = ['../../mkfsys/template']
+install_dir = ['../../moai-v$(REL_VER)-$(PLATFORM)/birdman']
+install_data_dir = ['../../moai-v$(REL_VER)-$(PLATFORM)/birdman']
+makefile_version_landmark = ['moai']
+@@.
+
+@@L include_paths_common
+@{libZnk}
+@{libRano}
+@@.
+
+@@L dependency_libs_common
+slib: @{libRano} Rano $(DL_VER)
+slib: @{libZnk}  Znk  $(DL_VER)
+@@.
+
+@@L runtime_additional
+@@.
+
+@@V info_vc
+linking_libs_special = ['ws2_32']
+@@.
+
+@@V info_mingw
+linking_libs_special = ['ws2_32']
+@@.
+
+@@V info_msys
+linking_libs_special = ['ws2_32']
+@@.
+
+@@V info_linux
+linking_libs_special = ['pthread dl stdc++']
+@@.
+
+@@V info_cygwin
+linking_libs_special = ['pthread dl stdc++']
+@@.
+
+@@L mkid_list
+vc
+mingw
+msys
+linux
+cygwin
+android
+@@.
+
+@@L product_list
+exec birdman main.c
+@@.
+
+@@L rc_list
+@@.
+
+@@L sublibs_list
+@@.
+
+@@L install_data_list
+birdman.myf
+@@.
+
+@@L ignore_list
+ignores
+obsolete
+@@.
+
+@@L src_suffix_list
+c
+cpp
+@@.

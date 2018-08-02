@@ -14,7 +14,7 @@ template_lib_ver_sfx  = ['-$[lib_dlver]$']
 template_lib_file     = ['$[lib_pfx]$$[lib_name]$$[lib_ver_sfx]$.$[lib_sfx]$']
 template_libs_path    = ['$(MY_LIBS_ROOT)/$[lib_dir]$/out_dir/$(ABINAME)/$[lib_file]$']
 template_runtime_path = ['$(MY_LIBS_ROOT)/$(DLIBS_DIR)/$[lib_file]$']
-template_sublib       = ['$[submkf_dir]$/$O/$[lib_pfx]$$[sublib_name]$.$[slib_sfx]$']
+template_sublib_dir   = ['$[submkf_dir]$/$O']
 shell = ['dos']
 @@.
 
@@ -25,19 +25,22 @@ $[obj_dir]$:
 
 @@L exefile_rule
 $[exe_file]$: $[objs]$ $[res_file]$
-	$(LINKER) -o $[exe_file]$ $[res_file]$ $[objs]$ $(SUB_LIBS) $[dep_libs]$
+	@echo $(LINKER) -o $[exe_file]$ $[res_file]$ {[objs]} $(SUB_LIBS) $[dep_libs]$
+	@     $(LINKER) -o $[exe_file]$ $[res_file]$ $[objs]$ $(SUB_LIBS) $[dep_libs]$
 @@.
 
 @@L dlibfile_rule
 $[dlib_file]$: $[objs]$ $[slib_file]$ gsl.def
-	gcc -static-libgcc -g -Wl,--disable-stdcall-fixup,--kill-at -shared -o $[dlib_file]$ $[objs]$ $(SUB_LIBS) $[dep_libs]$ $[def_file]$
+	@echo gcc -static-libgcc -g -Wl,--disable-stdcall-fixup,--kill-at -shared -o $[dlib_file]$ {[objs]} $(SUB_LIBS) $[dep_libs]$ $[def_file]$
+	@     gcc -static-libgcc -g -Wl,--disable-stdcall-fixup,--kill-at -shared -o $[dlib_file]$ $[objs]$ $(SUB_LIBS) $[dep_libs]$ $[def_file]$
 	dlltool --kill-at --dllname $[dlib_file]$ -d $[def_file]$ -l $[ilib_file]$
 @@.
 
 @@L slibfile_rule
 $[slib_file]$: $[objs]$
 	if exist $[slib_file]$ del $[slib_file]$
-	ar cru $[slib_file]$ $[objs]$ $(SUB_LIBS)
+	@echo ar cru $[slib_file]$ {[objs]} $(SUB_OBJS_ECHO)
+	@     ar cru $[slib_file]$ $[objs]$ $(SUB_OBJS)
 	ranlib $[slib_file]$
 @@.
 
@@ -78,7 +81,7 @@ install:
 @@.
 
 @@L clean_here_rule
-	del /Q $O\ 
+	rmdir /S /Q $O\ 
 @@.
 
 @@L clean_sub_rule

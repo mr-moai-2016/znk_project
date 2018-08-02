@@ -1,0 +1,331 @@
+@def_quote [' ']
+
+##
+# doc_title:
+#   この記事のタイトル.
+#
+# author:
+#   記事担当者.
+#
+# update:
+#   最終更新日.
+#
+# category_path:
+#   ガイドメニューにおけるカテゴリを示す.
+#
+# urp:
+#   ガイドメニューのリンク先.
+#
+# nb_tags:
+#   ここで指定した tag が行末に現れた場合は <br> の自動付加を行わない.
+#
+# title_attr_fmt:
+#   各Sectionのタイトルの部分に続けて付加的な文字列を挿入することができる.
+#   これをTitle Attributeと呼び、ここではそのformat文字列を指定する.
+#   またこのformat文字列に %s を一つ含めることにより、Indexセクションの第3カラム要素をそこに挿入させることができる.
+#
+# 行末における<\>:
+#   これが行末に指定されている場合は <br> の自動付加を行わない.
+# 
+#
+@@V config
+doc_title     = ['インフォメーション']
+author        = ['Mr.Moai']
+update        = ['2018/08/03']
+category_path = {}
+urp           = ['/index_github.html']
+nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
+@@.
+
+@@L AtFirst
+	我々「全日本ネットワーク研究所(通称ZNK)」では、フリーなアプリケーションを開発して皆様に提供しております.
+	これらはすべてオープンソースであり、またほぼすべてが Windows、Linux、そしてAndroid向けに開発されたものであります.
+	現在このサイトで提供しておりますものを以下でご紹介しましょう.
+@@.
+
+@@P Index
+{ ['#WhatsNew'] ['What's new?'] }
+{ ['#Moai_Engine'] ['Moaiのご紹介'] }
+{ ['#MoaiCGIApp_Easter'] ['Easterのご紹介'] }
+{ ['#MoaiCGIApp_VirtualUSERS'] ['VirtualUSERSのご紹介'] }
+{ ['#MoaiCGIApp_Others'] ['その他のWebアプリケーション'] }
+@@.
+
+
+@@L WhatsNew
+	<ul>
+		<li><b>2018/08/03 Ver2.1リリース.</b>
+		
+		Moai Ver2.1がリリースされました.
+		このバージョンで追加された新機能については<a class=MstyElemLink href="/announcement.html#WhatIsChanging_v2_1">こちら</a>にまとめてありますので参照してください.
+		リリースノートをご覧になりたい方は<a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project/tree/master/src/ReleaseNote.md target=_blank>こちら</a>を参照してください.
+		
+		<div class=MstyComment>
+		<b><u>バージョン2.0.*系をご使用の方へご注意</u></b>
+
+		Ver2.1を新規インストールして頂いても勿論かまいませんが、
+		Ver2.0.*から Ver2.1へアップグレードするための修正パッチを提供しています.
+		詳しくは<a class=MstyElemLink href=/moai2.0/upgrade.html#From2_0_To2_1>こちら</a>をご覧下さい.
+		</div>
+		</li>
+		
+		<li><b>2018/05/23 インストールガイド(Android版)の誤り訂正.</b>
+		
+		Moai Ver2.0のインストールガイドのAndroid版の項目において、一部記述が不十分な箇所がありました.
+		Android版でのmoai起動は <b>sh moai_for_android.sh</b> を実行してください.
+		
+		<div class=MstyComment>
+			<b><u>Note.</u></b>
+			
+			このmoai_for_android.shを使わずにmoaiを直接起動した場合、easterなどのcgiの実行権限が付与されず、
+			これらの起動に失敗する可能性があります.
+			Android版でMoaiは起動するのにEasterなどの使用だけが出来なかった方は、おそらくこれが原因と思われます.
+			発見が遅れ申し訳ありません.
+		</div>
+		</li>
+		
+		<li><b>2018/05/23 赤福、ふたクロ等を同時使用する場合の説明を追加.</b>
+		
+		赤福、ふたクロを使用している方はEasterを使用中にこれらの機能が発動しない状態になっていたことと思います.
+		これについては現状いくつかの回避策があります.
+		<a class=MstyElemLink href=/moai2.0/easter_reference.html#CooperateOthersViewers>こちら</a>をご一読頂ければと思います.
+		</li>
+		
+		<li><b>2018/05/02 Moai Ver2.0.2 リリース.</b>
+		
+		Moai CGI に(自立実行形式ではない)インタープリタ型のCGIスクリプトを実行させた場合、
+		カレントディレクトリのセッティングが行われていなかったため、多くのケースでこれが起動できないことがわかりました.
+		(例えばphpスクリプトではこの問題が発生せず、rubyやpythonスクリプトなどではこの問題が発生します.)
+		これを修正しています.
+		</li>
+		
+		<li><b>2018/04/28 Moai Ver2.0.1(修正パッチ).</b>
+		
+		Easter(MoaiCGIアプリケーション)
+		赤福と一緒に使っている場合、極一部の環境でオートリンク機能がうまく機能しないケースがあることがわかりました.
+		これを修正しています.
+		</li>
+		
+		<li><b>2018/04/27 Moai Ver2.0 リリース.</b>
+
+		このバージョンで追加された新機能については<a class=MstyElemLink href="/announcement.html#WhatIsChanging_v2_0">こちら</a>にまとめてありますので参照してください.
+		
+		<div class=MstyComment>
+		<b><u>旧バージョン1.1.8をご使用の方へご注意</u></b>
+		
+		Moai Ver2.0は基本的に<b>旧バージョン1.1.8とは全く互換性がない別のアプリケーション</b>とお考え下さい.
+		例えば旧バージョン1.1.8のディレクトリにそのままVer2.0のファイル群を上書きコピーなどして
+		バージョンアップすることは、おそらく問題が発生するためお勧めできません.
+		旧バージョン1.1.8をお使いの方は、お手数ですが最新バージョンのMoaiを新規インストールして頂ければと思います.
+		</div>
+		</li>
+		
+		<li><b>2016/10/07 Moai Ver1.1.8 リリース.</b>  
+		
+		これはVer1.1系の最終リリースとなります.
+		Ver1.1系は既にサポートを終了しております.
+		</li>
+		
+		<li><b>2016/05/21 Moai Ver1.0 リリース.</b> 
+		</li>
+	</ul>
+@@.
+
+
+@@L Moai_Engine
+	<ul>
+		<li><b>Moai Ver2.1本体</b><span class=MstyAuthor> (Author: Mr.Moai)</span>
+		<div class=MstyFrame>
+			<b><u>これは何？</u></b>
+			
+			<div class=MstyIndent>
+				Moaiはポータブルウェブサーバエンジンです.
+				(ローカルプロキシとして利用することもできます).
+				詳細については、<a class=MstyElemLink href=/moai2.0/moai_feature.html>Moaiの特徴</a>をご覧下さい.
+				<a class=MstyElemLink href=/FAQ.html>FAQ</a>も併せてご覧頂くと、あなたの所望の機能が見つかるかもしれません.
+			</div>
+			
+			<b><u>動作環境</u></b>
+			
+			<div class=MstyIndent>
+				以下の環境で動作します.
+				
+				<div class=MstyLogo>
+					<img src=/imgs/windows_icon.png height=48>
+					Windows2000以降
+				</div>
+				<div class=MstyLogo>
+					<img src=/imgs/linux_icon.png height=48>
+					Linux x86/x86_64
+				</div>
+				<div class=MstyLogo>
+					<img src=/imgs/android_icon.png height=48>
+					Android 4.0以降
+				</div>
+			</div>
+			
+			<b><u>スクリーンショット</u></b>
+			
+			<div class=MstyIndent>
+				Moaiが起動中はあなたのブラウザで以下のような画面を表示させることができます.
+				ここからMoaiシステムを利用した様々なWebアプリケーションをブラウザ上で利用できます.
+				例えば以下でも紹介しているEasterやVirtualUSERSなどです.
+
+				<div class=MstyFrame>
+					<img src=/imgs/moai_top_page.png width=100%>
+				</div>
+			</div>
+			
+			<b><u>ダウンロードおよびインストール</u></b>
+
+			<div class=MstyIndent>
+				初めての方は<a class=MstyElemLink href=/moai2.0/install.html>インストールガイド</a>をまずご参照ください.
+				ダウンロード先のリンクもそちらに示してあります.
+				既にMoai Ver2.0をインストールされている方は、<a class=MstyElemLink href=/moai2.0/upgrade.html>Moaiのアップグレード方法</a>を参照してください.
+			</div>
+		</div>
+		</li>
+	</ul>
+@@.
+
+
+@@L MoaiCGIApp_Easter
+	<ul>
+		<li><b>Easter</b><span class=MstyAuthor> (Author: Zenkaku)</span>
+		<div class=MstyFrame>
+			<b><u>これは何？</u></b>
+			
+			<div class=MstyIndent>
+				EasterはMoaiシステム上で動くウェブアプリケーションの一つです.
+				あなたのブラウザ上で仮想ブラウザ環境を実現しつつサポートサイトを閲覧できるビューアです.
+			</div>
+			
+			<b><u>動作環境</u></b>
+			
+			<div class=MstyIndent>
+				以下の環境で動作します.
+				
+				<div class=MstyLogo>
+					<img src=/imgs/moai.png height=48>
+					Moai CGI
+				</div>
+			</div>
+			
+			<b><u>サポートサイト</u></b>
+			
+			<div class=MstyIndent>
+				以下の匿名掲示板サイトをサポートします.
+				
+				<div class=MstyLogo>
+					<img src=/imgs/futaba_icon.png height=48>
+					ふたばちゃんねる
+				</div>
+				<div class=MstyLogo>
+					<img src=/imgs/5ch_icon.png height=48>
+					５ちゃんねる
+				</div>
+			</div>
+			
+			<b><u>スクリーンショット</u></b>
+			
+			<div class=MstyIndent>
+				Easterの画面に入るとあなたのブラウザで以下のような画面が表示され、
+				ここから仮想ブラウザ環境にてリンク先のサイトを閲覧することができます.
+				これを<b>仮想ブラウジング</b>と呼びます.
+				
+				<div class=MstyFrame>
+					<img src=/imgs/easter_link_manager1.png width=100%>
+				</div>
+			</div>
+			
+			<b><u>ダウンロードおよびインストール</u></b>
+			
+			<div class=MstyIndent>
+				Moaiエンジン本体をインストールすれば、このツールはデフォルトで付属しています.
+
+				初めての方は<a class=MstyElemLink href=/moai2.0/install.html>インストールガイド</a>をまずご参照ください.
+				ダウンロード先のリンクもそちらに示してあります.
+				既にMoai Ver2.0をインストールされている方は、<a class=MstyElemLink href=/moai2.0/upgrade.html>Moaiのアップグレード方法</a>を参照してください.
+			</div>
+		</div>
+		</li>
+	</ul>
+@@.
+
+
+@@L MoaiCGIApp_VirtualUSERS
+	<ul>
+		<li><b>VirtualUSERS</b><span class=MstyAuthor> (Author: K.Yakisoba.H and Zenkaku)</span>
+		<div class=MstyFrame>
+			<b><u>これは何？</u></b>
+			
+			<div class=MstyIndent>
+				VirtualUSERSはMoaiシステム上で動くウェブアプリケーションの一つです.
+				Moai+Easterでの閲覧の際に使われる仮想ブラウザ環境を、ボタン一つで自動的に構築/再構築するツールです.
+			</div>
+			
+			<b><u>動作環境</u></b>
+			
+			<div class=MstyIndent>
+				以下の環境で動作します.
+				
+				<div class=MstyLogo>
+					<img src=/imgs/moai.png height=48>
+					Moai CGI
+				</div>
+			</div>
+			
+			<b><u>サポートサイト</u></b>
+			
+			<div class=MstyIndent>
+				以下の匿名掲示板サイトをサポートします.
+				
+				<div class=MstyLogo>
+					<img src=/imgs/futaba_icon.png height=48>
+					ふたばちゃんねる
+				</div>
+				<div class=MstyLogo>
+					<img src=/imgs/5ch_icon.png height=48>
+					５ちゃんねる
+				</div>
+			</div>
+			
+			<b><u>スクリーンショット</u></b>
+			
+			<div class=MstyIndent>
+				VirtualUSERSの画面に入るとあなたのブラウザで以下のような画面が表示されます.
+				この画面の「VirtualUSERS」ボタンを押すだけで仮想ブラウザ環境の構築が完了します.
+				設定等はほとんどなく、初心者でも簡単に使うことができます.
+				
+				<div class=MstyFrame>
+					<img src=/imgs/virtual_users1.png width=100%>
+				</div>
+			</div>
+			
+			<b><u>ダウンロードおよびインストール</u></b>
+			
+			<div class=MstyIndent>
+				Moaiエンジン本体をインストールすればデフォルトで付属しています.
+
+				初めての方は<a class=MstyElemLink href=/moai2.0/install.html>インストールガイド</a>をまずご参照ください.
+				ダウンロード先のリンクもそちらに示してあります.
+				既にMoai Ver2.0をインストールされている方は、<a class=MstyElemLink href=/moai2.0/upgrade.html>Moaiのアップグレード方法</a>を参照してください.
+			</div>
+		</div>
+		</li>
+	</ul>
+@@.
+
+
+@@L MoaiCGIApp_Others
+	その他、CustomBoy、ProxyFinderといったWebアプリケーションがMoaiにデフォルトで付属しています.
+	また、Moai上で動くウェブアプリケーションは、あなたが独自に開発することもできます.
+	詳細についてはマニュアルをご参照ください.
+@@.
+
+
+@@P Link
+{ ['#TopBar'] ['一番上へ'] }
+{ ['https://mr-moai-2016.github.io'] ['Moaiドキュメント(オンライン)'] }
+{ ['https://github.com/mr-moai-2016/znk_project'] ['znk_project(github)'] }
+@@.

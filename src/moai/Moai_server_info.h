@@ -83,6 +83,11 @@ MoaiServerInfo_refCookieExtraVars( void );
 
 const char*
 MoaiServerInfo_authenticKey( void );
+void
+MoaiServerInfo_set_authenticKey( const char* authentic_key );
+
+const char*
+MoaiServerInfo_version( bool is_load_vtag );
 
 Znk_EXTERN_C_END
 

@@ -41,9 +41,9 @@ void
 ZnkS_copy( char* buf, size_t buf_size, const char* cstr, size_t cstr_leng )
 {
 	if( buf_size ){
-		const size_t cpy_size = ( cstr_leng == Znk_NPOS ) ?
-			Znk_MIN( Znk_strlen(cstr), buf_size-1 ) :
-			Znk_MIN( cstr_leng, buf_size-1 ) ;
+		size_t cpy_size;
+		cstr_leng = ( cstr_leng == Znk_NPOS ) ? strlen(cstr) : cstr_leng;
+		cpy_size = Znk_MIN( cstr_leng, buf_size-1 );
 		memmove( buf, cstr, cpy_size );
 		buf[ cpy_size ] = '\0';
 	}

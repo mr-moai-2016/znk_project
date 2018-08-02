@@ -33,7 +33,7 @@ COMPILER := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc \
 	-fpic -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv5te -mtune=xscale -msoft-float -mthumb -Os \
 	-g -DNDEBUG -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 \
 	-DANDROID \
-	-Wa,--noexecstack -Wformat -Werror=format-security -Wall \
+	-Wa,--noexecstack -Wformat -Werror=format-security -Wall  \
 	-I$(PLATFORMS_LEVEL)/arch-arm/usr/include
 
 LINKER   := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-g++ \
@@ -54,7 +54,7 @@ COMPILER := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc \
 	-fpic -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfpu=vfpv3-d16 -mfloat-abi=softfp -mthumb -Os \
 	-g -DNDEBUG -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 \
 	-DANDROID \
-	-Wa,--noexecstack -Wformat -Werror=format-security -Wall \
+	-Wa,--noexecstack -Wformat -Werror=format-security -Wall  \
 	-I$(PLATFORMS_LEVEL)/arch-arm/usr/include \
 
 LINKER   := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-g++ \
@@ -75,7 +75,7 @@ COMPILER := $(TOOLCHAINS_DIR)/bin/i686-linux-android-gcc \
 	-ffunction-sections -funwind-tables -no-canonical-prefixes -fstack-protector -O2 \
 	-g -DNDEBUG -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300 \
 	-DANDROID \
-	-Wa,--noexecstack -Wformat -Werror=format-security -Wall \
+	-Wa,--noexecstack -Wformat -Werror=format-security -Wall  \
 	-I$(PLATFORMS_LEVEL)/arch-x86/usr/include \
 
 LINKER   := $(TOOLCHAINS_DIR)/bin/i686-linux-android-g++ \
@@ -97,6 +97,8 @@ include Makefile_version.mak
 BASENAME0=gslconv
 EXE_FILE0=$O\gslconv
 OBJS0=\
+	$O\minizip/ioapi.o \
+	$O\minizip/unzip.o \
 	$O\Znk_algo_vec.o \
 	$O\Znk_bfr.o \
 	$O\Znk_bfr_ary.o \
@@ -117,6 +119,7 @@ OBJS0=\
 	$O\Znk_htp_hdrs.o \
 	$O\Znk_htp_post.o \
 	$O\Znk_htp_rar.o \
+	$O\Znk_htp_sbio.o \
 	$O\Znk_htp_util.o \
 	$O\Znk_liba_scan.o \
 	$O\Znk_math.o \
@@ -159,15 +162,18 @@ OBJS0=\
 	$O\Znk_varp_ary.o \
 	$O\Znk_vsnprintf.o \
 	$O\Znk_yy_base.o \
+	$O\Znk_zip.o \
 	$O\Znk_zlib.o \
 	$O\gslconv.o \
 
 BASENAME1=Znk
-DLIB_NAME1=libZnk.so
+DLIB_NAME1=libZnk-$(DL_VER).so
 DLIB_FILE1=$O\$(DLIB_NAME1)
-ILIB_FILE1=$O\libZnk.so
+ILIB_FILE1=$O\libZnk-$(DL_VER).so
 SLIB_FILE1=$O\libZnk.a
 OBJS1=\
+	$O\minizip/ioapi.o \
+	$O\minizip/unzip.o \
 	$O\Znk_algo_vec.o \
 	$O\Znk_bfr.o \
 	$O\Znk_bfr_ary.o \
@@ -188,6 +194,7 @@ OBJS1=\
 	$O\Znk_htp_hdrs.o \
 	$O\Znk_htp_post.o \
 	$O\Znk_htp_rar.o \
+	$O\Znk_htp_sbio.o \
 	$O\Znk_htp_util.o \
 	$O\Znk_liba_scan.o \
 	$O\Znk_math.o \
@@ -230,11 +237,18 @@ OBJS1=\
 	$O\Znk_varp_ary.o \
 	$O\Znk_vsnprintf.o \
 	$O\Znk_yy_base.o \
+	$O\Znk_zip.o \
 	$O\Znk_zlib.o \
 	$O\dll_main.o \
 
 SUB_LIBS=\
 	zlib/$O/libzlib.a \
+
+SUB_OBJS=\
+	zlib/$O/*.o \
+
+SUB_OBJS_ECHO=\
+	zlib/$O/{[objs]} \
 
 PRODUCT_EXECS= \
 	__mkg_sentinel_target__ \
@@ -254,40 +268,40 @@ RUNTIME_FILES= \
 
 
 # Entry rule.
-all: $O submkf_zlib $(EXE_FILE0) $(DLIB_FILE1) 
+all: $O\minizip $O submkf_zlib $(EXE_FILE0) $(DLIB_FILE1) $(SLIB_FILE1) 
 
 # Mkdir rule.
+$O\minizip:
+	if not exist $O\minizip mkdir $O\minizip
+
 $O:
 	if not exist $O mkdir $O
 
 
 # Product files rule.
 $(EXE_FILE0): $(OBJS0)
-	$(LINKER) -Wl,--gc-sections -Wl,-z,nocopyreloc $(RPATH_LINK) \
-	-lgcc \
-	$(OBJS0) $(SUB_LIBS) \
-	-Wl,-rpath,.  \
-	$(LINKER_OPT) \
-	-o $(EXE_FILE0)
+	@echo $(LINKER) -Wl,--gc-sections -Wl,-z,nocopyreloc $(RPATH_LINK) \
+	-lgcc {[objs]} $(SUB_LIBS) -Wl,-rpath,.  $(LINKER_OPT) -o $(EXE_FILE0)
+	@     $(LINKER) -Wl,--gc-sections -Wl,-z,nocopyreloc $(RPATH_LINK) \
+	-lgcc $(OBJS0) $(SUB_LIBS) -Wl,-rpath,.  $(LINKER_OPT) -o $(EXE_FILE0)
 
 $(SLIB_FILE1): $(OBJS1)
 	if exist $(SLIB_FILE1) del $(SLIB_FILE1)
-	$(LIBAR) crsD $(SLIB_FILE1) $(OBJS1) $(SUB_LIBS)
+	@echo $(LIBAR) crsD $(SLIB_FILE1) {[objs]} $(SUB_OBJS_ECHO)
+	@     $(LIBAR) crsD $(SLIB_FILE1) $(OBJS1) $(SUB_OBJS)
 
 gsl.myf: $(SLIB_FILE1)
-	if test -e $O\gslconv.exe ; then $O\gslconv.exe -g gsl.myf $(SLIB_FILE1) $(MACHINE) ; fi
+	@if exist $O\gslconv.exe $O\gslconv.exe -g gsl.myf $(SLIB_FILE1) $(MACHINE)
 
 gsl.def: gsl.myf
-	if test -e $O\gslconv.exe ; then $O\gslconv.exe -d gsl.myf gsl.def ; fi
+	@if exist $O\gslconv.exe $O\gslconv.exe -d gsl.myf gsl.def
 
 $(DLIB_FILE1): $(OBJS1)
 	if exist $(DLIB_FILE1) del $(DLIB_FILE1)
-	$(LINKER) -shared -Wl,-soname,$(DLIB_NAME1) \
-	-lgcc \
-	$(OBJS1) $(SUB_LIBS) \
-	-Wl,-rpath,.  \
-	$(LINKER_OPT) \
-	-o $(DLIB_FILE1)
+	@echo $(LINKER) -shared -Wl,-soname,$(DLIB_NAME1) \
+	-lgcc {[objs]} $(SUB_LIBS) -Wl,-rpath,.  $(LINKER_OPT) -o $(DLIB_FILE1)
+	@     $(LINKER) -shared -Wl,-soname,$(DLIB_NAME1) \
+	-lgcc $(OBJS1) $(SUB_LIBS) -Wl,-rpath,.  $(LINKER_OPT) -o $(DLIB_FILE1)
 	$(STRIP_UNNEEDED) $(DLIB_FILE1)
 
 
@@ -301,6 +315,12 @@ $(DLIB_FILE1): $(OBJS1)
 # the other way, '\' to the right hand of ':' we have to put only single '\',
 # for example $O\\%.o: $S\%.c .
 #
+$O\\minizip\\%.o: $S\minizip\%.c
+	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c $<
+
+$O\\minizip\\%.o: $S\minizip\%.cpp
+	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c $<
+
 $O\\%.o: $S\%.c
 	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c $<
 
@@ -326,9 +346,9 @@ install_data:
 
 # Install exec rule.
 install_exec: $(EXE_FILE0)
-	@if not exist ..\..\mkfsys @mkdir ..\..\mkfsys 
-	@if exist "$(EXE_FILE0)" @$(CP) /F "$(EXE_FILE0)" ..\..\mkfsys\ $(CP_END)
-	@for %%a in ( $(RUNTIME_FILES) ) do @if exist "%%a" @$(CP) /F "%%a" ..\..\mkfsys\ $(CP_END)
+	@if not exist ..\..\mkfsys\$(PLATFORM) @mkdir ..\..\mkfsys\$(PLATFORM) 
+	@if exist "$(EXE_FILE0)" @$(CP) /F "$(EXE_FILE0)" ..\..\mkfsys\$(PLATFORM)\ $(CP_END)
+	@for %%a in ( $(RUNTIME_FILES) ) do @if exist "%%a" @$(CP) /F "%%a" ..\..\mkfsys\$(PLATFORM)\ $(CP_END)
 
 # Install dlib rule.
 install_dlib: $(DLIB_FILE1)
@@ -346,15 +366,16 @@ install: all install_slib install_dlib install_exec
 
 # Clean rule.
 clean:
-	del /Q $O\ 
+	rmdir /S /Q $O\ 
 	@echo === Entering [zlib] ===
 	$(MAKE_CMD) -f Makefile_android.mak clean -C zlib
 	@echo === Leaving [zlib] ===
 
 
 # Src and Headers Dependency
-dll_main.o:
 gslconv.o: Znk_myf.h Znk_str_ary.h Znk_str_ex.h Znk_str_fio.h Znk_stdc.h Znk_missing_libc.h Znk_dir.h Znk_str_path.h Znk_liba_scan.h
+minizip/ioapi.o: minizip/ioapi.h
+minizip/unzip.o: minizip/unzip.h minizip/crypt.h
 Znk_algo_vec.o: Znk_algo_vec.h
 Znk_bfr.o: Znk_bfr.h Znk_stdc.h
 Znk_bfr_ary.o: Znk_bfr_ary.h
@@ -374,7 +395,8 @@ Znk_err.o: Znk_err.h Znk_mutex.h Znk_str.h
 Znk_fdset.o: Znk_fdset.h Znk_stdc.h
 Znk_htp_hdrs.o: Znk_htp_hdrs.h Znk_s_base.h Znk_varp_ary.h Znk_missing_libc.h
 Znk_htp_post.o: Znk_htp_post.h Znk_str.h Znk_missing_libc.h
-Znk_htp_rar.o: Znk_htp_rar.h Znk_net_base.h Znk_socket.h Znk_cookie.h Znk_s_base.h Znk_str_ary.h Znk_stdc.h Znk_mem_find.h Znk_sys_errno.h Znk_str_ex.h Znk_stock_bio.h Znk_zlib.h Znk_def_util.h
+Znk_htp_rar.o: Znk_htp_rar.h Znk_htp_sbio.h Znk_socket.h Znk_cookie.h Znk_s_base.h Znk_str_ary.h Znk_stdc.h Znk_sys_errno.h Znk_stock_bio.h
+Znk_htp_sbio.o: Znk_htp_sbio.h Znk_net_base.h Znk_cookie.h Znk_s_base.h Znk_str_ary.h Znk_stdc.h Znk_mem_find.h Znk_sys_errno.h Znk_stock_bio.h Znk_zlib.h Znk_def_util.h
 Znk_htp_util.o: Znk_htp_util.h Znk_str_ex.h Znk_mem_find.h
 Znk_liba_scan.o: Znk_stdc.h Znk_s_base.h Znk_str.h Znk_str_ary.h Znk_myf.h Znk_bfr.h Znk_vpod.h
 Znk_math.o: Znk_math.h
@@ -417,4 +439,5 @@ Znk_var.o: Znk_var.h Znk_stdc.h
 Znk_varp_ary.o: Znk_varp_ary.h Znk_s_base.h
 Znk_vsnprintf.o: Znk_vsnprintf.h Znk_stdc.h Znk_def_util.h Znk_tostr_int.h Znk_tostr_double.h
 Znk_yy_base.o: Znk_yy_base.h
+Znk_zip.o: Znk_zip.h Znk_stdc.h Znk_missing_libc.h Znk_dir.h minizip/unzip.h minizip/iowin32.h
 Znk_zlib.o: Znk_zlib.h Znk_dlhlp.h Znk_stdc.h

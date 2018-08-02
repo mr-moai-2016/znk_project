@@ -10,7 +10,7 @@ Znk_EXTERN_C_BEGIN
 bool
 MkfAndroid_generate( const ZnkMyf conf_myf, ZnkVarpAry product_list, MkfSeekFuncT_isInterestExt isSrcFileExt,
 		const ZnkStrAry include_paths_common,
-		const ZnkStrAry dependency_libs_common,
+		const ZnkStrAry dependency_libs_common, const ZnkStrAry runtime_additional,
 		const ZnkStrAry sublibs_list );
 
 Znk_EXTERN_C_END

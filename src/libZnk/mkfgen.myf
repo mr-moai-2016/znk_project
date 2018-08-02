@@ -5,7 +5,7 @@ my_libs_root = ['..']
 template_dir = ['../../mkfsys/template']
 lib_dlver = ['$(DL_VER)']
 install_dir = ['$(MY_LIBS_ROOT)/$(DLIBS_DIR)']
-install_exec_dir = ['../../mkfsys']
+install_exec_dir = ['../../mkfsys/$(PLATFORM)']
 install_slib_dir = ['$(MY_LIBS_ROOT)/$(SLIBS_DIR)']
 gslconv = ['$O/gslconv.exe']
 @@.
@@ -63,6 +63,14 @@ zlib zlib
 
 @@L ignore_list
 zlib
+@@.
+
+@@L only_list_vc
+minizip/iowin32.c
+@@.
+
+@@L only_list_mingw
+minizip/iowin32.c
 @@.
 
 @@L src_suffix_list

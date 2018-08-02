@@ -40,6 +40,10 @@ include Makefile_version.mak
 
 SUB_LIBS=\
 
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
+
 RUNTIME_FILES= \
 	__mkg_sentinel_target__ \
 
@@ -83,6 +87,6 @@ install: all install_data
 
 # Clean rule.
 clean:
-	del /Q $O\ 
+	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency

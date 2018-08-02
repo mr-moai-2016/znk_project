@@ -1,0 +1,317 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<link href="/msty.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<a name=TopBar></a>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter エキスパートマニュアル</b></p>
+
+<a class=MstyElemLink href="/">トップページ</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
+<a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
+<br> <br>
+<a class=MstyElemLink href="/moai2.0/index_expert.html">ご案内</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/moai_reference.html">Moaiエンジン</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/customboy_reference.html">CustomBoyエンジン</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
+<br> <br>
+<a class=MstyElemLink href="/moai2.0/moai_reference.html">エンジンの詳細</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_filter.html">フィルターの詳細</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/moai_local_proxy.html">ローカルプロキシとしての使い方</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/hacking.html">プラグイン開発のためのヒント</a> &nbsp;
+<br> <br>
+
+<div class=MstyComment>
+<u><b>記事担当者</b></u> : Mr.Moai<br>
+<br>
+<u><b>最終更新日</b></u> : 2018/07/17<br>
+<br>
+</div>
+<br>
+
+
+<a name=AtFirst></a>
+<u><b>
+はじめに
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	この記事ではMoaiをローカルプロキシとして使用する方法について詳しく説明します.<br>
+	( Ver2.0以降ではEasterによる仮想化が簡単に行えるため、<br>
+	もはやローカルプロキシによる仮想化の意味はあまりありません ).<br>
+</div><br>
+<br>
+
+
+<a name=Index></a>
+<u><b>
+目次
+</b></u><br>
+<br>
+<ul>
+	<li><b><a class=MstyElemLink href=#WhatIsProxy>プロキシとは？</a></b></li>
+	<li><b><a class=MstyElemLink href=#WhatIsLocalProxy>ローカルプロキシとは？</a></b></li>
+	<li><b><a class=MstyElemLink href=#FirstLocalProxy>初めてのローカルプロキシ</a></b></li>
+	<li><b><a class=MstyElemLink href=#WhatIsProxySettingDialog>プロキシ設定ダイアログとは？</a></b></li>
+	<li><b><a class=MstyElemLink href=#DifferenceOfOthers>同種の競合ツールと比べた場合の特徴は？</a></b></li>
+	<li><b><a class=MstyElemLink href=#warning>ご注意</a></b></li>
+</ul><br>
+
+
+<a name=WhatIsProxy></a>
+<u><b>
+プロキシとは？
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	一般に「プロキシを使う」と言った場合、あなたと最終接続先となるホストとの通信において、<br>
+	第三者のサーバ、即ちプロキシサーバでその通信を仲介することを意味します.<br>
+	概念的には以下のようになります.<br>
+	<br>
+	<div class=MstyComment>あなたのマシン上のブラウザ</div> ⇔
+	<div class=MstyComment>外部サーバ上で動作するプロキシ</div> ⇔
+	<div class=MstyComment>最終接続先サイト</div>
+	<br>
+	これにより最終接続先サイトからはあなたのマシンのIPアドレスが直接はわからなくなります.<br>
+	つまりIP情報を隠蔽することができます.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=WhatIsLocalProxy></a>
+<u><b>
+ローカルプロキシとは？
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	ローカルプロキシとは第三者となる外部サーバで通信を仲介するのではなく、<br>
+	この仕事を文字通り今あなたの使っているコンピュータ上で行うというものです.<br>
+	概念的には以下のようになります.<br>
+	<br>
+	<div class=MstyComment>あなたのマシン上のブラウザ</div> ⇔
+	<div class=MstyComment>あなたのマシン上で動作するローカルプロキシ</div> ⇔
+	<div class=MstyComment>接続先サイト</div>
+	<br>
+	ところでローカルプロキシがあくまであなたのマシンで動作している以上、<br>
+	接続先サイトから見ればあなたのマシンからの通信となります. つまりIPアドレスは隠蔽されません.<br>
+	よってローカルプロキシを使う目的はIPアドレスを隠蔽することではありません.<br>
+	 <br>
+	では何のためにこれを間に挟むのでしょうか？<br>
+	 <br>
+	Moaiに限らず一般にローカルプロキシは、あなたのブラウザとサイトとの通信を仲介します.<br>
+	その主たる目的は、あなたが定義したフィルタに従ってその通信内容をフィルタリングすることです.<br>
+	これによって特定の接続先サイトに送られるあなたのマシン固有の情報を遮断したり偽装したりすることができます.<br>
+	つまりローカルプロキシとは本来はプライベートを守るためのセキュリティーツールです.<br>
+	<br>
+	接続先サイトに送られるこの種の情報とは、具体的にはUser-AgentなどのHTTPヘッダの内容、<br>
+	POST時の変数の内容、Cookieの内容などです.<br>
+	あなたが使っているブラウザには特にクリーンアップしない限りこれらの情報が残留しています.<br>
+	ローカルプロキシのフィルタリングはこれを遮断したり加工修正することで<br>
+	接続先サイトにこれらがそのまま送信されることを防ぎます.<br>
+	<br>
+	<div class=MstyComment>
+	このフィルタリングの対象となるホストを細かく選別することもできます.<br>
+	例えばサイトＡにはそれ専用のフィルタリングを行い、サイトＢに対してはまた別のフィルタリングを行い、<br>
+	その他のサイトにはそもそもフィルタリング自体を全く行わないといったようなことです.<br>
+	</div>
+	<br>
+	また一方、受信においてサイトからの応答時のデータ(HTML, Javascriptのjsファイル, cssファイルなど)を<br>
+	加工修正することもできます.<br>
+	これにより、サイトのページのレイアウトを好みの形に修正したり、広告を除去したりすることもできます. <br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=FirstLocalProxy></a>
+<u><b>
+初めてのローカルプロキシ
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	Moaiをローカルプロキシとして使う場合は、以下の手順で設定します.<br>
+	<ul>
+		<li>1. moaiを起動する.<br>
+		</li>
+<br>
+		<li>2. ブラウザの<a href=#WhatIsProxySettingDialog>プロキシ設定ダイアログ</a>でプロキシサーバとして localhost:8124 を指定する.<br>
+		これでうまくいかない場合は 127.0.0.1:8124 で試してみて下さい.<br>
+		</li>
+	</ul>
+	<div class=MstyComment>
+	<u><b>【localhost および 127.0.0.1について】</b></u><br>
+<br>
+	これは一般にループバック接続と呼ばれ、自分自身への接続を意味します.<br>
+	特殊な使い方として別のマシンで起動しているMoaiに接続したい場合は、そのマシンのIPを指定することもできます.<br>
+	</div>
+	<br>
+	基本的には以上です.<br>
+	ブラウザから目的のサイトへアクセスできればOKです.<br>
+	このとき<b>普通のURL</b>でそのまま目的のサイトにアクセスします.<br>
+	それがターゲットに設定されたサイトであれば自動的に仮想ブラウザ環境が実現されます.<br>
+	すべての通信はMoaiのローカルプロキシを経由して行われることに注意してください.<br>
+	それがたとえターゲットに設定されていないサイトにアクセスする場合でもです.<br>
+	そのため稀にサイトによっては表示に問題が生じたり若干パフォーマンスが犠牲になることがあります.<br>
+	(Ver2.0以降で導入されたEasterはこの問題をも解消したものとなります)<br>
+	<br>
+	もし「プロキシサーバへの接続を拒否されました」のような表示がなされた場合は<br>
+	おそらく上記の手順において、 1 を起動していないか 2 の手順で何か指定をミスしています. <br>
+	あるいはOSのファイアウォール機能により8124への接続がブロックされている可能性もあるので<br>
+	その設定を確認して下さい.<br>
+	<br>
+	<div class=MstyComment>
+		Moaiをローカルプロキシとして使う場合でも、仮想ブラウザ環境の新規構築/刷新には <a class=MstyElemLink href=/moai2.0/virtual_users.html>VirtualUSERS</a> を使います.<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=WhatIsProxySettingDialog></a>
+<u><b>
+プロキシ設定ダイアログとは？
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	プロキシを使ったことがある方なら、この項目を読む必要はありません.<br>
+	使ったことがない方でも、プロキシの設定方法に関してはGoogleなどで検索すれば<br>
+	解説サイトは出てくるのでそちらをご覧頂いても勿論かまいませんが、<br>
+	ここでも一応初心者の方向けにFirefoxを例にとり、具体的な設定方法を説明します.<br>
+	<ul>
+		<li>1. 「ツール」メニューから「オプション」を選び、例の色々設定できる画面を開く.<br>
+		</li>
+<br>
+		<li>2. 「詳細」タブを選び、そこにある「接続設定」ボタンを押す.<br>
+		</li>
+<br>
+		<li>3. 「インターネット接続」ダイアログ(下図)が出るので「手動でプロキシを設定する」<br>
+		という部分にチェックをつける.<br>
+		</li>
+<br>
+		<li>4.  すぐ下にある「HTTPプロキシ」の部分に localhost (または127.0.0.1) と入力する.<br>
+		また右隣にある「ポート」の部分に 8124 と入力する(このとき日本語入力はOFFにしておきます)<br>
+		</li>
+<br>
+		<li>5.  同様にその下にある「SSLプロキシ」の部分に localhost (または127.0.0.1) と入力する.<br>
+		また右隣にある「ポート」の部分に 8124 と入力する(このとき日本語入力はOFFにしておきます)<br>
+		</li>
+<br>
+		<li>6.  moaiを起動する.<br>
+		</li>
+	</ul>
+	以上となります(先にmoaiを起動させた上で上記の１から５までの手順を行ってもかまいません).<br>
+	 <br>
+	<img src=/imgs/screenshot_proxy_dialog.png><br>
+	 <br>
+	<div class=MstyComment>
+		<u><b>【重要】</b></u>  <br>
+	<br>
+		元の設定に戻す(プロキシを使用しない)方法も覚えておきましょう.<br>
+		なぜこれが重要かといえば、本来<b>プロキシを使用しない</b>状態の方が自然だからです.<br>
+		<br>
+		上記 3. において「プロキシを使用しない」という項目が一番上にあります.<br>
+		これにチェックをつけることで、Firefoxはプロキシを介さない<b>通常の状態</b>に戻ります.<br>
+		(Firefoxの初期設定では元々この状態のはずです)<br>
+		<br>
+		もしmoaiの方が何か変なことになった場合(俗に言うバグった場合)は、一度moaiを終了して再び起動させれば<br>
+		大抵の場合は問題は解消されます. <br>
+		<br>
+		また万一、閲覧しているサイトがmoaiをローカルプロキシとして使用した場合においては、<br>
+		どうしてもうまく表示されないなど不具合が発生する場合は、諦めてブラウザのプロキシ設定を元に戻した上で閲覧しましょう.<br>
+		Ver2.0以降ならEasterを使う方がほとんどの場合望ましいです.<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=DifferenceOfOthers></a>
+<u><b>
+同種の競合ツールと比べた場合の特徴は？
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	Moaiの提供するローカルプロキシ機能は同種のツールであるProxomitronやPolipoなどと比べ、<br>
+	機能はずっと限定されるため、普段これらを使いこなしている方にとってはローカルプロキシとしてのMoaiは不要と思われます. <br>
+	 <br>
+	しかしPOST変数に関するフィルタリングに関してはProxomitronとPolipoはいずれも直接はサポートしておらず、<br>
+	それを実現するには外部ツールを使う必要があるなどやや煩雑ではあります.<br>
+	一方でMoaiはフィルタファイルによりこれがダイレクトかつ容易に設定できるため、その点では有利です.<br>
+<br>
+	その他、Moaiで実装されている技術面に関する参考事項を以下に列挙しておきます.<br>
+	<ul>
+		<li>HTTP CONNECTによるトンネリングによりHTTPSを仲介することができます.<br>
+		(仲介といってもHTTPSを復号するのではなく、暗号化されたままのバイト列をそのまま素通りさせるというものになります).<br>
+		これにより例えばGoogle検索やYoutube、nico動画などを見ることも可能です.<br>
+		</li>
+		<br>
+		<li>Socket通信における非ブロッキング接続やHTTPパイプライン化の中継をサポートします.<br>
+		ブロッキング接続では、複数のタブを開いてWebを閲覧する場合に、最初の接続が終るまで２番目３番目の接続が<br>
+		ブロックされ待たされてしまいますが、非ブロッキング接続によってこの問題を回避できます.<br>
+		</li>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=warning></a>
+<u><b>
+ご注意
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	特に重要な内容を伴う情報の通信を確実に行う必要がある場合においては、<br>
+	まず問題ないとは思いますが、念のためローカルプロキシの設定を一時解除するなどしておいた方がよいかもしれません. <br>
+	<br>
+	このプログラムはポート番号8124においてクライアントからの接続をリッスンします.<br>
+	(このデフォルトのポート番号はconfig.myfより変更することもできますが、その場合は<br>
+	8124をその番号で読み替えて下さい). <br>
+	ここで言う「クライアント」とは、あなたのマシン、あるいは家庭内LANなど極めて小規模で<br>
+	安全性が明らかなマシンにおいて、あなたの使うWebブラウザのことを示します.<br>
+	(場合によってはWebブラウザではなく、その他のローカルプロキシなどのソフトである場合もあります).<br>
+	<br>
+	仮に外部ネットワーク(WAN)からの不特定多数からの接続を許可した場合、<br>
+	Moaiは一般的なプロキシサーバのソフトと同様の処理を行います. <br>
+	しかしこのような用途での使用は基本的に想定されていないため、<br>
+	WANからのIPアドレスの接続要求があった場合、それを許可するべきではありません. <br>
+	(プロキシサーバ用の専用ソフトが行っている様々な防衛機構は、Moaiではほとんど搭載されていないためです)<br>
+	<br>
+	よってあなたがルータの設定を特別弄くっていない限りは通常は心配いらないことではありますが、<br>
+	<b>acceptable_host</b>を<b>ANY</b>として、さらにルータやファイアウォールの8124ポートを開けているなど<br>
+	WANからの接続を可能としたような<b>チャレンジャーな</b>使い方をされる予定なら、<br>
+	Moai側での防御として<b>access_allow_ips</b> や<b>access_deny_ips</b> などで不要なIPからの接続要求を弾くなどし、<br>
+	セキュリティ面にも十分配慮して下さい.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=Link></a>
+<u><b>
+リンク
+</b></u><br>
+<br>
+<ul>
+	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
+	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project>znk_project(github)</a></li>
+</ul><br>
+
+
+</body>
+</html>

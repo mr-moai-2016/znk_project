@@ -19,12 +19,12 @@ ABINAME=mingw$(MACHINE)$(DEBUG)
 O = ./out_dir/$(ABINAME)
 
 ifeq ($(DEBUG), d)
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)_mingwd
 SLIBS_DIR=slib/$(PLATFORM)_mingwd
 else
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)
 SLIBS_DIR=slib/$(PLATFORM)
@@ -38,6 +38,10 @@ INCLUDE_FLAG+=  \
 include Makefile_version.mak
 
 SUB_LIBS=\
+
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
 
 RUNTIME_FILES= \
 	__mkg_sentinel_target__ \
@@ -91,6 +95,6 @@ install: all install_data
 
 # Clean rule.
 clean:
-	rm -r $O/ 
+	rm -rf $O/ 
 
 # Src and Headers Dependency

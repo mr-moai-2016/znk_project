@@ -7,6 +7,8 @@
 #include <Znk_dir.h>
 #include <Znk_str_path.h>
 #include <Znk_liba_scan.h>
+#include <Znk_bird.h>
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -15,6 +17,72 @@ typedef enum {
 	,LibaDumper_e_Dumpbin   /* Use VC dumpbin tool */
 	,LibaDumper_e_NM        /* Use MinGW nm tool */
 } LibaDumperType;
+
+static bool
+scanMakefileVersion( ZnkStr dl_ver, const char* makefile_version_path, size_t level )
+{
+	bool found = false;
+	ZnkFile fp = Znk_fopen( makefile_version_path, "rb" );
+	if( fp ){
+		ZnkStr line         = ZnkStr_new( "" );
+		const char* p;
+		const size_t tail_pos = ZnkStrPath_getTailPos( makefile_version_path );
+		while( true ){
+			if( !ZnkStrFIO_fgets( line, 0, 4096, fp ) ){
+				break;
+			}
+			ZnkStr_chompNL( line );
+
+			p = ZnkStrEx_strstr( line, "DL_VER" );
+			if( p ){
+				p += Znk_strlen_literal( "DL_VER" );
+				p = Znk_strchr( p, '=' );
+				if( p ){
+					++p;
+					ZnkStr_set( dl_ver, p );
+					found = true;
+					break;
+				}
+			}
+
+			p = ZnkStrEx_strstr( line, "include" );
+			if( p ){
+				if( level >= 8 ){
+					/* Error : include level flow. */
+					break;
+				}
+				p += Znk_strlen_literal( "include" );
+				while( *p == ' ' || *p == '\t' ){ ++p; }
+				if( *p != '\0' ){
+					ZnkStr include_path = ZnkStr_new( "" );
+					ZnkStr_append( include_path, makefile_version_path, tail_pos ); 
+					ZnkStr_add( include_path, p );
+					found = scanMakefileVersion( dl_ver, ZnkStr_cstr(include_path), level+1 );
+					ZnkStr_delete( include_path );
+					break;
+				}
+			}
+		}
+		ZnkStr_delete( line );
+		Znk_fclose( fp );
+	}
+	return found;
+}
+
+static void
+extendDLibFilename( ZnkStr dlib_filename )
+{
+	ZnkStr dl_ver = ZnkStr_new( "" );
+	if( scanMakefileVersion( dl_ver, "Makefile_version.mak", 0 ) ){
+		if( !ZnkStr_empty( dl_ver ) ){
+			ZnkBird bird = ZnkBird_create( "#[", "]#" );
+			ZnkBird_regist( bird, "DL_VER", ZnkStr_cstr(dl_ver) );
+			ZnkBird_extend_self( bird, dlib_filename, ZnkStr_leng( dlib_filename ) );
+			ZnkBird_destroy( bird );
+		}
+	}
+	ZnkStr_delete( dl_ver );
+}
 
 static int
 gsl2def( ZnkMyf gsl, const char* gslmyf_filename, const char* deffile )
@@ -33,16 +101,20 @@ gsl2def( ZnkMyf gsl, const char* gslmyf_filename, const char* deffile )
 		size_t idx;
 		const char* nl = "\r\n";
 		ZnkVarp varp;
-		const char* dlib_filename = NULL;
+		ZnkStr dlib_filename = ZnkStr_new( "" );
 		ZnkFile fp = NULL;
 
 		varp = ZnkVarpAry_find_byName_literal( config, "dlib_filename", false );
-		if( varp ){ dlib_filename = ZnkVar_cstr( varp ); }
+		if( varp ){
+			ZnkStr_set( dlib_filename, ZnkVar_cstr( varp ) );
+		}
+
+		extendDLibFilename( dlib_filename );
 
 		fp = Znk_fopen( deffile, "wb" );
 		if( fp ){
 			ZnkStr line_ref = NULL;
-			Znk_fprintf( fp, "LIBRARY \"%s\"%s", dlib_filename, nl );
+			Znk_fprintf( fp, "LIBRARY \"%s\"%s", ZnkStr_cstr(dlib_filename), nl );
 
 			/* sanitize side space */
 			size = ZnkStrAry_size( export_symbols );
@@ -92,6 +164,7 @@ gsl2def( ZnkMyf gsl, const char* gslmyf_filename, const char* deffile )
 			Znk_fclose( fp );
 		}
 		ZnkStrAry_destroy( exports );
+		ZnkStr_delete( dlib_filename );
 	}
 	return 0;
 }

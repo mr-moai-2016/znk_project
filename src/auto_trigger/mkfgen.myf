@@ -5,6 +5,7 @@ my_libs_root = ['..']
 template_dir = ['../../mkfsys/template']
 lib_dlver = ['']
 install_dir = ['../../mkfsys']
+install_exec_dir = ['../../mkfsys/$(PLATFORM)']
 @@.
 
 @@L include_paths_common

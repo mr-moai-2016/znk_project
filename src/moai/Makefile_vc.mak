@@ -59,6 +59,10 @@ OBJS0=\
 
 SUB_LIBS=\
 
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
+
 RES_FILE0=$O\moai.res
 RC_FILE0 =$S\moai.rc
 PRODUCT_EXECS= \
@@ -69,6 +73,7 @@ RUNTIME_FILES= \
 	__mkg_sentinel_target__ \
 	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/Znk-$(DL_VER).dll \
 	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/Rano-$(DL_VER).dll \
+	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/libtls-17.dll \
 
 
 
@@ -82,7 +87,8 @@ $O:
 
 # Product files rule.
 $(EXE_FILE0): $(OBJS0) $(RES_FILE0)
-	$(LINKER) /OUT:$(EXE_FILE0) $(RES_FILE0) $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib 
+	@echo $(LINKER) /OUT:$(EXE_FILE0) $(RES_FILE0) {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib 
+	@     $(LINKER) /OUT:$(EXE_FILE0) $(RES_FILE0) $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib 
 
 
 # Suffix rule.
@@ -109,7 +115,6 @@ install_data:
 	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\default\filters @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\default\filters 
 	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root 
 	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\common @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\common 
-	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\moai1.1 @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\moai1.1 
 	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\moai2.0 @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\moai2.0 
 	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\imgs @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\imgs 
 	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\public @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\public 
@@ -127,14 +132,15 @@ install_data:
 	@if exist "doc_root\*.gif" @$(CP) /F "doc_root\*.gif" ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\ $(CP_END)
 	@if exist "doc_root\*.js" @$(CP) /F "doc_root\*.js" ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\ $(CP_END)
 	@if exist "doc_root\common\*.html" @$(CP) /F "doc_root\common\*.html" ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\common\ $(CP_END)
-	@if exist "doc_root\moai1.1\*.html" @$(CP) /F "doc_root\moai1.1\*.html" ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\moai1.1\ $(CP_END)
 	@if exist "doc_root\moai2.0\*.html" @$(CP) /F "doc_root\moai2.0\*.html" ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\moai2.0\ $(CP_END)
 	@if exist "doc_root\imgs\*.png" @$(CP) /F "doc_root\imgs\*.png" ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\imgs\ $(CP_END)
 	@if exist "doc_root\imgs\*.jpg" @$(CP) /F "doc_root\imgs\*.jpg" ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\imgs\ $(CP_END)
 	@if exist "doc_root\imgs\*.gif" @$(CP) /F "doc_root\imgs\*.gif" ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\imgs\ $(CP_END)
 	@if exist "doc_root\public\moai.png" @$(CP) /F "doc_root\public\moai.png" ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\public\ $(CP_END)
 	@if exist "moai_for_android.sh" @$(CP) /F "moai_for_android.sh" ..\..\moai-v$(REL_VER)-$(PLATFORM)\ $(CP_END)
+	@if exist "moai_for_linux.sh" @$(CP) /F "moai_for_linux.sh" ..\..\moai-v$(REL_VER)-$(PLATFORM)\ $(CP_END)
 	@if exist "vtag" @$(CP) /F "vtag" ..\..\moai-v$(REL_VER)-$(PLATFORM)\ $(CP_END)
+	@if exist "cert.pem" @$(CP) /F "cert.pem" ..\..\moai-v$(REL_VER)-$(PLATFORM)\ $(CP_END)
 
 # Install exec rule.
 install_exec: $(EXE_FILE0)
@@ -154,7 +160,7 @@ install: all install_exec install_data
 
 # Clean rule.
 clean:
-	del /Q $O\ 
+	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
 main.obj: Moai_server.h

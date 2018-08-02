@@ -53,6 +53,9 @@ ZnkHtpRAR_getHostnameAndPort( const char* url,
  * @param recv_fnca:
  *  recvされたdataを加工するためのコールバックFuncArg.
  *
+ * @param prog_fnca:
+ *  recv中の進捗状況を報告するためのコールバックFuncArg.
+ *
  * @param cookie:
  *  recvレシーブしたHTTPのSet-Cookieフィールドよりcookie情報を取得し、これに格納する.
  *  ただしこの情報が不要な場合はNULLを指定することもできる.
@@ -82,7 +85,7 @@ ZnkHtpRAR_getHostnameAndPort( const char* url,
 bool
 ZnkHtpRAR_sendAndRecv( const char* cnct_hostname, uint16_t cnct_port,
 		ZnkHtpHdrs send_hdrs, ZnkBfr send_body,
-		ZnkHtpHdrs recv_hdrs, ZnkHtpOnRecvFuncArg recv_fnca,
+		ZnkHtpHdrs recv_hdrs, ZnkHtpOnRecvFuncArg recv_fnca, ZnkHtpOnRecvFuncArg prog_fnca,
 		ZnkVarpAry cookie,
 		size_t try_connect_num, bool is_proxy, ZnkBfr wk_bfr, ZnkStr ermsg );
 

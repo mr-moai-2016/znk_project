@@ -19,12 +19,12 @@ ABINAME=mingw$(MACHINE)$(DEBUG)
 O = ./out_dir/$(ABINAME)
 
 ifeq ($(DEBUG), d)
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -g 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)_mingwd
 SLIBS_DIR=slib/$(PLATFORM)_mingwd
 else
-COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG
+COMPILER=$(GCC_CMD) -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG 
 LINKER=$(GCC_CMD)
 DLIBS_DIR=dlib/$(PLATFORM)
 SLIBS_DIR=slib/$(PLATFORM)
@@ -58,6 +58,10 @@ OBJS0=\
 
 SUB_LIBS=\
 
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
+
 RES_FILE0=$O/moai.res
 RC_FILE0 =$S/moai.rc
 PRODUCT_EXECS= \
@@ -68,6 +72,7 @@ RUNTIME_FILES= \
 	__mkg_sentinel_target__ \
 	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/Znk-$(DL_VER).dll \
 	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/Rano-$(DL_VER).dll \
+	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/libtls-17.dll \
 
 
 
@@ -81,7 +86,8 @@ $O:
 
 # Product files rule.
 $(EXE_FILE0): $(OBJS0) $(RES_FILE0)
-	$(LINKER) -o $(EXE_FILE0) $(RES_FILE0) $(OBJS0) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a -lws2_32 
+	@echo $(LINKER) -o $(EXE_FILE0) $(RES_FILE0) {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a -lws2_32 
+	@     $(LINKER) -o $(EXE_FILE0) $(RES_FILE0) $(OBJS0) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).dll.a $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).dll.a -lws2_32 
 
 
 ##
@@ -117,7 +123,6 @@ install_data:
 	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/default/filters 
 	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/doc_root 
 	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/doc_root/common 
-	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/doc_root/moai1.1 
 	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/doc_root/moai2.0 
 	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/doc_root/imgs 
 	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/doc_root/public 
@@ -135,14 +140,15 @@ install_data:
 	for tgt in doc_root/*.gif ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/doc_root/ ; fi ; done
 	for tgt in doc_root/*.js ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/doc_root/ ; fi ; done
 	for tgt in doc_root/common/*.html ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/doc_root/common/ ; fi ; done
-	for tgt in doc_root/moai1.1/*.html ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/doc_root/moai1.1/ ; fi ; done
 	for tgt in doc_root/moai2.0/*.html ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/doc_root/moai2.0/ ; fi ; done
 	for tgt in doc_root/imgs/*.png ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/doc_root/imgs/ ; fi ; done
 	for tgt in doc_root/imgs/*.jpg ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/doc_root/imgs/ ; fi ; done
 	for tgt in doc_root/imgs/*.gif ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/doc_root/imgs/ ; fi ; done
 	for tgt in doc_root/public/moai.png ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/doc_root/public/ ; fi ; done
 	for tgt in moai_for_android.sh ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/ ; fi ; done
+	for tgt in moai_for_linux.sh ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/ ; fi ; done
 	for tgt in vtag ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/ ; fi ; done
+	for tgt in cert.pem ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/ ; fi ; done
 
 # Install exec rule.
 install_exec: $(EXE_FILE0)
@@ -162,7 +168,7 @@ install: all install_exec install_data
 
 # Clean rule.
 clean:
-	rm -r $O/ 
+	rm -rf $O/ 
 
 # Src and Headers Dependency
 main.o: Moai_server.h

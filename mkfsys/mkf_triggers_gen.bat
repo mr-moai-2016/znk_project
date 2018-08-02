@@ -20,7 +20,7 @@ REM del  __temp_bb_cmd.bat
 set MKFSYS_DIR=%CD%
 if not exist %MKFSYS_DIR% goto Error_InvalidMkfSysDir
 
-cd %1
+cd /d %1
 if not exist mkf_triggers mkdir mkf_triggers
 
 %_TR_CP_CMD% %MKFSYS_DIR%\mkf_triggers\*.bat mkf_triggers\

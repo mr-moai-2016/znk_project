@@ -76,7 +76,6 @@ MkfSrcDepend_get( ZnkStr text, ZnkStrAry list, const char* obj_sfx, const char* 
 	for( idx=0; idx<size; ++idx ){
 		const char* name = ZnkStrAry_at_cstr( list, idx );
 		const char* ext = ZnkS_get_extension( name, '.' );
-		//if( isSrcFileExt( ext ) ){
 		if( is_interest_ext( ext ) ){
 			parseSrcInclude( vary, name, line, list, obj_sfx );
 		}
@@ -87,15 +86,20 @@ MkfSrcDepend_get( ZnkStr text, ZnkStrAry list, const char* obj_sfx, const char* 
 	for( idx=0; idx<size; ++idx ){
 		const ZnkVarp varp = ZnkVarpAry_at( vary, idx );
 		if( varp ){
-			size_t elem_idx;
 			size_t elem_size = ZnkStrAry_size( varp->prim_.u_.sda_ );
-			//Znk_printf_e( "%s:", ZnkVar_name_cstr( varp ) );
-			ZnkStr_addf2( text, "%s:", ZnkVar_name_cstr( varp ) );
-			for( elem_idx=0; elem_idx<elem_size; ++elem_idx ){
-				const char* elem = ZnkStrAry_at_cstr( varp->prim_.u_.sda_, elem_idx );
-				ZnkStr_addf2( text, " %s", elem );
+			if( elem_size ){
+				/***
+				 * ‰½‚É‚àˆË‘¶‚µ‚Ä‚¢‚È‚¢ê‡‚ÍA‚±‚ê‚ğo—Í‚·‚é‚Ì‚Í–³‘Ê‚Å‚ ‚é‚½‚ßA
+				 * elem_size == 0 ‚Ìê‡‚Í‚±‚ê‚ğÈ—ª‚·‚é.
+				 */
+				size_t elem_idx;
+				ZnkStr_addf( text, "%s:", ZnkVar_name_cstr( varp ) );
+				for( elem_idx=0; elem_idx<elem_size; ++elem_idx ){
+					const char* elem = ZnkStrAry_at_cstr( varp->prim_.u_.sda_, elem_idx );
+					ZnkStr_addf( text, " %s", elem );
+				}
+				ZnkStr_add( text, nl );
 			}
-			ZnkStr_add( text, nl );
 		}
 	}
 

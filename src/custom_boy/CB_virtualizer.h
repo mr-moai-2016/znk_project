@@ -29,7 +29,7 @@ CBVirtualizer_initVars_byFutabaSendMyf( ZnkVarpAry main_vars, const char* moai_d
 bool
 CBVirtualizer_doMainProc( RanoCGIEVar* evar, ZnkVarpAry cb_vars, const char* cb_src, ZnkBird bird, bool is_step1, bool is_step2, ZnkStr RE_key,
 		CBFgpInfo fgp_info, CBUAInfo ua_info, ZnkVarpAry main_vars, uint64_t* ptua64, ZnkStr msg, ZnkStr category, ZnkStr lacking_var,
-		const char* moai_dir );
+		const char* moai_dir, bool all_cookie_clear );
 void
 CBVirtualizer_registBird_byFutabaSendMyf( ZnkBird bird, const char* moai_dir );
 void
@@ -66,8 +66,9 @@ void
 CBVirtualizer_setRERandomFactor( double RE_random_factor );
 
 bool
-CBVirtualizer_initiateAndSave( RanoCGIEVar* evar, const ZnkVarpAry cb_vars, ZnkStr msg,
-		const char* cb_src, ZnkStr caco, ZnkStr ua_str, ZnkStr lacking_var );
+CBVirtualizer_initiateAndSave( RanoCGIEVar* evar, const ZnkVarpAry cb_vars,
+		ZnkStr msg, const char* cb_src, ZnkStr caco, ZnkStr ua_str, ZnkStr lacking_var,
+		bool all_cookie_clear );
 
 Znk_EXTERN_C_END
 

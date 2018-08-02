@@ -4,9 +4,9 @@
 ## brief
 -----------------------------------
   CustomBoy is the next-generation of USERS(User-Agent Screen-size and Everything Randomizer System)
-  based on Moai Ver2.0 and build up your virtual browser information instantly.
+  based on Moai Ver2.1 and build up your virtual browser information instantly.
   You can also create a custom detailed information about each element of browser,
-  such as Fingerprint and result values of Javascipt snippet code on Moai CGI user-interface.
+  such as Fingerprint and result values of Javascript snippet code on Moai CGI user-interface.
 
 ## auther
 -----------------------------------

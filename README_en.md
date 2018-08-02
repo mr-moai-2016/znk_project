@@ -10,11 +10,11 @@ developed for Windows, Linux, Cygwin, and Android.
 This repository have following :  
 * libZnk : Basically C/C++ library.  
 * Moai: Yet another Portable Web-Server and  Local-Proxy Engine.  
-  Current version is 2.0.2.  
-* Easter : Easter is a client-viewer system on your virtual browser environment of Moai Ver2.0 filters.
+  Current version is 2.1.  
+* Easter : Easter is a client-viewer system on your virtual browser environment of Moai filters.
   You can also manage your image collections gotten from Image BBS,
 * CustomBoy : CustomBoy is the next-generation of USERS(User-Agent Screen-size and Everything Randomizer System)
-  based on Moai Ver2.0 and build up your virtual browser information instantly.
+  based on Moai and build up your virtual browser information instantly.
   You can also create a custom detailed information about each element of browser,
   such as Fingerprint and result values of Javascipt snippet code on Moai CGI user-interface.
 ...etc  
@@ -52,6 +52,17 @@ zlib 1.2.3 :
   [NOTE]  
   libZnk use zlib as statically sub-object.
   zlib in here, its source code itself is not at all modified from its original version,
+  but accessory of example and document files are deleted except for the license terms
+  (README) to avoid redundancy.
+
+libressl 2.7.3 :   
+  LibReSSL files are retained under the copyright of the authors.
+  New additions are ISC licensed as per OpenBSD normal licensing policy, or are placed in the public domain. 
+  The OpenSSL code is distributed under the terms of the original OpenSSL licenses.
+
+  [NOTE]  
+  libRano use libressl as dynamically loadable-module.
+  This source code itself is not at all modified from its original version,
   but accessory of example and document files are deleted except for the license terms
   (README) to avoid redundancy.
 

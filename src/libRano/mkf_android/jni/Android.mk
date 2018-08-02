@@ -20,6 +20,7 @@ LOCAL_CFLAGS += -I.. \
 LOCAL_SRC_FILES := \
 	$S/Rano_cgi_util.c \
 	$S/Rano_conf_util.c \
+	$S/Rano_dir_util.c \
 	$S/Rano_file_info.c \
 	$S/Rano_hash.c \
 	$S/Rano_html_ui.c \
@@ -32,6 +33,8 @@ LOCAL_SRC_FILES := \
 	$S/Rano_post.c \
 	$S/Rano_sset.c \
 	$S/Rano_txt_filter.c \
+	$S/Rano_vtag_util.c \
+	$S/tls_module/tls_module.c \
 	$S/dll_main.c \
 
 # Refer to prebuilt external-dynamic-libraries

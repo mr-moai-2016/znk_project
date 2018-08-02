@@ -18,7 +18,7 @@
 #include <ctype.h>
 
 static void
-preloadTextAndInfos( ZnkStr text, ZnkStr unesc_src, const char* src, struct EstLinkInfo* link_info, ZnkFile fp, bool save_img_cache )
+preloadTextAndInfos( ZnkStr text, ZnkStr unesc_src, const char* src, struct EstLinkInfo* link_info, ZnkFile fp, bool save_img_cache, bool is_https )
 {
 	ZnkStr line = ZnkStr_new( "" );
 
@@ -62,6 +62,7 @@ preloadTextAndInfos( ZnkStr text, ZnkStr unesc_src, const char* src, struct EstL
 	if( save_img_cache ){
 		link_info->img_link_direct_ = false;
 	}
+	link_info->is_https_parent_ = is_https;
 
 	while( true ){
 		if( !ZnkStrFIO_fgets( line, 0, 4096, fp ) ){
@@ -74,19 +75,29 @@ preloadTextAndInfos( ZnkStr text, ZnkStr unesc_src, const char* src, struct EstL
 }
 
 static void
-setBaseHRef( ZnkStr base_href, const char* val, const char* hostname )
+setBaseHRef( ZnkStr base_href, const char* val, const char* hostname, bool is_https_parent )
 {
 	if( val[ 0 ] == '/' ){
 		if( val[ 1 ] == '/' ){
 			/***
-			 * <base href= の指定が //で始まる場合は何も加工せずそのままセット.
+			 * <base href= の指定が //で始まる場合.
 			 */
-			ZnkStr_set( base_href, val );
+			//ZnkStr_set( base_href, val );
+			if( is_https_parent ){
+				ZnkStr_set( base_href, "https://" );
+			} else {
+				ZnkStr_set( base_href, "http://" );
+			}
+			ZnkStr_add( base_href, val+2 );
 		} else {
 			/***
 			 * <base href= の指定が /で始まる場合はhostnameを前に追加.
 			 */
-			ZnkStr_set( base_href, "http://" );
+			if( is_https_parent ){
+				ZnkStr_set( base_href, "https://" );
+			} else {
+				ZnkStr_set( base_href, "http://" );
+			}
 			ZnkStr_add( base_href, hostname );
 			ZnkStr_add( base_href, val );
 		}
@@ -117,7 +128,7 @@ filterHtmlTags( ZnkStr tagname, ZnkVarpAry varp_ary, void* arg, ZnkStr tagend )
 		if( attr ){
 			ZnkStr base_href = link_info->base_href_;
 			const char* val = EstHtmlAttr_val( attr );
-			setBaseHRef( base_href, val, ZnkStr_cstr(link_info->hostname_) );
+			setBaseHRef( base_href, val, ZnkStr_cstr(link_info->hostname_), link_info->is_https_parent_ );
 		}
 		/***
 		 * <base href...>タグはeasterの動作を阻害するためとりあえず消去しておく.
@@ -174,7 +185,7 @@ filterHtmlTags( ZnkStr tagname, ZnkVarpAry varp_ary, void* arg, ZnkStr tagend )
 			ZnkStrAry ignore_hosts = hosts_myf ? ZnkMyf_find_lines( hosts_myf, "ignore_hosts" ) : NULL;
 			char hostname[ 256 ] = "";
 			ZnkStr req_urp = ZnkStr_new( "" );
-			EstBase_getHostnameAndRequrp_fromEstVal( hostname, sizeof(hostname), req_urp, ZnkStr_cstr(str) );
+			EstBase_getHostnameAndRequrp_fromEstVal( hostname, sizeof(hostname), req_urp, ZnkStr_cstr(str), NULL );
 			ZnkStr_delete( req_urp );
 			if( ZnkStrAry_find_isMatch( ignore_hosts, 0, hostname, Znk_NPOS, ZnkS_isMatchSWC ) != Znk_NPOS ){
 				ZnkStr_clear( str );
@@ -238,7 +249,7 @@ filterHtmlTags( ZnkStr tagname, ZnkVarpAry varp_ary, void* arg, ZnkStr tagend )
 			ZnkStrAry ignore_hosts = hosts_myf ? ZnkMyf_find_lines( hosts_myf, "ignore_hosts" ) : NULL;
 			char hostname[ 256 ] = "";
 			ZnkStr req_urp = ZnkStr_new( "" );
-			EstBase_getHostnameAndRequrp_fromEstVal( hostname, sizeof(hostname), req_urp, ZnkStr_cstr(str) );
+			EstBase_getHostnameAndRequrp_fromEstVal( hostname, sizeof(hostname), req_urp, ZnkStr_cstr(str), NULL );
 			ZnkStr_delete( req_urp );
 			if( ZnkStrAry_find_isMatch( ignore_hosts, 0, hostname, Znk_NPOS, ZnkS_isMatchSWC ) != Znk_NPOS ){
 				ZnkStr_clear( str );
@@ -601,7 +612,8 @@ insertThreadOperation( ZnkStr text,
 
 
 void
-EstFilter_main( const char* result_file, const char* src, const char* target, RanoTextType txt_type, ZnkStr console_msg, bool save_img_cache )
+EstFilter_main( const char* result_file,
+		const char* src, const char* target, RanoTextType txt_type, ZnkStr console_msg, bool save_img_cache, bool is_https )
 {
 	ZnkFile fp = Znk_fopen( result_file, "rb" );
 	if( fp ){
@@ -610,7 +622,7 @@ EstFilter_main( const char* result_file, const char* src, const char* target, Ra
 		struct EstLinkInfo link_info = { 0 };
 		ZnkStr ermsg = ZnkStr_new( "" );
 
-		preloadTextAndInfos( text, unesc_src, src, &link_info, fp, save_img_cache );
+		preloadTextAndInfos( text, unesc_src, src, &link_info, fp, save_img_cache, is_https );
 
 		if( !EstParser_invokeHtmlTagEx( text, filterHtmlTags, &link_info,
 					filterPlaneTxt, unesc_src,
@@ -643,7 +655,11 @@ EstFilter_main( const char* result_file, const char* src, const char* target, Ra
 
 			/* futaba : via Easter on XhrDMZ landmarking */
 			ZnkSRef_set_literal( &old_ptn, "＠ふたば</span>" );
-			ZnkSRef_set_literal( &new_ptn, "＠ふたば <font size=\"-1\" color=\"#808000\">via Easter on XhrDMZ</font></span>" );
+			if( is_https ){
+				ZnkSRef_set_literal( &new_ptn, "＠ふたば <font size=\"-1\" color=\"#808000\">via Easter on XhrDMZ(https)</font></span>" );
+			} else {
+				ZnkSRef_set_literal( &new_ptn, "＠ふたば <font size=\"-1\" color=\"#808000\">via Easter on XhrDMZ</font></span>" );
+			}
 			ZnkStrEx_replace_BF( text, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
 
 			/* futaba : via Easter on XhrDMZ landmarking(for i-mode) */
@@ -711,7 +727,11 @@ EstFilter_main( const char* result_file, const char* src, const char* target, Ra
 
 			/* 5ch smart phone : via Easter on XhrDMZ landmarking */
 			ZnkSRef_set_literal( &old_ptn, "<div id=\"title\" class=\"threadview_response_title\"></div>" );
-			ZnkSRef_set_literal( &new_ptn, "<span id=\"title\" class=\"threadview_response_title\"></span> <font size=\"-1\" color=\"#808000\">via Easter on XhrDMZ</font>" );
+			if( is_https ){
+				ZnkSRef_set_literal( &new_ptn, "<span id=\"title\" class=\"threadview_response_title\"></span> <font size=\"-1\" color=\"#808000\">via Easter on XhrDMZ(https)</font>" );
+			} else {
+				ZnkSRef_set_literal( &new_ptn, "<span id=\"title\" class=\"threadview_response_title\"></span> <font size=\"-1\" color=\"#808000\">via Easter on XhrDMZ</font>" );
+			}
 			ZnkStrEx_replace_BF( text, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
 
 			/* 5ch : ソースでの可読性向上のための改行挿入 */

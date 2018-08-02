@@ -60,7 +60,7 @@ initHtpHdr_forHead( ZnkHtpHdrs htp_hdrs, const char* hostname, const char* req_u
 			"Accept-Encoding", Znk_strlen_literal("Accept-Encoding"),
 			sref.cstr_, sref.leng_, true );
 
-	ZnkSRef_set_literal( &sref, "http://www.google.com" );
+	ZnkSRef_set_literal( &sref, "https://www.google.com" );
 	varp = ZnkHtpHdrs_regist( htp_hdrs->vars_,
 			"Referer", Znk_strlen_literal("Referer"),
 			sref.cstr_, sref.leng_, true );
@@ -90,14 +90,13 @@ initHtpHdr_forHead( ZnkHtpHdrs htp_hdrs, const char* hostname, const char* req_u
 static bool
 do_head2( RanoCGIEVar* evar, const char* hostname, const char* unesc_req_urp, const char* target,
 		const char* ua, ZnkVarpAry cookie,
-		const char* parent_proxy, ZnkStr msg, RanoModule mod )
+		const char* parent_proxy, ZnkStr msg, RanoModule mod, bool is_https )
 {
 	bool        result = false;
 	const char* tmpdir = EstConfig_getTmpDirPID( true );
 	struct ZnkHtpHdrs_tag htp_hdrs = { 0 };
 
 	ZnkHtpHdrs_compose( &htp_hdrs );
-	//initHtpHdr( &htp_hdrs, hostname, ua, cookie );
 	initHtpHdr_forHead( &htp_hdrs, hostname, unesc_req_urp, ua, cookie, evar );
 
 	if( mod ){
@@ -109,13 +108,13 @@ do_head2( RanoCGIEVar* evar, const char* hostname, const char* unesc_req_urp, co
 	{
 		ZnkStr result_filename = ZnkStr_new( "" );
 
-		result = RanoHtpBoy_do_head( hostname, unesc_req_urp, target,
+		result = RanoHtpBoy_cipher_head( hostname, unesc_req_urp, target,
 				&htp_hdrs,
 				parent_proxy,
-				tmpdir, result_filename );
+				tmpdir, result_filename, is_https, msg );
 		if( !result && msg ){
 			ZnkStr_addf( msg,
-					"  RanoHtpBoy_do_head : result=[%d] hostname=[%s] req_urp=[%s]<br>"
+					"  RanoHtpBoy_cipher_head : result=[%d] hostname=[%s] req_urp=[%s]<br>"
 					"                     : target=[%s] parent_proxy=[%s] tmpdir=[%s]<br>"
 					"                     : result_filename=[%s].<br>",
 					result, hostname, unesc_req_urp, target, parent_proxy, tmpdir, ZnkStr_cstr(result_filename) );
@@ -309,7 +308,8 @@ EstGet_procHead( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val )
 	char content_type[ 1024 ] = "application/octet-stream";
 	const char* target = "";
 	RanoModule  mod    = NULL;
-	const char* src    = EstBase_getHostnameAndRequrp_fromEstVal( hostname, sizeof(hostname), req_urp, est_val );
+	bool is_https = false;
+	const char* src    = EstBase_getHostnameAndRequrp_fromEstVal( hostname, sizeof(hostname), req_urp, est_val, &is_https );
 
 	Znk_UNUSED( src );
 
@@ -364,7 +364,7 @@ EstGet_procHead( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val )
 			 */
 			do_head2( evar, hostname, ZnkStr_cstr(req_urp), target,
 					ua, cookie,
-					parent_proxy, NULL, mod );
+					parent_proxy, NULL, mod, is_https );
 			EstConfig_readRecvHdrSetCookie( mod, target );
 			RanoHtpBoy_readRecvHdrVar( "Content-Type", content_type, sizeof(content_type), target, tmpdir_pid );
 			ZnkVarpAry_destroy( cookie );
@@ -526,7 +526,7 @@ downloadWithCookie( const char* tmpdir_com, const char* tmpdir_pid,
 		RanoModule mod, const char* ua, const char* parent_proxy,
 		ZnkStr result_filename, ZnkStr ermsg,
 		char* content_type,      size_t content_type_size,
-		char* new_last_modified, size_t new_last_modified_size )
+		char* new_last_modified, size_t new_last_modified_size, bool is_https )
 {
 	int status_code = -1; /* 広義解釈して、通信エラーの場合は -1 と定める */
 	ZnkVarpAry cookie = ZnkVarpAry_create( true );
@@ -543,7 +543,7 @@ downloadWithCookie( const char* tmpdir_com, const char* tmpdir_pid,
 	if( !EstBase_download( hostname, unesc_req_urp, target,
 			ua, cookie, evar_http_cookie,
 			parent_proxy,
-			result_filename, ermsg, mod, &status_code ) ){
+			result_filename, ermsg, mod, &status_code, is_https ) ){
 		RanoLog_printf( "EstBase_download ermsg=[%s]\n", ZnkStr_cstr(ermsg) );
 		status_code = -1;
 	}
@@ -569,7 +569,7 @@ updateCookieAndLastModified_byHead( const char* tmpdir_com, const char* tmpdir_p
 		RanoModule mod, const char* ua, const char* parent_proxy,
 		ZnkStr result_filename,
 		char* content_type,      size_t content_type_size,
-		char* new_last_modified, size_t new_last_modified_size )
+		char* new_last_modified, size_t new_last_modified_size, bool is_https )
 {
 	static const char* cachebox = "./cachebox/";
 
@@ -586,7 +586,7 @@ updateCookieAndLastModified_byHead( const char* tmpdir_com, const char* tmpdir_p
 	 */
 	do_head2( evar, hostname, unesc_req_urp, target,
 			ua, cookie,
-			parent_proxy, NULL, mod );
+			parent_proxy, NULL, mod, is_https );
 
 	/* Set-Cookieの検出とsend_filterへの更新. */
 	EstConfig_readRecvHdrSetCookie( mod, target );
@@ -681,14 +681,14 @@ static void
 filter( RanoTextType txt_type, ZnkStr console_msg,
 		const char* cmd_name, const char* hostname, const char* unesc_req_urp,
 		const char* evar_http_cookie,
-		const char* result_filename, const char* src, const char* target, bool save_img_cache  )
+		const char* result_filename, const char* src, const char* target, bool save_img_cache, bool is_https )
 {
 	switch( txt_type ){
 	case RanoText_HTML:
 	case RanoText_CSS:
 		ZnkStr_addf( console_msg, "%s : URL=[%s%s]\n", cmd_name, hostname, unesc_req_urp );
 		EstBase_addConsoleMsg_HttpCookie( console_msg, evar_http_cookie );
-		EstFilter_main( result_filename, src, target, txt_type, console_msg, save_img_cache );
+		EstFilter_main( result_filename, src, target, txt_type, console_msg, save_img_cache, is_https );
 		break;
 	case RanoText_JS:
 		filterJS( result_filename, src, target, txt_type );
@@ -828,6 +828,7 @@ EstGet_procGet( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, bo
 	ZnkStr      ermsg          = ZnkStr_new( "" );
 	ZnkDate     date = { 0 };
 	const char* est_cmd_name = is_view ? "est_view" : "est_get";
+	bool        is_https = false;
 
 	{
 		ZnkDate_getCurrent( &date );
@@ -835,7 +836,7 @@ EstGet_procGet( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, bo
 		ZnkStr_addf( console_msg, " %s begin\n", est_cmd_name );
 	}
 
-	src    = EstBase_getHostnameAndRequrp_fromEstVal( hostname, sizeof(hostname), req_urp, est_val );
+	src    = EstBase_getHostnameAndRequrp_fromEstVal( hostname, sizeof(hostname), req_urp, est_val, &is_https );
 	target = EstConfig_getTargetAndModule( &mod, hostname );
 
 	if( target && !ZnkS_empty(hostname) ){
@@ -871,7 +872,7 @@ EstGet_procGet( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, bo
 						mod, ua, parent_proxy,
 						result_filename,
 						content_type, sizeof(content_type),
-						new_last_modified, sizeof(new_last_modified) );
+						new_last_modified, sizeof(new_last_modified), is_https );
 
 				if( !is_404 ){
 					updated = updateLastModifiedData( ZnkStr_cstr(result_filename), new_last_modified );
@@ -889,14 +890,14 @@ EstGet_procGet( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, bo
 								mod, ua, parent_proxy,
 								result_filename, ermsg,
 								content_type, sizeof(content_type),
-								new_last_modified, sizeof(new_last_modified) );
+								new_last_modified, sizeof(new_last_modified), is_https );
 
 						if( status_code == 200 ){
 							txt_type = RanoCGIUtil_getTextType( content_type );
 							filter( txt_type, console_msg,
 									est_cmd_name, hostname, unesc_req_urp,
 									evar->http_cookie_,
-									ZnkStr_cstr(result_filename), src, target, save_img_cache );
+									ZnkStr_cstr(result_filename), src, target, save_img_cache, is_https );
 						}
 					}
 				}
@@ -915,14 +916,14 @@ EstGet_procGet( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, bo
 						mod, ua, parent_proxy,
 						result_filename, ermsg,
 						content_type, sizeof(content_type),
-						NULL, 0 );
+						NULL, 0, is_https );
 
 				txt_type = RanoCGIUtil_getTextType( content_type );
 				if( status_code == 200 ){
 					filter( txt_type, console_msg,
 							est_cmd_name, hostname, unesc_req_urp,
 							evar->http_cookie_,
-							ZnkStr_cstr(result_filename), src, target, save_img_cache );
+							ZnkStr_cstr(result_filename), src, target, save_img_cache, is_https );
 				}
 			}
 		}

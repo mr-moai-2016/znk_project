@@ -2,6 +2,8 @@
 
 #include <Rano_myf.h>
 #include <Rano_log.h>
+#include <Rano_vtag_util.h>
+
 #include <Znk_net_ip.h>
 #include <Znk_rand.h>
 #include <Znk_def_util.h>
@@ -23,6 +25,7 @@ static RanoModuleAry st_mod_ary = NULL;
 static bool          st_is_all_replace_cookie = true;
 static ZnkVarpAry    st_cookie_extra_vars = NULL;
 static char          st_authentic_key[ 256 ] = "";
+static char          st_version_str[ 64 ] = "2.0.0";
 
 const char*
 MoaiServerInfo_server_name( void )
@@ -280,4 +283,22 @@ MoaiServerInfo_authenticKey( void )
 				sum > 60 ? "%04X%04X" : "%04x%04x", r_code_1, r_code_2 );
 	}
 	return st_authentic_key;
+}
+
+void
+MoaiServerInfo_set_authenticKey( const char* authentic_key )
+{
+	ZnkS_copy( st_authentic_key, sizeof(st_authentic_key), authentic_key, Znk_NPOS ); 
+}
+
+const char*
+MoaiServerInfo_version( bool is_load_vtag )
+{
+	if( is_load_vtag ){
+		ZnkStr str = ZnkStr_new( "" );
+		RanoVTagUtil_getVTagStr( str, "vtag" );
+		Znk_snprintf( st_version_str, sizeof(st_version_str), "%s", ZnkStr_cstr(str) );
+		ZnkStr_delete( str );
+	}
+	return st_version_str;
 }

@@ -20,17 +20,23 @@
 #include <Znk_mem_find.h>
 #include <Znk_date.h>
 #include <Znk_dir_recursive.h>
+#include <Znk_rand.h>
 
 
 const char*
-EstBase_getHostnameAndRequrp_fromEstVal( char* hostname, size_t hostname_size, ZnkStr req_urp, const char* src_url )
+EstBase_getHostnameAndRequrp_fromEstVal( char* hostname, size_t hostname_size, ZnkStr req_urp, const char* src_url, bool* is_https )
 {
 	const char* p;
 	const char* q;
 	const char* src = src_url;
+
 	ZnkHtpURL_unescape_toStr( req_urp, src, Znk_strlen(src) );
+
+	if( is_https && ZnkS_isBegin( ZnkStr_cstr(req_urp), "https://" ) ){
+		*is_https = true;
+	}
+
 	p = RanoCGIUtil_skipProtocolPrefix( ZnkStr_cstr(req_urp) );
-	//RanoLog_printf( "getHostnameAndRequrp_fromEstVal : src=[%s] p=[%s].\n", src, p );
 	q = Znk_strchr( p, '/' );
 	if( q ){
 		ZnkS_copy( hostname, hostname_size, p, q-p );
@@ -43,10 +49,12 @@ EstBase_getHostnameAndRequrp_fromEstVal( char* hostname, size_t hostname_size, Z
 }
 
 static void
-initHtpHdr( ZnkHtpHdrs htp_hdrs, const char* hostname, const char* ua, ZnkVarpAry cookie )
+initHtpHdr( ZnkHtpHdrs htp_hdrs, const char* hostname, const char* ua, ZnkVarpAry cookie, bool is_https, const char* explicit_referer )
 {
 	ZnkVarp varp;
 	ZnkSRef sref = { 0 };
+	const int rand_factor = ZnkRand_getRandI( 0, 100 );
+	char referer_bur[ 512 ] = "";
 
 	varp = ZnkHtpHdrs_regist( htp_hdrs->vars_,
 			"Host",   Znk_strlen_literal("Host"),
@@ -72,34 +80,39 @@ initHtpHdr( ZnkHtpHdrs htp_hdrs, const char* hostname, const char* ua, ZnkVarpAr
 			"Accept-Encoding", Znk_strlen_literal("Accept-Encoding"),
 			sref.cstr_, sref.leng_, true );
 
-	ZnkSRef_set_literal( &sref, "http://www.2chan.net" );
+	if( !ZnkS_empty( explicit_referer ) ){
+		Znk_snprintf( referer_bur, sizeof(referer_bur), "%s", explicit_referer );
+		sref.cstr_ = referer_bur;
+		sref.leng_ = Znk_strlen( referer_bur );
+	} else { 
+		if( is_https ){
+			if( rand_factor < 30 ){
+				ZnkSRef_set_literal( &sref, "https://www.google.com" );
+			} else if( rand_factor < 50 ){
+				ZnkSRef_set_literal( &sref, "https://www.2chan.net" );
+			} else {
+				Znk_snprintf( referer_bur, sizeof(referer_bur), "https://%s", hostname );
+				sref.cstr_ = referer_bur;
+				sref.leng_ = Znk_strlen( referer_bur );
+			}
+		} else {
+			if( rand_factor < 30 ){
+				ZnkSRef_set_literal( &sref, "http://www.google.com" );
+			} else if( rand_factor < 50 ){
+				ZnkSRef_set_literal( &sref, "http://www.2chan.net" );
+			} else {
+				Znk_snprintf( referer_bur, sizeof(referer_bur), "http://%s", hostname );
+				sref.cstr_ = referer_bur;
+				sref.leng_ = Znk_strlen( referer_bur );
+			}
+		}
+	}
 	varp = ZnkHtpHdrs_regist( htp_hdrs->vars_,
 			"Referer", Znk_strlen_literal("Referer"),
 			sref.cstr_, sref.leng_, true );
 
 
-#if 0
-	/* Cookie */
-	{
-		const size_t size = ZnkVarpAry_size( cookie );
-		if( size ){
-			size_t idx;
-			ZnkStr str = ZnkStr_new( "" );
-			for( idx=0; idx<size; ++idx ){
-				varp = ZnkVarpAry_at( cookie, idx );
-				ZnkStr_addf( str, "%s=%s", ZnkStr_cstr(varp->name_), ZnkVar_cstr(varp) );
-				if( idx < size-1 ){
-					ZnkStr_add( str, "; " );
-				}
-			}
-			varp = ZnkHtpHdrs_regist( htp_hdrs->vars_,
-					"Cookie", Znk_strlen_literal("Cookie"),
-					ZnkStr_cstr(str), ZnkStr_leng(str), true );
-			ZnkStr_delete( str );
-		}
-	}
-#endif
-	{
+	if( cookie ){
 		ZnkStr     cok_stmt = ZnkStr_new( "" );
 		ZnkCookie_extend_toCookieStatement( cookie, cok_stmt );
 		varp = ZnkHtpHdrs_regist( htp_hdrs->vars_,
@@ -120,16 +133,17 @@ bool
 EstBase_download( const char* hostname, const char* unesc_req_urp, const char* target,
 		const char* ua, ZnkVarpAry cookie, const char* evar_http_cookie,
 		const char* parent_proxy,
-		ZnkStr result_filename, ZnkStr msg, RanoModule mod, int* status_code )
+		ZnkStr result_filename, ZnkStr msg, RanoModule mod, int* status_code, bool is_https )
 {
 	bool        result   = false;
 	const char* tmpdir   = EstConfig_getTmpDirPID( true );
 	const char* cachebox = "./cachebox/";
 	struct ZnkHtpHdrs_tag htp_hdrs = { 0 };
-	bool is_without_404 = true;
+	bool   is_without_404 = true;
+	const char* explicit_referer = EstConfig_getExplicitReferer();
 
 	ZnkHtpHdrs_compose( &htp_hdrs );
-	initHtpHdr( &htp_hdrs, hostname, ua, cookie );
+	initHtpHdr( &htp_hdrs, hostname, ua, cookie, is_https, explicit_referer );
 
 	/***
 	 * Header and Cookie filtering
@@ -159,32 +173,19 @@ EstBase_download( const char* hostname, const char* unesc_req_urp, const char* t
 		}
 	}
 
-#if 0
-	result = RanoHtpBoy_do_get( hostname, unesc_req_urp, target,
-			&htp_hdrs,
-			parent_proxy,
-			tmpdir, cachebox, result_filename );
-#endif
-	result = RanoHtpBoy_do_get_with404( hostname, unesc_req_urp, target,
+	result = RanoHtpBoy_cipher_get_with404( hostname, unesc_req_urp, target,
 			&htp_hdrs,
 			parent_proxy,
 			tmpdir, cachebox, result_filename,
-			is_without_404, status_code );
+			is_without_404, status_code, is_https,
+			NULL, msg );
 
 	if( !result && msg ){
 		ZnkStr_addf( msg,
-				"  RanoHtpBoy_do_get : result=[%d] hostname=[%s] req_urp=[%s]<br>"
+				"  RanoHtpBoy_cipher_get_with404 : result=[%d] hostname=[%s] req_urp=[%s]<br>"
 				"                    : target=[%s] parent_proxy=[%s] tmpdir=[%s]<br>"
 				"                    : result_filename=[%s].<br>",
 				result, hostname, unesc_req_urp, target, parent_proxy, tmpdir, ZnkStr_cstr(result_filename) );
-	}
-
-	/***
-	 * cache_index.dat ÇÃçXêV.
-	 */
-	{
-		ZnkVarpAry cache_index = ZnkVarpAry_create( true );
-		ZnkVarpAry_destroy( cache_index );
 	}
 
 	ZnkHtpHdrs_dispose( &htp_hdrs );

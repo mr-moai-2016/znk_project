@@ -33,7 +33,7 @@ COMPILER := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc \
 	-fpic -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv5te -mtune=xscale -msoft-float -mthumb -Os \
 	-g -DNDEBUG -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 \
 	-DANDROID \
-	-Wa,--noexecstack -Wformat -Werror=format-security -Wall \
+	-Wa,--noexecstack -Wformat -Werror=format-security -Wall $[compiler_option_special]$ \
 	-I$(PLATFORMS_LEVEL)/arch-arm/usr/include
 
 LINKER   := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-g++ \
@@ -54,7 +54,7 @@ COMPILER := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc \
 	-fpic -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfpu=vfpv3-d16 -mfloat-abi=softfp -mthumb -Os \
 	-g -DNDEBUG -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 \
 	-DANDROID \
-	-Wa,--noexecstack -Wformat -Werror=format-security -Wall \
+	-Wa,--noexecstack -Wformat -Werror=format-security -Wall $[compiler_option_special]$ \
 	-I$(PLATFORMS_LEVEL)/arch-arm/usr/include \
 
 LINKER   := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-g++ \
@@ -75,7 +75,7 @@ COMPILER := $(TOOLCHAINS_DIR)/bin/i686-linux-android-gcc \
 	-ffunction-sections -funwind-tables -no-canonical-prefixes -fstack-protector -O2 \
 	-g -DNDEBUG -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300 \
 	-DANDROID \
-	-Wa,--noexecstack -Wformat -Werror=format-security -Wall \
+	-Wa,--noexecstack -Wformat -Werror=format-security -Wall $[compiler_option_special]$ \
 	-I$(PLATFORMS_LEVEL)/arch-x86/usr/include \
 
 LINKER   := $(TOOLCHAINS_DIR)/bin/i686-linux-android-g++ \

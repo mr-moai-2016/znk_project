@@ -81,7 +81,12 @@ create_process( size_t argc, const char** argv, ZnkProcessConsoleType cons_type 
 	 * ここで実際に行われることは参照カウントのデクリメントである.
 	 */
 	CloseHandle( pi.hThread );
-	CloseHandle( pi.hProcess );
+
+	/***
+	 * pi.hProcessについてはまだクローズしない.
+	 * (この関数の外部でまだ使用する自由を与えるため.
+	 * ただしその代償として、使い終わったら外部で責任を持ってクローズする必要がある.)
+	 */
 
 	return pi.hProcess;
 }
@@ -147,10 +152,13 @@ ZnkProcess_execChild( size_t argc, const char** argv, bool is_wait, ZnkProcessCo
 #if defined(Znk_TARGET_WINDOWS)
 
 	HANDLE hProcess = create_process( argc, argv, cons_type );
-
 	if( is_wait ){
 		WaitForSingleObject( hProcess, INFINITE );
 	}
+	/***
+	 * pi.hProcessはもう使わないのでここでクローズ.
+	 */
+	CloseHandle( hProcess );
 
 #else
 	/***
@@ -205,7 +213,12 @@ ZnkProcess_execRestart( size_t argc, const char** argv, ZnkProcessConsoleType co
 {
 #if defined(Znk_TARGET_WINDOWS)
 
-	create_process( argc, argv, cons_type );
+	/***
+	 * create_processでは pi.hProcess のクローズは行わない仕様としてあるので、
+	 * ここでクローズする必要がある.
+	 */
+	HANDLE hProcess = create_process( argc, argv, cons_type );
+	CloseHandle( hProcess );
 	ZnkProcess_exit( true );
 
 #else

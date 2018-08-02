@@ -5,7 +5,7 @@
 
 Znk_EXTERN_C_BEGIN
 
-typedef bool (*EstDirUtilFuncT)( const char* file_path, void* arg );
+//typedef bool (*EstDirUtilFuncT)( const char* file_path, void* arg );
 
 /***
  * src_file_path‚Ædst_file_path‚Í(MD5‚ÌŒ‹‰Ê‚È‚Ç‚©‚ç)“¯‚¶“à—e‚Å‚ ‚é‰Â”\«‚ª”ZŒú‚Å‚ ‚é‚Æ‚·‚é.
@@ -19,6 +19,7 @@ bool
 EstDirUtil_moveFile( const char* src_file, const char* dst_dir, const char* renamed_filename, ZnkStr ermsg, ZnkStr dst_file_path,
 		bool is_src_delete );
 
+#if 0
 void
 EstDirUtil_moveDir( const char* src_dir, const char* dst_dir,
 		const char* title, ZnkStr ermsg,
@@ -27,6 +28,7 @@ void
 EstDirUtil_removeDir( const char* topdir,
 		const char* title, ZnkStr ermsg,
 		EstDirUtilFuncT is_processFile_func, void* is_processFile_arg );
+#endif
 
 void
 EstDirUtil_moveOldFile_toDustbox( const char* topdir, ZnkStr ermsg, size_t days_ago, size_t sec_ago );

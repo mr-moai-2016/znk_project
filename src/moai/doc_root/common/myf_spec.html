@@ -1,0 +1,346 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<link href="/msty.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<a name=TopBar></a>
+<p><b><img src="/imgs/here_landmark.png"> myfファイルの仕様</b></p>
+
+<a class=MstyElemLink href="/">トップページ</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
+<a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
+<br> <br>
+
+<div class=MstyComment>
+<u><b>記事担当者</b></u> : 全角<br>
+<br>
+<u><b>最終更新日</b></u> : 2018/08/01<br>
+<br>
+</div>
+<br>
+
+
+<a name=AtFirst></a>
+<u><b>
+はじめに
+</b></u><br>
+<br>
+<div class=MstyIndent>
+この記事では、myfファイルのフォーマット仕様について説明します.<br>
+</div><br>
+<br>
+
+
+<a name=Index></a>
+<u><b>
+目次
+</b></u><br>
+<br>
+<ul>
+	<li><b><a class=MstyElemLink href=#def_quote>クォーティング文字列の定義</a></b></li>
+	<li><b><a class=MstyElemLink href=#section_lines>行配列セクション(SectionLines)について</a></b></li>
+	<li><b><a class=MstyElemLink href=#section_vars>変数セクション(SectionVars)について</a></b></li>
+	<li><b><a class=MstyElemLink href=#section_prims>プリミティブセクション(SectionPrims)について</a></b></li>
+	<li><b><a class=MstyElemLink href=#outof_section>セクション外領域(OutOfSection)について</a></b></li>
+	<li><b><a class=MstyElemLink href=#special_empty>特殊空文字について</a></b></li>
+</ul><br>
+
+
+<a name=def_quote></a>
+<u><b>
+クォーティング文字列の定義
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	ファイルの一番初めの行に <b>@def_quote</b>で始まる行を記述することでクォーティング文字列を宣言できる.<br>
+	この指定がない場合、以下が指定されたのと同等とみなす.<br>
+<br>
+	<div class=MstyComment>
+		<div class=MstyCode>
+			@def_quote [' ']<br>
+		</div>
+	</div>
+<br>
+	このとき引数としてホワイトスペースで区切られた文字列を２つ取り、これはユーザが自由に指定できる.<br>
+	( ただしその長さはそれぞれ31文字以下でなければならない. これ以上長いものを指定した場合は途中で打ち切られる )<br>
+	例えば、上記の <b>@def_quote [' ']</b> という記述は、クォーティングの開始記号として <b>['</b> を以降の行で用い、<br>
+	同様にクォーティングの終了記号として <b>']</b> を以降の行で用いることを宣言する.<br>
+	<br>
+	このクォーティングは複数行に跨るデータを囲うこともできる.<br>
+<br>
+	<div class=MstyComment>
+		<b>例</b><br>
+<br>
+		text = ['なるほど完璧な作戦っスねーーーっ<br>
+		不可能だという点に目をつぶればよぉ～']<br>
+	</div>
+<br>
+	またこれで囲まれたデータはその中にたとえいかなる特殊文字が含まれていようとも、その文字がそのまま扱われる.<br>
+	(正規表現などにみられるエスケープ文字などといった邪悪なものは存在しない).<br>
+	従ってこの場合、' " \ などを使った典型パターンもそのまま記述でき、SJISコードの「表」や「ソ」などを含む日本語も安心して使える.<br>
+<br>
+	この宣言はファイルの最初の行において一度だけ行うことができる.<br>
+	仮に２行目以降宣言してもそれは単に読み飛ばされる.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=section_lines></a>
+<u><b>
+行配列セクション(SectionLines)について
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	行頭の<b>@@L name</b>は行配列セクションの開始を意味する.<br>
+	以降簡潔のため、これをSectionLinesと呼ぶ.<br>
+	nameの部分には、このSectionLinesの名前を記述する.<br>
+	nameの部分は非ホワイトスペース文字を使用可能である.<br>
+	行頭の<b>@@.</b>のみの行に至ることでSectionLinesは終了となる.<br>
+	<br>
+	SectionLinesの開始行と終了行の間に挟まれた行において文字列の配列データを記述できる.<br>
+	このとき一行につき一つの要素が対応する. この値はクォーティング文字列で囲わないこと.<br>
+	(囲ったとしてもそのクォーティング文字列はそのままデータとみなされる)<br>
+<br>
+	<div class=MstyComment>
+		<b>例</b><br>
+<br>
+		@@L starting_hosts<br>
+		http://www.google.com<br>
+		http://www.yahoo.co.jp<br>
+		@@.<br>
+	</div>
+    <br>
+	データ行の行頭に#を記述することでその部分をコメント化することもできる.<br>
+<br>
+	<div class=MstyComment>
+		<b>例</b><br>
+<br>
+		@@L starting_hosts<br>
+		http://www.google.com<br>
+		#http://www.yahoo.co.jp<br>
+		http://www.youtube.com<br>
+		@@.<br>
+	</div>
+<br>
+	ただしこのようなコメントは transientである.<br>
+	つまり一度myfをloadしてそれを同ファイルへsaveするようなプログラムでは跡形もなく消去される.<br>
+	上の例ではsaveしたmyf内では # で始まる行は消えてしまうことだろう.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=section_vars></a>
+<u><b>
+変数セクション(SectionVars)について
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	行頭の<b>@@V name</b>は変数セクションの開始を意味する.<br>
+	以降簡潔のため、これをSectionVarsと呼ぶ.<br>
+	nameの部分にはSectionVarsの名前を記述する.<br>
+	nameの部分は非ホワイトスペース文字を使用可能である.<br>
+	行頭の<b>@@.</b>のみの行に至ることでSectionVarsは終了となる.<br>
+	<br>
+	SectionVarsの開始行と終了行の間に挟まれた行を変数代入行と呼ぶ.<br>
+	これは以下の形式となる.<br>
+<br>
+	<div class=MstyComment>
+		var_name = quoted_value<br>
+		または<br>
+		var_name = { quoted_value ... }<br>
+	</div>
+<br>
+	quoted_valueにおいて値を記述するが、この値は必ずクォーティング文字列で囲う必要がある.<br>
+	また { quoted_value ... } においては quoted_value の配列を記述できる.<br>
+<br>
+	<div class=MstyComment>
+		<b>例</b><br>
+<br>
+		@@V last_access<br>
+		date = ['2016/03/25']<br>
+		time = ['23:55:01']<br>
+		@@.<br>
+	</div>
+<br>
+	<div class=MstyComment>
+		<b>例</b><br>
+<br>
+		@@V img_extensions<br>
+		list = { ['jpg'] ['png'] ['gif'] }<br>
+		@@.<br>
+	</div>
+<br>
+	変数代入行において行頭に#を記述することでその部分をコメント化することもできる.<br>
+<br>
+	<div class=MstyComment>
+		<b>例</b><br>
+<br>
+		@@V last_access<br>
+		#date = ['2016/03/25']<br>
+		date = ['2016/03/26']<br>
+		#time = ['23:55:01']<br>
+		time = ['01:03:04']<br>
+		@@.<br>
+	</div>
+<br>
+	ただしこのようなコメントは transientである.<br>
+	つまり一度myfをloadしてそれを同ファイルへsaveするようなプログラムでは跡形もなく消去される.<br>
+	上の例ではsaveしたmyf内では # で始まる行は消えてしまうことだろう.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=section_prims></a>
+<u><b>
+プリミティブセクション(SectionPrims)について
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	行頭の<b>@@P name</b>はプリミティブセクションの開始を意味する.<br>
+	以降簡潔のため、これをSectionPrimsと呼ぶ.<br>
+	nameの部分にはSectionPrimsの名前を記述する.<br>
+	nameの部分は非ホワイトスペース文字を使用可能である.<br>
+	行頭の<b>@@.</b>のみの行に至ることでSectionPrimsは終了となる.<br>
+	<br>
+	SectionPrimsの開始行と終了行の間に挟まれた行をプリミティブ行と呼ぶ.<br>
+	これは以下の形式となる.<br>
+<br>
+	<div class=MstyComment>
+		quoted_value<br>
+		または<br>
+		{ quoted_value ... }<br>
+	</div>
+<br>
+	quoted_valueにおいて値を記述するが、この値は必ずクォーティング文字列で囲う必要がある.<br>
+	また { quoted_value ... } においては quoted_value の配列を記述できる.<br>
+<br>
+	<div class=MstyComment>
+		<b>例</b><br>
+<br>
+		@@P last_access<br>
+		['Zenkaku']<br>
+		['2016/03/25']<br>
+		['23:55:01']<br>
+		@@.<br>
+	</div>
+<br>
+	<div class=MstyComment>
+		<b>例</b><br>
+<br>
+		@@P img_infos<br>
+		{ ['jpg'] ['JPEGフォーマット'] }<br>
+		{ ['png'] ['PNGフォーマット'] }<br>
+		{ ['gif'] ['GIFアニメーション'] }<br>
+		@@.<br>
+	</div>
+<br>
+	プリミティブ行において行頭に#を記述することでその部分をコメント化することもできる.<br>
+<br>
+	<div class=MstyComment>
+		<b>例</b><br>
+<br>
+		@@P last_access<br>
+		# ['Zenkaku']<br>
+		['2016/03/25']<br>
+		['23:55:01']<br>
+		@@.<br>
+	</div>
+<br>
+	ただしこのようなコメントは transientである.<br>
+	つまり一度myfをloadしてそれを同ファイルへsaveするようなプログラムでは跡形もなく消去される.<br>
+	上の例ではsaveしたmyf内では # で始まる行は消えてしまうことだろう.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=outof_section></a>
+<u><b>
+セクション外領域(OutOfSection)について
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	SectionLines、SectionVars、SectionPrims、これら３つ以外の領域においては、myfパーサは基本的に無視する.<br>
+	この部分をOutOfSectionと呼ぶ.<br>
+	従って、この部分にはコメントなどを記述しておくこともできる.<br>
+	このOutOfSectionについては、ZnkMyf_loadを行ったときに内容が記録され、<br>
+	これをZnkMyf_saveで保存したときにその内容もそのまま書き出される.<br>
+	(load =&gt; saveといった流れでこの部分の内容は失われない)<br>
+	<br>
+	OutOfSection領域であっても、<b>@def_quote</b>で始まる最初の行は特別な意味を持つ.<br>
+	これについては、上で述べたとおりである.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=special_empty></a>
+<u><b>
+特殊空文字について
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	これは滅多に登場しない例外的な場合に備えた仕様である.<br>
+	<br>
+	行頭が<b>@@^</b>の場合、myfの字句解析器はクォーティングされている場合を除きこれを無条件に空文字とみなす.<br>
+	myfではこれを特殊空文字と呼ぶ.<br>
+	例えば、以下にある行頭の特殊記号列を本当にデータとしてそのまま扱いたい場合どうすればよいだろうか？<br>
+	(そんなことは滅多にないだろうが)<br>
+<br>
+	<div class=MstyComment>
+		# ...<br>
+		@@L ...<br>
+		@@V ...<br>
+		@@.<br>
+		@@^ ...<br>
+	</div>
+<br>
+	特殊空文字を用いれば、上記を以下のように記述することでこれに対処できる.<br>
+<br>
+	<div class=MstyComment>
+		@@^# ...<br>
+		@@^@@L ...<br>
+		@@^@@V ...<br>
+		@@^@@.<br>
+		@@^@@^ ...<br>
+	</div>
+<br>
+	このあたりは仕様からエスケープシーケンスを排除した代償が間接的に現れているが<br>
+	こんな記号列を実用上のデータで扱う機会は滅多にないということでよしとしよう.<br>
+	尚、行頭以外に<b>@@^</b>が出現した場合は、空文字ではなくそのまま扱われる.<br>
+<br>
+	以上<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=Link></a>
+<u><b>
+リンク
+</b></u><br>
+<br>
+<ul>
+	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
+	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project>znk_project(github)</a></li>
+</ul><br>
+
+
+</body>
+</html>

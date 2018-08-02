@@ -6,5 +6,6 @@ custom_boy
 proxy_finder
 cgi_developers
 guest
+birdman
 plugin_futaba
 plugin_5ch

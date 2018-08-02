@@ -252,7 +252,7 @@ refCookieVar( ZnkMyf myf, const char* var_name )
 	return ZnkMyf_refVar( myf, "cookie_vars", var_name );
 }
 static void
-updateSendMyf( ZnkMyf myf, ZnkStr cfduid, ZnkStr caco, ZnkStr posttime )
+updateSendMyf( ZnkMyf myf, ZnkStr cfduid, ZnkStr caco, ZnkStr posttime, bool all_cookie_clear )
 {
 	ZnkVarp varp;
 
@@ -318,6 +318,21 @@ updateSendMyf( ZnkMyf myf, ZnkStr cfduid, ZnkStr caco, ZnkStr posttime )
 	varp = refCookieVar( myf, "pwdc" );
 	if( varp ){
 		ZnkVar_set_val_Str( varp, "", 0 );
+	}
+
+	/***
+	 * ŽŽŒ±“I:
+	 * ‚»‚Ì‘¼‚ÌCookie‚à‹­§Á‹Ž‚µ‚½‚¢ê‡.
+	 */
+	if( all_cookie_clear ){
+		ZnkVarpAry cookie_vars = ZnkMyf_find_vars( myf, "cookie_vars" );
+		if( cookie_vars ){
+			size_t idx = Znk_NPOS;
+			idx = ZnkVarpAry_findIdx_byName_literal( cookie_vars, "verifyc", false );
+			if( idx != Znk_NPOS ){
+				ZnkVarpAry_erase_byIdx( cookie_vars, idx );
+			}
+		}
 	}
 }
 
@@ -452,7 +467,8 @@ checkCBVars( const ZnkVarpAry cb_vars, const char* target, ZnkStr msg, ZnkStr la
 
 bool
 CBVirtualizer_initiateAndSave( RanoCGIEVar* evar, const ZnkVarpAry cb_vars,
-		ZnkStr msg, const char* cb_src, ZnkStr caco, ZnkStr ua_str, ZnkStr lacking_var )
+		ZnkStr msg, const char* cb_src, ZnkStr caco, ZnkStr ua_str, ZnkStr lacking_var,
+		bool all_cookie_clear )
 {
 	const char* moai_dir = CBConfig_moai_dir();
 	bool        result   = false;
@@ -639,7 +655,7 @@ CBVirtualizer_initiateAndSave( RanoCGIEVar* evar, const ZnkVarpAry cb_vars,
 				}
 			}
 
-			updateSendMyf( send_myf, cfduid, caco, posttime );
+			updateSendMyf( send_myf, cfduid, caco, posttime, all_cookie_clear );
 
 			ZnkMyf_save( send_myf, info->send_save_myf_filename_ );
 			ZnkMyf_save( send_myf, path );
@@ -1065,7 +1081,7 @@ registMain( ZnkVarpAry cb_vars, ZnkVarpAry main_vars, ZnkStr ua_str, ZnkStr RE_k
 bool
 CBVirtualizer_doMainProc( RanoCGIEVar* evar, ZnkVarpAry cb_vars, const char* cb_src, ZnkBird bird, bool is_step1, bool is_step2, ZnkStr RE_key,
 		CBFgpInfo fgp_info, CBUAInfo ua_info, ZnkVarpAry main_vars, uint64_t* ptua64, ZnkStr msg, ZnkStr category, ZnkStr lacking_var,
-		const char* moai_dir )
+		const char* moai_dir, bool all_cookie_clear )
 {
 	bool result = false;
 
@@ -1096,7 +1112,7 @@ CBVirtualizer_doMainProc( RanoCGIEVar* evar, ZnkVarpAry cb_vars, const char* cb_
 	}
 
 	if( is_step2 ){
-		if( !CBVirtualizer_initiateAndSave( evar, cb_vars, msg, cb_src, caco, ua_str, lacking_var ) ){
+		if( !CBVirtualizer_initiateAndSave( evar, cb_vars, msg, cb_src, caco, ua_str, lacking_var, all_cookie_clear ) ){
 			return false;
 		}
 		if( is_step1 ){
@@ -1114,37 +1130,6 @@ CBVirtualizer_doMainProc( RanoCGIEVar* evar, ZnkVarpAry cb_vars, const char* cb_
 
 	return result;
 }
-#if 0
-static bool
-getRE_select( ZnkStr resel, const char* select_id )
-{
-	ZnkDirId id = ZnkDir_openDir( "RE" );
-	if( id ){
-		const char* name;
-		const char* ext;
-		ZnkStr RE_key = ZnkStr_new( "" );
-		while( true ){
-			name = ZnkDir_readDir( id );
-			if( name == NULL ){
-				break;
-			}
-			ext = ZnkS_get_extension( name, '.' );
-			if( ZnkS_eqCase( ext, "png" ) ){
-				ZnkStr_assign( RE_key, 0, name, ext - 1 - name );
-				if( ZnkStr_eq( RE_key, select_id ) ){
-					ZnkStr_addf( resel, "<option value=\"%s\" selected>%s</option>\n", ZnkStr_cstr(RE_key), ZnkStr_cstr(RE_key) );
-				} else {
-					ZnkStr_addf( resel, "<option value=\"%s\">%s</option>\n", ZnkStr_cstr(RE_key), ZnkStr_cstr(RE_key) );
-				}
-			}
-		}
-		ZnkDir_closeDir( id );
-		ZnkStr_delete( RE_key );
-		return true;
-	}
-	return false;
-}
-#else
 static bool
 getRE_select( ZnkStr resel, const char* select_id )
 {
@@ -1168,8 +1153,6 @@ getRE_select( ZnkStr resel, const char* select_id )
 	ZnkMyf_destroy( myf );
 	return result;
 }
-#endif
-
 
 bool
 CBVirtualizer_load( ZnkVarpAry main_vars, const char* filename, const char* sec_name )

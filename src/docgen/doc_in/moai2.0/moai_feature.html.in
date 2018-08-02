@@ -1,0 +1,135 @@
+@def_quote [' ']
+
+@@V config
+doc_title = ['Moai+Easter ユーザーマニュアル']
+author = ['Mr.Moai']
+update = ['2018/03/25']
+category_path = { ['moai2_0_user'] }
+urp           = ['/moai2.0/moai_feature.html']
+nb_tags = { ['div'] ['ul'] ['li'] }
+@@.
+
+@@L AtFirst
+	この記事ではMoaiの特徴について列挙してあります.
+@@.
+
+@@P Index
+{ ['#AboutFunctions']     ['機能面'] }
+{ ['#AboutSecurity']      ['安全性'] }
+{ ['#AboutTransparency']  ['処理の透明性、移植性、および動作環境'] }
+@@.
+
+@@L AboutFunctions
+	機能的な面に関しては以下の点が挙げられます.
+	<ul>
+		<li><b>MoaiCGI</b>
+		以下に挙げるCGIアプリケーションを実現するための下地となるWebサーバ機能を提供します.
+		(Moaiエンジンの機能)
+		</li>
+
+		<li><b>仮想ブラウザ環境を瞬時に構築</b>
+		あなたのブラウザ環境を瞬時に仮想化、ランダマイズ化できます.
+		(VirtualUSERSの機能) <a class=MstyElemLink href=/moai2.0/virtual_users.html>詳細</a>
+		</li>
+
+		<li><b>仮想ブラウジング</b>
+		VirtualUSERSにより仮想化したブラウザ環境にて掲示板などを閲覧、レス投稿やスレ立てができます.
+		Moai Ver2.1以降ではHTTPSのサイトでも閲覧が可能になりました.
+		(Easterの機能) <a class=MstyElemLink href=/moai2.0/easter_reference.html>詳細</a>
+		</li>
+
+		<li><b>添付URL</b>
+		画像掲示板への添付画像の投稿時、ネット上に存在する画像のURLを指定してその画像を直接投稿することができます.
+		(Easter HyperPostの機能) <a class=MstyElemLink href=/moai2.0/easter_reference.html#EasterHyperPost>詳細</a>
+		</li>
+
+		<li><b>Moaiアップグレード</b>
+		Moai Ver2.1からの新機能となります.
+		Moaiエンジン設定より、ボタン一つで最新バージョンへアップグレード可能かどうかの確認が行えます.
+		またそれが可能ならば、Moaiシステム全体の自動的なアップグレードも行います.
+		(Birdmanの機能).
+		</li>
+
+		<li><b>画像管理</b>
+		画像掲示板で閲覧した画像の一時キャッシュ機能(デフォルトでは３日程度保持)、
+		画像のお気に入りへの分類やタグ付け、重複保存のチェック、保存した大量の画像の中から所望の画像を検索、
+		検索により抽出した画像をページ毎に閲覧するなど各種画像管理が行えます.
+		(Easterコレクションの機能) <a class=MstyElemLink href=/moai2.0/easter_collection.html>詳細</a>
+		</li>
+		
+		<li><b>広告のブロック</b>
+		GET時(単純にページ閲覧時など)における文字列置換フィルタリングが容易に行えます.
+		hosts.myfによりignore_hostsに通信をブロックしたいホストを記述しておくことで余計な通信を未然に防ぎます.
+		結果的に表示が高速化される効果もあります. <a class=MstyElemLink href=/moai2.0/moai_reference.html#ignore_hosts>詳細</a>
+		これらを応用し、広告ブロックなどが実現できます(デフォルトではブロックされるように設定してあります).
+		またpluginを導入することによりさらに高度で自由なフィルタリングを行うこともできます.
+		(Moaiエンジンの機能).
+		</li>
+		
+		<li><b>POSTデータの解析と究極的なカスタマイズ</b>
+		POST時(掲示板投稿時など)、送信される全ヘッダおよびPOST変数データの確認表示が可能で
+		そのとき実際に何が送信されているのかを解析するのに最適です.
+		(Easter HyperPostの機能).
+		また、POST時における HTTPヘッダ、クッキー、POST変数に関する値を改変するなどが容易に行えます.
+		(CustomBoy CustomUSERS、CustomCookieの機能).
+		pluginを導入することによりさらに高度で自由なフィルタリングを行うこともできます.
+		(Moaiエンジンの機能).
+		</li>
+
+		<li><b>外部プロキシの指定</b>
+		Moaiエンジン設定より、外部プロキシサーバを経由して接続するようMoaiに指示することができます.
+		(Moaiエンジン本体の機能)
+		またこのとき指定する外部プロキシサーバのいくつかの候補を自動的に取得することもできます.
+		(ProxyFinderの機能)
+		</li>
+	</ul>
+@@.
+
+
+@@L AboutSecurity
+	Moai+Easterでは、その安全性にも万全を期してあります.
+
+	Easterは一般のブラウザが行うような外部サイトへのアクセスならびにキャッシュ管理システムを完備しています.
+	キャッシュとはつまり外部サイトにあるHTMLをそのまま持ってきたものですから、その内容には危険性を孕みます.
+	そこでMoai+Easterでは、このような危険性を孕むHTMLについてはXhrDMZと呼ばれるオリジンに隔離して表示します.
+	これによりこの種の危険性がMoai+Easterシステム全体に波及する可能性を確実に排除できます.
+
+	XhrDMZの詳細については<a class=MstyElemLink href=/moai2.0/moai_reference.html#XhrDMZ>こちら</a>をご覧下さい.
+	ただしこの記事の内容はかなり難しいですし、Moaiを普通に使う上でXhrDMZの詳細を知っておく必要も全くありません.
+@@.
+
+
+@@L AboutTransparency
+	処理の透明性、安全性、移植性、および動作環境に関して以下の点が挙げられます.
+	<ul>
+		<li>Moaiは完全なオープンソースであり、ブラックボックスな部分は一切存在しません.
+		</li>
+		
+		<li>使用ライセンスは<a class=MstyElemLink href=http://www.kmonos.net/nysl target=_blank>NYSL</a>(煮るなり焼くなり好きにしろ)となります.
+		このライセンスは多分世の中に存在するあらゆるライセンスの中でもっとも制限のないものと思われます.
+		</li>
+		
+		<li>この種の処理を実現するためのコードとしては同種のものと比べかなりコンパクトです.
+		必要最小限に絞られており見通しが立ちやすいと思われます.
+		これにより、未知の不具合により潜在的なセキュリティーホールを含むリスクを抑えられます.
+		</li>
+		
+		<li>コードはCで記述されており、使用している外部のライブラリは基本ライブラリであるlibZnkとlibRanoです.
+		(これらのライブラリもすべてオープンソースです). 従って問題発生時に比較的追跡がしやすいと思われます.
+		</li>
+		
+		<li>コンパイルが比較的容易です(VCのほぼ全バージョン、MinGW、gccなどでコンパイル可能).
+		</li>
+		
+		<li>実行バイナリはWindowsやLinuxやAndroidで動作します.
+		Cygwinでもコンパイル可能です.
+		MacOSやiPhoneでは残念ながらサポートされていません.
+		</li>
+	</ul>
+@@.
+
+@@P Link
+{ ['#TopBar'] ['一番上へ'] }
+{ ['https://mr-moai-2016.github.io'] ['Moaiドキュメント(オンライン)'] }
+{ ['https://github.com/mr-moai-2016/znk_project'] ['znk_project(github)'] }
+@@.

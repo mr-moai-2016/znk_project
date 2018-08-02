@@ -1,0 +1,685 @@
+@def_quote [' ']
+
+@@V config
+doc_title = ['Moai+Easter エキスパートマニュアル']
+author = ['高速ヤキソバ変換']
+update = ['2017/10/09']
+category_path = { ['moai2_0_exp'] ['customboy'] }
+urp           = ['/moai2.0/customboy_hints_Snippet.html']
+nb_tags = { ['div'] ['ul'] ['li'] }
+title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
+@@.
+
+@@L AtFirst
+	ここではCustomBoyが取り扱うSnippetコードの真偽値に関する情報を列挙する.
+	
+	これらはBrowser毎に異なる真偽値のパターンを持つため、Browser解析等で有用である.
+	そしてその情報はCustomBoyエンジンのKnowledge-baseにも内蔵されており、
+	通常は特にユーザが何も設定せずとも、CustomBoyあるいはVirtualUSERSの実行結果に自動的に反映される.
+	
+	一般ユーザがこの記事に記載されたパターンの詳細を気にする必要は全くないが、
+	万一CustomBoyエンジンが内蔵するKnowledge-baseでは問題が発生した場合は、
+	ここにある情報を元にエキスパートユーザが手動でそのパターンを修正することもできる.
+@@.
+
+@@P Index
+{ ['#Snp_LtIE6']             ['Snp_LtIE6'] }
+{ ['#Snp_LtIE7']             ['Snp_LtIE7'] }
+{ ['#Snp_LtIE8']             ['Snp_LtIE8'] }
+{ ['#Snp_IE9']               ['Snp_IE9'] }
+{ ['#Snp_IE10']              ['Snp_IE10'] }
+{ ['#Snp_IE11']              ['Snp_IE11'] }
+{ ['#Snp_Trident']           ['Snp_Trident'] }
+{ ['#Snp_Edge']              ['Snp_Edge'] }
+{ ['#Snp_Gecko']             ['Snp_Gecko'] }
+{ ['#Snp_MozillaSidebar']    ['Snp_MozillaSidebar'] }
+{ ['#Snp_NavigatorOnline']   ['Snp_NavigatorOnline'] }
+{ ['#Snp_SessionStorage']    ['Snp_SessionStorage'] }
+{ ['#Snp_FunctionX5']        ['Snp_FunctionX5'] }
+{ ['#Snp_DocCurrentScript']  ['Snp_DocCurrentScript'] }
+{ ['#Snp_EventSource']       ['Snp_EventSource'] }
+{ ['#Snp_Crypto']            ['Snp_Crypto'] }
+{ ['#Snp_PerformanceNow']    ['Snp_PerformanceNow'] }
+{ ['#Snp_AudioContext']      ['Snp_AudioContext'] }
+{ ['#Snp_IndexedDB']         ['Snp_IndexedDB'] }
+{ ['#Snp_WindowStyles']      ['Snp_WindowStyles'] }
+{ ['#Snp_SendBeacon']        ['Snp_SendBeacon'] }
+{ ['#Snp_GetGamepads']       ['Snp_GetGamepads'] }
+{ ['#Snp_NavLanguages']      ['Snp_NavLanguages'] }
+{ ['#Snp_NavMediaDevices']   ['Snp_NavMediaDevices'] }
+{ ['#Snp_WinCaches']         ['Snp_WinCaches'] }
+{ ['#Snp_CreateImageBitmap'] ['Snp_CreateImageBitmap'] }
+{ ['#Snp_Onstorage']         ['Snp_Onstorage'] }
+{ ['#Snp_NavGetBattery']     ['Snp_NavGetBattery'] }
+{ ['#Snp_Presto']            ['Snp_Presto'] }
+{ ['#Snp_LtChrome14']        ['Snp_LtChrome14'] }
+{ ['#Snp_ChromiumInFutaba']  ['Snp_ChromiumInFutaba'] }
+{ ['#Snp_Touch']             ['Snp_Touch'] }
+{ ['#Snp_FacileMobile']      ['Snp_FacileMobile'] }
+{ ['#Snp_Webkit']            ['Snp_Webkit'] }
+@@.
+
+
+@@L Snp_LtIE6
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			typeof window.addEventListener == 'undefined' 
+			&amp;&amp; typeof document.documentElement.style.maxHeight == 'undefined'
+		</span>
+	</div>
+	
+	IE6以前のみtrue
+@@.
+
+
+@@L Snp_LtIE7
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			typeof window.addEventListener == 'undefined'
+			&amp;&amp; typeof document.querySelectorAll == 'undefined'
+		</span>
+	</div>
+	
+	IE7以前のみtrue
+@@.
+
+
+@@L Snp_LtIE8
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			typeof window.addEventListener == 'undefined'
+			&amp;&amp; typeof document.getElementsByClassName == 'undefined'
+		</span>
+	</div>
+	
+	IE8以前のみtrue
+@@.
+
+
+@@L Snp_IE9
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!document.uniqueID &amp;&amp; document.documentMode==9
+		</span>
+	</div>
+	
+	IE9のみtrue
+@@.
+
+
+@@L Snp_IE10
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!document.uniqueID &amp;&amp; document.documentMode==10
+		</span>
+	</div>
+	
+	IE10のみtrue
+@@.
+
+
+@@L Snp_IE11
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!document.uniqueID &amp;&amp; document.documentMode==11
+		</span>
+	</div>
+	
+	IE11のみtrue
+@@.
+
+
+@@L Snp_Trident
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!document.uniqueID
+		</span>
+	</div>
+	
+	Trident Rendering Engineを使っている場合はtrue.
+	IEはこれを使っているためtrue.
+@@.
+
+
+@@L Snp_Edge
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			'-ms-scroll-limit' in document.documentElement.style
+			&nbsp;&nbsp; &amp;&amp; '-ms-ime-align' in document.documentElement.style
+			&nbsp;&nbsp; &amp;&amp; !window.navigator.msPointerEnabled
+		</span>
+	</div>
+	
+	色々並べてあるが上二つはすべてMS製Browserに存在する特性であり、
+	最後にIEのみに存在する特性を除外していることから、Edgeか否かを判定する.
+	Edgeの場合はtrue.
+@@.
+
+
+@@L Snp_Gecko
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			'MozAppearance' in document.documentElement.style
+		</span>
+	</div>
+	
+	Gecko Rendering Engineを使っている場合はtrue
+	Firefoxはこれを使っているためtrue.
+@@.
+
+
+@@L Snp_MozillaSidebar
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!window.sidebar
+		</span>
+	</div>
+	
+	Mozilla Sidebarが存在する場合はtrue.
+	Firefoxにはこれが存在するためtrue.
+@@.
+
+
+@@L Snp_NavigatorOnline
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			typeof window.navigator.onLine != 'undefined'
+		</span>
+	</div>
+	
+	Browserがオンラインで動作しているかどうかを示す真偽値を返す.
+@@.
+
+
+@@L Snp_SessionStorage
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!window.sessionStorage
+		</span>
+	</div>
+	
+	BrowserにsessionStorage機構が存在するか否かを示す.
+	Browserの対応状況は以下が目安である(MDNによる).
+	<ul>
+		<li>Chrome: 5以上</li>
+		<li>Firefox(Gecko): 2以上</li>
+		<li>IE: 8以上</li>
+		<li>Opera: 10.50以上</li>
+		<li>Safari(Webkit): 4以上</li>
+		<li>Android: 2.1以上</li>
+		<li>Opera Mobile: 11以上</li>
+		<li>Safari Mobile: iOS 3.2以上</li>
+	</ul>
+@@.
+
+
+@@L Snp_FunctionX5
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			(function x(){})[-5] == 'x'
+		</span>
+	</div>
+	
+	このFunctionX5テストとは、Firefox Ver3.xにのみ存在するコード特性を検査するというもの.
+	'function x(){}' を文字列として見た場合、その -5 番目の文字(最後から5番目)は 'x' となっている.
+	Firefox Ver3.x ではこのような暗黙の文字列変換が行われるようで、その特性が存在するかを検証するコードである.
+	Firefox Ver3.xのみtrue.
+@@.
+
+
+@@L Snp_DocCurrentScript
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			typeof document.currentScript != 'undefined'
+		</span>
+	</div>
+	
+	以下の環境においてtrue.
+	<ul>
+		<li>Chrome: 29以上</li>
+		<li>Firefox(Gecko): 4以上</li>
+		<li>Opera: 16以上</li>
+	</ul>
+@@.
+
+
+@@L Snp_EventSource
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			typeof(EventSource) != 'undefined'
+		</span>
+	</div>
+	
+	以下の環境においてtrue.
+	<ul>
+		<li>Chrome: 9以上</li>
+		<li>Firefox(Gecko): 6以上</li>
+		<li>Opera: 11以上</li>
+	</ul>
+@@.
+
+
+@@L Snp_Crypto
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!window.crypto &amp;&amp; !!window.crypto.getRandomValues
+		</span>
+	</div>
+	
+	以下の環境においてtrue.
+	<ul>
+		<li>Chrome: 11以上</li>
+		<li>Firefox(Gecko): 21以上</li>
+		<li>IE: 11以上</li>
+		<li>Opera: 15以上</li>
+		<li>Safari: 3.1以上</li>
+	</ul>
+@@.
+
+
+@@L Snp_PerformanceNow
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!window.performance &amp;&amp; !!window.performance.now
+		</span>
+	</div>
+	
+	以下の環境においてtrue.
+	<ul>
+		<li>Chrome: 20以上</li>
+		<li>Firefox(Gecko): 15以上</li>
+		<li>IE: 10以上</li>
+		<li>Opera: 15以上</li>
+		<li>Safari: 8以上</li>
+	</ul>
+@@.
+
+
+@@L Snp_AudioContext
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!window.AudioContext
+		</span>
+	</div>
+	
+	以下の環境においてtrue.
+	<ul>
+		<li>Chrome: 10以上</li>
+		<li>Firefox(Gecko): 25以上</li>
+		<li>Opera: 15以上</li>
+		<li>Safari: 6以上</li>
+	</ul>
+@@.
+
+
+@@L Snp_IndexedDB
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!window.indexedDB
+		</span>
+	</div>
+	
+	これはBrowserにindexedDB機構が存在するか否かを示す.
+	Browserの対応状況は以下が目安である(MDNによる).
+	<ul>
+		<li>Chrome: 23以上</li>
+		<li>Firefox(Gecko): 10以上</li>
+		<li>IE: 10以上</li>
+		<li>Opera: 15以上</li>
+		<li>Safari(Webkit): 7.1以上</li>
+		<li>Edge: OK</li>
+		<li>Android: 4.4以上</li>
+		<li>Firefox Mobile: 22以上</li>
+		<li>Firefox OS: 1.0.1以上</li>
+		<li>Opera Mobile: 22以上</li>
+		<li>Safari Mobile: 8以上</li>
+	</ul>
+@@.
+
+
+@@L Snp_WindowStyles
+	以下のJavascriptコードを実行した結果である.
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!window.styles
+		</span>
+	</div>
+	
+	このSnippetはふたばちゃんねるにおいて独自に設定されているものである.
+	(少なくとも他のサイトでは、私はこのようなコードを見たことがない)
+	そしてMDNなどのよく知られたどのドキュメントを参照しても、
+	window objectの中にstylesというpropertyは記載されていない.
+	
+	果たしてこのpropertyを持つBrowserが世界に存在するのであろうか？
+	これまで私が試したすべてのBrowserにおいて、このコードがtrueとなるものは発見されなかった.
+	
+	<div class=MstyComment>
+		<u><b>参考</b></u> 
+
+		ちなみにwindow objectの中のstatusというpropertyならば、Gecko 1.9.1以降ならば存在する.
+	</div>
+@@.
+
+
+@@L Snp_SendBeacon
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!window.navigator.sendBeacon
+		</span>
+	</div>
+	
+	以下の環境においてtrue.
+	<ul>
+		<li>Chrome: 39以上</li>
+		<li>Firefox(Gecko): 31以上</li>
+		<li>Opera: 26以上</li>
+	</ul>
+@@.
+
+
+@@L Snp_GetGamepads
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!navigator.getGamepads
+		</span>
+	</div>
+	
+	以下の環境においてtrue.
+	<ul>
+		<li>Chrome: 21以上</li>
+		<li>Firefox(Gecko): 29以上</li>
+		<li>Opera: 15以上</li>
+	</ul>
+@@.
+
+
+@@L Snp_NavLanguages
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!window.navigator.languages
+		</span>
+	</div>
+	
+	以下の環境においてtrue.
+	<ul>
+		<li>Chrome: 32以上</li>
+		<li>Firefox(Gecko): 32以上</li>
+	</ul>
+@@.
+
+
+@@L Snp_NavMediaDevices
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!window.navigator.mediaDevices
+		</span>
+	</div>
+	
+	以下の環境においてtrue.
+	<ul>
+		<li>Chrome: 51以上</li>
+		<li>Firefox(Gecko): 36以上</li>
+	</ul>
+@@.
+
+
+@@L Snp_WinCaches
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!window.caches
+		</span>
+	</div>
+	
+	以下の環境においてtrue.
+	<ul>
+		<li>Chrome: 43以上</li>
+		<li>Firefox(Gecko): 39以上</li>
+	</ul>
+@@.
+
+
+@@L Snp_CreateImageBitmap
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!window.createImageBitmap
+		</span>
+	</div>
+	
+	以下の環境においてtrue.
+	<ul>
+		<li>Chrome: 50以上</li>
+		<li>Firefox(Gecko): 42以上</li>
+	</ul>
+@@.
+
+
+@@L Snp_Onstorage
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			typeof window.onstorage!='undefined'
+		</span>
+	</div>
+	
+	以下の環境においてtrue.
+	<ul>
+		<li>Firefox(Gecko): 45以上</li>
+	</ul>
+@@.
+
+
+@@L Snp_NavGetBattery
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!window.navigator.getBattery
+		</span>
+	</div>
+	
+	以下の環境においてtrue.
+	<ul>
+		<li>Chrome: 39以上</li>
+		<li>Firefox(Gecko): ?</li>
+		<li>Opera: 25以上</li>
+	</ul>
+@@.
+
+
+@@L Snp_Presto
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!window.opera
+		</span>
+	</div>
+	
+	Operaの古いVersionではそのRendering EngineはPrestoと呼ばれていた.
+	Opera12.16以前ではこれがtrueとなる.
+@@.
+
+
+@@L Snp_LtChrome14
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!window.chrome &amp;&amp; typeof window.chrome.webstore!='undefined'
+		</span>
+	</div>
+	
+	Chromeであるか否かを示す定石コードである(ただしVersion14以降が対象である).
+	前半の<span class=MstyCode>!!window.chrome</span>はChromium系か否かを判定する定石コードである.
+	後半の<span class=MstyCode>typeof window.chrome.webstore!='undefined'</span>は、OperaやEdgeの可能性を廃するために付加したものであろう.
+	Chrome Ver14以上のみtrueである.
+@@.
+
+
+@@L Snp_ChromiumInFutaba
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!!window.chrome &amp;&amp; 'WebkitAppearance' in document.documentElement.style
+		</span>
+	</div>
+	
+	このSnippetはふたばちゃんねるにおいて独自に設定されているものである.
+	(少なくとも他のサイトでは、私はこのようなコードを見たことがない)
+	実質 Chromium系であるか否かを示しているが、コードの後半が無意味である.
+	
+	以下の環境においてtrue.
+	<ul>
+		<li>Chrome: 全Version</li>
+		<li>Opera: 14以上</li>
+	</ul>
+	
+	<div class=MstyComment>
+		<u><b>解説</b></u>
+		
+		まずBrowser解析をされている方にとってはおなじみの以下のコードを掲載しておこう.
+		
+		<div class=MstyCode>
+			!window.chrome &amp;&amp; 'WebkitAppearance' in document.documentElement.style
+		</div>
+		
+		コード前半に<span class=MstyCode>!window.chrome</span>と置くことで、<b>Chromium系以外である</b>ことを前提とした上で
+		コード後半部によりWebkitが使われているVersionのみを検出するというものである.
+		これは様々なサイトで広く見られる正しいコードであり、例えばSafariなどを検出できる.
+		この記事でも<a class=MstyElemLink href=#Snp_Webkit>Snp_Webkit</a>という項目として挙げておいた.
+		
+		ところが、本項目のふたばちゃんねる独自のコードでは、前半部分が<span class=MstyCode>!!window.chrome</span>となっている.
+		これでは逆に<b>Chromium系である</b>ことを前提としてしまう.
+		
+		これはどうしたことか…？
+		もしかするとChromium系かつWebkitが使われているVersionのみを検出しようと試みたのであろうか？
+		
+		しかしながら、Browser解析をされている方なら普通はご存知だと思うが、
+		<b>Chromium系では<span class=MstyCode>'WebkitAppearance' in document.documentElement.style</span> で
+		Webkit版であるか否かを判定することはできない</b>のである.
+		(だからこそ、定石では先頭にまず<span class=MstyCode>!window.chrome</span>という前提条件を置く)
+		
+		なぜならばChromium系の場合、<b>どのVersionでも</b>この'WebkitAppearance' というパターンを必ず含む.
+		たとえ<b>Webkitが使われていないVersionでも</b>である.
+		つまりこのコードの &amp;&amp; より後半は必ずtrueになるのであるから、明らかに無意味である.
+	</div>
+		
+	<div class=MstyComment>
+		<u><b>検証</b></u>
+		
+		以下ではChromium系としてChromeまたは新しいVersionのOperaの例を挙げ、このことを検証してみよう.
+		この'WebkitAppearance'というパターンを調べるコードがtrueとなるのは、
+		Chromeの場合は全Version、Operaの場合はVer14以上のときである.
+		ChromeはVer28以降Webkitは廃止されBlinkへと移行した.
+		Operaの場合も同様にVer15以降はBlinkとなっている.
+		つまりWebkitではないVersionでもこのコードはやはりtrueとなってしまうことがお分かりだろう.
+	</div>
+@@.
+
+
+@@L Snp_Touch
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			typeof document.ontouchstart != 'undefined'
+		</span>
+	</div>
+	
+	この環境のBrowserにおいてTouch Padが有効か否かを示す.
+@@.
+
+
+@@L Snp_FacileMobile
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			typeof window.orientation != 'undefined'
+		</span>
+	</div>
+	
+	Browserにおいてwindow.orientationが存在するか否かを示す.
+	window.orientationとは端末画面が縦長(portrait)と横長(landscape)のどちらであるかに関する情報である.
+	これはモバイル環境である否かの簡易判定に使うことができる.
+@@.
+
+
+@@L Snp_Webkit
+	以下のJavascriptコードを実行した結果である.
+
+	<div class=MstyComment>
+		<span class=MstyCode>
+			!window.chrome &amp;&amp; 'WebkitAppearance' in document.documentElement.style
+		</span>
+	</div>
+	
+	Webkit判定.
+	これは<b>Chromium系以外の</b>Webkitが使われているBrowser、例えばSafariなどを検出する目的で
+	一般によく使用されている定石的なコードである.
+	
+	<div class=MstyComment>
+		<u><b>注意</b></u> 
+
+		ふたばの<a href=http://may.2chan.net/bin/base4.js>/bin/base4.js</a>内にこれとよく似た<b>ワケのわからん</b>テスト(上記のSnp_ChromiumInFutaba)が存在するが、
+		その効果はこれとは全く異なる.
+	</div>
+@@.
+
+@@P Link
+{ ['#TopBar'] ['一番上へ'] }
+{ ['https://mr-moai-2016.github.io'] ['Moaiドキュメント(オンライン)'] }
+{ ['https://github.com/mr-moai-2016/znk_project'] ['znk_project(github)'] }
+@@.

@@ -5,43 +5,50 @@
 	<meta http-equiv="Content-Script-Type" content="text/javascript">
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	<link href="/msty.css" rel="stylesheet" type="text/css">
-	<title>Moai2.0ドキュメント</title>
 </head>
 <body>
 <a name=TopBar></a>
-<p><b><img src="/imgs/here_landmark.png"> Moai2.0ドキュメント</b></p>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter ユーザーマニュアル</b></p>
 
 <a class=MstyElemLink href="/">トップページ</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/index.html">Moai2.0ドキュメント</a> &nbsp;
-<a class=MstyElemLink        href="/moai1.1/index.html">Moai1.1ドキュメント</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
+<a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
+<a class=MstyElemLink href="/moai2.0/index.html">ご案内</a> &nbsp;
 <a class=MstyNowSelectedLink href="/moai2.0/install.html">インストールガイド</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_reference.html">Moai本体</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/customboy_reference.html">CustomBoy</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_feature.html">Moaiの特徴</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/upgrade.html">Moaiのアップグレード方法</a> &nbsp;
 <br> <br>
 
 <div class=MstyComment>
-<u><b>記事担当者</b></u> : Mr.Moai<br> 
+<u><b>記事担当者</b></u> : Mr.Moai<br>
 <br>
-<u><b>最終更新日</b></u> : 2018/05/02<br>
+<u><b>最終更新日</b></u> : 2018/07/25<br>
 <br>
 </div>
 <br>
 
-<u><b>はじめに</b></u>
-<ul>
-	<font >
-		ここではMoai Ver2.0の入手およびインストール方法、さらには初回起動までの手順について詳細に解説します.<br>
-	</font><br>
-</ul><br>
+
+<a name=AtFirst></a>
+<u><b>
+はじめに
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	ここではMoaiの入手およびインストール方法、さらには初回起動までの手順について詳細に解説します.<br>
+</div><br>
+<br>
 
 
 <a name=Index></a>
-<u><b>目次</b></u>
+<u><b>
+目次
+</b></u><br>
+<br>
 <ul>
 	<li><b><a class=MstyElemLink href=#ForWindows>Windows版の入手およびインストール方法</a></b></li>
 	<li><b><a class=MstyElemLink href=#ForLinux>Linux版の入手およびインストール方法</a></b></li>
@@ -53,48 +60,53 @@
 
 
 <a name=ForWindows></a>
-<u><b>Windows版の入手およびインストール方法</b></u>
-<ul>
-	<font >
+<u><b>
+Windows版の入手およびインストール方法
+</b></u><br>
+<br>
+<div class=MstyIndent>
 	インストールといってもzipをダウンロードして単に展開するだけですが、<br>
 	以下に手順としてこれを説明しておきます.<br>
 	<br>
-	<li>1. 最新版はzipファイルとなっており、以下より入手できます.<br>
+	<ol>
+		<li>最新版はzipファイルとなっており、以下より入手できます.<br>
 	<br>
-	<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a><br>
+		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a><br>
+		<br>
+		Assets にある moai-v2.1-win32.zip もしくは moai-v2.1-win64.zip がWindows版となります.<br>
+		32bit Windowsをお使いの方は前者を、64bit Windowsをお使いの方は後者をダウンロードしてください.<br>
+		よくわからない方は前者をダウンロードしてください.<br>
+		<br>
+		これはどのフォルダ下にダウンロードしてもらっても別に構いませんが、例えば znk_project というフォルダを一つ作り、<br>
+		その中にダウンロードして展開することを我々はお勧めします.<br>
+		(今回ダウンロードしたもの以外のznk_projectに関係する他のディレクトリもこの中にまとめて置いておいた方が<br>
+		何かと見通しがよくなるでしょう.)<br>
+		</li>
+		<br>
+		<li>ダウンロードしたzipファイルを展開します.<br>
 	<br>
-	Assets にある moai-v2.0.2-win32.zip もしくは moai-v2.0.2-win64.zip がWindows版となります.<br>
-	32bit Windowsをお使いの方は前者を、64bit Windowsをお使いの方は後者をダウンロードしてください.<br>
-	よくわからない方は前者をダウンロードしてください.<br>
+		<div class=MstyComment>
+			展開直後の時点での全体のサイズ合計はせいぜい15MB程度なのですが、<br>
+			将来に備えて150MB程度のディスク容量に余裕がある方が望ましいです.<br>
+			詳細は<a href=#AboutDiskSize_ofMoaiEaster>こちら</a>を参照してください.<br>
+		</div>
+		</li>
+		<br>
+		<li>展開後フォルダの中に moai.exe があることを確認してください<br>
+		(これが実行ファイルとなります).<br>
+		これを一度実行させます.<br>
+		</li>
+		<br>
+		<li>展開後ディレクトリと同列の場所に moai_profileディレクトリが作成されたことを念のため確認してください<br>
 	<br>
-	これはどのフォルダ下にダウンロードしてもらっても別に構いませんが、znk_projectというフォルダを一つ作り、<br>
-	その中にダウンロードして展開することを我々はお勧めします.<br>
-	(今回ダウンロードしたもの以外のznk_projectに関係する他のディレクトリもこの中にまとめて置いておいた方が<br>
-	何かと見通しがよくなるでしょう.)<br>
-	</li>
-	<br>
-	<li>2. ダウンロードしたzipファイルを展開します.</li>
-	<div class=MstyComment>
-	展開直後の時点での全体のサイズ合計はせいぜい15MB程度なのですが、<br>
-	将来に備えて150MB程度のディスク容量に余裕がある方が望ましいです.<br>
-	詳細は<a href=#AboutDiskSize_ofMoaiEaster>こちら</a>を参照してください.<br>
-	</div>
-	</li>
-	<br>
-	<li>3. 展開後フォルダの中に moai.exe があることを確認してください<br>
-	(これが実行ファイルとなります).<br>
-	これを一度実行させます.<br>
-	</li>
-	<br>
-	<li>4. 展開後ディレクトリと同列の場所に moai_profileディレクトリが作成されたことを念のため確認してください<br>
-	<div class=MstyComment>
-	新しく作成された直後のmoai_profileのサイズはほとんど空っぽですが、<br>
-	ここにはEasterでのブックマークやコレクション機能で集めた画像ファイルの実体などが格納されます.<br>
-	特に画像コレクション機能をご利用になる場合は収集した画像分、ディスク容量が必要になってくると思います.<br>
-	詳細は<a href=#AboutDiskSize_ofMoaiProfile>こちら</a>を参照してください.<br>
-	</div><br>
-	</li>
-	<br>
+		<div class=MstyComment>
+			新しく作成された直後のmoai_profileのサイズはほとんど空っぽですが、<br>
+			ここにはEasterでのブックマークやコレクション機能で集めた画像ファイルの実体などが格納されます.<br>
+			特に画像コレクション機能をご利用になる場合は収集した画像分、ディスク容量が必要になってくると思います.<br>
+			詳細は<a href=#AboutDiskSize_ofMoaiProfile>こちら</a>を参照してください.<br>
+		</div>
+		</li>
+	</ol>
 	インストールについては以上です.<br>
 	これでいつでもmoaiを起動できる状態になりました.<br>
 	moai.exeへのショートカットをデスクトップ等に作っておくと便利です.<br>
@@ -104,11 +116,12 @@
 		<u><b>セキュリティの重要な警告ダイアログについて</b></u><br>
 		<br>
 		Moaiの初回起動時、Windowsのファイアウォール機能により、以下のダイアログが表示されることがあります.<br>
+<br>
 		<div class=MstyComment>
 			外部マシンからのアクセスを許すサーバ機能を持つアプリケーションを起動した場合、<br>
 			Windowsファイアウォールはこの確認ダイアログを出します.<br>
 			技術的に言えば、プログラムのソースコード上において、<br>
-			INADDR_ANYを指定してWinSock2 APIでのbind を実行した場合となります.
+			INADDR_ANYを指定してWinSock2 APIでのbind を実行した場合となります.<br>
 		</div>
 		<br>
 		<img src=/imgs/screenshot_warning_on_win32.png width=75%><br>
@@ -117,14 +130,14 @@
 		<br>
 		この場合「ブロックしない」あるいは「アクセスを許可」等を選んでおくとよいでしょう.<br>
 		また仮に「ブロックする」や「キャンセル」を選んでも、このツールをローカルマシンでのみ使う分には<br>
-		特に問題ありません. <br> 
+		特に問題ありません.  <br>
 		( Moaiを他のLAN上のマシンなどから経由して利用をしたいというような極めて特殊な用途の場合は、<br>
 		このブロックを解除する必要があるかもしれません. )<br>
-		<br>
 	</div>
 	<br>
 	Moaiを明示的に終了させる必要性は通常ありませんが、<br>
 	終了させたい場合はMoaiのウィンドウを閉じましょう.<br>
+<br>
 	<div class=MstyComment>
 		<u><b>参考</b></u><br>
 		<br>
@@ -147,266 +160,293 @@
 		コマンドプロンプト上から以下のように実行するとコンソールウィンドウを表示させずにMoaiを起動することができます.<br>
 		<br>
 		<div class=MstyComment>
-			start /MIN moai.exe
+			start /MIN moai.exe<br>
 		</div>
 		<br>
 		付属するmoai_without_console.bat はこれを実行するものです.<br>
 		このショートカットをスタートアップフォルダにコピーすれば、見かけ上はWindowsサービスと同じく、<br>
 		Windows起動時にバックグラウンドで自動起動するような感じになるでしょう.<br>
-		ただしこの場合、Moaiを終了させるにはタスクマネージャーからMoaiのタスク(プロセス)を終了させる必要があります.<br>
+		<!-- ただしこの場合、Moaiを終了させるにはタスクマネージャーからMoaiのタスク(プロセス)を終了させる必要があります. --><br>
 	</div>
 	<br>
 	アンインストールするには展開フォルダをそのまま削除する形になりますが、<br>
 	基本的に<b><font color=red>moai_profileフォルダだけは削除せず残しておいてください.</font></b><br>
 	このmoai_profileにはMoaiを介してそれまでお気に入りとして登録した画像ファイルの実体などが格納されています.<br>
 	(それさえも、もはや不要というなら削除してもかまいませんが…)<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=ForLinux></a>
-<u><b>Linux版の入手およびインストール方法</b></u>
-<ul>
-	<font >
+<u><b>
+Linux版の入手およびインストール方法
+</b></u><br>
+<br>
+<div class=MstyIndent>
 	インストールといってもzipをダウンロードして単に展開するだけですが、<br>
 	以下に手順としてこれを説明しておきます.<br>
 	<br>
-	<li>1. 最新版はzipファイルとなっており、以下より入手できます.<br>
-	<br>
-	<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a><br>
-	<br>
-	Assetsにある moai-v2.0.2-linux32.zip もしくは moai-v2.0.2-linux64.zip がLinux版となります.<br>
-	32bit Linuxをお使いの方は前者を、64bit Linuxをお使いの方は後者をダウンロードしてください.<br>
-	どちらのLinuxをお使いであるかわからない場合は unameコマンドなどで確認できるかと思います.<br>
-	以下では64bit Linuxと仮定して説明します.
-	</li>
-	<br>
-	<li>2. ダウンロードしたzipファイルを展開します.</li>
-	<div class=MstyComment>
-	展開直後の時点での全体のサイズ合計はせいぜい15MB程度なのですが、<br>
-	将来に備えてディスク容量にさらに150MB程度の余裕がある方が望ましいです.<br>
-	詳細は<a href=#AboutDiskSize_ofMoaiEaster>こちら</a>を参照してください.<br>
-	</div>
-	</li>
-	<br>
-	<li>3. 展開後のディレクトリの中へ移動します.<br>
-	以下のように入力しEnterを押します.
-	</li><br>
-	<div class=MstyComment>
-    cd moai-v2.0-linux64
-	</div><br>
-	<li>4. 展開後ディレクトリの中に moaiファイルがあることをlsコマンドで確認してください<br>
-	(この moai ファイルが実行バイナリ本体となります).<br>
-	これを一度実行させます.<br>
-	<div class=MstyComment>
-	./moai
-	</div><br>
-	万一にこれに実行権限が付与されていない場合は以下のコマンドを入力します.<br>
-	</li>
-	<div class=MstyComment>
-	chmod 755 moai<br>
-	./moai
-	</div>
-	<br>
-	<li>5. 展開後ディレクトリと同列の場所に moai_profileディレクトリが作成されたことを念のため確認してください<br>
-	<div class=MstyComment>
-	新しく作成された直後のmoai_profileのサイズはほとんど空っぽですが、<br>
-	ここにはEasterでのブックマークやコレクション機能で集めた画像ファイルの実体などが格納されます.<br>
-	特に画像コレクション機能をご利用になる場合は収集した画像分、ディスク容量が必要になってくると思います.<br>
-	詳細は<a href=#AboutDiskSize_ofMoaiProfile>こちら</a>を参照してください.
-	</div>
-	</li>
-	<br>
+	<ol>
+		<li>最新版はzipファイルとなっており、以下より入手できます.<br>
+		<br>
+		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a><br>
+		<br>
+		Assetsにある moai-v2.1-linux32.zip もしくは moai-v2.1-linux64.zip がLinux版となります.<br>
+		32bit Linuxをお使いの方は前者を、64bit Linuxをお使いの方は後者をダウンロードしてください.<br>
+		どちらのLinuxをお使いであるかわからない場合は unameコマンドなどで確認できるかと思います.<br>
+		以下では64bit Linuxと仮定して説明します.<br>
+		</li>
+		<br>
+		<li>ダウンロードしたzipファイルを展開します.<br>
+<br>
+		<div class=MstyComment>
+			展開直後の時点での全体のサイズ合計はせいぜい15MB程度なのですが、<br>
+			将来に備えてディスク容量にさらに150MB程度の余裕がある方が望ましいです.<br>
+			詳細は<a href=#AboutDiskSize_ofMoaiEaster>こちら</a>を参照してください.<br>
+		</div>
+		</li>
+		<br>
+		<li>展開後のディレクトリの中へ移動します.<br>
+		以下のように入力しEnterを押します.<br>
+<br>
+		<div class=MstyComment>
+			cd moai-v2.1-linux64<br>
+		</div>
+		</li>
+<br>
+		<li>展開後ディレクトリの中に moaiファイルがあることをlsコマンドで確認してください<br>
+		(この moai ファイルが実行バイナリ本体となります).<br>
+		これを一度実行させます.<br>
+<br>
+		<div class=MstyComment>
+			./moai<br>
+		</div>
+<br>
+		万一にこれに実行権限が付与されていない場合は以下のコマンドを入力します.<br>
+<br>
+		<div class=MstyComment>
+			chmod 755 moai<br>
+			./moai<br>
+		</div>
+		</li>
+		<br>
+		<li>展開後ディレクトリと同列の場所に moai_profileディレクトリが作成されたことを念のため確認してください<br>
+<br>
+		<div class=MstyComment>
+			新しく作成された直後のmoai_profileのサイズはほとんど空っぽですが、<br>
+			ここにはEasterでのブックマークやコレクション機能で集めた画像ファイルの実体などが格納されます.<br>
+			特に画像コレクション機能をご利用になる場合は収集した画像分、ディスク容量が必要になってくると思います.<br>
+			詳細は<a href=#AboutDiskSize_ofMoaiProfile>こちら</a>を参照してください.<br>
+		</div>
+		</li>
+	</ol>
 	インストールについては以上です.<br>
 	これでいつでもmoaiを起動できる状態になりました.<br>
 	<br>
 	Moaiを明示的に終了させる必要性は通常ありませんが、<br>
 	終了させたい場合はCtrl+Cでプロセスをkillして構いません.<br>
 	<br>
-	<br>
 	アンインストールするには展開フォルダをそのまま削除する形になりますが、<br>
 	基本的に<b><font color=red>moai_profileディレクトリだけは削除せず残しておいてください.</font></b><br>
 	このmoai_profileにはMoaiを介してそれまでお気に入りとして登録した画像ファイルの実体などが格納されています.<br>
 	(それさえも、もはや不要というなら削除してもかまいませんが…)<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=ForCygwin></a>
-<u><b>Cygwin版の入手およびインストール方法</b></u>
-<ul>
-	<font >
+<u><b>
+Cygwin版の入手およびインストール方法
+</b></u><br>
+<br>
+<div class=MstyIndent>
 	インストールといってもzipをダウンロードして単に展開するだけですが、<br>
 	以下に手順としてこれを説明しておきます.<br>
 	<br>
-	<li>1. 最新版はzipファイルとなっており、以下より入手できます.<br>
+	<ol>
+		<li>最新版はzipファイルとなっており、以下より入手できます.<br>
+		<br>
+		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a><br>
+		<br>
+		Assetsにある moai-v2.1-cygwin32.zip がCygwin版となります.<br>
+		64bit Windowsをお使いの方でもこれで動作するでしょう.<br>
 	<br>
-	<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a><br>
-	<br>
-	Assetsにある moai-v2.0.2-cygwin32.zip がCygwin版となります.<br>
-	64bit Windowsをお使いの方でもこれで動作するでしょう.<br>
-	</li>
-	<div class=MstyComment>
-	尚、Cygwinの64bit版専用実行バイナリは今回提供しておりません.<br>
-	(Cygwin環境本体がWOWで動作する32bitというケースもあり得るため、<br>
-	このあたりの組み合わせは割と煩雑です).<br>
-	<br>
-	そもそもWindows版がある中、わざわざCygwin版を選ぶといった方は<br>
-	ソースコードから自分でビルドして使いたいという方がほとんどだと思うので、<br>
-	わざわざ実行バイナリを提供する意味自体あまり感じないのですが、<br>
-	その場合でもビルド後の構成がどうなっているのかは確認できますので、<br>
-	とりあえず今回は32bit版実行バイナリのみ提供することにしました.
-	</div>
-	<br>
-	<li>2. ダウンロードしたzipファイルを展開します.</li>
-	<div class=MstyComment>
-	展開直後の時点での全体のサイズ合計はせいぜい15MB程度なのですが、<br>
-	将来に備えてディスク容量にさらに150MB程度の余裕がある方が望ましいです.<br>
-	詳細は<a href=#AboutDiskSize_ofMoaiEaster>こちら</a>を参照してください.<br>
-	</div>
-	</li>
-	<br>
-	<li>3. 展開後のディレクトリの中へ移動します.<br>
-	以下のように入力しEnterを押します.
-	</li><br>
-	<div class=MstyComment>
-    cd moai-v2.0-cygwin32
-	</div><br>
-	以下、Linuxと全く同じです.<br>
-	<li>4. 展開後ディレクトリの中に moaiファイルがあることをlsコマンドで確認してください<br>
-	(この moai ファイルが実行バイナリ本体となります).<br>
-	これを一度実行させます.<br>
-	<div class=MstyComment>
-	./moai
-	</div><br>
-	万一にこれに実行権限が付与されていない場合は以下のコマンドを入力します.<br>
-	</li>
-	<div class=MstyComment>
-	chmod 755 moai<br>
-	./moai
-	</div>
-	<br>
-	<li>5. 展開後ディレクトリと同列の場所に moai_profileディレクトリが作成されたことを念のため確認してください<br>
-	<div class=MstyComment>
-	新しく作成された直後のmoai_profileのサイズはほとんど空っぽですが、<br>
-	ここにはEasterでのブックマークやコレクション機能で集めた画像ファイルの実体などが格納されます.<br>
-	特に画像コレクション機能をご利用になる場合は収集した画像分、ディスク容量が必要になってくると思います.<br>
-	詳細は<a href=#AboutDiskSize_ofMoaiProfile>こちら</a>を参照してください.
-	</div>
-	</li>
-	<br>
+		<div class=MstyComment>
+			尚、Cygwinの64bit版専用実行バイナリは今回提供しておりません.<br>
+			(Cygwin環境本体がWOWで動作する32bitというケースもあり得るため、<br>
+			このあたりの組み合わせは割と煩雑です).<br>
+			<br>
+			そもそもWindows版がある中、わざわざCygwin版を選ぶといった方は<br>
+			ソースコードから自分でビルドして使いたいという方がほとんどだと思うので、<br>
+			わざわざ実行バイナリを提供する意味自体あまり感じないのですが、<br>
+			その場合でもビルド後の構成がどうなっているのかは確認できますので、<br>
+			とりあえず今回は32bit版実行バイナリのみ提供することにしました.<br>
+		</div>
+		</li>
+		<br>
+		<li>ダウンロードしたzipファイルを展開します.</li>
+<br>
+		<div class=MstyComment>
+			展開直後の時点での全体のサイズ合計はせいぜい15MB程度なのですが、<br>
+			将来に備えてディスク容量にさらに150MB程度の余裕がある方が望ましいです.<br>
+			詳細は<a href=#AboutDiskSize_ofMoaiEaster>こちら</a>を参照してください.<br>
+		</div>
+		</li>
+		<br>
+		<li>展開後のディレクトリの中へ移動します.<br>
+		以下のように入力しEnterを押します.<br>
+<br>
+		<div class=MstyComment>
+	    	cd moai-v2.1-cygwin32<br>
+		</div>
+		以下、Linuxと全く同じです.<br>
+		</li>
+<br>
+		<li>展開後ディレクトリの中に moaiファイルがあることをlsコマンドで確認してください<br>
+		(この moai ファイルが実行バイナリ本体となります).<br>
+		これを一度実行させます.<br>
+<br>
+		<div class=MstyComment>
+			./moai<br>
+		</div>
+<br>
+		万一にこれに実行権限が付与されていない場合は以下のコマンドを入力します.<br>
+<br>
+		<div class=MstyComment>
+			chmod 755 moai<br>
+			./moai<br>
+		</div>
+		</li>
+		<br>
+		<li>展開後ディレクトリと同列の場所に moai_profileディレクトリが作成されたことを念のため確認してください<br>
+<br>
+		<div class=MstyComment>
+			新しく作成された直後のmoai_profileのサイズはほとんど空っぽですが、<br>
+			ここにはEasterでのブックマークやコレクション機能で集めた画像ファイルの実体などが格納されます.<br>
+			特に画像コレクション機能をご利用になる場合は収集した画像分、ディスク容量が必要になってくると思います.<br>
+			詳細は<a href=#AboutDiskSize_ofMoaiProfile>こちら</a>を参照してください.<br>
+		</div>
+		</li>
+	</ol>
 	インストールについては以上です.<br>
 	これでいつでもmoaiを起動できる状態になりました.<br>
 	<br>
 	Moaiを明示的に終了させる必要性は通常ありませんが、<br>
 	終了させたい場合はCtrl+Cでプロセスをkillして構いません.<br>
 	<br>
-	<br>
 	アンインストールするには展開フォルダをそのまま削除する形になりますが、<br>
 	基本的に<b><font color=red>moai_profileディレクトリだけは削除せず残しておいてください.</font></b><br>
 	このmoai_profileにはMoaiを介してそれまでお気に入りとして登録した画像ファイルの実体などが格納されています.<br>
 	(それさえも、もはや不要というなら削除してもかまいませんが…)<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=ForAndroid></a>
-<u><b>Android版の入手およびインストール方法</b></u>
-<ul>
-	<font >
+<u><b>
+Android版の入手およびインストール方法
+</b></u><br>
+<br>
+<div class=MstyIndent>
 	Android版のインストールは、いわゆる一般的なAndroidアプリとはその方法が異なっています.<br>
 	Google Play Storeからインストールするだとかそういったオシャレなものは、<br>
 	<s>Googleが好き勝手に変更する仕様に追従すんの超面倒なので</s>残念ながらサポートしておりません.<br>
 	お手数ですが、基本的にはLinuxに準じた方法で、インストールおよび起動する形になります.<br>
 	Linuxに準じた方法といっても、さほど難しくはないと思います.<br>
 	以下に手順としてこれを説明しておきます.<br>
-	<br>
-	<li>1. 最新版はzipファイルとなっており、以下より入手できます.<br>
-	<br>
-	<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a><br>
-	<br>
-	Assetsにある moai-v2.0.2-android-armeabi.zip がAndroid版となります.<br>
-	これをダウンロードしてください.<br>
-	通常のARMベースCPUであれば動作すると思われます.<br>
-	<div class=MstyComment>
-	それ以外にも moai-v2.0.2-android-armeabi_v7a.zip や moai-v2.0.2-android-x86.zip などがあります.<br>
-	前者は新しいCPUに最適化されたもので場合によっては高速に動作しますが、<br>
-	古い端末(ARMv5、v6 端末など)と互換性がありません.<br>
-	また後者は、PC(x86)上のAndroidエミュレータなどで動作させるためのバイナリとなります.<br>
-	通常のユーザはこれらをダウンロードする必要はありません.
-	</div>
-	</li>
-	<br>
-	<li>2. Androidのホーム画面に以下のような「端末エミュレータ」アイコンがあります.<br>
-	これより端末エミュレータウィンドウを開きましょう.
-	</li>
-	<br>
-	<div class=MstyComment>
-	<img src=/imgs/android_terminal_icon.png>
-	</div>
-	<br>
-	<li>3. ホームディレクトリへ移動します.<br>
-	以下のように入力しEnterを押します.
-	</li>
-	<br>
-	<div class=MstyComment>
-	cd
-	</div><br>
-	最初なのでこの様子を示したスクリーンショットも一緒に載せておきます.<br>
-	(以降の操作の分については省略します).<br>
-	<div class=MstyComment>
-	<img src=/imgs/android_terminal_cd.png>
-	</div>
-	<br>
-	<li>4. 上記1でダウンロードした zipファイルは /storage/sdcard0/Download ディレクトリなどに保存されている場合があります.<br>
-	(システム構成によっては違う場所に保存されているかもしれません. その場合はその場所に読み替えてください). <br>
-	ホームディレクトリ以外でMoaiを実行すると、書き込み許可等の関係で何かと不便なことが起こりがちですので、<br>
-	まずはダウンロードした zip ファイルをホームディレクトリへ移動またはコピーする必要があります.<br>
-	以下のように入力しEnterを押します.
-	</li><br>
-	<div class=MstyComment>
-    cp /storage/sdcard0/Download/moai-v2.0.2-android-armeabi.zip ~/
-	</div>
-	<br>
-	<li>5. zipファイルを展開します.<br>
-	以下のように入力しEnterを押します.<br>
-	(以降の説明でも同様に入力後にEnterを押してコマンドを実行してください).
-	</li><br>
-	<div class=MstyComment>
-    unzip moai-v2.0.2-android-armeabi.zip
-	</div>
-	<br>
-	<li>6. 展開後のディレクトリの中へ移動します.<br>
-	</li><br>
-	<div class=MstyComment>
-    cd moai-v2.0-android-armeabi
-	</div>
-	<br>
-	<li>7. 展開後ディレクトリの中に moaiファイルがあることをlsコマンドで確認してください<br>
-	(この moai ファイルが実行バイナリ本体となります).<br>
-	これを一度実行させます.<br>
-	<div class=MstyComment>
-	./moai
-	</div><br>
-	万一にこれに実行権限が付与されていない場合は以下のコマンドを入力します.<br>
-	</li>
-	<div class=MstyComment>
-	chmod 755 moai<br>
-	./moai
-	</div>
-	<br>
-	<li>8. 展開後ディレクトリと同列の場所に moai_profileディレクトリが作成されたことを念のため確認してください<br>
-	<div class=MstyComment>
-	新しく作成された直後のmoai_profileのサイズはほとんど空っぽですが、<br>
-	ここにはEasterでのブックマークやコレクション機能で集めた画像ファイルの実体などが格納されます.<br>
-	特に画像コレクション機能をご利用になる場合は収集した画像分、ディスク容量が必要になってくると思います.<br>
-	詳細は<a href=#AboutDiskSize_ofMoaiProfile>こちら</a>を参照してください.
-	</div>
-	</li>
-	<br>
+	<ol>
+		<li>最新版はzipファイルとなっており、以下より入手できます.<br>
+		<br>
+		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a><br>
+		<br>
+		Assetsにある moai-v2.1-android-armeabi.zip がAndroid版となります.<br>
+		これをダウンロードしてください.<br>
+		通常のARMベースCPUであれば動作すると思われます.<br>
+<br>
+		<div class=MstyComment>
+			それ以外にも moai-v2.1-android-armeabi_v7a.zip や moai-v2.1-android-x86.zip などがあります.<br>
+			前者は新しいCPUに最適化されたもので場合によっては高速に動作しますが、<br>
+			古い端末(ARMv5、v6 端末など)と互換性がありません.<br>
+			また後者は、PC(x86)上のAndroidエミュレータなどで動作させるためのバイナリとなります.<br>
+			通常のユーザはこれらをダウンロードする必要はありません.<br>
+		</div>
+		</li>
+		<br>
+		<li>Androidのホーム画面に以下のような「端末エミュレータ」アイコンがあります.<br>
+		これをフリックし、端末エミュレータウィンドウを開きましょう.<br>
+<br>
+		<div class=MstyComment>
+			<img src=/imgs/android_terminal_icon.png><br>
+		</div>
+		</li>
+		<br>
+		<li>ホームディレクトリへ移動します.<br>
+		以下のように文字入力(半角英数字)しEnterを押します.<br>
+<br>
+		<div class=MstyComment>
+			cd<br>
+		</div>
+<br>
+		最初なのでこの様子を示したスクリーンショットも一緒に載せておきます.<br>
+		(以降の操作の分については省略します).<br>
+<br>
+		<div class=MstyComment>
+			<img src=/imgs/android_terminal_cd.png><br>
+		</div>
+		</li>
+		<br>
+		<li>上記1でダウンロードした zipファイルは /storage/sdcard0/Download ディレクトリなどに保存されている場合があります.<br>
+		(システム構成によっては違う場所に保存されているかもしれません. その場合はその場所に読み替えてください). <br>
+		ホームディレクトリ以外でMoaiを実行すると、書き込み許可等の関係で何かと不便なことが起こりがちですので、<br>
+		まずはダウンロードした zip ファイルをホームディレクトリへ移動またはコピーする必要があります.<br>
+		以下のように入力しEnterを押します.<br>
+<br>
+		<div class=MstyComment>
+	    	cp /storage/sdcard0/Download/moai-v2.1-android-armeabi.zip ~/<br>
+		</div>
+		</li>
+		<br>
+		<li>zipファイルを展開します.<br>
+		以下のように入力しEnterを押します.<br>
+		(以降の説明でも同様に入力後にEnterを押してコマンドを実行してください).<br>
+<br>
+		<div class=MstyComment>
+	    	unzip moai-v2.1-android-armeabi.zip<br>
+		</div>
+		</li>
+		<br>
+		<li>展開後のディレクトリの中へ移動します.<br>
+<br>
+		<div class=MstyComment>
+	    	cd moai-v2.1-android-armeabi<br>
+		</div>
+		</li>
+		<br>
+		<li>展開後ディレクトリの中に moai_for_android.sh ファイルがあることをlsコマンドで確認してください<br>
+		(このshスクリプトは内部で moai を適切に設定しつつ実行します).<br>
+		Android版での moai は以下のようにして起動します.<br>
+		<br>
+		<div class=MstyComment>
+			sh moai_for_android.sh<br>
+		</div>
+		</li>
+		<br>
+		<li>展開後ディレクトリと同列の場所に moai_profileディレクトリが作成されたことを念のため確認してください<br>
+<br>
+		<div class=MstyComment>
+			新しく作成された直後のmoai_profileのサイズはほとんど空っぽですが、<br>
+			ここにはEasterでのブックマークやコレクション機能で集めた画像ファイルの実体などが格納されます.<br>
+			特に画像コレクション機能をご利用になる場合は収集した画像分、ディスク容量が必要になってくると思います.<br>
+			詳細は<a href=#AboutDiskSize_ofMoaiProfile>こちら</a>を参照してください.<br>
+		</div>
+		</li>
+	</ol>
 	インストールについては以上です.<br>
 	これでいつでもmoaiを起動できる状態になりました.<br>
 	上記 1 から 8 までの手順は最初の一回だけとなり、<br>
@@ -414,20 +454,24 @@
 	<br>
 	Moaiを明示的に終了させる必要性は通常ありませんが、<br>
 	終了させたい場合はプロセスごとkillして構いません.<br>
-	言っている意味がわからない方は「端末エミュレータウィンドウ」を閉じましょう.<br>
+	( プロセスのkill の仕方がわからない方は、替りに「端末エミュレータウィンドウ」ごと閉じてもいいでしょう ).<br>
 	<br>
 	アンインストールするには展開フォルダをそのまま削除する形になりますが、<br>
 	基本的に<b><font color=red>moai_profileディレクトリだけは削除せず残しておいてください.</font></b><br>
 	このmoai_profileにはMoaiを介してそれまでお気に入りとして登録した画像ファイルの実体などが格納されています.<br>
 	(それさえも、もはや不要というなら削除してもかまいませんが…)<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
 
 <a name=AboutDiskSize_ofMoaiEaster></a>
-<u><b>Moai+Easter本体が使うディスク容量について</b></u>
-<ul>
-	<font >
+<u><b>
+Moai+Easter本体が使うディスク容量について
+</b></u><br>
+<br>
+<div class=MstyIndent>
 	Moai+Easterでは、展開直後の時点での全体のサイズ(15MB程度)に加え、<br>
 	実際にはここからさらにログファイルやキャッシュファイルなどの一時ファイル群が作成されます.<br>
 	従ってその分、ディスク容量の余裕を見ておく必要があります.<br>
@@ -438,14 +482,18 @@
 	<br>
 	ちなみにこの保存日数は設定で変更することもでき、日数を短くすればその分サイズを減らすことも可能ですが、<br>
 	サイズの上限を直接指定することは現バージョンのEasterではできません.<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
 
 <a name=AboutDiskSize_ofMoaiProfile></a>
-<u><b>moai_profileが使うディスク容量について</b></u>
-<ul>
-	<font >
+<u><b>
+moai_profileが使うディスク容量について
+</b></u><br>
+<br>
+<div class=MstyIndent>
 	ここにはEasterでのブックマークやコレクション機能で集めた画像ファイルの実体などが格納されます.<br>
 	特に画像コレクション機能をご利用になる場合は収集した画像分、ディスク容量が必要になってくると思います.<br>
 	moai_profileフォルダの合計サイズの上限は特に設定されていませんので注意してください.<br>
@@ -462,95 +510,23 @@
 	また、将来新しいMoai+Easterがリリースされて本体をバージョンアップするようなことがあったとしても、<br>
 	基本的にmoai_profileだけは共通で維持し、そのまま次バージョンに引き継ぐ形になります.<br>
 	つまりこのフォルダはMoai+Easter本体のバージョンからは独立したものとなっていることに注意してください.<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
-
-
-<a name=patch></a>
-<u><b>
-修正パッチの入手と適用方法について
-</b></u><br>
-<br>
-<div class=MstyIndent>
-	修正パッチのアーカイブ名は moai-v2.0-patch-v2.0.* となっています.<br>
-	これにはすべてのプラットフォームのパッチが含まれていますので、ダウンロードはこれ一つで構いません.<br>
-	* の部分はなるべく新しいものを選択します.<br>
-	<br>
-	<b>パッチを付属スクリプトを実行して適用する方法</b><br>
-	<br>
-	<div class=MstyIndent>
-		パッチ適用のためのスクリプトが用意されていますので、通常はそれを実行してください.<br>
-		以下の手順となります.<br>
-		<ol>
-			<li>まずMoaiが起動中の場合は、<b>必ず起動中のMoaiを一旦終了させておいてください</b>.<br>
-			そうしないと一部の実行形式のファイルにおいて「共有違反です」あるいは「ビージー(busy)」というメッセージが出て<br>
-			パッチの適用に失敗してしまいます.<br>
-			</li>
-			<br>
-			<li>既にインストールされた Moai Ver2.0 のディレクトリ配下に<b>tmp</b>というディレクトリがあると思います.<br>
-			(もしもこれがない場合は一度moaiを起動して<b>すぐに終了して</b>ください. これでtmpが作成されます).<br>
-			ダウンロードしたzipファイルを、このMoaiのtmpディレクトリに置いて下さい.<br>
-			そこでこの zip ファイルを展開します.<br>
-			</li>
-			<br>
-			<li>zipを展開するとmoai-v2.0-patch-v2.0.* というディレクトリが出来上がると思います.<br>
-			そのディレクトリ直下に apply_this_patch.bat または apply_this_patch.sh があることを確認してください.<br>
-			これがパッチ適用のためのスクリプトとなります.<br>
-			</li>
-			<br>
-			<li>Windowsの場合、「apply_this_patch.bat」をクリックして実行します.<br>
-			LinuxやCygwin、Androidの場合、同様に「apply_this_patch.sh」を実行します.<br>
-			即ちターミナルを開き、このファイルのあるディレクトリまで移動して「sh ./apply_this_patch.sh」を実行します.<br>
-			最後に「OK」と出ればパッチの適用は成功です.<br>
-			</li>
-		</ol>
-	</div>
-	<br>
-	<b>パッチを手動で適用する方法</b><br>
-	<br>
-	<div class=MstyIndent>
-		万一、付属のスクリプトがうまく機能しない場合や、そんなものには頼らないといった硬派な方は<br>
-		以下の方法より手動で適用することもできます.<br>
-		<ol>
-			<li>まずMoaiが起動中の場合は、<b>必ず起動中のMoaiを一旦終了させておいてください</b>.<br>
-			そうしないと一部の実行形式のファイルにおいて「共有違反です」あるいは「ビージー(busy)」というメッセージが出て<br>
-			パッチの適用に失敗してしまいます.<br>
-			</li>
-			<br>
-			<li>ダウンロードしたzipファイルを、既にインストールされた Moai Ver2.0 のディレクトリと同列の階層に置いて頂くのが<br>
-			一番わかりやすいかと思います.<br>
-			例えば、Moai Ver2.0のディレクトリが C:\znk_project\moai-v2.0-win32 なら、<br>
-			この zip ファイルを C:\znk_project\moai-v2.0-patch-v2.0.*.zip に置きます.<br>
-			そこでこの zip ファイルを展開します.<br>
-			</li>
-			<br>
-			<li>zipを展開するとmoai-v2.0-patch-v2.0.* というディレクトリが出来上がると思います.<br>
-			Moai Ver2.0のディレクトリの名前は「moai-v2.0-platformを示す文字列」という形式になっていますが、<br>
-			このzipを展開したディレクトリの中にMoaiのディレクトリと同じの名前のディレクトリがあります.<br>
-			特に<b>platformを示す文字列</b>が同じものとなるように注意して選び、<br>
-			その中身を既にインストールされたMoai Ver2.0のディレクトリへそのまま上書きコピーしてください.<br>
-			</li>
-			<br>
-			<li>さらにzipを展開したディレクトリの中に「moai-v2.0-common」というディレクトリがあります.<br>
-			これも同様にその中身を既にインストールされたMoai Ver2.0のディレクトリへそのまま上書きコピーしてください.<br>
-			</li>
-		</ol>
-	</div><br>
-	この修正パッチは既にインストールされた Moai Ver2.0 からであれば、基本的にはどのバージョンからも適用できます.<br>
-	(Ver1.1.8 以前のMoaiには適用できません).<br>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 </div><br>
 <br>
 
 
-<u><b>リンク</b></u>
+<a name=Link></a>
+<u><b>
+リンク
+</b></u><br>
+<br>
 <ul>
-	<li><a class=MstyElemLink href="#TopBar">一番上へ</a></li>
-	<li><a class=MstyElemLink href="https://mr-moai-2016.github.io">Moaiドキュメント(オンライン)</a></li>
-	<li><a class=MstyElemLink href="https://github.com/mr-moai-2016/znk_project">znk_project(github)</a></li>
+	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
+	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project>znk_project(github)</a></li>
 </ul><br>
+
 
 </body>
 </html>

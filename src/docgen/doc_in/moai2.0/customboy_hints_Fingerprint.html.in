@@ -1,0 +1,220 @@
+@def_quote [' ']
+
+@@V config
+doc_title = ['Moai+Easter エキスパートマニュアル']
+author = ['高速ヤキソバ変換']
+update = ['2017/10/05']
+category_path = { ['moai2_0_exp'] ['customboy'] }
+urp           = ['/moai2.0/customboy_hints_Fingerprint.html']
+nb_tags = { ['div'] ['ul'] ['li'] }
+title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
+@@.
+
+@@L AtFirst
+	ここではFingerprint algorithmが取り扱う値について項目毎に解説する.
+@@.
+
+@@P Index
+{ ['#Fgp_userAgent']        ['Fgp_userAgent']        ['fingerprint'] }
+{ ['#Fgp_language']         ['Fgp_language']         ['fingerprint'] }
+{ ['#Fgp_colorDepth']       ['Fgp_colorDepth']       ['fingerprint'] }
+{ ['#Fgp_ScreenResolution'] ['Fgp_ScreenResolution'] ['fingerprint'] }
+{ ['#Fgp_TimezoneOffset']   ['Fgp_TimezoneOffset']   ['fingerprint'] }
+{ ['#Fgp_SessionStorage']   ['Fgp_SessionStorage']   ['fingerprint'] }
+{ ['#Fgp_LocalStorage']     ['Fgp_LocalStorage']     ['fingerprint'] }
+{ ['#Fgp_IndexedDB']        ['Fgp_IndexedDB']        ['fingerprint'] }
+{ ['#Fgp_BodyAddBehavior']  ['Fgp_BodyAddBehavior']  ['fingerprint'] }
+{ ['#Fgp_OpenDatabase']     ['Fgp_OpenDatabase']     ['fingerprint'] }
+{ ['#Fgp_CpuClass']         ['Fgp_CpuClass']         ['fingerprint'] }
+{ ['#Fgp_Platform']         ['Fgp_Platform']         ['fingerprint'] }
+{ ['#Fgp_doNotTrack']       ['Fgp_doNotTrack']       ['fingerprint'] }
+{ ['#Fgp_PluginsString']    ['Fgp_PluginsString']    ['fingerprint'] }
+{ ['#Fgp_Canvas']           ['Fgp_Canvas']           ['fingerprint'] }
+@@.
+
+
+@@L Fgp_userAgent
+	<span class=MstyCode>navigator.userAgent</span>より取得されるいわゆるUser-Agent文字列である.
+
+	<div class=MstyComment>
+		現状のふたばのFingerprintの導出計算においてはこれは加味されていない.
+		しかしUser-Agentの情報自体が参照されていないというわけではない.
+	</div>
+@@.
+
+
+@@L Fgp_language
+	<span class=MstyCode>navigator.language</span>より取得されるいわゆるBrouserの言語情報を示す文字列である.
+	日本語環境のBrowserの場合、ja、ja-JP、ja-jp、ja-JP-macなどの値を取るが、
+	実際どのような値になるかはBrowserやその設定、システムのlocale設定などによっても様々となる.
+	
+	勿論例外もあるがおおよそ以下が目安である.
+	<ul>
+		<li>Android: ja-JP</li>
+		<li>iPhone: ja-jp</li>
+		<li>Mac Firefox: ja-JP-mac</li>
+		<li>Mac safari: ja-jp</li>
+		<li>その他: ja</li>
+	</ul>
+@@.
+
+
+@@L Fgp_colorDepth
+	<span class=MstyCode>screen.colorDepth</span>より取得されるBrowserの色深度bit数を示す文字列である.
+	32、24、16などの値を取るが、実際どのような値になるかはBrowserやその設定などによっても様々となる.
+@@.
+
+
+@@L Fgp_ScreenResolution
+	<span class=MstyCode>screen.width, screen.height</span>より取得されるモニタの解像度を示す二つの数字を文字xで連結した文字列である.
+	順番はこれとは逆順になることもある.
+
+	<div class=MstyComment>
+		現状のふたばのFingerprintの導出計算においてはこれは加味されていない.
+		しかしモニタの解像度情報が参照されていないというわけではない.
+		Fingerprintとは別にscszというPost変数が存在しており、そちらを介して参照される.
+	</div>
+@@.
+
+@@L Fgp_TimezoneOffset
+	<span class=MstyCode>new Date().getTimezoneOffset()</span> により取得されるタイムゾーンを意味する(世界標準時からの)オフセット値を示す文字列である.
+	日本ではこの値は必ず -540 になると考えてよい.
+@@.
+
+
+@@L Fgp_SessionStorage
+	<span class=MstyCode>!!window.sessionStorage</span> というコードSnippetを実行した結果を示し、trueまたはfalseという文字列となる.
+	そのBrowserにsessionStorage機構が存在するか否かを示す.
+	Browserの対応状況は以下が目安である(MDNによる).
+	<ul>
+		<li>Chrome: 5以上</li>
+		<li>Firefox(Gecko): 2以上</li>
+		<li>IE: 8以上</li>
+		<li>Opera: 10.50以上</li>
+		<li>Safari(Webkit): 4以上</li>
+		<li>Android: 2.1以上</li>
+		<li>Opera Mobile: 11以上</li>
+		<li>Safari Mobile: iOS 3.2以上</li>
+	</ul>
+@@.
+
+
+@@L Fgp_LocalStorage
+	<span class=MstyCode>!!window.localStorage</span> というコードSnippetを実行した結果を示し、trueまたはfalseという文字列となる.
+	そのBrowserにlocalStorage機構が存在するか否かを示す.
+	Browserの対応状況は以下が目安である(MDNによる).
+	<ul>
+		<li>Chrome: 4以上</li>
+		<li>Firefox(Gecko): 3.5以上</li>
+		<li>IE: 8以上</li>
+		<li>Opera: 10.50以上</li>
+		<li>Safari(Webkit): 4以上</li>
+		<li>Android: 2.1以上</li>
+		<li>Opera Mobile: 11以上</li>
+		<li>Safari Mobile: iOS 3.2以上</li>
+	</ul>
+@@.
+
+
+@@L Fgp_IndexedDB
+	<span class=MstyCode>!!window.indexedDB</span> というコードSnippetを実行した結果を示し、trueまたはfalseという文字列となる.
+	そのBrowserにindexedDB機構が存在するか否かを示す.
+	Browserの対応状況は以下が目安である(MDNによる).
+	<ul>
+		<li>Chrome: 23以上</li>
+		<li>Firefox(Gecko): 10以上</li>
+		<li>IE: 10以上</li>
+		<li>Opera: 15以上</li>
+		<li>Safari(Webkit): 7.1以上</li>
+		<li>Edge: OK</li>
+		<li>Android: 4.4以上</li>
+		<li>Firefox Mobile: 22以上</li>
+		<li>Firefox OS: 1.0.1以上</li>
+		<li>Opera Mobile: 22以上</li>
+		<li>Safari Mobile: 8以上</li>
+	</ul>
+@@.
+
+
+@@L Fgp_BodyAddBehavior
+	<span class=MstyCode>typeof(document.body.addBehavior)</span> というコードSnippetを実行した結果を示し、functionまたはobjectまたはundefinedという文字列となる.
+	そのBrowserに<span class=MstyCode>document.body.addBehavior</span> メソッドが存在するか否かを示す.
+	これはおそらくIE10以上にしか存在しない.
+	<ul>
+		<li>IE10以上: functionを返す.</li>
+		<li>IE9以下: objectを返す.</li>
+		<li>その他: undefinedを返す.</li>
+	</ul>
+@@.
+
+
+@@L Fgp_OpenDatabase
+	<span class=MstyCode>typeof(window.openDatabase)</span> というコードSnippetを実行した結果を示し、functionまたはundefinedという文字列となる.
+	そのBrowserにHTML5 WebSQL Databaseがサポートされているか否かを示す.
+	<ul>
+		<li>Chrome: 8以上か?</li>
+		<li>Firefox(Gecko): 未サポート(undefinedを返す)</li>
+		<li>IE: 未サポート(undefinedを返す)</li>
+		<li>Opera: 10.6以上か?</li>
+		<li>Safari: 3.1以上</li>
+		<li>Android: 2.1以上</li>
+	</ul>
+@@.
+
+
+@@L Fgp_CpuClass
+	<span class=MstyCode>navigator.cpuClass</span> より取得されるこのBrowserの動作しているMachineのCPU情報を示す文字列である.
+	x86、PPC などを返すと言われているが、実際のところほとんどのケースで空値となっている.
+@@.
+
+
+@@L Fgp_Platform
+	<span class=MstyCode>navigator.platform</span> より取得されるこのBrowserの動作しているOS環境を示す文字列である.
+	おおよそ以下が目安である.
+	<ul>
+		<li>Windows32/WOW : Win32</li>
+		<li>Windows64     : Win64</li>
+		<li>Linux32   : Linux i686</li>
+		<li>Linux64   : Linux x86_64</li>
+		<li>android   : Linux armv7l</li>
+		<li>iPhone    : iPhone</li>
+		<li>Mac       : MacIntel</li>
+	</ul>
+@@.
+
+@@L Fgp_doNotTrack
+	<span class=MstyCode>navigator.doNotTrack</span> より取得されるこのBrowserがTrackingを拒否しているか否か(DNT機能がOnか否か)を示す文字列である.
+	Firefox9以降より導入された.
+	Firefox9以降の場合、プライバシーの設定画面において「トラッキングの拒否をサイトに通知する」にチェックを入れるとこれが有効になり、この値は 1 となる.
+	チェックがOFFの場合 unspecified という値となる。
+	それ以外の環境では空値を返すとみなしてよい.
+@@.
+
+
+@@L Fgp_PluginsString
+	<span class=MstyCode>navigator.plugins</span> の値を元に取得されるこのBrowserにインストールされているPlugin群を示す文字列である.
+	環境によって様々なPluginやそのVersionがインストールされており、従ってほぼ自由文字列と考えてよく、
+	リアルに偽装したところであまり意味がないと思われる.
+	ただしIEの場合はこれは空値である.
+@@.
+
+
+@@L Fgp_Canvas
+	いわゆるCanvas Fingerprintと呼ばれる値である.
+	この値は fp.js における getCanvasFingerprint関数によって取得される文字列である.
+	getCanvasFingerprintでは HTML5のCanvas APIを使い図形や文字などを描き、次にその結果をPNG画像とし、
+	最後にそのPNG画像全体のFile ImageをBASE64 Encodingした結果がその値となる.
+	
+	この画像の出力結果は使用するRendering EngineやシステムにインストールされているGraphics system(GDI,X11 etc)、
+	Graphics cardなどのハードウェアにも依存することが考えられる.
+	それを考慮すると全体としてそこそこ自由度の高い文字列とみなすこともできる.
+	よって、実のところ単純にデタラメな値を設定しても偽装か否かを見破るのはそこそこ困難であると考えられるが、
+	このあたりをどう評価するかは人によって判断が分れるところであろう.
+@@.
+
+
+@@P Link
+{ ['#TopBar'] ['一番上へ'] }
+{ ['https://mr-moai-2016.github.io'] ['Moaiドキュメント(オンライン)'] }
+{ ['https://github.com/mr-moai-2016/znk_project'] ['znk_project(github)'] }
+@@.

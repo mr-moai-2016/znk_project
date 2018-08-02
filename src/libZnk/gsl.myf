@@ -1,7 +1,7 @@
 @def_quote [' ']
 
 @@V config
-dlib_filename = ['Znk-2.0.dll']
+dlib_filename = ['Znk-#[DL_VER]#.dll']
 def_filename = ['gsl.def']
 @@.
 
@@ -168,6 +168,7 @@ ZnkHtpPostVars_regist_byMPFDBody
 ZnkHtpRAR_getHostnameAndPort
 ZnkHtpRAR_getHostnameAndUnderpath_fromURL
 ZnkHtpRAR_sendAndRecv
+ZnkHtpSBIO_recv
 ZnkHtpURL_escape
 ZnkHtpURL_escape_withoutSlash
 ZnkHtpURL_getReqUrpDir
@@ -482,6 +483,7 @@ ZnkZStream_inflate
 ZnkZStream_inflate2
 ZnkZStream_inflateEnd
 ZnkZStream_inflateInit
+ZnkZip_extract
 ZnkZlib_finalize
 ZnkZlib_initiate
 Znk_Internal_getStdFP
@@ -603,4 +605,43 @@ zcalloc
 zcfree
 zlibCompileFlags
 zlibVersion
+fclose_file_func
+ferror_file_func
+fill_fopen_filefunc
+fill_win32_filefunc
+fopen_file_func
+fread_file_func
+fseek_file_func
+ftell_file_func
+fwrite_file_func
+unzClose
+unzCloseCurrentFile
+unzGetCurrentFileInfo
+unzGetFilePos
+unzGetGlobalComment
+unzGetGlobalInfo
+unzGetLocalExtrafield
+unzGetOffset
+unzGoToFilePos
+unzGoToFirstFile
+unzGoToNextFile
+unzLocateFile
+unzOpen
+unzOpen2
+unzOpenCurrentFile
+unzOpenCurrentFile2
+unzOpenCurrentFile3
+unzOpenCurrentFilePassword
+unzReadCurrentFile
+unzSetOffset
+unzStringFileNameCompare
+unzeof
+unztell
+win32_close_file_func
+win32_error_file_func
+win32_open_file_func
+win32_read_file_func
+win32_seek_file_func
+win32_tell_file_func
+win32_write_file_func
 @@.

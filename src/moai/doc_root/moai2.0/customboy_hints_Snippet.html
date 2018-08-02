@@ -8,299 +8,357 @@
 </head>
 <body>
 <a name=TopBar></a>
-<p><b><img src="/imgs/here_landmark.png"> Moai2.0ドキュメント</b></p>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter エキスパートマニュアル</b></p>
 
 <a class=MstyElemLink href="/">トップページ</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/index.html">Moai2.0ドキュメント</a> &nbsp;
-<a class=MstyElemLink        href="/moai1.1/index.html">Moai1.1ドキュメント</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
+<a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
-<a class=MstyElemLink        href="/moai2.0/install.html">インストールガイド</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_reference.html">Moai本体</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/customboy_reference.html">CustomBoy</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index_expert.html">ご案内</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_reference.html">Moaiエンジン</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/customboy_reference.html">CustomBoyエンジン</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/how_to_compile.html">HowToコンパイル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
 <br> <br>
-<a class=MstyElemLink        href="/moai2.0/customboy_reference.html">Overview and Tutorial</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/customboy_hints_Cookie.html">Cookie Hints</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/customboy_hints_PostVars.html">PostVars Hints</a> &nbsp;
-<a class=MstyElemLink        href="/moai2.0/customboy_hints_Fingerprint.html">Fingerprint Hints</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/customboy_reference.html">Overview and Tutorial</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/customboy_hints_Cookie.html">Cookie Hints</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/customboy_hints_PostVars.html">PostVars Hints</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/customboy_hints_Fingerprint.html">Fingerprint Hints</a> &nbsp;
 <a class=MstyNowSelectedLink href="/moai2.0/customboy_hints_Snippet.html">Snippet Hints</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/futaba_note.html">Futaba Note</a> &nbsp;
 <br> <br>
 
 <div class=MstyComment>
-<u><b>記事担当者</b></u> : 高速ヤキソバ変換<br> 
+<u><b>記事担当者</b></u> : 高速ヤキソバ変換<br>
 <br>
 <u><b>最終更新日</b></u> : 2017/10/09<br>
 <br>
 </div>
 <br>
 
-<u><b>はじめに</b></u>
-<ul>
-	<font>
-		ここではCustomBoyが取り扱うSnippetコードの真偽値に関する情報を列挙する.<br>
-		<br>
-		これらはBrowser毎に異なる真偽値のパターンを持つため、Browser解析等で有用である.<br>
-		そしてその情報は拙作のツールCustomBoyのUnknowledge-baseにも内蔵されており、<br>
-		通常は特にユーザが何も設定せずとも、CustomBoyあるいはVirtualUSERSの実行結果に自動的に反映される.<br>
-		<br>
-		一般ユーザがこの記事に記載されたパターンの詳細を気にする必要は全くないが、<br>
-		万一CustomBoyの内蔵する知識ベースでは問題が発生した場合は、<br>
-		ここにある情報を元にエキスパートユーザが手動でそのパターンを修正することもできる.<br>
-	</font><br>
-</ul><br>
+
+<a name=AtFirst></a>
+<u><b>
+はじめに
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	ここではCustomBoyが取り扱うSnippetコードの真偽値に関する情報を列挙する.<br>
+	<br>
+	これらはBrowser毎に異なる真偽値のパターンを持つため、Browser解析等で有用である.<br>
+	そしてその情報はCustomBoyエンジンのKnowledge-baseにも内蔵されており、<br>
+	通常は特にユーザが何も設定せずとも、CustomBoyあるいはVirtualUSERSの実行結果に自動的に反映される.<br>
+	<br>
+	一般ユーザがこの記事に記載されたパターンの詳細を気にする必要は全くないが、<br>
+	万一CustomBoyエンジンが内蔵するKnowledge-baseでは問題が発生した場合は、<br>
+	ここにある情報を元にエキスパートユーザが手動でそのパターンを修正することもできる.<br>
+</div><br>
+<br>
+
 
 <a name=Index></a>
-<u><b>目次</b></u>
+<u><b>
+目次
+</b></u><br>
+<br>
 <ul>
-<li><b><a class=MstyElemLink href=#Snp_LtIE6            >Snp_LtIE6</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_LtIE7            >Snp_LtIE7</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_LtIE8            >Snp_LtIE8</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_IE9              >Snp_IE9</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_IE10             >Snp_IE10</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_IE11             >Snp_IE11</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_Trident          >Snp_Trident</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_Edge             >Snp_Edge</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_Gecko            >Snp_Gecko</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_MozillaSidebar   >Snp_MozillaSidebar</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_NavigatorOnline  >Snp_NavigatorOnline</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_SessionStorage   >Snp_SessionStorage</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_FunctionX5       >Snp_FunctionX5</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_DocCurrentScript >Snp_DocCurrentScript</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_EventSource      >Snp_EventSource</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_Crypto           >Snp_Crypto</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_PerformanceNow   >Snp_PerformanceNow</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_AudioContext     >Snp_AudioContext</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_IndexedDB        >Snp_IndexedDB</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_WindowStyles     >Snp_WindowStyles</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_SendBeacon       >Snp_SendBeacon</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_GetGamepads      >Snp_GetGamepads</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_NavLanguages     >Snp_NavLanguages</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_NavMediaDevices  >Snp_NavMediaDevices</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_WinCaches        >Snp_WinCaches</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_CreateImageBitmap>Snp_CreateImageBitmap</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_Onstorage        >Snp_Onstorage</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_NavGetBattery    >Snp_NavGetBattery</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_Presto           >Snp_Presto</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_LtChrome14       >Snp_LtChrome14</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_ChromiumInFutaba >Snp_ChromiumInFutaba</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_Touch            >Snp_Touch</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_FacileMobile     >Snp_FacileMobile</a></b></li>
-<li><b><a class=MstyElemLink href=#Snp_Webkit           >Snp_Webkit</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_LtIE6>Snp_LtIE6</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_LtIE7>Snp_LtIE7</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_LtIE8>Snp_LtIE8</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_IE9>Snp_IE9</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_IE10>Snp_IE10</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_IE11>Snp_IE11</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_Trident>Snp_Trident</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_Edge>Snp_Edge</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_Gecko>Snp_Gecko</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_MozillaSidebar>Snp_MozillaSidebar</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_NavigatorOnline>Snp_NavigatorOnline</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_SessionStorage>Snp_SessionStorage</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_FunctionX5>Snp_FunctionX5</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_DocCurrentScript>Snp_DocCurrentScript</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_EventSource>Snp_EventSource</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_Crypto>Snp_Crypto</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_PerformanceNow>Snp_PerformanceNow</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_AudioContext>Snp_AudioContext</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_IndexedDB>Snp_IndexedDB</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_WindowStyles>Snp_WindowStyles</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_SendBeacon>Snp_SendBeacon</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_GetGamepads>Snp_GetGamepads</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_NavLanguages>Snp_NavLanguages</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_NavMediaDevices>Snp_NavMediaDevices</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_WinCaches>Snp_WinCaches</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_CreateImageBitmap>Snp_CreateImageBitmap</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_Onstorage>Snp_Onstorage</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_NavGetBattery>Snp_NavGetBattery</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_Presto>Snp_Presto</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_LtChrome14>Snp_LtChrome14</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_ChromiumInFutaba>Snp_ChromiumInFutaba</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_Touch>Snp_Touch</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_FacileMobile>Snp_FacileMobile</a></b></li>
+	<li><b><a class=MstyElemLink href=#Snp_Webkit>Snp_Webkit</a></b></li>
 </ul><br>
 
+
 <a name=Snp_LtIE6></a>
-<u><b>Snp_LtIE6</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				typeof window.addEventListener == 'undefined'<br> 
-				&amp;&amp; typeof document.documentElement.style.maxHeight == 'undefined'
-			</span>
-		</div>
-		<br>
-		IE6以前のみtrue<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+<u><b>
+Snp_LtIE6
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			typeof window.addEventListener == 'undefined' <br>
+			&amp;&amp; typeof document.documentElement.style.maxHeight == 'undefined'<br>
+		</span><br>
+	</div>
+	<br>
+	IE6以前のみtrue<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_LtIE7></a>
-<u><b>Snp_LtIE7</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				typeof window.addEventListener == 'undefined'<br>
-				&amp;&amp; typeof document.querySelectorAll == 'undefined'
-			</span>
-		</div>
-		<br>
-		IE7以前のみtrue<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+<u><b>
+Snp_LtIE7
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			typeof window.addEventListener == 'undefined'<br>
+			&amp;&amp; typeof document.querySelectorAll == 'undefined'<br>
+		</span><br>
+	</div>
+	<br>
+	IE7以前のみtrue<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_LtIE8></a>
-<u><b>Snp_LtIE8</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				typeof window.addEventListener == 'undefined'<br>
-				&amp;&amp; typeof document.getElementsByClassName == 'undefined'
-			</span>
-		</div>
-		<br>
-		IE8以前のみtrue<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+<u><b>
+Snp_LtIE8
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			typeof window.addEventListener == 'undefined'<br>
+			&amp;&amp; typeof document.getElementsByClassName == 'undefined'<br>
+		</span><br>
+	</div>
+	<br>
+	IE8以前のみtrue<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_IE9></a>
-<u><b>Snp_IE9</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!document.uniqueID &amp;&amp; document.documentMode==9
-			</span>
-		</div>
-		<br>
-		IE9のみtrue<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+<u><b>
+Snp_IE9
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!document.uniqueID &amp;&amp; document.documentMode==9<br>
+		</span><br>
+	</div>
+	<br>
+	IE9のみtrue<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_IE10></a>
-<u><b>Snp_IE10</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!document.uniqueID &amp;&amp; document.documentMode==10
-			</span>
-		</div>
-		<br>
-		IE10のみtrue<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+<u><b>
+Snp_IE10
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!document.uniqueID &amp;&amp; document.documentMode==10<br>
+		</span><br>
+	</div>
+	<br>
+	IE10のみtrue<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_IE11></a>
-<u><b>Snp_IE11</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!document.uniqueID &amp;&amp; document.documentMode==11
-			</span>
-		</div>
-		<br>
-		IE11のみtrue<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+<u><b>
+Snp_IE11
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!document.uniqueID &amp;&amp; document.documentMode==11<br>
+		</span><br>
+	</div>
+	<br>
+	IE11のみtrue<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_Trident></a>
-<u><b>Snp_Trident</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!document.uniqueID
-			</span>
-		</div>
-		<br>
-		Trident Rendering Engineを使っている場合はtrue.<br>
-		IEはこれを使っているためtrue.<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+<u><b>
+Snp_Trident
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!document.uniqueID<br>
+		</span><br>
+	</div>
+	<br>
+	Trident Rendering Engineを使っている場合はtrue.<br>
+	IEはこれを使っているためtrue.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_Edge></a>
-<u><b>Snp_Edge</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				'-ms-scroll-limit' in document.documentElement.style<br>
-				&nbsp;&nbsp; &amp;&amp; '-ms-ime-align' in document.documentElement.style<br>
-				&nbsp;&nbsp; &amp;&amp; !window.navigator.msPointerEnabled
-			</span>
-		</div>
-		<br>
-		色々並べてあるが上二つはすべてMS製Browserに存在する特性であり、<br>
-		最後にIEのみに存在する特性を除外していることから、Edgeか否かを判定する.<br>
-		Edgeの場合はtrue.<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+<u><b>
+Snp_Edge
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			'-ms-scroll-limit' in document.documentElement.style<br>
+			&nbsp;&nbsp; &amp;&amp; '-ms-ime-align' in document.documentElement.style<br>
+			&nbsp;&nbsp; &amp;&amp; !window.navigator.msPointerEnabled<br>
+		</span><br>
+	</div>
+	<br>
+	色々並べてあるが上二つはすべてMS製Browserに存在する特性であり、<br>
+	最後にIEのみに存在する特性を除外していることから、Edgeか否かを判定する.<br>
+	Edgeの場合はtrue.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_Gecko></a>
-<u><b>Snp_Gecko</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				'MozAppearance' in document.documentElement.style
-			</span>
-		</div>
-		<br>
-		Gecko Rendering Engineを使っている場合はtrue<br>
-		Firefoxはこれを使っているためtrue.<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+<u><b>
+Snp_Gecko
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			'MozAppearance' in document.documentElement.style<br>
+		</span><br>
+	</div>
+	<br>
+	Gecko Rendering Engineを使っている場合はtrue<br>
+	Firefoxはこれを使っているためtrue.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_MozillaSidebar></a>
-<u><b>Snp_MozillaSidebar</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!window.sidebar
-			</span>
-		</div>
-		<br>
-		Mozilla Sidebarが存在する場合はtrue.<br>
-		Firefoxにはこれが存在するためtrue.<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+<u><b>
+Snp_MozillaSidebar
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!window.sidebar<br>
+		</span><br>
+	</div>
+	<br>
+	Mozilla Sidebarが存在する場合はtrue.<br>
+	Firefoxにはこれが存在するためtrue.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_NavigatorOnline></a>
-<u><b>Snp_NavigatorOnline</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				typeof window.navigator.onLine != 'undefined'
-			</span>
-		</div>
-		<br>
-		Browserがオンラインで動作しているかどうかを示す真偽値を返す.<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+<u><b>
+Snp_NavigatorOnline
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			typeof window.navigator.onLine != 'undefined'<br>
+		</span><br>
+	</div>
+	<br>
+	Browserがオンラインで動作しているかどうかを示す真偽値を返す.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_SessionStorage></a>
-<u><b>Snp_SessionStorage</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!window.sessionStorage
-			</span>
-		</div>
-		<br>
-		BrowserにsessionStorage機構が存在するか否かを示す.<br>
-		Browserの対応状況は以下が目安である(MDNによる).<br>
+<u><b>
+Snp_SessionStorage
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!window.sessionStorage<br>
+		</span><br>
+	</div>
+	<br>
+	BrowserにsessionStorage機構が存在するか否かを示す.<br>
+	Browserの対応状況は以下が目安である(MDNによる).<br>
+	<ul>
 		<li>Chrome: 5以上</li>
 		<li>Firefox(Gecko): 2以上</li>
 		<li>IE: 8以上</li>
@@ -309,150 +367,189 @@
 		<li>Android: 2.1以上</li>
 		<li>Opera Mobile: 11以上</li>
 		<li>Safari Mobile: iOS 3.2以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_FunctionX5></a>
-<u><b>Snp_FunctionX5</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				(function x(){})[-5] == 'x'
-			</span>
-		</div>
-		<br>
-		このFunctionX5テストとは、Firefox Ver3.xにのみ存在するコード特性を検査するというもの.<br>
-		'function x(){}' を文字列として見た場合、その -5 番目の文字(最後から5番目)は 'x' となっている.<br>
-		Firefox Ver3.x ではこのような暗黙の文字列変換が行われるようで、その特性が存在するかを検証するコードである.<br>
-		Firefox Ver3.xのみtrue.<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+<u><b>
+Snp_FunctionX5
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			(function x(){})[-5] == 'x'<br>
+		</span><br>
+	</div>
+	<br>
+	このFunctionX5テストとは、Firefox Ver3.xにのみ存在するコード特性を検査するというもの.<br>
+	'function x(){}' を文字列として見た場合、その -5 番目の文字(最後から5番目)は 'x' となっている.<br>
+	Firefox Ver3.x ではこのような暗黙の文字列変換が行われるようで、その特性が存在するかを検証するコードである.<br>
+	Firefox Ver3.xのみtrue.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_DocCurrentScript></a>
-<u><b>Snp_DocCurrentScript</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				typeof document.currentScript != 'undefined'
-			</span>
-		</div>
-		<br>
-		以下の環境においてtrue.<br>
+<u><b>
+Snp_DocCurrentScript
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			typeof document.currentScript != 'undefined'<br>
+		</span><br>
+	</div>
+	<br>
+	以下の環境においてtrue.<br>
+	<ul>
 		<li>Chrome: 29以上</li>
 		<li>Firefox(Gecko): 4以上</li>
 		<li>Opera: 16以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_EventSource></a>
-<u><b>Snp_EventSource</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				typeof(EventSource) != 'undefined'
-			</span>
-		</div>
-		<br>
-		以下の環境においてtrue.<br>
+<u><b>
+Snp_EventSource
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			typeof(EventSource) != 'undefined'<br>
+		</span><br>
+	</div>
+	<br>
+	以下の環境においてtrue.<br>
+	<ul>
 		<li>Chrome: 9以上</li>
 		<li>Firefox(Gecko): 6以上</li>
 		<li>Opera: 11以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_Crypto></a>
-<u><b>Snp_Crypto</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!window.crypto &amp;&amp; !!window.crypto.getRandomValues
-			</span>
-		</div>
-		<br>
-		以下の環境においてtrue.<br>
+<u><b>
+Snp_Crypto
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!window.crypto &amp;&amp; !!window.crypto.getRandomValues<br>
+		</span><br>
+	</div>
+	<br>
+	以下の環境においてtrue.<br>
+	<ul>
 		<li>Chrome: 11以上</li>
 		<li>Firefox(Gecko): 21以上</li>
 		<li>IE: 11以上</li>
 		<li>Opera: 15以上</li>
 		<li>Safari: 3.1以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_PerformanceNow></a>
-<u><b>Snp_PerformanceNow</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!window.performance &amp;&amp; !!window.performance.now
-			</span>
-		</div>
-		<br>
-		以下の環境においてtrue.<br>
+<u><b>
+Snp_PerformanceNow
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!window.performance &amp;&amp; !!window.performance.now<br>
+		</span><br>
+	</div>
+	<br>
+	以下の環境においてtrue.<br>
+	<ul>
 		<li>Chrome: 20以上</li>
 		<li>Firefox(Gecko): 15以上</li>
 		<li>IE: 10以上</li>
 		<li>Opera: 15以上</li>
 		<li>Safari: 8以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_AudioContext></a>
-<u><b>Snp_AudioContext</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!window.AudioContext
-			</span>
-		</div>
-		<br>
-		以下の環境においてtrue.<br>
+<u><b>
+Snp_AudioContext
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!window.AudioContext<br>
+		</span><br>
+	</div>
+	<br>
+	以下の環境においてtrue.<br>
+	<ul>
 		<li>Chrome: 10以上</li>
 		<li>Firefox(Gecko): 25以上</li>
 		<li>Opera: 15以上</li>
 		<li>Safari: 6以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_IndexedDB></a>
-<u><b>Snp_IndexedDB</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!window.indexedDB
-			</span>
-		</div>
-		<br>
-		これはBrowserにindexedDB機構が存在するか否かを示す.<br>
-		Browserの対応状況は以下が目安である(MDNによる).<br>
-		<br>
+<u><b>
+Snp_IndexedDB
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!window.indexedDB<br>
+		</span><br>
+	</div>
+	<br>
+	これはBrowserにindexedDB機構が存在するか否かを示す.<br>
+	Browserの対応状況は以下が目安である(MDNによる).<br>
+	<ul>
 		<li>Chrome: 23以上</li>
 		<li>Firefox(Gecko): 10以上</li>
 		<li>IE: 10以上</li>
@@ -464,264 +561,330 @@
 		<li>Firefox OS: 1.0.1以上</li>
 		<li>Opera Mobile: 22以上</li>
 		<li>Safari Mobile: 8以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_WindowStyles></a>
-<u><b>Snp_WindowStyles</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!window.styles
-			</span>
-		</div>
-		<br>
-		このSnippetはふたばちゃんねるにおいて独自に設定されているものである.<br>
-		(少なくとも他のサイトでは、私はこのようなコードを見たことがない)<br>
-		そしてMDNなどのよく知られたどのドキュメントを参照しても、<br>
-		window objectの中にstylesというpropertyは記載されていない.<br>
-		<br>
-		果たしてこのpropertyを持つBrowserが世界に存在するのであろうか？<br>
-		これまで私が試したすべてのBrowserにおいて、このコードがtrueとなるものは発見されなかった.<br>
-		<br>
-		<div class=MstyComment>
-			<u><b>参考</b></u><br> <br>
-			ちなみにwindow objectの中のstatusというpropertyならば、Gecko 1.9.1以降ならば存在する.<br>
-		</div>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+<u><b>
+Snp_WindowStyles
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!window.styles<br>
+		</span><br>
+	</div>
+	<br>
+	このSnippetはふたばちゃんねるにおいて独自に設定されているものである.<br>
+	(少なくとも他のサイトでは、私はこのようなコードを見たことがない)<br>
+	そしてMDNなどのよく知られたどのドキュメントを参照しても、<br>
+	window objectの中にstylesというpropertyは記載されていない.<br>
+	<br>
+	果たしてこのpropertyを持つBrowserが世界に存在するのであろうか？<br>
+	これまで私が試したすべてのBrowserにおいて、このコードがtrueとなるものは発見されなかった.<br>
+	<br>
+	<div class=MstyComment>
+		<u><b>参考</b></u> <br>
+<br>
+		ちなみにwindow objectの中のstatusというpropertyならば、Gecko 1.9.1以降ならば存在する.<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_SendBeacon></a>
-<u><b>Snp_SendBeacon</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!window.navigator.sendBeacon
-			</span>
-		</div>
-		<br>
-		以下の環境においてtrue.<br>
+<u><b>
+Snp_SendBeacon
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!window.navigator.sendBeacon<br>
+		</span><br>
+	</div>
+	<br>
+	以下の環境においてtrue.<br>
+	<ul>
 		<li>Chrome: 39以上</li>
 		<li>Firefox(Gecko): 31以上</li>
 		<li>Opera: 26以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_GetGamepads></a>
-<u><b>Snp_GetGamepads</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!navigator.getGamepads
-			</span>
-		</div>
-		<br>
-		以下の環境においてtrue.<br>
+<u><b>
+Snp_GetGamepads
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!navigator.getGamepads<br>
+		</span><br>
+	</div>
+	<br>
+	以下の環境においてtrue.<br>
+	<ul>
 		<li>Chrome: 21以上</li>
 		<li>Firefox(Gecko): 29以上</li>
 		<li>Opera: 15以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_NavLanguages></a>
-<u><b>Snp_NavLanguages</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!window.navigator.languages
-			</span>
-		</div>
-		<br>
-		以下の環境においてtrue.<br>
+<u><b>
+Snp_NavLanguages
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!window.navigator.languages<br>
+		</span><br>
+	</div>
+	<br>
+	以下の環境においてtrue.<br>
+	<ul>
 		<li>Chrome: 32以上</li>
 		<li>Firefox(Gecko): 32以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_NavMediaDevices></a>
-<u><b>Snp_NavMediaDevices</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!window.navigator.mediaDevices
-			</span>
-		</div>
-		<br>
-		以下の環境においてtrue.<br>
+<u><b>
+Snp_NavMediaDevices
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!window.navigator.mediaDevices<br>
+		</span><br>
+	</div>
+	<br>
+	以下の環境においてtrue.<br>
+	<ul>
 		<li>Chrome: 51以上</li>
 		<li>Firefox(Gecko): 36以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_WinCaches></a>
-<u><b>Snp_WinCaches</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!window.caches
-			</span>
-		</div>
-		<br>
-		以下の環境においてtrue.<br>
+<u><b>
+Snp_WinCaches
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!window.caches<br>
+		</span><br>
+	</div>
+	<br>
+	以下の環境においてtrue.<br>
+	<ul>
 		<li>Chrome: 43以上</li>
 		<li>Firefox(Gecko): 39以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_CreateImageBitmap></a>
-<u><b>Snp_CreateImageBitmap</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!window.createImageBitmap
-			</span>
-		</div>
-		<br>
-		以下の環境においてtrue.<br>
+<u><b>
+Snp_CreateImageBitmap
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!window.createImageBitmap<br>
+		</span><br>
+	</div>
+	<br>
+	以下の環境においてtrue.<br>
+	<ul>
 		<li>Chrome: 50以上</li>
 		<li>Firefox(Gecko): 42以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_Onstorage></a>
-<u><b>Snp_Onstorage</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				typeof window.onstorage!='undefined'
-			</span>
-		</div>
-		<br>
-		以下の環境においてtrue.<br>
+<u><b>
+Snp_Onstorage
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			typeof window.onstorage!='undefined'<br>
+		</span><br>
+	</div>
+	<br>
+	以下の環境においてtrue.<br>
+	<ul>
 		<li>Firefox(Gecko): 45以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_NavGetBattery></a>
-<u><b>Snp_NavGetBattery</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!window.navigator.getBattery
-			</span>
-		</div>
-		<br>
-		以下の環境においてtrue.<br>
+<u><b>
+Snp_NavGetBattery
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!window.navigator.getBattery<br>
+		</span><br>
+	</div>
+	<br>
+	以下の環境においてtrue.<br>
+	<ul>
 		<li>Chrome: 39以上</li>
 		<li>Firefox(Gecko): ?</li>
 		<li>Opera: 25以上</li>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_Presto></a>
-<u><b>Snp_Presto</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!window.opera
-			</span>
-		</div>
-		<br>
-		Operaの古いVersionではそのRendering EngineはPrestoと呼ばれていた.<br>
-		Opera12.16以前ではこれがtrueとなる.<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+<u><b>
+Snp_Presto
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!window.opera<br>
+		</span><br>
+	</div>
+	<br>
+	Operaの古いVersionではそのRendering EngineはPrestoと呼ばれていた.<br>
+	Opera12.16以前ではこれがtrueとなる.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_LtChrome14></a>
-<u><b>Snp_LtChrome14</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!window.chrome &amp;&amp; typeof window.chrome.webstore!='undefined'
-			</span>
-		</div>
-		<br>
-		Chromeであるか否かを示す定石コードである(ただしVersion14以降が対象である).<br>
-		前半の<span class=MstyCode>!!window.chrome</span>はChromium系か否かを判定する定石コードである.<br>
-		後半の<span class=MstyCode>typeof window.chrome.webstore!='undefined'</span>は、OperaやEdgeの可能性を廃するために付加したものであろう.<br>
-		Chrome Ver14以上のみtrueである.<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+<u><b>
+Snp_LtChrome14
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!window.chrome &amp;&amp; typeof window.chrome.webstore!='undefined'<br>
+		</span><br>
+	</div>
+	<br>
+	Chromeであるか否かを示す定石コードである(ただしVersion14以降が対象である).<br>
+	前半の<span class=MstyCode>!!window.chrome</span>はChromium系か否かを判定する定石コードである.<br>
+	後半の<span class=MstyCode>typeof window.chrome.webstore!='undefined'</span>は、OperaやEdgeの可能性を廃するために付加したものであろう.<br>
+	Chrome Ver14以上のみtrueである.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_ChromiumInFutaba></a>
-<u><b>Snp_ChromiumInFutaba</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!!window.chrome &amp;&amp; 'WebkitAppearance' in document.documentElement.style
-			</span>
-		</div>
-		<br>
-		このSnippetはふたばちゃんねるにおいて独自に設定されているものである.<br>
-		(少なくとも他のサイトでは、私はこのようなコードを見たことがない)<br>
-		実質 Chromium系であるか否かを示しているが、コードの後半が無意味である.<br>
-		<br>
-		以下の環境においてtrue.<br>
-		<br>
+<u><b>
+Snp_ChromiumInFutaba
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!!window.chrome &amp;&amp; 'WebkitAppearance' in document.documentElement.style<br>
+		</span><br>
+	</div>
+	<br>
+	このSnippetはふたばちゃんねるにおいて独自に設定されているものである.<br>
+	(少なくとも他のサイトでは、私はこのようなコードを見たことがない)<br>
+	実質 Chromium系であるか否かを示しているが、コードの後半が無意味である.<br>
+	<br>
+	以下の環境においてtrue.<br>
+	<ul>
 		<li>Chrome: 全Version</li>
 		<li>Opera: 14以上</li>
-		<br>
-		<div class=MstyComment>
+	</ul>
+	<br>
+	<div class=MstyComment>
 		<u><b>解説</b></u><br>
 		<br>
 		まずBrowser解析をされている方にとってはおなじみの以下のコードを掲載しておこう.<br>
 		<br>
 		<div class=MstyCode>
-			!window.chrome &amp;&amp; 'WebkitAppearance' in document.documentElement.style
+			!window.chrome &amp;&amp; 'WebkitAppearance' in document.documentElement.style<br>
 		</div>
 		<br>
 		コード前半に<span class=MstyCode>!window.chrome</span>と置くことで、<b>Chromium系以外である</b>ことを前提とした上で<br>
 		コード後半部によりWebkitが使われているVersionのみを検出するというものである.<br>
 		これは様々なサイトで広く見られる正しいコードであり、例えばSafariなどを検出できる.<br>
-		この記事でも<a href=#Snp_Webkit>Snp_Webkit</a>という項目として挙げておいた.<br>
+		この記事でも<a class=MstyElemLink href=#Snp_Webkit>Snp_Webkit</a>という項目として挙げておいた.<br>
 		<br>
 		ところが、本項目のふたばちゃんねる独自のコードでは、前半部分が<span class=MstyCode>!!window.chrome</span>となっている.<br>
 		これでは逆に<b>Chromium系である</b>ことを前提としてしまう.<br>
@@ -734,10 +897,12 @@
 		Webkit版であるか否かを判定することはできない</b>のである.<br>
 		(だからこそ、定石では先頭にまず<span class=MstyCode>!window.chrome</span>という前提条件を置く)<br>
 		<br>
-		実はChromium系の場合、<b>どのVersionでも</b>この'WebkitAppearance' というパターンを必ず含む.<br>
+		なぜならばChromium系の場合、<b>どのVersionでも</b>この'WebkitAppearance' というパターンを必ず含む.<br>
 		たとえ<b>Webkitが使われていないVersionでも</b>である.<br>
 		つまりこのコードの &amp;&amp; より後半は必ずtrueになるのであるから、明らかに無意味である.<br>
+	</div>
 		<br>
+	<div class=MstyComment>
 		<u><b>検証</b></u><br>
 		<br>
 		以下ではChromium系としてChromeまたは新しいVersionのOperaの例を挙げ、このことを検証してみよう.<br>
@@ -746,86 +911,98 @@
 		ChromeはVer28以降Webkitは廃止されBlinkへと移行した.<br>
 		Operaの場合も同様にVer15以降はBlinkとなっている.<br>
 		つまりWebkitではないVersionでもこのコードはやはりtrueとなってしまうことがお分かりだろう.<br>
-		<br>
-		<br>
-		</div>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_Touch></a>
-<u><b>Snp_Touch</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				typeof document.ontouchstart != 'undefined'
-			</span>
-		</div>
-		<br>
-		この環境のBrowserにおいてTouch Padが有効か否かを示す.<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+<u><b>
+Snp_Touch
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			typeof document.ontouchstart != 'undefined'<br>
+		</span><br>
+	</div>
+	<br>
+	この環境のBrowserにおいてTouch Padが有効か否かを示す.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_FacileMobile></a>
-<u><b>Snp_FacileMobile</b></u>
-<ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				typeof window.orientation != 'undefined'
-			</span>
-		</div>
-		<br>
-		Browserにおいてwindow.orientationが存在するか否かを示す.<br>
-		window.orientationとは端末画面が縦長(portrait)と横長(landscape)のどちらであるかに関する情報である.<br>
-		これはモバイル環境である否かの簡易判定に使うことができる.<br>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
-</ul><br>
+<u><b>
+Snp_FacileMobile
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			typeof window.orientation != 'undefined'<br>
+		</span><br>
+	</div>
+	<br>
+	Browserにおいてwindow.orientationが存在するか否かを示す.<br>
+	window.orientationとは端末画面が縦長(portrait)と横長(landscape)のどちらであるかに関する情報である.<br>
+	これはモバイル環境である否かの簡易判定に使うことができる.<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
 
 
 <a name=Snp_Webkit></a>
-<u><b>Snp_Webkit</b></u>
+<u><b>
+Snp_Webkit
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	以下のJavascriptコードを実行した結果である.<br>
+<br>
+	<div class=MstyComment>
+		<span class=MstyCode><br>
+			!window.chrome &amp;&amp; 'WebkitAppearance' in document.documentElement.style<br>
+		</span><br>
+	</div>
+	<br>
+	Webkit判定.<br>
+	これは<b>Chromium系以外の</b>Webkitが使われているBrowser、例えばSafariなどを検出する目的で<br>
+	一般によく使用されている定石的なコードである.<br>
+	<br>
+	<div class=MstyComment>
+		<u><b>注意</b></u> <br>
+<br>
+		ふたばの<a href=http://may.2chan.net/bin/base4.js>/bin/base4.js</a>内にこれとよく似た<b>ワケのわからん</b>テスト(上記のSnp_ChromiumInFutaba)が存在するが、<br>
+		その効果はこれとは全く異なる.<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=Link></a>
+<u><b>
+リンク
+</b></u><br>
+<br>
 <ul>
-	<font>
-		以下のJavascriptコードを実行した結果である.<br>
-		<div class=MstyComment>
-			<span class=MstyCode>
-				!window.chrome &amp;&amp; 'WebkitAppearance' in document.documentElement.style
-			</span>
-		</div>
-		<br>
-		Webkit判定.<br>
-		これは<b>Chromium系以外の</b>Webkitが使われているBrowser、例えばSafariなどを検出する目的で<br>
-		一般によく使用されている定石的なコードである.<br>
-		<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
-		 	!window.chrome &amp;&amp; 'WebkitAppearance' in document.documentElement.style 
-			</div>
-		</div>
-		<br>
-		<div class=MstyComment>
-			<u><b>注意</b></u><br> <br>
-			ふたばの<a href=http://may.2chan.net/bin/base4.js>/bin/base4.js</a>内にこれとよく似た<b>ワケのわからん</b>テスト(上記のSnp_ChromiumInFutaba)が存在するが、<br>
-			その効果はこれとは全く異なる.
-		</div>
-	</font><br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b>
+	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
+	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project>znk_project(github)</a></li>
 </ul><br>
 
-<u><b>リンク</b></u>
-<ul>
-	<li><a class=MstyElemLink href="#TopBar">一番上へ</a></li>
-	<li><a class=MstyElemLink href="https://mr-moai-2016.github.io">Moaiドキュメント(オンライン)</a></li>
-	<li><a class=MstyElemLink href="https://github.com/mr-moai-2016/znk_project">znk_project(github)</a></li>
-</ul><br>
 
 </body>
 </html>

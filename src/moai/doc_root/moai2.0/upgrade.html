@@ -1,0 +1,383 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<link href="/msty.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<a name=TopBar></a>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter ユーザーマニュアル</b></p>
+
+<a class=MstyElemLink href="/">トップページ</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
+<a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
+<br> <br>
+<a class=MstyElemLink href="/moai2.0/index.html">ご案内</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/install.html">インストールガイド</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/moai_feature.html">Moaiの特徴</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/upgrade.html">Moaiのアップグレード方法</a> &nbsp;
+<br> <br>
+
+<div class=MstyComment>
+<u><b>記事担当者</b></u> : Mr.Moai<br>
+<br>
+<u><b>最終更新日</b></u> : 2018/07/25<br>
+<br>
+</div>
+<br>
+
+
+<a name=AtFirst></a>
+<u><b>
+はじめに
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	ここではMoaiシステムのアップグレードの仕方について、詳細に解説します.<br>
+</div><br>
+<br>
+
+
+<a name=Index></a>
+<u><b>
+目次
+</b></u><br>
+<br>
+<ul>
+	<li><b><a class=MstyElemLink href=#MoaiUpgrade>Moaiアップグレードを用いた簡単アップグレード(Ver2.1以降)</a></b></li>
+	<li><b><a class=MstyElemLink href=#From2_0_To2_1>Moai Ver2.0 から Moai Ver2.1 へアップグレードする方法</a></b></li>
+</ul><br>
+
+
+<a name=MoaiUpgrade></a>
+<u><b>
+Moaiアップグレードを用いた簡単アップグレード(Ver2.1以降)
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	Moai Ver2.1より <b>Moaiアップグレード</b>という機能が導入されました.<br>
+	これはボタンを押すだけでMoaiシステム全体を自動的に最新のバージョンにアップグレードできるというものです.<br>
+	このようなソフトウェアの更新機能は、最近のアプリケーションではブラウザをはじめとしてよく見かけると思いますが、<br>
+	Moaiシステムでもこのようなことができるようになったと考えて頂いて構いません.<br>
+<br>
+	<div class=MstyComment>
+		<u><b>【Moai Ver2.0を使用して頂いている方へ】</b></u><br>
+<br>
+		Moai Ver2.0 ( Ver2.0.2以前 ) を使用している方は、まだこれが使えません.<br>
+		まずは<a class=MstyElemLink href=#From2_0_To2_1>こちら</a>をご覧頂き、Moai Ver2.1へアップグレードしてください.<br>
+	</div>
+<br>
+	Moaiトップページ(http://127.0.0.1:8124、またはhttp://localhost:8124)を開くと「Moaiエンジン設定」というリンクがあります.<br>
+	このリンク先を開き、更に一番上のガイドメニューから「Moaiアップグレード」を選ぶと、以下のような画面が表示されます.<br>
+<br>
+	<div class=MstyComment>
+		<img src=/imgs/birdman_console1.png width=100%><br>
+	</div>
+<br>
+	「Birdman Console」では、これから処理される内容の詳細が報告されます.<br>
+	開始時には何も処理されていないため、メッセージの部分が「None.」と表示されています.<br>
+<br>
+	<div class=MstyComment>
+		<u><b>Note.</b></u><br>
+<br>
+		「Birdman」というのはMoaiアップグレードを行うための内部プログラムで、Ver2.1より新規導入されました.<br>
+		MoaiアップグレードによりMoaiエンジン本体も更新され得るのですが、その処理はMoaiとは別のプログラムが行う必要があります.<br>
+		その役目を担うのがBirdmanです.<br>
+		一方、Birdman自身も更新される場合があり、これについてはMoai本体がその処理を担います.<br>
+		そういう意味ではこの二つのプログラムは相補的な関係にあります.<br>
+<br>
+		ちなみに名前の由来はEaster島の鳥人伝説です.<br>
+		この伝説によれば、卵を手渡された鳥人はその瞬間に新たなる鳥人となるのだそうです.<br>
+	</div>
+<br>
+	それでは「最新バージョンの確認」ボタンを押してみましょう.<br>
+	現在ご利用のMoaiが最新バージョンである場合、以下のように表示されます.<br>
+<br>
+	<div class=MstyComment>
+		<img src=/imgs/birdman_console2.png width=100%><br>
+	</div>
+<br>
+	色々と報告されていますが、ここでユーザが確認すべき情報は画面の最後にある通りです.<br>
+	即ち、今現在利用しているMoaiは既に最新バージョンであり、これ以上は何もする必要がないということです.<br>
+	今はMoaiのトップページに戻りましょう.<br>
+	また時をあらためてこのボタンを押し、最新バージョンにアップグレード可能か否かを定期的に確認するなどすればよろしいでしょう.<br>
+<br>
+	<div class=MstyComment>
+		<u><b>Note.</b></u><br>
+		<br>
+		Birdman は vtag_rule というファイルをダウンロードし、これを分析することで<br>
+		Moaiが最新バージョンであるかどうかを確認します.<br>
+		いずれにせよこれの詳細についてユーザは気にする必要はありません.<br>
+	</div>
+<br>
+	一方、Moaiをさらなる新しいバージョンへアップグレード可能である場合、以下のように表示されます.<br>
+<br>
+	<div class=MstyComment>
+		<img src=/imgs/birdman_console3.png width=100%><br>
+	</div>
+<br>
+	画面の指示に従い、「修正パッチのダウンロード」ボタンを押します.<br>
+	以下のような画面が表示されると思います.<br>
+<br>
+	<div class=MstyComment>
+		<img src=/imgs/birdman_console4.png width=100%><br>
+	</div>
+<br>
+	色々と報告されていますが、要するにここまでで修正パッチを適用できる直前までの状態が整ったということです.<br>
+	(実際にはまだ適用されていません).<br>
+	最後にこれを実際に適用するため、「修正パッチを適用」ボタンを押します.<br>
+<br>
+	<div class=MstyComment>
+		<u><b>Note.</b></u><br>
+		<br>
+		Birdmanが内部で何をやっているのか興味ある方のために、少し解説しておきましょう.<br>
+		Birdmanは github のMoai公式サイトへアクセスし、最新バージョンへの修正パッチを自動的にダウンロードします.<br>
+		修正パッチは zip 形式となっていますので、さらにこれを解凍しなければなりません.<br>
+		この解凍処理も自動的に行われます.<br>
+		これらの実体はMoaiフォルダ直下のbirdman/tmpフォルダに一時的に置かれます.<br>
+		また「最新バージョンの確認」ボタンを押すタイミングでこれは削除されます.<br>
+	</div>
+<br>
+	<div class=MstyComment>
+		<img src=/imgs/birdman_console5.png width=100%><br>
+	</div>
+<br>
+	上記のように表示され、古いバージョンのMoaiフォルダ内に対し、新しいファイルのコピー処理などが行われます.<br>
+	またこのとき、一瞬Moai本体が終了し再度起動すると思います.<br>
+	(これはMoai本体を上書きするためには、これを一度終了させる必要があるためです.)<br>
+<br>
+	最後に「OK. All upgrade is successfully done.」のように表示されていれば成功です.<br>
+	一応Moaiのトップページに戻り、バージョンの表示が Ver2.1 になっていることを確認してください.<br>
+	( 一番上にある「Welcome to Moai+Easter World」と書かれている部分のすぐ右です ).<br>
+<br>
+	いかがでしょうか？<br>
+	「簡単」と謳っておきながらずいぶんと長い説明になってしまいましたが、実際には大したことはありません.<br>
+	纏めますと、あなたが行うことは「最新バージョンの確認」、「修正パッチのダウンロード」、「修正パッチを適用」<br>
+	この３つのボタンを順番に押すだけです.<br>
+<br>
+	<b>Moai Ver2.1以降では、たったこれだけの操作でMoaiシステムを常に最新の状態に保つことができます！</b><br>
+	もはやMoaiの最新バージョンがリリースされるたびに面倒なインストール作業を行う必要はなくなったわけです.<br>
+<br>
+	<div class=MstyComment>
+		<u><b>Note.</b></u><br>
+		<br>
+		そんな三段階に分けなくても、一つのボタンで一括で全部やっちゃえば？<br>
+		と思われる方もいるかもしれません.<br>
+<br>
+		この自動アップグレードのためのシステム(Birdman)は、我々Moai開発チームも特にテストに力を入れた部分ではあるのですが、<br>
+		一般にソフトウェアの世界では、「不具合は100％絶対に起こり得ない」とは誰も断定できないのです.<br>
+		よって、万一途中で問題が発生した場合でもどの時点でそれが起きたかを一目瞭然とすることが重要となります.<br>
+		また、Moaiの哲学として「処理の透明性」を主要なポリシーの一つとして掲げているというのもあります.<br>
+		そのような経緯で、現時点ではこのように三つのフェーズに分けてあります.<br>
+	</div>
+<br>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=From2_0_To2_1></a>
+<u><b>
+Moai Ver2.0 から Moai Ver2.1 へアップグレードする方法
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	ここでは Moai Ver2.0 から Ver2.1 へアップグレードするためのガイドラインについて述べます.<br>
+	Moai Ver2.0にはまだ「Moaiアップグレード」がないため、これ以外の方法でアップグレードしなければなりません.<br>
+	二つの方法があります.<br>
+<br>
+	<ul>
+		<li><b>改めて Moai Ver2.1 を新規インストールする</b><br>
+<br>
+		最も単純明快な方法ではあります.<br>
+<br>
+		この場合、Ver2.1 のインストール先フォルダは Ver2.0 時の際に既に作成頂いている moai_profile フォルダと同列の位置になるようにした方が良いでしょう.<br>
+		( 言い換えれば、Ver2.1のインストール先フォルダを Ver2.0のフォルダと同列になるようにインストールします.<br>
+		まあ普通はそうされることが多いとは思いますが… ).<br>
+		そうすれば Moai Ver2.1 でも moai_profile環境( Moai Ver2.0 において登録されたEasterのリンク集やコレクションの環境 )が引き続きご使用いただけます.<br>
+<br>
+		この様子を念のために冗長に書きますと、以下のようになります.<br>
+		旧 Moai Ver2.0 が例えば C:\znk_project というフォルダの下に以下のようにインストールされていたとします.<br>
+<br>
+		<div class=MstyComment>
+			【フォルダ構成】<br>
+			moai-v2.0-win32<br>
+			moai_profile<br>
+		</div>
+<br>
+		Moai Ver2.1 の zip をダウンロードし、同フォルダに以下のように展開します.<br>
+		これが上で言う「同列に置く」の意味です.<br>
+<br>
+		<div class=MstyComment>
+			【フォルダ構成】<br>
+			moai-v2.0-win32<br>
+			moai-v2.1-win32<br>
+			moai_profile<br>
+		</div>
+<br>
+		moai-v2.1-win32 の方の moai.exe を起動し、問題がないことを確かめて下さい.<br>
+		そして moai-v2.0-win32 の方については、もはや必要ないのであればこれを削除して頂いても構いません.<br>
+<br>
+		<div class=MstyComment>
+			【フォルダ構成】<br>
+			moai-v2.1-win32<br>
+			moai_profile<br>
+		</div>
+<br>
+		Windows 32bit版を例に挙げましたが、他のプラットフォームでも同様です.<br>
+		Linux環境ではこのドキュメント内での「フォルダ」という用語を「ディレクトリ」に読み替えてください.<br>
+		各プラットフォーム毎のダウンロード先やインストール方法については<a class=MstyElemLink href=/moai2.0/install.html>インストールガイド</a>を参照してください.<br>
+		</li>
+<br>
+		<li><b>既存のMoai Ver2.0フォルダに修正パッチを適用してVer2.1へアップグレードする</b><br>
+<br>
+			ここでは修正パッチを使用して Moai Ver2.0 から Ver2.1 へアップグレードする方法について述べます.<br>
+			Moai Ver2.0 フォルダ内の各種設定ファイルやfilterファイル、Easterのcacheboxを消去したくないといった場合など<br>
+			こちらの方法の方がよいのかもしれません.<br>
+<br>
+			Moai Ver2.0 から Ver2.1 への修正パッチは以下より入手できます.<br>
+			修正パッチのアーカイブ名は moai-v2.0-patch-v2.1-{platform}.zip という形式になっています.<br>
+			プラットフォーム毎に異なりますので、お使いのプラットフォームのものを選んでダウンロードしてください.<br>
+<br>
+			<ul>
+				<li><a class=MstyElemLink href=https://mr-moai-2016.github.io/patch/moai-v2.0-patch-v2.1-windows.zip>Windows版</a></li>
+				<li><a class=MstyElemLink href=https://mr-moai-2016.github.io/patch/moai-v2.0-patch-v2.1-cygwin.zip>Cygwin版</a></li>
+				<li><a class=MstyElemLink href=https://mr-moai-2016.github.io/patch/moai-v2.0-patch-v2.1-linux.zip>Linux版</a></li>
+				<li><a class=MstyElemLink href=https://mr-moai-2016.github.io/patch/moai-v2.0-patch-v2.1-android.zip>Android版</a></li>
+			</ul>
+<br>
+			<div class=MstyComment>
+				【注意】<br>
+<br>
+				これらの修正パッチは Moai Ver2.0 のフォルダに対してのみ適用できます.<br>
+				Ver1.1.8 以前のものには適用できません.<br>
+				またVer2.1以降のものにも適用することもできません(そもそもVer2.1へ変更するためのものですので、これは無意味です).<br>
+<br>
+				ここで言う Ver2.0 とは Ver2.0シリーズすべてを含みます.<br>
+				即ち、Ver2.0、Ver2.0.1、Ver2.0.2 ならばいずれも適用可能な対象となります.<br>
+			</div>
+			<br>
+			この修正パッチ内には、パッチ適用のためのスクリプトが用意されています.<br>
+			通常はそれを実行することで自動的に Moai Ver2.0 のフォルダを認識し、パッチが適用されます.<br>
+			以下の手順に従ってください.<br>
+<br>
+			<ol>
+				<li>まずMoaiが起動中の場合は、<b>必ず起動中のMoaiを一旦終了させておいてください</b>.<br>
+				そうしないと一部の実行形式のファイルにおいて「共有違反です」あるいは「ビージー(busy)」というメッセージが出て<br>
+				パッチの適用に失敗してしまいます.<br>
+				</li>
+				<br>
+				<li>ダウンロードしたzipファイルを、既にインストールされた Moai Ver2.0 のフォルダと同列の階層に置いて頂くのが<br>
+				一番わかりやすいかと思います.<br>
+				例えば、これから適用する予定の Moai Ver2.0のフォルダが C:\znk_project\moai-v2.0-win32 なら、<br>
+				windows版のパッチファイルを C:\znk_project\moai-v2.0-patch-v2.1-windows.zip に置きます.<br>
+				そこでこの zip ファイルを展開します.<br>
+				</li>
+				<br>
+				<li>zipを展開するとmoai-v2.0-patch-v2.1-windows というフォルダが出来上がると思います.<br>
+				そのフォルダ直下に apply_this_patch.bat または apply_this_patch.sh があることを確認してください.<br>
+				これがパッチ適用のためのスクリプトとなります.<br>
+				</li>
+				<br>
+				<li>Windowsの場合、「apply_this_patch.bat」をクリックして実行します.<br>
+				LinuxやCygwin、Androidの場合、同様に「apply_this_patch.sh」を実行します.<br>
+				即ちターミナルを開き、このファイルのあるフォルダまで移動して「sh apply_this_patch.sh」をコマンド入力し実行します.<br>
+				最後に「OK」と出ればパッチの適用は成功です.<br>
+				</li>
+<br>
+				<li>この時点で moai-<b>v2.0</b>-win32フォルダは、moai-<b>v2.1</b>-win32という名前に自動的に改名されていると思います.<br>
+				(ただし既に moai-v2.1-win32 というフォルダが存在する場合は、スクリプトはこの改名は行いません).<br>
+				一旦このフォルダ内に入り、moai.exe を再び起動します.<br>
+				Moaiのトップページ http://127.0.0.1:8124 にアクセスし、バージョンの表示が Ver2.1 になっていることを確認してください.<br>
+				( 一番上にある「Welcome to Moai+Easter World」と書かれている部分のすぐ右です ).<br>
+				万一 Ver2.1 になっていないならパッチ適用に失敗しています.<br>
+				もう一度試すか、下記に述べる手動で適用する方法を試すか、あるいはもうVer2.1を新規インストールして頂いた方が確実かもしれません.<br>
+				</li>
+			</ol>
+<br>
+			以上です.<br>
+<br>
+			<div class=MstyComment>
+				<b>【vtagファイルについて】</b><br>
+<br>
+				moaiフォルダ内には vtag ファイルというものが含まれており、このファイルの中身にバージョン番号が書かれてあります.<br>
+				Moaiの内部システム的にはこれを真のバージョン番号として認識しています.<br>
+			</div>
+<br>
+			<div class=MstyComment>
+				<b>【パッチ適用スクリプトはmoaiフォルダをどのようにして自動認識するのか】</b><br>
+<br>
+				パッチ適用スクリプトは親フォルダを順に上がっていき、moai-v2.0-{platform} という形式の名前のフォルダが存在するかを調べます.<br>
+				そのような名前のフォルダが見つかったら、さらにそのフォルダ内に target.myf ファイルが含まれているかどうかを確認し、<br>
+				それが存在するならば、それが適用先のmoaiフォルダと判断します.<br>
+			</div>
+<br>
+			ちなみにVer2.1で導入された新機能「Moaiアップグレード」は、WebブラウザのMoaiエンジン設定の画面より<br>
+			現在のMoaiが最新バージョンであるかを確認し、最新バージョンでなければ最新版の修正パッチを自動的にダウンロードし、<br>
+			上記の適用処理を自動的に行うものとなります.<br>
+			<br>
+			<div class=MstyComment>
+				<u><b>パッチを手動で適用する方法</b></u><br>
+				<br>
+				万一、付属のスクリプトがうまく機能しない場合や、そんなものには頼らないといった硬派な方は<br>
+				以下の方法より手動で適用することもできます.<br>
+<br>
+				<ol>
+					<li>まずMoaiが起動中の場合は、<b>必ず起動中のMoaiを一旦終了させておいてください</b>.<br>
+					そうしないと一部の実行形式のファイルにおいて「共有違反です」あるいは「ビージー(busy)」というメッセージが出て<br>
+					パッチの適用に失敗してしまいます.<br>
+					</li>
+					<br>
+					<li>ダウンロードしたzipファイルを、既にインストールされた Moai Ver2.0 のフォルダと同列の階層に置いて頂くのが<br>
+					一番わかりやすいかと思います.<br>
+					例えば、これからパッチを適用する予定の Moai Ver2.0のフォルダが C:\znk_project\moai-v2.0-win32 なら、<br>
+					windows版のパッチファイルを C:\znk_project\moai-v2.0-patch-v2.1-windows.zip に置きます.<br>
+					そこでこの zip ファイルを展開します.<br>
+					</li>
+					<br>
+					<li>zipを展開するとmoai-v2.0-patch-v2.1-windows というフォルダが出来上がると思います.<br>
+					このzipを展開したフォルダの中に moai-windows という名前のフォルダがあります.<br>
+					この中身は、新しく更新されたファイル群の集合となっています.<br>
+					よってこの中身をそのまま、これからパッチを適用する予定の Moai Ver2.0のフォルダへ上書きコピーしてください.<br>
+					</li>
+					<br>
+					<li>さらにzipを展開したフォルダの中に「moai-v2.1-common」というフォルダがあります.<br>
+					これも同様にその中身をMoai Ver2.0のフォルダへそのまま上書きコピーしてください.<br>
+					</li>
+<br>
+					<li>以上でフォルダの中身はすべてVer2.1のものになりました.<br>
+					このままでも構わないのですが、一応フォルダ名も moai-v2.0-win32 から moai-v2.1-win32 に変更しておいた方がよいでしょう.<br>
+					</li>
+				</ol>
+<br>
+				Windowsの例で示しましたが、他のプラットフォームでも同様です.<br>
+			</div>
+		</li>
+	</ul>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=Link></a>
+<u><b>
+リンク
+</b></u><br>
+<br>
+<ul>
+	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
+	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project>znk_project(github)</a></li>
+</ul><br>
+
+
+</body>
+</html>

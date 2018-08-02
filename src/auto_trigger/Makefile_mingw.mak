@@ -17,12 +17,12 @@ ABINAME=mingw$(MACHINE)$(DEBUG)
 O = .\out_dir\$(ABINAME)
 
 ifeq ($(DEBUG), d)
-COMPILER=gcc -Wall -Wstrict-aliasing=2 -g
+COMPILER=gcc -Wall -Wstrict-aliasing=2 -g 
 LINKER=gcc
 DLIBS_DIR=dlib\$(PLATFORM)_mingwd
 SLIBS_DIR=slib\$(PLATFORM)_mingwd
 else
-COMPILER=gcc -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG
+COMPILER=gcc -Wall -Wstrict-aliasing=2 -O2 -fno-strict-aliasing -Wno-uninitialized -DNDEBUG 
 LINKER=gcc
 DLIBS_DIR=dlib\$(PLATFORM)
 SLIBS_DIR=slib\$(PLATFORM)
@@ -43,6 +43,10 @@ OBJS0=\
 
 SUB_LIBS=\
 
+SUB_OBJS=\
+
+SUB_OBJS_ECHO=\
+
 PRODUCT_EXECS= \
 	__mkg_sentinel_target__ \
 	$(EXE_FILE0) \
@@ -62,7 +66,8 @@ $O:
 
 # Product files rule.
 $(EXE_FILE0): $(OBJS0) 
-	$(LINKER) -o $(EXE_FILE0)  $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk.a -lws2_32 
+	@echo $(LINKER) -o $(EXE_FILE0)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk.a -lws2_32 
+	@     $(LINKER) -o $(EXE_FILE0)  $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk.a -lws2_32 
 
 
 ##
@@ -105,9 +110,9 @@ install_data:
 
 # Install exec rule.
 install_exec: $(EXE_FILE0)
-	@if not exist ..\..\mkfsys @mkdir ..\..\mkfsys 
-	@if exist "$(EXE_FILE0)" @$(CP) /F "$(EXE_FILE0)" ..\..\mkfsys\ $(CP_END)
-	@for %%a in ( $(RUNTIME_FILES) ) do @if exist "%%a" @$(CP) /F "%%a" ..\..\mkfsys\ $(CP_END)
+	@if not exist ..\..\mkfsys\$(PLATFORM) @mkdir ..\..\mkfsys\$(PLATFORM) 
+	@if exist "$(EXE_FILE0)" @$(CP) /F "$(EXE_FILE0)" ..\..\mkfsys\$(PLATFORM)\ $(CP_END)
+	@for %%a in ( $(RUNTIME_FILES) ) do @if exist "%%a" @$(CP) /F "%%a" ..\..\mkfsys\$(PLATFORM)\ $(CP_END)
 
 # Install dlib rule.
 install_dlib:
@@ -121,7 +126,6 @@ install: all install_exec install_data
 
 # Clean rule.
 clean:
-	del /Q $O\ 
+	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-auto_trigger.o:

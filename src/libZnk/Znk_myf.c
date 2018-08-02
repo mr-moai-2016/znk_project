@@ -108,7 +108,8 @@ deleteMyfSection( void* elem )
 struct ZnkMyfImpl {
 	char       quote_begin_[ 32 ];
 	char       quote_end_[ 32 ];
-	char       nl_[ 32 ];
+	char       nl_[ 16 ];
+	char       missing_rhs_nl_[ 16 ];
 	/***
 	 * MyfSection格納および寿命管理用
 	 */
@@ -134,6 +135,7 @@ ZnkMyf_create( void )
 	myf->quote_begin_[ 0 ] = '\0';
 	myf->quote_end_[ 0 ]   = '\0';
 	ZnkS_copy_literal( myf->nl_, sizeof(myf->nl_), "\n" );
+	ZnkS_copy_literal( myf->missing_rhs_nl_, sizeof(myf->missing_rhs_nl_), "" );
 	myf->sec_ary_ = ZnkObjAry_create( deleteMyfSection );
 	myf->oos_ary_ = ZnkObjAry_create( deleteMyfSection );
 	/***
@@ -343,36 +345,52 @@ FUNC_ERROR:
  * -1: Error発生.
  */
 static bool
-gainQuotedOneElem( ZnkStr quoted_one, const char* sec_name, ZnkStr line, ZnkFile fp, size_t* count, ZnkStr lhs_tmp,
+gainQuotedOneElem( ZnkStr quoted_one, const char* sec_name, ZnkStr line, ZnkFile fp, size_t* count, ZnkStr rhs_tmp, const char* missing_rhs_nl,
 		const char* quote_begin, const char* quote_end, size_t quote_begin_leng, size_t quote_end_leng )
 {
 	/***
-	 * lhs_tmpの開始位置はquotedされていない区間内であることを前提とする.
+	 * rhs_tmpの開始位置はquotedされていない区間内であることを前提とする.
 	 */
 	const char* mistake_p;
 	const char* breath_end;
 
-	while( !ZnkStr_isBegin( lhs_tmp, quote_begin ) ){
-		const char* begin = strstr( ZnkStr_cstr(lhs_tmp), quote_begin );
+	//while( !ZnkStr_isBegin( rhs_tmp, quote_begin ) ){
+	while( true ){
+		const char* begin = strstr( ZnkStr_cstr(rhs_tmp), quote_begin );
 
 		if( begin ){
-			mistake_p = strchr( ZnkStr_cstr(lhs_tmp), '=' );
+			mistake_p = strchr( ZnkStr_cstr(rhs_tmp), '=' );
 			if( mistake_p && mistake_p < begin ){
 				goto MistakeDetection;
 			}
-			/* lhs_tmpにおける0位置が次のquote_begin開始位置になるように合わせておく */
-			ZnkStr_cut_front( lhs_tmp, begin-ZnkStr_cstr(lhs_tmp) );
+			/* rhs_tmpにおける0位置が次のquote_begin開始位置になるように合わせておく */
+			ZnkStr_cut_front( rhs_tmp, begin-ZnkStr_cstr(rhs_tmp) );
+			begin = ZnkStr_cstr(rhs_tmp);
+
+			/***
+			 * rhs_tmpがquote_beginを含むにも関わらず、それ以降にquote_endが見つからない場合、
+			 * chompNLしていた missing_rhs_nl を補填しなければならない.
+			 * 尚、ベクトル型の場合は、ここでの end の後ろにさらに次の quote_begin - quote_end が続く可能性があるが、
+			 * ここではそれらについては、敢えて無視しなければならない.
+			 * それらの検査とmissing_rhs_nlの付加処理に関しては次回のgainQuotedOneElemが行うべき仕事である.
+			 */
+			{
+				const char* end = strstr( begin, quote_end );
+				if( end == NULL ){
+					ZnkStr_add( rhs_tmp, missing_rhs_nl );
+				}
+			}
 			break;
 		}
 
-		breath_end = strchr( ZnkStr_cstr(lhs_tmp), '}' );
+		breath_end = strchr( ZnkStr_cstr(rhs_tmp), '}' );
 		if( breath_end ){
 	 		/* VarDirective終端を検出 */
 			return 0;
 		}
 
 		/***
-		 * lhs_tmp内にはquote_beginが存在しない.
+		 * rhs_tmp内にはquote_beginが存在しない.
 		 * さらにこれがまだVarDirective終端でなければこれを補充する必要がある.
 		 */
 		if( !ZnkStrFIO_fgets( line, 0, 4096, fp ) ){
@@ -382,21 +400,21 @@ gainQuotedOneElem( ZnkStr quoted_one, const char* sec_name, ZnkStr line, ZnkFile
 			return -1;
 		}
 		++*count;
-		ZnkStr_add( lhs_tmp, ZnkStr_cstr(line) );
+		ZnkStr_add( rhs_tmp, ZnkStr_cstr(line) );
 	}
 
 	/***
-	 * 以降lhs_tmpはquote_beginで始まる.
+	 * 以降rhs_tmpはquote_beginで始まる.
 	 */
 	while( true ){
-		const char* begin = ZnkStr_cstr( lhs_tmp ) + quote_begin_leng;
+		const char* begin = ZnkStr_cstr( rhs_tmp ) + quote_begin_leng;
 		const char* end   = strstr( begin, quote_end );
 
 		if( end ){
 			const char* next;
 			/***
 			 * quote_endを検出.
-			 * 現在ストックされているlhs_tmp内で賄える場合.
+			 * 現在ストックされているrhs_tmp内で賄える場合.
 			 */
 			ZnkStr_assign( quoted_one, 0, begin, end-begin );
 			next = end + quote_end_leng;
@@ -408,20 +426,20 @@ gainQuotedOneElem( ZnkStr quoted_one, const char* sec_name, ZnkStr line, ZnkFile
 					goto MistakeDetection;
 				}
 				/* begin以前までの処理済み部分をカット.
-				 * lhs_tmpにおける0位置が次のquote_begin開始位置になるように合わせておく */
-				ZnkStr_cut_front( lhs_tmp, begin-ZnkStr_cstr(lhs_tmp) );
+				 * rhs_tmpにおける0位置が次のquote_begin開始位置になるように合わせておく */
+				ZnkStr_cut_front( rhs_tmp, begin-ZnkStr_cstr(rhs_tmp) );
 			} else {
 				if( mistake_p ){
 					goto MistakeDetection;
 				}
 				/* 次のquote_beginが見つからなかった場合. */
 				/* next以前までの処理済み部分をカット. */
-				ZnkStr_cut_front( lhs_tmp, next-ZnkStr_cstr(lhs_tmp) );
+				ZnkStr_cut_front( rhs_tmp, next-ZnkStr_cstr(rhs_tmp) );
 			}
 			break;
 		}
 		/***
-		 * lhs_tmp内にはquote_endが存在しない.
+		 * rhs_tmp内にはquote_endが存在しない.
 		 * quote_endが検出されるまで、これを補充する必要がある.
 		 */
 		if( !ZnkStrFIO_fgets( line, 0, 4096, fp ) ){
@@ -431,7 +449,7 @@ gainQuotedOneElem( ZnkStr quoted_one, const char* sec_name, ZnkStr line, ZnkFile
 			return -1;
 		}
 		++*count;
-		ZnkStr_add( lhs_tmp, ZnkStr_cstr(line) );
+		ZnkStr_add( rhs_tmp, ZnkStr_cstr(line) );
 	}
 	return 1;
 
@@ -443,12 +461,12 @@ MistakeDetection:
 	/* Unexpected '=' */
 	Znk_printf_e( "ZnkMyf_load : Unexpected '=' in SectionVars %s : line:%zu End of this VarDirective may be broken.\n",
 			sec_name, *count );
-	Znk_printf_e( "            : lhs_tmp=[%s]\n", ZnkStr_cstr(lhs_tmp) );
+	Znk_printf_e( "            : rhs_tmp=[%s]\n", ZnkStr_cstr(rhs_tmp) );
 	return -1;
 }
 static bool
 parseVarDirective( ZnkVarpAry vars, const char* sec_name, ZnkStr line,
-		ZnkFile fp, const char* nl, size_t* count, ZnkStr lhs_tmp,
+		ZnkFile fp, const char* nl, size_t* count, ZnkStr rhs_tmp,
 		const char* quote_begin, const char* quote_end, size_t quote_begin_leng, size_t quote_end_leng )
 {
 	size_t key_begin; size_t key_end;
@@ -473,13 +491,12 @@ parseVarDirective( ZnkVarpAry vars, const char* sec_name, ZnkStr line,
 	 * まずnameを""として値だけ登録し、すぐ後でnameを設定.
 	 */
 	varp = ZnkVarp_create( "", "", 0, ZnkPrim_e_None, NULL );
-	//ZnkVar_set_val_Str( varp, p+val_begin, val_end-val_begin );
 	ZnkVarpAry_push_bk( vars, varp );
 	ZnkStr_assign( varp->name_, 0, p+key_begin, key_end-key_begin );
 
 
-	ZnkStr_assign( lhs_tmp, 0, p+val_begin, val_end-val_begin );
-	if( ZnkStr_isBegin( lhs_tmp, "{" ) ){
+	ZnkStr_assign( rhs_tmp, 0, p+val_begin, val_end-val_begin );
+	if( ZnkStr_isBegin( rhs_tmp, "{" ) ){
 		/* ベクトル型 */
 		ZnkStr quoted_one = ZnkStr_new( "" );
 		ZnkStrAry sda;
@@ -487,7 +504,7 @@ parseVarDirective( ZnkVarpAry vars, const char* sec_name, ZnkStr line,
 		sda = ZnkVar_str_ary( varp );
 
 		while( true ){
-			state = gainQuotedOneElem( quoted_one, sec_name, line, fp, count, lhs_tmp,
+			state = gainQuotedOneElem( quoted_one, sec_name, line, fp, count, rhs_tmp, nl,
 					quote_begin, quote_end, quote_begin_leng, quote_end_leng );
 			if( state != 1 ){
 				break;
@@ -503,7 +520,7 @@ parseVarDirective( ZnkVarpAry vars, const char* sec_name, ZnkStr line,
 		ZnkStr str;
 		ZnkPrim_compose( &varp->prim_, ZnkPrim_e_Str, NULL );
 		str = ZnkVar_str( varp );
-		state = gainQuotedOneElem( str, sec_name, line, fp, count, lhs_tmp,
+		state = gainQuotedOneElem( str, sec_name, line, fp, count, rhs_tmp, nl,
 				quote_begin, quote_end, quote_begin_leng, quote_end_leng );
 		if( state != 1 ){
 			return false;
@@ -513,13 +530,12 @@ parseVarDirective( ZnkVarpAry vars, const char* sec_name, ZnkStr line,
 }
 static bool
 parsePrimDirective( ZnkPrimpAry prims, const char* sec_name, ZnkStr line,
-		ZnkFile fp, const char* nl, size_t* count, ZnkStr lhs_tmp,
+		ZnkFile fp, const char* nl, size_t* count, ZnkStr rhs_tmp,
 		const char* quote_begin, const char* quote_end, size_t quote_begin_leng, size_t quote_end_leng )
 {
 	size_t val_begin; size_t val_end;
 	ZnkPrimp prim = NULL;
 	const char* p      = ZnkStr_cstr(line);
-	//size_t      p_leng = ZnkStr_leng(line);
 	int  state = -1;
 
 	ZnkS_find_side_skip( ZnkStr_cstr(line), 0, Znk_NPOS,
@@ -529,8 +545,8 @@ parsePrimDirective( ZnkPrimpAry prims, const char* sec_name, ZnkStr line,
 	prim = ZnkPrimp_create( ZnkPrim_e_None, NULL );
 	ZnkPrimpAry_push_bk( prims, prim );
 
-	ZnkStr_assign( lhs_tmp, 0, p+val_begin, val_end-val_begin );
-	if( ZnkStr_isBegin( lhs_tmp, "{" ) ){
+	ZnkStr_assign( rhs_tmp, 0, p+val_begin, val_end-val_begin );
+	if( ZnkStr_isBegin( rhs_tmp, "{" ) ){
 		/* ベクトル型 */
 		ZnkStr quoted_one = ZnkStr_new( "" );
 		ZnkStrAry sda;
@@ -538,7 +554,7 @@ parsePrimDirective( ZnkPrimpAry prims, const char* sec_name, ZnkStr line,
 		sda = ZnkPrim_strAry( prim );
 
 		while( true ){
-			state = gainQuotedOneElem( quoted_one, sec_name, line, fp, count, lhs_tmp,
+			state = gainQuotedOneElem( quoted_one, sec_name, line, fp, count, rhs_tmp, nl,
 					quote_begin, quote_end, quote_begin_leng, quote_end_leng );
 			if( state != 1 ){
 				break;
@@ -554,7 +570,7 @@ parsePrimDirective( ZnkPrimpAry prims, const char* sec_name, ZnkStr line,
 		ZnkStr str;
 		ZnkPrim_compose( prim, ZnkPrim_e_Str, NULL );
 		str = ZnkPrim_str( prim );
-		state = gainQuotedOneElem( str, sec_name, line, fp, count, lhs_tmp,
+		state = gainQuotedOneElem( str, sec_name, line, fp, count, rhs_tmp, nl,
 				quote_begin, quote_end, quote_begin_leng, quote_end_leng );
 		if( state != 1 ){
 			return false;
@@ -666,7 +682,7 @@ parseSectionVars( ZnkMyf myf, const char* p, size_t p_leng,
 	const size_t quote_end_leng   = strlen( quote_end );
 	const char* nl = myf->nl_;
 	ZnkMyfSection sec;
-	ZnkStr lhs_tmp = ZnkStr_new( "" );
+	ZnkStr rhs_tmp = ZnkStr_new( "" );
 	bool result = false;
 
 	/***
@@ -708,7 +724,7 @@ parseSectionVars( ZnkMyf myf, const char* p, size_t p_leng,
 			break;
 		}
 		if( !parseVarDirective( sec->u_.vars_, ZnkStr_cstr(sec->name_), line,
-					fp, nl, count, lhs_tmp,
+					fp, nl, count, rhs_tmp,
 					quote_begin, quote_end, quote_begin_leng, quote_end_leng ) )
 		{
 			goto FUNC_END;
@@ -717,7 +733,7 @@ parseSectionVars( ZnkMyf myf, const char* p, size_t p_leng,
 	result = true;
 
 FUNC_END:
-	ZnkStr_delete( lhs_tmp );
+	ZnkStr_delete( rhs_tmp );
 	return result;
 }
 static bool
@@ -732,7 +748,7 @@ parseSectionPrims( ZnkMyf myf, const char* p, size_t p_leng,
 	const size_t quote_end_leng   = strlen( quote_end );
 	const char* nl = myf->nl_;
 	ZnkMyfSection sec;
-	ZnkStr lhs_tmp = ZnkStr_new( "" );
+	ZnkStr rhs_tmp = ZnkStr_new( "" );
 	bool result = false;
 
 	/***
@@ -774,7 +790,7 @@ parseSectionPrims( ZnkMyf myf, const char* p, size_t p_leng,
 			break;
 		}
 		if( !parsePrimDirective( sec->u_.prims_, ZnkStr_cstr(sec->name_), line,
-					fp, nl, count, lhs_tmp,
+					fp, nl, count, rhs_tmp,
 					quote_begin, quote_end, quote_begin_leng, quote_end_leng ) )
 		{
 			goto FUNC_END;
@@ -783,7 +799,7 @@ parseSectionPrims( ZnkMyf myf, const char* p, size_t p_leng,
 	result = true;
 
 FUNC_END:
-	ZnkStr_delete( lhs_tmp );
+	ZnkStr_delete( rhs_tmp );
 	return result;
 }
 

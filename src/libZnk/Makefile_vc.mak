@@ -41,6 +41,8 @@ include Makefile_version.mak
 BASENAME0=gslconv
 EXE_FILE0=$O\gslconv.exe
 OBJS0=\
+	$O\minizip/ioapi.obj \
+	$O\minizip/unzip.obj \
 	$O\Znk_algo_vec.obj \
 	$O\Znk_bfr.obj \
 	$O\Znk_bfr_ary.obj \
@@ -61,6 +63,7 @@ OBJS0=\
 	$O\Znk_htp_hdrs.obj \
 	$O\Znk_htp_post.obj \
 	$O\Znk_htp_rar.obj \
+	$O\Znk_htp_sbio.obj \
 	$O\Znk_htp_util.obj \
 	$O\Znk_liba_scan.obj \
 	$O\Znk_math.obj \
@@ -103,7 +106,9 @@ OBJS0=\
 	$O\Znk_varp_ary.obj \
 	$O\Znk_vsnprintf.obj \
 	$O\Znk_yy_base.obj \
+	$O\Znk_zip.obj \
 	$O\Znk_zlib.obj \
+	$O\minizip/iowin32.obj \
 	$O\gslconv.obj \
 
 BASENAME1=Znk
@@ -112,6 +117,8 @@ DLIB_FILE1=$O\$(DLIB_NAME1)
 ILIB_FILE1=$O\Znk-$(DL_VER).imp.lib
 SLIB_FILE1=$O\Znk.lib
 OBJS1=\
+	$O\minizip/ioapi.obj \
+	$O\minizip/unzip.obj \
 	$O\Znk_algo_vec.obj \
 	$O\Znk_bfr.obj \
 	$O\Znk_bfr_ary.obj \
@@ -132,6 +139,7 @@ OBJS1=\
 	$O\Znk_htp_hdrs.obj \
 	$O\Znk_htp_post.obj \
 	$O\Znk_htp_rar.obj \
+	$O\Znk_htp_sbio.obj \
 	$O\Znk_htp_util.obj \
 	$O\Znk_liba_scan.obj \
 	$O\Znk_math.obj \
@@ -174,11 +182,19 @@ OBJS1=\
 	$O\Znk_varp_ary.obj \
 	$O\Znk_vsnprintf.obj \
 	$O\Znk_yy_base.obj \
+	$O\Znk_zip.obj \
 	$O\Znk_zlib.obj \
+	$O\minizip/iowin32.obj \
 	$O\dll_main.obj \
 
 SUB_LIBS=\
 	zlib/$O/zlib.lib \
+
+SUB_OBJS=\
+	zlib/$O/*.obj \
+
+SUB_OBJS_ECHO=\
+	zlib/$O/{[objs]} \
 
 PRODUCT_EXECS= \
 	__mkg_sentinel_target__ \
@@ -198,19 +214,24 @@ RUNTIME_FILES= \
 
 
 # Entry rule.
-all: $O submkf_zlib $(EXE_FILE0) $(DLIB_FILE1) 
+all: $O\minizip $O submkf_zlib $(EXE_FILE0) $(DLIB_FILE1) $(SLIB_FILE1) 
 
 # Mkdir rule.
+$O\minizip:
+	if not exist $O\minizip mkdir $O\minizip
+
 $O:
 	if not exist $O mkdir $O
 
 
 # Product files rule.
 $(EXE_FILE0): $(OBJS0) 
-	$(LINKER) /OUT:$(EXE_FILE0)  $(OBJS0) $(SUB_LIBS)  ws2_32.lib 
+	@echo $(LINKER) /OUT:$(EXE_FILE0)  {[objs]} $(SUB_LIBS)  ws2_32.lib 
+	@     $(LINKER) /OUT:$(EXE_FILE0)  $(OBJS0) $(SUB_LIBS)  ws2_32.lib 
 
 $(SLIB_FILE1): $(OBJS1)
-	LIB /NOLOGO /OUT:$(SLIB_FILE1) $(OBJS1) $(SUB_LIBS)
+	@echo LIB /NOLOGO /OUT:$(SLIB_FILE1) {[objs]} $(SUB_LIBS)
+	@     LIB /NOLOGO /OUT:$(SLIB_FILE1) $(OBJS1) $(SUB_LIBS)
 
 gsl.myf: $(SLIB_FILE1)
 	@if exist $O\gslconv.exe $O\gslconv.exe -g gsl.myf $(SLIB_FILE1) $(MACHINE)
@@ -219,10 +240,17 @@ gsl.def: gsl.myf
 	@if exist $O\gslconv.exe $O\gslconv.exe -d gsl.myf gsl.def
 
 $(DLIB_FILE1): $(OBJS1) $(SLIB_FILE1) gsl.def
-	$(LINKER) /DLL /OUT:$(DLIB_FILE1) /IMPLIB:$(ILIB_FILE1) $(OBJS1) $(SUB_LIBS)  ws2_32.lib  /DEF:gsl.def
+	@echo $(LINKER) /DLL /OUT:$(DLIB_FILE1) /IMPLIB:$(ILIB_FILE1) {[objs]} $(SUB_LIBS)  ws2_32.lib  /DEF:gsl.def
+	@     $(LINKER) /DLL /OUT:$(DLIB_FILE1) /IMPLIB:$(ILIB_FILE1) $(OBJS1) $(SUB_LIBS)  ws2_32.lib  /DEF:gsl.def
 
 
 # Suffix rule.
+{$S\minizip}.c{$O\minizip}.obj:
+	$(COMPILER) -I$S $(INCLUDE_FLAG) -Fo$@ -c $<
+
+{$S\minizip}.cpp{$O\minizip}.obj:
+	$(COMPILER) -I$S $(INCLUDE_FLAG) -Fo$@ -c $<
+
 {$S}.c{$O}.obj:
 	$(COMPILER) -I$S $(INCLUDE_FLAG) -Fo$@ -c $<
 
@@ -251,9 +279,9 @@ install_data:
 
 # Install exec rule.
 install_exec: $(EXE_FILE0)
-	@if not exist ..\..\mkfsys @mkdir ..\..\mkfsys 
-	@if exist "$(EXE_FILE0)" @$(CP) /F "$(EXE_FILE0)" ..\..\mkfsys\ $(CP_END)
-	@for %%a in ( $(RUNTIME_FILES) ) do @if exist "%%a" @$(CP) /F "%%a" ..\..\mkfsys\ $(CP_END)
+	@if not exist ..\..\mkfsys\$(PLATFORM) @mkdir ..\..\mkfsys\$(PLATFORM) 
+	@if exist "$(EXE_FILE0)" @$(CP) /F "$(EXE_FILE0)" ..\..\mkfsys\$(PLATFORM)\ $(CP_END)
+	@for %%a in ( $(RUNTIME_FILES) ) do @if exist "%%a" @$(CP) /F "%%a" ..\..\mkfsys\$(PLATFORM)\ $(CP_END)
 
 # Install dlib rule.
 install_dlib: $(DLIB_FILE1)
@@ -271,7 +299,7 @@ install: all install_slib install_dlib install_exec
 
 # Clean rule.
 clean:
-	del /Q $O\ 
+	rmdir /S /Q $O\ 
 	@echo === Entering [zlib] ===
 	cd zlib
 	nmake -f Makefile_vc.mak clean
@@ -280,8 +308,9 @@ clean:
 
 
 # Src and Headers Dependency
-dll_main.obj:
 gslconv.obj: Znk_myf.h Znk_str_ary.h Znk_str_ex.h Znk_str_fio.h Znk_stdc.h Znk_missing_libc.h Znk_dir.h Znk_str_path.h Znk_liba_scan.h
+minizip/ioapi.obj: minizip/ioapi.h
+minizip/unzip.obj: minizip/unzip.h minizip/crypt.h
 Znk_algo_vec.obj: Znk_algo_vec.h
 Znk_bfr.obj: Znk_bfr.h Znk_stdc.h
 Znk_bfr_ary.obj: Znk_bfr_ary.h
@@ -301,7 +330,8 @@ Znk_err.obj: Znk_err.h Znk_mutex.h Znk_str.h
 Znk_fdset.obj: Znk_fdset.h Znk_stdc.h
 Znk_htp_hdrs.obj: Znk_htp_hdrs.h Znk_s_base.h Znk_varp_ary.h Znk_missing_libc.h
 Znk_htp_post.obj: Znk_htp_post.h Znk_str.h Znk_missing_libc.h
-Znk_htp_rar.obj: Znk_htp_rar.h Znk_net_base.h Znk_socket.h Znk_cookie.h Znk_s_base.h Znk_str_ary.h Znk_stdc.h Znk_mem_find.h Znk_sys_errno.h Znk_str_ex.h Znk_stock_bio.h Znk_zlib.h Znk_def_util.h
+Znk_htp_rar.obj: Znk_htp_rar.h Znk_htp_sbio.h Znk_socket.h Znk_cookie.h Znk_s_base.h Znk_str_ary.h Znk_stdc.h Znk_sys_errno.h Znk_stock_bio.h
+Znk_htp_sbio.obj: Znk_htp_sbio.h Znk_net_base.h Znk_cookie.h Znk_s_base.h Znk_str_ary.h Znk_stdc.h Znk_mem_find.h Znk_sys_errno.h Znk_stock_bio.h Znk_zlib.h Znk_def_util.h
 Znk_htp_util.obj: Znk_htp_util.h Znk_str_ex.h Znk_mem_find.h
 Znk_liba_scan.obj: Znk_stdc.h Znk_s_base.h Znk_str.h Znk_str_ary.h Znk_myf.h Znk_bfr.h Znk_vpod.h
 Znk_math.obj: Znk_math.h
@@ -344,4 +374,6 @@ Znk_var.obj: Znk_var.h Znk_stdc.h
 Znk_varp_ary.obj: Znk_varp_ary.h Znk_s_base.h
 Znk_vsnprintf.obj: Znk_vsnprintf.h Znk_stdc.h Znk_def_util.h Znk_tostr_int.h Znk_tostr_double.h
 Znk_yy_base.obj: Znk_yy_base.h
+Znk_zip.obj: Znk_zip.h Znk_stdc.h Znk_missing_libc.h Znk_dir.h minizip/unzip.h minizip/iowin32.h
 Znk_zlib.obj: Znk_zlib.h Znk_dlhlp.h Znk_stdc.h
+minizip/iowin32.obj: minizip/ioapi.h minizip/iowin32.h

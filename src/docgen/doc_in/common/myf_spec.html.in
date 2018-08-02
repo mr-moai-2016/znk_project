@@ -1,0 +1,258 @@
+@def_quote [' ']
+
+@@V config
+doc_title = ['myfファイルの仕様']
+author = ['全角']
+update = ['2018/08/01']
+category_path = {}
+urp           = ['/common/myf_spec.html']
+nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['table'] ['tr'] ['td'] }
+@@.
+
+@@L AtFirst
+この記事では、myfファイルのフォーマット仕様について説明します.
+@@.
+
+@@P Index
+{ ['#def_quote']     ['クォーティング文字列の定義'] }
+{ ['#section_lines'] ['行配列セクション(SectionLines)について'] }
+{ ['#section_vars']  ['変数セクション(SectionVars)について'] }
+{ ['#section_prims'] ['プリミティブセクション(SectionPrims)について'] }
+{ ['#outof_section'] ['セクション外領域(OutOfSection)について'] }
+{ ['#special_empty'] ['特殊空文字について'] }
+@@.
+
+
+@@L def_quote
+	ファイルの一番初めの行に <b>@def_quote</b>で始まる行を記述することでクォーティング文字列を宣言できる.
+	この指定がない場合、以下が指定されたのと同等とみなす.
+
+	<div class=MstyComment>
+		<div class=MstyCode>
+			@def_quote [' ']
+		</div>
+	</div>
+
+	このとき引数としてホワイトスペースで区切られた文字列を２つ取り、これはユーザが自由に指定できる.
+	( ただしその長さはそれぞれ31文字以下でなければならない. これ以上長いものを指定した場合は途中で打ち切られる )
+	例えば、上記の <b>@def_quote [' ']</b> という記述は、クォーティングの開始記号として <b>['</b> を以降の行で用い、
+	同様にクォーティングの終了記号として <b>']</b> を以降の行で用いることを宣言する.
+	
+	このクォーティングは複数行に跨るデータを囲うこともできる.
+
+	<div class=MstyComment>
+		<b>例</b>
+
+		text = ['なるほど完璧な作戦っスねーーーっ
+		不可能だという点に目をつぶればよぉ～']
+	</div>
+
+	またこれで囲まれたデータはその中にたとえいかなる特殊文字が含まれていようとも、その文字がそのまま扱われる.
+	(正規表現などにみられるエスケープ文字などといった邪悪なものは存在しない).
+	従ってこの場合、' " \ などを使った典型パターンもそのまま記述でき、SJISコードの「表」や「ソ」などを含む日本語も安心して使える.
+
+	この宣言はファイルの最初の行において一度だけ行うことができる.
+	仮に２行目以降宣言してもそれは単に読み飛ばされる.
+@@.
+
+@@L section_lines
+	行頭の<b>@@L name</b>は行配列セクションの開始を意味する.
+	以降簡潔のため、これをSectionLinesと呼ぶ.
+	nameの部分には、このSectionLinesの名前を記述する.
+	nameの部分は非ホワイトスペース文字を使用可能である.
+	行頭の<b>@@.</b>のみの行に至ることでSectionLinesは終了となる.
+	
+	SectionLinesの開始行と終了行の間に挟まれた行において文字列の配列データを記述できる.
+	このとき一行につき一つの要素が対応する. この値はクォーティング文字列で囲わないこと.
+	(囲ったとしてもそのクォーティング文字列はそのままデータとみなされる)
+
+	<div class=MstyComment>
+		<b>例</b>
+
+		@@L starting_hosts
+		http://www.google.com
+		http://www.yahoo.co.jp
+		@@.
+	</div>
+    
+	データ行の行頭に#を記述することでその部分をコメント化することもできる.
+
+	<div class=MstyComment>
+		<b>例</b>
+
+		@@L starting_hosts
+		http://www.google.com
+		#http://www.yahoo.co.jp
+		http://www.youtube.com
+		@@.
+	</div>
+
+	ただしこのようなコメントは transientである.
+	つまり一度myfをloadしてそれを同ファイルへsaveするようなプログラムでは跡形もなく消去される.
+	上の例ではsaveしたmyf内では # で始まる行は消えてしまうことだろう.
+@@.
+
+
+@@L section_vars
+	行頭の<b>@@V name</b>は変数セクションの開始を意味する.
+	以降簡潔のため、これをSectionVarsと呼ぶ.
+	nameの部分にはSectionVarsの名前を記述する.
+	nameの部分は非ホワイトスペース文字を使用可能である.
+	行頭の<b>@@.</b>のみの行に至ることでSectionVarsは終了となる.
+	
+	SectionVarsの開始行と終了行の間に挟まれた行を変数代入行と呼ぶ.
+	これは以下の形式となる.
+
+	<div class=MstyComment>
+		var_name = quoted_value
+		または
+		var_name = { quoted_value ... }
+	</div>
+
+	quoted_valueにおいて値を記述するが、この値は必ずクォーティング文字列で囲う必要がある.
+	また { quoted_value ... } においては quoted_value の配列を記述できる.
+
+	<div class=MstyComment>
+		<b>例</b>
+
+		@@V last_access
+		date = ['2016/03/25']
+		time = ['23:55:01']
+		@@.
+	</div>
+
+	<div class=MstyComment>
+		<b>例</b>
+
+		@@V img_extensions
+		list = { ['jpg'] ['png'] ['gif'] }
+		@@.
+	</div>
+
+	変数代入行において行頭に#を記述することでその部分をコメント化することもできる.
+
+	<div class=MstyComment>
+		<b>例</b>
+
+		@@V last_access
+		#date = ['2016/03/25']
+		date = ['2016/03/26']
+		#time = ['23:55:01']
+		time = ['01:03:04']
+		@@.
+	</div>
+
+	ただしこのようなコメントは transientである.
+	つまり一度myfをloadしてそれを同ファイルへsaveするようなプログラムでは跡形もなく消去される.
+	上の例ではsaveしたmyf内では # で始まる行は消えてしまうことだろう.
+@@.
+
+
+@@L section_prims
+	行頭の<b>@@P name</b>はプリミティブセクションの開始を意味する.
+	以降簡潔のため、これをSectionPrimsと呼ぶ.
+	nameの部分にはSectionPrimsの名前を記述する.
+	nameの部分は非ホワイトスペース文字を使用可能である.
+	行頭の<b>@@.</b>のみの行に至ることでSectionPrimsは終了となる.
+	
+	SectionPrimsの開始行と終了行の間に挟まれた行をプリミティブ行と呼ぶ.
+	これは以下の形式となる.
+
+	<div class=MstyComment>
+		quoted_value
+		または
+		{ quoted_value ... }
+	</div>
+
+	quoted_valueにおいて値を記述するが、この値は必ずクォーティング文字列で囲う必要がある.
+	また { quoted_value ... } においては quoted_value の配列を記述できる.
+
+	<div class=MstyComment>
+		<b>例</b>
+
+		@@P last_access
+		['Zenkaku']
+		['2016/03/25']
+		['23:55:01']
+		@@.
+	</div>
+
+	<div class=MstyComment>
+		<b>例</b>
+
+		@@P img_infos
+		{ ['jpg'] ['JPEGフォーマット'] }
+		{ ['png'] ['PNGフォーマット'] }
+		{ ['gif'] ['GIFアニメーション'] }
+		@@.
+	</div>
+
+	プリミティブ行において行頭に#を記述することでその部分をコメント化することもできる.
+
+	<div class=MstyComment>
+		<b>例</b>
+
+		@@P last_access
+		# ['Zenkaku']
+		['2016/03/25']
+		['23:55:01']
+		@@.
+	</div>
+
+	ただしこのようなコメントは transientである.
+	つまり一度myfをloadしてそれを同ファイルへsaveするようなプログラムでは跡形もなく消去される.
+	上の例ではsaveしたmyf内では # で始まる行は消えてしまうことだろう.
+@@.
+
+
+@@L outof_section
+	SectionLines、SectionVars、SectionPrims、これら３つ以外の領域においては、myfパーサは基本的に無視する.
+	この部分をOutOfSectionと呼ぶ.
+	従って、この部分にはコメントなどを記述しておくこともできる.
+	このOutOfSectionについては、ZnkMyf_loadを行ったときに内容が記録され、
+	これをZnkMyf_saveで保存したときにその内容もそのまま書き出される.
+	(load =&gt; saveといった流れでこの部分の内容は失われない)
+	
+	OutOfSection領域であっても、<b>@def_quote</b>で始まる最初の行は特別な意味を持つ.
+	これについては、上で述べたとおりである.
+@@.
+
+
+@@L special_empty
+	これは滅多に登場しない例外的な場合に備えた仕様である.
+	
+	行頭が<b>@@^</b>の場合、myfの字句解析器はクォーティングされている場合を除きこれを無条件に空文字とみなす.
+	myfではこれを特殊空文字と呼ぶ.
+	例えば、以下にある行頭の特殊記号列を本当にデータとしてそのまま扱いたい場合どうすればよいだろうか？
+	(そんなことは滅多にないだろうが)
+
+	<div class=MstyComment>
+		# ...
+		@@L ...
+		@@V ...
+		@@.
+		@@^ ...
+	</div>
+
+	特殊空文字を用いれば、上記を以下のように記述することでこれに対処できる.
+
+	<div class=MstyComment>
+		@@^# ...
+		@@^@@L ...
+		@@^@@V ...
+		@@^@@.
+		@@^@@^ ...
+	</div>
+
+	このあたりは仕様からエスケープシーケンスを排除した代償が間接的に現れているが
+	こんな記号列を実用上のデータで扱う機会は滅多にないということでよしとしよう.
+	尚、行頭以外に<b>@@^</b>が出現した場合は、空文字ではなくそのまま扱われる.
+
+	以上
+@@.
+
+@@P Link
+{ ['#TopBar'] ['一番上へ'] }
+{ ['https://mr-moai-2016.github.io'] ['Moaiドキュメント(オンライン)'] }
+{ ['https://github.com/mr-moai-2016/znk_project'] ['znk_project(github)'] }
+@@.

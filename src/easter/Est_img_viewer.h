@@ -7,8 +7,14 @@
 
 Znk_EXTERN_C_BEGIN
 
-void
-EstImgViewer_makeTopbarUI_forLoading( ZnkStr topbar_ui, bool is_video );
+typedef enum {
+	 EstViewerType_e_Img = 0
+	,EstViewerType_e_Video
+	,EstViewerType_e_Data
+} EstViewerType;
+
+//void
+//EstImgViewer_makeTopbarUI_forLoading2( ZnkStr topbar_ui, EstViewerType viewer_type );
 
 void
 EstImgViewer_makeNowLoading( ZnkStr ans, RanoTextType txt_type, const char* result_filename );

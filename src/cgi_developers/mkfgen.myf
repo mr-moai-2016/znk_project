@@ -4,7 +4,7 @@
 my_libs_root = ['..']
 template_dir = ['../../mkfsys/template']
 install_dir = ['../../moai-v$(REL_VER)-$(PLATFORM)/cgis/cgi_developers/protected']
-install_data_dir = ['../../moai-v$(REL_VER)-$(PLATFORM)/cgis/cgi_developers/publicbox']
+install_data_dir = ['../../moai-v$(REL_VER)-$(PLATFORM)/cgis/cgi_developers']
 special_exe_sfx = ['cgi']
 runtime_install = ['false']
 @@.
@@ -65,10 +65,12 @@ exec progress progress.c
 @@.
 
 @@L install_data_list
-*.c
-*.cpp
-*.html
-*.js
+*.c    publicbox
+*.cpp  publicbox
+*.html publicbox
+*.js   publicbox
+*.go   publicbox
+*.go   protected
 @@.
 
 @@L ignore_list

@@ -7,7 +7,7 @@
 Znk_EXTERN_C_BEGIN
 
 void
-EstFilter_main( const char* result_file, const char* src, const char* target, RanoTextType txt_type, ZnkStr console_msg, bool save_img_cache );
+EstFilter_main( const char* result_file, const char* src, const char* target, RanoTextType txt_type, ZnkStr console_msg, bool save_img_cache, bool is_https );
 
 Znk_EXTERN_C_END
 

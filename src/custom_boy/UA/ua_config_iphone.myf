@@ -108,7 +108,24 @@
 ['Mobile/8L1']
 @@.
 
+@@L futaber
+['futaber 3.5/iPhone SE/11.4']
+['futaber 3.5/iPhone 5/9.3.1']
+['futaber 4.0/iPhone 6/11.4']
+['futaber 4.0/iPhone 6s/11.4']
+['futaber 4.0/iPhone 7 Plus/10.3.3']
+['futaber 4.0/iPhone 8/11.4']
+['futaber 4.0/iPhone SE/10.3.3']
+['futaber 4.0/iPhone SE/11.4']
+['futaber 4.0/iPhone X/11.4']
+['futaber 3.5/iPad mini/9.3.5']
+['futaber 4.0/iPad Pro 10.5-inch/11.3']
+['futaber 4.0/iPad Pro 12.9-inch/11.4.1']
+['futaber 4.0/iPad Air 2/10.3.2']
+@@.
+
 @@L iphone
+['$[futaber]$'] *0.1
 ['$[moz5]$ ($[platform]$) AppleWebKit/602.3.12$[s]$ ($[khtml]$) Version/10.0$[ss]$ $[mobile_info]$ Safari/602.1']
 ['$[moz5]$ ($[platform]$) AppleWebKit/602.2.14$[s]$ ($[khtml]$) Version/10.0$[ss]$ $[mobile_info]$ Safari/602.1']
 ['$[moz5]$ ($[platform]$) AppleWebKit/602.1.50$[s]$ ($[khtml]$) Version/10.0$[ss]$ $[mobile_info]$ Safari/602.1']

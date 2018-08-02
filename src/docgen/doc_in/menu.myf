@@ -1,0 +1,73 @@
+@def_quote [' ']
+
+@@V config
+title_author     = ['記事担当者']
+title_update     = ['最終更新日']
+title_atfirst    = ['はじめに']
+title_index      = ['目次']
+title_link       = ['リンク']
+msg_backto_index = ['目次に戻る']
+@@.
+
+@@P root
+{ ['/']  ['トップページ'] }
+{ ['/moai2.0/index.html']        ['ユーザーマニュアル']     ['moai2_0_user'] }
+{ ['/moai2.0/index_expert.html'] ['エキスパートマニュアル'] ['moai2_0_exp'] }
+{ ['/announcement.html']         ['アナウンスメント'] }
+{ ['/FAQ.html']                  ['FAQ'] }
+@@.
+
+@@P moai2_0_user
+{ ['/moai2.0/index.html']            ['ご案内'] }
+{ ['/moai2.0/install.html']          ['インストールガイド'] }
+{ ['/moai2.0/moai_feature.html']     ['Moaiの特徴'] }
+{ ['/moai2.0/easter_reference.html'] ['Easter']           ['easter'] }
+{ ['/moai2.0/virtual_users.html']    ['VirtualUSERS'] }
+{ ['/moai2.0/upgrade.html']          ['Moaiのアップグレード方法'] }
+@@.
+
+@@P moai2_0_exp
+{ ['/moai2.0/index_expert.html']        ['ご案内'] }
+{ ['/moai2.0/moai_reference.html']      ['Moaiエンジン']        ['moai_engine'] }
+{ ['/moai2.0/customboy_reference.html'] ['CustomBoyエンジン']   ['customboy'] }
+{ ['/moai2.0/how_to_compile.html']      ['HowToコンパイル'] }
+{ ['/moai2.0/moai_cgi_developers.html'] ['Moai CGI Developers'] ['moai_cgi_developers'] }
+@@.
+
+@@P moai1_1
+{ ['/moai1.1/install.html']        ['インストールガイド'] }
+{ ['/moai1.1/index.html']          ['Moaiの特徴'] }
+{ ['/moai1.1/moai_reference.html'] ['Moaiリファレンス'] }
+{ ['/moai1.1/local_proxy.html']    ['ローカルプロキシ'] }
+{ ['/moai1.1/how_to_compile.html'] ['HowToコンパイル'] }
+{ ['/moai1.1/hacking.html']        ['ハッキング'] }
+@@.
+
+@@P moai_engine
+{ ['/moai2.0/moai_reference.html']   ['エンジンの詳細'] }
+{ ['/moai2.0/moai_filter.html']      ['フィルターの詳細'] }
+{ ['/moai2.0/moai_local_proxy.html'] ['ローカルプロキシとしての使い方'] }
+{ ['/moai2.0/hacking.html']          ['プラグイン開発のためのヒント'] }
+@@.
+
+@@P easter
+{ ['/moai2.0/easter_reference.html']     ['仮想ブラウジング'] }
+{ ['/moai2.0/easter_collection.html']    ['コレクション'] }
+{ ['/moai2.0/easter_config.html']        ['設定'] }
+{ ['/moai2.0/easter_boxmap_viewer.html'] ['BoxMapビューア'] }
+@@.
+
+@@P customboy
+{ ['/moai2.0/customboy_reference.html']         ['Overview and Tutorial'] }
+{ ['/moai2.0/customboy_hints_Cookie.html']      ['Cookie Hints'] }
+{ ['/moai2.0/customboy_hints_PostVars.html']    ['PostVars Hints'] }
+{ ['/moai2.0/customboy_hints_Fingerprint.html'] ['Fingerprint Hints'] }
+{ ['/moai2.0/customboy_hints_Snippet.html']     ['Snippet Hints'] }
+{ ['/moai2.0/futaba_note.html']                 ['Futaba Note'] }
+@@.
+
+@@P moai_cgi_developers
+{ ['/moai2.0/moai_cgi_developers.html']           ['Moai CGI 入門編'] }
+{ ['/moai2.0/moai_cgi_developers_pragmatic.html'] ['Moai CGI 実践編'] }
+{ ['/moai2.0/mkfgen.html']                        ['mkfgenリファレンス'] }
+@@.

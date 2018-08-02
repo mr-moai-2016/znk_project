@@ -1,0 +1,165 @@
+@def_quote [' ']
+
+@@V config
+my_libs_root = ['../..']
+template_dir = ['../../../mkfsys/template']
+lib_dlver = ['43']
+install_dir      = ['$(MY_LIBS_ROOT)/$(DLIBS_DIR)']
+install_slib_dir = ['$(MY_LIBS_ROOT)/$(SLIBS_DIR)']
+@@.
+
+@@L include_paths_common
+../include
+../include/compat
+../crypto/asn1
+../crypto/bn
+../crypto/evp
+../crypto/modes
+../crypto
+@@.
+
+@@L dependency_libs_common
+@@.
+
+@@V info_vc
+linking_libs_special = ['ws2_32 advapi32']
+compiler_option_special = ['-DLIBRESSL_INTERNAL -D__BEGIN_HIDDEN_DECLS= -D__END_HIDDEN_DECLS= \
+	-DOPENSSL_NO_HW_PADLOCK -DOPENSSL_NO_ASM \
+	/wd4706 /wd4996']
+rlib_pfx_special = ['crypto:lib']
+slib_pfx_special = ['crypto:lib']
+@@.
+
+@@V info_mingw
+linking_libs_special = ['ws2_32']
+compiler_option_special = ['-DLIBRESSL_INTERNAL -D__BEGIN_HIDDEN_DECLS= -D__END_HIDDEN_DECLS= \
+	-DOPENSSL_NO_HW_PADLOCK -DOPENSSL_NO_ASM']
+rlib_pfx_special = ['crypto:lib']
+@@.
+
+@@V info_msys
+linking_libs_special = ['ws2_32']
+compiler_option_special = ['-DLIBRESSL_INTERNAL -D__BEGIN_HIDDEN_DECLS= -D__END_HIDDEN_DECLS= \
+	-DOPENSSL_NO_HW_PADLOCK -DOPENSSL_NO_ASM']
+rlib_pfx_special = ['crypto:lib']
+@@.
+
+@@V info_linux
+linking_libs_special = ['pthread dl stdc++']
+compiler_option_special = ['-DLIBRESSL_INTERNAL -D__BEGIN_HIDDEN_DECLS= -D__END_HIDDEN_DECLS= \
+	-DOPENSSL_NO_HW_PADLOCK -DOPENSSL_NO_ASM']
+@@.
+
+@@V info_cygwin
+linking_libs_special = ['pthread dl stdc++']
+compiler_option_special = ['-DLIBRESSL_INTERNAL -D__BEGIN_HIDDEN_DECLS= -D__END_HIDDEN_DECLS= \
+	-DOPENSSL_NO_HW_PADLOCK -DOPENSSL_NO_ASM']
+@@.
+
+@@V info_android
+compiler_option_special = ['-DLIBRESSL_INTERNAL -D__BEGIN_HIDDEN_DECLS= -D__END_HIDDEN_DECLS= \
+	-DOPENSSL_NO_HW_PADLOCK -DOPENSSL_NO_ASM']
+@@.
+
+@@L mkid_list
+vc
+mingw
+msys
+linux
+cygwin
+android
+@@.
+
+@@L product_list
+dlib crypto dll_main.c
+@@.
+
+@@L rc_list
+@@.
+
+@@L sublibs_list
+@@.
+
+@@L install_data_list
+@@.
+
+##
+# Note.
+#
+# included by C source:
+#   chacha/chacha-merged.c
+#   poly1305/poly1305-donna.c
+#   des/ncbc_enc.c
+#
+# arc4random does exist stdlib.h on Android.
+# 
+@@L ignore_list
+ignore
+chacha/chacha-merged.c
+poly1305/poly1305-donna.c
+des/ncbc_enc.c
+compat/getentropy_aix.c
+compat/getentropy_freebsd.c
+compat/getentropy_hpux.c
+compat/getentropy_netbsd.c
+compat/getentropy_osx.c
+compat/getentropy_solaris.c
+@@.
+
+@@L only_list_vc
+compat/explicit_bzero_win.c
+compat/getentropy_win.c
+compat/getpagesize.c
+compat/strcasecmp.c
+compat/arc4random_uniform.c
+compat/arc4random.c
+compat/posix_win.c
+bio/b_win.c
+ui/ui_openssl_win.c
+@@.
+
+@@L only_list_mingw
+compat/explicit_bzero_win.c
+compat/getentropy_win.c
+compat/arc4random_uniform.c
+compat/arc4random.c
+compat/posix_win.c
+bio/b_win.c
+ui/ui_openssl_win.c
+@@.
+
+@@L only_list_msys
+compat/explicit_bzero_win.c
+compat/getentropy_win.c
+compat/arc4random_uniform.c
+compat/arc4random.c
+compat/posix_win.c
+bio/b_win.c
+ui/ui_openssl_win.c
+@@.
+
+@@L only_list_cygwin
+compat/explicit_bzero.c
+bio/b_posix.c
+ui/ui_openssl.c
+@@.
+
+@@L only_list_linux
+compat/getentropy_linux.c
+compat/arc4random_uniform.c
+compat/arc4random.c
+bio/b_posix.c
+ui/ui_openssl.c
+@@.
+
+@@L only_list_android
+compat/explicit_bzero.c
+bio/b_posix.c
+ui/ui_openssl.c
+bio/bss_log.c
+@@.
+
+@@L src_suffix_list
+c
+cpp
+@@.

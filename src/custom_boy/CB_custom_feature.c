@@ -214,7 +214,7 @@ registScszStr( ZnkVarpAry cb_vars, ZnkVarpAry main_vars, ZnkStr scsz_str )
 static CBStatus
 processFgpStep2( ZnkBird bird, ZnkVarpAry cb_vars, ZnkVarpAry main_vars, uint64_t* ptua64,
 		CBFgpInfo fgp_info, ZnkStr RE_key, RanoCGIEVar* evar, const char* cb_src,
-		ZnkStr lacking_var, ZnkStr ermsg )
+		ZnkStr lacking_var, ZnkStr ermsg, bool all_cookie_clear )
 {
 	ZnkStr caco   = NULL;
 	ZnkStr ua_str = NULL;
@@ -263,7 +263,7 @@ processFgpStep2( ZnkBird bird, ZnkVarpAry cb_vars, ZnkVarpAry main_vars, uint64_
 	registScszStr( cb_vars, main_vars, scsz_str );
 
 	caco = ZnkStr_new( "" );
-	if( CBVirtualizer_initiateAndSave( evar, cb_vars, ermsg, cb_src, caco, ua_str, lacking_var ) ){
+	if( CBVirtualizer_initiateAndSave( evar, cb_vars, ermsg, cb_src, caco, ua_str, lacking_var, all_cookie_clear ) ){
 		ZnkStr_add( ermsg, "<b><font color=\"#773300\">OK. VirtualUSERS Initiation done successfully.</font></b>" );
 		CBVirtualizer_registBird_byVars( bird, cb_vars );
 		ZnkBird_regist( bird, "pthc", ZnkStr_cstr(caco) );
@@ -377,7 +377,7 @@ CBStatus
 CBCustomFeature_main( RanoCGIEVar* evar, ZnkVarpAry cb_vars, const char* cb_src,
 		ZnkBird bird, ZnkStr RE_key, CBFgpInfo fgp_info, struct CBUAInfo_tag* ua_info,
 		ZnkVarpAry main_vars, uint64_t* ptua64, ZnkStr ermsg, ZnkStr category, ZnkStr lacking_var,
-		CBConfigInfo* info, bool is_authenticated )
+		CBConfigInfo* info, bool is_authenticated, bool all_cookie_clear )
 {
 	const char* moai_dir = CBConfig_moai_dir();
 	const char* target = CBConfig_theNegotiatingTarget();
@@ -410,7 +410,7 @@ CBCustomFeature_main( RanoCGIEVar* evar, ZnkVarpAry cb_vars, const char* cb_src,
 		break;
 	case Cmd_e_FgpStep1:
 		CBVirtualizer_doMainProc( evar, cb_vars, cb_src, bird, true, false,
-				RE_key, fgp_info, ua_info, main_vars, ptua64, ermsg, category, lacking_var, moai_dir );
+				RE_key, fgp_info, ua_info, main_vars, ptua64, ermsg, category, lacking_var, moai_dir, all_cookie_clear );
 		fgp_state_mode = CBFgpStateMode_e_StockContext;
 		CBVirtualizer_save( main_vars, info->ua_state_filename_, "MainContext" );
 		CBVirtualizer_registBird_byVars( bird, main_vars );
@@ -419,7 +419,7 @@ CBCustomFeature_main( RanoCGIEVar* evar, ZnkVarpAry cb_vars, const char* cb_src,
 	case Cmd_e_FgpStep2:
 		cb_status = processFgpStep2( bird, cb_vars, main_vars, ptua64,
 				fgp_info, RE_key, evar, cb_src,
-				lacking_var, ermsg );
+				lacking_var, ermsg, all_cookie_clear );
 		fgp_state_mode = CBFgpStateMode_e_SaveFile;
 		CBVirtualizer_registBird_byVars( bird, main_vars );
 		CBVirtualizer_save( main_vars, info->ua_state_filename_, "MainContext" );

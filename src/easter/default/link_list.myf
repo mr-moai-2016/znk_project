@@ -19,6 +19,11 @@ url =['may.2chan.net/b/futaba.php?mode=cat&sort=1']
 name=['ふたばちゃんねる may カタログ 新順']
 @@.
 
+@@V link_1504254733
+url =['https://may.2chan.net/b/futaba.php?mode=cat&sort=1']
+name=['ふたばちゃんねる may カタログ 新順(https)']
+@@.
+
 @@V link_1501685160
 url =['img.2chan.net/b/futaba.php?mode=cat']
 name=['ふたばちゃんねる img カタログ']

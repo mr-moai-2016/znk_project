@@ -2,7 +2,6 @@
 #define INCLUDE_GUARD__Znk_dir_recursive_h__
 
 #include <Znk_str.h>
-//#include <Znk_err.h>
 
 Znk_EXTERN_C_BEGIN
 
@@ -18,6 +17,7 @@ typedef enum {
 	 ZnkDirRecursiveFnca_e_onEnterDir=0
 	,ZnkDirRecursiveFnca_e_processFile
 	,ZnkDirRecursiveFnca_e_onExitDir
+	,ZnkDirRecursiveFnca_e_isIgnoreDir
 } ZnkDirRecursiveFncaType;
 
 ZnkDirRecursive
@@ -50,6 +50,13 @@ ZnkDirRecursive_config_onExitDir( ZnkDirRecursive recur,
 		const ZnkDirRecursiveFuncT func, void* arg )
 {
 	ZnkDirRecursiveFuncArg* fnca = ZnkDirRecursive_configFnca( recur, ZnkDirRecursiveFnca_e_onExitDir );
+	Znk_FUNCARG_INIT( *fnca, func, arg );
+}
+Znk_INLINE void
+ZnkDirRecursive_config_isIgnoreDir( ZnkDirRecursive recur,
+		const ZnkDirRecursiveFuncT func, void* arg )
+{
+	ZnkDirRecursiveFuncArg* fnca = ZnkDirRecursive_configFnca( recur, ZnkDirRecursiveFnca_e_isIgnoreDir );
 	Znk_FUNCARG_INIT( *fnca, func, arg );
 }
 

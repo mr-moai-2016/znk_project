@@ -17,6 +17,9 @@ LOCAL_MODULE := gslconv
 LOCAL_CFLAGS += -I.. \
 
 LOCAL_SRC_FILES := \
+	$S/minizip/ioapi.c \
+	$S/minizip/iowin32.c \
+	$S/minizip/unzip.c \
 	$S/Znk_algo_vec.c \
 	$S/Znk_bfr.c \
 	$S/Znk_bfr_ary.c \
@@ -37,6 +40,7 @@ LOCAL_SRC_FILES := \
 	$S/Znk_htp_hdrs.c \
 	$S/Znk_htp_post.c \
 	$S/Znk_htp_rar.c \
+	$S/Znk_htp_sbio.c \
 	$S/Znk_htp_util.c \
 	$S/Znk_liba_scan.c \
 	$S/Znk_math.c \
@@ -79,6 +83,7 @@ LOCAL_SRC_FILES := \
 	$S/Znk_varp_ary.c \
 	$S/Znk_vsnprintf.c \
 	$S/Znk_yy_base.c \
+	$S/Znk_zip.c \
 	$S/Znk_zlib.c \
 	$S/gslconv.c \
 
@@ -91,6 +96,9 @@ LOCAL_MODULE := Znk
 LOCAL_CFLAGS += -I.. \
 
 LOCAL_SRC_FILES := \
+	$S/minizip/ioapi.c \
+	$S/minizip/iowin32.c \
+	$S/minizip/unzip.c \
 	$S/Znk_algo_vec.c \
 	$S/Znk_bfr.c \
 	$S/Znk_bfr_ary.c \
@@ -111,6 +119,7 @@ LOCAL_SRC_FILES := \
 	$S/Znk_htp_hdrs.c \
 	$S/Znk_htp_post.c \
 	$S/Znk_htp_rar.c \
+	$S/Znk_htp_sbio.c \
 	$S/Znk_htp_util.c \
 	$S/Znk_liba_scan.c \
 	$S/Znk_math.c \
@@ -153,6 +162,7 @@ LOCAL_SRC_FILES := \
 	$S/Znk_varp_ary.c \
 	$S/Znk_vsnprintf.c \
 	$S/Znk_yy_base.c \
+	$S/Znk_zip.c \
 	$S/Znk_zlib.c \
 	$S/dll_main.c \
 

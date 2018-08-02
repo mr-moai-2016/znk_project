@@ -166,17 +166,23 @@ doHyperUpload( ZnkVarpAry post_vars,
 	bool   is_updated = false;
 	ZnkStr result_filename = ZnkStr_new( "result.dat" );
 	bool   is_result = false;
+	bool   is_url   = false;
+
+	is_url = ZnkS_isBegin( new_filename, "http://" ) ||
+		ZnkS_isBegin( new_filename, "https://" ) ||
+		ZnkS_isBegin( new_filename, "//" );
 
 	/***
 	 * http:// または https:// または // 以外は認めない.
 	 * 即ちfile:// や ローカルファイルへの相対およびフルパスの指定は認めない.
 	 * これらは「添付ファイル」より指定すべきであり、その方がよりセキュリティ的に堅牢である.
 	 */
-	if( ZnkS_isBegin( new_filename, "http://" ) || ZnkS_isBegin( new_filename, "https://" ) || ZnkS_isBegin( new_filename, "//" ) ){
+	if( is_url ){
+		bool        is_https = false;
 		int         status_code = -1;
 		char        hostname[ 1024 ] = "";
 		ZnkStr      req_urp = ZnkStr_new( "" );
-		const char* src     = EstBase_getHostnameAndRequrp_fromEstVal( hostname, sizeof(hostname), req_urp, new_filename );
+		const char* src     = EstBase_getHostnameAndRequrp_fromEstVal( hostname, sizeof(hostname), req_urp, new_filename, &is_https );
 		const char* unesc_req_urp = ZnkStr_cstr( req_urp );
 		ZnkVarpAry  cookie  = ZnkVarpAry_create( true );
 		const char* parent_proxy  = EstConfig_parent_proxy();
@@ -185,7 +191,7 @@ doHyperUpload( ZnkVarpAry post_vars,
 		is_result = EstBase_download( hostname, unesc_req_urp, "upload",
 				ua, cookie, evar_http_cookie,
 				parent_proxy,
-				result_filename, NULL, mod, &status_code );
+				result_filename, NULL, mod, &status_code, is_https );
 
 		ZnkVarpAry_destroy( cookie );
 		ZnkStr_delete( req_urp );
@@ -421,13 +427,14 @@ EstPost_procPost( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, 
 	ZnkStr src      = ZnkStr_new( "" );
 	const char* target = NULL;
 	RanoModule  mod    = NULL;
+	bool is_https = false;
 
 	ZnkHtpHdrs_compose( htp_hdrs );
 
-	RanoLog_printf( "procPost : est_val=[%s]\n", est_val );
+	RanoLog_printf( "Easter : EstPost_procPost : est_val=[%s]\n", est_val );
 	{
 		char hostname_buf[ 1024 ] = "";
-		ZnkStr_set( src, EstBase_getHostnameAndRequrp_fromEstVal( hostname_buf, sizeof(hostname_buf), req_urp, est_val ) );
+		ZnkStr_set( src, EstBase_getHostnameAndRequrp_fromEstVal( hostname_buf, sizeof(hostname_buf), req_urp, est_val, &is_https ) );
 		ZnkStr_set( hostname, hostname_buf );
 	}
 
@@ -461,13 +468,13 @@ EstPost_procPost( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, 
 		ZnkStr console_msg = ZnkStr_new( "" );
 
 		{
-			result = RanoHtpBoy_do_post( ZnkStr_cstr(hostname), ZnkStr_cstr(req_urp), target,
+			result = RanoHtpBoy_cipher_post( ZnkStr_cstr(hostname), ZnkStr_cstr(req_urp), target,
 					htp_hdrs, post_vars,
 					parent_proxy,
-					tmpdir, cachebox, result_filename );
-			if( !result ){
+					tmpdir, cachebox, result_filename, is_https, msg );
+			if( !result && msg ){
 				ZnkStr_addf( msg,
-						"  RanoHtpBoy_do_post : result=[%d] hostname=[%s] req_urp=[%s]<br>"
+						"  RanoHtpBoy_cipher_post : result=[%d] hostname=[%s] req_urp=[%s]<br>"
 						"                     : target=[%s] parent_proxy=[%s] tmpdir=[%s]<br>"
 						"                     : result_filename=[%s].<br>",
 						result, ZnkStr_cstr(hostname), ZnkStr_cstr(req_urp), target, parent_proxy, tmpdir, ZnkStr_cstr(result_filename) );
@@ -486,7 +493,7 @@ EstPost_procPost( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, 
 		case RanoText_CSS:
 			ZnkStr_add( console_msg, "est_post success.\n" );
 			EstBase_addConsoleMsg_HttpCookie( console_msg, evar->http_cookie_ );
-			filterMain( ZnkStr_cstr(result_filename), ZnkStr_cstr(src), target, txt_type, console_msg, false );
+			filterMain( ZnkStr_cstr(result_filename), ZnkStr_cstr(src), target, txt_type, console_msg, false, is_https );
 			break;
 		case RanoText_JS:
 			//filterJS( ZnkStr_cstr(result_filename), ZnkStr_cstr(src), target, txt_type );
@@ -526,7 +533,7 @@ EstPost_procHyperPost( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_
 	ZnkStr_addf( msg, "procHyperPost : est_val=[%s]\n", est_val );
 	{
 		char hostname_buf[ 1024 ] = "";
-		ZnkStr_set( src, EstBase_getHostnameAndRequrp_fromEstVal( hostname_buf, sizeof(hostname_buf), req_urp, est_val ) );
+		ZnkStr_set( src, EstBase_getHostnameAndRequrp_fromEstVal( hostname_buf, sizeof(hostname_buf), req_urp, est_val, NULL ) );
 		ZnkStr_set( hostname, hostname_buf );
 	}
 
