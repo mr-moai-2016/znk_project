@@ -29,9 +29,9 @@ else
 	rm -rf $patch_basename/moai-common
 	rm -rf $patch_basename/moai-linux32
 	rm -rf $patch_basename/moai-linux64
-	mkdri $patch_basename/moai-common
-	mkdri $patch_basename/moai-linux32
-	mkdri $patch_basename/moai-linux64
+	mkdir $patch_basename/moai-common
+	mkdir $patch_basename/moai-linux32
+	mkdir $patch_basename/moai-linux64
 	linux32/patgen make diff_linux32.pmk $patch_basename/moai-common $patch_basename/moai-linux32 linux32
 	linux64/patgen make diff_linux64.pmk $patch_basename/moai-common $patch_basename/moai-linux64 linux64
 	if test -e apply_this_scripts/linux/apply_this_patch.sh ; then cp apply_this_scripts/linux/apply_this_patch.sh $patch_basename/ ; fi
