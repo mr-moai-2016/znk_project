@@ -362,7 +362,7 @@ ZnkS_isMatchSWC( const char* ptn, size_t ptn_leng,
  *     // この例ではパターンがTEXTとPICTの二つしかないので知れているが、
  *     // パターンの数が大量かつ、この比較をリアルタイムに出来るだけ高速に行わなければならない場合等に効果が期待できる.
  *     // この種の4文字IDのテクニックはAdobe Photoshop File のフォーマットなどにも見られる.
- *     {type
+ *     {
  *       const uint32_t type_id32 = ZnkS_get_id32( type_str4, Znk_NPOS ); 
  *       if( type_id32 == TEXT ){
  *         ...

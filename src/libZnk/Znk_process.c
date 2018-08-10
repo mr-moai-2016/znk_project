@@ -113,7 +113,11 @@ exec_restart( size_t argc, const char** argv )
 	}
 	arg_ary[argc] = NULL;
 	execv( cmd, arg_ary );
-	Znk_free( arg_ary ); /* このfreeは実行されるのか ? (おそらく実行されないのでは?) */
+	/***
+	 * このfreeは実行されるのは、execvに失敗した場合のみ.
+	 * (execvに成功した場合は制御はここに戻ってこない).
+	 */
+	Znk_free( arg_ary );
 }
 #endif
 

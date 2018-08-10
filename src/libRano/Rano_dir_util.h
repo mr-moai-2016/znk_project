@@ -2,6 +2,7 @@
 #define INCLUDE_GUARD__Rano_dir_util_h__
 
 #include <Znk_str.h>
+#include <Znk_dir_recursive.h>
 
 Znk_EXTERN_C_BEGIN
 
@@ -36,8 +37,9 @@ RanoDirUtil_removeDir( const char* topdir,
 void
 RanoDirUtil_filterDir( const char* src_dir, const char* dst_dir,
 		const char* title, ZnkStr ermsg,
-		RanoDirUtilFuncT is_processFile_func, void* is_processFile_arg,
-		RanoDirUtilFilterFuncT filtFile_func, void* filtFile_arg );
+		RanoDirUtilFuncT       is_processFile_func,  void* is_processFile_arg,
+		RanoDirUtilFilterFuncT filterFile_func,      void* filterFile_arg,
+		const ZnkDirRecursiveFuncT isIgnoreDir_func, void* isIgnoreDir_arg );
 
 /**
  * @brief

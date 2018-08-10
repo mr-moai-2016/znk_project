@@ -1102,6 +1102,7 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 	const char* profile_dir          = MoaiServerInfo_profile_dir();
 	const char* moai_authentic_key   = MoaiServerInfo_authenticKey();
 	bool        is_authenticated     = false;
+	bool        explicit_doc_root    = false;
 
 	ZnkStr msg_str      = ZnkStr_new( "" );
 	ZnkStr fsys_path    = ZnkStr_new( "" );
@@ -1155,6 +1156,7 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 	if( ZnkStr_isBegin( req_urp_dir, "/doc_root/" ) || ZnkStr_eq( req_urp_dir, "/doc_root" ) ){
 		ZnkStr_set( fsys_path, "." );
 		ZnkStr_add( fsys_path, ZnkStr_cstr(req_urp_dir) );
+		explicit_doc_root = true;
 	} else if( ZnkStr_isBegin( req_urp_dir, "/cgis/" ) || ZnkStr_eq( req_urp_dir, "/cgis" ) ){
 		ZnkStr_set( fsys_path, "." );
 		ZnkStr_add( fsys_path, ZnkStr_cstr(req_urp_dir) );
@@ -1173,7 +1175,7 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 	/***
 	 * Mount special fsys_path.
 	 */
-	MoaiCGIManager_mapFSysDir( fsys_path, profile_dir );
+	MoaiCGIManager_mapFSysDir2( fsys_path, profile_dir, explicit_doc_root );
 
 	/***
 	 * is_authenticated or not by Moai_AuthenticKey.

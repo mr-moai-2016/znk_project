@@ -99,6 +99,8 @@ include Makefile_version.mak
 BASENAME0=docgen
 EXE_FILE0=$O\docgen
 OBJS0=\
+	$O\Doc_html.o \
+	$O\Doc_source.o \
 	$O\main.o \
 
 SUB_LIBS=\
@@ -178,3 +180,6 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
+Doc_html.o: Doc_html.h
+Doc_source.o: Doc_source.h
+main.o: Doc_html.h

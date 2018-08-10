@@ -12,7 +12,7 @@ echo "MK_OS=[$MK_OS]"
 birdman_exe=./birdman.exe
 if test "$MK_OS" = "CYGWIN"; then
 	if test -e moai-cygwin32; then
-		cp moai-common/birdman/birdman.myf ./
+		if test -e moai-common/birdman/birdman.myf ; then cp moai-common/birdman/birdman.myf ./ ; fi
 		birdman_exe=moai-cygwin32/birdman/birdman.exe
 		$birdman_exe install cygwin32 $old_parent_ver $new_parent_ver
 	else

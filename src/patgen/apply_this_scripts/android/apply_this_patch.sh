@@ -21,7 +21,7 @@ case "$UNAME_M" in
 		echo "Error : Unsupported CPU : [$UNAME_M]"
 esac
 chmod 755 $birdman_exe
-cp moai-common/birdman/birdman.myf ./
+if test -e moai-common/birdman/birdman.myf ; then cp moai-common/birdman/birdman.myf ./ ; fi
 $birdman_exe install android-x86         $old_parent_ver $new_parent_ver
 $birdman_exe install android-armeabi     $old_parent_ver $new_parent_ver
 $birdman_exe install android-armeabi-v7a $old_parent_ver $new_parent_ver

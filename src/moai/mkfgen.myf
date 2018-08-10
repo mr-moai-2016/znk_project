@@ -86,8 +86,7 @@ doc_root/imgs/*.png
 doc_root/imgs/*.jpg
 doc_root/imgs/*.gif
 doc_root/public/moai.png
-moai_for_android.sh
-moai_for_linux.sh
+moai_for_*.sh
 vtag
 cert.pem
 @@.

@@ -189,4 +189,5 @@ easter = ['cgis/easter/easter.cgi']
 favorite = { ['/cgis/easter/favorite'] ['#[profile_dir]#/favorite'] ['EST_FAVORITE_DIR'] }
 stockbox = { ['/cgis/easter/stockbox'] ['#[profile_dir]#/stockbox'] ['EST_STOCKBOX_DIR'] }
 userbox  = { ['/cgis/easter/userbox']  ['#[profile_dir]#/userbox']  ['EST_USERBOX_DIR'] }
+MathJax  = { ['/MathJax']  ['#[profile_dir]#/MathJax']  ['EST_MATHJAX_DIR'] }
 @@.

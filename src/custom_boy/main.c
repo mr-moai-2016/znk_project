@@ -158,7 +158,7 @@ parseQueryString( RanoCGIEVar* evar )
 			CBConfig_setNegotiatingTarget( ZnkVar_cstr( varp ) );
 		}
 	}
-	info = CBConfig_theInfo(); 
+	info = CBConfig_theInfo2(); 
 	if( info ){
 		template_html_file = "templates/automatic.html";
 	}

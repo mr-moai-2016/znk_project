@@ -72,7 +72,7 @@
 	<li><b><a class=MstyElemLink href=#MoaiCGI_transfer_chunked>Transfer-Encoding: chunked転送モードに関する実験</a></b></li>
 	<li><b><a class=MstyElemLink href=#MoaiCGI_post_go>Hello Post!(GO言語版)</a></b></li>
 	<li><b><a class=MstyElemLink href=#MoaiCGI_futaba_php>他サイトで公開されているPHPスクリプトなどを実行させてみる(その1)</a></b></li>
-	<li><b><a class=MstyElemLink href=#MoaiCGI_up_php    >他サイトで公開されているPHPスクリプトなどを実行させてみる(その2)</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiCGI_up_php>他サイトで公開されているPHPスクリプトなどを実行させてみる(その2)</a></b></li>
 	<li><b><a class=MstyElemLink href=#MoaiCGI_next>さて、この次は？</a></b></li>
 </ul><br>
 
@@ -676,6 +676,49 @@ Hello Post!(GO言語版)
 		php-4.4.6-Win32を使った場合は、正常に動作することを確認しています.<br>
 		現在ふたばちゃんねるで使っているPHPはVer5.6.30のようですのでおそらくそのバージョンでも動作はするのでしょう.<br>
 		残念ながら最新バージョンのPHPではこのスクリプトは正常に動作しないようです.<br>
+	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=MoaiCGI_up_php></a>
+<u><b>
+他サイトで公開されているPHPスクリプトなどを実行させてみる(その2)
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	Moai CGI でPHPスクリプトを実行するデモの続きです.<br>
+	<br>
+	<b><u>CGIへのリンクとソースコード</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		<a class=MstyAppLink href="http://localhost:8124/cgis/protected/futaba_up/up.php">http://localhost:8124/cgis/protected/futaba_up/up.php</a>
+		<a class=MstyElemLink href="http://www.2chan.net/script" target=_blank>オリジナル配布元</a>
+		<span class=MstyAuthor> (Author: Ms.Futaba-Kanrinin)</span><br>
+		<div class=MstyComment>
+			CGIのリンクについてはmoaiを起動しておく必要があります.<br>
+			また、Moaiのconfig_cgi.myfにおいて、phpインタプリタのパスを正しく指定しておく必要があります.<br>
+		</div>
+	</div>
+	<br>
+	<b><u>説明</u></b><br>
+	<br>
+	<div class=MstyIndent>
+		デモとしてとして、ふたばちゃんねるにおいて配布されているup.phpを題材にしています(若干コードを修正させて頂きました).<br>
+		ソースコードの内容についての説明はここでは致しません(あしからず).<br>
+		これを動作させるにはPHPインタープリタをインストールしておく必要があります.<br>
+		<br>
+		筆者の環境では以下のような画面が表示されました.<br>
+		こちらのスクリプトもまたMoai CGIで安全に実行させることに成功したようです.<br>
+		<br>
+		<div class=MstyComment>
+			<img src=/imgs/guest_futaba_up.png width=100%><br>
+		</div>
+		<br>
+		php-4.4.6-Win32を使った場合は、正常に動作することを確認しています.<br>
+		現在ふたばちゃんねるで使っているPHPはVer5.6.30のようですのでおそらくそのバージョンでも動作はするのでしょう.<br>
 	</div>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>

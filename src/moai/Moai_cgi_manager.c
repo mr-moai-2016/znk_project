@@ -254,24 +254,6 @@ isEndOfCGIScriptName( char ch )
 	return false;
 }
 
-#if 0
-bool
-MoaiCGIManager_isAuthenticReqUrp( const char* req_urp )
-{
-	if( ZnkS_isBegin( req_urp, "/cgis/" ) ){
-		/* /cgis/authentic/... というパターンであるかどうか. */
-		const char* p = req_urp + Znk_strlen_literal("/cgis/");
-		const char* q = Znk_strchr( p, '/' );
-		if( q && q > p ){
-			if( (q-p) == Znk_strlen_literal("authentic") &&  ZnkS_eqEx( p, "authentic", q-p ) ){
-				return true;
-			}
-		}
-	}
-	return false;
-}
-#endif
-
 bool
 MoaiCGIManager_isValidReqUrp_forRun( const char* req_urp )
 {
@@ -325,45 +307,32 @@ MoaiCGIManager_isValidReqUrp_forPathBegin( const char* req_urp, const char* path
 	return false;
 }
 
-#if 0
-bool
-MoaiCGIManager_isValidReqUrp_forBox( const char* req_urp, const char* box_list_name )
-{
-	if( ZnkS_isBegin( req_urp, "/cgis/" ) ){
-		/* /cgis/<一つ以上のディレクトリ>/<box>/... というパターン以外は認めない. */
-		const char* p = req_urp + Znk_strlen_literal("/cgis/");
-		const char* q = Znk_strchr( p, '/' );
-		const ZnkStrAry box_list = ZnkMyf_find_lines( st_config_cgi_myf, box_list_name );
-		if( q && q > p ){
-			const size_t tbl_size  = ZnkStrAry_size( box_list );
-			size_t rec_idx;
-			for( rec_idx=0; rec_idx<tbl_size; ++rec_idx ){
-				const char* box  = ZnkStrAry_at_cstr( box_list, rec_idx );
-				const char* r          = NULL;
-				char        ptn[ 256 ] = "";
-				Znk_snprintf( ptn, sizeof(ptn), "%s", box );
-				r = Znk_strstr( q+1, ptn );
-				if( r ){
-					r += Znk_strlen(ptn);
-					switch( *r ){
-					case '/': case '\0':
-						return true;
-					default:
-						break;
-					}
-				}
-			}
-		}
-	}
-	return false;
-}
-#endif
 
 const bool
-MoaiCGIManager_mapFSysDir( ZnkStr fsys_path, const char* profile_dir )
+MoaiCGIManager_mapFSysDir2( ZnkStr fsys_path, const char* profile_dir, bool explicit_doc_root )
 {
-	if( ZnkStr_isBegin( fsys_path, "./" ) ){
-		const char* p = ZnkStr_cstr( fsys_path ) + 1;
+	const char* p = NULL;
+	size_t fsys_prefix_leng = 0;
+
+	if( !explicit_doc_root && ZnkStr_isBegin( fsys_path, "./doc_root/" ) ){
+		/***
+		 * req_urp が 通常のものの場合は、./doc_root が追加される.
+		 * 特に req_urp が /doc_root と明示的に指定されている場合を explicit_doc_root と呼ぶが、
+		 * この場合はこの範疇としては処理しない.
+		 */
+		fsys_prefix_leng = Znk_strlen_literal("./doc_root");
+		p = ZnkStr_cstr( fsys_path ) + fsys_prefix_leng;
+	} else if( ZnkStr_isBegin( fsys_path, "./" ) ){
+		/***
+		 * req_urp が /doc_root や /cgis など特殊な場合は、./ が追加される.
+		 * 特に req_urp が /doc_root と明示的に指定されている場合を explicit_doc_root と呼ぶが、
+		 * この場合はこの範疇として処理する.
+		 */
+		fsys_prefix_leng = Znk_strlen_literal(".");
+		p = ZnkStr_cstr( fsys_path ) + fsys_prefix_leng;
+	}
+
+	if( p ){
 		ZnkVarpAry fsys_map_list = st_config_cgi_myf ?
 			ZnkMyf_find_vars( st_config_cgi_myf, "fsys_map_list" ) : NULL;
 		if( fsys_map_list ){
@@ -379,7 +348,7 @@ MoaiCGIManager_mapFSysDir( ZnkStr fsys_path, const char* profile_dir )
 					static const size_t default_idx = 1;
 					static const size_t envvar_idx  = 2;
 					RanoConfUtil_initByStrAry_withEnvVar( fsys_path, sda, default_idx, envvar_idx,
-							0, 1 /* strlen(".") */ + Znk_strlen(req_url) );
+							0, fsys_prefix_leng + Znk_strlen(req_url) );
 					ZnkBird_regist( bird, "profile_dir", profile_dir );
 					ZnkBird_extend_self( bird, fsys_path, ZnkStr_leng(fsys_path) );
 					ZnkBird_destroy( bird );

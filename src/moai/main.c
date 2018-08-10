@@ -21,6 +21,21 @@
 #  include <windows.h>
 #endif
 
+static void
+chmod755Birdman( void )
+{
+#if defined(Znk_TARGET_UNIX)
+#  if defined(__CYGWIN__)
+	if( ZnkDir_getType( "birdman/birdman.exe" ) == ZnkDirType_e_File ){
+		system( "chmod 755 birdman/birdman.exe" );
+	}
+#  endif
+	if( ZnkDir_getType( "birdman/birdman" ) == ZnkDirType_e_File ){
+		system( "chmod 755 birdman/birdman" );
+	}
+#endif
+}
+
 Znk_INLINE void
 dumpFile_toBase64( const char* in_filename, const char* out_filename )
 {
@@ -94,6 +109,27 @@ int main( int argc, char** argv )
 		}
 	}
 
+	/***
+	 * birdmanに実行権限を付与.
+	 * (インストール直後に備えたもの)
+	 *
+	 * Note.
+	 *   moai_for_*.sh スクリプトの内部で chmod 755 ./birdman/birdman.exe のような処理はさせるべきではない.
+	 *
+	 *   moai_for_*.sh は birdman 自身が moai を復帰起動させる際に呼ぶのにも使用する.
+	 *   このとき、自分自身を別プロセスに置き換える execv システムコール を使って /bin/sh moai_for_*.sh を実行させるが、
+	 *   birdman 自身がまだ完全に終了していない状況(終了処理中)にも関わらず、このシェルスクリプトが実行される環境がある.
+	 *   (少なくともCygwinでそのような状況が起こり得ることを確認).
+	 *
+	 *   もしもこの状況下で chmod 755 ./birdman/birdman.exe を実行すると birdmanはまだ起動中であるためこれに失敗し、
+	 *   この影響で /bin/sh 自体もエラー終了し、moai_for_*.sh に書かれたそれ以降の処理が適切に行われない不具合が発生する可能性がある.
+	 *   可能性があると書いたのはこれが発生しないこともあるためで、その発生条件はほぼ再現性がない.
+	 *
+	 *   これを防止するため、birdmanへの実行権限の付与は moai_for_*.sh 内には書かず、
+	 *   代わりに moai 本体のプロセスが確実に起動したこのタイミングでそれを付与させる.
+	 */
+	chmod755Birdman();
+
 	//dumpFile_toBase64( "index.png", "flrv_canv_b64.txt" );
 
 	while( true ){
@@ -122,12 +158,13 @@ int main( int argc, char** argv )
 				ZnkStr_add( birdman_path, "/birdman/birdman.exe" );
 				if( ZnkDir_getType( ZnkStr_cstr(birdman_path) ) == ZnkDirType_e_File ){
 					if( ZnkDir_copyFile_byForce( ZnkStr_cstr(birdman_path), "birdman.exe", ermsg ) ){
+						/* OK */
 					}
 				}
 				ZnkStr_add( birdman_path, "/birdman/birdman" );
 				if( ZnkDir_getType( ZnkStr_cstr(birdman_path) ) == ZnkDirType_e_File ){
 					if( ZnkDir_copyFile_byForce( ZnkStr_cstr(birdman_path), "birdman", ermsg ) ){
-						system( "chmod 755 birdman" );
+						/* OK */
 					}
 				}
 			}
@@ -136,6 +173,12 @@ int main( int argc, char** argv )
 		}
 		ZnkDir_changeCurrentDir( ZnkStr_cstr(curdir_save) );
 		ZnkStr_delete( curdir_save );
+
+		/***
+		 * birdmanに実行権限を付与.
+		 * (Moaiアップグレードによる新しいbirdmanのコピーの直後に備えたもの)
+		 */
+		chmod755Birdman();
 
 		/* authentic_key.datの内容の継続を要求する */
 		{

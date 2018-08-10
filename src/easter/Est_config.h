@@ -33,6 +33,8 @@ size_t
 EstConfig_getDustboxDaysAgo( void );
 const char*
 EstConfig_getExplicitReferer( void );
+const char*
+EstConfig_getEasterDefaultUA( void );
 
 ZnkStr
 EstConfig_getMoaiDir( void );

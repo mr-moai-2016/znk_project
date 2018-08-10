@@ -43,11 +43,16 @@ MoaiCGIManager_isValidReqUrp_forPathBegin( const char* req_urp, const char* path
 
 /**
  * @note
- * この関数でfsys_path は "./"で始まり、それ以降が req_urp と同じ文字列になっていることが前提.
+ * この関数でfsys_path は "./doc_root" あるいは "./" で始まり、
+ * それ以降が req_urp と同じ文字列になっていることが前提.
  * そうではない場合は何もしない.
+ *
+ * @note
+ * 特に req_urp が /doc_root と明示的に指定されている場合を explicit_doc_root と呼び、
+ * その場合は fsys_path は ./doc_root で始まるような文字列でセットされ、かつ explicit_doc_rootにtrueを指定しなければならない.
  */
 const bool
-MoaiCGIManager_mapFSysDir( ZnkStr fsys_path, const char* profile_dir );
+MoaiCGIManager_mapFSysDir2( ZnkStr fsys_path, const char* profile_dir, bool explicit_doc_root );
 
 Znk_EXTERN_C_END
 

@@ -25,6 +25,8 @@ LOCAL_CFLAGS += -I.. \
 	-I$(MY_LIBS_ROOT)/libZnk \
 
 LOCAL_SRC_FILES := \
+	$S/Doc_html.c \
+	$S/Doc_source.c \
 	$S/main.c \
 
 # Refer to prebuilt external-dynamic-libraries

@@ -13,19 +13,19 @@ static bool st_is_dos_path = false;
 static CBConfigInfo st_cb_config_info_futaba = {
 	"futaba/ua_state.myf",
 	"futaba_send.myf",
-	"futaba/futaba_send_save.myf",
+//	"futaba/futaba_send_save.myf",
 };
 static CBConfigInfo st_cb_config_info_5ch = {
 	"5ch/ua_state.myf",
 	"5ch_send.myf",
-	"5ch/5ch_send_save.myf",
+//	"5ch/5ch_send_save.myf",
 };
 
 static char st_negotiating_target[ 256 ] = "futaba";
 
 
 CBConfigInfo*
-CBConfig_theInfo( void )
+CBConfig_theInfo2( void )
 {
 	if( ZnkS_eq( st_negotiating_target, "futaba" ) ){
 		return &st_cb_config_info_futaba;

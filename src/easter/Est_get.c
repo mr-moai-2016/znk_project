@@ -321,7 +321,7 @@ EstGet_procHead( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val )
 		const char* tmpdir_com = EstConfig_getTmpDirCommon( true );
 
 		ZnkStr      result_filename = ZnkStr_newf( "./%sresult.dat", tmpdir_pid );
-		const char* ua              = "Firefox";
+		const char* ua              = EstConfig_getEasterDefaultUA();
 		const char* parent_proxy    = EstConfig_parent_proxy();
 		bool        static_cached      = false;
 
@@ -844,7 +844,7 @@ EstGet_procGet( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, bo
 		const char* tmpdir_pid = EstConfig_getTmpDirPID( true );
 
 		ZnkStr       result_filename = ZnkStr_newf( "./%sresult.dat", tmpdir_pid );
-		const char*  ua              = "Firefox";
+		const char*  ua              = EstConfig_getEasterDefaultUA();
 		const char*  parent_proxy    = EstConfig_parent_proxy();
 		bool         static_cached   = false;
 		RanoTextType txt_type        = RanoText_Binary;

@@ -63,7 +63,8 @@ static size_t     st_preview_max_width  = 860;
 static size_t     st_preview_max_height = 820;
 static size_t     st_cache_days_ago   = 7;
 static size_t     st_dustbox_days_ago = 10;
-static char       st_explicit_referer[ 4096 ] = "";
+static char       st_explicit_referer[ 4096 ] = "https://www.google.co.jp";
+static char       st_easter_default_ua[ 4096 ] = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0";
 
 const char*
 EstConfig_getTmpDirPID( bool with_end_dsp )
@@ -136,6 +137,11 @@ const char*
 EstConfig_getExplicitReferer( void )
 {
 	return st_explicit_referer;
+}
+const char*
+EstConfig_getEasterDefaultUA( void )
+{
+	return st_easter_default_ua;
 }
 
 ZnkStr
@@ -412,6 +418,15 @@ EstConfig_initiate( RanoCGIEVar* evar, const char* moai_dir, size_t count )
 		varp = ZnkVarpAry_findObj_byName_literal( vars, "dustbox_days_ago", false );
 		if( varp ){
 			ZnkS_getSzU( &st_dustbox_days_ago, ZnkVar_cstr(varp) );
+		}
+
+		varp = ZnkVarpAry_findObj_byName_literal( vars, "explicit_referer", false );
+		if( varp ){
+			ZnkS_copy( st_explicit_referer, sizeof(st_explicit_referer), ZnkVar_cstr(varp), ZnkVar_str_leng(varp) );
+		}
+		varp = ZnkVarpAry_findObj_byName_literal( vars, "easter_default_ua", false );
+		if( varp ){
+			ZnkS_copy( st_easter_default_ua, sizeof(st_easter_default_ua), ZnkVar_cstr(varp), ZnkVar_str_leng(varp) );
 		}
 	}
 	{
@@ -964,6 +979,25 @@ EstConfigManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, cons
 					"dustbox_days_ago", &st_dustbox_days_ago, 1, 30,
 					"ダストボックスの保存日数", ermsg );
 			ZnkStr_addf( msg, "dustbox_days_ago=[%zu]\n", st_dustbox_days_ago );
+
+			/* explicit_referer */
+			{
+				ZnkVarp em_varp = ZnkVarpAry_findObj_byName( em_vars, "explicit_referer", Znk_NPOS, false );
+				if( em_varp == NULL ){
+					em_varp = ZnkVarp_create( "explicit_referer", "", 0, ZnkPrim_e_Str, NULL );
+					ZnkVarpAry_push_bk( em_vars, em_varp );
+				}
+				ZnkVar_set_val_Str( em_varp, st_explicit_referer, Znk_NPOS );
+			}
+			/* easter_default_ua */
+			{
+				ZnkVarp em_varp = ZnkVarpAry_findObj_byName( em_vars, "easter_default_ua", Znk_NPOS, false );
+				if( em_varp == NULL ){
+					em_varp = ZnkVarp_create( "easter_default_ua", "", 0, ZnkPrim_e_Str, NULL );
+					ZnkVarpAry_push_bk( em_vars, em_varp );
+				}
+				ZnkVar_set_val_Str( em_varp, st_easter_default_ua, Znk_NPOS );
+			}
 
 			ZnkMyf_save( st_easter_myf, "easter.myf" );
 		} else {

@@ -414,7 +414,7 @@ RanoHtpModifier_modifySendHdrs( ZnkVarpAry hdr_vars, const char* ua, ZnkStr msg 
 
 	if( content_type ){
 		hdr_type = getHtpHdrType_byUA( ua );
-		hdr_os = getHtpHdrOS_byUA( ua );
+		hdr_os   = getHtpHdrOS_byUA( ua );
 
 		if( ZnkStr_empty(ct_boundary) ){
 			/***

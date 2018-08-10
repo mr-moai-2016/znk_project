@@ -177,9 +177,11 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 		万一にこれに実行権限が付与されていない場合は以下のコマンドを入力します.
 
 		<div class=MstyComment>
-			chmod 755 moai
-			./moai
+			sh moai_for_linux.sh
 		</div>
+
+		これでmoaiが起動すると思います. 
+		また一度このコマンドを実行したら、２度目以降は ./moai でも問題なく起動できるようになっていると思います.
 		</li>
 		
 		<li>展開後ディレクトリと同列の場所に moai_profileディレクトリが作成されたことを念のため確認してください
@@ -230,7 +232,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 		</div>
 		</li>
 		
-		<li>ダウンロードしたzipファイルを展開します.</li>
+		<li>ダウンロードしたzipファイルを展開します.
 
 		<div class=MstyComment>
 			展開直後の時点での全体のサイズ合計はせいぜい15MB程度なのですが、
@@ -245,6 +247,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 		<div class=MstyComment>
 	    	cd moai-v2.1-cygwin32
 		</div>
+
 		以下、Linuxと全く同じです.
 		</li>
 
@@ -259,9 +262,11 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 		万一にこれに実行権限が付与されていない場合は以下のコマンドを入力します.
 
 		<div class=MstyComment>
-			chmod 755 moai
-			./moai
+			sh moai_for_cygwin.sh
 		</div>
+
+		これでmoaiが起動すると思います. 
+		また一度このコマンドを実行したら、２度目以降は ./moai でも問題なく起動できるようになっていると思います.
 		</li>
 		
 		<li>展開後ディレクトリと同列の場所に moai_profileディレクトリが作成されたことを念のため確認してください

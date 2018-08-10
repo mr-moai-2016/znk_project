@@ -223,16 +223,18 @@
 	<div class=MstyComment>
 		<u><b>参考</b></u>  <br>
 		<br>
-		header_vars 内のUser-Agent行を削除することによって、<br>
-		<b>敢えてMoaiにおいてUser-Agent偽装を行わせない</b>ようにすることもできる.<br>
+		header_vars 内のUser-Agentに、<b>UNTOUCH</b> という値を設定することによって、<br>
+		<b>敢えてこのフィルターによるUser-Agent偽装を行わせない</b>ようにすることもできる.<br>
 		例えば、ブラウザのUser-Agent偽装アドオンなどによって既にUser-Agentを任意の値に偽装している場合など<br>
 		その偽装値をMoaiで再修正することなくそのまま送信して欲しいことがある.<br>
+		この場合、CustomBoyエンジンでも、header_varsにおけるUser-Agent値(UNTOUCH)の上書き変更を行わない.<br>
 		<br>
 		現状のMoaiはJavascriptにおけるnavigator.userAgentの値や<br>
 		HTTPSによって暗号化されたHTTPヘッダにおけるUser-Agentまでは修正できないので、<br>
 		場合によってはそのようなアドオンを使う方が偽装がより確実となることもあるかもしれない.<br>
-		元通りMoaiによってUser-Agentを偽装させるようにするには、<br>
-		User-Agent行を追加すればよい(このときの右辺値は適当なものでよい).<br>
+		(HTTPSで送信するにはEasterの力を借りる必要がある)<br>
+<br>
+		元通りUser-Agentを偽装させるようにするには、この値を UNTOUCH 以外のものにすればよい.<br>
 	</div>
 	<br>
 	尚、User-Agent以外のその他のヘッダー変数の値も同様に変更することができるが<br>

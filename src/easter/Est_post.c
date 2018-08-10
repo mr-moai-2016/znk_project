@@ -215,6 +215,7 @@ func_proc_post_vars( ZnkVarpAry post_vars, void* arg, const char* content_type, 
 	ZnkStr       given_authentick_key = post_info->given_authentick_key_;
 	bool         is_authenticated     = false;
 	const char*  moai_authentic_key   = EstConfig_authenticKey();
+	const char*  easter_default_ua    = EstConfig_getEasterDefaultUA();
 	
 	if( ZnkStr_eq( given_authentick_key, moai_authentic_key ) ){
 		is_authenticated = true;
@@ -254,7 +255,14 @@ func_proc_post_vars( ZnkVarpAry post_vars, void* arg, const char* content_type, 
 				if( !ZnkS_empty( new_filename ) ){
 					const char* upfile_varname = ZnkVar_cstr(hyper_upload_var);
 					ZnkVarp     ua_var         = ZnkHtpHdrs_find_literal( htp_hdrs->vars_, "User-Agent" );
-					const char* ua             = ua_var ? ZnkHtpHdrs_val_cstr(ua_var,0) : "Firesexy";
+
+					/***
+					 * header_varsにUser-Agentの項目がないか、値がUNTOUCHである場合.
+					 * easter_default_uaを使う.
+					 */
+					const char* ua = ( ua_var == NULL ) ? easter_default_ua :
+						ZnkS_eq( ZnkHtpHdrs_val_cstr(ua_var,0), "UNTOUCH" ) ? easter_default_ua : ZnkHtpHdrs_val_cstr(ua_var,0);
+
 					result = doHyperUpload( post_vars, new_filename, upfile_varname, ua, evar->http_cookie_, mod );
 					if( !result ){
 						/***
@@ -307,6 +315,7 @@ EstPost_parsePostAndCookieVars( RanoCGIEVar* evar, ZnkVarpAry post_vars, const c
 	RanoCGIUtilFnca_procPostVars fnca_proc_post_vars = {
 		func_proc_post_vars, NULL,
 	};
+	const char* easter_default_ua = EstConfig_getEasterDefaultUA();
 
 	/***
 	 * 実際に使用するboundaryはContent-Type内に記載されている文字列の前に
@@ -352,11 +361,10 @@ EstPost_parsePostAndCookieVars( RanoCGIEVar* evar, ZnkVarpAry post_vars, const c
 	{
 		ZnkVarpAry cookie   = ZnkVarpAry_create( true );
 		char cookie_filename[ 256 ] = "";
-		const char* ua = "Firesexy";
 
 		Znk_snprintf( cookie_filename, sizeof(cookie_filename), "%s%s/cookie.txt", tmpdir, target );
 		ZnkCookie_load( cookie, cookie_filename );
-		initHtpHdr_forPost( htp_hdrs, hostname, req_urp, ua, cookie, evar );
+		initHtpHdr_forPost( htp_hdrs, hostname, req_urp, easter_default_ua, cookie, evar );
 
 		ZnkVarpAry_destroy( cookie );
 	}
@@ -371,7 +379,15 @@ EstPost_parsePostAndCookieVars( RanoCGIEVar* evar, ZnkVarpAry post_vars, const c
 		const ZnkVarpAry ftr_vars = ZnkMyf_find_vars( ftr_send, "header_vars" );
 		if( ftr_vars ){
 			const ZnkVarp ua_var = ZnkVarpAry_find_byName( ftr_vars, "User-Agent", Znk_strlen_literal("User-Agent"), false );
-			if( RanoHtpModifier_modifySendHdrs( htp_hdrs->vars_, ZnkVar_cstr(ua_var), pst_str ) ){
+
+			/***
+			 * header_varsにUser-Agentの項目がないか、値がUNTOUCHである場合.
+			 * easter_default_uaを使う.
+			 */
+			const char* ua = ( ua_var == NULL ) ? easter_default_ua :
+				ZnkS_eq( ZnkVar_cstr(ua_var), "UNTOUCH" ) ? easter_default_ua : ZnkVar_cstr(ua_var);
+
+			if( RanoHtpModifier_modifySendHdrs( htp_hdrs->vars_, ua, pst_str ) ){
 				ZnkStr_add( pst_str, "  RanoHtpModifier_modifySendHdrs is true\n" );
 			} else {
 				ZnkStr_add( pst_str, "  RanoHtpModifier_modifySendHdrs is false\n" );

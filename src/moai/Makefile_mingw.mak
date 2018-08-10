@@ -143,8 +143,7 @@ install_data:
 	@if exist "doc_root\imgs\*.jpg" @$(CP) /F "doc_root\imgs\*.jpg" ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\imgs\ $(CP_END)
 	@if exist "doc_root\imgs\*.gif" @$(CP) /F "doc_root\imgs\*.gif" ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\imgs\ $(CP_END)
 	@if exist "doc_root\public\moai.png" @$(CP) /F "doc_root\public\moai.png" ..\..\moai-v$(REL_VER)-$(PLATFORM)\doc_root\public\ $(CP_END)
-	@if exist "moai_for_android.sh" @$(CP) /F "moai_for_android.sh" ..\..\moai-v$(REL_VER)-$(PLATFORM)\ $(CP_END)
-	@if exist "moai_for_linux.sh" @$(CP) /F "moai_for_linux.sh" ..\..\moai-v$(REL_VER)-$(PLATFORM)\ $(CP_END)
+	@if exist "moai_for_*.sh" @$(CP) /F "moai_for_*.sh" ..\..\moai-v$(REL_VER)-$(PLATFORM)\ $(CP_END)
 	@if exist "vtag" @$(CP) /F "vtag" ..\..\moai-v$(REL_VER)-$(PLATFORM)\ $(CP_END)
 	@if exist "cert.pem" @$(CP) /F "cert.pem" ..\..\moai-v$(REL_VER)-$(PLATFORM)\ $(CP_END)
 

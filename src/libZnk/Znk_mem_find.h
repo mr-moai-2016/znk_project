@@ -191,7 +191,7 @@ Znk_INLINE size_t ZnkMem_rfind_pos_8( const uint8_t* buf, size_t begin, size_t e
 	return Znk_NPOS;
 }
 
-/***
+/**
  * 一旦occ_tblが初期化された場合、その値は0にはなり得ないため、
  * 値が 0 か否かを調べることで初期化されているか否かを判定できる.
  * 使用例.
@@ -204,7 +204,7 @@ Znk_INLINE size_t ZnkMem_rfind_pos_8( const uint8_t* buf, size_t begin, size_t e
 #define ZnkOccTable_D( name ) size_t name[ 256 ] = { 0 }
 #define ZnkOccTable_isInitialized( occ_tbl ) ( (occ_tbl)[ 0 ] )
 
-/***
+/**
  * @brief
  *   buf内にあると予想されるdata列の位置を探索し、そのバイト位置を返す.
  *   この関数では、delta を指定することにより、検索したい文字列をbufからdeltaの倍数の

@@ -15,7 +15,6 @@ pwd = ['']
 js = ['on']
 USERS_futabapt = ['']
 USERS_password = ['']
-USERS_ptua = ['Mozilla/5.0 (Windows NT 6.2; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0']
 @@.
 
 # Cookie値のフィルタリング

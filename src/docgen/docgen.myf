@@ -1,0 +1,24 @@
+@def_quote [' ']
+
+@@V config
+title_author     = ['記事担当者']
+title_update     = ['最終更新日']
+title_atfirst    = ['はじめに']
+title_index      = ['目次']
+title_link       = ['リンク']
+msg_backto_index = ['目次に戻る']
+@@.
+
+@@P root
+{ ['/']  ['トップページ'] }
+{ ['/moai2.0/index.html']        ['ユーザーマニュアル'] ['moai2_0_user'] }
+{ ['/source_doc/index.html']     ['ソースドキュメント'] ['source_doc'] }
+{ ['/announcement.html']         ['アナウンスメント'] }
+{ ['/FAQ.html']                  ['FAQ'] }
+@@.
+
+@@P source_doc
+{ ['/source_doc/docgen/index.html']  ['docgen'] }
+{ ['/source_doc/libRano/index.html'] ['libRano'] }
+@@.
+

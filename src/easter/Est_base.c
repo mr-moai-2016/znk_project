@@ -140,7 +140,8 @@ EstBase_download( const char* hostname, const char* unesc_req_urp, const char* t
 	const char* cachebox = "./cachebox/";
 	struct ZnkHtpHdrs_tag htp_hdrs = { 0 };
 	bool   is_without_404 = true;
-	const char* explicit_referer = EstConfig_getExplicitReferer();
+	const char* explicit_referer  = EstConfig_getExplicitReferer();
+	const char* easter_default_ua = EstConfig_getEasterDefaultUA();
 
 	ZnkHtpHdrs_compose( &htp_hdrs );
 	initHtpHdr( &htp_hdrs, hostname, ua, cookie, is_https, explicit_referer );
@@ -161,7 +162,15 @@ EstBase_download( const char* hostname, const char* unesc_req_urp, const char* t
 		const ZnkVarpAry ftr_vars = ZnkMyf_find_vars( ftr_send, "header_vars" );
 		if( ftr_vars ){
 			const ZnkVarp ua_var = ZnkVarpAry_find_byName( ftr_vars, "User-Agent", Znk_strlen_literal("User-Agent"), false );
-			if( RanoHtpModifier_modifySendHdrs( htp_hdrs.vars_, ZnkVar_cstr(ua_var), msg ) ){
+
+			/***
+			 * header_vars‚ÉUser-Agent‚Ì€–Ú‚ª‚È‚¢‚©A’l‚ªUNTOUCH‚Å‚ ‚éê‡.
+			 * easter_default_ua‚ğg‚¤.
+			 */
+			const char* ua = ( ua_var == NULL ) ? easter_default_ua :
+				ZnkS_eq( ZnkVar_cstr(ua_var), "UNTOUCH" ) ? easter_default_ua : ZnkVar_cstr(ua_var);
+
+			if( RanoHtpModifier_modifySendHdrs( htp_hdrs.vars_, ua, msg ) ){
 				if( msg ){
 					ZnkStr_add( msg, "  RanoHtpModifier_modifySendHdrs : true\n" );
 				}

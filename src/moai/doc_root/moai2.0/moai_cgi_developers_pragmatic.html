@@ -836,6 +836,7 @@ Hello Post!(実践バージョン)
 		ところでこのset_dat_pathを始動させるには Moai CGIのHTMLとしてのブラウザ表示が完了した後でなければなりません.<br>
 		難しいのはここです.<br>
 		そこで Znk_fflush( Znk_stdout() ) を使って、まずこれを強制的にブラウザに出力させます.<br>
+<br>
 		<div class=MstyComment>
 			<u><b>Note</b></u><br>
 			<br>
@@ -845,6 +846,7 @@ Hello Post!(実践バージョン)
 		</div>
 		<br>
 		また同様に Znk_fclose( Znk_stdout() ) を使って標準出力を強制的にクローズします.<br>
+<br>
 		<div class=MstyComment>
 			<u><b>Note</b></u><br>
 			<br>
@@ -883,6 +885,7 @@ Hello Post!(実践バージョン)
 				}<br>
 			</div>
 		</div>
+<br>
 		progress.html内のset_dat_pathでは../publicbox/state.datの中身を何度も読み込んで表示する仕組みになっているのでした.<br>
 		一方、very_long_work関数では、そのstate.datの中身を処理の進捗に応じて上書き更新します.<br>
 		ここでは state.datの中身の値として st_count の値を書き込んでいます.<br>

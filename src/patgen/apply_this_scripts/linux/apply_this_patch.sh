@@ -23,7 +23,7 @@ case "$UNAME_M" in
 esac
 
 chmod 755 $birdman_exe
-cp moai-common/birdman/birdman.myf ./
+if test -e moai-common/birdman/birdman.myf ; then cp moai-common/birdman/birdman.myf ./ ; fi
 $birdman_exe install linux32 $old_parent_ver $new_parent_ver
 $birdman_exe install linux64 $old_parent_ver $new_parent_ver
 

@@ -61,7 +61,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 { ['#MoaiCGI_transfer_chunked'] ['Transfer-Encoding: chunked転送モードに関する実験'] }
 { ['#MoaiCGI_post_go']       ['Hello Post!(GO言語版)'] }
 { ['#MoaiCGI_futaba_php']    ['他サイトで公開されているPHPスクリプトなどを実行させてみる(その1)'] }
-{ ['#MoaiCGI_up_php    ']    ['他サイトで公開されているPHPスクリプトなどを実行させてみる(その2)'] }
+{ ['#MoaiCGI_up_php']        ['他サイトで公開されているPHPスクリプトなどを実行させてみる(その2)'] }
 { ['#MoaiCGI_next']          ['さて、この次は？'] }
 @@.
 

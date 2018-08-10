@@ -14,6 +14,7 @@ preview_max_width  = ['820']
 preview_max_height = ['820']
 cache_days_ago = ['3']
 dustbox_days_ago = ['5']
+easter_default_ua = ['Mozilla/5.0 (Windows NT 6.2; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0']
 @@.
 
 @@V filter_onclick_jscall

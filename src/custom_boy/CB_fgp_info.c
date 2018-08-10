@@ -150,7 +150,7 @@ CBFgpInfo_save( const CBFgpInfo fgp_info, const char* filename, const char* sec_
 void
 CBFgpInfo_proc_byStateMode( CBFgpInfo fgp_info, CBFgpStateMode state_mode )
 {
-	CBConfigInfo* info = CBConfig_theInfo(); 
+	CBConfigInfo* info = CBConfig_theInfo2(); 
 	switch( state_mode ){
 	case CBFgpStateMode_e_StockContext:
 	case CBFgpStateMode_e_SaveFile:

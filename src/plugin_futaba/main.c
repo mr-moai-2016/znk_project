@@ -103,7 +103,7 @@ on_post( ZnkMyf ftr_send, ZnkVarpAry hdr_vars, ZnkVarpAry post_vars )
 
 	if( dst_ptua ){
 		/* まず簡易なケースを弾く */
-		if( !isUntouchable_ptua( dst_ptua ) ){
+		if( USERS_ptua && !isUntouchable_ptua( dst_ptua ) ){
 			/***
 			 * ptuaの実値をtransientな仕様とすることで偽装をかわす可能性がある.
 			 */

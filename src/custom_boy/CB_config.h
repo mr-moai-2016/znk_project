@@ -9,12 +9,12 @@ Znk_EXTERN_C_BEGIN
 typedef struct CBConfigInfo_tag {
 	const char* ua_state_filename_;
 	const char* send_myf_filename_;
-	const char* send_save_myf_filename_;
-	const char* negotiating_target_;
+//	const char* send_save_myf_filename_;
+//	const char* negotiating_target_;
 } CBConfigInfo;
 
 CBConfigInfo*
-CBConfig_theInfo( void );
+CBConfig_theInfo2( void );
 
 void
 CBConfig_setNegotiatingTarget( const char* target );

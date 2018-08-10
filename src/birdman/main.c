@@ -1069,6 +1069,9 @@ int main( int argc, char** argv )
 #if defined(__ANDROID__)
 					ZnkStr_setf( main_app_file, "/system/bin/sh" );
 					main_app_arg = "moai_for_android.sh";
+#elif defined(__CYGWIN__)
+					ZnkStr_setf( main_app_file, "/bin/sh" );
+					main_app_arg = "moai_for_cygwin.sh";
 #elif defined(Znk_TARGET_UNIX)
 					ZnkStr_setf( main_app_file, "/bin/sh" );
 					main_app_arg = "moai_for_linux.sh";

@@ -132,8 +132,8 @@ ZnkMyf
 ZnkMyf_create( void )
 {
 	ZnkMyf myf = Znk_alloc0( sizeof( struct ZnkMyfImpl ) );
-	myf->quote_begin_[ 0 ] = '\0';
-	myf->quote_end_[ 0 ]   = '\0';
+	ZnkS_copy_literal( myf->quote_begin_, sizeof(myf->quote_begin_), "['" );
+	ZnkS_copy_literal( myf->quote_end_,   sizeof(myf->quote_end_),   "']" );
 	ZnkS_copy_literal( myf->nl_, sizeof(myf->nl_), "\n" );
 	ZnkS_copy_literal( myf->missing_rhs_nl_, sizeof(myf->missing_rhs_nl_), "" );
 	myf->sec_ary_ = ZnkObjAry_create( deleteMyfSection );

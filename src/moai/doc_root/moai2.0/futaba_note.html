@@ -234,6 +234,33 @@ Chapter2 : VirtualUSERSが仮想化する情報とは？
 		ふたばちゃんねるでは、POST変数 flrv, flvv にパックして送信されます.<br>
 		この処理は /bin/base4.js というJavascriptの実行によって行われます.<br>
 		</li>
+<br>
+		<li><b>Snippet</b><br>
+<br>
+		この値はあなたのブラウザ上で、いくつかのJavascriptのテストコード(Snippetと呼びます)を実行させた結果です.<br>
+		このSnippetによるテストの結果はブラウザの種類やバージョン毎に異なる値をとります.<br>
+<br>
+		この値がブラウザを特定するための情報であるというならば、こんな値よりも User-Agent で判断すればよいのではと思われるかもしれません.<br>
+		しかしながら最近ではブラウザのアドオンを使うことによってUser-Agentを偽装することが簡単にできるようになりました.<br>
+		それどころかブラウザ標準の機能としてUser-Agentを偽装できるものすらあります.<br>
+		よって、単にUser-Agentの文字列では、ユーザが本当はどのブラウザのどのバージョンを使っているのかを特定する情報としては、いささか信憑性に欠けるというわけです.<br>
+<br>
+		そこでブラウザ識別のために掲示板がとる戦略としては、ユーザが投稿する際にこのまずSnippetを実行させ、次にそのテスト結果も掲示板へと一緒に送信されるようにしておきます.<br>
+		掲示板側からは送信されたこの値を分析することで、ユーザが本当はどのブラウザのどのバージョンにおいて実行されたのかを(ある程度)特定するわけです.<br>
+<br>
+		Fingerprintとの違いは可逆性にあります.<br>
+		つまりハッシュ値とは違い、この値は元の値を一意に復元できるような形式のものが使われます.<br>
+<br>
+		ではこれが実際にどのように送信されるかを説明致します.<br>
+		以下の図をご覧下さい.<br>
+<br>
+		<span class=MstyComment>あなたのブラウザ環境<br>(Javascriptを使ってSnippetによるテスト値を計算)</span> ⇒
+		<div class=MstyComment>HTTPヘッダ<br><b>POST変数</b><br>クッキー</div> ⇒
+		<span class=MstyComment>送信先のサイト<br>(futaba.php)</span><br>
+<br>
+		ふたばちゃんねるでは、POST変数 ptua にパックして送信されます.<br>
+		この処理は /bin/base4.js というJavascriptの実行によって行われます.<br>
+		</li>
 	</ol><br>
 <br>
 	いかがでしょうか？<br>
@@ -307,6 +334,23 @@ Chapter3 : 手動で仮想ブラウザ環境を実現する方法
 		</div>
 		</li>
 <br>
+		<li><b>Snippetのテスト値を変更する.</b><br>
+		以下にある「POST変数を手動で修正する方法」によって、POST変数を直接変更しましょう.<br>
+		ふたばちゃんねるの場合、POST変数 ptua を変更します.<br>
+<br>
+		この値は33bit整数というちょっと変な値となっています.<br>
+		ふたばちゃんねるでは33個のSnippet(Javascriptのテストコード)が用意されており、それらは 0 か 1 を返します(ブラウザの種類によって結果は変わります).<br>
+		これらすべてを実行させ、第1番目のSnippetの実行結果を 1bit目 に、第2番目のSnippetの実行結果を 2bit目 に、…第33番目のSnippetの実行結果を 33bit目 に置くことによって、この33bit整数を作ります.<br>
+		これら33個のSnippetの意味については、それらのリファレンスを<a class=MstyElemLink href=/moai2.0/customboy_hints_Snippet.html>こちら</a>に作成しておきましたので参考にしてください.<br>
+<br>
+		<div class=MstyComment>
+			CustomBoyのアルゴリズムは、User-Agentの文字列とこの値が矛盾なきよう取り計らいつつ値を刷新します.<br>
+		</div>
+<br>
+		ちょっと難しいでしょうか？<br>
+		よくわからなければ、このptuaの値はランダムにしてもとりあえずはよいと思います.<br>
+		</li>
+<br>
 		<li><b>jsの値をonに変更する.</b><br>
 		このPOST変数はふたばちゃんねる独自のものです.<br>
 		以下にある「POST変数を手動で修正する方法」によって、POST変数を直接変更しましょう(値は on にします).<br>
@@ -357,6 +401,18 @@ Chapter3 : 手動で仮想ブラウザ環境を実現する方法
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 </div><br>
 <br>
+
+
+<a name=Link></a>
+<u><b>
+リンク
+</b></u><br>
+<br>
+<ul>
+	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
+	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project>znk_project(github)</a></li>
+</ul><br>
 
 
 </body>

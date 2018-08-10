@@ -334,8 +334,15 @@ RanoModule_filtHtpHeader( const RanoModule mod, ZnkVarpAry hdr_vars )
 			if( htp_var ){
 				/* found */
 				htp_val = ZnkHtpHdrs_val( htp_var, 0 );
-				ZnkStr_set( htp_val, ZnkStr_cstr(ftr_var->prim_.u_.str_) );
-				++count;
+				/***
+				 * 新仕様:
+				 * ftr_varの値がUNTOUCHとなっている場合は特別扱いとし、
+				 * フィルタリングを適用しないことを意味するものとする.
+				 */
+				if( !ZnkS_eq( ZnkVar_cstr(ftr_var), "UNTOUCH" ) ){
+					ZnkStr_set( htp_val, ZnkVar_cstr(ftr_var) );
+					++count;
+				}
 			} else {
 				/* not found */
 				/* この場合新規追加とする */
