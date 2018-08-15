@@ -17,6 +17,7 @@ tmp
 filters
 filters/*.myf
 doc_root/state.dat
+cgis/easter/convert.exe
 cgis/easter/cache_task_lasttime.dat
 cgis/easter/recentory.myf
 cgis/easter/tmp

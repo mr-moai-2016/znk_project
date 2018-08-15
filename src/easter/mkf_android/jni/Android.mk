@@ -30,6 +30,7 @@ LOCAL_SRC_FILES := \
 	$S/Est_assort_ui.c \
 	$S/Est_base.c \
 	$S/Est_bat_operator.c \
+	$S/Est_bmp_writer.c \
 	$S/Est_box.c \
 	$S/Est_boxmap_viewer.c \
 	$S/Est_box_base.c \
@@ -75,6 +76,7 @@ LOCAL_SRC_FILES := \
 	$S/Est_assort_ui.c \
 	$S/Est_base.c \
 	$S/Est_bat_operator.c \
+	$S/Est_bmp_writer.c \
 	$S/Est_box.c \
 	$S/Est_boxmap_viewer.c \
 	$S/Est_box_base.c \

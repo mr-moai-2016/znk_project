@@ -3,6 +3,7 @@
 #include <Est_config.h>
 #include <Est_ui.h>
 #include <Est_hint_manager.h>
+#include <Est_bmp_writer.h>
 
 #include <Rano_log.h>
 #include <Rano_htp_modifier.h>
@@ -14,6 +15,12 @@
 #include <Znk_cookie.h>
 #include <Znk_stdc.h>
 #include <Znk_str_ex.h>
+#include <Znk_dir.h>
+
+#if defined(Znk_TARGET_WINDOWS)
+#  include <windows.h>
+#endif
+#  include <stdlib.h>
 
 #define IS_OK( val ) (bool)( (val) != NULL )
 
@@ -205,9 +212,178 @@ doHyperUpload( ZnkVarpAry post_vars,
 	return is_updated;
 }
 
+
+#if defined(Znk_TARGET_WINDOWS)
+static bool
+saveHBitmap( HBITMAP hBmp, const char* filename, ZnkStr ermsg )
+{
+	bool result = false;
+	BITMAP bmap;
+	int    nBit = GetObject( hBmp, sizeof(bmap), &bmap );
+	int    nBmi = 0;
+	size_t nColorTable = 0;
+	int    nImage = 0;
+	BITMAPINFO* pBmi = NULL;
+	uint8_t* pImage = NULL;
+	size_t rowbytes = 0;
+
+	/* パレットエントリ数を判定 */
+	switch( bmap.bmBitsPixel ) {
+	case 1:  nColorTable =   2;    break;
+	case 4:  nColorTable =  16;    break;
+	case 8:  nColorTable = 256;    break;
+	default: nColorTable =   0;    break;         
+	}
+	
+	// 必要なサイズを計算し、メモリを獲得します
+	nBmi     = sizeof(RGBQUAD) * nColorTable; /* ヘッダーのサイズ */
+	rowbytes = ((bmap.bmWidth * bmap.bmBitsPixel) + 31) / 8;
+	nImage   = rowbytes * bmap.bmHeight; /* 画素情報のサイズ */
+	pBmi     = (BITMAPINFO *)Znk_malloc(nBmi + nImage);
+	
+	pImage = Znk_force_ptr_cast( uint8_t*, pBmi ) + nBmi;
+	
+	/* ヘッダー情報の作成 */
+	memset( pBmi, 0, nBmi );
+	pBmi->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	pBmi->bmiHeader.biWidth  = bmap.bmWidth;
+	pBmi->bmiHeader.biHeight = bmap.bmHeight;
+	pBmi->bmiHeader.biPlanes = 1;
+	pBmi->bmiHeader.biBitCount = bmap.bmBitsPixel;
+	pBmi->bmiHeader.biCompression = BI_RGB;
+	pBmi->bmiHeader.biSizeImage = 0;
+	pBmi->bmiHeader.biXPelsPerMeter = 0;
+	pBmi->bmiHeader.biYPelsPerMeter = 0;
+	pBmi->bmiHeader.biClrUsed      = nColorTable;
+	pBmi->bmiHeader.biClrImportant = nColorTable;
+	
+	/* 画素情報取得 */
+	{
+		HWND hWnd = GetDesktopWindow();
+		HDC  hDC  = GetWindowDC(hWnd);
+		GetDIBits( hDC, hBmp, 0, bmap.bmHeight, pImage, pBmi, DIB_RGB_COLORS );
+		ReleaseDC( hWnd, hDC );
+	}
+	{
+		ZnkFile fp = Znk_fopen( filename, "wb" );
+		if( fp ){
+			uint8_t argb_idx[ 4 ] = { 3, 2, 1, 0 };
+			uint8_t* palette32 = NULL;
+			size_t   palette32_num = 0;
+			EstBmp_writeBFH( fp, bmap.bmHeight, bmap.bmBitsPixel, rowbytes, ermsg );
+			EstBmp_writeBIH( fp, palette32, palette32_num,
+					bmap.bmWidth, bmap.bmHeight, bmap. bmBitsPixel, rowbytes,
+					argb_idx, ermsg );
+			Znk_fwrite( pImage, nImage, fp );
+			Znk_fclose( fp );
+			result = true;
+		}
+	}
+	Znk_free( pBmi );
+	return result;
+}
+#endif
+
+static bool
+getClipboardDataTest( const char* filename, ZnkStr ermsg )
+{
+	bool result = false;
+#if defined(Znk_TARGET_WINDOWS)
+	HWND hwnd = NULL;
+	if( IsClipboardFormatAvailable( CF_BITMAP ) ){
+		if( OpenClipboard( hwnd ) ){
+			HBITMAP hBitmap = (HBITMAP)GetClipboardData( CF_BITMAP );
+			result = saveHBitmap( hBitmap, filename, ermsg );
+			CloseClipboard();
+		} else {
+			if( ermsg ){
+				ZnkStr_addf( ermsg, "getClipboardDataTest : Cannot open Clipboard.\n" );
+			}
+		}
+	} else {
+		if( ermsg ){
+			ZnkStr_addf( ermsg, "getClipboardDataTest : CF_BITMAP is not available.\n" );
+		}
+	}
+#endif
+	return result;
+}
+
+static bool
+uploadClipboard( ZnkVarpAry post_vars, const char* upfile_varname )
+{
+	bool   result = false;
+	ZnkStr ermsg  = ZnkStr_new( "" );
+
+	/***
+	 * Test : GetClipboardData (only windows)
+	 */
+	result = getClipboardDataTest( "tmp/clipboard_save.bmp", ermsg );
+	if( !result ){
+		RanoCGIMsg_initiate( true, NULL );
+		RanoCGIMsg_begin();
+		Znk_printf( "Easter Hyper Post : Error : getClipboardDataTest : [%s].\n", ZnkStr_cstr(ermsg) );
+		RanoCGIMsg_end();
+		RanoCGIMsg_finalize();
+		goto FUNC_END;
+	}
+
+	result = false;
+
+	/***
+	 * さしあたってはImageMagic(あるいはそれと互換なconvertコマンド)を用いる.
+	 * 尚、現時点ではまだマルチプロセス処理に対する排他制御は行っていない.
+	 */
+	if( ZnkDir_getType( "convert.exe" ) == ZnkDirType_e_File ){
+		if( ZnkDir_deleteFile_byForce( "tmp/clipboard_save.png" ) ){
+			system( "convert.exe tmp/clipboard_save.bmp tmp/clipboard_save.png" );
+			if( ZnkDir_getType( "tmp/clipboard_save.png" ) == ZnkDirType_e_File ){
+				ZnkDir_deleteFile_byForce( "tmp/clipboard_save.bmp" );
+				if( replaceUploadFile_forMPFD( post_vars, upfile_varname, "tmp/clipboard_save.png" ) ){
+					result = true;
+				}
+			}
+		}
+	} else {
+		RanoCGIMsg_initiate( true, NULL );
+		RanoCGIMsg_begin();
+		Znk_printf( "Easter Hyper Post : Error : Missing convert command..\n" );
+		RanoCGIMsg_end();
+		RanoCGIMsg_finalize();
+		goto FUNC_END;
+	}
+
+FUNC_END:
+	ZnkStr_delete( ermsg );
+	return result;
+}
+
+static void
+cleanupHypeUpload( ZnkVarpAry post_vars,
+		ZnkVarp hyper_upload_path, ZnkVarp hyper_upload_var, ZnkVarp clipboard_upload_mode,
+		bool* is_updated )
+{
+	/***
+	 * 以下は post_vars から狩り取る.
+	 */
+	if( hyper_upload_path ){
+		ZnkVarpAry_erase( post_vars, hyper_upload_path );
+		*is_updated = true;
+	}
+	if( hyper_upload_var ){
+		ZnkVarpAry_erase( post_vars, hyper_upload_var );
+		*is_updated = true;
+	}
+	if( clipboard_upload_mode ){
+		ZnkVarpAry_erase( post_vars, clipboard_upload_mode );
+		*is_updated = true;
+	}
+}
+
 static bool
 func_proc_post_vars( ZnkVarpAry post_vars, void* arg, const char* content_type, bool* is_updated )
 {
+	bool result = false;
 	EstPostInfo* post_info = Znk_force_ptr_cast( EstPostInfo*, arg );
 	RanoCGIEVar* evar                 = post_info->evar_;
 	ZnkHtpHdrs   htp_hdrs             = post_info->htp_hdrs_;
@@ -243,17 +419,28 @@ func_proc_post_vars( ZnkVarpAry post_vars, void* arg, const char* content_type, 
 	 * Easter Hyper-Upload
 	 */
 	if( is_authenticated ){
-		bool    result = false;
-		ZnkVarp hyper_upload_path = NULL;
-		ZnkVarp hyper_upload_var  = NULL;
+		ZnkVarp hyper_upload_path     = ZnkVarpAry_find_byName_literal( post_vars, "est_hyper_upload_path", false );
+		ZnkVarp hyper_upload_var      = ZnkVarpAry_find_byName_literal( post_vars, "est_hyper_upload_var", false );
+		ZnkVarp clipboard_upload_mode = ZnkVarpAry_find_byName_literal( post_vars, "est_clipboard_upload_mode", false );
 		/***
 		 * この機能は Authentic なUIからの投稿に限り有効.
 		 */
-		if( IS_OK( hyper_upload_path = ZnkVarpAry_find_byName_literal( post_vars, "est_hyper_upload_path", false ) )){
-			if( IS_OK( hyper_upload_var = ZnkVarpAry_find_byName_literal( post_vars, "est_hyper_upload_var", false ) )){
+		if( IS_OK( hyper_upload_var ) ){
+			const char* upfile_varname = ZnkVar_cstr(hyper_upload_var);
+
+			if( IS_OK( clipboard_upload_mode ) && ZnkS_eq( ZnkVar_cstr( clipboard_upload_mode ), "on" ) ){
+				/* Clipboard uploading */
+				result = uploadClipboard( post_vars, upfile_varname );
+				if( result ){
+					*is_updated = true;
+				} else {
+					return false;
+				}
+
+			} else if( IS_OK( hyper_upload_path ) ){
+				/* URL uploading */
 				const char* new_filename = ZnkVar_cstr( hyper_upload_path );
 				if( !ZnkS_empty( new_filename ) ){
-					const char* upfile_varname = ZnkVar_cstr(hyper_upload_var);
 					ZnkVarp     ua_var         = ZnkHtpHdrs_find_literal( htp_hdrs->vars_, "User-Agent" );
 
 					/***
@@ -282,22 +469,12 @@ func_proc_post_vars( ZnkVarpAry post_vars, void* arg, const char* content_type, 
 				}
 			}
 		}
-		/***
-		 * est_hyper_upload_path, est_hyper_upload_var のみ狩り取る.
-		 */
-		if( hyper_upload_path ){
-			ZnkVarpAry_erase( post_vars, hyper_upload_path );
-			*is_updated = true;
-		}
-		if( hyper_upload_var ){
-			ZnkVarpAry_erase( post_vars, hyper_upload_var );
-			*is_updated = true;
-		}
+		cleanupHypeUpload( post_vars, hyper_upload_path, hyper_upload_var, clipboard_upload_mode, is_updated );
 	}
 	return true;
 }
 
-void
+bool
 EstPost_parsePostAndCookieVars( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, ZnkStr msg, ZnkHtpHdrs htp_hdrs,
 		ZnkStr pst_str, /* XSS-safe */ const char* hostname, const char* req_urp, const char* target, RanoModule mod )
 {
@@ -400,7 +577,6 @@ EstPost_parsePostAndCookieVars( RanoCGIEVar* evar, ZnkVarpAry post_vars, const c
 			in_bfr, content_length,
 			content_type, ZnkStr_cstr(src_boundary), ZnkStr_cstr(dst_boundary),
 			pst_str, varname_of_urlenc_body, is_unescape_val, &fnca_proc_post_vars );
-	Znk_UNUSED(result);
 
 	/***
 	 * Header and Cookie filtering
@@ -428,6 +604,8 @@ EstPost_parsePostAndCookieVars( RanoCGIEVar* evar, ZnkVarpAry post_vars, const c
 	ZnkStr_delete( src_boundary );
 	ZnkStr_delete( dst_boundary );
 	ZnkBfr_destroy( in_bfr );
+
+	return result;
 }
 
 void
@@ -444,6 +622,7 @@ EstPost_procPost( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, 
 	const char* target = NULL;
 	RanoModule  mod    = NULL;
 	bool is_https = false;
+	bool parse_post_and_cookie_result = false;
 
 	ZnkHtpHdrs_compose( htp_hdrs );
 
@@ -459,7 +638,7 @@ EstPost_procPost( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, 
 		goto FUNC_END;
 	}
 
-	EstPost_parsePostAndCookieVars( evar, post_vars, est_val, msg, htp_hdrs,
+	parse_post_and_cookie_result = EstPost_parsePostAndCookieVars( evar, post_vars, est_val, msg, htp_hdrs,
 			pst_str, ZnkStr_cstr(hostname), ZnkStr_cstr(req_urp), target, mod );
 
 	/***
@@ -473,7 +652,7 @@ EstPost_procPost( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, 
 	}
 #endif
 
-	{
+	if( parse_post_and_cookie_result ){
 		RanoTextType txt_type = RanoText_Binary;
 		char content_type[ 1024 ] = "application/octet-stream";
 		const char* parent_proxy  = EstConfig_parent_proxy();

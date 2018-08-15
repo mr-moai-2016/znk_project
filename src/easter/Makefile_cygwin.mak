@@ -64,6 +64,7 @@ OBJS0=\
 	$O/Est_assort_ui.o \
 	$O/Est_base.o \
 	$O/Est_bat_operator.o \
+	$O/Est_bmp_writer.o \
 	$O/Est_box.o \
 	$O/Est_boxmap_viewer.o \
 	$O/Est_box_base.o \
@@ -101,6 +102,7 @@ OBJS1=\
 	$O/Est_assort_ui.o \
 	$O/Est_base.o \
 	$O/Est_bat_operator.o \
+	$O/Est_bmp_writer.o \
 	$O/Est_box.o \
 	$O/Est_boxmap_viewer.o \
 	$O/Est_box_base.o \
@@ -253,7 +255,7 @@ Est_linf_list.o: Est_linf_list.h Est_base.h
 Est_link.o: Est_link.h Est_parser.h Est_config.h
 Est_link_manager.o: Est_link_manager.h Est_config.h Est_ui.h Est_unid.h Est_hint_manager.h Est_base.h Est_linf_list.h Est_box_ui.h
 Est_parser.o: Est_parser.h
-Est_post.o: Est_post.h Est_base.h Est_config.h Est_ui.h Est_hint_manager.h
+Est_post.o: Est_post.h Est_base.h Est_config.h Est_ui.h Est_hint_manager.h Est_bmp_writer.h
 Est_recentory.o: Est_recentory.h Est_search_manager.h Est_finf.h Est_unid.h
 Est_record.o: Est_record.h Est_base.h
 Est_search_manager.o: Est_search_manager.h Est_boxmap_viewer.h Est_ui.h Est_box_ui.h Est_record.h Est_config.h Est_assort.h Est_assort_ui.h Est_hint_manager.h Est_base.h Est_finf.h Est_box_base.h Est_unid.h

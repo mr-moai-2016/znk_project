@@ -38,12 +38,12 @@
 
 # os
 @@L os_winnt
-['Windows NT 10.0'] *0.1
+['Windows NT 10.0'] *0.25
 ['Windows NT 6.3']  *0.1
 ['Windows NT 6.2']
-['Windows NT 6.1']  *0.3
+['Windows NT 6.1']  *0.35
 ['Windows NT 6.0']
-['Windows NT 5.1']  *0.3
+['Windows NT 5.1']  *0.15
 @@.
 
 @@L os_win32
@@ -57,15 +57,58 @@
 @@.
 
 @@L mac_ver
+[' Mac OS X 10_6']
+[' Mac OS X 10_6_1']
+[' Mac OS X 10_6_2']
+[' Mac OS X 10_6_3']
+[' Mac OS X 10_6_4']
+[' Mac OS X 10_6_5']
+[' Mac OS X 10_6_7']
 [' Mac OS X 10_6_8']
+[' Mac OS X 10_7']
+[' Mac OS X 10_7_1']
+[' Mac OS X 10_7_2']
+[' Mac OS X 10_7_3']
+[' Mac OS X 10_7_4']
+[' Mac OS X 10_7_5']
+[' Mac OS X 10_8']
+[' Mac OS X 10_8_1']
 [' Mac OS X 10_8_2']
+[' Mac OS X 10_8_3']
+[' Mac OS X 10_8_4']
 [' Mac OS X 10_8_5']
+[' Mac OS X 10_9']
+[' Mac OS X 10_9_1']
 [' Mac OS X 10_9_2']
+[' Mac OS X 10_9_3']
 [' Mac OS X 10_9_4']
 [' Mac OS X 10_9_5']
 [' Mac OS X 10_10']
 [' Mac OS X 10_10_1']
 [' Mac OS X 10_10_2']
+[' Mac OS X 10_10_3']
+[' Mac OS X 10_10_4']
+[' Mac OS X 10_10_5']
+[' Mac OS X 10_11']
+[' Mac OS X 10_11_1']
+[' Mac OS X 10_11_2']
+[' Mac OS X 10_11_3']
+[' Mac OS X 10_11_4']
+[' Mac OS X 10_11_5']
+[' Mac OS X 10_12']
+[' Mac OS X 10_12_1']
+[' Mac OS X 10_12_2']
+[' Mac OS X 10_12_3']
+[' Mac OS X 10_12_4']
+[' Mac OS X 10_12_5']
+[' Mac OS X 10_12_6']
+[' Mac OS X 10_13']
+[' Mac OS X 10_13_1']
+[' Mac OS X 10_13_2']
+[' Mac OS X 10_13_3']
+[' Mac OS X 10_13_4']
+[' Mac OS X 10_13_5']
+[' Mac OS X 10_13_6']
 @@.
 
 @@L os_mac
@@ -75,7 +118,7 @@
 
 @@L platform
 ['$[os_winnt]$$[machine_win]$'] *0.6
-['$[os_win32]$']
+['$[os_win32]$'] *0.05
 ['$[os_linux]$$[machine_linux]$']
 ['$[os_mac]$$[machine_mac]$$[mac_ver]$']
 @@.
@@ -151,6 +194,34 @@
 ['50.0.2661.$[rv]$']
 ['51.0.2704.$[rv]$']
 ['52.0.2743.$[rv]$']
+['53.0.2785.$[rv]$']
+['54.0.2840.$[rv]$']
+['55.0.2883.$[rv]$']
+['56.0.2924.$[rv]$']
+['57.0.2987.$[rv]$']
+['58.0.3029.$[rv]$']
+['59.0.3071.$[rv]$']
+@@.
+
+@@L version_recent
+['60.0.3112.$[rv]$']
+['61.0.3164.$[rv]$']
+['62.0.3202.$[rv]$']
+['63.0.3239.$[rv]$']
+['64.0.3282.$[rv]$']
+['65.0.3325.$[rv]$']
+['66.0.3359.$[rv]$']
+['67.0.3396.$[rv]$']
+['68.0.3440.$[rv]$']
+@@.
+
+@@L version_latest
+['38.0.2125.$[rv]$']
+['49.0.2623.$[rv]$']
+['62.0.3202.$[rv]$']
+['63.0.3239.$[rv]$']
+['65.0.3325.$[rv]$']
+['68.0.3440.$[rv]$'] *0.8
 @@.
 
 @@L khtml
@@ -172,9 +243,11 @@
 
 @@L chrome_gt27
 ['$[moz5]$ ($[platform]$) AppleWebKit/537.36 ($[khtml]$) Chrome/$[version_gt27]$ $[mobile]$Safari/537.36']
+['$[moz5]$ ($[platform]$) AppleWebKit/537.36 ($[khtml]$) Chrome/$[version_recent]$ $[mobile]$Safari/537.36'] *0.15
+['$[moz5]$ ($[platform]$) AppleWebKit/537.36 ($[khtml]$) Chrome/$[version_latest]$ $[mobile]$Safari/537.36'] *0.8
 @@.
 
 @@L chrome
 ['$[chrome_lt26]$']
-['$[chrome_gt27]$'] *0.7
+['$[chrome_gt27]$'] *0.98
 @@.

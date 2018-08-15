@@ -19,15 +19,15 @@ rlib: @{libRano} Rano $(DL_VER)
 @@.
 
 @@V info_vc
-linking_libs_special = ['ws2_32']
+linking_libs_special = ['ws2_32 user32 gdi32']
 @@.
 
 @@V info_mingw
-linking_libs_special = ['ws2_32']
+linking_libs_special = ['ws2_32 user32 gdi32']
 @@.
 
 @@V info_msys
-linking_libs_special = ['ws2_32']
+linking_libs_special = ['ws2_32 user32 gdi32']
 @@.
 
 @@V info_linux

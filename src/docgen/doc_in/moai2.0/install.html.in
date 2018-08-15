@@ -29,7 +29,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 	<ol>
 		<li>最新版はzipファイルとなっており、以下より入手できます.
 	
-		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a>
+		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/v2.1>https://github.com/mr-moai-2016/znk_project/releases/v2.1</a>
 		
 		Assets にある moai-v2.1-win32.zip もしくは moai-v2.1-win64.zip がWindows版となります.
 		32bit Windowsをお使いの方は前者を、64bit Windowsをお使いの方は後者をダウンロードしてください.
@@ -141,7 +141,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 	<ol>
 		<li>最新版はzipファイルとなっており、以下より入手できます.
 		
-		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a>
+		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/v2.1>https://github.com/mr-moai-2016/znk_project/releases/v2.1</a>
 		
 		Assetsにある moai-v2.1-linux32.zip もしくは moai-v2.1-linux64.zip がLinux版となります.
 		32bit Linuxをお使いの方は前者を、64bit Linuxをお使いの方は後者をダウンロードしてください.
@@ -214,7 +214,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 	<ol>
 		<li>最新版はzipファイルとなっており、以下より入手できます.
 		
-		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a>
+		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/v2.1>https://github.com/mr-moai-2016/znk_project/releases/v2.1</a>
 		
 		Assetsにある moai-v2.1-cygwin32.zip がCygwin版となります.
 		64bit Windowsをお使いの方でもこれで動作するでしょう.
@@ -302,7 +302,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 	<ol>
 		<li>最新版はzipファイルとなっており、以下より入手できます.
 		
-		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a>
+		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/v2.1>https://github.com/mr-moai-2016/znk_project/releases/v2.1</a>
 		
 		Assetsにある moai-v2.1-android-armeabi.zip がAndroid版となります.
 		これをダウンロードしてください.

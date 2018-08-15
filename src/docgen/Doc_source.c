@@ -967,7 +967,7 @@ filterFile( const char* src_file_path, const char* dst_file_path, void* arg )
 			/***
 			 * ‚Æ‚è‚ ‚¦‚¸.
 			 */
-			const char* p = Znk_strstr( out_file_path, "/source_doc/" );
+			const char* p = Znk_strstr( out_file_path, "/mydoc/source_doc/" );
 			if( p ){
 				ZnkStrAry_push_bk_cstr( info->file_list_, p, Znk_NPOS );
 			}
@@ -1072,7 +1072,7 @@ DocSource_make( const char* in_dir, const char* out_dir )
 			Znk_fprintf( fp, "<html><body>" );
 			for( idx=0; idx<size; ++idx ){
 				const char* href = ZnkStrAry_at_cstr( info.file_list_, idx );
-				Znk_fprintf( fp, "<a class=MstyElemLink href=%s>%s</a><br>", href, href );
+				Znk_fprintf( fp, "<a class=MstyElemLink href=%s>%s</a><br>\n", href, href );
 			}
 			Znk_fprintf( fp, "</body></html>" );
 			Znk_fclose( fp );

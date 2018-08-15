@@ -31,16 +31,15 @@
 @@V config
 doc_title     = ['インフォメーション']
 author        = ['Mr.Moai']
-update        = ['2018/08/03']
+update        = ['2018/08/10']
 category_path = {}
 urp           = ['/index_github.html']
 nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 @@.
 
 @@L AtFirst
-	我々「全日本ネットワーク研究所(通称ZNK)」では、フリーなアプリケーションを開発して皆様に提供しております.
-	これらはすべてオープンソースであり、またほぼすべてが Windows、Linux、そしてAndroid向けに開発されたものであります.
-	現在このサイトで提供しておりますものを以下でご紹介しましょう.
+我々「全日本ネットワーク研究所(通称ZNK)」では、現在 Moaiと呼ばれるシステムを開発して皆様に提供しております.
+このシステムはすべてオープンソースであり、Windows、Linux、そしてAndroid向けに開発されたものです.
 @@.
 
 @@P Index
@@ -54,31 +53,53 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 
 @@L WhatsNew
 	<ul>
-		<li><b>2018/08/03 Android版の「Moaiアップグレード」機能が動作しない不具合について.</b>
+		<li><b>2018/08/16 Moai Ver2.1.2 リリース.</b>
 
-		リリース早々申し訳ありません.
-		Android版のMoaiにおいて「Moaiアップグレード」が正常に機能しないという不具合があったようです.
-		この問題は本日 2018/08/03 15:00 に修正致しました(今現在は問題ありません).
-		よってそれより前の時間にダウンロードされた方がおられましたら、この問題が発生すると思います.
+		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/v2.1.2>Moai Ver2.1.2</a>がリリースされました. (修正パッチのみの提供となります).
 
-		お手数ですが再度ダウンロード頂くか、あるいは moai-v2.1-android-armeabi ディレクトリに入り、
-		以下のコマンドを実行して頂くと直るかと思います(実行権限の付加し忘れという単純なミスでした…).
+		既に Moai Ver2.1以降をインストールされている方は、<a class=MstyElemLink target=_blank href=/moai2.0/upgrade.html#MoaiUpgrade>Moaiアップグレード</a>を行うことでこのバージョンへアップグレードできます.
 
+		Moaiを新規にインストールされる方は、まずは<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/v2.1>Moai Ver2.1</a>をインストールし、そこから<a class=MstyElemLink target=_blank href=/moai2.0/upgrade.html#MoaiUpgrade>Moaiアップグレード</a>を行うことでこのバージョンへアップグレードできます.
+
+		リリースノートは<a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project/tree/master/src/ReleaseNote.md target=_blank>こちら</a>です.
+		
 		<div class=MstyComment>
-			chmod 755 birdman/birdman
+			<u><b>「Moaiアップグレード」機能が動作しない不具合について.</b></u>
+
+			Moai Ver2.1ではある条件下において「Moaiアップグレード」が正常に機能しないという不具合があります.
+			特にAndroidとCygwin環境において、正常に動作しないことがあります.
+
+			万一これが機能しない場合、お手数ですが Moai Ver2.1 のディレクトリに入り、以下のコマンドを実行して頂くと直るかと思います.
+			(この問題はすべてUNIX上での実行権限の付加に失敗するために発生するものです).
+
+			<div class=MstyComment>
+				chmod 755 birdman/birdman
+			</div>
+
+			また万一CygwinにおいてMoaiそのものが起動しなくなった場合、以下のコマンドもお試しください.
+
+			<div class=MstyComment>
+				chmod 755 *.dll
+			</div>
+
+			尚、この問題は Ver2.1.1より修正されております.
 		</div>
 		</li>
 
-		<li><b>2018/08/03 Moai Ver2.1リリース.</b>
+		<li><b>2018/08/10 Moai Ver2.1.1 リリース.</b>
+
+		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/v2.1.1>Moai Ver2.1.1</a>がリリースされました. (修正パッチのみの提供となります).
+		</li>
+
+		<li><b>2018/08/03 Moai Ver2.1 リリース.</b>
 		
-		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/latest>Moai Ver2.1</a>がリリースされました.
+		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/v2.1>Moai Ver2.1</a>がリリースされました.
 		このバージョンで追加された新機能については<a class=MstyElemLink href="/announcement.html#WhatIsChanging_v2_1">こちら</a>にまとめてありますので参照してください.
-		リリースノートをご覧になりたい方は<a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project/tree/master/src/ReleaseNote.md target=_blank>こちら</a>を参照してください.
-		
+
 		<div class=MstyComment>
 		<b><u>バージョン2.0.*系をご使用の方へご注意</u></b>
 
-		Ver2.1を新規インストールして頂いても勿論かまいませんが、
+		Ver2.1 を新規インストールして頂いても勿論かまいませんが、
 		Ver2.0.*から Ver2.1へアップグレードするための修正パッチを提供しています.
 		詳しくは<a class=MstyElemLink href=/moai2.0/upgrade.html#From2_0_To2_1>こちら</a>をご覧下さい.
 		</div>

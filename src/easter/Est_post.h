@@ -12,7 +12,7 @@ Znk_EXTERN_C_BEGIN
 typedef void (*EstPostFuncT_filterMain)( const char* result_file,
 		const char* src, const char* target, RanoTextType txt_type, ZnkStr console_msg, bool save_img_cache, bool is_https );
 
-void
+bool
 EstPost_parsePostAndCookieVars( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, ZnkStr msg, ZnkHtpHdrs htp_hdrs,
 		ZnkStr pst_str, const char* hostname, const char* req_urp, const char* target, RanoModule mod );
 

@@ -75,21 +75,21 @@ var st_func_tbls = [];
 
 
 
-<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>キャッシュに関する設定</legend>
+<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>Easterキャッシュに関する設定</legend>
 <font size=-1>
 <br>
-キャッシュの保存日数：
+Easterキャッシュの保存日数：
 <input class=MstyInputField type=text name=cache_days_ago value=#[cache_days_ago]# size=5> 日前まで<br>
-ダストボックスの保存日数：
+Easterのゴミ箱の保存日数：
 <input class=MstyInputField type=text name=dustbox_days_ago value=#[dustbox_days_ago]# size=5> 日前まで<br>
 <br>
 </font>
-<a class=MstyElemLink  href="/easter?est_manager=cache&amp;command=clean_cachebox&amp;confirm=on&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >cacheboxをクリア</a><br>
+<a class=MstyElemLink  href="/easter?est_manager=cache&amp;command=clean_cachebox&amp;confirm=on&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >Easterキャッシュをクリア</a><br>
 <a class=MstyElemLink  href="/easter?est_manager=cache&amp;command=view&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >BoxMapビューアを開く</a> &nbsp;
 </fieldset>
 
 <br>
-<button class=MstyWideButton type='submit' name='command' value='update'>更新</button><br>
+<button class=MstyWideButton type='submit' name='command' value='update'>設定の確定</button><br>
 
 <br><font size=-1 color=red>#[ermsg]#</font><br>
 

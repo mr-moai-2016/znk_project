@@ -495,6 +495,30 @@ filterClear( ZnkStr str, void* arg )
 	ZnkStr_clear( str );
 	return 1;
 }
+static int
+filterClearIFrame( ZnkStr str, void* arg )
+{
+	{
+		ZnkSRef old_ptn = { 0 };
+		ZnkSRef new_ptn = { 0 };
+		ZnkSRef_set_literal( &old_ptn, "//dec.2chan.net/bin/sphead.htm" );
+		ZnkSRef_set_literal( &new_ptn, "" );
+		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+	return 1;
+}
+static int
+filterClearDocWriteStyle( ZnkStr str, void* arg )
+{
+	{
+		ZnkSRef old_ptn = { 0 };
+		ZnkSRef new_ptn = { 0 };
+		ZnkSRef_set_literal( &old_ptn, "height:" );
+		ZnkSRef_set_literal( &new_ptn, "height:0px;width:" );
+		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+	return 1;
+}
 
 static int
 addOpenHyperpostButton( ZnkStr str, void* arg )
@@ -677,6 +701,19 @@ EstFilter_main( const char* result_file,
 					"microadCompass.queue.push({", "});",
 					NULL, NULL,
 					filterClear, &link_info, true );
+
+			/* futaba : ad */
+			ZnkStrPtn_invokeInQuote( text,
+					"<iframe", "</iframe>",
+					NULL, NULL,
+					filterClearIFrame, &link_info, true );
+
+			/* futaba : ad */
+			ZnkStrPtn_invokeInQuote( text,
+					"document.write", "<iframe",
+					NULL, NULL,
+					filterClearDocWriteStyle, &link_info, true );
+
 
 			/* futaba : デフォルトの[リロード]のリンクは面倒なので一旦消去する */
 			ZnkStrPtn_invokeInQuote( text,

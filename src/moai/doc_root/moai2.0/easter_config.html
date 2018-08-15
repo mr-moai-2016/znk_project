@@ -58,7 +58,7 @@
 	<li><b><a class=MstyElemLink href=#AboutConfig>Easterにおける設定画面の概要</a></b></li>
 	<li><b><a class=MstyElemLink href=#VirtualBrousing>仮想ブラウジングに関する設定</a></b></li>
 	<li><b><a class=MstyElemLink href=#Collection>コレクションに関する設定</a></b></li>
-	<li><b><a class=MstyElemLink href=#Cache>キャッシュに関する設定</a></b></li>
+	<li><b><a class=MstyElemLink href=#Cache>Easterキャッシュに関する設定</a></b></li>
 </ul><br>
 
 
@@ -187,29 +187,35 @@ Easterにおける設定画面の概要
 
 <a name=Cache></a>
 <u><b>
-キャッシュに関する設定
+Easterキャッシュに関する設定
 </b></u><br>
 <br>
 <div class=MstyIndent>
-	この項目にあるのはEasterのキャッシュに関するものです.<br>
+	この項目にあるのはEasterキャッシュに関するものです.<br>
 	<ul>
-		<li><b>キャッシュの保存日数</b><br>
-		Easter経由でHTMLや画像を表示した場合、それらのファイルはEasterのキャッシュ管理システムでキャッシュされます.<br>
-		ここではそのキャッシュを最大何日前までのものまで残すかを指定します.<br>
-		デフォルトでは3となっており、この場合3日前までのものがキャッシュとして残されるということです.<br>
-		それより古いキャッシュはEasterのダストボックスへと移動されます.<br>
+		<li><b>Easterキャッシュの保存日数</b><br>
+		Easter経由でHTMLや画像を表示した場合、それらのファイルはEasterの管理下(cgis/easter/cachebox内)でキャッシュされます.<br>
+		これを<b>Easterキャッシュ</b>と呼びます.<br>
+		（ブラウザが保持する通常のキャッシュと区別するため、このような名前にしています).<br>
+<br>
+		ここではEasterキャッシュを最大何日前までのものまで残すかを指定します.<br>
+		デフォルトでは3となっており、この場合3日前までのものがEasterキャッシュとして残されるということです.<br>
+		それより古いEasterキャッシュ内のファイルについては、Easterのゴミ箱へと自動的に移動されます.<br>
 		</li>
 		<br>
-		<li><b>ダストボックスの保存日数</b><br>
+		<li><b>Easterのゴミ箱の保存日数</b><br>
 		Easterで画像等を削除した場合、誤操作に対する猶予を与えるため本当にそのファイルをディスクから削除するのではなく<br>
-		それをmoaiディレクトリ配下のcgi/easter/dustboxというディレクトリへ移動します.<br>
-		これをEasterでのダストボックスと呼んでいます.<br>
-		ここではそのダストボックス内でのファイルを最大何日前までのものまで残すかを指定します.<br>
-		デフォルトでは5となっており、この場合5日前までのものがダストボックス内に残されるということです.<br>
+		moaiディレクトリ配下のcgis/easter/dustboxというディレクトリへ移動します.<br>
+		これを<b>Easterのゴミ箱</b>と呼びます.<br>
+<br>
+		ここではEasterのゴミ箱の中身を最大何日前までのものまで残すかを指定します.<br>
+		デフォルトでは5となっており、この場合5日前までのものがEasterのゴミ箱内に残されるということです.<br>
 		それより古いファイルは、今度こそ本当に削除されます.<br>
 		</li>
-		<li><b>キャッシュの全削除</b><br>
-		Easterにおけるキャッシュ(cachebox)の中身をすべてmoaiディレクトリ配下のcgi/easter/dustboxへ移動します.<br>
+<br>
+		<li><b>Easterキャッシュのクリア</b><br>
+		このボタンを押すと、Easterキャッシュの中身をすべてEasterのゴミ箱へ移動します.<br>
+		（ボタンを押して直ちにこの処理が行われるのでなく、一旦確認画面が表示されます).<br>
 		</li>
 	</ul>
 	尚、ここには「BoxMapビューアを開く」ボタンがあり、ここからBoxMapビューアを開くこともできるようになっています.<br>

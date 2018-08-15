@@ -48,6 +48,7 @@ OBJS0=\
 	$O\Est_assort_ui.obj \
 	$O\Est_base.obj \
 	$O\Est_bat_operator.obj \
+	$O\Est_bmp_writer.obj \
 	$O\Est_box.obj \
 	$O\Est_boxmap_viewer.obj \
 	$O\Est_box_base.obj \
@@ -85,6 +86,7 @@ OBJS1=\
 	$O\Est_assort_ui.obj \
 	$O\Est_base.obj \
 	$O\Est_bat_operator.obj \
+	$O\Est_bmp_writer.obj \
 	$O\Est_box.obj \
 	$O\Est_boxmap_viewer.obj \
 	$O\Est_box_base.obj \
@@ -144,12 +146,12 @@ $O:
 
 # Product files rule.
 $(EXE_FILE0): $(OBJS0) 
-	@echo $(LINKER) /OUT:$(EXE_FILE0)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib 
-	@     $(LINKER) /OUT:$(EXE_FILE0)  $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib 
+	@echo $(LINKER) /OUT:$(EXE_FILE0)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib user32.lib gdi32.lib 
+	@     $(LINKER) /OUT:$(EXE_FILE0)  $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib user32.lib gdi32.lib 
 
 $(EXE_FILE1): $(OBJS1) 
-	@echo $(LINKER) /OUT:$(EXE_FILE1)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib 
-	@     $(LINKER) /OUT:$(EXE_FILE1)  $(OBJS1) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib 
+	@echo $(LINKER) /OUT:$(EXE_FILE1)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib user32.lib gdi32.lib 
+	@     $(LINKER) /OUT:$(EXE_FILE1)  $(OBJS1) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib user32.lib gdi32.lib 
 
 
 # Suffix rule.
@@ -228,7 +230,7 @@ Est_linf_list.obj: Est_linf_list.h Est_base.h
 Est_link.obj: Est_link.h Est_parser.h Est_config.h
 Est_link_manager.obj: Est_link_manager.h Est_config.h Est_ui.h Est_unid.h Est_hint_manager.h Est_base.h Est_linf_list.h Est_box_ui.h
 Est_parser.obj: Est_parser.h
-Est_post.obj: Est_post.h Est_base.h Est_config.h Est_ui.h Est_hint_manager.h
+Est_post.obj: Est_post.h Est_base.h Est_config.h Est_ui.h Est_hint_manager.h Est_bmp_writer.h
 Est_recentory.obj: Est_recentory.h Est_search_manager.h Est_finf.h Est_unid.h
 Est_record.obj: Est_record.h Est_base.h
 Est_search_manager.obj: Est_search_manager.h Est_boxmap_viewer.h Est_ui.h Est_box_ui.h Est_record.h Est_config.h Est_assort.h Est_assort_ui.h Est_hint_manager.h Est_base.h Est_finf.h Est_box_base.h Est_unid.h
