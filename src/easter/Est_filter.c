@@ -505,6 +505,13 @@ filterClearIFrame( ZnkStr str, void* arg )
 		ZnkSRef_set_literal( &new_ptn, "" );
 		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
 	}
+	{
+		ZnkSRef old_ptn = { 0 };
+		ZnkSRef new_ptn = { 0 };
+		ZnkSRef_set_literal( &old_ptn, "//dec.2chan.net/bin/amp.htm" );
+		ZnkSRef_set_literal( &new_ptn, "" );
+		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
 	return 1;
 }
 static int
