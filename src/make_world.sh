@@ -1,6 +1,9 @@
 #!/bin/sh
 current_dir_save=`pwd`
 
+SKIP_CLEAN_LIST=""
+if test -e proj_list_skip_clean.sh ; then SKIP_CLEAN_LIST="$SKIP_CLEAN_LIST `cat proj_list_skip_clean.sh`" ; fi
+
 check_error()
 {
 	status=$1
@@ -12,6 +15,16 @@ check_error()
 
 make_one()
 {
+	if test "$2" = "clean" ; then
+		for i in $SKIP_CLEAN_LIST
+		do
+			if test "$1" = "$i" ; then
+				echo "Skip [$i]"
+				return
+			fi
+		done
+	fi
+
 	cd $1
 	echo ""
 	echo ""

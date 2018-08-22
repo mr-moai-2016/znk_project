@@ -16,6 +16,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 @@P Index
 { ['#VirtualUSERS_Button'] ['ボタン一つで仮想環境を構築する'] }
 { ['#VirtualUSERS_Menu']   ['構築するブラウザ環境の範囲を限定する'] }
+{ ['#VirtualUSERS_Cookie'] ['Cookieの値を直接弄くる'] }
 @@.
 
 
@@ -123,6 +124,20 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 		iPhone環境向けのものに限定して仮想ブラウザ環境を構築します.
 		</li>
 	</ul>
+@@.
+
+@@L VirtualUSERS_Cookie
+	Cookieの値については「VirtualUSERS」ボタンで基本的には消去されますが、
+	一部消去されないものもあります（これは敢えてそうしてあります).
+	このようなものまで完全に消去するには、「Cookieの仮想環境」フレームにおいて「全Cookieを強制消去」にチェックを入れた状態で
+	「VirtualUSERS」ボタンを押します.
+
+	<div class=MstyComment>
+		<u><b>参考</b></u>
+		
+		「CustomCookie」をクリックすると、さらに細かいCookie値の設定を行うこともできます.
+		これはCustomBoyの機能となりますので、ここではこれ以上の説明はしません.
+	</div>
 @@.
 
 

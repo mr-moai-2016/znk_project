@@ -1,17 +1,10 @@
 @echo off
-if not exist ..\%3 goto Error
-
-REM à»â∫ÇÃÇ‡ÇÃÇcleanÇ∑ÇÈèÍçáÇÕó·äOìIÇ…skipÇ∑ÇÈ.
-if "%4" == "clean" (
-	set SKIP_CLEAN_LIST=
-	if exist ..\proj_list_skip_clean.bat call ..\proj_list_skip_clean.bat
-	for %%a in ( %SKIP_CLEAN_LIST% ) do if "%3" == "%%a" goto Skip
-)
+if not exist %3 goto Error
 
 setlocal
 echo ======
 echo === Entering [%3] ===
-cd ..\%3
+cd %3
 %1 -f Makefile_%2.mak %4
 if errorlevel 1 goto Error_Make
 echo === Leaving [%3] ===
@@ -23,6 +16,7 @@ goto End
 
 :Skip
 echo Skip : directory [%3] is skipped.
+pause
 goto End
 
 :Error

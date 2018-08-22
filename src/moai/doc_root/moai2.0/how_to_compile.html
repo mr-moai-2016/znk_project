@@ -26,7 +26,7 @@
 <div class=MstyComment>
 <u><b>記事担当者</b></u> : Mr.Moai ＆ 全角<br>
 <br>
-<u><b>最終更新日</b></u> : 2018/03/30<br>
+<u><b>最終更新日</b></u> : 2018/08/20<br>
 <br>
 </div>
 <br>
@@ -63,6 +63,7 @@
 	<li><b><a class=MstyElemLink href=#compile_on_msys>MSYSを使ってコンパイルする</a></b></li>
 	<li><b><a class=MstyElemLink href=#compile_on_others_windows>WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使ってコンパイルする</a></b></li>
 	<li><b><a class=MstyElemLink href=#compile_on_android>Android版をコンパイルする</a></b></li>
+	<li><b><a class=MstyElemLink href=#about_libressl>付属ライブラリlibresslについて</a></b></li>
 	<li><b><a class=MstyElemLink href=#about_macos>MacOSについて</a></b></li>
 </ul><br>
 
@@ -1181,6 +1182,44 @@ Android版をコンパイルする
 		うまくいけばこれでMoaiが起動するはずです.<br>
 		上記「Linuxの場合」で説明したのと同様のメッセージが表示されれば成功です.<br>
 	</div>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+</div><br>
+<br>
+
+
+<a name=about_libressl></a>
+<u><b>
+付属ライブラリlibresslについて
+</b></u><br>
+<br>
+<div class=MstyIndent>
+	Moai システムでは HTTPS を実現するために、libressl ライブラリを使用しています.<br>
+	Moaiのソースコード内にはこの libressl のソースコードも付属しています.<br>
+	( 少し古いVCでもコンパイル可能とするため、若干コードを手直ししたものになります ).<br>
+	これに関しては以下の点に注意してください.<br>
+<br>
+	<ul>
+		<li>src フォルダ直下の make_world.bat または make_world.sh を初めて実行した場合、<br>
+		この libressl も自動的にビルドされます.<br>
+		</li>
+<br>
+		<li>src フォルダ直下の make_world.bat または make_world.sh により clean を実行した場合、<br>
+		libresslの配下は clean されません.<br>
+<br>
+		<div class=MstyComment>
+			<b><u>Note.</u></b><br>
+<br>
+			proj_list_skip_clean.bat(proj_list_skip_clean.sh) というファイルによって、これらが clean されないように設定してあります.<br>
+			なぜこのようにしているのかと言えば、libressl のコンパイルは時間がかかることと、<br>
+			Moai自体のバージョンが上がっても、libressl自体は通常はコンパイルし直す必要性はないものと考えられるからです.<br>
+		</div>
+<br>
+		<li>libressl単体をビルドしたい場合は、libressl フォルダ内に入り、その中にある make_world.bat または make_world.sh を実行します.<br>
+		尚、このフォルダ内で make_world.bat または make_world.sh により clean を実行した場合は、<br>
+		( src フォルダ直下の場合と異なり )今度は libressl 全体が clean されます.<br>
+		</li>
+	</ul>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 </div><br>

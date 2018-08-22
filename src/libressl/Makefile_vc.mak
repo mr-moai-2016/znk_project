@@ -1,0 +1,14 @@
+MAKE_CMD=nmake
+MKID=vc
+
+# Entry rule.
+all:
+	call _make_kick.bat $(MAKE_CMD) $(MKID)
+
+# Install rule.
+install:
+	call _make_kick.bat $(MAKE_CMD) $(MKID) install
+
+# Clean rule.
+clean:
+	call _make_kick.bat $(MAKE_CMD) $(MKID) clean

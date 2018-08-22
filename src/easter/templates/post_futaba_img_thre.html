@@ -45,8 +45,7 @@ var st_func_tbls = [];
 </td></tr>
 
 <tr><td>
-<form action="http://#[xhr_dmz]#/easter?est_post=#[post_dst]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" method="POST" enctype="#[post_enctype]#" id="fm">
-<input type=hidden name=est_hyper_upload_var value=upfile>
+<form action="http://#[xhr_dmz]#/easter?est_post=#[post_dst]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" method="POST" enctype="#[post_enctype]#" name="fm_main">
 
 #[input_hiddens]#
 
@@ -63,39 +62,34 @@ var st_func_tbls = [];
 		[<label><input type=checkbox name=textonly value=on>画像なし</label>]
 	</td></tr>
 	<br>
-	<tr><td class=ftdc_extra><b>添付URL</b></td><td><input class=MstyInputField type=text name=est_hyper_upload_path placeholder="URL" value="" size=65></td></tr>
+	<tr><td class=ftdc_extra><b>添付URL</b></td><td><input class=MstyInputField type=text name=est_hyper_upload_path placeholder="URL" value="#[est_hyper_upload_path]#" size=65></td></tr>
 	<tr><td colspan=2>
 		<div class=MstyComment>
 		「添付URL」はURLの指定により画像の添付が行える拡張機能となります.<br>
-		例えば以下のような画像を即座に添付したい場合に便利です.<br>
-		<div style="padding:0.4em 1em">
-		・Google画像検索の結果<br>
-		・Easterでコレクションされた画像<br>
-		</div>
+		例えば、Google画像検索の結果やEasterでコレクションされた画像などを即座に添付したい場合に便利です.<br>
 		この指定が行われている場合は「ディスクからファイルを選択」より優先されます.<br>
 		</div>
 	</td></tr>
-	<tr><td class=ftdc_extra><b>添付クリップボード</b></td><td>[<label><input type=checkbox name=est_clipboard_upload_mode value=on>クリップボードの内容をアップロード</label>]</td></tr>
+	<tr><td class=ftdc_extra><b>添付クリップボード</b></td><td>[<label><input type=checkbox name=est_clipboard_upload_mode value=on #[est_clipboard_upload_mode]#>クリップボードの内容をアップロード</label>]</td></tr>
 	<tr><td colspan=2>
 		<div class=MstyComment>
 		「添付クリップボード」はクリップボードの内容で画像の添付が行える拡張機能となります.<br>
-		例えば以下のような画像を即座に添付したい場合に便利です.<br>
-		<div style="padding:0.4em 1em">
-		・ペイントソフト等で画像編集中の画像を即座に投稿<br>
-		</div>
+		例えば、ペイントソフト等で画像編集中の画像などを即座に添付したい場合に便利です.<br>
 		この指定がONの場合、「ディスクからファイルを選択」や「添付URL」より優先されます.<br>
 		<br>
-		現バージョンではこれはまだ<font color=red>試験的な機能</font>となります.<br>
-		以下の制限や注意点がありますので、それを十分踏まえた上でお試し下さい.<br>
+		現バージョンではWindows限定の機能であり、更に以下の注意点があります.<br>
 		<div style="padding:0.4em 1em">
-		・Windows限定の機能となります.<br>
 		・クリップボードに何も画像がコピーされていない場合はエラーとなります.<br>
 		・ImageMagicのconvertコマンドが別途必要です(手抜きで申し訳ない…).<br>
 		・png画像形式として投稿されます.<br>
-		・<font color=red>送信内容の確認画面等をまだ実装しておりません</font>ので誤送信に注意してください.<br>
 		</div>
-		詳しくは <a href='/moai2.0/easter_reference.html#EasterHyperPost' target=_blank>こちら</a>をご覧下さい.
+		詳しくは <a class=MstyElemLink href='/moai2.0/easter_reference.html#EasterHyperPost' target=_blank>こちら</a>をご覧下さい.
 		</div>
+	</td></tr>
+	<tr><td colspan=2>
+	<a class=MstyElemLinkRed href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'hyper_post', 'confirm', 'post_dst=#[post_dst]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#', '' )">送信画像の確認</a>
+	<br>
+	#[upfile_preview]#
 	</td></tr>
 </table>
 </form>

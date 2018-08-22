@@ -1,5 +1,8 @@
 libZnk
 libRano
+libressl/crypto
+libressl/ssl
+libressl/tls
 moai
 easter
 custom_boy

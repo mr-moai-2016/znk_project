@@ -31,6 +31,15 @@ typedef struct {
 	ZnkStr       given_authentick_key_;
 } EstPostInfo;
 
+static const char*
+getUpfileVarname( const char* target )
+{
+	if( ZnkS_eq( target, "futaba" ) ){
+		return "upfile";
+	}
+	return "";
+}
+
 static void
 initHtpHdr_forPost( ZnkHtpHdrs htp_hdrs, const char* hostname, const char* req_urp, const char* ua, ZnkVarpAry cookie, RanoCGIEVar* evar )
 {
@@ -168,10 +177,10 @@ replaceUploadFile_forMPFD( const ZnkVarpAry hpvs, const char* query_post_var_nam
 
 static bool
 doHyperUpload( ZnkVarpAry post_vars,
-		const char* new_filename, const char* upfile_varname, const char* ua, const char* evar_http_cookie, RanoModule mod )
+		const char* new_filename, const char* upfile_varname, const char* ua, const char* evar_http_cookie, RanoModule mod,
+		ZnkStr result_filename )
 {
 	bool   is_updated = false;
-	ZnkStr result_filename = ZnkStr_new( "result.dat" );
 	bool   is_result = false;
 	bool   is_url   = false;
 
@@ -208,7 +217,6 @@ doHyperUpload( ZnkVarpAry post_vars,
 		}
 	}
 
-	ZnkStr_delete( result_filename );
 	return is_updated;
 }
 
@@ -285,7 +293,7 @@ saveHBitmap( HBITMAP hBmp, const char* filename, ZnkStr ermsg )
 #endif
 
 static bool
-getClipboardDataTest( const char* filename, ZnkStr ermsg )
+getClipboardData( const char* filename, ZnkStr ermsg )
 {
 	bool result = false;
 #if defined(Znk_TARGET_WINDOWS)
@@ -297,12 +305,19 @@ getClipboardDataTest( const char* filename, ZnkStr ermsg )
 			CloseClipboard();
 		} else {
 			if( ermsg ){
-				ZnkStr_addf( ermsg, "getClipboardDataTest : Cannot open Clipboard.\n" );
+				ZnkStr_addf( ermsg, "Easter HyperPost : Error.<br>" );
+				ZnkStr_addf( ermsg, "<br>" );
+				ZnkStr_addf( ermsg, "&nbsp;&nbsp;クリップボードの内容の取得に失敗しました.<br>" );
+				ZnkStr_addf( ermsg, "&nbsp;&nbsp;Cannot open Clipboard.\n" );
 			}
 		}
 	} else {
 		if( ermsg ){
-			ZnkStr_addf( ermsg, "getClipboardDataTest : CF_BITMAP is not available.\n" );
+			ZnkStr_addf( ermsg, "Easter HyperPost : Error.<br>" );
+			ZnkStr_addf( ermsg, "<br>" );
+			ZnkStr_addf( ermsg, "&nbsp;&nbsp;クリップボードの内容の取得に失敗しました.<br>" );
+			ZnkStr_addf( ermsg, "&nbsp;&nbsp;クリップボードに画像がありません.<br>" );
+			ZnkStr_addf( ermsg, "&nbsp;&nbsp;(CF_BITMAP is not available)" );
 		}
 	}
 #endif
@@ -310,21 +325,15 @@ getClipboardDataTest( const char* filename, ZnkStr ermsg )
 }
 
 static bool
-uploadClipboard( ZnkVarpAry post_vars, const char* upfile_varname )
+uploadClipboard( ZnkVarpAry post_vars, const char* upfile_varname, ZnkStr ermsg )
 {
 	bool   result = false;
-	ZnkStr ermsg  = ZnkStr_new( "" );
 
 	/***
 	 * Test : GetClipboardData (only windows)
 	 */
-	result = getClipboardDataTest( "tmp/clipboard_save.bmp", ermsg );
+	result = getClipboardData( "tmp/clipboard_save.bmp", ermsg );
 	if( !result ){
-		RanoCGIMsg_initiate( true, NULL );
-		RanoCGIMsg_begin();
-		Znk_printf( "Easter Hyper Post : Error : getClipboardDataTest : [%s].\n", ZnkStr_cstr(ermsg) );
-		RanoCGIMsg_end();
-		RanoCGIMsg_finalize();
 		goto FUNC_END;
 	}
 
@@ -335,32 +344,30 @@ uploadClipboard( ZnkVarpAry post_vars, const char* upfile_varname )
 	 * 尚、現時点ではまだマルチプロセス処理に対する排他制御は行っていない.
 	 */
 	if( ZnkDir_getType( "convert.exe" ) == ZnkDirType_e_File ){
-		if( ZnkDir_deleteFile_byForce( "tmp/clipboard_save.png" ) ){
-			system( "convert.exe tmp/clipboard_save.bmp tmp/clipboard_save.png" );
-			if( ZnkDir_getType( "tmp/clipboard_save.png" ) == ZnkDirType_e_File ){
-				ZnkDir_deleteFile_byForce( "tmp/clipboard_save.bmp" );
-				if( replaceUploadFile_forMPFD( post_vars, upfile_varname, "tmp/clipboard_save.png" ) ){
-					result = true;
-				}
+		ZnkDir_deleteFile_byForce( "cachebox/upload/clipboard_save.png" );
+		system( "convert.exe tmp/clipboard_save.bmp cachebox/upload/clipboard_save.png" );
+		if( ZnkDir_getType( "cachebox/upload/clipboard_save.png" ) == ZnkDirType_e_File ){
+			ZnkDir_deleteFile_byForce( "tmp/clipboard_save.bmp" );
+			if( replaceUploadFile_forMPFD( post_vars, upfile_varname, "cachebox/upload/clipboard_save.png" ) ){
+				result = true;
 			}
 		}
 	} else {
-		RanoCGIMsg_initiate( true, NULL );
-		RanoCGIMsg_begin();
-		Znk_printf( "Easter Hyper Post : Error : Missing convert command..\n" );
-		RanoCGIMsg_end();
-		RanoCGIMsg_finalize();
+		ZnkStr_addf( ermsg, "Easter HyperPost : Error.<br>" );
+		ZnkStr_addf( ermsg, "<br>" );
+		ZnkStr_addf( ermsg, "&nbsp;&nbsp;ImageMagicのconvertコマンドがeaster配下に設置されていません.<br>" );
+		ZnkStr_addf( ermsg, "&nbsp;&nbsp;クリップボードのファイル形式の変換のためにこのコマンドが必要となります.<br>" );
+		ZnkStr_addf( ermsg, "&nbsp;&nbsp;<a class=MstyElemLink href=/moai2.0/easter_reference.html#EasterHyperPost>こちら</a>を参照し、このコマンドを設置してください.<br>" );
 		goto FUNC_END;
 	}
 
 FUNC_END:
-	ZnkStr_delete( ermsg );
 	return result;
 }
 
 static void
 cleanupHypeUpload( ZnkVarpAry post_vars,
-		ZnkVarp hyper_upload_path, ZnkVarp hyper_upload_var, ZnkVarp clipboard_upload_mode,
+		ZnkVarp hyper_upload_path, ZnkVarp clipboard_upload_mode,
 		bool* is_updated )
 {
 	/***
@@ -370,21 +377,28 @@ cleanupHypeUpload( ZnkVarpAry post_vars,
 		ZnkVarpAry_erase( post_vars, hyper_upload_path );
 		*is_updated = true;
 	}
-	if( hyper_upload_var ){
-		ZnkVarpAry_erase( post_vars, hyper_upload_var );
-		*is_updated = true;
-	}
 	if( clipboard_upload_mode ){
 		ZnkVarpAry_erase( post_vars, clipboard_upload_mode );
 		*is_updated = true;
 	}
 }
 
+struct HyperPostInfo {
+	EstPostInfo post_info_;
+	ZnkStr upfile_filename_;
+	ZnkStr upfile_varname_;
+	ZnkStr ermsg_;
+	ZnkStr est_hyper_upload_path_;
+	bool*  est_clipboard_upload_mode_;
+};
+
 static bool
 func_proc_post_vars( ZnkVarpAry post_vars, void* arg, const char* content_type, bool* is_updated )
 {
 	bool result = false;
-	EstPostInfo* post_info = Znk_force_ptr_cast( EstPostInfo*, arg );
+	struct HyperPostInfo* hyper_post_info = Znk_force_ptr_cast( struct HyperPostInfo*, arg );
+	EstPostInfo* post_info = &hyper_post_info->post_info_;
+	ZnkStr       upfile_filename = hyper_post_info->upfile_filename_;
 	RanoCGIEVar* evar                 = post_info->evar_;
 	ZnkHtpHdrs   htp_hdrs             = post_info->htp_hdrs_;
 	RanoModule   mod                  = post_info->mod_;
@@ -420,19 +434,22 @@ func_proc_post_vars( ZnkVarpAry post_vars, void* arg, const char* content_type, 
 	 */
 	if( is_authenticated ){
 		ZnkVarp hyper_upload_path     = ZnkVarpAry_find_byName_literal( post_vars, "est_hyper_upload_path", false );
-		ZnkVarp hyper_upload_var      = ZnkVarpAry_find_byName_literal( post_vars, "est_hyper_upload_var", false );
 		ZnkVarp clipboard_upload_mode = ZnkVarpAry_find_byName_literal( post_vars, "est_clipboard_upload_mode", false );
 		/***
 		 * この機能は Authentic なUIからの投稿に限り有効.
 		 */
-		if( IS_OK( hyper_upload_var ) ){
-			const char* upfile_varname = ZnkVar_cstr(hyper_upload_var);
+		{
+			const char* upfile_varname = ZnkStr_cstr(hyper_post_info->upfile_varname_);
 
 			if( IS_OK( clipboard_upload_mode ) && ZnkS_eq( ZnkVar_cstr( clipboard_upload_mode ), "on" ) ){
 				/* Clipboard uploading */
-				result = uploadClipboard( post_vars, upfile_varname );
+				result = uploadClipboard( post_vars, upfile_varname, hyper_post_info->ermsg_ );
 				if( result ){
+					ZnkStr_set( upfile_filename, "cachebox/upload/clipboard_save.png" );
 					*is_updated = true;
+					if( hyper_post_info->est_clipboard_upload_mode_ ){
+						*hyper_post_info->est_clipboard_upload_mode_ = true;
+					}
 				} else {
 					return false;
 				}
@@ -450,33 +467,39 @@ func_proc_post_vars( ZnkVarpAry post_vars, void* arg, const char* content_type, 
 					const char* ua = ( ua_var == NULL ) ? easter_default_ua :
 						ZnkS_eq( ZnkHtpHdrs_val_cstr(ua_var,0), "UNTOUCH" ) ? easter_default_ua : ZnkHtpHdrs_val_cstr(ua_var,0);
 
-					result = doHyperUpload( post_vars, new_filename, upfile_varname, ua, evar->http_cookie_, mod );
+					result = doHyperUpload( post_vars, new_filename, upfile_varname, ua, evar->http_cookie_, mod, upfile_filename );
 					if( !result ){
 						/***
 						 * Downloadに失敗したと思われる.
 						 * この場合は何もせずエラーメッセージを出すべき.
 						 */
-						RanoCGIMsg_initiate( true, NULL );
-						RanoCGIMsg_begin();
-						Znk_printf( "Easter Hyper Post : Error : [%s] のダウンロードに失敗しました.\n", new_filename );
-						RanoCGIMsg_end();
-						RanoCGIMsg_finalize();
+						ZnkStr ermsg = hyper_post_info->ermsg_;
+						ZnkStr_addf( ermsg, "Easter HyperPost : Error.<br>" );
+						ZnkStr_addf( ermsg, "<br>" );
+						ZnkStr_addf( ermsg, "&nbsp;&nbsp;添付URLにて指定されたURLの画像のダウンロードに失敗しました.<br>" );
+						ZnkStr_addf( ermsg, "&nbsp;&nbsp;URLの指定に誤りがある可能性もあるのでご確認ください.<br>" );
+						ZnkStr_addf( ermsg, "<br>" );
+						ZnkStr_addf( ermsg, "&nbsp;&nbsp;指定されたURL=[%s]", new_filename );
 						return false;
 					}
 					if( result ){
 						*is_updated = true;
+						if( hyper_post_info->est_hyper_upload_path_ ){
+							ZnkStr_set( hyper_post_info->est_hyper_upload_path_, new_filename );
+						}
 					}
 				}
 			}
 		}
-		cleanupHypeUpload( post_vars, hyper_upload_path, hyper_upload_var, clipboard_upload_mode, is_updated );
+		cleanupHypeUpload( post_vars, hyper_upload_path, clipboard_upload_mode, is_updated );
 	}
 	return true;
 }
 
-bool
-EstPost_parsePostAndCookieVars( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, ZnkStr msg, ZnkHtpHdrs htp_hdrs,
-		ZnkStr pst_str, /* XSS-safe */ const char* hostname, const char* req_urp, const char* target, RanoModule mod )
+static bool
+parsePostAndCookieVars( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, ZnkHtpHdrs htp_hdrs,
+		ZnkStr pst_str, /* XSS-safe */ const char* hostname, const char* req_urp, const char* target, RanoModule mod,
+		ZnkStr upfile_preview, ZnkStr hyper_upload_path, bool* clipboard_upload_mode )
 {
 	static const char* varname_of_urlenc_body = NULL;
 	bool   is_unescape_val = true;
@@ -488,7 +511,7 @@ EstPost_parsePostAndCookieVars( RanoCGIEVar* evar, ZnkVarpAry post_vars, const c
 	ZnkStr given_authentick_key = ZnkStr_new( "" );
 	size_t      content_length = 0;
 	const char* content_type   = evar->content_type_;
-	EstPostInfo post_info = { 0 };
+	struct HyperPostInfo hyper_post_info = { { 0 } };
 	RanoCGIUtilFnca_procPostVars fnca_proc_post_vars = {
 		func_proc_post_vars, NULL,
 	};
@@ -504,19 +527,20 @@ EstPost_parsePostAndCookieVars( RanoCGIEVar* evar, ZnkVarpAry post_vars, const c
 	ZnkS_getSzU( &content_length, evar->content_length_ );
 	RanoCGIUtil_getStdInStr( in_bfr, content_length );
 
-#if 0
-	target = EstConfig_getTargetAndModule( &mod, hostname );
-	if( target == NULL ){
-		goto FUNC_END;
-	}
-#endif
-
 	{
-		post_info.evar_     = evar;
-		post_info.htp_hdrs_ = htp_hdrs,
-		post_info.mod_      = mod;
-		post_info.given_authentick_key_ = given_authentick_key,
-		fnca_proc_post_vars.arg_ = &post_info;
+		EstPostInfo* post_info = &hyper_post_info.post_info_;
+		post_info->evar_     = evar;
+		post_info->htp_hdrs_ = htp_hdrs,
+		post_info->mod_      = mod;
+		post_info->given_authentick_key_ = given_authentick_key;
+		hyper_post_info.upfile_filename_ = ZnkStr_new( "" );
+		hyper_post_info.upfile_varname_  = ZnkStr_new( "" );
+		hyper_post_info.ermsg_           = msg;
+		hyper_post_info.est_hyper_upload_path_     = hyper_upload_path;
+		hyper_post_info.est_clipboard_upload_mode_ = clipboard_upload_mode;
+		fnca_proc_post_vars.arg_ = &hyper_post_info;
+
+		ZnkStr_set( hyper_post_info.upfile_varname_, getUpfileVarname( target ) );
 	}
 
 	/***
@@ -578,6 +602,65 @@ EstPost_parsePostAndCookieVars( RanoCGIEVar* evar, ZnkVarpAry post_vars, const c
 			content_type, ZnkStr_cstr(src_boundary), ZnkStr_cstr(dst_boundary),
 			pst_str, varname_of_urlenc_body, is_unescape_val, &fnca_proc_post_vars );
 
+	if( !result ){
+		ZnkStr_setf( upfile_preview, "<div class=MstyComment>%s</div>", ZnkStr_cstr(hyper_post_info.ermsg_) );
+	} else if( upfile_preview ){
+		const char* xhr_dmz = EstConfig_XhrDMZ();
+		ZnkStr upfile_filename = hyper_post_info.upfile_filename_;
+		if( ZnkStr_empty(upfile_filename) ){
+			/* ディスクからファイルを選択 */
+			const char* upfile_varname = ZnkStr_cstr(hyper_post_info.upfile_varname_);
+			ZnkVarp varp = ZnkVarpAry_findObj_byName( post_vars, upfile_varname, Znk_NPOS, false );
+			if( varp ){
+				if( ZnkVar_prim_type( varp ) == ZnkPrim_e_Bfr ){
+					const char* filename = ZnkVar_misc_cstr( varp, "filename" );
+					if( !ZnkS_empty(filename) ){
+						ZnkFile fp = NULL;
+						ZnkStr_setf( upfile_filename, "cachebox/upload/%s", filename );
+						fp = Znk_fopen( ZnkStr_cstr(upfile_filename), "wb" );
+						if( fp ){
+							Znk_fwrite( ZnkVar_data(varp), ZnkVar_data_size(varp), fp );
+							Znk_fclose( fp );
+							if( hyper_upload_path ){
+								ZnkStr_setf( hyper_upload_path, "http://%s/cgis/easter/%s",
+										xhr_dmz, ZnkStr_cstr(upfile_filename) );
+							}
+						}
+					}
+				}
+			}
+		} else {
+			/* 添付URL or 添付クリップボード */
+			if( ZnkStr_isBegin( upfile_filename, "./" ) ){
+				ZnkStr_cut_front( upfile_filename, 2 );
+			}
+		}
+		if( ZnkStr_leng(upfile_filename) ){
+			ZnkStr_setf( upfile_preview,
+					"<div class=MstyComment>"
+					"<a href='http://%s/cgis/easter/%s' target=_blank>"
+					"<img src='http://%s/cgis/easter/%s' width=350>"
+					"</a>"
+					"</div>",
+					xhr_dmz, ZnkStr_cstr(upfile_filename),
+					xhr_dmz, ZnkStr_cstr(upfile_filename) );
+		} else {
+			ZnkStr_setf( upfile_preview,
+					"<div class=MstyComment>"
+					"以下のうちのいずれかを指定した状態で「送信画像の確認」ボタンを押すと、<br>"
+					"これから送信される画像の内容をプレビューで確認できます.<br>"
+					"(このボタンでは実際の送信は行われません)<br>"
+					"<div style=\"padding:0.4em 1em\">"
+					"・ディスクからファイルを選択<br>"
+					"・添付URL<br>"
+					"・添付クリップボード<br>"
+					"</div>"
+					"これら複数を同時に指定した場合は、下にある項目の指定が優先されます.<br>"
+					"(いずれも指定されていない場合は、このメッセージが表示されます)<br>"
+					"</div>" );
+		}
+	}
+
 	/***
 	 * Header and Cookie filtering
 	 * PostVar filteringにおけるon_post関数の呼び出しで、headerやcookie_varsの値を
@@ -590,20 +673,14 @@ EstPost_parsePostAndCookieVars( RanoCGIEVar* evar, ZnkVarpAry post_vars, const c
 		RanoModule_filtCookieVars( mod, htp_hdrs->vars_, is_all_replace, extra_vars );
 	}
 
-#if 0
-	/* Javascript 上でのcookie設定などであり得る. */
-	if( evar->http_cookie_ ){
-		ZnkVarp varp = ZnkHtpHdrs_find_literal( htp_hdrs->vars_, "Cookie" );
-		ZnkStr str = ZnkHtpHdrs_val( varp, 0 );
-		ZnkStr_addf( str, "; %s", evar->http_cookie_ );
-	}
-#endif
-
 	ZnkStr_delete( given_authentick_key );
 
 	ZnkStr_delete( src_boundary );
 	ZnkStr_delete( dst_boundary );
 	ZnkBfr_destroy( in_bfr );
+
+	ZnkStr_delete( hyper_post_info.upfile_filename_ );
+	ZnkStr_delete( hyper_post_info.upfile_varname_ );
 
 	return result;
 }
@@ -638,8 +715,9 @@ EstPost_procPost( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, 
 		goto FUNC_END;
 	}
 
-	parse_post_and_cookie_result = EstPost_parsePostAndCookieVars( evar, post_vars, est_val, msg, htp_hdrs,
-			pst_str, ZnkStr_cstr(hostname), ZnkStr_cstr(req_urp), target, mod );
+	parse_post_and_cookie_result = parsePostAndCookieVars( evar, post_vars, msg, htp_hdrs,
+			pst_str, ZnkStr_cstr(hostname), ZnkStr_cstr(req_urp), target, mod,
+			NULL, NULL, NULL );
 
 	/***
 	 * confirm用
@@ -710,6 +788,7 @@ FUNC_END:
 	ZnkHtpHdrs_dispose( htp_hdrs );
 }
 
+#if 0
 void
 EstPost_procHyperPost( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, ZnkStr msg )
 {
@@ -744,8 +823,8 @@ EstPost_procHyperPost( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_
 		}
 	}
 
-	EstPost_parsePostAndCookieVars( evar, post_vars, est_val, msg, htp_hdrs,
-			pst_str, ZnkStr_cstr(hostname), ZnkStr_cstr(req_urp), target, mod );
+	parsePostAndCookieVars( evar, post_vars, msg, htp_hdrs,
+			pst_str, ZnkStr_cstr(hostname), ZnkStr_cstr(req_urp), target, mod, NULL );
 
 	/***
 	 * confirm用
@@ -769,6 +848,7 @@ EstPost_procHyperPost( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_
 
 		ZnkBird_regist( bird, "xhr_dmz",  EstConfig_XhrDMZ() );
 		ZnkBird_regist( bird, "post_dst", ZnkStr_cstr(src) );
+		ZnkBird_regist( bird, "upfile_preview",  "" );
 		if( ZnkS_isBegin( evar->content_type_, "multipart/form-data;" ) ){
 			ZnkBird_regist( bird, "post_enctype", "multipart/form-data" );
 		} else {
@@ -826,6 +906,12 @@ EstPost_procHyperPost( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_
 			ZnkBird_regist( bird, "summary",      "" );
 		} else {
 			char cache_path[ 256 ] = "";
+			if( ZnkStr_isBegin( original_url, "http://" ) ){
+				ZnkStr_cut_front( original_url, Znk_strlen_literal("http://") );
+			}
+			if( ZnkStr_isBegin( original_url, "https://" ) ){
+				ZnkStr_cut_front( original_url, Znk_strlen_literal("https://") );
+			}
 			ZnkBird_regist( bird, "original_url", ZnkStr_cstr(original_url) );
 			Znk_snprintf( cache_path, sizeof(cache_path), "cachebox/%s/%s", target, ZnkStr_cstr(original_url) );
 			EstUI_getSummary( bird, cache_path );
@@ -873,5 +959,225 @@ FUNC_END:
 	ZnkStr_delete( req_urp );
 	ZnkStr_delete( src );
 	ZnkStr_delete( original_url );
+	ZnkHtpHdrs_dispose( htp_hdrs );
+}
+#endif
+
+void
+EstPost_procPostEx( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, ZnkStr msg )
+{
+	ZnkVarp post_dst_varp = ZnkVarpAry_find_byName_literal( post_vars, "post_dst", false );
+	if( post_dst_varp == NULL ){
+		/* EstHyperPost_main 仕様に変換すべく、QueryStringにpost_dst変数を追加し、
+		 * est_post_exの値であるest_valをその値とする. */
+		post_dst_varp = ZnkVarp_create( "post_dst", "", 0, ZnkPrim_e_Str, NULL );
+		ZnkVar_set_val_Str( post_dst_varp, est_val, Znk_NPOS );
+		ZnkVarpAry_push_bk( post_vars, post_dst_varp );
+	}
+	EstHyperPost_main( evar, post_vars, msg );
+}
+
+/***
+ * Ver2.1.3
+ * こちらに移行予定.
+ */
+void
+EstHyperPost_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg )
+{
+	struct ZnkHtpHdrs_tag htp_hdrs_instance = { 0 };
+	ZnkHtpHdrs htp_hdrs = &htp_hdrs_instance;
+	ZnkStr pst_str  = ZnkStr_new( "" );
+	ZnkStr hostname = ZnkStr_new( "" );
+	ZnkStr req_urp  = ZnkStr_new( "" );
+	ZnkStr src      = ZnkStr_new( "" );
+	ZnkStr original_url = ZnkStr_new( "" );
+	ZnkStr upfile_preview = ZnkStr_new( "" );
+	const char* target = NULL;
+	RanoModule  mod    = NULL;
+	ZnkVarp post_dst_varp = NULL;
+	bool is_authenticated = true;
+	char command[ 256 ] = "";
+	ZnkStr hyper_upload_path     = ZnkStr_new( "" );
+	bool   clipboard_upload_mode = false;
+
+	ZnkHtpHdrs_compose( htp_hdrs );
+
+	{
+		ZnkVarp authkey = ZnkVarpAry_find_byName_literal( post_vars, "Moai_AuthenticKey", false );
+		if( authkey ){
+			const char* moai_authentic_key = EstConfig_authenticKey();
+			is_authenticated = ZnkS_eq( ZnkVar_cstr(authkey), moai_authentic_key );
+		}
+	}
+
+	{
+		ZnkVarp command_varp = ZnkVarpAry_find_byName_literal( post_vars, "command", false );
+		if( command_varp ){
+			ZnkS_copy( command, sizeof(command), ZnkVar_cstr( command_varp ), Znk_NPOS );
+			if( ZnkS_eq( command, "confirm" ) ){
+			}
+		}
+	}
+
+	if( IS_OK( post_dst_varp = ZnkVarpAry_find_byName_literal( post_vars, "post_dst", false ) )){
+		char hostname_buf[ 1024 ] = "";
+		const char* post_dst = ZnkVar_cstr( post_dst_varp );
+		ZnkStr_set( src, EstBase_getHostnameAndRequrp_fromEstVal( hostname_buf, sizeof(hostname_buf), req_urp, post_dst, NULL ) );
+		ZnkStr_set( hostname, hostname_buf );
+	}
+
+	target = EstConfig_getTargetAndModule( &mod, ZnkStr_cstr(hostname) );
+	if( target == NULL ){
+		goto FUNC_END;
+	}
+
+	{
+		ZnkVarp varp = ZnkVarpAry_find_byName_literal( post_vars, "est_original_url", false );
+		if( varp ){
+			ZnkStr_set( original_url, ZnkVar_cstr(varp) );
+		}
+	}
+
+	parsePostAndCookieVars( evar, post_vars, msg, htp_hdrs,
+			pst_str, ZnkStr_cstr(hostname), ZnkStr_cstr(req_urp), target, mod,
+			upfile_preview, hyper_upload_path, &clipboard_upload_mode );
+
+	/***
+	 * HyperPost UI
+	 */
+	{
+		ZnkStr str = ZnkStr_new( "" );
+		size_t idx;
+		const size_t size = ZnkVarpAry_size( post_vars );
+		ZnkBird bird = ZnkBird_create( "#[", "]#" );
+		ZnkStr  val  = ZnkStr_new( "" );
+		ZnkStr  input_hiddens = ZnkStr_new( "" );
+		ZnkVarp varp = NULL;
+		bool has_binary_attachment = false;
+		bool has_title = false;
+
+		ZnkStr_add( str, "HTTP Header Confirmation.\n" );
+		RanoCGIUtil_addHdrVarsStr( str, htp_hdrs->vars_ ); /* XSS-safe */
+		ZnkStr_add( str, "\n" );
+
+		ZnkBird_regist( bird, "xhr_dmz",  EstConfig_XhrDMZ() );
+		ZnkBird_regist( bird, "post_dst", ZnkStr_cstr(src) );
+		if( ZnkS_isBegin( evar->content_type_, "multipart/form-data;" ) ){
+			ZnkBird_regist( bird, "post_enctype", "multipart/form-data" );
+		} else {
+			ZnkBird_regist( bird, "post_enctype", "application/x-www-form-urlencoded" );
+		}
+
+		{
+			ZnkSRef old_ptn = { 0 };
+			ZnkSRef new_ptn = { 0 };
+			ZnkSRef_set_literal( &old_ptn, "\n" );
+			ZnkSRef_set_literal( &new_ptn, "<br>\n" );
+			ZnkStrEx_replace_BF( str,     0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+			ZnkStrEx_replace_BF( pst_str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+		}
+		ZnkBird_regist( bird, "hdr_vars_str", ZnkStr_cstr(str) );
+		ZnkBird_regist( bird, "pst_vars_str", ZnkStr_cstr(pst_str) );
+		ZnkBird_regist( bird, "Moai_AuthenticKey", EstConfig_authenticKey() );
+
+		if( ZnkS_eq( target, "futaba" ) ){
+			if( ZnkVarpAry_find_byName_literal( post_vars, "resto", false ) ){
+				ZnkBird_regist( bird, "send_button_name", "返信する" );
+			} else {
+				ZnkBird_regist( bird, "send_button_name", "スレッドを立てる" );
+			}
+		}
+
+		for( idx=0; idx<size; ++idx ){
+			const char* key  = NULL;
+			varp = ZnkVarpAry_at( post_vars, idx );
+			key  = ZnkVar_name_cstr( varp );
+			if( EstConfig_isInputHiddensPostVarNames( target, key ) ){
+				/* this is hiddens post var */
+				if( ZnkVar_prim_type( varp ) == ZnkPrim_e_Str ){
+					ZnkStr_set( val, ZnkVar_cstr( varp ) );
+					ZnkHtpURL_negateHtmlTagEffection( val ); /* for XSS */
+					ZnkStr_addf( input_hiddens, "<input type=hidden name=%s value=\"%s\">\n", key, ZnkStr_cstr(val) );
+				}
+			} else {
+				/* this is not hiddens post var */
+				if( ZnkS_eq( key, "sub" ) ){
+					has_title = true;
+				}
+				if( ZnkVar_prim_type( varp ) == ZnkPrim_e_Str ){
+					ZnkStr_set( val, ZnkVar_cstr( varp ) );
+				} else if( ZnkVar_prim_type( varp ) == ZnkPrim_e_Bfr ){
+					ZnkStr_set( val, ZnkVar_misc_cstr( varp, "filename" ) ); /* filename */
+					has_binary_attachment = true;
+				}
+				ZnkHtpURL_negateHtmlTagEffection( val ); /* for XSS */
+				ZnkBird_regist( bird, key, ZnkStr_cstr(val) );
+			}
+		}
+		ZnkBird_regist( bird, "input_hiddens", ZnkStr_cstr(input_hiddens) );
+		ZnkBird_regist( bird, "upfile_preview",  ZnkStr_cstr(upfile_preview) );
+		ZnkBird_regist( bird, "est_hyper_upload_path", ZnkStr_cstr(hyper_upload_path) );
+		ZnkBird_regist( bird, "est_clipboard_upload_mode", clipboard_upload_mode ? "checked" : "" );
+
+		if( ZnkStr_empty(original_url) ){
+			ZnkBird_regist( bird, "original_url", "Unknown" );
+			ZnkBird_regist( bird, "summary",      "" );
+		} else {
+			char cache_path[ 256 ] = "";
+			if( ZnkStr_isBegin( original_url, "http://" ) ){
+				ZnkStr_cut_front( original_url, Znk_strlen_literal("http://") );
+			}
+			if( ZnkStr_isBegin( original_url, "https://" ) ){
+				ZnkStr_cut_front( original_url, Znk_strlen_literal("https://") );
+			}
+			ZnkBird_regist( bird, "original_url", ZnkStr_cstr(original_url) );
+			Znk_snprintf( cache_path, sizeof(cache_path), "cachebox/%s/%s", target, ZnkStr_cstr(original_url) );
+			EstUI_getSummary( bird, cache_path );
+		}
+
+		{
+			ZnkStr hint_table = EstHint_getHintTable( "hyper_post" );
+			if( hint_table ){
+				ZnkBird_regist( bird, "hint_table", ZnkStr_cstr(hint_table) );
+			} else {
+				ZnkBird_regist( bird, "hint_table", "" );
+			}
+		}
+
+		ZnkHtpURL_negateHtmlTagEffection( msg ); /* for XSS */
+		{
+			ZnkSRef old_ptn = { 0 };
+			ZnkSRef new_ptn = { 0 };
+			ZnkSRef_set_literal( &old_ptn, "\n" );
+			ZnkSRef_set_literal( &new_ptn, "<br>\n" );
+			ZnkStrEx_replace_BF( msg, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+		}
+		ZnkBird_regist( bird, "msg",           ZnkStr_cstr(msg) );
+
+		if( has_binary_attachment ){
+			if( has_title ){
+				RanoCGIUtil_printTemplateHTML( evar, bird, "templates/post_futaba.html" );
+			} else {
+				RanoCGIUtil_printTemplateHTML( evar, bird, "templates/post_futaba_img_thre.html" );
+			}
+		} else {
+			/* futaba img タイプとみなす */
+			RanoCGIUtil_printTemplateHTML( evar, bird, "templates/post_futaba_img.html" );
+		}
+		ZnkBird_destroy( bird );
+
+		ZnkStr_delete( input_hiddens );
+		ZnkStr_delete( val );
+		ZnkStr_delete( str );
+	}
+
+FUNC_END:
+	ZnkStr_delete( pst_str );
+	ZnkStr_delete( hostname );
+	ZnkStr_delete( req_urp );
+	ZnkStr_delete( src );
+	ZnkStr_delete( original_url );
+	ZnkStr_delete( upfile_preview );
+	ZnkStr_delete( hyper_upload_path );
 	ZnkHtpHdrs_dispose( htp_hdrs );
 }

@@ -67,8 +67,6 @@ int
 EstLink_filterScript( ZnkStr str, struct EstLinkInfo* link_info );
 int
 EstLink_filterLink( ZnkStr str, struct EstLinkInfo* link_info, EstLinkXhr link_xhr );
-//int
-//EstLink_filterForm( ZnkStr str, struct EstLinkInfo* link_info );
 bool
 EstLink_filterOnclickJSCall( ZnkVarpAry varp_ary, ZnkVarpAry onclick_jscall );
 

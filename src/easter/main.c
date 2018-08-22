@@ -78,7 +78,7 @@ parseQueryString( RanoCGIEVar* evar )
 	} else if( IS_OK( varp = ZnkVarpAry_find_byName_literal( post_vars, "est_post_ex", false ) )){
 		if( is_xhr_authhost ){
 			RanoLog_printf( "parseQueryString: procHyperPost\n" );
-			EstPost_procHyperPost( evar, post_vars, ZnkVar_cstr(varp), msg );
+			EstPost_procPostEx( evar, post_vars, ZnkVar_cstr(varp), msg );
 		} else {
 			procSystemError( evar,
 					"非正規な方法によるアクセスとなっています.<br>"
@@ -104,6 +104,8 @@ parseQueryString( RanoCGIEVar* evar )
 				EstTopicManager_main( evar, post_vars, msg, EstConfig_authenticKey() );
 			} else if( ZnkS_eq( manager, "tag_manager" ) ) {
 				EstTagManager_main( evar, post_vars, msg, EstConfig_authenticKey() );
+			} else if( ZnkS_eq( manager, "hyper_post" ) ) {
+				EstHyperPost_main( evar, post_vars, msg );
 			}
 		} else {
 			procSystemError( evar,

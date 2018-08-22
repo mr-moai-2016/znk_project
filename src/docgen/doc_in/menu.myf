@@ -10,7 +10,7 @@ msg_backto_index = ['目次に戻る']
 @@.
 
 @@P root
-{ ['/']  ['トップページ'] }
+{ ['/']                          ['トップページ'] }
 { ['/moai2.0/index.html']        ['ユーザーマニュアル']     ['moai2_0_user'] }
 { ['/moai2.0/index_expert.html'] ['エキスパートマニュアル'] ['moai2_0_exp'] }
 { ['/announcement.html']         ['アナウンスメント'] }

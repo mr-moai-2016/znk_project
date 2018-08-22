@@ -27,5 +27,16 @@ cgis/easter/cachebox
 cgis/custom_boy/tmp
 cgis/custom_boy/cachebox
 cgis/cgi_developers/publicbox/state.dat
+cgis/protected/futaba_bbs/*.htm
+cgis/protected/futaba_bbs/*.log
+cgis/protected/futaba_bbs/src
+cgis/protected/futaba_bbs/thumb
+cgis/protected/futaba_up/*.htm
+cgis/protected/futaba_up/*.log
+cgis/protected/futaba_up/src
+cgis/protected/futaba_up/thumb
 birdman/tmp
+libtls-17.dll
+cygtls-17.dll
+libtls-17.so
 @@.
