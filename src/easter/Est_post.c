@@ -22,6 +22,9 @@
 #endif
 #  include <stdlib.h>
 
+#define SJIS_HYO "\x95\x5c" /* 表 */
+#define SJIS_NOU "\x94\x5c" /* 能 */
+
 #define IS_OK( val ) (bool)( (val) != NULL )
 
 typedef struct {
@@ -344,6 +347,7 @@ uploadClipboard( ZnkVarpAry post_vars, const char* upfile_varname, ZnkStr ermsg 
 	 * 尚、現時点ではまだマルチプロセス処理に対する排他制御は行っていない.
 	 */
 	if( ZnkDir_getType( "convert.exe" ) == ZnkDirType_e_File ){
+		ZnkDir_mkdirPath( "cachebox/upload", Znk_NPOS, '/', NULL );
 		ZnkDir_deleteFile_byForce( "cachebox/upload/clipboard_save.png" );
 		system( "convert.exe tmp/clipboard_save.bmp cachebox/upload/clipboard_save.png" );
 		if( ZnkDir_getType( "cachebox/upload/clipboard_save.png" ) == ZnkDirType_e_File ){
@@ -477,7 +481,7 @@ func_proc_post_vars( ZnkVarpAry post_vars, void* arg, const char* content_type, 
 						ZnkStr_addf( ermsg, "Easter HyperPost : Error.<br>" );
 						ZnkStr_addf( ermsg, "<br>" );
 						ZnkStr_addf( ermsg, "&nbsp;&nbsp;添付URLにて指定されたURLの画像のダウンロードに失敗しました.<br>" );
-						ZnkStr_addf( ermsg, "&nbsp;&nbsp;URLの指定に誤りがある可能性もあるのでご確認ください.<br>" );
+						ZnkStr_addf( ermsg, "&nbsp;&nbsp;URLの指定に誤りがある可" SJIS_NOU "性もあるのでご確認ください.<br>" );
 						ZnkStr_addf( ermsg, "<br>" );
 						ZnkStr_addf( ermsg, "&nbsp;&nbsp;指定されたURL=[%s]", new_filename );
 						return false;
@@ -616,6 +620,7 @@ parsePostAndCookieVars( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, Znk
 					const char* filename = ZnkVar_misc_cstr( varp, "filename" );
 					if( !ZnkS_empty(filename) ){
 						ZnkFile fp = NULL;
+						ZnkDir_mkdirPath( "cachebox/upload", Znk_NPOS, '/', NULL );
 						ZnkStr_setf( upfile_filename, "cachebox/upload/%s", filename );
 						fp = Znk_fopen( ZnkStr_cstr(upfile_filename), "wb" );
 						if( fp ){
@@ -656,7 +661,7 @@ parsePostAndCookieVars( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, Znk
 					"・添付クリップボード<br>"
 					"</div>"
 					"これら複数を同時に指定した場合は、下にある項目の指定が優先されます.<br>"
-					"(いずれも指定されていない場合は、このメッセージが表示されます)<br>"
+					"(いずれも指定されていない場合は、このメッセージが" SJIS_HYO "示されます)<br>"
 					"</div>" );
 		}
 	}
