@@ -9,7 +9,7 @@ Release Note
 ~~~
     Easter
 
-    * ふたばちゃんねるの仕様変更の影響で、Easter HyperPostの画面の画面が開かなくなる不具合が発生したため、これを修正.
+    * ふたばちゃんねるの仕様変更の影響で、Easter HyperPostの画面が開かなくなる不具合が発生したため、これを修正.
 
     CustomBoy
 
