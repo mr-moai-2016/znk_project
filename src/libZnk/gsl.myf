@@ -239,7 +239,6 @@ ZnkNSet32_destroy
 ZnkNSet32_eq
 ZnkNSet32_erase
 ZnkNSet32_find
-ZnkNSet32_print_e
 ZnkNSet32_push
 ZnkNSet32_size
 ZnkNetBase_finalize

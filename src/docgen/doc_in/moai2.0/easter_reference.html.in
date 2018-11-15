@@ -346,7 +346,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 		</div>
 		</li>
 
-		<li><b>添付クリップボード機能</b>
+		<li id=EasterHyperPost_clipboard><b>添付クリップボード機能</b>
 		これは画像を投稿するための機能で、Windows限定のものとなります.
 
 		このモードをONにした場合、Windowsにおいて現在クリップボードにコピーされている画像の内容を、

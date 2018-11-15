@@ -77,6 +77,7 @@ ZnkNSet32_eq( const ZnkNSet32 nset1, const ZnkNSet32 nset2 )
 	}
 	return false;
 }
+#if 0
 void
 ZnkNSet32_print_e( const ZnkNSet32 nset )
 {
@@ -88,4 +89,5 @@ ZnkNSet32_print_e( const ZnkNSet32 nset )
 	}
 	Znk_printf_e("}\n");
 }
+#endif
 

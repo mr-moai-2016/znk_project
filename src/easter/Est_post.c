@@ -361,7 +361,7 @@ uploadClipboard( ZnkVarpAry post_vars, const char* upfile_varname, ZnkStr ermsg 
 		ZnkStr_addf( ermsg, "<br>" );
 		ZnkStr_addf( ermsg, "&nbsp;&nbsp;ImageMagicのconvertコマンドがeaster配下に設置されていません.<br>" );
 		ZnkStr_addf( ermsg, "&nbsp;&nbsp;クリップボードのファイル形式の変換のためにこのコマンドが必要となります.<br>" );
-		ZnkStr_addf( ermsg, "&nbsp;&nbsp;<a class=MstyElemLink href=/moai2.0/easter_reference.html#EasterHyperPost>こちら</a>を参照し、このコマンドを設置してください.<br>" );
+		ZnkStr_addf( ermsg, "&nbsp;&nbsp;<a class=MstyElemLink href=/moai2.0/easter_reference.html#EasterHyperPost_clipboard>こちら</a>を参照し、このコマンドを設置してください.<br>" );
 		goto FUNC_END;
 	}
 
@@ -607,7 +607,9 @@ parsePostAndCookieVars( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, Znk
 			pst_str, varname_of_urlenc_body, is_unescape_val, &fnca_proc_post_vars );
 
 	if( !result ){
-		ZnkStr_setf( upfile_preview, "<div class=MstyComment>%s</div>", ZnkStr_cstr(hyper_post_info.ermsg_) );
+		if( upfile_preview ){
+			ZnkStr_setf( upfile_preview, "<div class=MstyComment>%s</div>", ZnkStr_cstr(hyper_post_info.ermsg_) );
+		}
 	} else if( upfile_preview ){
 		const char* xhr_dmz = EstConfig_XhrDMZ();
 		ZnkStr upfile_filename = hyper_post_info.upfile_filename_;
@@ -793,180 +795,6 @@ FUNC_END:
 	ZnkHtpHdrs_dispose( htp_hdrs );
 }
 
-#if 0
-void
-EstPost_procHyperPost( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, ZnkStr msg )
-{
-	struct ZnkHtpHdrs_tag htp_hdrs_instance = { 0 };
-	ZnkHtpHdrs htp_hdrs = &htp_hdrs_instance;
-	ZnkStr pst_str  = ZnkStr_new( "" );
-	ZnkStr hostname = ZnkStr_new( "" );
-	ZnkStr req_urp  = ZnkStr_new( "" );
-	ZnkStr src      = ZnkStr_new( "" );
-	ZnkStr original_url = ZnkStr_new( "" );
-	const char* target = NULL;
-	RanoModule  mod    = NULL;
-
-	ZnkHtpHdrs_compose( htp_hdrs );
-
-	ZnkStr_addf( msg, "procHyperPost : est_val=[%s]\n", est_val );
-	{
-		char hostname_buf[ 1024 ] = "";
-		ZnkStr_set( src, EstBase_getHostnameAndRequrp_fromEstVal( hostname_buf, sizeof(hostname_buf), req_urp, est_val, NULL ) );
-		ZnkStr_set( hostname, hostname_buf );
-	}
-
-	target = EstConfig_getTargetAndModule( &mod, ZnkStr_cstr(hostname) );
-	if( target == NULL ){
-		goto FUNC_END;
-	}
-
-	{
-		ZnkVarp varp = ZnkVarpAry_find_byName_literal( post_vars, "est_original_url", false );
-		if( varp ){
-			ZnkStr_set( original_url, ZnkVar_cstr(varp) );
-		}
-	}
-
-	parsePostAndCookieVars( evar, post_vars, msg, htp_hdrs,
-			pst_str, ZnkStr_cstr(hostname), ZnkStr_cstr(req_urp), target, mod, NULL );
-
-	/***
-	 * confirm用
-	 * メッセージ内容を正確なものとするため、filtering処理などが全て終った後に
-	 * 全文を構築しなければならない.
-	 */
-	{
-		ZnkStr str = ZnkStr_new( "" );
-		size_t idx;
-		const size_t size = ZnkVarpAry_size( post_vars );
-		ZnkBird bird = ZnkBird_create( "#[", "]#" );
-		ZnkStr  val  = ZnkStr_new( "" );
-		ZnkStr  input_hiddens = ZnkStr_new( "" );
-		ZnkVarp varp = NULL;
-		bool has_binary_attachment = false;
-		bool has_title = false;
-
-		ZnkStr_add( str, "HTTP Header Confirmation.\n" );
-		RanoCGIUtil_addHdrVarsStr( str, htp_hdrs->vars_ ); /* XSS-safe */
-		ZnkStr_add( str, "\n" );
-
-		ZnkBird_regist( bird, "xhr_dmz",  EstConfig_XhrDMZ() );
-		ZnkBird_regist( bird, "post_dst", ZnkStr_cstr(src) );
-		ZnkBird_regist( bird, "upfile_preview",  "" );
-		if( ZnkS_isBegin( evar->content_type_, "multipart/form-data;" ) ){
-			ZnkBird_regist( bird, "post_enctype", "multipart/form-data" );
-		} else {
-			ZnkBird_regist( bird, "post_enctype", "application/x-www-form-urlencoded" );
-		}
-
-		{
-			ZnkSRef old_ptn = { 0 };
-			ZnkSRef new_ptn = { 0 };
-			ZnkSRef_set_literal( &old_ptn, "\n" );
-			ZnkSRef_set_literal( &new_ptn, "<br>\n" );
-			ZnkStrEx_replace_BF( str,     0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
-			ZnkStrEx_replace_BF( pst_str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
-		}
-		ZnkBird_regist( bird, "hdr_vars_str", ZnkStr_cstr(str) );
-		ZnkBird_regist( bird, "pst_vars_str", ZnkStr_cstr(pst_str) );
-		ZnkBird_regist( bird, "Moai_AuthenticKey", EstConfig_authenticKey() );
-
-		if( ZnkVarpAry_find_byName_literal( post_vars, "resto", false ) ){
-			ZnkBird_regist( bird, "send_button_name", "返信する" );
-		} else {
-			ZnkBird_regist( bird, "send_button_name", "スレッドを立てる" );
-		}
-
-		for( idx=0; idx<size; ++idx ){
-			const char* key  = NULL;
-			varp = ZnkVarpAry_at( post_vars, idx );
-			key  = ZnkVar_name_cstr( varp );
-			if( EstConfig_isInputHiddensPostVarNames( target, key ) ){
-				/* this is hiddens post var */
-				if( ZnkVar_prim_type( varp ) == ZnkPrim_e_Str ){
-					ZnkStr_set( val, ZnkVar_cstr( varp ) );
-					ZnkHtpURL_negateHtmlTagEffection( val ); /* for XSS */
-					ZnkStr_addf( input_hiddens, "<input type=hidden name=%s value=\"%s\">\n", key, ZnkStr_cstr(val) );
-				}
-			} else {
-				/* this is not hiddens post var */
-				if( ZnkS_eq( key, "sub" ) ){
-					has_title = true;
-				}
-				if( ZnkVar_prim_type( varp ) == ZnkPrim_e_Str ){
-					ZnkStr_set( val, ZnkVar_cstr( varp ) );
-				} else if( ZnkVar_prim_type( varp ) == ZnkPrim_e_Bfr ){
-					ZnkStr_set( val, ZnkVar_misc_cstr( varp, "filename" ) ); /* filename */
-					has_binary_attachment = true;
-				}
-				ZnkHtpURL_negateHtmlTagEffection( val ); /* for XSS */
-				ZnkBird_regist( bird, key, ZnkStr_cstr(val) );
-			}
-		}
-		ZnkBird_regist( bird, "input_hiddens", ZnkStr_cstr(input_hiddens) );
-
-		if( ZnkStr_empty(original_url) ){
-			ZnkBird_regist( bird, "original_url", "Unknown" );
-			ZnkBird_regist( bird, "summary",      "" );
-		} else {
-			char cache_path[ 256 ] = "";
-			if( ZnkStr_isBegin( original_url, "http://" ) ){
-				ZnkStr_cut_front( original_url, Znk_strlen_literal("http://") );
-			}
-			if( ZnkStr_isBegin( original_url, "https://" ) ){
-				ZnkStr_cut_front( original_url, Znk_strlen_literal("https://") );
-			}
-			ZnkBird_regist( bird, "original_url", ZnkStr_cstr(original_url) );
-			Znk_snprintf( cache_path, sizeof(cache_path), "cachebox/%s/%s", target, ZnkStr_cstr(original_url) );
-			EstUI_getSummary( bird, cache_path );
-		}
-
-		{
-			ZnkStr hint_table = EstHint_getHintTable( "hyper_post" );
-			if( hint_table ){
-				ZnkBird_regist( bird, "hint_table", ZnkStr_cstr(hint_table) );
-			} else {
-				ZnkBird_regist( bird, "hint_table", "" );
-			}
-		}
-
-		ZnkHtpURL_negateHtmlTagEffection( msg ); /* for XSS */
-		{
-			ZnkSRef old_ptn = { 0 };
-			ZnkSRef new_ptn = { 0 };
-			ZnkSRef_set_literal( &old_ptn, "\n" );
-			ZnkSRef_set_literal( &new_ptn, "<br>\n" );
-			ZnkStrEx_replace_BF( msg, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
-		}
-		ZnkBird_regist( bird, "msg",           ZnkStr_cstr(msg) );
-
-		if( has_binary_attachment ){
-			if( has_title ){
-				RanoCGIUtil_printTemplateHTML( evar, bird, "templates/post_futaba.html" );
-			} else {
-				RanoCGIUtil_printTemplateHTML( evar, bird, "templates/post_futaba_img_thre.html" );
-			}
-		} else {
-			/* futaba img タイプとみなす */
-			RanoCGIUtil_printTemplateHTML( evar, bird, "templates/post_futaba_img.html" );
-		}
-		ZnkBird_destroy( bird );
-
-		ZnkStr_delete( input_hiddens );
-		ZnkStr_delete( val );
-		ZnkStr_delete( str );
-	}
-
-FUNC_END:
-	ZnkStr_delete( pst_str );
-	ZnkStr_delete( hostname );
-	ZnkStr_delete( req_urp );
-	ZnkStr_delete( src );
-	ZnkStr_delete( original_url );
-	ZnkHtpHdrs_dispose( htp_hdrs );
-}
-#endif
 
 void
 EstPost_procPostEx( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, ZnkStr msg )

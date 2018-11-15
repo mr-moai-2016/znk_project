@@ -158,7 +158,7 @@
 			@@L dependency_libs_common<br>
 			@@.<br>
 			<br>
-			修正前<br>
+			修正後<br>
 			@@L dependency_libs_common<br>
 			<font color=red><br>
 				rlib: @{libZnk}  Znk  $(DL_VER)<br>
@@ -313,9 +313,7 @@ Hello 環境変数!(実践バージョン)
 				ZnkStr msg = ZnkStr_new( "" ); <span class=MstyCodeSynComment>/* libZnkが提供するString型 */</span><br>
 				ZnkStr_addf( msg, "server_name=[%s]\n", evar-&gt;server_name_ );<br>
 				...<br>
-				<span class=MstyCodeSynComment><br>
-				/* XSS対策. HTMLタグ(&lt;,&gt;)の効果を打ち消します. */<br>
-				</span><br>
+				<span class=MstyCodeSynComment>/* XSS対策. HTMLタグ(&lt;,&gt;)の効果を打ち消します. */</span><br>
 				ZnkHtpURL_negateHtmlTagEffection( msg );<br>
 				fputs( ZnkStr_cstr(msg), stdout );<br>
 				ZnkStr_delete( msg ); <span class=MstyCodeSynComment>/* 使い終わったら解放しなければなりません */</span><br>
@@ -406,10 +404,10 @@ Hello Query String!(実践バージョン)
 					size_t i; <br>
 					for( i=0; i&lt;ZnkVarpAry_size(post_vars); ++i ){<br>
 					<div class=MstyIndent>
-						<span class=MstyCodeSynComment><br>
+						<span class=MstyCodeSynComment>
 						/* Post変数を一つ取り出します.<br>
 						* この変数の名前も得ておきます. */<br>
-						</span><br>
+						</span>
 						ZnkVarp &nbsp;&nbsp;&nbsp; var &nbsp;= ZnkVarpAry_at( post_vars, i );<br>
 						const char* name = ZnkVar_name_cstr(var);<br>
 						const char* val  = ZnkVar_cstr(var);<br>
@@ -502,8 +500,10 @@ Hello Post!(実践バージョン)
 				...<br>
 				ZnkVarpAry post_vars = ZnkVarpAry_create( true );<br>
 				...<br>
-				<span class=MstyCodeSynComment>/* CGIにおけるフォームの投稿データをpost_varsへと取得します. */<br>
-				/* またこの関数においては第1引数evarの指定も必要となります. */</span><br>
+				<span class=MstyCodeSynComment>
+				/* CGIにおけるフォームの投稿データをpost_varsへと取得します. */<br>
+				/* またこの関数においては第1引数evarの指定も必要となります. */<br>
+				</span>
 				RanoCGIUtil_getPostedFormData( evar, post_vars, NULL, NULL, NULL, NULL, true );<br>
 				...<br>
 			</div>
@@ -543,35 +543,33 @@ Hello Post!(実践バージョン)
 				<div class=MstyIndent>
 					const char* ext = NULL;<br>
 					bool is_image = false;<br>
-					<span class=MstyCodeSynComment><br>
-					/* ZnkStrはlibZnkが提供する文字列型です. */<br>
-					</span><br>
+					<span class=MstyCodeSynComment>/* ZnkStrはlibZnkが提供する文字列型です. */</span><br>
 					ZnkStr msg = ZnkStr_new( "" );<br>
 					size_t i; <br>
 					<br>
 					for( i=0; i&lt;ZnkVarpAry_size(post_vars); ++i ){<br>
 					<div class=MstyIndent>
-						<span class=MstyCodeSynComment><br>
+						<span class=MstyCodeSynComment>
 						/* Post変数を一つ取り出します.<br>
-						* この変数の名前も得ておきます. */<br>
-						</span><br>
+						 * この変数の名前も得ておきます. */<br>
+						</span>
 						ZnkVarp     var  = ZnkVarpAry_at( post_vars, i );<br>
 						const char* name = ZnkVar_name_cstr(var);<br>
 						<br>
 						if( ZnkVar_prim_type( var ) == ZnkPrim_e_Bfr ){<br>
 						<div class=MstyIndent>
-							<span class=MstyCodeSynComment><br>
+							<span class=MstyCodeSynComment>
 							/* ZnkVarpのタイプがZnkPrim_e_Bfr(任意のByte列).<br>
-							* これは添付ファイルを意味します. */<br>
-							</span><br>
+							 * これは添付ファイルを意味します. */<br>
+							</span>
 							const char*    filename  = ZnkVar_misc_cstr( var, "filename" );<br>
 							const uint8_t* data      = ZnkVar_data( var );<br>
 							const size_t   data_size = ZnkVar_data_size( var );<br>
 							<br>
-							<span class=MstyCodeSynComment><br>
+							<span class=MstyCodeSynComment>
 							/* ZnkS_get_extension の戻り値はファイルの拡張子となります. */<br>
 							/* この参照先は、post_varsの寿命が続く限りにおいては有効です. */<br>
-							</span><br>
+							</span>
 							ext = ZnkS_get_extension( filename, '.' );<br>
 							<br>
 							if( data_size &gt; 2000000 ){ /* 2000KB以上 */<br>
@@ -581,19 +579,19 @@ Hello Post!(実践バージョン)
 							</div>
 							} else {<br>
 							<div class=MstyIndent>
-								<span class=MstyCodeSynComment><br>
+								<span class=MstyCodeSynComment>
 								/* 文字列が等しいかの比較を行います. */<br>
 								/* ただし大文字小文字の区別はしません. */<br>
-								</span><br>
+								</span>
 								if(&nbsp; ZnkS_eqCase( ext, "jpg" )<br>
 								&nbsp; || ZnkS_eqCase( ext, "png" )<br>
 								&nbsp; || ZnkS_eqCase( ext, "gif" )<br>
 								&nbsp; || ZnkS_eqCase( ext, "webm" )<br>
 								){<br>
 								<div class=MstyIndent>
-									<span class=MstyCodeSynComment><br>
+									<span class=MstyCodeSynComment>
 									/* 画像ファイルの拡張子であった場合はこのデータをresult_file.ext として保存します. */<br>
-									</span><br>
+									</span>
 									saveAsResultFile( ext, data, data_size );<br>
 									is_image = true;<br>
 									ZnkStr_addf( msg, "Image : %s orinal filename=[%s]\n", name, filename );<br>
@@ -609,10 +607,10 @@ Hello Post!(実践バージョン)
 						</div>
 						} else {<br>
 						<div class=MstyIndent>
-							<span class=MstyCodeSynComment><br>
+							<span class=MstyCodeSynComment>
 							/* ZnkVarpのタイプがその他(Str).<br>
 							* これはinputタグやtextareaタグ等に由来する文字列データ. */<br>
-							</span><br>
+							</span>
 							const char* val = ZnkVar_cstr(var);<br>
 							ZnkStr_addf( msg, "%s = [%s] (size=[%u])\n", name, val, ZnkVar_str_leng(var) );<br>
 						</div>
@@ -622,22 +620,20 @@ Hello Post!(実践バージョン)
 					<br>
 					if( is_image ){<br>
 					<div class=MstyIndent>
-						<span class=MstyCodeSynComment><br>
+						<span class=MstyCodeSynComment>
 						/* 画像ファイルであった場合はimgタグによりそれを表示します. */<br>
-						</span><br>
+						</span>
 						ZnkStr_addf( msg, "&lt;br&gt;\n" );<br>
 						ZnkStr_addf( msg, "&lt;img src=\"./result_file.%s\"&gt;\n", ext );<br>
 						ZnkStr_addf( msg, "&lt;br&gt;\n" );<br>
 					</div>
 					}<br>
-					<span class=MstyCodeSynComment><br>
-					/* XSS対策. msg内にある一切のHTMLタグの効果を打ち消します. */<br>
-					</span><br>
+<br>
+					<span class=MstyCodeSynComment>/* XSS対策. msg内にある一切のHTMLタグの効果を打ち消します. */</span><br>
 					ZnkHtpURL_negateHtmlTagEffection( msg ); <span class=MstyCodeSynComment>/* for XSS */</span><br>
 					fputs( ZnkStr_cstr(msg), stdout );<br>
-					<span class=MstyCodeSynComment><br>
-					/* ZnkStrは使用後解放しなければなりません. */<br>
-					</span><br>
+<br>
+					<span class=MstyCodeSynComment>/* ZnkStrは使用後解放しなければなりません. */</span><br>
 					ZnkStr_delete( msg );<br>
 				</div>
 				}<br>
@@ -726,21 +722,16 @@ Hello Post!(実践バージョン)
 		このHTMLテンプレートファイルを読み込んで内容を出力するコードは以下のようになります.<br>
 		<div class=MstyComment>
 			<div class=MstyCode>
-				<span class=MstyCodeSynComment><br>
-					/* ZnkBirdの生成. */<br>
-				</span><br>
+				<span class=MstyCodeSynComment>/* ZnkBirdの生成. */</span><br>
 				ZnkBird bird = ZnkBird_create( "#[", "]#" );<br>
-				<span class=MstyCodeSynComment><br>
-					/* BIRDタグの登録. */<br>
-				</span><br>
+<br>
+				<span class=MstyCodeSynComment>/* BIRDタグの登録. */</span><br>
 				ZnkBird_regist( bird, "your_name", "Mr.Moai" );<br>
-				<span class=MstyCodeSynComment><br>
-					/* テンプレートHTMLを読み込み、BIRDタグを展開して表示. */<br>
-				</span><br>
+<br>
+				<span class=MstyCodeSynComment>/* テンプレートHTMLを読み込み、BIRDタグを展開して表示. */</span><br>
 				RanoCGIUtil_printTemplateHTML( evar, bird, "../publicbox/hello_template.html" );<br>
-				<span class=MstyCodeSynComment><br>
-					/* ZnkBirdの破棄. */<br>
-				</span><br>
+<br>
+				<span class=MstyCodeSynComment>/* ZnkBirdの破棄. */</span><br>
 				ZnkBird_destroy( bird );<br>
 			</div>
 		</div>
@@ -802,9 +793,7 @@ Hello Post!(実践バージョン)
 		<br>
 		<div class=MstyComment>
 			<div class=MstyCode>
-			<span class=MstyCodeSynComment><br>
-			/* まずJavascript progress.jsを含んだHTMLを表示させる. */<br>
-			</span><br>
+			<span class=MstyCodeSynComment>/* まずJavascript progress.jsを含んだHTMLを表示させる. */</span><br>
 			{<br>
 			<div class=MstyIndent>
 				ZnkBird bird = ZnkBird_create( "#[", "]#" );<br>
@@ -814,14 +803,11 @@ Hello Post!(実践バージョン)
 			}<br>
 			<br>
 			Znk_fflush( Znk_stdout() );<br>
-			<span class=MstyCodeSynComment><br>
-			/* Broken-Pipeを強制的に引き起こし、Web Server側でのReadループを強制終了させる. */<br>
-			</span><br>
+<br>
+			<span class=MstyCodeSynComment>/* Broken-Pipeを強制的に引き起こし、Web Server側でのReadループを強制終了させる. */</span><br>
 			Znk_fclose( Znk_stdout() );<br>
 			<br>
-			<span class=MstyCodeSynComment><br>
-			/* 時間のかかる処理. */<br>
-			</span><br>
+			<span class=MstyCodeSynComment>/* 時間のかかる処理. */</span><br>
 			very_long_work();<br>
 			</div>
 		</div>

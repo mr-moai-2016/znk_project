@@ -276,13 +276,17 @@ filterHtmlTags( ZnkStr tagname, ZnkVarpAry varp_ary, void* arg, ZnkStr tagend )
 						EstLink_filterLink( link_info->hyperpost_url_, link_info, EstLinkXhr_e_ExplicitAuth );
 						link_info->est_req_ = EstRequest_e_post;
 						{
-							ZnkVarp name = ZnkVarpAry_find_byName_literal( varp_ary, "name", true );
-							if( name == NULL ){
-								name = ZnkVarp_create( "name", "", 0, ZnkPrim_e_Str, NULL );
-								EstHtmlAttr_set_quote_char( name, '"' );
-								ZnkVarpAry_push_bk( varp_ary, name );
+							ZnkVarp id = ZnkVarpAry_find_byName_literal( varp_ary, "id", true );
+							if( id && ZnkS_eq( ZnkVar_cstr(id), "fm" ) ){
+								/* futaba main form */
+								ZnkVarp name = ZnkVarpAry_find_byName_literal( varp_ary, "name", true );
+								if( name == NULL ){
+									name = ZnkVarp_create( "name", "", 0, ZnkPrim_e_Str, NULL );
+									EstHtmlAttr_set_quote_char( name, '"' );
+									ZnkVarpAry_push_bk( varp_ary, name );
+								}
+								ZnkVar_set_val_Str( name, "Easter_fm_main", Znk_NPOS );
 							}
-							ZnkVar_set_val_Str( name, "Easter_fm_main", Znk_NPOS );
 						}
 					}
 				}

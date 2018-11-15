@@ -36,8 +36,11 @@ ZnkNSet32_copy( ZnkNSet32 dst, const ZnkNSet32 src );
 bool
 ZnkNSet32_eq( const ZnkNSet32 nset1, const ZnkNSet32 nset2 );
 
+#if 0
+/* íœ—\’è */
 void
 ZnkNSet32_print_e( const ZnkNSet32 nset );
+#endif
 
 Znk_EXTERN_C_END
 
