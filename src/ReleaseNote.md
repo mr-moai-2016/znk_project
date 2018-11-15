@@ -1,10 +1,29 @@
 Release Note
 -----------------------------------
 
-## 2018/08/22 Version 2.1.3 リリース.
-  Moai Ver2.1.3 がリリースされました.
 
-  Version 2.1.2 からの修正点は以下の通り.  
+## 2018/11/15 Moai Version 2.1.4 リリース.
+
+  修正点は以下の通りです.  
+
+~~~
+    Easter
+
+    * ふたばちゃんねるの仕様変更の影響で、Easter HyperPostの画面の画面が開かなくなる不具合が発生したため、これを修正.
+
+    CustomBoy
+
+    * User-Agent生成アルゴリズムにおいて、Knowledge-baseの調整変更.
+
+    その他
+
+    * ドキュメントの不備を修正.
+~~~
+
+
+## 2018/08/22 Moai Version 2.1.3 リリース.
+
+  修正点は以下の通りです.  
 
 ~~~
     Easter
@@ -19,10 +38,9 @@ Release Note
 ~~~
 
 
-## 2018/08/16 Version 2.1.2 リリース.
-  Moai Ver2.1.2 がリリースされました.
+## 2018/08/16 Moai Version 2.1.2 リリース.
 
-  Version 2.1.1 からの修正点は以下の通り.  
+  修正点は以下の通りです.  
 
 ~~~
     Easter
@@ -40,10 +58,9 @@ Release Note
 ~~~
 
 
-## 2018/08/10 Version 2.1.1 リリース.
-  Moai Ver2.1.1 がリリースされました.
+## 2018/08/10 Moai Version 2.1.1 リリース.
 
-  Version 2.1 からの修正点は以下の通り.  
+  修正点は以下の通りです.  
 
 ~~~
     Moai-Engine本体
@@ -70,10 +87,10 @@ Release Note
 ~~~
 
 
-## 2018/08/03 Version 2.1 リリース
-  Moai Ver2.1 CipherAgent がリリースされました.
+## 2018/08/03 Moai Version 2.1 リリース
 
-  Version 2.0.2からの修正点は以下の通り.  
+  Moai Ver2.1 CipherAgent がリリースされました.
+  修正点は以下の通りです.  
 
 ~~~
     Moai-Engine本体
