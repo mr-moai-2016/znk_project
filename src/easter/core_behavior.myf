@@ -1,0 +1,57 @@
+@def_quote [' ']
+
+@@V filter_onclick_jscall
+del = { ['replace']
+['del(']
+['Easter_del(']
+}
+sod = { ['replace']
+['sd(']
+['Easter_sd(']
+}
+@@.
+
+@@L allow_js_hosts
+code.jquery.com
+@@.
+
+@@L input_hiddens_futaba
+mode
+MAX_FILE_SIZE
+baseform
+pthb
+pthc
+pthd
+ptua
+flrv
+flvv
+scsz
+hash
+js
+chrenc
+resto
+@@.
+
+@@L input_hiddens_5ch
+@@.
+
+@@L filter_target_futaba
+replace_ex ['.webm</a>-('] ['.webm</a> <font size=-1 color="#808000">by Easter Video Cache</font> -(']
+clear_t ['microadCompass.queue.push({'] ['});']
+clear_src_t ['document.write('] [');']
+# futaba : デフォルトの[リロード]のリンクは面倒なので一旦消去する.
+clear_f ['<span id="contres">'] ['<span id="contdisp">']
+# futaba : Easter_scroll
+replace_ex ['scrll()'] ['Easter_scroll( 'resto' )']
+replace_ex ['return ptfk'] ['ptfk']
+@@.
+
+@@L filter_target_5ch
+# Easter URL変換 : subback-tmpl x-handlebars-template
+replace_ex [' href="/<%- helper.subDomain(thread[2]) %>/'] [' href="/easter?est_view=//itest.5ch.net/']
+replace_ex ['<% if(helper.checkl50()) { %>/l50<% } %>'] ['<% if(helper.checkl50()) { %>/l50<% } %>/']
+# 5ch : ソースでの可読性向上のための改行挿入
+replace_ex ['</span></div></div><br>'] ['</span></div></div><br>&br;']
+# 5ch : Easter_scroll
+replace_ex ['function standardize(node){'] ['Easter_scroll( 'key' ); function standardize(node){']
+@@.

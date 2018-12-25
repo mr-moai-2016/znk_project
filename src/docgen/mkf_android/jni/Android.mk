@@ -27,6 +27,7 @@ LOCAL_CFLAGS += -I.. \
 LOCAL_SRC_FILES := \
 	$S/Doc_html.c \
 	$S/Doc_source.c \
+	$S/Doc_util.c \
 	$S/main.c \
 
 # Refer to prebuilt external-dynamic-libraries

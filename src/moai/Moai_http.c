@@ -365,7 +365,6 @@ dumpBrokenChunkStream( ZnkBfr stream )
 	}
 }
 
-
 void
 MoaiHttp_processResponse_forText( ZnkSocket O_sock, MoaiContext ctx, MoaiFdSet mfds,
 		size_t* content_length_remain, RanoModule mod )
@@ -511,7 +510,7 @@ MoaiHttp_processResponse_forText( ZnkSocket O_sock, MoaiContext ctx, MoaiFdSet m
 		}
 		RanoModule_invokeOnResponse( mod, info->hdrs_.vars_, ctx->text_, ZnkStr_cstr(info->req_urp_) );
 		if( txt_ftr ){
-			RanoTxtFilterAry_exec( txt_ftr, ctx->text_ );
+			RanoModule_execFilterAry( txt_ftr, ctx->text_ );
 
 			if( body_info->txt_type_ == RanoText_CSS ){
 				const ZnkStrAry css_additional = RanoModule_ftrCSSAdditional( mod );

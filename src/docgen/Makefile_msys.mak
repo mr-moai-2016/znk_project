@@ -44,6 +44,7 @@ EXE_FILE0=$O/docgen.exe
 OBJS0=\
 	$O/Doc_html.o \
 	$O/Doc_source.o \
+	$O/Doc_util.o \
 	$O/main.o \
 
 SUB_LIBS=\
@@ -125,4 +126,5 @@ clean:
 # Src and Headers Dependency
 Doc_html.o: Doc_html.h
 Doc_source.o: Doc_source.h
-main.o: Doc_html.h
+Doc_util.o: Doc_util.h
+main.o: Doc_html.h Doc_source.h

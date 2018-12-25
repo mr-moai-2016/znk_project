@@ -3,7 +3,7 @@
 @@V config
 doc_title = ['Moai+Easter ユーザーマニュアル']
 author = ['全角']
-update = ['2018/08/22']
+update = ['2018/12/21']
 category_path = { ['moai2_0_user'] ['easter'] }
 urp           = ['/moai2.0/easter_reference.html']
 nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
@@ -384,7 +384,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 			ImageMagicの公式サイトは、https://imagemagick.org となります.
 			特にWindows版のImageMagicについては、<a class=MstyElemLink href=https://imagemagick.org/script/download.php#windows target=_blank>https://imagemagick.org/script/download.php#windows</a>より入手できます.
 			リンク先を見て頂くとわかりますが、Windows版だけでも割と沢山ファイルがあり少しわかりにくいですが、
-			<a class=MstyElemLink href=https://www.imagemagick.org/download/binaries/ImageMagick-7.0.8-10-portable-Q16-x86.zip target=_blank>ImageMagick-7.0.8-10-portable-Q16-x86.zip</a>というのを選んでいただくのが確実でしょう.
+			ImageMagick-7.0.8-*-portable-Q16-x86.zip というのを選んでいただくのが確実でしょう.
 			</li>
 
 			<li><b>ダウンロードしたzipを展開します.</b>

@@ -331,7 +331,7 @@ clean:
 
 
 # Src and Headers Dependency
-gslconv.o: Znk_myf.h Znk_str_ary.h Znk_str_ex.h Znk_str_fio.h Znk_stdc.h Znk_missing_libc.h Znk_dir.h Znk_str_path.h Znk_liba_scan.h
+gslconv.o: Znk_myf.h Znk_str_ary.h Znk_str_ex.h Znk_str_fio.h Znk_stdc.h Znk_missing_libc.h Znk_dir.h Znk_str_path.h Znk_liba_scan.h Znk_bird.h
 minizip/ioapi.o: minizip/ioapi.h
 minizip/unzip.o: minizip/unzip.h minizip/crypt.h
 Znk_algo_vec.o: Znk_algo_vec.h

@@ -102,6 +102,9 @@ const char*
 RanoTarget_findTargetName( const ZnkMyf mtgt, const char* hostname );
 
 void
+RanoModule_execFilterAry( RanoTxtFilterAry txt_ftr, ZnkStr text );
+
+void
 RanoModule_filtTxt( const RanoModule mod, ZnkStr text, RanoTextType txt_type );
 
 /**

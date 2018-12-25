@@ -54,6 +54,9 @@ OBJS0=\
 	$O\Est_config.o \
 	$O\Est_dir_util.o \
 	$O\Est_filter.o \
+	$O\Est_filter_5ch.o \
+	$O\Est_filter_default.o \
+	$O\Est_filter_futaba.o \
 	$O\Est_finf.o \
 	$O\Est_get.o \
 	$O\Est_hint_manager.o \
@@ -65,6 +68,7 @@ OBJS0=\
 	$O\Est_post.o \
 	$O\Est_recentory.o \
 	$O\Est_record.o \
+	$O\Est_rpsc.o \
 	$O\Est_search_manager.o \
 	$O\Est_sqi.o \
 	$O\Est_tag.o \
@@ -92,6 +96,9 @@ OBJS1=\
 	$O\Est_config.o \
 	$O\Est_dir_util.o \
 	$O\Est_filter.o \
+	$O\Est_filter_5ch.o \
+	$O\Est_filter_default.o \
+	$O\Est_filter_futaba.o \
 	$O\Est_finf.o \
 	$O\Est_get.o \
 	$O\Est_hint_manager.o \
@@ -103,6 +110,7 @@ OBJS1=\
 	$O\Est_post.o \
 	$O\Est_recentory.o \
 	$O\Est_record.o \
+	$O\Est_rpsc.o \
 	$O\Est_search_manager.o \
 	$O\Est_sqi.o \
 	$O\Est_tag.o \
@@ -177,6 +185,7 @@ __mkg_sentinel_target__:
 
 # Install data rule.
 install_data:
+	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\easter @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\easter 
 	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\easter\default @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\easter\default 
 	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\easter\templates @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\easter\templates 
 	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\easter\publicbox @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\easter\publicbox 
@@ -184,6 +193,7 @@ install_data:
 	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\easter\publicbox\alternative\5ch\itest.5ch.net\assets\js\android @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\easter\publicbox\alternative\5ch\itest.5ch.net\assets\js\android 
 	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\easter\publicbox\alternative\5ch\itest.5ch.net\assets\js\iphone @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\easter\publicbox\alternative\5ch\itest.5ch.net\assets\js\iphone 
 	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\easter\publicbox\alternative\5ch\agree.5ch.net\js @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\easter\publicbox\alternative\5ch\agree.5ch.net\js 
+	@if exist "core_behavior.myf" @$(CP) /F "core_behavior.myf" ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\easter\ $(CP_END)
 	@if exist "default\*.myf" @$(CP) /F "default\*.myf" ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\easter\default\ $(CP_END)
 	@if exist "templates\*.html" @$(CP) /F "templates\*.html" ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\easter\templates\ $(CP_END)
 	@if exist "templates\*.myf" @$(CP) /F "templates\*.myf" ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\easter\templates\ $(CP_END)
@@ -227,7 +237,10 @@ Est_box_ui.o: Est_box_ui.h Est_config.h Est_ui_base.h Est_cinf_ui.h Est_linf_lis
 Est_cinf_ui.o: Est_cinf_ui.h Est_base.h
 Est_config.o: Est_config.h Est_base.h Est_hint_manager.h Est_unid.h
 Est_dir_util.o: Est_dir_util.h
-Est_filter.o: Est_filter.h Est_link.h Est_config.h Est_parser.h Est_base.h Est_hint_manager.h
+Est_filter.o: Est_filter.h Est_link.h Est_config.h Est_parser.h Est_base.h Est_hint_manager.h Est_filter_default.h Est_filter_futaba.h Est_filter_5ch.h
+Est_filter_5ch.o: Est_filter_5ch.h Est_parser.h Est_link.h Est_config.h Est_rpsc.h
+Est_filter_default.o: Est_filter_default.h Est_parser.h Est_link.h Est_config.h
+Est_filter_futaba.o: Est_filter_futaba.h Est_parser.h Est_link.h Est_config.h Est_rpsc.h
 Est_finf.o: Est_finf.h Est_record.h
 Est_get.o: Est_get.h Est_config.h Est_link.h Est_base.h Est_filter.h Est_img_viewer.h
 Est_hint_manager.o: Est_hint_manager.h
@@ -239,6 +252,7 @@ Est_parser.o: Est_parser.h
 Est_post.o: Est_post.h Est_base.h Est_config.h Est_ui.h Est_hint_manager.h Est_bmp_writer.h
 Est_recentory.o: Est_recentory.h Est_search_manager.h Est_finf.h Est_unid.h
 Est_record.o: Est_record.h Est_base.h
+Est_rpsc.o: Est_rpsc.h Est_parser.h Est_filter.h Est_link.h Est_base.h
 Est_search_manager.o: Est_search_manager.h Est_boxmap_viewer.h Est_ui.h Est_box_ui.h Est_record.h Est_config.h Est_assort.h Est_assort_ui.h Est_hint_manager.h Est_base.h Est_finf.h Est_box_base.h Est_unid.h
 Est_sqi.o: Est_sqi.h Est_tag.h
 Est_tag.o: Est_tag.h Est_unid.h

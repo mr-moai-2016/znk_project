@@ -17,17 +17,3 @@ dustbox_days_ago = ['5']
 easter_default_ua = ['Mozilla/5.0 (Windows NT 6.2; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0']
 @@.
 
-@@V filter_onclick_jscall
-del = { ['replace']
-['del(']
-['Easter_del(']
-}
-sod = { ['replace']
-['sd(']
-['Easter_sd(']
-}
-@@.
-
-@@L allow_js_hosts
-code.jquery.com
-@@.

@@ -53,6 +53,7 @@ RanoHtpBoy_readRecvHdrVar
 RanoHtpBoy_seekExeDir
 RanoHtpBoy_setTmpDirCommon
 RanoHtpModifier_modifySendHdrs
+RanoHtpUtil_download
 RanoLog_close
 RanoLog_open
 RanoLog_printf
@@ -62,6 +63,7 @@ RanoModuleAry_initiateFilters
 RanoModuleAry_loadAllModules
 RanoModule_create
 RanoModule_destroy
+RanoModule_execFilterAry
 RanoModule_filtCookieVars
 RanoModule_filtHtpHeader
 RanoModule_filtPostVars
@@ -106,6 +108,7 @@ RanoTxtFilterAry_destroy
 RanoTxtFilterAry_exec
 RanoTxtFilterAry_regist_byCommand
 RanoTxtFilterAry_size
+RanoTxtFilterAry_test
 RanoTxtFilter_writeCommand
 RanoVTagUtil_getNewParentVer
 RanoVTagUtil_getPatchDir

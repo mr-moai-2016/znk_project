@@ -5,6 +5,7 @@
 #include <Rano_cgi_util.h>
 #include <Rano_htp_boy.h>
 #include <Rano_htp_modifier.h>
+#include <Rano_htp_util.h>
 #include <Rano_file_info.h>
 
 #include <Znk_s_base.h>
@@ -131,10 +132,19 @@ initHtpHdr( ZnkHtpHdrs htp_hdrs, const char* hostname, const char* ua, ZnkVarpAr
 
 bool
 EstBase_download( const char* hostname, const char* unesc_req_urp, const char* target,
-		const char* ua, ZnkVarpAry cookie, const char* evar_http_cookie,
+		const char* ua, ZnkVarpAry cookie,
 		const char* parent_proxy,
 		ZnkStr result_filename, ZnkStr msg, RanoModule mod, int* status_code, bool is_https )
 {
+	const char* tmpdir   = EstConfig_getTmpDirPID( true );
+	const char* explicit_referer  = EstConfig_getExplicitReferer();
+	const char* easter_default_ua = EstConfig_getEasterDefaultUA();
+	return RanoHtpUtil_download( hostname, unesc_req_urp, target,
+			ua, cookie,
+			parent_proxy,
+			result_filename, msg, mod, status_code, is_https,
+			tmpdir, explicit_referer, easter_default_ua );
+#if 0
 	bool        result   = false;
 	const char* tmpdir   = EstConfig_getTmpDirPID( true );
 	const char* cachebox = "./cachebox/";
@@ -199,6 +209,7 @@ EstBase_download( const char* hostname, const char* unesc_req_urp, const char* t
 
 	ZnkHtpHdrs_dispose( &htp_hdrs );
 	return result;
+#endif
 }
 
 const char*

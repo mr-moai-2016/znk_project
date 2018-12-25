@@ -10,6 +10,7 @@
 #include <Znk_str.h>
 #include <Znk_str_fio.h>
 #include <Znk_str_ary.h>
+#include <Znk_str_ex.h>
 #include <Znk_stdc.h>
 #include <Znk_s_base.h>
 #include <Znk_htp_hdrs.h>
@@ -118,6 +119,36 @@ recoverSendFilter( ZnkMyf ftr_send )
 	return true;
 }
 
+enum {
+	Rpsc_e_Replace=0
+};
+
+static RanoTxtFilterCmdInfo st_cmdinfo_table[] = {
+	/* replace ['old_ptn'] ['new_ptn'] */
+	{ "replace", Rpsc_e_Replace, 2, },
+};
+static RanoTxtFilterConvertStrFunc_T st_unescapeArg = NULL;
+static RanoTxtFilterConvertStrFunc_T st_escapeArg = NULL;
+static bool
+exec_one( ZnkStr text, uintptr_t cmd_type, ZnkStrAry args, void* exec_arg )
+{
+	const int type = Znk_force_ptr_cast( int, cmd_type );
+	switch( type ){
+	case Rpsc_e_Replace:
+	{
+		ZnkStr old_ptn = ZnkStrAry_at( args, 0 );
+		ZnkStr new_ptn = ZnkStrAry_at( args, 1 );
+		ZnkStrEx_replace_BF( text, 0, ZnkStr_cstr(old_ptn), ZnkStr_leng(old_ptn),
+				ZnkStr_cstr(new_ptn), ZnkStr_leng(new_ptn), Znk_NPOS, Znk_NPOS ); 
+		break;
+	}
+	default:
+		break;
+	}
+	return true;
+}
+
+
 bool
 RanoModule_load( RanoModule mod, const char* target_name,
 		const char* filters_dir, const char* plugins_dir )
@@ -146,22 +177,22 @@ RanoModule_load( RanoModule mod, const char* target_name,
 		command_ary = ZnkMyf_find_lines( mod->ftr_recv_, "html_filter" );
 		if( command_ary ){
 			RanoTxtFilterAry_regist_byCommandAry( mod->ftr_html_, command_ary,
-					ZnkMyf_quote_begin( mod->ftr_recv_ ),
-					ZnkMyf_quote_end( mod->ftr_recv_ ) );
+					ZnkMyf_quote_begin( mod->ftr_recv_ ), ZnkMyf_quote_end( mod->ftr_recv_ ),
+					st_cmdinfo_table, Znk_NARY(st_cmdinfo_table), st_unescapeArg );
 		}
 
 		command_ary = ZnkMyf_find_lines( mod->ftr_recv_, "js_filter" );
 		if( command_ary ){
 			RanoTxtFilterAry_regist_byCommandAry( mod->ftr_js_, command_ary,
-					ZnkMyf_quote_begin( mod->ftr_recv_ ),
-					ZnkMyf_quote_end( mod->ftr_recv_ ) );
+					ZnkMyf_quote_begin( mod->ftr_recv_ ), ZnkMyf_quote_end( mod->ftr_recv_ ),
+					st_cmdinfo_table, Znk_NARY(st_cmdinfo_table), st_unescapeArg );
 		}
 
 		command_ary = ZnkMyf_find_lines( mod->ftr_recv_, "css_filter" );
 		if( command_ary ){
 			RanoTxtFilterAry_regist_byCommandAry( mod->ftr_css_, command_ary,
-					ZnkMyf_quote_begin( mod->ftr_recv_ ),
-					ZnkMyf_quote_end( mod->ftr_recv_ ) );
+					ZnkMyf_quote_begin( mod->ftr_recv_ ), ZnkMyf_quote_end( mod->ftr_recv_ ),
+					st_cmdinfo_table, Znk_NARY(st_cmdinfo_table), st_unescapeArg );
 		}
 
 		command_ary = ZnkMyf_find_lines( mod->ftr_recv_, "css_additional" );
@@ -210,7 +241,8 @@ updateReplaceCmdAry( ZnkMyf myf, const char* ftr_name, RanoTxtFilterAry txt_ftr_
 		for( idx=0; idx<size; ++idx ){
 			ZnkStr_clear( line );
 			txt_ftr = RanoTxtFilterAry_at( txt_ftr_ary, idx );
-			RanoTxtFilter_writeCommand( txt_ftr, line, quote_begin, quote_end );
+			RanoTxtFilter_writeCommand( txt_ftr, line, quote_begin, quote_end,
+					st_cmdinfo_table, Znk_NARY(st_cmdinfo_table), st_escapeArg );
 			ZnkStrAry_push_bk_snprintf( command_ary, Znk_NPOS, "%s%s", ZnkStr_cstr( line ), nl );
 		}
 		ZnkStr_delete( line );
@@ -704,6 +736,12 @@ RanoModuleAry_initiateFilters( RanoModuleAry mod_ary, ZnkStrAry result_msgs )
 }
 
 void
+RanoModule_execFilterAry( RanoTxtFilterAry txt_ftr, ZnkStr text )
+{
+	RanoTxtFilterAry_exec( txt_ftr, text, exec_one, NULL );
+}
+
+void
 RanoModule_filtTxt( const RanoModule mod, ZnkStr text, RanoTextType txt_type )
 {
 	RanoTxtFilterAry txt_ftr = NULL;
@@ -721,7 +759,7 @@ RanoModule_filtTxt( const RanoModule mod, ZnkStr text, RanoTextType txt_type )
 		break;
 	}
 	if( txt_ftr ){
-		RanoTxtFilterAry_exec( txt_ftr, text );
+		RanoModule_execFilterAry( txt_ftr, text );
 		if( txt_type == RanoText_CSS ){
 			const ZnkStrAry css_additional = RanoModule_ftrCSSAdditional( mod );
 			const size_t size = ZnkStrAry_size( css_additional );
@@ -767,22 +805,22 @@ RanoModule_reloadFilters_byDate( RanoModule mod, const char* target_name, const 
 			command_ary = ZnkMyf_find_lines( mod->ftr_recv_, "html_filter" );
 			if( command_ary ){
 				RanoTxtFilterAry_regist_byCommandAry( mod->ftr_html_, command_ary,
-						ZnkMyf_quote_begin( mod->ftr_recv_ ),
-						ZnkMyf_quote_end( mod->ftr_recv_ ) );
+						ZnkMyf_quote_begin( mod->ftr_recv_ ), ZnkMyf_quote_end( mod->ftr_recv_ ),
+						st_cmdinfo_table, Znk_NARY(st_cmdinfo_table), st_unescapeArg );
 			}
 	
 			command_ary = ZnkMyf_find_lines( mod->ftr_recv_, "js_filter" );
 			if( command_ary ){
 				RanoTxtFilterAry_regist_byCommandAry( mod->ftr_js_, command_ary,
-						ZnkMyf_quote_begin( mod->ftr_recv_ ),
-						ZnkMyf_quote_end( mod->ftr_recv_ ) );
+						ZnkMyf_quote_begin( mod->ftr_recv_ ), ZnkMyf_quote_end( mod->ftr_recv_ ),
+						st_cmdinfo_table, Znk_NARY(st_cmdinfo_table), st_unescapeArg );
 			}
 	
 			command_ary = ZnkMyf_find_lines( mod->ftr_recv_, "css_filter" );
 			if( command_ary ){
 				RanoTxtFilterAry_regist_byCommandAry( mod->ftr_css_, command_ary,
-						ZnkMyf_quote_begin( mod->ftr_recv_ ),
-						ZnkMyf_quote_end( mod->ftr_recv_ ) );
+						ZnkMyf_quote_begin( mod->ftr_recv_ ), ZnkMyf_quote_end( mod->ftr_recv_ ),
+						st_cmdinfo_table, Znk_NARY(st_cmdinfo_table), st_unescapeArg );
 			}
 	
 			command_ary = ZnkMyf_find_lines( mod->ftr_recv_, "css_additional" );

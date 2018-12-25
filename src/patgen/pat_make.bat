@@ -2,7 +2,7 @@
 set old_parent_ver=2.1
 set old_ver=2.1
 set new_parent_ver=2.1
-set new_ver=2.1.1
+set new_ver=2.1
 
 set CP=xcopy /H /C /Y
 if exist set_ver.bat call set_ver.bat

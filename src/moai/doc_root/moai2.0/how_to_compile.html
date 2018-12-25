@@ -26,7 +26,7 @@
 <div class=MstyComment>
 <u><b>記事担当者</b></u> : Mr.Moai ＆ 全角<br>
 <br>
-<u><b>最終更新日</b></u> : 2018/08/20<br>
+<u><b>最終更新日</b></u> : 2018/12/01<br>
 <br>
 </div>
 <br>
@@ -414,61 +414,40 @@ WindowsでVCを使ってコンパイルする
 </b></u><br>
 <br>
 <div class=MstyIndent>
-	既にVC(Visual C++)はお使いのPCにインストールされていることを前提とします.<br>
-	Moai Ver2.0以降で導入された新しいビルドシステムでは、インストールされているVCはほとんどの場合自動的に認識されます.<br>
-	特に VC6.0以上VC14.0以下のx86環境向けなら自動的に認識します.<br>
-	<br>
+	以下ではVC(Visual C++)でのコンパイル方法について説明します.<br>
+	VCは既にお使いのPCにインストールされているものと仮定して話を進めます.<br>
+<br>
+	Moaiのコンパイルはすべてコマンドラインベースで行われます.<br>
+	(IDEを起動する必要はありません)<br>
+<br>
 	<div class=MstyComment>
-		<u><b>Note</b></u><br>
-		<br>
-		Moaiのコンパイルはすべてコマンドラインベースで行うことができます.<br>
-		(IDEを起動する必要は一切ありません)<br>
-		またそれらを一括で実行するためのルールが記述されたMakefileも用意されており、<br>
-		nmakeコマンドを使うことでこのMakefileの内容を実行できます.<br>
-		<br>
-		その際、いくつかの必要な環境変数をあらかじめ設定しておく必要がありますが、<br>
-		通常は我々がこれを手動で全部設定する必要はなく、VCのインストールディレクトリ配下に<br>
-		これらを自動設定するためのbatファイルが存在するのでそれを使います. <br>
-		<br>
-		これはVCのバージョンによって場所と名前と中身が異なりますが例えばVC7.0以上VC14.0以下のx86環境向けなら<br>
-		vsvars32.bat という名前になっています.<br>
-		このバージョンのVCがインストールされている場合は VS??COMNTOOLS (??にはバージョン番号が入る)という形式の<br>
-		環境変数が既に設定されているはずです. これを利用してvsvars32.batの場所を特定することができます.<br>
-		<br>
-	</div>
+		<u><b>Note. VCでのコンパイルに関する一般知識</b></u><br>
+<br>
+		VCの場合、内部的にはnmakeコマンドがMakefile_vc.makを実行することでビルドが行われます.<br>
+		その際、いくつかの必要な環境変数をあらかじめ設定しておく必要があります.<br>
+		通常、これらを手動で設定する必要はなく、替わりに変数設定用バッチファイルを実行させます.<br>
 	<br>
-	これ以外のVCの場合は自動的には認識しないかもしれません.<br>
-	もしもこの自動認識に失敗する場合は環境変数ZNK_VSCOMNTOOLSで明示的に指定しなければなりません.<br>
-	以下のNoteも参考にして下さい.<br>
-	<br>
-	<div class=MstyComment>
-		<u><b>Note</b></u><br>
-		<br>
-		環境変数ZNK_VSCOMNTOOLSが明示的に指定されている場合、VC用のMakefileは<br>
-		%ZNK_VSCOMNTOOLS%に以下のbatファイルが存在するかどうかをチェックし、<br>
-		存在するならそれを実行することにより、ビルドに必要な環境変数の設定が行われます.<br>
-		<ul>
-			<li>vsvars32.bat</li>
-			<li>vsvars64.bat</li>
-			<li>vsvarsamd64.bat</li>
-			<li>VsDevCmd.bat</li>
-		</ul>
-		よってお使いのVCにおいて上記のbatファイルの存在するフォルダの位置がわかれば、<br>
-		ZNK_VSCOMNTOOLSにそのフォルダのフルパスを指定すればよいです.<br>
-		<br>
-		さらに以下の環境変数も用意されており、これらの環境変数が明示的に指定されている場合は、<br>
-		ZNK_VSCOMNTOOLSの指定よりも優先されます.<br>
-		(知識のある方はこちらの指定の方が手っ取り早いかもしれません)<br>
-		<ul>
-			<li>ZNK_VC_SETENV32_CMD<br>
-			x86向けコンパイル設定用batファイル(例えばvsvars32.bat)のフルパスを指定します.<br>
-			</li>
-			<br>
-			<li>ZNK_VC_SETENV64_CMD<br>
-			x64向けコンパイル設定用batファイル(例えばvsvars64.bat)のフルパスを指定します.<br>
-			</li>
-		</ul>
+		この変数設定用バッチファイルは、VCのインストールディレクトリ配下に存在するのですが、<br>
+		厄介なことに、VCのバージョンやマシン環境によってそのありかやファイル名が異なるのです.<br>
+		例えばVC11.0のx86環境向けなら、これはvsvars32.bat という名前になっており、<br>
+<br>
+		C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\Tools<br>
+<br>
+		などといったフォルダ内に存在します. あるいは<br>
+<br>
+		C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin<br>
+<br>
+		などといったフォルダ内に同様の(しかし名前は異なる)ファイルが存在することもあります.<br>
+		またx64環境(VCではamd64やx86_amd64などと表記されます)向けの場合、詳細は省略しますが<br>
+		状況はさらに複雑です.<br>
 	</div>
+<br>
+	Moaiでは、通常は以下で述べる手順に従うことによりコンパイルを簡単に行うことが可能です.<br>
+	特にVC6.0以上VC14.0以下のx86環境向けならこれはうまく機能すると思います.<br>
+<br>
+	しかし上で挙げたVCのバージョン以外では、この手順は失敗するかもしれません.<br>
+	その場合は、以下のNoteで述べます特別な環境変数をまずは明示的に指定した上で<br>
+	再度この手順をお試しください.<br>
 	<br>
 	では手順の説明に入ります.<br>
 	まずsrcフォルダの直下にある<b>make_world.bat</b>を実行します.<br>
@@ -502,15 +481,100 @@ WindowsでVCを使ってコンパイルする
 	<br>
 	さらに、srcディレクトリの一つ上の階層にmoai-v2.0-win32ディレクトリが生成され、<br>
 	コンパイルされた実行バイナリや設定ファイルなどの必要なものすべてが、そのディレクトリへとインストールされます.<br>
-	(なんらかの理由でこのインストール処理だけを省略し、つまり純粋にコンパイルだけを行いたい場合は、<br>
+	(なんらかの理由でこのインストール処理だけを省略したい、つまり純粋にコンパイルだけを行いたい場合は、<br>
 	「1. make install」の替わりに「0. make」を選んでください)<br>
 	<br>
 	以上でWindows版のMoaiのコンパイルとインストールはすべて完了です.<br>
 	お疲れ様でした.<br>
 	<br>
+<br>
 	<div class=MstyComment>
-		Ver1.1.8以前にあった compile_by_vc.bat と install_bin_for_win32.bat は<br>
-		Ver2.0では廃止/削除されました.<br>
+		<u><b>Note. 上記の手順で失敗する場合のトラブルシューティング</b></u><br>
+<br>
+		Moaiのビルドシステムは、あなたのPCにインストールされているVCを自動的に認識します.<br>
+		内部的にはこの自動認識は src\bat_utils\setenv_vc.bat というバッチファイルにおいて行われます.<br>
+		上記の手順で失敗する場合、この自動認識が失敗していると考えられます.<br>
+<br>
+		VCがインストールされている場合、VS??COMNTOOLS (??にはVCの内部バージョン番号が入る)という形式の名前の<br>
+		環境変数が設定されているはずです. これは例えばVisual Studio 2012の場合ですと、<br>
+		( 2012ではVCの内部バージョンは11.0になりますので )環境変数名は VS110COMNTOOLS であり、<br>
+		その値は<br>
+<br>
+		C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\Tools<br>
+<br>
+		などとなっています.<br>
+		これによりVCのインストールフォルダのパスが明らかとなるわけです.<br>
+		また、上記のNote「VCでのコンパイルに関する一般知識」でも述べましたが、<br>
+		このフォルダにはVCにおける変数設定用バッチファイルも存在します.<br>
+<br>
+		では次にMoaiのビルドシステムで用意されている環境変数について説明します.<br>
+		未知のバージョンのVCなどで上記の自動認識に失敗する場合でも、<br>
+		これらの環境変数をうまく指定することにより、Moaiのビルドシステムでのコンパイルが可能となります.<br>
+<br>
+<br>
+		<u><b>環境変数 ZNK_VSCOMNTOOLS</b></u><br>
+		<br>
+		環境変数ZNK_VSCOMNTOOLSが明示的に指定されている場合、src\bat_utils\setenv_vc.batは<br>
+		上記で述べた環境変数 VS??COMNTOOLS を参照する替わりにこのZNK_VSCOMNTOOLSの指定値を使います.<br>
+<br>
+		src\bat_utils\setenv_vc.batは、この環境変数値が示すフォルダの配下に、<br>
+		さらに以下のbatファイル群が存在するかどうかを調査します.<br>
+		もしも存在するならそれを採用して実行するという流れになります.<br>
+		<ul>
+			<li>vsvars32.bat</li>
+			<li>vsvars64.bat</li>
+			<li>vsvarsamd64.bat</li>
+			<li>..\..\VC\bin\vcvars64.bat</li>
+			<li>..\..\VC\bin\amd64\vcvarsamd64.bat</li>
+			<li>..\..\VC\bin\x86_amd64\vcvarsx86_amd64.bat</li>
+			<li>VsDevCmd.bat</li>
+		</ul>
+		よってお使いのVCにおいて上記のbatファイルの存在するフォルダの位置がわかれば、<br>
+		ZNK_VSCOMNTOOLSにそのフォルダのフルパスを指定すればよいことになります.<br>
+<br>
+		一つ注意点があります.<br>
+		例えば「Program Files」のように途中で半角スペースが入るフォルダ名の場合でも<br>
+		ZNK_VSCOMNTOOLSで指定する文字列はダブルクォートで括らないようにして設定してください.<br>
+		その理由は src\bat_utils\setenv_vc.bat の内部でZNK_VSCOMNTOOLSをダブルクォートで括って扱っているためです.<br>
+		このときバッチファイルの文法に起因して、二重にダブルクォートで括ってしまう状況が発生してしまい、<br>
+		これによりうまく機能しません.<br>
+<br>
+<br>
+		<u><b>環境変数 ZNK_VC_SETENV32_CMD と ZNK_VC_SETENV32_ARGS</b></u><br>
+		<br>
+		環境変数ZNK_VC_SETENV32_CMDが明示的に指定されている場合、src\bat_utils\setenv_vc.batは<br>
+		その指定値をx86向け変数設定用バッチファイルのありか(フルパス)とみなします.<br>
+		例えばVC11の場合ですと<br>
+<br>
+		C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\Tools\vsvars32.bat<br>
+<br>
+		などといった値が考えられます(VC11の場合はこの値を明示的に指定する必要はないとは思いますが).<br>
+		さらにこのバッチファイルになんらかのオプション引数を与えたいとします.<br>
+		その場合は、環境変数 ZNK_VC_SETENV32_ARGSにそのオプション引数を指定します.<br>
+<br>
+		ZNK_VSCOMNTOOLSのときと同様の注意点があります.<br>
+		途中で半角スペースが入る場合などであっても、指定する文字列はダブルクォートで括らないようにしてください.<br>
+		尚、この環境変数とZNK_VSCOMNTOOLSを両方設定した場合は、ZNK_VSCOMNTOOLSの値より<br>
+		この環境変数の値の方が優先されます.<br>
+<br>
+<br>
+		<u><b>環境変数 ZNK_VC_SETENV64_CMD と ZNK_VC_SETENV64_ARGS</b></u><br>
+		<br>
+		環境変数ZNK_VC_SETENV64_CMDが明示的に指定されている場合、src\bat_utils\setenv_vc.batは<br>
+		その指定値をx64向け変数設定用バッチファイルのありか(フルパス)とみなします.<br>
+		例えばVC11の場合ですと<br>
+<br>
+		C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\vsvarsx86_amd64.bat<br>
+<br>
+		などといった値が考えられます(VC11の場合はこの値を明示的に指定する必要はないとは思いますが).<br>
+		さらにこのバッチファイルになんらかのオプション引数を与えたいとします.<br>
+		その場合は、環境変数 ZNK_VC_SETENV64_ARGSにそのオプション引数を指定します.<br>
+<br>
+		ZNK_VSCOMNTOOLSのときと同様の注意点があります.<br>
+		途中で半角スペースが入る場合などであっても、指定する文字列はダブルクォートで括らないようにしてください.<br>
+		尚、この環境変数とZNK_VSCOMNTOOLSを両方設定した場合は、ZNK_VSCOMNTOOLSの値より<br>
+		この環境変数の値の方が優先されます.<br>
+<br>
 	</div>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
@@ -566,7 +630,7 @@ Linuxを使ってコンパイルする
 	<br>
 	さらに、srcディレクトリの一つ上の階層にmoai-v2.0-linux32ディレクトリが生成され、<br>
 	コンパイルされた実行バイナリや設定ファイルなどの必要なものすべてが、そのディレクトリへとインストールされます.<br>
-	(なんらかの理由でこのインストール処理だけを省略し、つまり純粋にコンパイルだけを行いたい場合は、<br>
+	(なんらかの理由でこのインストール処理だけを省略したい、つまり純粋にコンパイルだけを行いたい場合は、<br>
 	「sh ./make_world.sh install」の替わりに「sh ./make_world.sh」と実行してください)<br>
 	<br>
 	以上でMoaiのコンパイルとインストールはすべて完了です.<br>

@@ -208,7 +208,7 @@ doHyperUpload( ZnkVarpAry post_vars,
 
 		Znk_UNUSED( src );
 		is_result = EstBase_download( hostname, unesc_req_urp, "upload",
-				ua, cookie, evar_http_cookie,
+				ua, cookie,
 				parent_proxy,
 				result_filename, NULL, mod, &status_code, is_https );
 

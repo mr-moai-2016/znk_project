@@ -59,6 +59,7 @@ exec cache_task cache_task.c
 @@.
 
 @@L install_data_list
+core_behavior.myf
 default/*.myf
 templates/*.html
 templates/*.myf

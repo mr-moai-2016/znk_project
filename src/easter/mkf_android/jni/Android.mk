@@ -39,6 +39,9 @@ LOCAL_SRC_FILES := \
 	$S/Est_config.c \
 	$S/Est_dir_util.c \
 	$S/Est_filter.c \
+	$S/Est_filter_5ch.c \
+	$S/Est_filter_default.c \
+	$S/Est_filter_futaba.c \
 	$S/Est_finf.c \
 	$S/Est_get.c \
 	$S/Est_hint_manager.c \
@@ -50,6 +53,7 @@ LOCAL_SRC_FILES := \
 	$S/Est_post.c \
 	$S/Est_recentory.c \
 	$S/Est_record.c \
+	$S/Est_rpsc.c \
 	$S/Est_search_manager.c \
 	$S/Est_sqi.c \
 	$S/Est_tag.c \
@@ -85,6 +89,9 @@ LOCAL_SRC_FILES := \
 	$S/Est_config.c \
 	$S/Est_dir_util.c \
 	$S/Est_filter.c \
+	$S/Est_filter_5ch.c \
+	$S/Est_filter_default.c \
+	$S/Est_filter_futaba.c \
 	$S/Est_finf.c \
 	$S/Est_get.c \
 	$S/Est_hint_manager.c \
@@ -96,6 +103,7 @@ LOCAL_SRC_FILES := \
 	$S/Est_post.c \
 	$S/Est_recentory.c \
 	$S/Est_record.c \
+	$S/Est_rpsc.c \
 	$S/Est_search_manager.c \
 	$S/Est_sqi.c \
 	$S/Est_tag.c \

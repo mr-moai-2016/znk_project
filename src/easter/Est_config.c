@@ -37,10 +37,11 @@ static ZnkMyf        st_easter_myf;
 static ZnkMyf        st_tags_myf;
 static ZnkMyf        st_target_myf;
 static ZnkMyf        st_hosts_myf;
-static ZnkMyf        st_input_hiddens_myf;
+//static ZnkMyf        st_input_hiddens_myf;
+static ZnkMyf        st_core_behavior_myf;
 static RanoModuleAry st_mod_ary;
 
-static ZnkStrAry  st_allow_js_hosts = NULL;
+//static ZnkStrAry  st_allow_js_hosts = NULL;
 
 static ZnkStr     st_direct_img_link = NULL;
 static ZnkStr     st_auto_link = NULL;
@@ -360,9 +361,11 @@ EstConfig_initiate( RanoCGIEVar* evar, const char* moai_dir, size_t count )
 	if( ZnkDir_getType( "easter.myf" ) != ZnkDirType_e_File ){ 
 		ZnkDir_copyFile_byForce( "default/easter.myf", "easter.myf", NULL );
 	}
+#if 0
 	if( ZnkDir_getType( "input_hiddens.myf" ) != ZnkDirType_e_File ){ 
 		ZnkDir_copyFile_byForce( "default/input_hiddens.myf", "input_hiddens.myf", NULL );
 	}
+#endif
 
 	/* load easter.myf */
 	result = ZnkMyf_load( st_easter_myf, "easter.myf" );
@@ -379,7 +382,7 @@ EstConfig_initiate( RanoCGIEVar* evar, const char* moai_dir, size_t count )
 		st_auto_link = ZnkVar_str(varp);
 
 
-		st_allow_js_hosts = ZnkMyf_find_lines( st_easter_myf, "allow_js_hosts" );
+		//st_allow_js_hosts = ZnkMyf_find_lines( st_easter_myf, "allow_js_hosts" );
 
 		varp = ZnkVarpAry_findObj_byName_literal( vars, "show_file_num", false );
 		if( varp ){
@@ -502,38 +505,6 @@ EstConfig_initiate( RanoCGIEVar* evar, const char* moai_dir, size_t count )
 	return result;
 }
 
-#if 0
-static bool
-isOldFile( const char* file_path, ZnkStr msg )
-{
-	ZnkDate current = { 0 };
-	ZnkDate date = { 0 };
-	ZnkDate threshold = { 0 };
-	long diff_sec = 0;
-	bool is_old = false;
-
-	ZnkDate_getCurrent( &current );
-	ZnkDate_getNDaysAgo( &threshold, &current, 1 );
-	RanoFileInfo_getLastUpdatedTime( file_path, &date );
-
-	if( ZnkDate_compareDay( &date, &threshold ) >= 0 ){
-		diff_sec = ZnkDate_diffSecond( &current, &date, 1 );
-		if( msg ){
-			ZnkStr_addf( msg, "Est_config : diff_sec=[%ld]\n", diff_sec );
-		}
-		if( diff_sec >= 600 ){
-			is_old = true;
-		}
-	} else {
-		if( msg ){
-			ZnkStr_addf( msg, "Est_config : compareDay is negative.\n" );
-		}
-		is_old = true;
-	}
-	return is_old;
-}
-#endif
-
 
 void
 EstConfig_finalize( void )
@@ -606,12 +577,6 @@ bool
 EstConfig_isAutoLink( void )
 {
 	return ZnkStr_eq( st_auto_link, "on" );
-}
-
-ZnkVarpAry
-EstConfig_filterOnclickJSCall( void )
-{
-	return ZnkMyf_find_vars( st_easter_myf, "filter_onclick_jscall" );
 }
 
 #define IS_OK( val ) (bool)( (val) != NULL )
@@ -700,11 +665,6 @@ EstConfig_topics_dir( void )
 	return "topics";
 }
 
-ZnkStrAry
-EstConfig_AllowJSHosts( void )
-{
-	return st_allow_js_hosts;
-}
 ZnkMyf
 EstConfig_tags_myf( void )
 {
@@ -787,22 +747,42 @@ EstConfig_readRecvHdrSetCookie( RanoModule mod, const char* target )
 		ZnkVarpAry_destroy( vars );
 	}
 }
+
+static ZnkMyf
+theCoreBehavior( void )
+{
+	if( st_core_behavior_myf == NULL ){
+		st_core_behavior_myf = ZnkMyf_create();
+		if( !ZnkMyf_load( st_core_behavior_myf, "core_behavior.myf" ) ){
+			RanoLog_printf( "Easter : loading core_behavior.myf is failure.\n" );
+			ZnkMyf_destroy( st_core_behavior_myf );
+			st_core_behavior_myf = NULL;
+			return NULL;
+		}
+	}
+	return st_core_behavior_myf;
+}
+ZnkStrAry
+EstConfig_getCoreBehaviorLines( const char* sec_name )
+{
+	theCoreBehavior();
+	return ZnkMyf_find_lines( st_core_behavior_myf, sec_name );
+}
+ZnkVarpAry
+EstConfig_getCoreBehaviorVars( const char* sec_name )
+{
+	theCoreBehavior();
+	return ZnkMyf_find_vars( st_core_behavior_myf, sec_name );
+}
 bool
 EstConfig_isInputHiddensPostVarNames( const char* target, const char* query_varname )
 {
 	ZnkStrAry lines = NULL;
 
-	if( st_input_hiddens_myf == NULL ){
-		st_input_hiddens_myf = ZnkMyf_create();
-		if( !ZnkMyf_load( st_input_hiddens_myf, "input_hiddens.myf" ) ){
-			RanoLog_printf( "Easter : loading input_hiddens.myf is failure.\n" );
-			ZnkMyf_destroy( st_input_hiddens_myf );
-			st_input_hiddens_myf = NULL;
-			return false;
-		}
-	}
+	char sec_name[ 256 ] = "";
+	Znk_snprintf( sec_name, sizeof(sec_name), "input_hiddens_%s", target );
+	lines = EstConfig_getCoreBehaviorLines( sec_name );
 
-	lines = ZnkMyf_find_lines( st_input_hiddens_myf, target );
 	if( lines ){
 		const char* val = NULL;
 		size_t idx;
@@ -818,6 +798,19 @@ EstConfig_isInputHiddensPostVarNames( const char* target, const char* query_varn
 	/* not found */
 	return false;
 }
+ZnkVarpAry
+EstConfig_filterOnclickJSCall( void )
+{
+	theCoreBehavior();
+	return ZnkMyf_find_vars( st_core_behavior_myf, "filter_onclick_jscall" );
+}
+ZnkStrAry
+EstConfig_AllowJSHosts( void )
+{
+	theCoreBehavior();
+	return ZnkMyf_find_lines( st_core_behavior_myf, "allow_js_hosts" );
+}
+
 
 static bool
 updateSizeVar( ZnkBird bird, ZnkVarpAry post_vars, ZnkVarpAry em_vars,

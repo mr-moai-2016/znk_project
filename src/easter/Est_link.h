@@ -5,6 +5,8 @@
 #include <Znk_str.h>
 #include <Znk_myf.h>
 
+#include <Est_filter.h>
+
 Znk_EXTERN_C_BEGIN
 
 typedef enum {
@@ -42,14 +44,17 @@ EstRequest_getCStr( EstRequest est_req )
 }
 
 struct EstLinkInfo {
-	ZnkStr     base_href_;
-	ZnkStr     hostname_;
-	ZnkStr     hyperpost_url_;
-	EstRequest est_req_;
-	ZnkMyf     mtgt_;
-	bool       img_link_direct_;
-	bool       css_link_done_;
-	bool       is_https_parent_;
+	ZnkStr      unesc_src_;
+	ZnkStr      base_href_;
+	ZnkStr      hostname_;
+	ZnkStr      hyperpost_url_;
+	//const char* target_;
+	EstFilterModule* filter_module_;
+	EstRequest  est_req_;
+	ZnkMyf      mtgt_;
+	bool        img_link_direct_;
+	bool        css_link_done_;
+	bool        is_https_parent_;
 };
 
 typedef int (*EstLinkProcessFuncT)( ZnkVarpAry str, void* arg );

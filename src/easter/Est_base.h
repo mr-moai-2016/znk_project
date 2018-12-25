@@ -11,7 +11,7 @@ EstBase_getHostnameAndRequrp_fromEstVal( char* hostname, size_t hostname_size, Z
 
 bool
 EstBase_download( const char* hostname, const char* unesc_req_urp, const char* target,
-		const char* ua, ZnkVarpAry cookie, const char* evar_http_cookie,
+		const char* ua, ZnkVarpAry cookie,
 		const char* parent_proxy,
 		ZnkStr result_filename, ZnkStr msg, RanoModule mod, int* status_code, bool is_https );
 

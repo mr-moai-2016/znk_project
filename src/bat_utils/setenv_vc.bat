@@ -17,7 +17,7 @@ REM VC80  : Visual Studio 2005
 REM VC71  : Visual Studio 2003
 REM VC70  : Visual Studio 2002
 REM
-if not "%ZNK_VC_SETENV32_CMD%" == "" goto x86_ExecCmd
+if not "%ZNK_VC_SETENV32_CMD%" == "" goto x86_explicit_cmd
 if not "%ZNK_VSCOMNTOOLS%" == "" goto x86_Unknown
 if not "%VS140COMNTOOLS%"  == "" goto x86_VC140
 if not "%VS120COMNTOOLS%"  == "" goto x86_VC120
@@ -71,21 +71,25 @@ echo Error : Missing vsvars32.bat, VsDevCmd.bat.
 goto End
 
 :x86_vsvars32
-set ZNK_VC_SETENV32_CMD="%ZNK_VSCOMNTOOLS%\vsvars32.bat"
+set _BU_VC_SETENV32_CMD="%ZNK_VSCOMNTOOLS%\vsvars32.bat"
 goto x86_ExecCmd
 
 :x86_VsDevCmd
 set VSCMD_START_DIR=%CD%
-set ZNK_VC_SETENV32_CMD="%ZNK_VSCOMNTOOLS%\VsDevCmd.bat" -no_ext
+set _BU_VC_SETENV32_CMD="%ZNK_VSCOMNTOOLS%\VsDevCmd.bat" -no_ext
 goto x86_ExecCmd
 
 :x86_VC60
-set ZNK_VC_SETENV32_CMD="%ZNK_VC60_DIR%\VC98\Bin\VCVARS32.BAT"
+set _BU_VC_SETENV32_CMD="%ZNK_VC60_DIR%\VC98\Bin\VCVARS32.BAT"
+goto x86_ExecCmd
+
+:x86_explicit_cmd
+set _BU_VC_SETENV32_CMD="%ZNK_VC_SETENV32_CMD%" %ZNK_VC_SETENV32_ARGS%
 goto x86_ExecCmd
 
 :x86_ExecCmd
-echo Now call %ZNK_VC_SETENV32_CMD%
-call %ZNK_VC_SETENV32_CMD%
+echo Now call %_BU_VC_SETENV32_CMD%
+call %_BU_VC_SETENV32_CMD%
 goto End
 
 
@@ -94,7 +98,7 @@ goto End
 REM ------
 REM Automatic Recognize
 REM
-if not "%ZNK_VC_SETENV64_CMD%" == "" goto x64_ExecCmd
+if not "%ZNK_VC_SETENV64_CMD%" == "" goto x64_explicit_cmd
 if not "%ZNK_VSCOMNTOOLS%" == "" goto x64_Unknown
 if not "%VS140COMNTOOLS%"  == "" goto x64_VC140
 if not "%VS120COMNTOOLS%"  == "" goto x64_VC120
@@ -133,45 +137,58 @@ goto x64_Unknown
 REM ------
 REM Unknown VC Version.
 REM 最終的手段としてはZNK_VSCOMNTOOLSで、以下のbatファイルのあるパスを直接与える.
+REM x86_amd64は32bit上で64bitをクロスコンパイル(VS2012 Expressではこれしかない模様)
 REM VsDevCmd.batはVS2017以上
 REM
 :x64_Unknown
 if exist "%ZNK_VSCOMNTOOLS%\..\..\VC\bin\vcvars64.bat"          goto x64_vcbin_vcvars64
 if exist "%ZNK_VSCOMNTOOLS%\..\..\VC\bin\amd64\vcvarsamd64.bat" goto x64_vcbin_amd64_vcvarsamd64
+if exist "%ZNK_VSCOMNTOOLS%\..\..\VC\bin\x86_amd64\vcvarsx86_amd64.bat" goto x64_vcbin_x86_amd64_vcvarsx86_amd64
 if exist "%ZNK_VSCOMNTOOLS%\vcvars64.bat"                       goto x64_vcvars64
 if exist "%ZNK_VSCOMNTOOLS%\vcvarsamd64.bat"                    goto x64_vcvarsamd64
 if exist "%ZNK_VSCOMNTOOLS%\VsDevCmd.bat"                       goto x64_VsDevCmd
-echo Error : Missing vcvars64.bat, vcvarsamd64.bat, VsDevCmd.bat
+echo Error : Missing vcvars64.bat, vcvarsamd64.bat, vcvarsx86_amd64.bat, VsDevCmd.bat
 goto End
 
 :x64_vcbin_vcvars64
-set ZNK_VC_SETENV64_CMD="%ZNK_VSCOMNTOOLS%\..\..\VC\bin\vcvars64.bat"
+set _BU_VC_SETENV64_CMD="%ZNK_VSCOMNTOOLS%\..\..\VC\bin\vcvars64.bat"
 goto x64_ExecCmd
 
 :x64_vcbin_amd64_vcvarsamd64
-set ZNK_VC_SETENV64_CMD="%ZNK_VSCOMNTOOLS%\..\..\VC\bin\amd64\vcvarsamd64.bat"
+set _BU_VC_SETENV64_CMD="%ZNK_VSCOMNTOOLS%\..\..\VC\bin\amd64\vcvarsamd64.bat"
+goto x64_ExecCmd
+
+:x64_vcbin_x86_amd64_vcvarsx86_amd64
+set _BU_VC_SETENV64_CMD="%ZNK_VSCOMNTOOLS%\..\..\VC\bin\x86_amd64\vcvarsx86_amd64.bat"
 goto x64_ExecCmd
 
 :x64_vcvars64
-set ZNK_VC_SETENV64_CMD="%ZNK_VSCOMNTOOLS%\vcvars64.bat"
+set _BU_VC_SETENV64_CMD="%ZNK_VSCOMNTOOLS%\vcvars64.bat"
 goto x64_ExecCmd
 
 :x64_vcvarsamd64
-set ZNK_VC_SETENV64_CMD="%ZNK_VSCOMNTOOLS%\vcvarsamd64.bat"
+set _BU_VC_SETENV64_CMD="%ZNK_VSCOMNTOOLS%\vcvarsamd64.bat"
 goto x64_ExecCmd
 
 :x64_VsDevCmd
 set VSCMD_START_DIR=%CD%
-set ZNK_VC_SETENV64_CMD="%ZNK_VSCOMNTOOLS%\VsDevCmd.bat" -no_ext -arch=amd64
+set _BU_VC_SETENV64_CMD="%ZNK_VSCOMNTOOLS%\VsDevCmd.bat" -no_ext -arch=amd64
+goto x64_ExecCmd
+
+:x64_explicit_cmd
+set _BU_VC_SETENV64_CMD="%ZNK_VC_SETENV64_CMD%" %ZNK_VC_SETENV64_ARGS%
 goto x64_ExecCmd
 
 :x64_ExecCmd
-echo Now call %ZNK_VC_SETENV64_CMD%
-call %ZNK_VC_SETENV64_CMD%
+echo Now call %_BU_VC_SETENV64_CMD%
+call %_BU_VC_SETENV64_CMD%
 goto End
 
 :End
 if exist setenv_vc_additional.bat call setenv_vc_additional.bat
+if not "%ZNK_VC_PLATFORM_SDK_DIR%" == "" set INCLUDE=%ZNK_VC_PLATFORM_SDK_DIR%\INCLUDE;%INCLUDE%
+if not "%ZNK_VC_PLATFORM_SDK_DIR%" == "" set     LIB=%ZNK_VC_PLATFORM_SDK_DIR%\LIB;%LIB%
+if not "%ZNK_VC_PLATFORM_SDK_DIR%" == "" set    PATH=%ZNK_VC_PLATFORM_SDK_DIR%\BIN;%PATH%
 echo ===
 echo INCLUDE=[%INCLUDE%]
 echo LIB=[%LIB%]

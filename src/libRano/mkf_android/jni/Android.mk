@@ -26,6 +26,7 @@ LOCAL_SRC_FILES := \
 	$S/Rano_html_ui.c \
 	$S/Rano_htp_boy.c \
 	$S/Rano_htp_modifier.c \
+	$S/Rano_htp_util.c \
 	$S/Rano_log.c \
 	$S/Rano_module.c \
 	$S/Rano_myf.c \

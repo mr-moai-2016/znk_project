@@ -53,6 +53,7 @@ OBJS0=\
 	$O\Rano_html_ui.obj \
 	$O\Rano_htp_boy.obj \
 	$O\Rano_htp_modifier.obj \
+	$O\Rano_htp_util.obj \
 	$O\Rano_log.obj \
 	$O\Rano_module.obj \
 	$O\Rano_myf.obj \
@@ -165,6 +166,7 @@ Rano_file_info.obj: Rano_file_info.h
 Rano_hash.obj: Rano_hash.h
 Rano_htp_boy.obj: Rano_htp_boy.h Rano_log.h Rano_post.h tls_module/tls_module.h
 Rano_htp_modifier.obj: Rano_htp_modifier.h
+Rano_htp_util.obj: Rano_htp_util.h Rano_htp_boy.h Rano_htp_modifier.h
 Rano_log.obj: Rano_log.h
 Rano_module.obj: Rano_module.h Rano_module_ary.h Rano_log.h Rano_myf.h Rano_txt_filter.h Rano_plugin_dev.h Rano_parent_proxy.h Rano_file_info.h
 Rano_myf.obj: Rano_myf.h Rano_log.h

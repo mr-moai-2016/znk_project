@@ -110,6 +110,11 @@ EstConfig_readRecvHdrSetCookie( RanoModule mod, const char* target );
 bool
 EstConfig_isInputHiddensPostVarNames( const char* target, const char* query_varname );
 
+ZnkStrAry
+EstConfig_getCoreBehaviorLines( const char* sec_name );
+ZnkVarpAry
+EstConfig_getCoreBehaviorVars( const char* sec_name );
+
 void
 EstConfigManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const char* authentic_key );
 

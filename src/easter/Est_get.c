@@ -541,7 +541,7 @@ downloadWithCookie( const char* tmpdir_com, const char* tmpdir_pid,
 	 * (通常ブラウザ側でそれは行われてからRequestされる)
 	 */
 	if( !EstBase_download( hostname, unesc_req_urp, target,
-			ua, cookie, evar_http_cookie,
+			ua, cookie,
 			parent_proxy,
 			result_filename, ermsg, mod, &status_code, is_https ) ){
 		RanoLog_printf( "EstBase_download ermsg=[%s]\n", ZnkStr_cstr(ermsg) );
