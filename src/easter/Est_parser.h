@@ -6,7 +6,10 @@
 
 Znk_EXTERN_C_BEGIN
 
-typedef int (*EstParserProcessFuncT)( ZnkStr tagname, ZnkVarpAry varp_ary, void* arg, ZnkStr tagend );
+typedef int (*EstParserProcessFuncT)(
+		ZnkStr tagname, ZnkVarpAry varp_ary, void* arg, ZnkStr tagend );
+typedef int (*EstParserPreModifyProcessFuncT)(
+		ZnkStr tagname, ZnkVarpAry varp_ary, void* arg, ZnkStr tagend, ZnkStr text, size_t cur );
 
 typedef int (*EstParserPlaneTxtProcessFuncT)( ZnkStr planetxt, void* arg );
 
@@ -14,6 +17,7 @@ bool
 EstParser_invokeHtmlTagEx( ZnkStr text,
 		const EstParserProcessFuncT tag_event_handler, void* tag_event_arg,
 		const EstParserPlaneTxtProcessFuncT planetxt_event_handler, void* planetxt_event_arg,
+		const EstParserPreModifyProcessFuncT premodify_event_handler, void* premodify_event_arg,
 		ZnkStr msg );
 
 Znk_INLINE const char*

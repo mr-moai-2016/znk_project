@@ -36,10 +36,10 @@ typedef struct EstFilterModule_tag {
 bool
 EstFilter_ignoreHosts( ZnkStr str );
 
-bool
-EstFilter_replaceToAutolink( ZnkStr planetxt );
+size_t
+EstFilter_replaceToAutolink( ZnkStr planetxt, bool is_append_a_tag );
 
-void
+bool
 EstFilter_insertBBSOperation( ZnkStr text, 
 		const char* result_filename, const char* landmark, const char* src, const char* bbs_id_name, ZnkStr console_msg );
 

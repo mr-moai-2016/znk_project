@@ -10,7 +10,7 @@ EstCInfListUI_make( ZnkStr ans, ZnkVarpAry cinf_list,
 		size_t begin_idx, size_t end_idx,
 		const char* style_class_name, const char* new_linkid, const char* url_prefix, const char* id_prefix,
 		bool is_target_blank, size_t show_file_num, size_t line_file_num, size_t elem_pix_width,
-		const char* authentic_key, bool is_checked )
+		const char* authentic_key, bool is_checked, bool use_flexbox )
 {
 	const size_t size = ZnkVarpAry_size( cinf_list );
 	if( end_idx > size ){
@@ -34,8 +34,14 @@ EstCInfListUI_make( ZnkStr ans, ZnkVarpAry cinf_list,
 	
 		ZnkStr_add( ans, "\n" );
 
-		ZnkStr_add( ans, "<table border=0>\n" );
-		ZnkStr_add( ans, "<tr>\n" );
+		if( use_flexbox ){
+			ZnkStr_add( ans, "<div class=\"tile is-ancestor is-vertical\">\n" );
+			ZnkStr_add( ans, "<div class=\"tile is-parent\">\n" );
+		} else {
+			ZnkStr_add( ans, "<div class=\"table-container\">\n" );
+			ZnkStr_add( ans, "<table border=0 class=table>\n" );
+			ZnkStr_add( ans, "<tr>\n" );
+		}
 
 		for( idx=begin_idx; idx<end_idx; ++idx ){
 			void* elem_ptr  = NULL;
@@ -56,11 +62,16 @@ EstCInfListUI_make( ZnkStr ans, ZnkVarpAry cinf_list,
 			{
 				const char* val = url;
 				const char* checked = is_checked ? "checked" : "";
-				ZnkStr_add( ans, "<td style=vertical-align:top>" );
+
+				if( use_flexbox ){
+					ZnkStr_addf( ans, "<article class=\"tile is-child\">\n" );
+				} else {
+					ZnkStr_add( ans, "<td style=vertical-align:top>" );
+				}
 				ZnkStr_addf( ans, "<input type=checkbox id=%s%s name=%s%s value=\"%s\" %s>", id_prefix, id, id_prefix, id, val, checked );
-				ZnkStr_add( ans, "</td>" );
+				//ZnkStr_add( ans, "</td>" );
 				/* widthÇ +32 Ç»Ç«Ç∆â¡éZÇµÇ»Ç¢ï˚Ç™ÇÊÇ¢(ChromeÇ≈ÉuÉååªè€Ç™î≠ê∂Ç∑ÇÈ) */
-				ZnkStr_addf( ans, "<td width=\"%zu\" valign=top style=word-break:break-all>", elem_pix_width );
+				//ZnkStr_addf( ans, "<td width=\"%zu\" valign=top style=word-break:break-all>", elem_pix_width );
 
 				view_func( ans, elem_ptr,
 						url_prefix, url, ZnkStr_cstr(unesc_url), ZnkStr_cstr(esc_url),
@@ -71,19 +82,36 @@ EstCInfListUI_make( ZnkStr ans, ZnkVarpAry cinf_list,
 				if( ZnkS_eq( id, new_linkid ) ){
 					ZnkStr_addf( ans, "<font color=red> New!</font>" );
 				}
+
+				if( use_flexbox ){
+					ZnkStr_addf( ans, "</article>\n" );
+				} else {
+					ZnkStr_add( ans, "</td>\n" );
+				}
 			}
 
-			ZnkStr_add( ans, "</td>\n" );
 			if( idx != end_idx-1 ){
 				if( ((idx+1)-begin_idx) % line_file_num == 0 ){
-					ZnkStr_add( ans, "</tr>\n<tr>\n" );
+					if( use_flexbox ){
+						ZnkStr_add( ans, "</div>\n\n" );
+						ZnkStr_add( ans, "<div class=\"tile is-parent\">" );
+					} else {
+						ZnkStr_add( ans, "</tr>\n<tr>\n" );
+						ZnkStr_add( ans, "<br>\n" );
+					}
 				}
 			}
 			ZnkStr_add( ans, "\n" );
 		}
 
-		ZnkStr_add( ans, "</tr>\n" );
-		ZnkStr_add( ans, "</table>\n" );
+		if( use_flexbox ){
+			ZnkStr_add( ans, "</div>\n" );
+			ZnkStr_add( ans, "</div>\n" );
+		} else {
+			ZnkStr_add( ans, "</tr>\n" );
+			ZnkStr_add( ans, "</table>\n" );
+			ZnkStr_add( ans, "</div>\n" );
+		}
 
 		ZnkStr_add( ans, "\n" );
 		ZnkStr_delete( esc_url );

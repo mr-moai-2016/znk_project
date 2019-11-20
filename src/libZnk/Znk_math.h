@@ -7,9 +7,18 @@
 /***
  * VC“™A‚±‚ê‚ª’è‹`‚³‚ê‚Ä‚¢‚È‚¢math.h‚ª‚ ‚é.
  */
-#ifndef M_PI
-#  define M_PI		3.14159265358979323846
+#ifndef   M_PI
+#  define M_PI   3.14159265358979323846
 #endif
+
+#ifndef   M_LN2
+#  define M_LN2  0.69314718055994530942
+#endif
+
+#ifndef   M_LN10
+#  define M_LN10 2.30258509299404568402
+#endif
+
 
 /***
  * ƒKƒ“ƒ}ŠÖ”

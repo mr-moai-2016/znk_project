@@ -32,9 +32,20 @@ getSfxRuleLeftDSP( const char* mkf_id )
 	if( ZnkS_eq( mkf_id, "vc" ) ){
 		return "\\";
 	} else if( ZnkS_eq( mkf_id, "mingw" ) || ZnkS_eq( mkf_id, "android" ) ){
-		return "\\\\";
+		//return "\\\\";
+		return "\\";
 	}
 	return "/";
+}
+static bool
+isRecursiveSfxRuleSupport( const char* mkf_id )
+{
+	if( ZnkS_eq( mkf_id, "vc" ) ){
+		/* VC nmake */
+		return false;
+	}
+	/* GNU Make */
+	return true;
 }
 static const char*
 getNL( const char* mkf_id )
@@ -190,6 +201,35 @@ getObjsDefsProductFiles( ZnkStr ans, const char* defs_name, ZnkStrAry install_fi
 }
 
 static void
+getObjBasename( char* obj_base_buf, size_t obj_base_buf_size, const char* dir, const size_t dir_leng, const char* obj_dsp, ZnkStr dir_tmp )
+{
+	ZnkStr_assign( dir_tmp, 0, dir, dir_leng );
+	/* 消極的なdsp変換 : 変換元が / で区切られている形式である場合のみを対象 */
+	if( !ZnkS_eq( obj_dsp, "/" ) && ZnkStrEx_strchr( dir_tmp, '/' ) ){
+		ZnkStrEx_replace_BF( dir_tmp, 0,
+				"/", 1,
+				obj_dsp, Znk_strlen(obj_dsp),
+				Znk_NPOS, Znk_NPOS );
+	}
+	ZnkS_copy( obj_base_buf, obj_base_buf_size, ZnkStr_cstr( dir_tmp ), ZnkStr_leng( dir_tmp ) );
+}
+
+static void
+getObjDir( char* obj_dir_buf, size_t obj_dir_buf_size, const char* dir, const char* obj_dsp, ZnkStr dir_tmp )
+{
+	/* 消極的なdsp変換 : 変換元が / で区切られている形式である場合のみを対象 */
+	if( !ZnkS_eq( obj_dsp, "/" ) && Znk_strchr( dir, '/' ) ){
+		ZnkStr_set( dir_tmp, dir );
+		ZnkStrEx_replace_BF( dir_tmp, 0,
+				"/", 1,
+				obj_dsp, Znk_strlen(obj_dsp),
+				Znk_NPOS, Znk_NPOS );
+		dir = ZnkStr_cstr( dir_tmp );
+	}
+	Znk_snprintf( obj_dir_buf, obj_dir_buf_size, "$O%s%s", obj_dsp, dir );
+}
+
+static void
 getObjsDefs( ZnkStr ans,
 		ZnkStrAry list, ZnkVarpAry product_list, ZnkStrAry rc_list, ZnkStrAry sublibs_list, const ZnkStrAry runtime_list,
 		ZnkStr template_lib_file, ZnkStr template_lib_ver_sfx, ZnkStr template_sublib_dir,
@@ -213,6 +253,7 @@ getObjsDefs( ZnkStr ans,
 	ZnkStr  ilib_file = ZnkStr_new( "" );
 	ZnkStr  slib_file = ZnkStr_new( "" );
 	ZnkStr  dlib_name = ZnkStr_new( "" );
+	ZnkStr  dir_tmp   = ZnkStr_new( "" );
 	//ZnkStr  basename_mod = ZnkStr_new( "" );
 	ZnkBird bird = ZnkBird_create( "$[", "]$" );
 
@@ -314,7 +355,8 @@ getObjsDefs( ZnkStr ans,
 			ext  = ZnkS_get_extension( name, '.' );
 			if( isSrcFileExt( ext ) ){
 				if( !isExistMainSrc( product_list, name ) ){
-					ZnkS_copy( obj_basename, sizeof(obj_basename), name, ext-1-name );
+					//ZnkS_copy( obj_basename, sizeof(obj_basename), name, ext-1-name );
+					getObjBasename( obj_basename, sizeof(obj_basename), name, ext-1-name, dsp, dir_tmp );
 					ZnkStr_addf( ans, "\t%s%s.%s \\%s", out_dir, obj_basename, obj_sfx, nl );
 				}
 			}
@@ -323,9 +365,11 @@ getObjsDefs( ZnkStr ans,
 		{
 			ext  = ZnkS_get_extension( main_name, '.' );
 			if( ext ){
-				ZnkS_copy( obj_basename, sizeof(obj_basename), main_name, ext-1-main_name );
+				//ZnkS_copy( obj_basename, sizeof(obj_basename), main_name, ext-1-main_name );
+				getObjBasename( obj_basename, sizeof(obj_basename), main_name, ext-1-main_name, dsp, dir_tmp );
 				ZnkStr_addf( ans, "\t%s%s.%s \\%s", out_dir, obj_basename, obj_sfx, nl );
 			} else {
+				getObjBasename( obj_basename, sizeof(obj_basename), main_name, Znk_strlen(main_name), dsp, dir_tmp );
 				ZnkStr_addf( ans, "\t%s%s.%s \\%s", out_dir, main_name, obj_sfx, nl );
 			}
 			//ZnkStr_addf( ans, "\t%s%s.%s \\%s", out_dir, main_name, obj_sfx, nl );
@@ -549,7 +593,7 @@ getObjsDefs( ZnkStr ans,
 	ZnkStr_delete( ilib_file );
 	ZnkStr_delete( slib_file );
 	ZnkStr_delete( dlib_name );
-	//ZnkStr_delete( basename_mod );
+	ZnkStr_delete( dir_tmp );
 }
 
 static void
@@ -574,21 +618,22 @@ getSuffixRule( ZnkStr ans, ZnkMyf tmpl_myf, const char* mkf_id, ZnkStrAry dir_li
 		/* とりあえず */
 		const char* src_dsp = getDSP( is_dos );
 		const char* obj_dsp = getSfxRuleLeftDSP( mkf_id );
+		/***
+		 * GNU MakefileのSuffixRuleでは $O/%.o: $S/%.c (DOS環境のMinGWの場合は $O\\%.o: $S\%.c)といった記述一行だけで
+		 * サブディレクトリに存在する o ファイルまで再帰的に網羅することができる.
+		 * (つまり各サブディレクトリsubdir毎に $O\subdir\\%.o: $S\subdir\%.c などと記述する必要がない)
+		 * しかしVCのnmakeのSuffixRuleでは、すべてのサブディレクトリ(dir_listで与えられる)を指定しなくてはならない.
+		 */
+		bool is_recursive_suffix_rule_support = isRecursiveSfxRuleSupport( mkf_id );
 
 		ZnkStr_clear( ans );
 
-		for( dir_idx=0; dir_idx<dir_list_size; ++dir_idx ){
-			const char* dir = ZnkStrAry_at_cstr( dir_list, dir_idx );
+		if( is_recursive_suffix_rule_support ){
 			char src_dir[ 256 ] = "";
 			char obj_dir[ 256 ] = "";
 
-			if( ZnkS_eq( dir, "." ) ){
-				ZnkS_copy( src_dir, sizeof(src_dir), "$S", Znk_NPOS );
-				ZnkS_copy( obj_dir, sizeof(obj_dir), "$O", Znk_NPOS );
-			} else {
-				Znk_snprintf( src_dir, sizeof(src_dir), "$S%s%s", src_dsp, dir );
-				Znk_snprintf( obj_dir, sizeof(obj_dir), "$O%s%s", obj_dsp, dir );
-			}
+			ZnkS_copy( src_dir, sizeof(src_dir), "$S", Znk_NPOS );
+			ZnkS_copy( obj_dir, sizeof(obj_dir), "$O", Znk_NPOS );
 
 			size = ZnkStrAry_size( src_suffix_list );
 			for( idx=0; idx<size; ++idx ){
@@ -598,6 +643,30 @@ getSuffixRule( ZnkStr ans, ZnkMyf tmpl_myf, const char* mkf_id, ZnkStrAry dir_li
 				ZnkBird_regist( rule_bird, "src_sfx", src_sfx );
 				ZnkBird_extend( rule_bird, ans, ZnkStr_cstr(rule_src), ZnkStr_leng( rule_src ) * 2 );
 				ZnkStr_add( ans, nl );
+			}
+		} else {
+			for( dir_idx=0; dir_idx<dir_list_size; ++dir_idx ){
+				const char* dir = ZnkStrAry_at_cstr( dir_list, dir_idx );
+				char src_dir[ 256 ] = "";
+				char obj_dir[ 256 ] = "";
+
+				if( ZnkS_eq( dir, "." ) ){
+					ZnkS_copy( src_dir, sizeof(src_dir), "$S", Znk_NPOS );
+					ZnkS_copy( obj_dir, sizeof(obj_dir), "$O", Znk_NPOS );
+				} else {
+					Znk_snprintf( src_dir, sizeof(src_dir), "$S%s%s", src_dsp, dir );
+					Znk_snprintf( obj_dir, sizeof(obj_dir), "$O%s%s", obj_dsp, dir );
+				}
+
+				size = ZnkStrAry_size( src_suffix_list );
+				for( idx=0; idx<size; ++idx ){
+					src_sfx = ZnkStrAry_at_cstr( src_suffix_list, idx );
+					ZnkBird_regist( rule_bird, "src_dir", src_dir );
+					ZnkBird_regist( rule_bird, "obj_dir", obj_dir );
+					ZnkBird_regist( rule_bird, "src_sfx", src_sfx );
+					ZnkBird_extend( rule_bird, ans, ZnkStr_cstr(rule_src), ZnkStr_leng( rule_src ) * 2 );
+					ZnkStr_add( ans, nl );
+				}
 			}
 		}
 	}
@@ -611,10 +680,11 @@ getAllTargetRule( ZnkStr ans, ZnkStrAry dir_list, const ZnkStrAry submkf_list, c
 {
 	size_t       idx;
 	const size_t dir_list_size     = ZnkStrAry_size( dir_list );
-	const size_t submkf_size      = ZnkStrAry_size( submkf_list );
+	const size_t submkf_size       = ZnkStrAry_size( submkf_list );
 	const size_t product_list_size = ZnkVarpAry_size( product_list );
-	const char* obj_dsp = getDSP( is_dos );
-	const char* nl      = getNL( mkf_id );
+	const char*  obj_dsp = getDSP( is_dos );
+	const char*  nl      = getNL( mkf_id );
+	ZnkStr       dir_tmp = ZnkStr_new( "" );
 
 	ZnkStr_clear( ans );
 	ZnkStr_add( ans, "all: " );
@@ -626,7 +696,8 @@ getAllTargetRule( ZnkStr ans, ZnkStrAry dir_list, const ZnkStrAry submkf_list, c
 		if( ZnkS_eq( dir, "." ) ){
 			ZnkS_copy( obj_dir, sizeof(obj_dir), "$O", Znk_NPOS );
 		} else {
-			Znk_snprintf( obj_dir, sizeof(obj_dir), "$O%s%s", obj_dsp, dir );
+			//Znk_snprintf( obj_dir, sizeof(obj_dir), "$O%s%s", obj_dsp, dir );
+			getObjDir( obj_dir, sizeof(obj_dir), dir, obj_dsp, dir_tmp );
 		}
 
 		ZnkStr_addf( ans, "%s ", obj_dir );
@@ -654,6 +725,7 @@ getAllTargetRule( ZnkStr ans, ZnkStrAry dir_list, const ZnkStrAry submkf_list, c
 		}
 	}
 	ZnkStr_add( ans, nl );
+	ZnkStr_delete( dir_tmp );
 }
 
 static void
@@ -663,6 +735,7 @@ getMkdirRule( ZnkStr ans, ZnkMyf tmpl_myf, const char* mkf_id, ZnkStrAry dir_lis
 	size_t  size = ZnkStrAry_size( lines );
 	size_t  idx;
 	ZnkStr  rule_src = ZnkStr_new( "" );
+	ZnkStr  dir_tmp  = ZnkStr_new( "" );
 	ZnkBird rule_bird = ZnkBird_create( "$[", "]$" );
 	const char* nl = getNL( mkf_id );
 
@@ -685,7 +758,18 @@ getMkdirRule( ZnkStr ans, ZnkMyf tmpl_myf, const char* mkf_id, ZnkStrAry dir_lis
 			if( ZnkS_eq( dir, "." ) ){
 				ZnkS_copy( obj_dir, sizeof(obj_dir), "$O", Znk_NPOS );
 			} else {
+#if 0
+				if( !ZnkS_eq( obj_dsp, "/" ) && Znk_strchr( dir, '/' ) ){
+					ZnkStr_set( dir_tmp, dir );
+					ZnkStrEx_replace_BF( dir_tmp, 0,
+							"/", 1,
+							obj_dsp, Znk_strlen(obj_dsp),
+							Znk_NPOS, Znk_NPOS );
+					dir = ZnkStr_cstr( dir_tmp );
+				}
 				Znk_snprintf( obj_dir, sizeof(obj_dir), "$O%s%s", obj_dsp, dir );
+#endif
+				getObjDir( obj_dir, sizeof(obj_dir), dir, obj_dsp, dir_tmp );
 			}
 
 			ZnkBird_regist( rule_bird, "obj_dir", obj_dir );
@@ -696,6 +780,7 @@ getMkdirRule( ZnkStr ans, ZnkMyf tmpl_myf, const char* mkf_id, ZnkStrAry dir_lis
 
 	ZnkBird_destroy( rule_bird );
 	ZnkStr_delete( rule_src );
+	ZnkStr_delete( dir_tmp );
 }
 
 static void
@@ -1703,24 +1788,149 @@ generateMkfVersion( const char* makefile_version_landmark )
 	}
 }
 
+typedef bool (*Str_FuncT_Is)( const char* str, void* arg );
+struct OnlyInfo {
+	ZnkStrAry  dir_ary_;
+	ZnkDirType dir_type_;
+};
 /**
- * src_ary を except_ary を除き dst_aryへ追加.
- * except_aryがNULLの場合はそのまま追加.
+ * src_ary を is_funcがtrueを返す場合のみ dst_aryへ追加.
+ * is_funcがNULLの場合はそのまま追加.
  */
 static void
-addStrAry_withExcept( ZnkStrAry dst_ary, const ZnkStrAry src_ary, const ZnkStrAry except_ary )
+addStrAry_withCondition( ZnkStrAry dst_ary, const ZnkStrAry src_ary, Str_FuncT_Is is_func, void* is_func_arg )
 {
 	const size_t size = ZnkStrAry_size( src_ary );
 	size_t idx;
 	for( idx=0; idx<size; ++idx ){
 		const char*  src      = ZnkStrAry_at_cstr( src_ary, idx );
 		const size_t src_leng = ZnkStrAry_at_leng( src_ary, idx );
-		if( except_ary == NULL || ZnkStrAry_find( except_ary, 0, src, src_leng ) == Znk_NPOS ){
+		if( is_func == NULL || is_func( src, is_func_arg ) ){ 
 			ZnkStrAry_push_bk_cstr( dst_ary, src, src_leng );
 		}
 	}
 }
+static bool
+isAddElem_forExcept( const char* str, void* arg )
+{
+	struct OnlyInfo* info = Znk_force_ptr_cast( struct OnlyInfo*, arg );
+	if( info->dir_ary_ == NULL ){
+		/* dir_aryの指定がなかった場合は無条件で追加を許可 */
+		return true;
+	} else {
+		const size_t size = ZnkStrAry_size( info->dir_ary_ );
+		size_t idx;
+		for( idx=0; idx<size; ++idx ){
+			const char* dir = ZnkStrAry_at_cstr( info->dir_ary_, idx );
+			/***
+			 * strがdirで指定されたディレクトリ配下であるかどうかを判定する.
+			 * このときは追加の対象外としてfalseを返す必要がある.
+			 *
+			 * とりあえずここではもっとも単純にstrの前半にdirを含むかどうかで判定する.
+			 */
+			if( ZnkS_isBegin( str, dir ) ){
+				return false;
+			}
+		}
+	}
+	return (bool)( ZnkDir_getType( str ) == info->dir_type_ );
+}
+static bool
+isAddElem_forInclude( const char* str, void* arg )
+{
+	struct OnlyInfo* info = Znk_force_ptr_cast( struct OnlyInfo*, arg );
+	if( info->dir_ary_ == NULL ){
+		/* dir_aryの指定がなかった場合は無条件で追加を許可 */
+		return true;
+	} else {
+		const size_t size = ZnkStrAry_size( info->dir_ary_ );
+		size_t idx;
+		for( idx=0; idx<size; ++idx ){
+			const char* dir = ZnkStrAry_at_cstr( info->dir_ary_, idx );
+			/***
+			 * strがdirで指定されたディレクトリ配下であるかどうかを判定する.
+			 * このときは追加の対象としてtrueを返す必要がある.
+			 *
+			 * とりあえずここではもっとも単純にstrの前半にdirを含むかどうかで判定する.
+			 */
+			if( ZnkS_isBegin( str, dir ) ){
+				return (bool)( ZnkDir_getType( str ) == info->dir_type_ );
+			}
+		}
+	}
+	return false;
+}
+static void
+addStrAry_withExcept_forDirType( ZnkStrAry dst_ary, const ZnkStrAry src_ary, const ZnkStrAry dir_ary, ZnkDirType dir_type )
+{
+	struct OnlyInfo info = { 0 };
+	info.dir_ary_  = dir_ary;
+	info.dir_type_ = dir_type;
+	addStrAry_withCondition( dst_ary, src_ary, isAddElem_forExcept, &info );
+}
+static void
+addStrAry_withInclude_forDirType( ZnkStrAry dst_ary, const ZnkStrAry src_ary, const ZnkStrAry dir_ary, ZnkDirType dir_type )
+{
+	struct OnlyInfo info = { 0 };
+	info.dir_ary_  = dir_ary;
+	info.dir_type_ = dir_type;
+	addStrAry_withCondition( dst_ary, src_ary, isAddElem_forInclude, &info );
+}
 
+/***
+ * mkf_id_listにあるonly_listをすべてマージしたonly_list_allを得る.
+ */
+static void
+initOnlyListAll( ZnkStrAry only_list_all, ZnkMyf conf_myf, const ZnkStrAry mkf_id_list )
+{
+	const size_t size = ZnkStrAry_size( mkf_id_list );
+	size_t       idx;
+	ZnkStr       only_list_name = ZnkStr_new( "" );
+	ZnkStrAry    only_list      = NULL;
+
+	/* init only_list_all */
+	for( idx=0; idx<size; ++idx ){
+		const char* mkf_id = ZnkStrAry_at_cstr( mkf_id_list, idx );
+		ZnkStr_setf( only_list_name, "only_list_%s", mkf_id );
+		only_list = ZnkMyf_find_lines( conf_myf, ZnkStr_cstr(only_list_name) );
+		if( only_list ){
+			size_t only_idx;
+			size_t only_size = ZnkStrAry_size( only_list );
+			for( only_idx=0; only_idx<only_size; ++only_idx ){
+				const char* only = ZnkStrAry_at_cstr( only_list, only_idx );
+				MkfSSet_add( only_list_all, only );
+			}
+		}
+	}
+	ZnkStr_delete( only_list_name );
+}
+/***
+ * only_list_allからmkf_idで指定したonly_listだけを除去する.
+ * 注: only_list_allを Oa、これを構成する各only_listを O1, O2, O3 ... On とすれば
+ *   Oa = O1 ∪ O2 ∪ O3 ... On
+ *   得たいのはこれからOiだけを除去したものである.
+ *   ここで O1, O2, O3 などは共通要素を持つ可能性があることに注意する.
+ *   従ってまずすべてのマージ Oa を求めてから、そこで改めてOiを除去する必要がある.
+ */
+static void
+eraseCurrentOnlyList( ZnkStrAry only_list_all, ZnkMyf conf_myf, const char* mkf_id )
+{
+	ZnkStr       only_list_name = ZnkStr_new( "" );
+	ZnkStrAry    only_list      = NULL;
+
+	/* list_mdfへ only_list を追加. */
+	ZnkStr_setf( only_list_name, "only_list_%s", mkf_id );
+	only_list = ZnkMyf_find_lines( conf_myf, ZnkStr_cstr(only_list_name) );
+	if( only_list ){
+		size_t only_idx;
+		size_t only_size = ZnkStrAry_size( only_list );
+		for( only_idx=0; only_idx<only_size; ++only_idx ){
+			const char* only = ZnkStrAry_at_cstr( only_list, only_idx );
+			MkfSSet_erase( only_list_all, only );
+		}
+	}
+	ZnkStr_delete( only_list_name );
+}
 
 int main(int argc, char **argv)
 {
@@ -1734,7 +1944,7 @@ int main(int argc, char **argv)
 		ZnkVarpAry info  = NULL;
 		ZnkVarpAry product_list = NULL;
 		ZnkStrAry  product_list_sda = NULL;
-		ZnkStrAry  lines = NULL;
+		ZnkStrAry  mkid_list = NULL;
 		ZnkStrAry  include_paths_common   = NULL;
 		ZnkStrAry  dependency_libs_common = NULL;
 		ZnkStrAry  runtime_additional = NULL;
@@ -1752,20 +1962,31 @@ int main(int argc, char **argv)
 		const char* resfile_additional = NULL;
 		bool is_runtime_install = true;
 		bool is_include_makefile_version = true;
+		bool is_android_ndk_build_support = false;
 		size_t size;
 		size_t idx;
 		ZnkStr info_name      = ZnkStr_new( "" );
 		ZnkStr only_list_name = ZnkStr_new( "" );
-		ZnkStrAry dir_list = ZnkStrAry_create( true );
-		ZnkStrAry list     = ZnkStrAry_create( true );
-		ZnkStrAry list_mdf = ZnkStrAry_create( true );
+		ZnkStrAry dir_list      = ZnkStrAry_create( true );
+		ZnkStrAry list          = ZnkStrAry_create( true );
+		ZnkStrAry dir_list_mdf  = ZnkStrAry_create( true );
+		ZnkStrAry list_mdf      = ZnkStrAry_create( true );
 		ZnkStrAry ignore_list   = ZnkMyf_find_lines( conf_myf, "ignore_list" );
 		ZnkStrAry only_list     = NULL;
 		ZnkStrAry only_list_all = ZnkStrAry_create( true );
 		const char* gslconv = "$(MKFSYS_DIR)/$(PLATFORM)/gslconv.exe";
 		ZnkStr makefile_version_landmark = ZnkStr_new( "libZnk" );
 
-		MkfSeek_listDir( list, dir_list, ".", ignore_list, isInterestExt );
+		mkid_list = ZnkMyf_find_lines( conf_myf, "mkid_list" );
+		/* init only_list_all */
+		initOnlyListAll( only_list_all, conf_myf, mkid_list );
+
+		/***
+		 * まずはignore_listは無視しつつ基本的なFile/Directoryシークを行う.
+		 */
+		{
+			MkfSeek_listDir( list, dir_list, ".", ignore_list, isInterestExt );
+		}
 
 		product_list = ZnkVarpAry_create( true );
 		tkns = ZnkStrAry_create( true );
@@ -1800,6 +2021,10 @@ int main(int argc, char **argv)
 		varp = ZnkVarpAry_find_byName_literal( vars, "include_makefile_version", false );
 		if( varp ){
 			is_include_makefile_version = ZnkS_eq( ZnkVar_cstr( varp ), "true" );
+		}
+		varp = ZnkVarpAry_find_byName_literal( vars, "is_android_ndk_build_support", false );
+		if( varp ){
+			is_android_ndk_build_support = ZnkS_eq( ZnkVar_cstr( varp ), "true" );
 		}
 		varp = ZnkVarpAry_find_byName_literal( vars, "makefile_version_landmark", false );
 		if( varp ){
@@ -1848,51 +2073,58 @@ int main(int argc, char **argv)
 			ZnkVarpAry_push_bk( product_list, varp );
 		}
 
-		lines = ZnkMyf_find_lines( conf_myf, "mkid_list" );
-		size = ZnkStrAry_size( lines );
-
-		/* init only_list_all */
+		size = ZnkStrAry_size( mkid_list );
 		for( idx=0; idx<size; ++idx ){
-			const char* mkf_id = ZnkStrAry_at_cstr( lines, idx );
-			ZnkStr_setf( only_list_name, "only_list_%s", mkf_id );
-			only_list = ZnkMyf_find_lines( conf_myf, ZnkStr_cstr(only_list_name) );
-			if( only_list ){
-				size_t only_idx;
-				size_t only_size = ZnkStrAry_size( only_list );
-				for( only_idx=0; only_idx<only_size; ++only_idx ){
-					const char* only = ZnkStrAry_at_cstr( only_list, only_idx );
-					MkfSSet_add( only_list_all, only );
-				}
-			}
-		}
-
-		for( idx=0; idx<size; ++idx ){
-			const char* mkf_id = ZnkStrAry_at_cstr( lines, idx );
+			const char* mkf_id = ZnkStrAry_at_cstr( mkid_list, idx );
 
 			ZnkStr_setf( info_name, "info_%s", mkf_id );
 			info = ZnkMyf_find_vars( conf_myf, ZnkStr_cstr(info_name) );
 
-			/* list から only_list_all を除き、list_mdfへコピー. */
+			/* list/dir_list へ 「only_list_allで指定されたディレクトリ配下のパス」 を除き、
+			 * list_mdf/dir_list_mdfへコピー. */
 			ZnkStrAry_clear( list_mdf );
-			addStrAry_withExcept( list_mdf, list, only_list_all );
+			ZnkStrAry_clear( dir_list_mdf );
+			addStrAry_withExcept_forDirType( list_mdf,     list,     only_list_all, ZnkDirType_e_File );
+			addStrAry_withExcept_forDirType( dir_list_mdf, dir_list, only_list_all, ZnkDirType_e_Directory );
 
-			/* list_mdfへ only_list を追加. */
+			/* list/dir_list へ 「only_listで指定されたディレクトリ配下のパス」 に限り、
+			 * list_mdf/dir_list_mdfへコピー. */
 			ZnkStr_setf( only_list_name, "only_list_%s", mkf_id );
 			only_list = ZnkMyf_find_lines( conf_myf, ZnkStr_cstr(only_list_name) );
 			if( only_list ){
-				addStrAry_withExcept( list_mdf, only_list, NULL );
+				addStrAry_withInclude_forDirType( list_mdf,     list,     only_list, ZnkDirType_e_File );
+				addStrAry_withInclude_forDirType( dir_list_mdf, dir_list, only_list, ZnkDirType_e_Directory );
 			}
-
-			ZnkStr_setf( only_list_name, "only_list_%s", mkf_id );
-			only_list = ZnkMyf_find_lines( conf_myf, ZnkStr_cstr(only_list_name) );
 
 			MkfInstall_clearList_atMkfGenerate( &mkf_inst );
-			if( ZnkS_eq( mkf_id, "android" ) ){
-				MkfAndroid_generate( conf_myf, product_list, isSrcFileExt,
+			if( is_android_ndk_build_support && ZnkS_eq( mkf_id, "android" ) ){
+				MkfAndroid_generate_forNdkBuild( conf_myf,
+						list_mdf, dir_list,
+						product_list, isSrcFileExt,
 						include_paths_common,
 						dependency_libs_common, runtime_additional,
-						sublibs_list );
+						sublibs_list, template_dir );
 			}
+
+#if 0
+			/***
+			 * dir_listから次式で得られるignore_list_modifyを除去する.
+			 * ignore_list_modify = only_list_all - only_list + ignore_list.
+			 * 注:
+			 * dir_listは既にignore_listを除去した状態で取得している.
+			 * にもかかわらずここで再びこれを除去するのは、only_list_allにignore_listの要素が含まれている可能性があるからである.
+			 * そのような場合はignore_listでの指定を優先する(つまり無視対象にする).
+			 */
+			{
+				ZnkStrAry ignore_list_modify = ZnkStrAry_create( true );
+				ZnkStrAry_copy( ignore_list_modify, only_list_all );
+				eraseCurrentOnlyList( ignore_list_modify, conf_myf, mkf_id );
+				addStrAry_withExcept( ignore_list_modify, ignore_list, NULL );
+				/* 除去 */
+				ZnkStrAry_destroy( ignore_list_modify );
+			}
+#endif
+
 			generateMkf( info, list_mdf, dir_list, mkf_id, src_suffix_list,
 					include_paths_common, dependency_libs_common, runtime_additional, is_runtime_install,
 					my_libs_root, template_dir, product_list, rc_list, sublibs_list,
@@ -1910,10 +2142,11 @@ int main(int argc, char **argv)
 		ZnkStr_delete( info_name );
 		ZnkStr_delete( only_list_name );
 		ZnkStr_delete( makefile_version_landmark );
+		ZnkStrAry_destroy( dir_list );
 		ZnkStrAry_destroy( list );
+		ZnkStrAry_destroy( dir_list_mdf );
 		ZnkStrAry_destroy( list_mdf );
 		ZnkStrAry_destroy( only_list_all );
-		ZnkStrAry_destroy( dir_list );
 		MkfInstall_dispose( &mkf_inst );
 	}
 

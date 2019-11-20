@@ -1,27 +1,30 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html><html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta http-equiv="Content-Script-Type" content="text/javascript">
 	<meta http-equiv="Content-Style-Type" content="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<link href="/bulma.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+<div class="section">
+<div class="container">
+<div class="content">
 <a name=TopBar></a>
 <p><b><img src="/imgs/here_landmark.png"> Moai+Easter ユーザーマニュアル</b></p>
 
 <a class=MstyElemLink href="/">トップページ</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
-<a class=MstyElemLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index.html">初級マニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index_expert.html">上級マニュアル</a> &nbsp;
 <a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
 <a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
 <a class=MstyElemLink href="/moai2.0/index.html">ご案内</a> &nbsp;
 <a class=MstyElemLink href="/moai2.0/install.html">インストールガイド</a> &nbsp;
-<a class=MstyElemLink href="/moai2.0/moai_feature.html">Moaiの特徴</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
-<a class=MstyElemLink href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
-<a class=MstyElemLink href="/moai2.0/upgrade.html">Moaiのアップグレード方法</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/easter_reference.html">Easterの使い方</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/virtual_users.html">VirtualUSERSの使い方</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/upgrade.html">Moaiを最新バージョンにする</a> &nbsp;
 <br> <br>
 <a class=MstyElemLink href="/moai2.0/easter_reference.html">仮想ブラウジング</a> &nbsp;
 <a class=MstyElemLink href="/moai2.0/easter_collection.html">コレクション</a> &nbsp;
@@ -29,33 +32,19 @@
 <a class=MstyNowSelectedLink href="/moai2.0/easter_boxmap_viewer.html">BoxMapビューア</a> &nbsp;
 <br> <br>
 
-<div class=MstyComment>
-<u><b>記事担当者</b></u> : 全角<br>
-<br>
-<u><b>最終更新日</b></u> : 2018/04/02<br>
-<br>
-</div>
-<br>
-
-
 <a name=AtFirst></a>
-<u><b>
-はじめに
-</b></u><br>
-<br>
-<div class=MstyIndent>
-	この記事ではEasterのコア機能の一つであるBoxと呼ばれる機構について説明します.<br>
+<h1 class="title">はじめに</h1>
+<p>
+	この記事ではEasterのコア機能の一つである「Box」について説明します.<br>
 	またそれを閲覧、操作するためのBoxMapビューアについても解説します.<br>
-	尚、この記事の内容はエキスパート向けのものです.<br>
+	尚、この記事の内容はエキスパート向けのもので、一般ユーザには必要ない内容となっています.<br>
 	Easterコレクションについての知識も前提となるため、まずはそちらを一読しておくことをお勧めします.<br>
-</div><br>
+</p>
 <br>
 
 
 <a name=Index></a>
-<u><b>
-目次
-</b></u><br>
+<h1 class="title">目次</h1>
 <br>
 <ul>
 	<li><b><a class=MstyElemLink href=#Abstract>概要</a></b></li>
@@ -66,103 +55,122 @@
 
 
 <a name=Abstract></a>
-<u><b>
-概要
-</b></u><br>
-<br>
-<div class=MstyIndent>
-	Easterではコレクションやキャッシュが格納された特殊ディレクトリを特に<b>Box</b>と呼びます.<br>
-	またBoxMapビューアではBoxの中身をファイルシステム上の実ディレクトリレベルで直接閲覧したり管理を行うことができます.<br>
+<h1 class="title">概要</h1>
+<p>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Box<br>
+	</div>
+	<div class="message-body">
+		Easterではコレクションやキャッシュが格納された特殊ディレクトリを特に<b>Box</b>と呼びます.<br>
+		またBoxMapビューアではBoxの中身をファイルシステム上の実ディレクトリレベルで直接閲覧したり管理を行うことができます.<br>
+		<br>
+		EasterのBoxをファイルシステム上の実ディレクトリに対応付ける操作を「<b>Boxを実ディレクトリにマッピングする</b>」と呼びます.<br>
+		(UNIXシステムなどにおけるマウントと形式的には似た概念です).<br>
+		<b>BoxMapビューア</b>という名前の由来はここから来ています.<br>
+	</div>
+</article><br>
 	<br>
-	EasterのBoxをファイルシステム上の実ディレクトリに対応付ける操作を<br>
-	「<b>Boxを実ディレクトリにマッピングする</b>」と呼びます.<br>
-	(UNIXシステムなどにおけるマウントと形式的には似た概念です).<br>
-	<b>BoxMapビューア</b>という名前の由来はここから来ています.<br>
-	<br>
-	Easterには現在、以下にリストされたBoxが存在します. <br>
-	<ul>
-		<li><b>favorite</b><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		favorite<br>
+	</div>
+	<div class="message-body">
 		このBoxは「コレクション」の画面では「お気に入りボックス」と表記されています.<br>
 		お気に入り登録されたされたファイルの実体はこのBoxに格納されています.<br>
 		ここに格納された画像などは(特にユーザがそれを明示的に削除などしない限り)永続保存されます.<br>
-		<div class=MstyComment>
+<br>
+		<div class=box>
 			これは問題等発生した場合のメンテナンス用のためのものであり、通常はここからファイルを閲覧する必要はありません.<br>
 			「コレクション」画面にある「お気に入りボックス」より閲覧するのがほとんどの場合望ましいです.<br>
 		</div>
 		<br>
-		デフォルトではmoai_profile/favoriteディレクトリが実体となりますが、<br>
-		環境変数EST_FAVORITE_DIRを指定することにより、その実ディレクトリをユーザが自由に変更することもできます.<br>
+		デフォルトではmoai_profile/favoriteディレクトリが実体となりますが、環境変数EST_FAVORITE_DIRを指定することにより、その実ディレクトリをユーザが自由に変更することもできます.<br>
 		(環境変数による変更を反映させるにはmoai本体を一度終了させ、再び起動させる必要があります)<br>
-		</li>
+	</div>
+</article><br>
 		<br>
-		<li><b>stockbox</b><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		stockbox<br>
+	</div>
+	<div class="message-body">
 		このBoxは「コレクション」の画面では「ストックボックス」と表記されています.<br>
 		ストックされたファイルの実体はこのBoxに格納されています.<br>
 		ここに格納された画像などは(特にユーザがそれを明示的に削除などしない限り)永続保存されます.<br>
-		<div class=MstyComment>
+<br>
+		<div class=box>
 			これは問題等発生した場合のメンテナンス用のためのものであり、通常はここからファイルを閲覧する必要はありません.<br>
 			「コレクション」画面にある「ストックボックス」より閲覧するのがほとんどの場合望ましいです.<br>
 		</div>
 		<br>
-		デフォルトではmoai_profile/stockboxディレクトリが実体となりますが、<br>
-		環境変数EST_STOCKBOX_DIRを指定することにより、その実ディレクトリをユーザが自由に変更することもできます.<br>
+		デフォルトではmoai_profile/stockboxディレクトリが実体となりますが、環境変数EST_STOCKBOX_DIRを指定することにより、その実ディレクトリをユーザが自由に変更することもできます.<br>
 		(環境変数による変更を反映させるにはmoai本体を一度終了させ、再び起動させる必要があります)<br>
 		<br>
-		<div class=MstyComment>
+		<div class=box>
 			favoriteとそっくりですが、実のところ実装としての内部構造はどちらもほぼ同じものです.<br>
 			一応favoriteは本分類した画像の格納用を想定したものに対し、stockboxは仮分類した画像の格納用を想定したものとなります.<br>
-			お気に入りというほどでもないけれども、（将来お気に入りになるかもしれないので)一応永続保存しておきたい、<br>
-			といったようなことはよくあることと思いますが、stockboxはまさにそのためのBoxです.<br>
-			stockboxに仮分類された画像を、後でさらにfavoriteへ本分類するといったことができます.<br>
-			また逆に既にfavoriteに本分類(Easterのソースではこれをfavoritizeと呼ぶこともあります)された画像を、<br>
-			stockboxへ降格することもできます.<br>
+			stockboxに分類された画像をfavoriteへ分類するといったことができますが、Easterの内部実装ではこれをfavoritizeと呼びます.<br>
+			また逆に favoriteに分類された画像を stockboxへ分類することもできますが、Easterの内部実装ではこれをstockと呼びます.<br>
 		</div>
-		</li>
+	</div>
+</article><br>
 		<br>
-		<li><b>cachebox</b><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		cachebox<br>
+	</div>
+	<div class="message-body">
 		Easterが管理するキャッシュはEasterキャッシュと呼ばれます.<br>
 		EasterキャッシュもまたBox構造で管理されており、このBoxが該当します.<br>
 		(この中身は、古いものより定期的にEasterのゴミ箱へ移されます).<br>
 		Moaiディレクトリ直下のcgis/easter/cacheboxディレクトリが実体となります.<br>
 		(現バージョンではこの位置を変更することはできません).<br>
-		<div class=MstyComment>
+<br>
+		<div class=box>
 			これは問題等発生した場合のメンテナンス用のためのものであり、通常はここからファイルを閲覧する必要はありません.<br>
 		</div>
-		</li>
+	</div>
+</article><br>
 		<br>
-		<li><b>dustbox</b><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		dustbox<br>
+	</div>
+	<div class="message-body">
 		Easterのゴミ箱もまたBox構造で管理されており、このBoxが該当します.<br>
 		(この中身は、古いものより定期的に本当に削除されます).<br>
 		Moaiディレクトリ直下のcgis/easter/dustboxディレクトリが実体となります.<br>
 		(現バージョンではこの位置を変更することはできません).<br>
-		<div class=MstyComment>
+<br>
+		<div class=box>
 			これは問題等発生した場合のメンテナンス用のためのものであり、通常はここからファイルを閲覧する必要はありません.<br>
 		</div>
-		</li>
+	</div>
+</article><br>
 		<br>
-		<li><b>userbox</b><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		userbox<br>
+	</div>
+	<div class="message-body">
 		このBoxはユーザが自由な用途で使用できます(ユーザボックスと呼びます).<br>
 		例えばEasterとは無関係なローカルなディレクトリにあなたがこれまでに集めた画像が大量に格納されているとします.<br>
-		これをディレクトリごとuserboxディレクトリ配下へ移動して、その画像をEasterの画像ビューアで閲覧したり、<br>
-		favoriteやstockboxに分類するというのが典型的な使い方になるでしょう(詳しくは後述します).<br>
+		これをディレクトリごとuserboxディレクトリ配下へ移動して、その画像をEasterの画像ビューアで閲覧したり、favoriteやstockboxに分類するというのが典型的な使い方になるでしょう(詳しくは後述します).<br>
 		<br>
-		デフォルトではmoai_profile/userboxディレクトリが実体となりますが、<br>
-		環境変数EST_USERBOX_DIRを指定することにより、その実ディレクトリをユーザが自由に変更することもできます.<br>
+		デフォルトではmoai_profile/userboxディレクトリが実体となりますが、環境変数EST_USERBOX_DIRを指定することにより、その実ディレクトリをユーザが自由に変更することもできます.<br>
 		(環境変数による変更を反映させるにはmoai本体を一度終了させ、再び起動させる必要があります)<br>
-		</li>
-	</ul>
+	</div>
+</article><br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=BoxMapViewer_UserBox></a>
-<u><b>
-BoxMapビューアから既存のフォルダの内容を閲覧する
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">BoxMapビューアから既存のフォルダの内容を閲覧する</h1>
+<p>
 	ここではユーザボックスの典型的な使い方の例を挙げましょう.<br>
 	また以下ではWindows環境で説明しますが、Linuxなどの環境でも同様な処理が可能です.<br>
 	既に述べましたが、ユーザボックスの実体はデフォルトではmoai_profile/userboxディレクトリとなります.<br>
@@ -170,44 +178,41 @@ BoxMapビューアから既存のフォルダの内容を閲覧する
 	最初の状態ではこのuserboxディレクトリは空になっていると思います.<br>
 	従って、BoxMapビューアからuserboxを選ぶとおそらく以下のように何もない状態として表示されるでしょう.<br>
 	<br>
-	<div class=MstyComment>
-		<img src=/imgs/easter_boxmap_viewer0.png width=100%><br>
+	<div class=MstyImgBox>
+		<img src=/imgs/easter_boxmap_viewer0.png /><br>
 	</div>
 	<br>
-	例えば今、WindowsのExplore上に「未分類」という名前のフォルダがあり、<br>
-	その中にあなたが今までダウンロードした画像などのファイルが格納されているとしましょう.<br>
+	例えば今、WindowsのExplore上に「未分類」という名前のフォルダがあり、その中にあなたが今までダウンロードした画像などのファイルが格納されているとしましょう.<br>
 	フォルダの名前から分かるとおり、この中のファイルは分類されておらずグチャグチャな状態になっているものとします.<br>
-	つまり今回の説明の目的は、まずはこれをEasterコレクション管理下に置いて閲覧できる状態にし、<br>
-	次にタグなどを使って綺麗に分類することです.<br>
+	つまり今回の説明の目的は、まずはこれをEasterコレクション管理下に置いて閲覧できる状態にし、次にタグなどを使って綺麗に分類することです.<br>
 	<br>
 	しかしこのままではこの「未分類」フォルダをEasterからは見ることはできません.<br>
 	Easterからユーザボックスとして見えるのはmoai_profile\userbox配下に存在するものだけだからです.<br>
 	では、WindowsのExplore上から一旦この「未分類」というフォルダをmoai_profile\userboxフォルダ配下へ移動しましょう.<br>
 	以下のようになるでしょう.<br>
 	<br>
-	<div class=MstyComment>
-		<img src=/imgs/userbox_in_explore.png width=100%><br>
+	<div class=box>
+		<img src=/imgs/userbox_in_explore.png /><br>
 	</div>
 	<br>
-	<div class=MstyComment>
-		筆者の環境ではC:\znk_projectというフォルダがまずトップにあり、<br>
-		更にその中にmoai_profileフォルダやmoai本体のフォルダなどを置いています.<br>
+	<div class=box>
+		筆者の環境ではC:\znk_projectというフォルダがまずトップにあり、更にその中にmoai_profileフォルダやmoai本体のフォルダなどを置いています.<br>
 	</div>
 	<br>
 	さて、この状態で再びEasterのBoxMapビューアに戻りましょう.<br>
 	「userbox」とある部分を押すと、userbox内の最新の状態に表示が更新されます.<br>
 	今度は以下のようにBoxMapビューア上に「未分類」フォルダが表示されると思います.<br>
 	<br>
-	<div class=MstyComment>
-		<img src=/imgs/easter_boxmap_viewer1.png width=100%><br>
+	<div class=MstyImgBox>
+		<img src=/imgs/easter_boxmap_viewer1.png /><br>
 	</div>
 	<br>
 	ではこれを開いてみます.<br>
 	「フォルダ一覧」の中にある「未分類」を押し、このフォルダを開きましょう.<br>
 	以下のように「未分類」フォルダの中身をBoxMapビューア上から表示することができます.<br>
 	<br>
-	<div class=MstyComment>
-		<img src=/imgs/easter_boxmap_viewer2.png width=100%><br>
+	<div class=MstyImgBox>
+		<img src=/imgs/easter_boxmap_viewer2.png /><br>
 	</div>
 	<br>
 	この画面では、「未分類」フォルダ内に存在するサブフォルダとファイルの一覧が表示されています.<br>
@@ -224,7 +229,7 @@ BoxMapビューアから既存のフォルダの内容を閲覧する
 		特にそれが画像の場合はサムネイル表示されます.<br>
 		これらのファイルはEasterコレクションにおけるトピックビューアと同様にページ単位で表示されます.<br>
 		<br>
-		<div class=MstyComment>
+		<div class=box>
 			<u><b>画像がページ単位で表示される理由</b></u><br>
 			<br>
 			フォルダ内の画像の数が多い場合に、それらのサムネを一度に全部表示すると時間がかかって煩わしくなります.<br>
@@ -235,153 +240,155 @@ BoxMapビューアから既存のフォルダの内容を閲覧する
 		</div>
 		</li>
 	</ul>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=BoxMapViewer_UserBox_Assort></a>
-<u><b>
-BoxMapビューアからEasterコレクションへ分類する
-</b></u><br>
+<h1 class="title">BoxMapビューアからEasterコレクションへ分類する</h1>
+<p>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		userboxからのEasterコレクションへ分類する<br>
+	</div>
+	<div class="message-body">
+		このセクションは前セクションの続きです.<br>
+		「未分類」フォルダ内に存在するファイルをEasterコレクションへ分類する方法について詳しく述べます.<br>
+		フォルダ一覧やファイル一覧のそれぞれの要素には、よく見るとすべてチェックボタンがついています.<br>
+		BoxMapビューアでは、これらの要素のうちチェックをつけたものに関して分類処理を行うことができます.<br>
+		この操作はBoxMapビューア下方にあるボタンで行います.<br>
+	</div>
+</article><br>
 <br>
-<div class=MstyIndent>
-	このセクションは前セクションの続きです.<br>
-	「未分類」フォルダ内に存在するファイルをEasterコレクションへ分類する方法について詳しく述べます.<br>
-	フォルダ一覧やファイル一覧のそれぞれの要素には、よく見るとすべてチェックボタンがついています.<br>
-	BoxMapビューアでは、これらの要素のうちチェックをつけたものに関して分類処理を行うことができます.<br>
-	この操作はBoxMapビューア下方にある以下に挙げたボタンで行います.<br>
-	<ul>
-		<li><b>全部にCheckを入れる, 全部のCheckを外す</b><br>
-		<br>
-		「全部にCheckを入れる」ボタンや「全部のCheckを外す」ボタンは、今現在表示されている<b>ページ内のファイル</b>に関して<br>
-		これらすべてにチェックを入れたり外したりするための便利ボタンです.<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		全部にCheckを入れる, 全部のCheckを外す<br>
+	</div>
+	<div class="message-body">
+		「全部にCheckを入れる」ボタンや「全部のCheckを外す」ボタンは、今現在表示されている<b>ページ内のファイル</b>に関してこれらすべてにチェックを入れたり外したりするための便利ボタンです.<br>
 		(フォルダは対象外です).<br>
-		</li>
+	</div>
+</article><br>
 		<br>
-		<li><b>Check項目の一括削除</b><br>
-		<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Check項目の一括削除<br>
+	</div>
+	<div class="message-body">
 		「Check項目の一括削除」ボタンは、チェックを入れた不要な要素を一括で削除します.<br>
-		実際の様子を以下で見てみましょう.<br>
-		do_not_eat.pngとkeshikaran.pngという二つのファイルを一度に一括削除してみたいと思います.<br>
+<br>
+		実際の様子を以下で見てみましょう.  do_not_eat.pngとkeshikaran.pngという二つのファイルを一度に一括削除してみたいと思います.<br>
 		まずこれらにチェックを入れます.<br>
 		<br>
-		<div class=MstyComment>
-			<img src=/imgs/easter_boxmap_viewer_remove1.png width=100%><br>
+		<div class=MstyImgBox>
+			<img src=/imgs/easter_boxmap_viewer_remove1.png /><br>
 		</div>
 		<br>
 		「Check項目の一括削除」ボタンを押すと以下のように「削除の確認」画面が表示されます.<br>
 		<br>
-		<div class=MstyComment>
-			<img src=/imgs/easter_boxmap_viewer_remove2.png width=100%><br>
+		<div class=MstyImgBox>
+			<img src=/imgs/easter_boxmap_viewer_remove2.png /><br>
 		</div>
 		<br>
 		この状態ではまだ実際には削除されていません.<br>
 		削除しようとしているものに間違いがなければ、「はい、実際に削除します」を選びましょう.<br>
-		やっぱりやめたい場合は「いいえ、何もせずに戻ります」を選びましょう.<br>
-		(あるいは何もせず、「削除の確認」画面をブラウザのタブごと閉じてもかまいません).<br>
+		やっぱりやめたい場合は「いいえ、何もせずに戻ります」を選びましょう.  (あるいは何もせず、「削除の確認」画面をブラウザのタブごと閉じてもかまいません).<br>
 		<br>
 		この「削除の確認」画面から削除項目の修正を行うこともできます.<br>
-		例えば、やっぱり do_not_eat.png だけは残しておきたいと思ったなら、<br>
-		以下のようにこれのチェックを外しておけばよいです.<br>
+		例えば、やっぱり do_not_eat.png だけは残しておきたいと思ったなら、以下のようにこれのチェックを外しておけばよいです.<br>
 		<br>
-		<div class=MstyComment>
-			<img src=/imgs/easter_boxmap_viewer_remove3.png width=100%><br>
+		<div class=MstyImgBox>
+			<img src=/imgs/easter_boxmap_viewer_remove3.png /><br>
 		</div>
 		<br>
-		ではこれで実際に削除してみます.<br>
-		削除に成功すると以下のように表示されます.<br>
+		ではこれで実際に削除してみます. 削除に成功すると以下のように表示されます.<br>
 		<br>
-		<div class=MstyComment>
-			<img src=/imgs/easter_boxmap_viewer_remove4.png width=100%><br>
+		<div class=MstyImgBox>
+			<img src=/imgs/easter_boxmap_viewer_remove4.png /><br>
 		</div>
 		<br>
 		「戻る」ボタンを押すと元の「未分類」フォルダの中身の表示に戻ります.<br>
 		<br>
-		<div class=MstyComment>
-			<img src=/imgs/easter_boxmap_viewer_remove5.png width=100%><br>
+		<div class=MstyImgBox>
+			<img src=/imgs/easter_boxmap_viewer_remove5.png /><br>
 		</div>
 		<br>
 		今削除したファイルは結局keshikaran.pngだけとなりましたが、これがもう表示されていないことがわかります.<br>
 		<br>
-		<div class=MstyComment>
+		<div class=box>
 			<u><b>参考:「削除」されたファイルについて</b></u><br>
 			<br>
 			ところで「削除」とは言いましたが、正確に言えば上記の操作で本当にファイルシステム上から削除されているわけではなく、<br>
 			指定ファイルがEasterのゴミ箱(moaiディレクトリ直下にあるcgis/easter/dustbox)へ移動されただけです.<br>
-			従って万一誤って「削除」してしまっても、その直後ならEasterのゴミ箱を開けばその中にそのファイルはまだ残っており、<br>
-			そこからサルベージすることもできます.<br>
+			従って万一誤って「削除」してしまっても、その直後ならEasterのゴミ箱を開けばその中にそのファイルはまだ残っており、そこからサルベージすることもできます.<br>
 			<br>
-			Easterシステムでは１日に一回のペースでcache_task.cgiというプロセスがバックグラウンドで自動的に起動し、<br>
+			Easterシステムでは１日に一回のペースでcache_task.cgiというプロセスをバックグラウンドで自動的に起動させます.<br>
+			(といっても勝手に起動するわけではなく、その日初めてEasterを起動させたタイミングで子プロセスを起動させる方式をとっています)<br>
 			Easter周りの定期的なメンテナンスも行いますが、Easterのゴミ箱はこのときに掃除されます.<br>
 			そしてこのとき初めてファイルシステム上から本当に削除されます.<br>
 			(ただしすべて削除されるわけではなく、初期設定では最終更新日が５日前より古いものが削除されます).<br>
 		</div>
-		</li>
+	</div>
+</article><br>
 		<br>
-		<li><b>Check項目を一括でストック, Check項目を一括でお気に入りへ</b><br>
-		<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Check項目を一括でストック, Check項目を一括でお気に入りへ<br>
+	</div>
+	<div class="message-body">
 		この操作も上述した「削除」の方法とほぼ同様に行えます.<br>
-		つまりまずは、あらかじめ分類したいファイルにチェックを入れておき、<br>
-		それらについて一括でストックあるいはお気に入り登録するということです.<br>
-		（「削除」のときとは異なり、確認画面は出ません).<br>
+		つまりまずは、あらかじめ分類したいファイルにチェックを入れておき、それらについて一括でストックあるいはお気に入り登録するということです.<br>
+		(「削除」のときとは異なり、確認画面は出ません ).<br>
 		<br>
-		<div class=MstyComment>
+		<div class=box>
 			ここでの「分類」の意味はEaster Image Viewerでの画像の分類とほぼ同じです.<br>
 			Easter Image Viewerとの違いはチェックを入れたファイルを一括して分類することができるという点です.<br>
 		</div>
 		<br>
 		次にこれらのボタンの下方に「タグ一覧」がありますから、そこから付加したいタグをチェックします.<br>
 		これは今から分類されるファイルすべてに共通してこのタグが付加されることを意味します.<br>
-		最後に「Check項目を一括でストック」または「Check項目を一括でお気に入りへ」ボタンを押すと、<br>
-		それぞれ「ストックボックス」または「お気に入りボックス」へのタグ付け分類が完了します.<br>
+		最後に「Check項目を一括でストック」または「Check項目を一括でお気に入りへ」ボタンを押すと、それぞれ「ストックボックス」または「お気に入りボックス」へのタグ付け分類が完了します.<br>
 		<br>
 		分類したファイルの実体はこの「userbox/未分類」フォルダからmoai_profile/stockboxまたはmoai_profile/favoriteフォルダへ移動されます.<br>
 		またファイル名もデータ内容のMD5をとったものに替わりますので注意してください.<br>
 		（ファイルの拡張子についてははそのままです)<br>
 		<br>
-		<div class=MstyComment>
+		<div class=box>
 			<u><b>参考:「分類」されたファイルについて</b></u><br>
 			<br>
-			favoriteへ分類されたファイルはmoai_profile/favoriteへ移動されますが、<br>
-			さらにその下は以下のような形式になってその実体が保存されています.<br>
+			favoriteへ分類されたファイルはmoai_profile/favoriteへ移動されますが、さらにその下は以下のような形式になってその実体が保存されています.<br>
 			<br>
-			<div class=MstyComment>
-				<div class=MstyCode>
-					拡張子/MD5の最初の2文字/MD5.拡張子<br>
-				</div>
-			</div>
+			<div class=box><div class=MstyCode>
+				拡張子/MD5の最初の2文字/MD5.拡張子<br>
+			</div></div>
 			<br>
 			また付加されたタグ情報やコメントについては以下のファイルにその実体が記録されてあります.<br>
 			<br>
-			<div class=MstyComment>
-				<div class=MstyCode>
-					拡張子/MD5の最初の2文字/info_list.myf<br>
-				</div>
-			</div>
+			<div class=box><div class=MstyCode>
+				拡張子/MD5の最初の2文字/info_list.myf<br>
+			</div></div>
 			<br>
 			stockboxについても同様です.<br>
 		</div>
 		<br>
 		これらは「コレクション」の画面から「ストックボックス」または「お気に入りボックス」を押すと閲覧できます.<br>
 		これらを再閲覧する方法については<a class=MstyElemLink href=/moai2.0/easter_collection.html#TopicViewer target=_blank>こちら</a>を参照してください.<br>
-		</li>
-	</ul>
+	</div>
+</article><br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=BoxMapViewer_CacheBox></a>
-<u><b>
-BoxMapビューアでキャッシュの内容を直接閲覧する
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">BoxMapビューアでキャッシュの内容を直接閲覧する</h1>
+<p>
 	通常必要ないことではありますが、EasterのキャッシュファイルはBoxMapビューアで直接閲覧することもできます.<br>
-	ここではその方法について極簡単にヒントを示しておきましょう.<br>
+	システムの内部構造を探索するのが好きなあなたのために、ここではその方法について極簡単にヒントを示しておきましょう.<br>
+<br>
 	画像掲示板ふたばちゃんねるを例とします.<br>
 	<ol>
 		<li>まずBoxMapビューアより「cachebox」を開きます.<br>
@@ -405,17 +412,36 @@ BoxMapビューアでキャッシュの内容を直接閲覧する
 		また「src」には、Easter Image Viewerで今まで開いたことのある画像(画像本体でサムネイルではない)がキャッシュとして保存されています.<br>
 		</li>
 	</ol>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
+
+
+<div class="card">
+	<u><b>This article was written by:</b></u><br>
+	<div class="card-content">
+		<div class="media">
+			<div class="media-left">
+				<figure class="image is-48x48">
+				<img src="/imgs/zenkaku.png" alt="none image">
+				</figure>
+			</div>
+			<div class="media-content">
+				<p class="title is-4">Zenkaku</p>
+				<p class="subtitle is-6">@znk project</p>
+			</div>
+		</div>
+		<div class="content">
+		  <time datetime="2016-1-1">2019/07/26</time>
+		</div>
+	</div>
+</div>
 
 
 <a name=Link></a>
-<u><b>
-リンク
-</b></u><br>
-<br>
+<h1 class="title"></h1>
+<hr>
 <ul>
 	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
 	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
@@ -423,5 +449,8 @@ BoxMapビューアでキャッシュの内容を直接閲覧する
 </ul><br>
 
 
+</div>
+</div>
+</div>
 </body>
 </html>

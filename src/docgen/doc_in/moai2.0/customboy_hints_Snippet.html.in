@@ -1,8 +1,8 @@
 @def_quote [' ']
 
 @@V config
-doc_title = ['Moai+Easter エキスパートマニュアル']
-author = ['高速ヤキソバ変換']
+doc_title = ['Moai+Easter 上級マニュアル']
+author = { ['K.Yakisoba.H'] }
 update = ['2017/10/09']
 category_path = { ['moai2_0_exp'] ['customboy'] }
 urp           = ['/moai2.0/customboy_hints_Snippet.html']
@@ -14,11 +14,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 	ここではCustomBoyが取り扱うSnippetコードの真偽値に関する情報を列挙する.
 	
 	これらはBrowser毎に異なる真偽値のパターンを持つため、Browser解析等で有用である.
-	そしてその情報はCustomBoyエンジンのKnowledge-baseにも内蔵されており、
-	通常は特にユーザが何も設定せずとも、CustomBoyあるいはVirtualUSERSの実行結果に自動的に反映される.
+	そしてその情報はCustomBoyエンジンのKnowledge-baseにも内蔵されており、通常は特にユーザが何も設定せずとも、CustomBoyあるいはVirtualUSERSの実行結果に自動的に反映される.
 	
-	一般ユーザがこの記事に記載されたパターンの詳細を気にする必要は全くないが、
-	万一CustomBoyエンジンが内蔵するKnowledge-baseでは問題が発生した場合は、
+	一般ユーザがこの記事に記載されたパターンの詳細を気にする必要は全くないが、万一CustomBoyエンジンが内蔵するKnowledge-baseでは問題が発生した場合は、
 	ここにある情報を元にエキスパートユーザが手動でそのパターンを修正することもできる.
 @@.
 
@@ -62,94 +60,66 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_LtIE6
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			typeof window.addEventListener == 'undefined' 
-			&amp;&amp; typeof document.documentElement.style.maxHeight == 'undefined'
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		typeof window.addEventListener == 'undefined' 
+		&amp;&amp; typeof document.documentElement.style.maxHeight == 'undefined'
+	</div></div>
 	IE6以前のみtrue
 @@.
 
 
 @@L Snp_LtIE7
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			typeof window.addEventListener == 'undefined'
-			&amp;&amp; typeof document.querySelectorAll == 'undefined'
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		typeof window.addEventListener == 'undefined'
+		&amp;&amp; typeof document.querySelectorAll == 'undefined'
+	</div></div>
 	IE7以前のみtrue
 @@.
 
 
 @@L Snp_LtIE8
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			typeof window.addEventListener == 'undefined'
-			&amp;&amp; typeof document.getElementsByClassName == 'undefined'
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		typeof window.addEventListener == 'undefined'
+		&amp;&amp; typeof document.getElementsByClassName == 'undefined'
+	</div></div>
 	IE8以前のみtrue
 @@.
 
 
 @@L Snp_IE9
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!document.uniqueID &amp;&amp; document.documentMode==9
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!document.uniqueID &amp;&amp; document.documentMode==9
+	</div></div>
 	IE9のみtrue
 @@.
 
 
 @@L Snp_IE10
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!document.uniqueID &amp;&amp; document.documentMode==10
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!document.uniqueID &amp;&amp; document.documentMode==10
+	</div></div>
 	IE10のみtrue
 @@.
 
 
 @@L Snp_IE11
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!document.uniqueID &amp;&amp; document.documentMode==11
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!document.uniqueID &amp;&amp; document.documentMode==11
+	</div></div>
 	IE11のみtrue
 @@.
 
 
 @@L Snp_Trident
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!document.uniqueID
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!document.uniqueID
+	</div></div>
 	Trident Rendering Engineを使っている場合はtrue.
 	IEはこれを使っているためtrue.
 @@.
@@ -157,30 +127,21 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_Edge
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			'-ms-scroll-limit' in document.documentElement.style
-			&nbsp;&nbsp; &amp;&amp; '-ms-ime-align' in document.documentElement.style
-			&nbsp;&nbsp; &amp;&amp; !window.navigator.msPointerEnabled
-		</span>
-	</div>
-	
-	色々並べてあるが上二つはすべてMS製Browserに存在する特性であり、
-	最後にIEのみに存在する特性を除外していることから、Edgeか否かを判定する.
+	<div class=box><div class=MstyCode>
+		'-ms-scroll-limit' in document.documentElement.style
+		&nbsp;&nbsp; &amp;&amp; '-ms-ime-align' in document.documentElement.style
+		&nbsp;&nbsp; &amp;&amp; !window.navigator.msPointerEnabled
+	</div></div>
+	色々並べてあるが上二つはすべてMS製Browserに存在する特性であり、最後にIEのみに存在する特性を除外していることから、Edgeか否かを判定する.
 	Edgeの場合はtrue.
 @@.
 
 
 @@L Snp_Gecko
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			'MozAppearance' in document.documentElement.style
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		'MozAppearance' in document.documentElement.style
+	</div></div>
 	Gecko Rendering Engineを使っている場合はtrue
 	Firefoxはこれを使っているためtrue.
 @@.
@@ -188,13 +149,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_MozillaSidebar
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!window.sidebar
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!window.sidebar
+	</div></div>
 	Mozilla Sidebarが存在する場合はtrue.
 	Firefoxにはこれが存在するためtrue.
 @@.
@@ -202,26 +159,18 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_NavigatorOnline
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			typeof window.navigator.onLine != 'undefined'
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		typeof window.navigator.onLine != 'undefined'
+	</div></div>
 	Browserがオンラインで動作しているかどうかを示す真偽値を返す.
 @@.
 
 
 @@L Snp_SessionStorage
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!window.sessionStorage
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!window.sessionStorage
+	</div></div>
 	BrowserにsessionStorage機構が存在するか否かを示す.
 	Browserの対応状況は以下が目安である(MDNによる).
 	<ul>
@@ -239,13 +188,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_FunctionX5
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			(function x(){})[-5] == 'x'
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		(function x(){})[-5] == 'x'
+	</div></div>
 	このFunctionX5テストとは、Firefox Ver3.xにのみ存在するコード特性を検査するというもの.
 	'function x(){}' を文字列として見た場合、その -5 番目の文字(最後から5番目)は 'x' となっている.
 	Firefox Ver3.x ではこのような暗黙の文字列変換が行われるようで、その特性が存在するかを検証するコードである.
@@ -255,13 +200,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_DocCurrentScript
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			typeof document.currentScript != 'undefined'
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		typeof document.currentScript != 'undefined'
+	</div></div>
 	以下の環境においてtrue.
 	<ul>
 		<li>Chrome: 29以上</li>
@@ -273,13 +214,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_EventSource
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			typeof(EventSource) != 'undefined'
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		typeof(EventSource) != 'undefined'
+	</div></div>
 	以下の環境においてtrue.
 	<ul>
 		<li>Chrome: 9以上</li>
@@ -291,13 +228,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_Crypto
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!window.crypto &amp;&amp; !!window.crypto.getRandomValues
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!window.crypto &amp;&amp; !!window.crypto.getRandomValues
+	</div></div>
 	以下の環境においてtrue.
 	<ul>
 		<li>Chrome: 11以上</li>
@@ -311,13 +244,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_PerformanceNow
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!window.performance &amp;&amp; !!window.performance.now
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!window.performance &amp;&amp; !!window.performance.now
+	</div></div>
 	以下の環境においてtrue.
 	<ul>
 		<li>Chrome: 20以上</li>
@@ -331,13 +260,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_AudioContext
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!window.AudioContext
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!window.AudioContext
+	</div></div>
 	以下の環境においてtrue.
 	<ul>
 		<li>Chrome: 10以上</li>
@@ -350,13 +275,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_IndexedDB
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!window.indexedDB
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!window.indexedDB
+	</div></div>
 	これはBrowserにindexedDB機構が存在するか否かを示す.
 	Browserの対応状況は以下が目安である(MDNによる).
 	<ul>
@@ -377,23 +298,17 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_WindowStyles
 	以下のJavascriptコードを実行した結果である.
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!window.styles
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!window.styles
+	</div></div>
 	このSnippetはふたばちゃんねるにおいて独自に設定されているものである.
 	(少なくとも他のサイトでは、私はこのようなコードを見たことがない)
-	そしてMDNなどのよく知られたどのドキュメントを参照しても、
-	window objectの中にstylesというpropertyは記載されていない.
+	そしてMDNなどのよく知られたどのドキュメントを参照しても、window objectの中にstylesというpropertyは記載されていない.
 	
 	果たしてこのpropertyを持つBrowserが世界に存在するのであろうか？
 	これまで私が試したすべてのBrowserにおいて、このコードがtrueとなるものは発見されなかった.
 	
-	<div class=MstyComment>
-		<u><b>参考</b></u> 
-
+	<div class=box>
 		ちなみにwindow objectの中のstatusというpropertyならば、Gecko 1.9.1以降ならば存在する.
 	</div>
 @@.
@@ -401,13 +316,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_SendBeacon
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!window.navigator.sendBeacon
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!window.navigator.sendBeacon
+	</div></div>
 	以下の環境においてtrue.
 	<ul>
 		<li>Chrome: 39以上</li>
@@ -419,13 +330,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_GetGamepads
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!navigator.getGamepads
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!navigator.getGamepads
+	</div></div>
 	以下の環境においてtrue.
 	<ul>
 		<li>Chrome: 21以上</li>
@@ -437,13 +344,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_NavLanguages
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!window.navigator.languages
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!window.navigator.languages
+	</div></div>
 	以下の環境においてtrue.
 	<ul>
 		<li>Chrome: 32以上</li>
@@ -454,13 +357,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_NavMediaDevices
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!window.navigator.mediaDevices
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!window.navigator.mediaDevices
+	</div></div>
 	以下の環境においてtrue.
 	<ul>
 		<li>Chrome: 51以上</li>
@@ -471,13 +370,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_WinCaches
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!window.caches
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!window.caches
+	</div></div>
 	以下の環境においてtrue.
 	<ul>
 		<li>Chrome: 43以上</li>
@@ -488,13 +383,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_CreateImageBitmap
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!window.createImageBitmap
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!window.createImageBitmap
+	</div></div>
 	以下の環境においてtrue.
 	<ul>
 		<li>Chrome: 50以上</li>
@@ -505,13 +396,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_Onstorage
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			typeof window.onstorage!='undefined'
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		typeof window.onstorage!='undefined'
+	</div></div>
 	以下の環境においてtrue.
 	<ul>
 		<li>Firefox(Gecko): 45以上</li>
@@ -521,13 +408,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_NavGetBattery
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!window.navigator.getBattery
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!window.navigator.getBattery
+	</div></div>
 	以下の環境においてtrue.
 	<ul>
 		<li>Chrome: 39以上</li>
@@ -539,13 +422,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_Presto
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!window.opera
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!window.opera
+	</div></div>
 	Operaの古いVersionではそのRendering EngineはPrestoと呼ばれていた.
 	Opera12.16以前ではこれがtrueとなる.
 @@.
@@ -553,29 +432,21 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_LtChrome14
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!window.chrome &amp;&amp; typeof window.chrome.webstore!='undefined'
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!window.chrome &amp;&amp; typeof window.chrome.webstore!='undefined'
+	</div></div>
 	Chromeであるか否かを示す定石コードである(ただしVersion14以降が対象である).
-	前半の<span class=MstyCode>!!window.chrome</span>はChromium系か否かを判定する定石コードである.
-	後半の<span class=MstyCode>typeof window.chrome.webstore!='undefined'</span>は、OperaやEdgeの可能性を廃するために付加したものであろう.
+	前半の<span class=MstyCodeIn>!!window.chrome</span>はChromium系か否かを判定する定石コードである.
+	後半の<span class=MstyCodeIn>typeof window.chrome.webstore!='undefined'</span>は、OperaやEdgeの可能性を廃するために付加したものであろう.
 	Chrome Ver14以上のみtrueである.
 @@.
 
 
 @@L Snp_ChromiumInFutaba
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!!window.chrome &amp;&amp; 'WebkitAppearance' in document.documentElement.style
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!!window.chrome &amp;&amp; 'WebkitAppearance' in document.documentElement.style
+	</div></div>
 	このSnippetはふたばちゃんねるにおいて独自に設定されているものである.
 	(少なくとも他のサイトでは、私はこのようなコードを見たことがない)
 	実質 Chromium系であるか否かを示しているが、コードの後半が無意味である.
@@ -586,42 +457,37 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 		<li>Opera: 14以上</li>
 	</ul>
 	
-	<div class=MstyComment>
+	<div class=box>
 		<u><b>解説</b></u>
 		
 		まずBrowser解析をされている方にとってはおなじみの以下のコードを掲載しておこう.
-		
-		<div class=MstyCode>
+		<div class=box><div class=MstyCode>
 			!window.chrome &amp;&amp; 'WebkitAppearance' in document.documentElement.style
-		</div>
-		
-		コード前半に<span class=MstyCode>!window.chrome</span>と置くことで、<b>Chromium系以外である</b>ことを前提とした上で
-		コード後半部によりWebkitが使われているVersionのみを検出するというものである.
+		</div></div>
+		コード前半に<span class=MstyCodeIn>!window.chrome</span>と置くことで、<b>Chromium系以外である</b>ことを前提とした上でコード後半部によりWebkitが使われているVersionのみを検出するというものである.
 		これは様々なサイトで広く見られる正しいコードであり、例えばSafariなどを検出できる.
 		この記事でも<a class=MstyElemLink href=#Snp_Webkit>Snp_Webkit</a>という項目として挙げておいた.
 		
-		ところが、本項目のふたばちゃんねる独自のコードでは、前半部分が<span class=MstyCode>!!window.chrome</span>となっている.
+		ところが、本項目のふたばちゃんねる独自のコードでは、前半部分が<span class=MstyCodeIn>!!window.chrome</span>となっている.
 		これでは逆に<b>Chromium系である</b>ことを前提としてしまう.
 		
 		これはどうしたことか…？
 		もしかするとChromium系かつWebkitが使われているVersionのみを検出しようと試みたのであろうか？
 		
-		しかしながら、Browser解析をされている方なら普通はご存知だと思うが、
-		<b>Chromium系では<span class=MstyCode>'WebkitAppearance' in document.documentElement.style</span> で
-		Webkit版であるか否かを判定することはできない</b>のである.
-		(だからこそ、定石では先頭にまず<span class=MstyCode>!window.chrome</span>という前提条件を置く)
+		しかしながら、Browser解析をされている方なら普通はご存知だと思うが、<\>
+		<b>Chromium系では<span class=MstyCodeIn>'WebkitAppearance' in document.documentElement.style</span> でWebkit版であるか否かを判定することはできない</b>のである.
+		(だからこそ、定石では先頭にまず<span class=MstyCodeIn>!window.chrome</span>という前提条件を置く)
 		
 		なぜならばChromium系の場合、<b>どのVersionでも</b>この'WebkitAppearance' というパターンを必ず含む.
 		たとえ<b>Webkitが使われていないVersionでも</b>である.
 		つまりこのコードの &amp;&amp; より後半は必ずtrueになるのであるから、明らかに無意味である.
 	</div>
 		
-	<div class=MstyComment>
+	<div class=box>
 		<u><b>検証</b></u>
 		
 		以下ではChromium系としてChromeまたは新しいVersionのOperaの例を挙げ、このことを検証してみよう.
-		この'WebkitAppearance'というパターンを調べるコードがtrueとなるのは、
-		Chromeの場合は全Version、Operaの場合はVer14以上のときである.
+		この'WebkitAppearance'というパターンを調べるコードがtrueとなるのは、Chromeの場合は全Version、Operaの場合はVer14以上のときである.
 		ChromeはVer28以降Webkitは廃止されBlinkへと移行した.
 		Operaの場合も同様にVer15以降はBlinkとなっている.
 		つまりWebkitではないVersionでもこのコードはやはりtrueとなってしまうことがお分かりだろう.
@@ -631,26 +497,18 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_Touch
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			typeof document.ontouchstart != 'undefined'
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		typeof document.ontouchstart != 'undefined'
+	</div></div>
 	この環境のBrowserにおいてTouch Padが有効か否かを示す.
 @@.
 
 
 @@L Snp_FacileMobile
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			typeof window.orientation != 'undefined'
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		typeof window.orientation != 'undefined'
+	</div></div>
 	Browserにおいてwindow.orientationが存在するか否かを示す.
 	window.orientationとは端末画面が縦長(portrait)と横長(landscape)のどちらであるかに関する情報である.
 	これはモバイル環境である否かの簡易判定に使うことができる.
@@ -659,22 +517,16 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 @@L Snp_Webkit
 	以下のJavascriptコードを実行した結果である.
-
-	<div class=MstyComment>
-		<span class=MstyCode>
-			!window.chrome &amp;&amp; 'WebkitAppearance' in document.documentElement.style
-		</span>
-	</div>
-	
+	<div class=box><div class=MstyCode>
+		!window.chrome &amp;&amp; 'WebkitAppearance' in document.documentElement.style
+	</div></div>
 	Webkit判定.
-	これは<b>Chromium系以外の</b>Webkitが使われているBrowser、例えばSafariなどを検出する目的で
-	一般によく使用されている定石的なコードである.
+	これは<b>Chromium系以外の</b>Webkitが使われているBrowser、例えばSafariなどを検出する目的で一般によく使用されている定石的なコードである.
 	
-	<div class=MstyComment>
+	<div class=box>
 		<u><b>注意</b></u> 
 
-		ふたばの<a href=http://may.2chan.net/bin/base4.js>/bin/base4.js</a>内にこれとよく似た<b>ワケのわからん</b>テスト(上記のSnp_ChromiumInFutaba)が存在するが、
-		その効果はこれとは全く異なる.
+		ふたばの<a class=MstyElemLink href=http://may.2chan.net/bin/base4ajax.js>/bin/base4ajax.js</a>内にこれとよく似た意味不明なテスト(上記のSnp_ChromiumInFutaba)が存在するが、その効果はこれとは全く異なる.
 	</div>
 @@.
 

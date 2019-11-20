@@ -22,3 +22,18 @@ msg_backto_index = ['目次に戻る']
 { ['/source_doc/libRano/index.html'] ['libRano'] }
 @@.
 
+@@P html_doc
+{ ['mydoc'] ['../../../../zdoc/mydoc_in']  ['#[profile_dir]#/mydoc'] }
+{ ['moai']  ['../../../src/docgen/doc_in'] ['../../../src/moai/doc_root'] }
+@@.
+
+@@P install
+{ ['mydoc'] ['../../../../zdoc/mydoc_in']  ['#[profile_dir]#/mydoc'] }
+{ ['moai']  ['../../../src/moai/doc_root'] ['../../../moai-v2.2-win64/doc_root'] }
+@@.
+
+@@P install_filter
+{ ['mydoc'] ['*.html'] ['*.css'] ['*.png'] ['*.jpg'] }
+{ ['moai']  ['*.html'] ['*.css'] ['*.png'] }
+@@.
+

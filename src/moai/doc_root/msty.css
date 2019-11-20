@@ -1,3 +1,7 @@
+/* for smart-phone (disable bad auto adjust) */
+body {
+-webkit-text-size-adjust: 100%;
+}
 
 .MstyItemOdd {
 	padding: 4px 8px;
@@ -89,20 +93,6 @@
 	border-radius: 0.5em;
 	box-shadow: 5px 5px 5px #AAA;
 }
-.MstyAppLink {
-	color: #000;
-	font-size: 16px;
-	font-weight: bold;
-	border: 1px solid #3D803D;
-	padding: 4px 8px;
-	display: inline-block;
-	background: #E0E0B0 none repeat scroll 0% 0%;
-	text-align: center;
-	border-radius: 10px;
-	margin-bottom: 0px;
-	text-decoration: none;
-    word-break: normal;
-}
 .MstyAppLinkRed {
 	color: #000;
 	font-size: 16px;
@@ -131,30 +121,17 @@
 	text-decoration: none;
     word-break: normal;
 }
-.MstyAppLink:hover {
-	color: #000;
-	font-size: 16px;
-	font-weight: bold;
-	border: 1px solid #3D803D;
-	padding: 4px 8px;
-	display: inline-block;
-	background: #B0B0E0 none repeat scroll 0% 0%;
-	text-align: center;
-	border-radius: 10px;
-	margin-bottom: 0px;
-	text-decoration: none;
-    word-break: normal;
-}
 
 .MstyNowSelectedLink {
 	color: #000;
-	border: 1px solid #3D8080;
+#	border: 1px solid #3D8080;
 	padding: 3px 8px;
 	display: inline-block;
 	background: #A0A0FF none repeat scroll 0% 0%;
 	text-align: center;
 	border-radius: 10px;
-	margin-bottom: 5px;
+	margin-top:    5px;
+#	margin-bottom: 5px;
 	text-decoration: none;
 }
 
@@ -209,33 +186,57 @@
 
 .MstyElemLink {
 	color: #000;
-#	font-size: 16px;
-	border: 1px solid #3D803D;
 	padding: 4px 8px;
 	display: inline-block;
 	background: #E0E0B0 none repeat scroll 0% 0%;
 	text-align: center;
 	border-radius: 10px;
-	margin-bottom: 5px;
+	margin-top:    5px;
 	text-decoration: none;
-    word-break: normal;
+#   word-break: normal;
+#	overflow-wrap: break-word;
 }
 .MstyElemLink:hover {
 	color: #000;
-#	font-size: 16px;
-	border: 1px solid #3D803D;
 	padding: 4px 8px;
 	display: inline-block;
 	background: #B0B0E0 none repeat scroll 0% 0%;
 	text-align: center;
 	border-radius: 10px;
-	margin-bottom: 5px;
+	margin-top:    5px;
+	text-decoration: none;
+#   word-break: normal;
+#	overflow-wrap: break-word;
+}
+
+.MstyWrapLink {
+	color: #000;
+	padding: 4px 8px;
+	display: inline;
+	background: #E0E0B0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-top:    5px;
 	text-decoration: none;
     word-break: normal;
+	overflow-wrap: break-word;
 }
+.MstyWrapLink:hover {
+	color: #000;
+	padding: 4px 8px;
+	display: inline;
+	background: #B0B0E0 none repeat scroll 0% 0%;
+	text-align: center;
+	border-radius: 10px;
+	margin-top:    5px;
+	text-decoration: none;
+    word-break: normal;
+	overflow-wrap: break-word;
+}
+
 .MstyElemLinkTop {
 	color: #000;
-	border: 1px solid #3D803D;
+#	border: 1px solid #3D803D;
 	padding: 4px 8px;
 	display: inline-block;
 	background: #E0E0B0 none repeat scroll 0% 0%;
@@ -258,7 +259,8 @@
 	background: #E0E0B0 none repeat scroll 0% 0%;
 	text-align: center;
 	border-radius: 10px;
-	margin-bottom: 5px;
+	margin-top:    5px;
+#	margin-bottom: 5px;
 	text-decoration: none;
     word-break: normal;
 }
@@ -270,7 +272,8 @@
 	background: #B0B0E0 none repeat scroll 0% 0%;
 	text-align: center;
 	border-radius: 10px;
-	margin-bottom: 5px;
+	margin-top:    5px;
+#	margin-bottom: 5px;
 	text-decoration: none;
     word-break: normal;
 }
@@ -309,8 +312,10 @@
 	text-align: center;
 	border-radius: 10px;
 	margin-bottom: 0px;
+	margin-left:   10px;
 	text-decoration: none;
     word-break: break-all;
+	max-width: 200px;
 }
 .MstyFInfElemLink:hover {
 	color: #000;
@@ -321,8 +326,10 @@
 	text-align: center;
 	border-radius: 10px;
 	margin-bottom: 0px;
+	margin-left:   10px;
 	text-decoration: none;
     word-break: break-all;
+	max-width: 200px;
 }
 
 .MstyMsgConsole {
@@ -403,10 +410,10 @@
 
 .MstyAutoLinkTarget {
 	color: #000;
-	border: 1px solid #3D803D;
+#	border: 1px solid #3D803D;
 	padding: 3px 8px;
 	display: inline-block;
-#	background: #E0E0B0 none repeat scroll 0% 0%;
+	background: #E0E0B0 none repeat scroll 0% 0%;
 	text-align: center;
 	border-radius: 10px;
 	margin-bottom: 5px;
@@ -492,8 +499,21 @@
 .MstyFloatLeft {
 	float: left;
 }
+.MstyBlock {
+	display: block;
+    word-break: normal;
+	overflow-wrap: break-word;
+}
 .MstyCode {
 	font-family:Monaco,Consolas,Courier New,Courier,monospace,sans-serif;
+	display: block;
+    word-break: normal;
+	overflow-wrap: break-word;
+}
+.MstyCodeIn {
+	font-family:Monaco,Consolas,Courier New,Courier,monospace,sans-serif;
+    word-break: normal;
+	overflow-wrap: break-word;
 }
 .MstyCodeSynConst {
 	color: #660000;
@@ -513,3 +533,41 @@
 	text-align: center
 }
 
+.MstyFutabaBGColor {
+	color: "#F0E0D6";
+}
+.MstyOnlyIE8 {
+	display:none;
+	display:block\0; /* forIE8gt */
+}
+.MstyThumbnail {
+#	width: 200px;
+#	height: auto;
+	max-width:  200px;
+	max-height: 200px;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+.MstyNoun {
+	max-width:  230px;
+	min-width:  230px;
+	max-height: 200px;
+	padding-right: 15px;
+	padding-left: 15px;
+	display: inline-block;
+	font-size: 14px;
+    word-break: break-all;
+}
+.MstyRightPreview {
+	margin-left: 10px;
+}
+.MstyImgBox {
+	width: 100%;
+	overflow: auto;
+}
+.MstyImgBox img {
+	width:  auto;
+	height: auto;
+	max-width:  none;
+	max-height: none;
+}

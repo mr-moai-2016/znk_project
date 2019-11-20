@@ -423,8 +423,8 @@ EstLinkManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const 
 			ZnkStr EstLM_edit_ui = ZnkStr_new( "" );
 			ZnkStr_addf( EstLM_edit_ui,
 					"LinkÇÃêVãKìoò^<br>\n"
-					"<input class=MstyInputField type=text name=EstLM_url     placeholder=\"URL\"  value=\"\" size=50><br>\n"
-					"<input class=MstyInputField type=text name=EstLM_comment placeholder=\"ê‡ñæ\" value=\"\" size=50><br>\n" );
+					"<span class=MstyOnlyIE8>URL: </span><input class=MstyInputField type=text name=EstLM_url     placeholder=\"URL\"  value=\"\" size=50><br>\n"
+					"<span class=MstyOnlyIE8>ê‡ñæ:</span><input class=MstyInputField type=text name=EstLM_comment placeholder=\"ê‡ñæ\" value=\"\" size=50><br>\n" );
 			ZnkStr_addf( EstLM_edit_ui,
 					"<button class=MstyWideButton type='submit' name='command' value='save_link'>è„ãLÇ≈ìoò^</button><br>\n" );
 			ZnkBird_regist( bird, "EstLM_edit_ui", ZnkStr_cstr( EstLM_edit_ui ) );
@@ -442,10 +442,10 @@ EstLinkManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const 
 					const char* comment = EstLInf_comment( linf );
 					ZnkStr EstLM_edit_ui = ZnkStr_new( "" );
 					ZnkStr_addf( EstLM_edit_ui,
-							"ID=[%s]<br>\n"
+							"ID=[%s]ÇÃï“èW<br>\n"
 							"<input type=hidden name=EstLM_update_id value=\"%s\">\n"
-							"<input class=MstyInputField type=text name=EstLM_url     placeholder=\"URL\"  value=\"%s\" size=50><br>\n"
-							"<input class=MstyInputField type=text name=EstLM_comment placeholder=\"ê‡ñæ\" value=\"%s\" size=50><br>\n",
+							"<span class=MstyOnlyIE8>URL: </span><input class=MstyInputField type=text name=EstLM_url     placeholder=\"URL\"  value=\"%s\" size=50><br>\n"
+							"<span class=MstyOnlyIE8>ê‡ñæ:</span><input class=MstyInputField type=text name=EstLM_comment placeholder=\"ê‡ñæ\" value=\"%s\" size=50><br>\n",
 							id, id, url, comment );
 					ZnkStr_addf( EstLM_edit_ui,
 							"<button class=MstyWideButton type='submit' name='command' value='update_link'>çXêV</button><br>\n" );

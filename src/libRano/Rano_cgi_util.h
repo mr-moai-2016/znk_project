@@ -144,6 +144,12 @@ size_t
 RanoCGIUtil_initMultiDirLog( const char* logdir_basename, const char* count_filename,
 		size_t pitch_of_count, size_t pitch_of_logfiles, bool keep_open );
 
+size_t
+RanoCGIUtil_rano_app_init_log( const char* app_name, bool is_multi_dir );
+
+void
+RanoCGIUtil_rano_app_print_error( const char* msg );
+
 Znk_EXTERN_C_END
 
 #endif /* INCLUDE_GUARD */

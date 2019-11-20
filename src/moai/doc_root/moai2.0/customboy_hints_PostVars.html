@@ -1,18 +1,22 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html><html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta http-equiv="Content-Script-Type" content="text/javascript">
 	<meta http-equiv="Content-Style-Type" content="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<link href="/bulma.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+<div class="section">
+<div class="container">
+<div class="content">
 <a name=TopBar></a>
-<p><b><img src="/imgs/here_landmark.png"> Moai+Easter エキスパートマニュアル</b></p>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter 上級マニュアル</b></p>
 
 <a class=MstyElemLink href="/">トップページ</a> &nbsp;
-<a class=MstyElemLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">初級マニュアル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">上級マニュアル</a> &nbsp;
 <a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
 <a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
@@ -30,31 +34,17 @@
 <a class=MstyElemLink href="/moai2.0/futaba_note.html">Futaba Note</a> &nbsp;
 <br> <br>
 
-<div class=MstyComment>
-<u><b>記事担当者</b></u> : 高速ヤキソバ変換<br>
-<br>
-<u><b>最終更新日</b></u> : 2017/10/04<br>
-<br>
-</div>
-<br>
-
-
 <a name=AtFirst></a>
-<u><b>
-はじめに
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">はじめに</h1>
+<p>
 	ここではCustomBoyが仮想化するPost変数のHint情報を列挙する.<br>
 	(主にふたばちゃんねるの例を題材とする).<br>
-</div><br>
+</p>
 <br>
 
 
 <a name=Index></a>
-<u><b>
-目次
-</b></u><br>
+<h1 class="title">目次</h1>
 <br>
 <ul>
 	<li><b><a class=MstyElemLink href=#pv_js>Post variable : js</a></b></li>
@@ -70,44 +60,33 @@
 
 
 <a name=pv_js></a>
-<u><b>
-Post variable : js
-</b></u><span class=MstyAuthor> (Category: futaba)</span><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">Post variable : js</h1>
+<span class=MstyAuthor> (Category: futaba)</span><p>
 	この値は必ず on にしておかなければならない.<br>
 	<br>
 	名前の由来は<s><b>女子小学s</b></s>無論<b>J</b>ava<b>S</b>criptである.<br>
-	Javascriptを実行したかどうかを判断するためのものであり、<br>
-	/bin/base4.js を実行すると on に設定される仕組みとなっている.<br>
-	( 無論、Javascriptの/bin/base4.jsを実行させずとも、最初からこのPost変数 に on 値を設定しておけば良い. )<br>
-	ふたばにおいてはこれを on にしておかないと「環境変数がありません(Javascriptがオフ？)」というエラーが表示され、<br>
-	投稿に失敗するのは周知の通りである.<br>
+	Javascriptを実行したかどうかを判断するためのものであり、/bin/base4ajax.js を実行すると on に設定される仕組みとなっている.<br>
+	( 無論、Javascriptの/bin/base4ajax.jsを実行させずとも、最初からこのPost変数 に on 値を設定しておけば良い. )<br>
+	ふたばにおいてはこれを on にしておかないと「環境変数がありません(Javascriptがオフ？)」というエラーが表示され、投稿に失敗するのは周知の通りである.<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=pv_pthb></a>
-<u><b>
-Post variable : pthb
-</b></u><span class=MstyAuthor> (Category: futaba)</span><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">Post variable : pthb</h1>
+<span class=MstyAuthor> (Category: futaba)</span><p>
 	これについては<a class=MstyElemLink href=#pv_pthc>pthc</a>のセクションを参照して頂きたい.<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=pv_pthc></a>
-<u><b>
-Post variable : pthc
-</b></u><span class=MstyAuthor> (Category: futaba)</span><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">Post variable : pthc</h1>
+<span class=MstyAuthor> (Category: futaba)</span><p>
 	ptは<b>P</b>os<b>T</b>(あるいは<b>P</b>ost <b>T</b>ime) の意味であろう. h は不明である.<br>
 	( <b>P</b>a<b>T</b><b>H</b> の可能性もありそうだが、現状の仕様とは意味が合わない. )<br>
 	他にも類似したものとして pthb や pthd などがあるが、なぜ a からではなく b から始まるのかも不明である.<br>
@@ -116,53 +95,43 @@ Post variable : pthc
 	この値はfutaba.phpに初アクセスした時間(およびそれに類した値)である.<br>
 	現状ではカタログに初めてアクセスするか、または初めてレス投稿した際にまずpthcに設定されるようである.<br>
 	あるいは /bin/cachemt7.php にアクセスしたときにそれに類した値が生成される形となる.<br>
-	おそらくワンタイムパスワードならぬ、ワンタイムユーザIDとでも呼ぶべき用途として発行し、<br>
-	futaba.php内部で使っているのだろう.<br>
+	おそらくワンタイムパスワードならぬ、ワンタイムユーザIDとでも呼ぶべき用途として発行し、futaba.php内部で使っているのだろう.<br>
 <br>
 	<b>一度目の投稿</b>においては、localStorage(futabapt)にpthcのコピー値も設定される.<br>
 	また<b>二度目の投稿</b>において、さらにそのlocalStorage(futabapt)のコピー値がpthbへと設定される.<br>
 	おそらくpthbの値の存在によってlocalStorageに確実に値が設定されたことを確認する意図があると思われる.<br>
 	<br>
 	一旦設定されると、CookieおよびBrowser CacheおよびlocalStorageこれら全てを消去しない限り同じ値が残り続ける.<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=pv_pthd></a>
-<u><b>
-Post variable : pthd
-</b></u><span class=MstyAuthor> (Category: futaba)</span><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">Post variable : pthd</h1>
+<span class=MstyAuthor> (Category: futaba)</span><p>
 	現状では使用されている気配はない(かつては使用されていたこともある).<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=pv_ptua></a>
-<u><b>
-Post variable : ptua
-</b></u><span class=MstyAuthor> (Category: futaba)</span><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">Post variable : ptua</h1>
+<span class=MstyAuthor> (Category: futaba)</span><p>
 	ptは<b>P</b>os<b>T</b>(あるいは<b>P</b>ost <b>T</b>ime) の意味であろう.<br>
 	uaは<b>U</b>ser<b>A</b>gentである.<br>
 	この値は頻繁にその意味が変更される歴史を持つ.<br>
 	最初期はnavigator.userAgentの文字列値をそのまま格納していたため、名前に ua という文字が含まれているのであろう.<br>
 	<br>
-	現状での意味は、33個のものBrowserとそのVersion固有の真偽値をとるJavascriptコード片(Snippetと呼ぶ)の結果値を、<br>
-	33bitのflag値にpackした上で10進数変換したものである.<br>
-	この計算はレス投稿時に毎回 /bin/base4.js におけるptfk function内で行われており、<br>
-	sphという名前の配列変数を検索すると該当処理を行っている行を見つけることができる.<br>
+	現状での意味は、33個のものBrowserとそのVersion固有の真偽値をとるJavascriptコード片(Snippetと呼ぶ)の結果値を、33bitのflag値にpackした上で10進数変換したものである.<br>
+	この計算はレス投稿時に毎回 /bin/base4ajax.js におけるptfk function内で行われており、sphという名前の配列変数を検索すると該当処理を行っている行を見つけることができる.<br>
 	まあ派手に長い行なので目視でもすぐわかるが…<br>
 	(尚、最大値は32bit非負整数のMaxを超える可能性があるため、浮動小数点数をベースとして行われている模様).<br>
 	<br>
-	要はBrowserとそのVersion固有の値の寄せ集めであるため、Browserそのもの(あるいは場合によってはそのVersionのみでも良いが)<br>
-	を変更しない限り基本的に同じ値をとり続ける.<br>
+	要はBrowserとそのVersion固有の値の寄せ集めであるため、Browserそのもの(あるいは場合によってはそのVersionのみでも良いが)を変更しない限り基本的に同じ値をとり続ける.<br>
 	<br>
 	尚、この値を乱数生成器などで出力される完全なrandomな整数値として割り当てても、少なくとも筆者の環境では現状問題ないようである.<br>
 	しかしこの値からinvertすれば元のBrowser環境を(ある程度の範囲はあるとは言え)一意に推定することが可能である.<br>
@@ -170,50 +139,43 @@ Post variable : ptua
 	(というより、わざわざfutaba.phpがこのようなPost変数を導入した理由はそれしか考えられまい)<br>
 	よってより万全を期すなら、このptuaの値を<b>それらしく</b>偽装する方が望ましいといえる.<br>
 	<br>
-	例えば下位8bitはIE(Edge)に関するものであるため、IE(Edge)以外のBrowserとして偽装したいなら、<br>
-	その数字を必ず<b>256の倍数</b>にすれば「それらしく」偽装できる.<br>
+	例えば下位8bitはIE(Edge)に関するものであるため、IE(Edge)以外のBrowserとして偽装したいなら、その数字を必ず<b>256の倍数</b>にすれば「それらしく」偽装できる.<br>
 	それ以外にも各Snippetの意味を事細かに調べてBrowserとVersion毎に反映させていけば値の精度はより高まるであろう.<br>
 	自力でツールなどを作ってこの値を偽装される方で、この辺りに拘りのある方は参考にされてはどうだろうか？<br>
 	各Snippetの意味については、<a class=MstyElemLink href=/moai2.0/customboy_hints_Snippet.html>こちら</a>に完全なリファレンスを作成したので参照していただきたい.<br>
 <br>
 	尚、CustomBoyエンジンではKnowledge-Baseによりこの値を自動的に生成する.<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=pv_scsz></a>
-<u><b>
-Post variable : scsz
-</b></u><span class=MstyAuthor> (Category: futaba)</span><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">Post variable : scsz</h1>
+<span class=MstyAuthor> (Category: futaba)</span><p>
 	名前の由来は <b>SC</b>reen<b>S</b>i<b>Z</b>e であろう. <br>
 	<br>
 	この値は、あなたの使っているモニタの解像度と色深度の情報を示す.<br>
-	(Javascriptにこれを取得するAPIがあり、レス投稿(ptfk function)時に毎回 /bin/base4.jsでこれを取得しているようである)<br>
+	(Javascriptにこれを取得するAPIがあり、レス投稿(ptfk function)時に毎回 /bin/base4ajax.jsでこれを取得しているようである)<br>
 	<br>
-	<div class=MstyComment>
+	<div class=box><div class=MstyCode>
     	モニタ解像度の幅 x モニタ解像度の高さ x モニタの色深度ビット数<br>
-	</div>
+	</div></div>
 <br>
 	というフォーマットを持つ記述子となる.<br>
 	例えば、640x480x24、1024x768x32といった値をとる.<br>
 <br>
 	尚、CustomBoyエンジンではKnowledge-Baseによりこの値を自動的に生成する.<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=pv_pwd></a>
-<u><b>
-Post variable : pwd
-</b></u><span class=MstyAuthor> (Category: futaba)</span><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">Post variable : pwd</h1>
+<span class=MstyAuthor> (Category: futaba)</span><p>
 	名前の由来は <b>P</b>ass<b>W</b>or<b>D</b> である.<br>
 	<br>
 	この値は、レス投稿時のいわゆる「削除キー」に相当するものである.<br>
@@ -222,23 +184,21 @@ Post variable : pwd
 <br>
 	通常はふたばより自動的に割り当てられた値をそのまま使えばよい.<br>
 	ただしユーザ情報を初期化したい場合は、Cookieのpwdc値を一旦空にしておくとよい.<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=pv_flrv></a>
-<u><b>
-Post variable : flrv
-</b></u><span class=MstyAuthor> (Category: futaba)</span><br>
+<h1 class="title">Post variable : flrv</h1>
+<span class=MstyAuthor> (Category: futaba)</span><p>
+	注：現在のふたばちゃんねるではこれは廃止されたようですが、一応ここでの説明は残しておきます.<br>
 <br>
-<div class=MstyIndent>
 	この値は、Fingerprint値と呼ばれるものが格納される.<br>
 	<br>
 	少し歴史を述べると、当初これにはFingerprint値ではなくAdobe FlashのReVision番号が格納されていた.<br>
-	しかしそれだと値が被り過ぎるためか、あるいはFlashに見切りをつけたためかは知らないが、<br>
-	ある時ふたばはその仕様を廃止した.<br>
+	しかしそれだと値が被り過ぎるためか、あるいはFlashに見切りをつけたためかは知らないが、ある時ふたばはその仕様を廃止した.<br>
 	そしてこの変数名だけをそのまま流用して、替わりにここにFingerprint値を格納するようになった経緯がある.<br>
 	名前に含まれる謎の「l」の文字はその名残である.<br>
 	<br>
@@ -265,34 +225,52 @@ Post variable : flrv
 	この点はptuaとは大きく異なる. (futaba.phpがFingerprintに加え、新しいptuaの仕様を追加的に導入した経緯もそれによる).<br>
 <br>
 	尚、CustomBoyエンジンではKnowledge-Baseによりこの値を自動的に生成する.<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=pv_flvv></a>
-<u><b>
-Post variable : flvv
-</b></u><span class=MstyAuthor> (Category: futaba)</span><br>
+<h1 class="title">Post variable : flvv</h1>
+<span class=MstyAuthor> (Category: futaba)</span><p>
+	注：現在のふたばちゃんねるではこれは廃止されたようですが、一応ここでの説明は残しておきます.<br>
 <br>
-<div class=MstyIndent>
 	この値も<a class=MstyElemLink href=#pv_flrv>flrv</a>と同じくFingerprint値と呼ばれるものが格納される.<br>
 	flrvとflvvの違いはその取得する情報の種類だけである.<br>
 	flrvが取得する全情報に加え、BrowserのPlugin情報文字列まで加味したものがflvvである.<br>
 <br>
 	尚、CustomBoyエンジンではKnowledge-Baseによりこの値を自動的に生成する.<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
+
+
+<div class="card">
+	<u><b>This article was written by:</b></u><br>
+	<div class="card-content">
+		<div class="media">
+			<div class="media-left">
+				<figure class="image is-48x48">
+				<img src="/imgs/yakisoba.png" alt="none image">
+				</figure>
+			</div>
+			<div class="media-content">
+				<p class="title is-4">K.Yakisoba.H</p>
+				<p class="subtitle is-6">@znk project</p>
+			</div>
+		</div>
+		<div class="content">
+		  <time datetime="2016-1-1">2019/07/29</time>
+		</div>
+	</div>
+</div>
 
 
 <a name=Link></a>
-<u><b>
-リンク
-</b></u><br>
-<br>
+<h1 class="title"></h1>
+<hr>
 <ul>
 	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
 	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
@@ -300,5 +278,8 @@ Post variable : flvv
 </ul><br>
 
 
+</div>
+</div>
+</div>
 </body>
 </html>

@@ -99,6 +99,7 @@ __mkg_sentinel_target__:
 install_data:
 	@if not exist ..\..\mkfsys\template @mkdir ..\..\mkfsys\template 
 	@if exist "template\*.mak" @$(CP) /F "template\*.mak" ..\..\mkfsys\template\ $(CP_END)
+	@if exist "template\*.mk" @$(CP) /F "template\*.mk" ..\..\mkfsys\template\ $(CP_END)
 	@if exist "template\*.myf" @$(CP) /F "template\*.myf" ..\..\mkfsys\template\ $(CP_END)
 
 # Install exec rule.

@@ -1,9 +1,9 @@
 @def_quote [' ']
 
 @@V config
-doc_title = ['Moai+Easter エキスパートマニュアル']
-author = ['全角']
-update = ['2018/07/24']
+doc_title = ['Moai+Easter 上級マニュアル']
+author = { ['Zenkaku'] }
+update = ['2019/06/15']
 category_path = { ['moai2_0_exp'] ['moai_cgi_developers'] }
 urp           = ['/moai2.0/mkfgen.html']
 nb_tags = { ['div'] ['ul'] ['li'] }
@@ -16,7 +16,7 @@ title_attr_fmt = ['<span class=MstyAuthor> (Section Type: %s)</span>']
 	この記事はまた、現在のznk_projectのファイル+ディレクトリ構造全体がどのようになっているかを解説するものでもあります.
 	
 	出来るだけ平易な説明を心がけたつもりですが、それでもかなり専門的な内容であることに変わりはなく、
-	おそらくこれはエキスパートマニュアルの中でも最も難しい内容のものでしょう.
+	おそらくこれは上級マニュアルの中でも最も難しい内容のものでしょう.
 	マルチプラットフォームの静的ライブラリ、動的ライブラリ、そしてツールの開発に相当に慣れたプログラマの方を対象に
 	この種のビルドシステムの一形態としてznk_projectが提供する抽象化モデルをご紹介します.
 @@.
@@ -291,6 +291,24 @@ title_attr_fmt = ['<span class=MstyAuthor> (Section Type: %s)</span>']
 		Makefile_version.makでは DL_VER や REL_VER の値が定義されます.
 		DL_VERはDLibに付加するバージョン番号であり、デフォルトではlibZnkのものが参照されます.
 		REL_VERはツールに付加するバージョン番号であり、デフォルトではmoaiのものが参照されます.
+		</li>
+
+		<li><b>is_android_ndk_build_support</b>(bool型)
+		このbool値は mkid_list 内に android の指定を含む場合のみ意味を持ちます.
+		ここでは mkid_list 内に android が指定されているものとします.
+
+		mkfgenシステムでの android版バイナリのビルドは、Makefile_android.makを使って
+		( mkidがandroid のもの以外と同様の様式によって) makeコマンドを実行することで行うことができます.
+		しかしながら、Android Developerの公式ドキュメントでは ndk_build スクリプトの実行によってビルドする方法が示されています.
+		mkfgenシステムでも、この ndk_build によるビルドは可能ですが、ただしその場合
+		その実行に必要な特別なMakefile、すなわち Application.mk と Android.mk を生成する必要があります.
+
+		このbool値を true に設定すると、mkf_androidフォルダを生成して、その配下にこの Application.mk と Android.mk を生成します.
+		このときカレントディレクトリを mkf_android へ移動し、Android NDK が提供する ndk_build スクリプトを実行しますと.
+		この Application.mk と Android.mk に記述されたルールに従ってビルドが行われるといった形になります.
+		この値を false に設定すると、mkf_androidフォルダは生成されず、Makefile_android.mak のみが生成されます.
+		( Makefile_android.mak は、この値の真偽に関わらず生成されます ).
+
 		</li>
 		
 		<li><b>makefile_version_landmark</b>(String型)
@@ -754,6 +772,10 @@ title_attr_fmt = ['<span class=MstyAuthor> (Section Type: %s)</span>']
 	このセクションではこのmkfgenによって扱うrcファイル(Windowsのリソースファイル)の名前を明示的に列挙できます.
 	しかしこれが空でもmkfgenは自動的にrcファイルを認識して、この情報を生成されるMakefileに補充します.
 	万一この自動認識がうまくいかないケースが発生した場合はこのセクションで明示的に指定してください.
+
+	特にproduct_list においてexec指定された実行ファイル名とrc名が一致する場合、これらは自動的に関連付けられます.
+	例えば product_list において exec player main.cpp と指定された場合、rcファイルの名前が player.rc の場合は
+	特に何も指定せずとも player.rc は playerに自動的にリンクされるということです.
 @@.
 
 
@@ -818,7 +840,8 @@ title_attr_fmt = ['<span class=MstyAuthor> (Section Type: %s)</span>']
 @@.
 
 @@L only_list
-	このコンパイラにおいてのみ使用するソースファイルを指定します.
+	このコンパイラにおいてのみ使用するソースファイルまたはディレクトリを指定します.
+
 	例えば名前が example_win.c と thread_win.c というソースファイルについてはvcとmingwにおいてのみ、
 	名前が example_unix.c と thread_pthread.c というソースファイルについてはlinuxとcygwinにおいてのみとして
 	それぞれ使用したい場合は次のように指定します.
@@ -845,8 +868,46 @@ title_attr_fmt = ['<span class=MstyAuthor> (Section Type: %s)</span>']
 		@@.
 	</div>
 
-	このようにプラットフォーム依存のファイルの指定などでこのセクションを使いますが、
-	特に指定するファイルがない場合はこのセクションは省略することが可能です.
+	ディレクトリの指定の例も示しましょう.
+	例えば名前が audio/dsound ディレクトリについてはvcとmingwにおいてのみ、
+	audio/alsa ディレクトリについては linuxとcygwinにおいてのみ、
+	audio/android ディレクトリについては androidにおいてのみとして
+	それぞれ使用(すなわち配下のソースファイルをコンパイル対象に含めるという意味ですが)したい場合は次のように指定します.
+	
+	<div class=MstyComment>
+		@@L only_list_vc
+		audio/dsound
+		@@.
+		
+		@@L only_list_mingw
+		audio/dsound
+		@@.
+		
+		@@L only_list_linux
+		audio/alsa
+		@@.
+		
+		@@L only_list_cygwin
+		audio/alsa
+		@@.
+
+		@@L only_list_android
+		audio/android
+		@@.
+	</div>
+
+	このようにプラットフォーム依存のファイルやディレクトリの指定などでこのセクションを使いますが、
+	特に指定するファイルやディレクトリがない場合はこのセクションは省略することが可能です.
+	またファイルとディレクトリを混在させて指定してもかまいません.
+	mkfgenは only_list で指定されたパスがファイルであるのか、あるいはディレクトリであるのかを自動認識します.
+
+	<div class=MstyComment>
+		<u><b>参考</b></u>
+		
+		ignore_list と only_list の双方から指定されたファイルやディレクトリは
+		ignore_listの指定が優先されます.
+		すなわち only_list での指定は無視されてコンパイル対象に含まれません.
+	</div>
 @@.
 
 @@L src_suffix_list

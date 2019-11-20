@@ -15,6 +15,7 @@
 #include <Rano_htp_modifier.h>
 #include <Rano_html_ui.h>
 #include <Rano_cgi_util.h>
+#include <Rano_conf_util.h>
 
 #include <Znk_str.h>
 #include <Znk_str_ex.h>
@@ -416,7 +417,7 @@ CBVirtualizer_initVars_byFutabaSendMyf( ZnkVarpAry main_vars, const char* moai_d
 	CBVarsBase_registStr_toVars( main_vars, "flrv", "", 0 );
 	CBVarsBase_registStr_toVars( main_vars, "flvv", "", 0 );
 
-	Znk_snprintf( path, sizeof(path), "%s%s/%s", moai_dir, st_filters_dir, info->send_myf_filename_ );
+	Znk_snprintf( path, sizeof(path), "%s/%s", st_filters_dir, info->send_myf_filename_ );
 
 	ZnkMyf_load( send_myf, path );
 
@@ -483,7 +484,6 @@ CBVirtualizer_initiateAndSave( RanoCGIEVar* evar, const ZnkVarpAry cb_vars,
 		ZnkStr msg, const char* cb_src, ZnkStr caco, ZnkStr ua_str, ZnkStr lacking_var,
 		bool all_cookie_clear )
 {
-	const char* moai_dir = CBConfig_moai_dir();
 	bool        result   = false;
 	const char* tmpdir = st_is_dos_path ? ".\\tmp\\" : "./tmp/";
 
@@ -620,7 +620,8 @@ CBVirtualizer_initiateAndSave( RanoCGIEVar* evar, const ZnkVarpAry cb_vars,
 			char       path[ 256 ];
 			ZnkMyf     send_myf = ZnkMyf_create();
 			ZnkVarpAry vars = NULL;
-			Znk_snprintf( path, sizeof(path), "%s%s/%s", moai_dir, st_filters_dir, info->send_myf_filename_ );
+			//Znk_snprintf( path, sizeof(path), "%s%s/%s", moai_dir, st_filters_dir, info->send_myf_filename_ );
+			Znk_snprintf( path, sizeof(path), "%s/%s", st_filters_dir, info->send_myf_filename_ );
 
 			ZnkMyf_load( send_myf, path );
 
@@ -685,9 +686,12 @@ CBVirtualizer_initiateAndSave( RanoCGIEVar* evar, const ZnkVarpAry cb_vars,
 
 			updateSendMyf( send_myf, cfduid, caco, posttime, all_cookie_clear );
 
-			//ZnkMyf_save( send_myf, info->send_save_myf_filename_ );
-			ZnkMyf_save( send_myf, path );
-			ZnkStr_addf( msg, "&nbsp;&nbsp;Saving your %s/%s<br>", st_filters_dir, info->send_myf_filename_ );
+			if( ZnkMyf_save( send_myf, path ) ){
+				ZnkStr_addf( msg, "&nbsp;&nbsp;Saving your %s<br>", path );
+			} else {
+				ZnkStr_addf( msg, "&nbsp;&nbsp;Cannot saving your %s<br>", path );
+				result = false;
+			}
 			ZnkMyf_destroy( send_myf );
 		}
 
@@ -712,7 +716,7 @@ CBVirtualizer_registBird_byFutabaSendMyf( ZnkBird bird, const char* moai_dir )
 	ZnkMyf     send_myf = ZnkMyf_create();
 	ZnkVarpAry vars = NULL;
 	CBConfigInfo* info = CBConfig_theInfo2(); 
-	Znk_snprintf( path, sizeof(path), "%s%s/%s", moai_dir, st_filters_dir, info->send_myf_filename_ );
+	Znk_snprintf( path, sizeof(path), "%s/%s", st_filters_dir, info->send_myf_filename_ );
 
 	ZnkMyf_load( send_myf, path );
 
@@ -853,7 +857,6 @@ generateVirtualUSERS( RanoCGIEVar* evar, ZnkVarpAry cb_vars, struct CBUAInfo_tag
 	ZnkStr fgp_str  = ZnkStr_new( "" );
 	ZnkStr browser  = ZnkStr_new( "" );
 	int major_ver = 0;
-//	ZnkFile fp = NULL;
 
 	ZnkStr_add( msg, "<b>Step1:</b><br>" );
 	ZnkStr_add( msg, "&nbsp;&nbsp;Basically post variables have been generated.</b><br>" );
@@ -931,7 +934,7 @@ reportCookieUI( ZnkStr cookie_recs, ZnkStrAry known_names, const char* moai_dir 
 	ZnkVarpAry vars = NULL;
 	CBConfigInfo* info = CBConfig_theInfo2(); 
 
-	Znk_snprintf( path, sizeof(path), "%s%s/%s", moai_dir, st_filters_dir, info->send_myf_filename_ );
+	Znk_snprintf( path, sizeof(path), "%s/%s", st_filters_dir, info->send_myf_filename_ );
 
 	ZnkMyf_load( send_myf, path );
 
@@ -975,7 +978,7 @@ reportCookieView( ZnkStr cookie_recs, ZnkStrAry known_names, const char* moai_di
 	ZnkVarpAry vars = NULL;
 	CBConfigInfo* info = CBConfig_theInfo2(); 
 
-	Znk_snprintf( path, sizeof(path), "%s%s/%s", moai_dir, st_filters_dir, info->send_myf_filename_ );
+	Znk_snprintf( path, sizeof(path), "%s/%s", st_filters_dir, info->send_myf_filename_ );
 
 	ZnkMyf_load( send_myf, path );
 
@@ -1015,7 +1018,7 @@ CBVirtualizer_saveCookie_byCBVars( ZnkVarpAry cb_vars, const char* moai_dir )
 	ZnkVarpAry ck_vars = NULL;
 	CBConfigInfo* info = CBConfig_theInfo2(); 
 
-	Znk_snprintf( path, sizeof(path), "%s%s/%s", moai_dir, st_filters_dir, info->send_myf_filename_ );
+	Znk_snprintf( path, sizeof(path), "%s/%s", st_filters_dir, info->send_myf_filename_ );
 
 	if( ZnkVarpAry_find_byName_literal( cb_vars, "cb_erase_empty", false ) ){
 		erase_empty = true;
@@ -1038,7 +1041,6 @@ CBVirtualizer_saveCookie_byCBVars( ZnkVarpAry cb_vars, const char* moai_dir )
 						ck_varp = ZnkVarp_create( "", "", ZnkHtpPostVar_e_None, ZnkPrim_e_Str, NULL );
 						ZnkVar_set_name( ck_varp, name + 3, Znk_NPOS );
 						ZnkHtpURL_unescape_toStr( ZnkVar_str(ck_varp), ZnkVar_cstr(cb_varp), ZnkVar_str_leng(cb_varp) );
-						//ZnkVar_set_val_Str( ck_varp, ZnkVar_cstr(cb_varp), ZnkVar_str_leng(cb_varp) );
 						ZnkVarpAry_push_bk( ck_vars, ck_varp );
 					}
 				}
@@ -1050,22 +1052,6 @@ CBVirtualizer_saveCookie_byCBVars( ZnkVarpAry cb_vars, const char* moai_dir )
 	ZnkMyf_destroy( send_myf );
 }
 
-
-
-#if 0
-static void
-registSnippet( ZnkVarpAry cb_vars, ZnkVarpAry main_vars, CBUAInfo ua_info, uint64_t* ptua64 )
-{
-	ZnkStr tmp      = ZnkStr_new( "" );
-	if( ua_info ){
-		*ptua64 = generatePtuaResult( ua_info );
-		ZnkStr_setf( tmp, "%" Znk_PFMD_64 "u", *ptua64 );
-		CBVarsBase_registStr_toVars( cb_vars,   "ptua", ZnkStr_cstr(tmp), ZnkStr_leng(tmp) );
-		CBVarsBase_registStr_toVars( main_vars, "ptua", ZnkStr_cstr(tmp), ZnkStr_leng(tmp) );
-	}
-	ZnkStr_delete( tmp );
-}
-#endif
 
 static void
 registMain( ZnkVarpAry cb_vars, ZnkVarpAry main_vars, ZnkStr ua_str, ZnkStr RE_key, CBFgpInfo fgp_info, ZnkStr scsz_str, CBUAInfo ua_info, uint64_t* ptua64 )

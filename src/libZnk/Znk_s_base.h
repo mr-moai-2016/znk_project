@@ -343,6 +343,7 @@ ZnkS_isMatchSWC( const char* ptn, size_t ptn_leng,
  *   LEとBEの環境によって異なる結果になる. ここではこれを高速化のためのIDと考える.
  *
  * @exam
+ *   // 例1.
  *   // 以下はZnkS_get_id32の場合の例であるが、ZnkS_get_id64の場合は4文字のところを8文字に読み替えて欲しい.
  *   // type_str4は4文字以内の文字列が与えられると仮定し、万一それより長い場合は、4文字で打ち切る.
  *   bool checkType( const char* type_str4 )
@@ -370,6 +371,17 @@ ZnkS_isMatchSWC( const char* ptn, size_t ptn_leng,
  *         ...
  *       }
  *     }
+ *   }
+ *
+ *   // 例2.
+ *   // 以下はid32を文字列として参照する効率のよい方法である.
+ *   // 要素数2のuint32_t型配列を定義してその第1要素にコピーする点がポイントである.
+ *   // id64の場合も同様にuint64_t型配列とすればよい.
+ *   printID( uint32_t id32 )
+ *   {
+ *     uint32_t id32_s[ 2 ] = { 0, 0 }; // 第2要素は常に0でNULL終端のために使う.
+ *     id32_s[ 0 ] = id32;
+ *     printf( "%s", Znk_force_ptr_cast(const char*, id32_s) );
  *   }
  *    
  */

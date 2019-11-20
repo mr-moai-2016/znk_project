@@ -6,32 +6,18 @@
  * 汎用のbinary streamを保持する uint8_t の動的配列である.
  */
 
-#include <Znk_base.h>
+#include <Znk_capacity.h>
 
 Znk_EXTERN_C_BEGIN
-
-typedef enum {
-	 ZnkBfr_Exp2  =  0
-	,ZnkBfr_Pad8  =  3
-	,ZnkBfr_Pad16
-	,ZnkBfr_Pad32
-	,ZnkBfr_Pad64
-	,ZnkBfr_Pad128
-	,ZnkBfr_Pad256
-	,ZnkBfr_Pad512
-	,ZnkBfr_Pad1024
-	,ZnkBfr_Pad2048
-	,ZnkBfr_Pad4096
-} ZnkBfrType;
 
 typedef struct ZnkBfrImpl* ZnkBfr;
 
 ZnkBfr
-ZnkBfr_create( const uint8_t* init_data, size_t size, bool with_zero, ZnkBfrType type );
+ZnkBfr_create( const uint8_t* init_data, size_t size, bool with_zero, ZnkCapacityType type );
 
 Znk_INLINE ZnkBfr
 ZnkBfr_create_null( void ){
-	return ZnkBfr_create( NULL, 0, false, ZnkBfr_Exp2 );
+	return ZnkBfr_create( NULL, 0, false, ZnkCapacity_Exp2 );
 }
 
 void
@@ -134,6 +120,19 @@ bool
 ZnkBfr_push_bk_64( ZnkBfr bfr, uint64_t val, bool is_LE );
 bool
 ZnkBfr_push_bk_ptr( ZnkBfr bfr, void* ptr );
+
+/**
+ * @brief
+ *   これから delta byte だけのデータをpush_bk するのに先立って事前にresizeしておく.
+ *   増加した delta byte 分の領域はこの時点では不定値となっているが、
+ *   戻り値のポインタがその増分領域を示すので、これを利用して値をセットすればよい.
+ *
+ * @note
+ *   この関数はpush_bk処理を高速化するためのものであり、
+ *   これによりZnkBfr関数の呼び出し回数を最小限にできる.
+ */
+uint8_t*
+ZnkBfr_push_bk_previous( ZnkBfr zkbfr, size_t delta );
 
 size_t
 ZnkBfr_pop_bk_ex( ZnkBfr bfr, uint8_t* data, size_t data_size );

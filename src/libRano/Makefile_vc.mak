@@ -62,7 +62,7 @@ OBJS0=\
 	$O\Rano_sset.obj \
 	$O\Rano_txt_filter.obj \
 	$O\Rano_vtag_util.obj \
-	$O\tls_module/tls_module.obj \
+	$O\tls_module\tls_module.obj \
 	$O\dll_main.obj \
 
 SUB_LIBS=\
@@ -159,8 +159,8 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-Rano_cgi_util.obj: Rano_cgi_util.h Rano_type.h Rano_log.h Rano_post.h
-Rano_conf_util.obj: Rano_conf_util.h
+Rano_cgi_util.obj: Rano_cgi_util.h Rano_type.h Rano_log.h Rano_post.h Rano_htp_boy.h
+Rano_conf_util.obj: Rano_conf_util.h Rano_htp_boy.h
 Rano_dir_util.obj: Rano_dir_util.h Rano_file_info.h
 Rano_file_info.obj: Rano_file_info.h
 Rano_hash.obj: Rano_hash.h

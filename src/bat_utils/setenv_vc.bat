@@ -189,6 +189,9 @@ if exist setenv_vc_additional.bat call setenv_vc_additional.bat
 if not "%ZNK_VC_PLATFORM_SDK_DIR%" == "" set INCLUDE=%ZNK_VC_PLATFORM_SDK_DIR%\INCLUDE;%INCLUDE%
 if not "%ZNK_VC_PLATFORM_SDK_DIR%" == "" set     LIB=%ZNK_VC_PLATFORM_SDK_DIR%\LIB;%LIB%
 if not "%ZNK_VC_PLATFORM_SDK_DIR%" == "" set    PATH=%ZNK_VC_PLATFORM_SDK_DIR%\BIN;%PATH%
+if not "%ZNK_VC_DIRECTX_SDK_DIR%" == "" set INCLUDE=%ZNK_VC_DIRECTX_SDK_DIR%\INCLUDE;%INCLUDE%
+if not "%ZNK_VC_DIRECTX_SDK_DIR%" == "" set     LIB=%ZNK_VC_DIRECTX_SDK_DIR%\LIB;%LIB%
+if not "%ZNK_VC_DIRECTX_SDK_DIR%" == "" set    PATH=%ZNK_VC_DIRECTX_SDK_DIR%\BIN;%PATH%
 echo ===
 echo INCLUDE=[%INCLUDE%]
 echo LIB=[%LIB%]

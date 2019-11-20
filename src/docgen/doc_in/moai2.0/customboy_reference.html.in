@@ -29,9 +29,9 @@
 # 
 #
 @@V config
-doc_title = ['Moai+Easter エキスパートマニュアル']
-author = ['高速ヤキソバ変換']
-update = ['2017/12/29']
+doc_title = ['Moai+Easter 上級マニュアル']
+author = { ['K.Yakisoba.H'] }
+update = ['2019/06/21']
 category_path = { ['moai2_0_exp'] ['customboy'] }
 urp           = ['/moai2.0/customboy_reference.html']
 nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
@@ -43,28 +43,26 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 @@.
 
 @@P Index
-{ ['#CustomBoy']     ['Overview of CustomBoy'] }
-{ ['#CustomUSERS']   ['CustomUSERS：Tutorial of Customize for your User-Agent and all Post variables'] }
-{ ['#CustomCookie']  ['CustomCookie：Tutorial of Customize for your all Cookie values'] }
-{ ['#CustomFeature'] ['CustomFeature：Tutorial of Customize for your all Fingerprint values'] }
+{ ['#CustomBoy']     ['CustomBoyの概要'] }
+{ ['#CustomUSERS']   ['CustomUSERS：User-Agentと全てのPost変数をカスタマイズする'] }
+{ ['#CustomCookie']  ['CustomCookie：全てのCookie値をカスタマイズする'] }
+{ ['#CustomFeature'] ['CustomFeature：ブラウザ固有の環境特性値をカスタマイズする'] }
 @@.
 
 @@L CustomBoy
 	通常、CustomBoyの思考routineは与えられた環境Categoryを入力として、それに矛盾しない範囲において最適なUA/Post変数をランダムに出力する.
 	このランダマイズはCustomBoyの持つKnowledge-Baseを基にした確率的アルゴリズムによって行われる.
-	このアルゴリズムを一言で総括すると確率が付加されたBNF上で展開を行い、結果としてUA/Post変数として有意なMarkov chain的なシーケンスを無数に決定できるというものである.
+	このKnowledge-Baseは確率が付加されたBNFである. CustomBoyエンジンはこの展開を行い、結果としてUA/Post変数として有意なMarkov chain的なシーケンスを無数に決定する.
 	さらにCustomFeatureでは、その際に参照するMachine/Browser固有の各要素値をexplicitに上書き指定可能であり、生成されるFingerprint値の究極なるCutomizeを行うができる.
 	CustomBoyは以下の３つのUIをあなたに提供する.
-	<ul>
-		<li>CustomUSERS
-		</li>
-		<li>CustomCookie
-		</li>
-		<li>CustomFeature
-		</li>
-	</ul>
+
+	<div class=content><ul>
+		<li>CustomUSERS：User-Agentと全てのPost変数をカスタマイズする</li>
+		<li>CustomCookie：全てのCookie値をカスタマイズする</li>
+		<li>CustomFeature：ブラウザ固有の環境特性値をカスタマイズする</li>
+	</ul></div>
 	
-	<div class=MstyComment>
+	<div class=box>
 		正確に言えばVirtualUSERSもCustomBoyの一機能として実装されていますが、ここでは別枠扱いとします.
 	</div>
 	
@@ -74,46 +72,45 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 @@L CustomUSERS
 	CustomUSERSはUA(User-Agent)およびPost変数値を直接設定可能なinterfaceである.
 	Tutorialとして次の手順をご紹介しよう.
-	<ol>
+	<div class=content><ol type="1">
 		<li><b>Step1</b>ボタンにより仮想環境を構築する.
-		このときCustomUSERSにおいてほぼすべての情報の構築は自動的に完了しており、
-		一連の情報は選択された環境Categoryに矛盾しないよう適切にセットされている.
+		これによりCustomUSERSにおけるほぼすべての情報の構築は自動的に完了し、一連の情報は選択された環境Categoryに矛盾しないよう適切なデフォルトにセットされる.
 		</li>
 		
-		<li>このままの状態でも全く構わないと思うが、さらに各固有の値に拘りのある方は、
-		これを微調整して修正した上で<b>UA/Post変数の更新</b>ボタンを押す.
+		<li>このままの状態でも全く構わないと思うが、さらに各固有の値に拘りのある方は、これを微調整して修正した上で<b>UA/Post変数の更新</b>ボタンを押す.
 		これによりその調整が反映されたUA/Post変数がセットされる.
 		</li>
 		
 		<li><b>Step2</b>ボタンを押すことで最終状態を確定させる.
 		これで完了である.
 		</li>
-	</ol>
+	</ol></div>
 @@.
 
 @@L CustomCookie
 	CustomCookieはCookie値を直接設定可能なinterfaceである.
 	Tutorialとして次の手順をご紹介しよう.
-	<ol>
-		<li><b>Cookieの仮想環境</b>フレームには現在のあなたの環境の仮想的なCookie値が設定されてある.
+	<div class=content><ol type="1">
+		<li><b>Cookieの仮想環境</b>フレームには現在の仮想的なCookie値が設定されてある.
 		このフレームではここにリストされた任意の項目を直接書き換え可能である.
 		</li>
 		
 		<li>Cookie値の書き換えが終わったら、<b>上記で強制書き換え</b>ボタンを押す.
-		「空値のものは項目自体を消去」にチェックを入れてこのボタンを押せば、
-		読んで字のごとく値が空のCookieの項目については、その項目そのものを消去できる.
 		これで完了である.
+		<div class=box>
+			「空値のものは項目自体を消去」にチェックを入れてこのボタンを押せば、
+			読んで字のごとく値が空のCookieの項目については、その項目そのものを消去できる.
+		</div>
 		</li>
-	</ol>
+	</ol></div>
 @@.
 
 @@L CustomFeature
 	CustomFeatureはFingerprint値およびSnippet(javascriptによる判定コード)の値を直接設定可能なinterfaceである.
 	Tutorialとして次の手順をご紹介しよう.
-	<ol>
+	<div class=content><ol type="1">
 		<li><b>Step1</b>ボタンにより仮想環境を構築する.
-		このときCustomFeatureにおいてほぼすべての情報の構築は自動的に完了しており、
-		一連の情報は選択された環境Categoryに矛盾しないよう適切にセットされている.
+		これによりCustomFeatureにおけるほぼすべての情報の構築は自動的に完了し、一連の情報は選択された環境Categoryに矛盾しないよう適切なデフォルトにセットされる.
 		</li>
 		
 		<li>このままの状態でも全く構わないと思うが、さらに各固有の値に拘りのある方は、
@@ -126,7 +123,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 		<li><b>Step2</b>ボタンを押すことで最終状態を確定させよう.
 		これで完了である.
 		</li>
-	</ol>
+	</ol></div>
 @@.
 
 @@P Link

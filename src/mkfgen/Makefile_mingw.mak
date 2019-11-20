@@ -79,13 +79,24 @@ $(EXE_FILE0): $(OBJS0)
 
 ##
 # Pattern rule.
+#
 # We use not suffix rule but pattern rule for dealing flexibly with files in sub-directory.
 # In this case, there is very confusing specification, that is :
 # '\' to the left hand of ':' works as escape sequence, 
 # '\' to the right hand of ':' does not work as escape sequence. 
 # Hence, we have to duplicate '\' to the left hand of ':',
-# the other way, '\' to the right hand of ':' we have to put only single '\',
-# for example $O\\%.o: $S\%.c .
+# the other way, '\' to the right hand of ':' we have to put only single '\'.
+# Note that we have to duplicate '\' only before special charactor(% etc) in the left of ':'.
+#
+# For example 1 :
+#   $O\\mydir\\%.o: $S\%.c        .... NG
+#   $O\mydir\\%.o:  $S\%.c        .... OK
+# For example 2 :
+#   $O\\mydir\%.o:  $S\mydir\%.c  .... NG
+#   $O\mydir\\%.o:  $S\mydir\%.c  .... OK
+# In the case of example 2, we can write more simply :
+#   $O\\%.o: $S\%.c               .... OK
+#   (Because '%' is wildcard and it indicates patical path 'mydir\filename_base' recursively )
 #
 $O\\%.o: $S\%.c
 	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c $<
@@ -105,6 +116,7 @@ __mkg_sentinel_target__:
 install_data:
 	@if not exist ..\..\mkfsys\template @mkdir ..\..\mkfsys\template 
 	@if exist "template\*.mak" @$(CP) /F "template\*.mak" ..\..\mkfsys\template\ $(CP_END)
+	@if exist "template\*.mk" @$(CP) /F "template\*.mk" ..\..\mkfsys\template\ $(CP_END)
 	@if exist "template\*.myf" @$(CP) /F "template\*.myf" ..\..\mkfsys\template\ $(CP_END)
 
 # Install exec rule.

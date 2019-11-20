@@ -8,9 +8,6 @@
 #include <Znk_str_ex.h>
 #include <string.h>
 
-/***
- * ‚±‚ÌÀ‘•‚ğ«—ˆV‚µ‚¢Rano_txt_filter‚Æ‚µ‚Ä“±“ü‚·‚é.
- */
 
 typedef uintptr_t RanoTxtFilterType;
 
@@ -199,4 +196,5 @@ RanoTxtFilterAry_test( const RanoTxtFilterAry fltr_ary, ZnkStr text )
 		/* replace_inq ['old_ptn'] ['new_ptn'] ['quote_begin'] ['quote_end'] ‚Æ‚¢‚¤Œ`® */
 		{ "replace_inq", ReplaceINQ, 4, },
 	};
+	Znk_UNUSED( st_cmdinfo_table );
 }

@@ -8,10 +8,12 @@
 Znk_EXTERN_C_BEGIN
 
 bool
-MkfAndroid_generate( const ZnkMyf conf_myf, ZnkVarpAry product_list, MkfSeekFuncT_isInterestExt isSrcFileExt,
+MkfAndroid_generate_forNdkBuild( const ZnkMyf conf_myf,
+		ZnkStrAry list, ZnkStrAry dir_list,
+		ZnkVarpAry product_list, MkfSeekFuncT_isInterestExt isSrcFileExt,
 		const ZnkStrAry include_paths_common,
 		const ZnkStrAry dependency_libs_common, const ZnkStrAry runtime_additional,
-		const ZnkStrAry sublibs_list );
+		const ZnkStrAry sublibs_list, const char* template_dir );
 
 Znk_EXTERN_C_END
 

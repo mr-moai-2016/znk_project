@@ -20,15 +20,166 @@ theRpsc( void )
 }
 
 static int
+filterSetStr( ZnkStr str, void* arg )
+{
+	const char* val = Znk_force_ptr_cast( char*, arg );
+	ZnkStr_set( str, val );
+	return 1;
+}
+
+static int
 filterHeightZeroTrick( ZnkStr str, void* arg )
 {
 	if( ZnkStrEx_strstr( str, "iframe" ) || ZnkStrEx_strstr( str, "src=\"\"" ) ){
-		ZnkSRef old_ptn = { 0 };
-		ZnkSRef new_ptn = { 0 };
-		ZnkSRef_set_literal( &old_ptn, "height:" );
-		ZnkSRef_set_literal( &new_ptn, "height:0px;width:" );
+		ZnkStrPtn_invokeInQuote( str,
+				"width:", "px",
+				NULL, NULL,
+				filterSetStr, "0", false );
+		ZnkStrPtn_invokeInQuote( str,
+				"height:", "px",
+				NULL, NULL,
+				filterSetStr, "0", false );
+		ZnkStrPtn_invokeInQuote( str,
+				"margin:", "px",
+				NULL, NULL,
+				filterSetStr, "0", false );
+	}
+	return 1;
+}
+static int
+filterPaginationBtn( ZnkStr str, void* arg )
+{
+	ZnkStr href = ZnkStr_new( "" );
+	ZnkStr name = ZnkStr_new( "" );
+	const char* p = NULL;
+	const char* q = NULL;
+
+	p = ZnkStrEx_strchr( str, '"' );
+	if( p == NULL ){
+		goto FUNC_END;
+	}
+	q = Znk_strchr( p+1, '"' );
+	if( q == NULL ){
+		goto FUNC_END;
+	}
+	ZnkStr_assign( href, 0, p+1, q-p-1 ); 
+
+	p = q+1;
+
+	p = Znk_strchr( p, '"' );
+	if( p == NULL ){
+		goto FUNC_END;
+	}
+	q = Znk_strchr( p+1, '"' );
+	if( q == NULL ){
+		goto FUNC_END;
+	}
+	ZnkStr_assign( name, 0, p+1, q-p-1 ); 
+
+	p = q+1;
+
+	p = Znk_strstr( p, "accesskey=" );
+	if( p ){
+		p += Znk_strlen( "accesskey=" );
+		if( *p == 'x' ){
+			ZnkStr_setf( str, "<a class=\"pagination-next\" href=\"%s\" accesskey=%c>%s</a>\n", ZnkStr_cstr(href), *p, ZnkStr_cstr(name) );
+		} else {
+			ZnkStr_setf( str, "<a class=\"pagination-previous\" href=\"%s\" accesskey=%c>%s</a>\n", ZnkStr_cstr(href), *p, ZnkStr_cstr(name) );
+		}
+	} else {
+		ZnkStr_setf( str, "<a class=\"pagination-next\" href=\"%s\">%s</a>\n", ZnkStr_cstr(href), ZnkStr_cstr(name) );
+	}
+
+FUNC_END:
+	ZnkStr_delete( href );
+	ZnkStr_delete( name );
+	return 1;
+}
+static int
+filterPagination( ZnkStr str, void* arg )
+{
+	ZnkSRef old_ptn = { 0 };
+	ZnkSRef new_ptn = { 0 };
+	{
+		ZnkSRef_set_literal( &old_ptn, "<table align=left border=1 class=\"psen\"" );
+		ZnkSRef_set_literal( &new_ptn, "<div class=\"pagination\"" );
 		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
 	}
+	{
+		ZnkSRef_set_literal( &old_ptn, "</table>" );
+		ZnkSRef_set_literal( &new_ptn, "</div>" );
+		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+	{
+		ZnkSRef_set_literal( &old_ptn, "<tr><td>" );
+		ZnkSRef_set_literal( &new_ptn, "" );
+		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+	{
+		ZnkSRef_set_literal( &old_ptn, "</td><td>" );
+		ZnkSRef_set_literal( &new_ptn, "" );
+		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+	{
+		ZnkSRef_set_literal( &old_ptn, "</td></tr>" );
+		ZnkSRef_set_literal( &new_ptn, "" );
+		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+	{
+		ZnkSRef_set_literal( &old_ptn, "]&nbsp;[" );
+		ZnkSRef_set_literal( &new_ptn, "][" );
+		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+	{
+		ZnkSRef_set_literal( &old_ptn, "]<br>[" );
+		ZnkSRef_set_literal( &new_ptn, "][" );
+		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+	{
+		ZnkSRef_set_literal( &old_ptn, "][" );
+		ZnkSRef_set_literal( &new_ptn, "\n" );
+		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+	{
+		ZnkSRef_set_literal( &old_ptn, "[<" );
+		ZnkSRef_set_literal( &new_ptn, "<div class=\"pagination-list\"><" );
+		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+	{
+		ZnkSRef_set_literal( &old_ptn, ">]" );
+		ZnkSRef_set_literal( &new_ptn, ">\n</div>" );
+		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+	{
+		ZnkSRef_set_literal( &old_ptn, "<a " );
+		ZnkSRef_set_literal( &new_ptn, "<a class=\"pagination-link\" " );
+		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+	{
+		ZnkSRef_set_literal( &old_ptn, "<b>" );
+		ZnkSRef_set_literal( &new_ptn, "<span class=\"pagination-link is-current\">" );
+		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+	{
+		ZnkSRef_set_literal( &old_ptn, "</b>" );
+		ZnkSRef_set_literal( &new_ptn, "</span>" );
+		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+	{
+		ZnkSRef_set_literal( &old_ptn, "最初のページ" );
+		ZnkSRef_set_literal( &new_ptn, "<a class=\"pagination-previous\">最初のページ</a>" );
+		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+	{
+		ZnkSRef_set_literal( &old_ptn, "最後のページ" );
+		ZnkSRef_set_literal( &new_ptn, "<a class=\"pagination-next\">最後のページ</a>" );
+		ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+
+	ZnkStrPtn_invokeInQuote( str,
+			"<form action=", "</form>",
+			NULL, NULL,
+			filterPaginationBtn, "", true );
 	return 1;
 }
 
@@ -181,50 +332,61 @@ on_input( ZnkStr tagname, ZnkVarpAry varp_ary, void* arg, ZnkStr tagend )
 }
 
 static int
-replaceEstViewToGet( ZnkStr str, void* arg )
+on_link( ZnkStr tagname, ZnkVarpAry varp_ary, void* arg, ZnkStr tagend )
 {
-	ZnkSRef old_ptn = { 0 };
-	ZnkSRef new_ptn = { 0 };
-	ZnkSRef_set_literal( &old_ptn, "est_view=" );
-	ZnkSRef_set_literal( &new_ptn, "est_get=" );
-	ZnkStrEx_replace_BF( str, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
-	return 1;
-}
-static int
-landmarkEaster( ZnkStr str, void* arg )
-{
-	ZnkStr_add( str, " <font size=\"-1\" color=\"#808000\">via Easter on XhrDMZ</font>" );
-	return 1;
+	struct EstLinkInfo* link_info = Znk_force_ptr_cast( struct EstLinkInfo*, arg );
+
+	/* link hrefの値を取得 */
+	ZnkVarp href = ZnkVarpAry_find_byName_literal( varp_ary, "href", true );
+	if( href ){
+		ZnkStr str = EstHtmlAttr_str( href );
+		if( !link_info->css_link_done_ ){
+			const char* xhr_auth_host = EstConfig_XhrAuthHost();
+			ZnkVarp rel  = ZnkVarpAry_find_byName_literal( varp_ary, "rel",  true );
+			ZnkVarp type = ZnkVarpAry_find_byName_literal( varp_ary, "type", true );
+			char file_path[ 256 ] = "";
+			Znk_snprintf( file_path, sizeof(file_path), "http://%s/msty.css", xhr_auth_host );
+			if( rel && type 
+			  && ZnkS_eq( EstHtmlAttr_val(rel),  "stylesheet" )
+			  && ZnkS_eq( EstHtmlAttr_val(type), "text/css" )
+			  && !ZnkS_eq( EstHtmlAttr_val(href), file_path ) )
+			{
+				if( ZnkStrEx_strstr( str, "/bin/style4.css" ) ){
+					/* ふたばのcssは無効化する */
+					ZnkStr_set( tagname, "!-- link" );
+					ZnkStr_set( tagend, "-->\n" );
+				} else {
+					ZnkStr_set( tagend, " />\n" );
+				}
+				ZnkStr_addf( tagend, "<link href=\"http://%s/cgis/easter/publicbox/futaba.css\" rel=\"stylesheet\" type=\"text/css\" />\n",
+						xhr_auth_host );
+				link_info->css_link_done_ = true;
+			}
+		} else if( ZnkStrEx_strstr( str, "/bin/style4.css" ) ){
+			/* ふたばのcssは無効化する(二つ目以降のstyle4.cssがあった場合も消しておく) */
+			ZnkStr_set( tagname, "!-- link" );
+			ZnkStr_set( tagend, "-->\n" );
+		}
+		link_info->est_req_ = EstRequest_e_get; /* 直接取得 */
+		return EstLink_filterLink( str, link_info, EstLinkXhr_e_ImplicitDMZ );
+	}
+	return 0;
 }
 
 static int
 on_other( ZnkStr text, void* arg, const char* landmarking )
 {
 	struct EstLinkInfo* link_info = Znk_force_ptr_cast( struct EstLinkInfo*, arg );
-
-	ZnkStrPtn_invokeInQuote( text,
-			".webm\" target='_blank'>", ".webm\" target='_blank'><img src=",
-			NULL, NULL,
-			replaceEstViewToGet, link_info, true );
+	const char* xhr_auth_host = EstConfig_XhrAuthHost();
 
 	/* futaba : via Easter on XhrDMZ landmarking */
 	{
 		ZnkSRef old_ptn = { 0 };
-		ZnkStr  new_ptn = ZnkStr_newf( "＠ふたば <font size=\"-1\" color=\"#808000\">%s</font></span>", landmarking );
+		ZnkStr  new_ptn = ZnkStr_newf( "＠ふたば <font size=\"-1\" color=\"#808000\"><a href=http://%s/easter>%s</a></font></span>", xhr_auth_host, landmarking );
 		ZnkSRef_set_literal( &old_ptn, "＠ふたば</span>" );
 		ZnkStrEx_replace_BF( text, 0, old_ptn.cstr_, old_ptn.leng_, ZnkStr_cstr(new_ptn), ZnkStr_leng(new_ptn), Znk_NPOS, Znk_NPOS ); 
 		ZnkStr_delete( new_ptn );
 	}
-
-	/* futaba : via Easter on XhrDMZ landmarking(for i-mode) */
-	ZnkStrPtn_invokeInQuote( text,
-			"data-iconpos=\"left\">TOP</a> <h1>", "</h1>",
-			NULL, NULL,
-			landmarkEaster, link_info, false );
-	ZnkStrPtn_invokeInQuote( text,
-			"data-iconpos=\"left\">戻る</a> <h1>", "</h1>",
-			NULL, NULL,
-			landmarkEaster, link_info, false );
 
 	/* Rpscスクリプトの実行 */
 	{
@@ -232,11 +394,22 @@ on_other( ZnkStr text, void* arg, const char* landmarking )
 		EstRpsc_exec( ary, text, link_info );
 	}
 
-	/* futaba : 除去オブジェクトを覆う div が無駄な空間を開ける場合、そのstyleの高さを0にする */
+	/**
+	 * 手書き?
+	 * <span id="oebtnd"></span></td><td><div id="swfContents"><div id="oe3"></div></div>
+	 */
+
+	/* futaba : 除去オブジェクトを覆う div が無駄な空間を開ける場合、そのstyleの幅と高さを0にする */
 	ZnkStrPtn_invokeInQuote( text,
 			"<div ", "</div>",
 			NULL, NULL,
 			filterHeightZeroTrick, link_info, true );
+
+	/* futaba : スレ立て用画面の最下にあるpagination */
+	ZnkStrPtn_invokeInQuote( text,
+			"<table align=left border=1 class=\"psen\">", "</td></tr></table><br clear=all>",
+			NULL, NULL,
+			filterPagination, link_info, true );
 	return 0;
 }
 
@@ -245,7 +418,8 @@ on_plane_text( ZnkStr planetxt, void* arg )
 {
 	struct EstLinkInfo* link_info = Znk_force_ptr_cast( struct EstLinkInfo*, arg );
 	if( EstConfig_isAutoLink() && ZnkStrEx_strstr( link_info->unesc_src_, "mode=cat" ) == NULL ){
-		EstFilter_replaceToAutolink( planetxt );
+		const bool is_append_a_tag = true;
+		EstFilter_replaceToAutolink( planetxt, is_append_a_tag );
 	}
 	return 1;
 }
@@ -254,9 +428,21 @@ static int
 on_bbs_operation( ZnkStr txt, const char* result_filename, const char* src, ZnkStr console_msg )
 {
 	ZnkSRef landmark = { 0 };
+
+	/* for スレ立て画面、画像掲示板一般 */
 	ZnkSRef_set_literal( &landmark, "</div><!--スレッド終了-->" );
-	EstFilter_insertBBSOperation( txt,
-			result_filename, landmark.cstr_, src, "resto", console_msg );
+	if( EstFilter_insertBBSOperation( txt,
+			result_filename, landmark.cstr_, src, "resto", console_msg ) ){
+		return 0;
+	}
+
+	/* for トップページ */
+	ZnkSRef_set_literal( &landmark,  "<!-- top banner end-->" );
+	if( EstFilter_insertBBSOperation( txt,
+			result_filename, landmark.cstr_, src, "resto", console_msg ) ){
+		return 0;
+	}
+
 	return 0;
 }
 
@@ -270,6 +456,7 @@ EstFilter_futaba_getModule( void )
 		st_module_instance.on_script_ = on_script;
 		st_module_instance.on_form_   = on_form;
 		st_module_instance.on_input_  = on_input;
+		st_module_instance.on_link_   = on_link;
 		st_module_instance.on_other_         = on_other;
 		st_module_instance.on_plane_text_    = on_plane_text;
 		st_module_instance.on_bbs_operation_ = on_bbs_operation;

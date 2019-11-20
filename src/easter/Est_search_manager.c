@@ -74,29 +74,6 @@ findValidPath( const char* path )
 	return Znk_NPOS;
 }
 
-#if 0
-static bool
-grepFile( const char* file_path, ZnkStr keyword, const size_t* keyword_occ_tbl )
-{
-	ZnkFile fp = Znk_fopen( file_path, "rb" );
-	bool result = false;
-	if( fp ){
-		ZnkStr line = ZnkStr_new( "" );
-		size_t pos = Znk_NPOS;
-		while( ZnkStrFIO_fgets( line, 0, 4096, fp ) ){
-			pos = ZnkMem_lfind_data_BMS( (uint8_t*)ZnkStr_cstr(line), ZnkStr_leng(line),
-					(uint8_t*)ZnkStr_cstr(keyword), ZnkStr_leng(keyword), 1, keyword_occ_tbl );
-			if( pos != Znk_NPOS ){
-				result = true;
-				break;
-			}
-		}
-		Znk_fclose( fp );
-		ZnkStr_delete( line );
-	}
-	return result;
-}
-#endif
 
 typedef struct {
 	size_t      new_idx_;
@@ -135,42 +112,6 @@ static bool count_onEnterDir( ZnkDirRecursive recur, const char* file_path, void
 	}
 	return true;
 }
-#if 0
-static bool search_onEnterDir( ZnkDirRecursive recur, const char* top_dir, void* arg, size_t local_err_num )
-{
-	++st_dir_count;
-	{
-		SearchInfo* search_info = Znk_force_ptr_cast( SearchInfo*, arg );
-		ZnkFile fp = fopenStateDat( search_info->search_key_ );
-		if( fp ){
-			Znk_fprintf( fp, "Searching : file=%zu : directory=%zu/%zu", st_file_count, st_dir_count, st_dir_max );
-			Znk_fclose( fp );
-		}
-	}
-	return true;
-}
-
-static bool
-isFileExt( const ZnkStrAry file_ext, const char* query_ext )
-{
-	const size_t size = ZnkStrAry_size( file_ext );
-	if( size ){
-		const char* ext = NULL;
-		size_t idx;
-		for( idx=0; idx<size; ++idx ){
-			ext = ZnkStrAry_at_cstr( file_ext, idx );
-			if( ZnkS_eqCase( ext, query_ext ) ){
-				/* found */
-				return true;
-			}
-		}
-		/* not found */
-		return false;
-	}
-	/* この場合に限り、全ての拡張子が対象 */
-	return true;
-}
-#endif
 
 static bool
 isEqExt( const char* s1, size_t s1_leng, const char* s2, size_t s2_leng )
@@ -240,32 +181,6 @@ searchInMyf( SearchInfo* search_info, EstSQI sqi, ZnkMyf myf, const char* cur_di
 			}
 		
 			/* file_tagsによる篩 */
-#if 0
-			if( qtg_size ){
-				var = ZnkVarpAry_find_byName_literal( vars, "file_tags", false );
-				if( var ){
-					file_tags = ZnkVar_cstr( var );
-					if( ZnkS_empty( file_tags ) ){
-						continue; /* 不適合 */
-					} else {
-						bool found = false;
-						ZnkStrAry_clear( tags_list );
-						ZnkStrEx_addSplitC( tags_list,
-								file_tags, Znk_NPOS,
-								' ', false, 4 );
-						found = EstSQI_isMatchTags( sqi, tags_list );
-						if( !found ){
-							continue; /* 不適合 */
-						}
-					}
-				}
-			} else {
-				var = ZnkVarpAry_find_byName_literal( vars, "file_tags", false );
-				if( var ){
-					file_tags = ZnkVar_cstr( var );
-				}
-			}
-#else
 			if( qtg_size == 0 ){
 				size_t tags_list_num = 0;
 				/***
@@ -314,7 +229,6 @@ searchInMyf( SearchInfo* search_info, EstSQI sqi, ZnkMyf myf, const char* cur_di
 					continue; /* 不適合 */
 				}
 			}
-#endif
 		
 			if( ZnkDate_year( &sqi_date ) != 0 ){
 				var = ZnkVarpAry_find_byName_literal( vars, "access_time", false );
@@ -459,7 +373,6 @@ searchInMD5InfoList( SearchInfo* search_info, ZnkStr msg, ZnkStr fsys_path, cons
 
 	ZnkDirRecursive_destroy( recur );
 
-#if 1
 	{
 		ZnkFile fp = fopenStateDat( searched_key );
 		if( fp ){
@@ -467,7 +380,6 @@ searchInMD5InfoList( SearchInfo* search_info, ZnkStr msg, ZnkStr fsys_path, cons
 			Znk_fclose( fp );
 		}
 	}
-#endif
 	return true;
 }
 
@@ -677,23 +589,21 @@ makeEditUI( ZnkStr EstSM_edit_ui, ZnkVarpAry sqi_vars, const char* EstSM_topdir,
 	const char* EstSM_size     = "";
 	const char* EstSM_size_method = "big";
 
-	ZnkStr_addf( EstSM_edit_ui, "<a class=MstyElemLink href=\"javascript:EjsAssort_submitCommand( document.fm_main, 'search', 'search_run' )\">" );
-	ZnkStr_addf( EstSM_edit_ui, "下記で検索</a><br>\n" );
-
+	ZnkStr_addf( EstSM_edit_ui, "<div style=\"margin-bottom:8px\">\n" );
 	if( ZnkS_empty(EstSM_topdir) ){
 		pv = ZnkVarpAry_find_byName_literal( sqi_vars, "EstSM_topdir", false );
 		if( pv ){
 			EstSM_topdir = ZnkVar_cstr( pv );
 		}
 	}
-	ZnkStr_addf( EstSM_edit_ui, "<input class=MstyInputField type=text name=EstSM_topdir placeholder=\"検索場所\" value=\"%s\" size=50><br>",
+	ZnkStr_addf( EstSM_edit_ui, "<span class=MstyOnlyIE8>検索場所</span><input class=input type=text name=EstSM_topdir placeholder=\"検索場所\" value=\"%s\" size=50><br>",
 			EstSM_topdir );
 
 	pv = ZnkVarpAry_find_byName_literal( sqi_vars, "EstSM_file_ext", false );
 	if( pv ){
 		EstSM_file_ext = ZnkVar_cstr( pv );
 	}
-	ZnkStr_addf( EstSM_edit_ui, "<input class=MstyInputField type=text name=EstSM_file_ext placeholder=\"拡張子\" value=\"%s\" size=20><br>",
+	ZnkStr_addf( EstSM_edit_ui, "<span class=MstyOnlyIE8>拡張子</span><input class=input type=text name=EstSM_file_ext placeholder=\"拡張子\" value=\"%s\" size=20><br>",
 			EstSM_file_ext );
 
 	/* keyword */
@@ -701,21 +611,24 @@ makeEditUI( ZnkStr EstSM_edit_ui, ZnkVarpAry sqi_vars, const char* EstSM_topdir,
 	if( pv ){
 		EstSM_keyword = ZnkVar_cstr( pv );
 	}
-	ZnkStr_addf( EstSM_edit_ui, "<input class=MstyInputField type=text name=EstSM_keyword placeholder=\"コメント内文字列\" value=\"%s\" size=50><br>",
+	ZnkStr_addf( EstSM_edit_ui, "<span class=MstyOnlyIE8>コメント内文字列</span><input class=input type=text name=EstSM_keyword placeholder=\"コメント内文字列\" value=\"%s\" size=50><br>",
 			EstSM_keyword );
+	ZnkStr_addf( EstSM_edit_ui, "</div>\n" );
 
+
+	ZnkStr_addf( EstSM_edit_ui, "<div style=\"margin-bottom:8px;\">\n" );
 	pv = ZnkVarpAry_find_byName_literal( sqi_vars, "EstSM_time", false );
 	if( pv ){
 		EstSM_time = ZnkVar_cstr( pv );
 	}
-	ZnkStr_addf( EstSM_edit_ui, "<input class=MstyInputField type=text name=EstSM_time placeholder=\"時刻\"   value=\"%s\" size=20> &nbsp;",
+	ZnkStr_addf( EstSM_edit_ui, "<span class=MstyOnlyIE8>時刻</span><input style=\"max-width:200px;\" class=input type=text name=EstSM_time placeholder=\"時刻\"   value=\"%s\" size=20> &nbsp;",
 			EstSM_time );
 
 	pv = ZnkVarpAry_find_byName_literal( sqi_vars, "EstSM_time_method", false );
 	if( pv ){
 		EstSM_time_method = ZnkVar_cstr( pv );
 	}
-	ZnkStr_addf( EstSM_edit_ui, "<select name=\"EstSM_time_method\" >"
+	ZnkStr_addf( EstSM_edit_ui, "<span class=MstyOnlyIE8></span><select class=select name=\"EstSM_time_method\" >"
 			"<option value=\"old\" %s>指定した時刻より古い</option>"
 			"<option value=\"new\" %s>指定した時刻より新しい</option>"
 			"<option value=\"eq\"  %s>指定した時刻と等しい</option>"
@@ -723,19 +636,22 @@ makeEditUI( ZnkStr EstSM_edit_ui, ZnkVarpAry sqi_vars, const char* EstSM_topdir,
 			ZnkS_eq(EstSM_time_method,"old") ? "selected" : "",
 			ZnkS_eq(EstSM_time_method,"new") ? "selected" : "",
 			ZnkS_eq(EstSM_time_method,"eq")  ? "selected" : "" );
+	ZnkStr_addf( EstSM_edit_ui, "</div>\n" );
 
+
+	ZnkStr_addf( EstSM_edit_ui, "<div style=\"margin-bottom:8px\">\n" );
 	pv = ZnkVarpAry_find_byName_literal( sqi_vars, "EstSM_size", false );
 	if( pv ){
 		EstSM_size = ZnkVar_cstr( pv );
 	}
-	ZnkStr_addf( EstSM_edit_ui, "<input class=MstyInputField type=text name=EstSM_size placeholder=\"サイズ\" value=\"%s\" size=20> &nbsp;",
+	ZnkStr_addf( EstSM_edit_ui, "<span class=MstyOnlyIE8>サイズ</span><input style=\"max-width:200px;\" class=input type=text name=EstSM_size placeholder=\"サイズ\" value=\"%s\" size=20> &nbsp;",
 			EstSM_size );
 
 	pv = ZnkVarpAry_find_byName_literal( sqi_vars, "EstSM_size_method", false );
 	if( pv ){
 		EstSM_size_method = ZnkVar_cstr( pv );
 	}
-	ZnkStr_addf( EstSM_edit_ui, "<select name=\"EstSM_size_method\" >"
+	ZnkStr_addf( EstSM_edit_ui, "<select class=select name=\"EstSM_size_method\" >"
 			"<option value=\"big\"   %s>指定したサイズより大きい</option>"
 			"<option value=\"small\" %s>指定したサイズより小さい</option>"
 			"<option value=\"eq\"    %s>指定したサイズと等しい</option>"
@@ -743,6 +659,8 @@ makeEditUI( ZnkStr EstSM_edit_ui, ZnkVarpAry sqi_vars, const char* EstSM_topdir,
 			ZnkS_eq(EstSM_size_method,"big")   ? "selected" : "",
 			ZnkS_eq(EstSM_size_method,"small") ? "selected" : "",
 			ZnkS_eq(EstSM_size_method,"eq")    ? "selected" : "" );
+	ZnkStr_addf( EstSM_edit_ui, "</div>\n" );
+
 
 	{
 		ZnkStrAry enable_tag_list = ZnkStrAry_create( true );
@@ -751,7 +669,8 @@ makeEditUI( ZnkStr EstSM_edit_ui, ZnkVarpAry sqi_vars, const char* EstSM_topdir,
 		if( pv ){
 			EstSM_tags = ZnkVar_cstr( pv );
 		}
-		ZnkStr_addf( EstSM_edit_ui, "<input class=MstyInputField type=text name=EstSM_tags placeholder=\"タグ\" value=\"\" size=50 disable> &nbsp;" );
+		ZnkStr_addf( EstSM_edit_ui, "<div style=\"margin-bottom:8px\">\n" );
+		ZnkStr_addf( EstSM_edit_ui, "<span class=MstyOnlyIE8>タグ</span><input class=input type=text name=EstSM_tags placeholder=\"タグ\" value=\"\" size=50 disable> &nbsp;" );
 		getEnableTagList_fromTagsStr( enable_tag_list, EstSM_tags );
 
 		/* tags_method */
@@ -759,7 +678,7 @@ makeEditUI( ZnkStr EstSM_edit_ui, ZnkVarpAry sqi_vars, const char* EstSM_topdir,
 		if( pv ){
 			EstSM_tags_method = ZnkVar_cstr( pv );
 		}
-		ZnkStr_addf( EstSM_edit_ui, "<select name=\"EstSM_tags_method\" >"
+		ZnkStr_addf( EstSM_edit_ui, "<select class=select name=\"EstSM_tags_method\" >"
 				"<option value=\"and\" %s>AND検索</option>"
 				"<option value=\"or\" %s>OR検索</option>"
 				"</select><br>\n",
@@ -772,9 +691,14 @@ makeEditUI( ZnkStr EstSM_edit_ui, ZnkVarpAry sqi_vars, const char* EstSM_topdir,
 			EstSM_tags_num = ZnkVar_cstr( pv );
 		}
 		ZnkStr_addf( EstSM_edit_ui,
-				"<input class=MstyInputField type=text name=EstSM_tags_num placeholder=\"タグの個数\" value=\"%s\" size=10 disable><br>\n",
+				"<span class=MstyOnlyIE8>タグの個数</span><input style=\"max-width:200px;\" class=input type=text name=EstSM_tags_num placeholder=\"タグの個数\" value=\"%s\" size=10 disable><br>\n",
 				EstSM_tags_num );
 	
+		ZnkStr_addf( EstSM_edit_ui, "<a class=MstyElemLink href=\"javascript:EjsAssort_submitCommand( document.fm_main, 'search', 'search_run' )\">" );
+		ZnkStr_addf( EstSM_edit_ui, "検索</a><br>\n" );
+
+		ZnkStr_addf( EstSM_edit_ui, "</div>\n" );
+
 		{
 			ZnkStr arg = ZnkStr_newf( "searched_key=%s", searched_key );
 			EstAssortUI_makeCategorySelectBar( EstSM_edit_ui, current_category_id, NULL,
@@ -786,31 +710,9 @@ makeEditUI( ZnkStr EstSM_edit_ui, ZnkVarpAry sqi_vars, const char* EstSM_topdir,
 	}
 	
 	ZnkStr_addf( EstSM_edit_ui, "<a class=MstyElemLink href=\"javascript:EjsAssort_submitCommand( document.fm_main, 'search', 'search_run' )\">" );
-	ZnkStr_addf( EstSM_edit_ui, "上記で検索</a><br>\n" );
+	ZnkStr_addf( EstSM_edit_ui, "検索</a><br>\n" );
 }
 
-#if 0
-static size_t
-remove_byFileList( ZnkVarpAry cache_file_list, ZnkStrAry assorted_filelist )
-{
-	size_t count = 0;
-	size_t size = ZnkVarpAry_size( cache_file_list );
-	size_t idx;
-	ZnkVarp var;
-	ZnkStrAry sda;
-	const char* file_path = NULL;
-	for( idx=size; idx; --idx ){
-		var = ZnkVarpAry_at( cache_file_list, idx-1 );
-		sda = ZnkVar_str_ary( var );
-		file_path = ZnkStrAry_at_cstr(sda,0);
-		if( ZnkStrAry_find( assorted_filelist, 0, file_path, Znk_NPOS ) != Znk_NPOS ){
-			ZnkVarpAry_erase_byIdx( cache_file_list, idx-1 );
-			++count;
-		}
-	}
-	return count;
-}
-#endif
 
 typedef enum {
 	 Mode_e_SearchNew=0
@@ -936,11 +838,18 @@ makeAssortAndEditUI( ZnkStr assort_ui, ZnkStr tag_editor_ui, ZnkVarpAry post_var
 	if( tags ){
 		getEnableTagList_fromTagsStr( enable_tag_list, tags );
 	}
-	//EstAssortUI_make( assort_ui, "", enable_tag_list, comment );
-	//EstAssortUI_makeTagEditor( tag_editor_ui, ZnkStr_cstr(tag_editor_msg) );
 	EstAssortUI_makeTagsView( assort_ui, enable_tag_list, "category_all", "", comment, false );
 	ZnkStrAry_destroy( enable_tag_list );
 	ZnkStr_delete( tag_editor_msg );
+}
+
+static void
+addHint( ZnkStr ans, const char* id )
+{
+	ZnkStr_addf( ans, "<font size=-1>\n" );
+	ZnkStr_addf( ans, "<a class=MstyQandALink href=\"javascript:void(0);\" onclick=\"displayQandA( 'Hint', '%s' );\"><img src='/cgis/easter/publicbox/icons/question_16.png'></a>\n", id );
+	ZnkStr_addf( ans, "<div id=%s></div>\n", id );
+	ZnkStr_addf( ans, "</font>\n" );
 }
 
 void
@@ -1076,6 +985,7 @@ EstSearchManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, cons
 	switch( es_mode ){
 	case Mode_e_SearchNew:
 	{
+		addHint( EstSM_edit_ui, "searchCache" );
 		ZnkStr_addf( msg, "Mode_e_SearchNew.\n" );
 		makeEditUI( EstSM_edit_ui, post_vars, "", result_searched_key, current_category_id );
 		sqi = EstSQI_create( post_vars );
@@ -1127,12 +1037,25 @@ EstSearchManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, cons
 					finf_list_size,
 					show_file_num, begin_idx, authentic_key, "PageSwitcher" );
 
+#if 0
 			ZnkStr_add( EstSM_result, "<table><tr><td valign=top>\n" );
 
 			EstBoxUI_make_forSearchResult( EstSM_result, finf_list,
 					begin_idx, end_idx, authentic_key );
-
 			ZnkStr_add( EstSM_result, "</td><td valign=top><span id=preview></span></td></tr></table>\n" );
+#else
+			ZnkStr_add( EstSM_result, "<span id=upper_preview></span><br>\n" );
+			ZnkStr_add( EstSM_result, "<div class=\"tile is-parent\">\n" );
+			ZnkStr_add( EstSM_result, "  <div class=\"tile is-child\">\n" );
+			EstBoxUI_make_forSearchResult( EstSM_result, finf_list,
+					begin_idx, end_idx, authentic_key );
+			ZnkStr_add( EstSM_result, "  </div>\n" );
+			ZnkStr_add( EstSM_result, "  <div class=\"tile is-child\">\n" );
+			ZnkStr_add( EstSM_result, "    <div class=MstyRightPreview><span id=right_preview></span></div>\n" );
+			ZnkStr_add( EstSM_result, "  </div>\n" );
+			ZnkStr_add( EstSM_result, "</div>\n" );
+			ZnkStr_add( EstSM_result, "<br>\n" );
+#endif
 
 			ZnkStr_addf( EstSM_result, "%zu 件ヒットしました.<br>", finf_list_size );
 			{
@@ -1149,6 +1072,7 @@ EstSearchManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, cons
 		if( IS_OK( varp = ZnkVarpAry_find_byName_literal( post_vars, "category_key", false ) )){
 			ZnkStr_addf( msg, "category_key=[%s]\n", ZnkVar_cstr(varp) );
 		}
+		addHint( EstSM_edit_ui, "searchCache" );
 		makeEditUI( EstSM_edit_ui, sqi_vars, sm_topbox, result_searched_key, current_category_id );
 
 		ZnkVarpAry_destroy( sqi_vars );
@@ -1159,16 +1083,9 @@ EstSearchManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, cons
 	{
 		ZnkVarpAry  finf_list = EstFInfList_create();
 		ZnkVarpAry  sqi_vars  = ZnkVarpAry_create( true );
-		//const char* sm_topbox = "";
 		const char* comment = "";
 		template_html_file = "templates/search_manager.html";
 		ZnkStr_addf( msg, "Mode_e_ShowResult.\n" );
-
-#if 0
-		if( IS_OK( varp = ZnkVarpAry_find_byName_literal( post_vars, "cache_path", false ) )){
-			sm_topbox = ZnkVar_cstr(varp);
-		}
-#endif
 
 		if( EstFInfList_load( finf_list, sqi_vars, show_filename ) ){
 			ZnkStr query_string_base = ZnkStr_new( "" );
@@ -1201,14 +1118,15 @@ EstSearchManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, cons
 			{
 				ZnkStr topic_name = ZnkStr_new( "無名" );
 				getTopicName( topics_dir, result_searched_key, topic_name, msg );
+				addHint( EstSM_edit_ui, "searchResult" );
 				ZnkStr_addf( EstSM_edit_ui, "<br>\n" );
-				ZnkStr_addf( EstSM_edit_ui, "<input class=MstyInputField type=text name=topic_name placeholder=\"トピック名\" value=\"%s\" size=50>",
+				ZnkStr_addf( EstSM_edit_ui, "<span class=MstyOnlyIE8>トピックス名</span><input class=input type=text name=topic_name placeholder=\"トピックス名\" value=\"%s\" size=50>",
 						ZnkStr_cstr(topic_name) );
 				ZnkStr_addf( EstSM_edit_ui, " <a class=MstyElemLink href=\"javascript:EjsAssort_submitCommand( document.fm_main, 'search', 'save' )\">" );
-				ZnkStr_addf( EstSM_edit_ui, "この名前でトピックを保存</a> \n" );
+				ZnkStr_addf( EstSM_edit_ui, "このトピックスを保存</a> \n" );
 				ZnkStr_delete( topic_name );
 
-				ZnkStr_addf( EstSM_edit_ui, "<a class=MstyElemLink href=\"/easter?est_manager=search&amp;command=edit&amp;searched_key=%s&amp;Moai_AuthenticKey=%s\" >検索して内容を更新</a> &nbsp;\n",
+				ZnkStr_addf( EstSM_edit_ui, "<a class=MstyElemLink href=\"/easter?est_manager=search&amp;command=edit&amp;searched_key=%s&amp;Moai_AuthenticKey=%s\" >再検索</a> &nbsp;\n",
 						result_searched_key, authentic_key );
 			}
 
@@ -1217,12 +1135,26 @@ EstSearchManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, cons
 					finf_list_size,
 					show_file_num, begin_idx, authentic_key, "PageSwitcher" );
 
+#if 0
 			ZnkStr_add( EstSM_result, "<table><tr><td valign=top>\n" );
 
 			EstBoxUI_make_forSearchResult( EstSM_result, finf_list,
 					begin_idx, end_idx, authentic_key );
 
 			ZnkStr_add( EstSM_result, "</td><td valign=top><span id=preview></span></td></tr></table>\n" );
+#else
+			ZnkStr_add( EstSM_result, "<span id=upper_preview></span><br>\n" );
+			ZnkStr_add( EstSM_result, "<div class=\"tile is-parent\">\n" );
+			ZnkStr_add( EstSM_result, "  <div class=\"tile is-child\">\n" );
+			EstBoxUI_make_forSearchResult( EstSM_result, finf_list,
+					begin_idx, end_idx, authentic_key );
+			ZnkStr_add( EstSM_result, "  </div>\n" );
+			ZnkStr_add( EstSM_result, "  <div class=\"tile is-child\">\n" );
+			ZnkStr_add( EstSM_result, "    <div class=MstyRightPreview><span id=right_preview></span></div>\n" );
+			ZnkStr_add( EstSM_result, "  </div>\n" );
+			ZnkStr_add( EstSM_result, "</div>\n" );
+			ZnkStr_add( EstSM_result, "<br>\n" );
+#endif
 
 			ZnkStr_addf( EstSM_result, "%zu 件ヒットしました.<br>", finf_list_size );
 			{
@@ -1252,9 +1184,9 @@ EstSearchManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, cons
 			ZnkStr result_view = ZnkStr_new( "" );
 			topic_name = ZnkVar_cstr(varp);
 			if( addNewTopic( topics_dir, result_searched_key, topic_name, msg ) ){
-				ZnkStr_addf( result_view, "トピック[%s]を保存しました.", topic_name );
+				ZnkStr_addf( result_view, "トピックス[%s]を保存しました.", topic_name );
 			} else {
-				ZnkStr_addf( result_view, "トピック[%s]の保存に失敗しました.", topic_name );
+				ZnkStr_addf( result_view, "トピックス[%s]の保存に失敗しました.", topic_name );
 			}
 			ZnkBird_regist( bird, "result_view",  ZnkStr_cstr(result_view) );
 			ZnkStr_delete( result_view );
@@ -1265,6 +1197,7 @@ EstSearchManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, cons
 	}
 	default:
 		ZnkStr_addf( msg, "Mode : default.\n" );
+		addHint( EstSM_edit_ui, "searchResult" );
 		makeEditUI( EstSM_edit_ui, post_vars, "", result_searched_key, current_category_id );
 		ZnkStr_addf( EstSM_result, "command=[%s]\n", ZnkVar_cstr(cmd_var) );
 		break;

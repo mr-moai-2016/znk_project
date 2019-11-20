@@ -3,6 +3,7 @@ libRano
 libressl/crypto
 libressl/ssl
 libressl/tls
+libMoai
 moai
 easter
 custom_boy

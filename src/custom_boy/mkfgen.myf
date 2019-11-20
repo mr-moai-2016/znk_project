@@ -59,6 +59,7 @@ exec custom_boy main.c
 
 @@L install_data_list
 custom_boy.myf
+rano_app.myf
 templates/*.html
 publicbox/*
 RE/*.png

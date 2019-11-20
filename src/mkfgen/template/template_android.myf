@@ -25,9 +25,9 @@ $[obj_dir]$:
 
 @@L exefile_rule
 $[exe_file]$: $[objs]$
-	@echo $(LINKER) -Wl,--gc-sections -Wl,-z,nocopyreloc $(RPATH_LINK) \
+	@echo $(LINKER) -pie -Wl,--gc-sections -Wl,-z,nocopyreloc $(RPATH_LINK) \
 	-lgcc {[objs]} $(SUB_LIBS) -Wl,-rpath,. $[dep_libs]$ $(LINKER_OPT) -o $[exe_file]$
-	@     $(LINKER) -Wl,--gc-sections -Wl,-z,nocopyreloc $(RPATH_LINK) \
+	@     $(LINKER) -pie -Wl,--gc-sections -Wl,-z,nocopyreloc $(RPATH_LINK) \
 	-lgcc $[objs]$ $(SUB_LIBS) -Wl,-rpath,. $[dep_libs]$ $(LINKER_OPT) -o $[exe_file]$
 @@.
 

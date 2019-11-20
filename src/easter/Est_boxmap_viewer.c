@@ -42,7 +42,6 @@ makeCacheView( RanoCGIEVar* evar,
 	ZnkStr fsys_path = ZnkStr_new( "" );
 	EstBoxDirType dir_type = EstBoxDir_e_Unknown;
 	size_t box_path_offset = 0;
-	//bool   is_dirlist_first_style = false;
 	bool   is_dirlist_first_style = true;
 
 	/***
@@ -76,7 +75,6 @@ makeCacheView( RanoCGIEVar* evar,
 			EstBase_unescape_forMbcFSysPath( elem_name_mbc );
 			EstBase_escape_forURL( elem_name_mbc_esc, 1 );
 
-			//ZnkStr_addf( caches, "<b>カレントディレクトリ : <span class=MstyAutoLinkOther>%s</span></b>\n", ZnkStr_cstr(elem_name_mbc) );
 			ZnkStr_addf( caches, "<input type=hidden name=est_cache_pwd   value=\"%s\">\n",  ZnkStr_cstr(elem_name_mbc) );
 			ZnkStr_addf( caches, "<input type=hidden name=est_cache_begin value=\"%zu\">\n", begin_idx );
 			ZnkStr_addf( caches, "<input type=hidden name=est_cache_end   value=\"%zu\">\n", end_idx );
@@ -97,8 +95,6 @@ makeCacheView( RanoCGIEVar* evar,
 						path, show_file_num, authentic_key );
 			}
 
-			//ZnkStr_addf( caches, " <span id=now_selected_path></span>\n" );
-			//ZnkStr_addf( caches, "<hr>" );
 			ZnkStr_addf( caches, "<br>" );
 
 			while( true ){
@@ -143,23 +139,10 @@ makeCacheView( RanoCGIEVar* evar,
 				}
 			}
 
-#if 0
-			ZnkStr_addf( caches, "<a class=MstyElemLink onclick=\"EjsAssort_checkExist( '%s', %zu, %zu, '%s', previewing_img_url )\">CheckExist</a> &nbsp;",
-					ZnkStr_cstr(elem_name_mbc_esc), begin_idx, end_idx, authentic_key );
-#endif
-
 			ZnkStr_delete( elem_name_mbc );
 			ZnkStr_delete( name_esc );
 		}
 		if( is_dirlist_first_style ){
-#if 0
-			/* dir_list */
-			EstBoxUI_make_forFSysView( caches, cache_dir_list,
-					0, Znk_NPOS, authentic_key, false, false );
-			if( ZnkVarpAry_size( cache_dir_list ) && ZnkVarpAry_size( cache_file_list ) ){
-				ZnkStr_addf( caches, "<hr>" );
-			}
-#endif
 
 			/* file_list */
 			if( ZnkVarpAry_size( cache_file_list ) ){
@@ -233,11 +216,9 @@ makeCacheView( RanoCGIEVar* evar,
 		ZnkStr_addf( caches, "none cache in current directory=[%s] (fsys_path=[%s]) dir_type=[%d]\n", elem_name, ZnkStr_cstr(fsys_path), dir_type );
 	}
 
-	//ZnkStr_add( caches, "<hr>\n" );
 	ZnkStr_add( caches, "<br> <br>\n" );
 	ZnkStr_addf( caches, "<a class=MstyElemLink onclick=\"EjsAssort_checkAll( 'cache_file', %zu, %zu, true )\">全部にCheckを入れる</a> &nbsp;", begin_idx, end_idx );
 	ZnkStr_addf( caches, "<a class=MstyElemLink onclick=\"EjsAssort_checkAll( 'cache_file', %zu, %zu, false )\">全部のCheckを外す</a>", begin_idx, end_idx );
-	//ZnkStr_add( caches, "<br>" );
 	ZnkStr_add( caches, "<br>\n" );
 
 	ZnkStr_delete( uxs_elem_name );
@@ -282,7 +263,7 @@ viewCache( ZnkBird bird, RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, co
 		EstBase_unescape_forMbcFSysPath( elem_name_mbc );
 		ZnkHtpURL_sanitizeReqUrpDir( elem_name_mbc, false );
 
-		ZnkStr_addf( msg, "EstCacheManager : view : elem_name=[%s]\n", ZnkStr_cstr(elem_name_mbc) );
+		ZnkStr_addf( msg, "EstBoxMapViewer : view : elem_name=[%s]\n", ZnkStr_cstr(elem_name_mbc) );
 		if( IS_OK( varp = ZnkVarpAry_find_byName_literal( post_vars, "est_cache_begin", false ) )){
 			ZnkS_getSzU( &begin_idx, ZnkVar_cstr(varp) );
 			ZnkStr_addf( msg, "est_cache_begin=[%zu]\n", begin_idx );
@@ -337,7 +318,7 @@ removeCaches( ZnkBird bird,
 	 * TODO:
 	 * 以下を削除します.
 	 * 本当によろしいですか？
-	 * 画面を出し、「削除」ボタンを押すとカレントのEstCacheManager画面に戻る.
+	 * 画面を出し、「削除」ボタンを押すとカレントのEstBoxMapViewer画面に戻る.
 	 */
 	ZnkVarp confirm;
 	ZnkVarp varp;
@@ -459,7 +440,7 @@ cleanCacheBox( ZnkBird bird,
 	 * TODO:
 	 * 以下を削除します.
 	 * 本当によろしいですか？
-	 * 画面を出し、「削除」ボタンを押すとカレントのEstCacheManager画面に戻る.
+	 * 画面を出し、「削除」ボタンを押すとカレントのEstBoxMapViewer画面に戻る.
 	 */
 	ZnkVarp confirm;
 	ZnkVarp varp;
@@ -580,7 +561,7 @@ getMappingStatus( ZnkStr ans )
 }
 
 void
-EstCacheManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const char* authentic_key )
+EstBoxMapViewer_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const char* authentic_key )
 {
 	ZnkBird bird = ZnkBird_create( "#[", "]#" );
 	const char* template_html_file = "templates/boxmap_viewer.html";

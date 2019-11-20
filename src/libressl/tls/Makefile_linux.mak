@@ -69,21 +69,21 @@ DLIB_FILE0=$O/$(DLIB_NAME0)
 ILIB_FILE0=$O/libtls-17.so
 SLIB_FILE0=$O/libtls.a
 OBJS0=\
-	$O/tls_conninfo.o \
-	$O/tls_verify.o \
-	$O/tls_bio_cb.o \
-	$O/tls_config.o \
-	$O/tls_keypair.o \
-	$O/tls_server.o \
-	$O/tls_peer.o \
-	$O/compat/pwrite.o \
+	$O/compat/ftruncate.o \
 	$O/compat/getuid.o \
 	$O/compat/pread.o \
-	$O/compat/ftruncate.o \
-	$O/tls_client.o \
-	$O/tls_ocsp.o \
+	$O/compat/pwrite.o \
 	$O/tls.o \
+	$O/tls_bio_cb.o \
+	$O/tls_client.o \
+	$O/tls_config.o \
+	$O/tls_conninfo.o \
+	$O/tls_keypair.o \
+	$O/tls_ocsp.o \
+	$O/tls_peer.o \
+	$O/tls_server.o \
 	$O/tls_util.o \
+	$O/tls_verify.o \
 	$O/dll_main.o \
 
 SUB_LIBS=\
@@ -138,20 +138,25 @@ $(DLIB_FILE0): $(OBJS0) $(SLIB_FILE0)
 
 ##
 # Pattern rule.
+#
 # We use not suffix rule but pattern rule for dealing flexibly with files in sub-directory.
 # In this case, there is very confusing specification, that is :
 # '\' to the left hand of ':' works as escape sequence, 
 # '\' to the right hand of ':' does not work as escape sequence. 
 # Hence, we have to duplicate '\' to the left hand of ':',
-# the other way, '\' to the right hand of ':' we have to put only single '\',
-# for example $O\\%.o: $S\%.c .
+# the other way, '\' to the right hand of ':' we have to put only single '\'.
+# Note that we have to duplicate '\' only before special charactor(% etc) in the left of ':'.
 #
-$O/compat/%.o: $S/compat/%.c
-	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c -fPIC $<
-
-$O/compat/%.o: $S/compat/%.cpp
-	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c -fPIC $<
-
+# For example 1 :
+#   $O\\mydir\\%.o: $S\%.c        .... NG
+#   $O\mydir\\%.o:  $S\%.c        .... OK
+# For example 2 :
+#   $O\\mydir\%.o:  $S\mydir\%.c  .... NG
+#   $O\mydir\\%.o:  $S\mydir\%.c  .... OK
+# In the case of example 2, we can write more simply :
+#   $O\\%.o: $S\%.c               .... OK
+#   (Because '%' is wildcard and it indicates patical path 'mydir\filename_base' recursively )
+#
 $O/%.o: $S/%.c
 	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c -fPIC $<
 
@@ -192,14 +197,14 @@ clean:
 	rm -rf $O/ 
 
 # Src and Headers Dependency
-tls_conninfo.o: tls_internal.h
-tls_verify.o: tls_internal.h
-tls_bio_cb.o: tls_internal.h
-tls_config.o: tls_internal.h
-tls_keypair.o: tls_internal.h
-tls_server.o: tls_internal.h
-tls_peer.o: tls_internal.h
-tls_client.o: tls_internal.h
-tls_ocsp.o: tls_internal.h
 tls.o: tls_internal.h
+tls_bio_cb.o: tls_internal.h
+tls_client.o: tls_internal.h
+tls_config.o: tls_internal.h
+tls_conninfo.o: tls_internal.h
+tls_keypair.o: tls_internal.h
+tls_ocsp.o: tls_internal.h
+tls_peer.o: tls_internal.h
+tls_server.o: tls_internal.h
 tls_util.o: tls_internal.h
+tls_verify.o: tls_internal.h

@@ -44,6 +44,7 @@ void
 EstAssortUI_makeTagsView( ZnkStr assort_ui,
 		ZnkStrAry enable_tag_list, const char* current_category_id, const char* tag_editor_msg, const char* comment, bool in_tag_editor )
 {
+	const bool use_flexbox = EstConfig_getUseFlexBox();
 	ZnkMyf tags_myf = EstConfig_tags_myf();
 	ZnkVarpAry category_all = ZnkMyf_find_vars( tags_myf, "category_all" );
 	ZnkVarpAry tag_list;
@@ -82,11 +83,19 @@ EstAssortUI_makeTagsView( ZnkStr assort_ui,
 
 			ZnkStr_addf( assort_ui, "<b>%s</b>", ZnkVar_cstr( group_var ) );
 
-			ZnkStr_add( assort_ui, "<table border=0>\n" );
-			ZnkStr_add( assort_ui, "<tr>\n" );
+			if( use_flexbox ){
+				ZnkStr_add( assort_ui, "<div class=\"tile is-parent\">\n" );
+			} else {
+				ZnkStr_add( assort_ui, "<table class=table border=0>\n" );
+				ZnkStr_add( assort_ui, "<tr>\n" );
+			}
 			tag_size = ZnkVarpAry_size( tag_list );
 			for( tag_idx=0; tag_idx<tag_size; ++tag_idx ){
-				ZnkStr_addf( assort_ui, "<td class=MstyNoneWordBreak width=\"%zu\" valign=top>", width );
+				if( use_flexbox ){
+					ZnkStr_add( assort_ui, "  <div class=\"tile is-child\">\n" );
+				} else {
+					ZnkStr_addf( assort_ui, "<td class=MstyNoneWordBreak width=\"%zu\" valign=top>", width );
+				}
 				var = ZnkVarpAry_at( tag_list, tag_idx );
 				id  = ZnkVar_name_cstr( var );
 				val = ZnkVar_cstr( var );
@@ -99,17 +108,30 @@ EstAssortUI_makeTagsView( ZnkStr assort_ui,
 						ZnkBfr_set_aryval_8( unknown_list, enable_idx, 1 );
 					}
 				}
-				ZnkStr_addf( assort_ui, "<input type=checkbox id=%s name=%s size=\"10\" value=\"%s\" %s>%s<br>", id, id, val,
+				ZnkStr_addf( assort_ui, "<input class=checkbox type=checkbox id=%s name=%s size=\"10\" value=\"%s\" %s>%s<br>", id, id, val,
 						on ? "checked" : "",
 						val );
 
-				ZnkStr_add( assort_ui, "</td>\n" );
+				if( use_flexbox ){
+					ZnkStr_add( assort_ui, "  </div>\n" );
+				} else {
+					ZnkStr_add( assort_ui, "</td>\n" );
+				}
 				if( (tag_idx+1) % line_tag_num == 0 ){
-					ZnkStr_add( assort_ui, "</tr>\n<tr>\n" );
+					if( use_flexbox ){
+						ZnkStr_add( assort_ui, "</div>\n" );
+						ZnkStr_add( assort_ui, "<div class=\"tile is-parent\">\n" );
+					} else {
+						ZnkStr_add( assort_ui, "</tr>\n<tr>\n" );
+					}
 				}
 			}
-			ZnkStr_add( assort_ui, "</tr>\n" );
-			ZnkStr_add( assort_ui, "</table>\n" );
+			if( use_flexbox ){
+				ZnkStr_add( assort_ui, "</div>\n" );
+			} else {
+				ZnkStr_add( assort_ui, "</tr>\n" );
+				ZnkStr_add( assort_ui, "</table>\n" );
+			}
 			ZnkStr_add( assort_ui, "</div><br>\n" );
 		}
 	}
@@ -131,29 +153,51 @@ EstAssortUI_makeTagsView( ZnkStr assort_ui,
 		if( unknown_exist ){
 			ZnkStr_addf( assort_ui, "<b>未知のタグ</b><br>" );
 			ZnkStr_addf( assort_ui, "<font size=-1 color=#555555>以下のタグがこの画像に付加されていますが、未知のタグです.</font>" );
-			ZnkStr_add( assort_ui, "<table border=0>\n" );
-			ZnkStr_add( assort_ui, "<tr>\n" );
+
+			if( use_flexbox ){
+				ZnkStr_add( assort_ui, "<div class=\"tile is-parent\">\n" );
+			} else {
+				ZnkStr_add( assort_ui, "<table class=table border=0>\n" );
+				ZnkStr_add( assort_ui, "<tr>\n" );
+			}
 
 			tag_idx = 0;
 			for( unknown_idx=0; unknown_idx<unknown_size; ++unknown_idx ){
 				if( unknown_data[ unknown_idx ] == 0 ){
 					char buf[ 256 ] = "";
 					char new_id[ 256 ] = "";
-					ZnkStr_addf( assort_ui, "<td class=MstyNoneWordBreak width=\"%zu\" valign=top>", width );
+					if( use_flexbox ){
+						ZnkStr_addf( assort_ui, "  <div class=\"tile is-child\">\n" );
+					} else {
+						ZnkStr_addf( assort_ui, "<td class=MstyNoneWordBreak width=\"%zu\" valign=top>", width );
+					}
 					val = ZnkStrAry_at_cstr( enable_tag_list, unknown_idx );
 					Znk_snprintf( new_id, sizeof(new_id), "tagid_%s", EstUNID_issue( buf, sizeof(buf) ) );
-					ZnkStr_addf( assort_ui, "<input type=checkbox id=%s name=%s size=\"10\" value=\"%s\" checked>%s<br>",
+					ZnkStr_addf( assort_ui, "<input class=checkbox type=checkbox id=%s name=%s size=\"10\" value=\"%s\" checked>%s<br>",
 							new_id, new_id, val, val );
 
-					ZnkStr_add( assort_ui, "</td>\n" );
+					if( use_flexbox ){
+						ZnkStr_add( assort_ui, "  </div>\n" );
+					} else {
+						ZnkStr_add( assort_ui, "</td>\n" );
+					}
 					if( (tag_idx+1) % 4 == 0 ){
-						ZnkStr_add( assort_ui, "</tr>\n<tr>\n" );
+						if( use_flexbox ){
+							ZnkStr_add( assort_ui, "</div>\n" );
+							ZnkStr_add( assort_ui, "<div class=\"tile is-parent\">\n" );
+						} else {
+							ZnkStr_add( assort_ui, "</tr>\n<tr>\n" );
+						}
 					}
 					++tag_idx;
 				}
 			}
-			ZnkStr_add( assort_ui, "</tr>\n" );
-			ZnkStr_add( assort_ui, "</table>\n" );
+			if( use_flexbox ){
+				ZnkStr_add( assort_ui, "</div>\n" );
+			} else {
+				ZnkStr_add( assort_ui, "</tr>\n" );
+				ZnkStr_add( assort_ui, "</table>\n" );
+			}
 		}
 	}
 
@@ -179,8 +223,7 @@ EstAssortUI_makeTagsView( ZnkStr assort_ui,
 
 	if( comment ){
 		ZnkStr_addf( assort_ui, "<br>この分類に関するコメント<br>" );
-		//ZnkStr_addf( assort_ui, "<textarea class=MstyInputField name=ast_comment cols=48 rows=4>%s</textarea>\n", comment );
-		ZnkStr_addf( assort_ui, "<textarea class=MstyInputField name=ast_comment cols=35 rows=4>%s</textarea>\n", comment );
+		ZnkStr_addf( assort_ui, "<textarea class=textarea name=ast_comment cols=35 rows=4>%s</textarea>\n", comment );
 	}
 	ZnkStr_add( assort_ui, "<br>\n" );
 
@@ -216,7 +259,7 @@ EstAssortUI_makeGroupsView( ZnkStr assort_ui,
 		} else {
 			on = false;
 		}
-		ZnkStr_addf( assort_ui, "<input type=checkbox id=%s name=%s value=\"%s\" %s>%s<br>\n",
+		ZnkStr_addf( assort_ui, "<input class=checkbox type=checkbox id=%s name=%s value=\"%s\" %s>%s<br>\n",
 				group_key, group_key, group_val,
 				on ? "checked" : "",
 				group_val );
@@ -229,7 +272,7 @@ EstAssortUI_makeTagEditor( ZnkStr editor_ui, const char* editor_msg, const char*
 	ZnkStr_addf( editor_ui, "<fieldset class=MstyStdFieldSet><legend>タグの新規登録</legend>\n" );
 
 	ZnkStr_addf( editor_ui,
-			"<input class=MstyInputField type=text name=EstCM_new_tag placeholder=\"タグ文字列の指定\" value=\"\" size=20> \n" );
+			"<input class=input type=text name=EstCM_new_tag placeholder=\"タグ文字列の指定\" value=\"\" size=20> \n" );
 
 	{
 		ZnkMyf tags_myf = EstConfig_tags_myf();

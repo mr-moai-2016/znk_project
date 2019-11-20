@@ -127,6 +127,7 @@ on_link( ZnkStr tagname, ZnkVarpAry varp_ary, void* arg, ZnkStr tagend )
 	ZnkVarp href = ZnkVarpAry_find_byName_literal( varp_ary, "href", true );
 	if( href ){
 		ZnkStr str = EstHtmlAttr_str( href );
+#if 0
 		if( !link_info->css_link_done_ ){
 			const char* xhr_auth_host = EstConfig_XhrAuthHost();
 			ZnkVarp rel  = ZnkVarpAry_find_byName_literal( varp_ary, "rel",  true );
@@ -138,10 +139,14 @@ on_link( ZnkStr tagname, ZnkVarpAry varp_ary, void* arg, ZnkStr tagend )
 			  && ZnkS_eq( EstHtmlAttr_val(type), "text/css" )
 			  && !ZnkS_eq( EstHtmlAttr_val(href), file_path ) )
 			{
-				ZnkStr_setf( tagend, " /> <link href=\"%s\" rel=\"stylesheet\" type=\"text/css\" />", file_path );
+				ZnkStr_set( tagend, " /> " );
+				ZnkStr_addf( tagend, "<link href=\"%s\" rel=\"stylesheet\" type=\"text/css\" />", file_path );
+				ZnkStr_addf( tagend, "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">" );
+				ZnkStr_addf( tagend, "<link href=\"http://%s/bulma.css\" rel=\"stylesheet\" type=\"text/css\" />", xhr_auth_host );
 				link_info->css_link_done_ = true;
 			}
 		}
+#endif
 		link_info->est_req_ = EstRequest_e_get; /* ’¼Úæ“¾ */
 		return EstLink_filterLink( str, link_info, EstLinkXhr_e_ImplicitDMZ );
 	}

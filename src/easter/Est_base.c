@@ -144,72 +144,6 @@ EstBase_download( const char* hostname, const char* unesc_req_urp, const char* t
 			parent_proxy,
 			result_filename, msg, mod, status_code, is_https,
 			tmpdir, explicit_referer, easter_default_ua );
-#if 0
-	bool        result   = false;
-	const char* tmpdir   = EstConfig_getTmpDirPID( true );
-	const char* cachebox = "./cachebox/";
-	struct ZnkHtpHdrs_tag htp_hdrs = { 0 };
-	bool   is_without_404 = true;
-	const char* explicit_referer  = EstConfig_getExplicitReferer();
-	const char* easter_default_ua = EstConfig_getEasterDefaultUA();
-
-	ZnkHtpHdrs_compose( &htp_hdrs );
-	initHtpHdr( &htp_hdrs, hostname, ua, cookie, is_https, explicit_referer );
-
-	/***
-	 * Header and Cookie filtering
-	 * PostVar filteringにおけるon_post関数の呼び出しで、headerやcookie_varsの値を
-	 * 参照/加工するような処理にも対応するため、この filteringをここで呼び出す.
-	 */
-	if( mod ){
-		bool is_all_replace = true;
-		RanoModule_filtHtpHeader(  mod, htp_hdrs.vars_ );
-		RanoModule_filtCookieVars( mod, htp_hdrs.vars_, is_all_replace, NULL );
-	}
-
-	if( mod ){
-		ZnkMyf ftr_send = RanoModule_ftrSend( mod );
-		const ZnkVarpAry ftr_vars = ZnkMyf_find_vars( ftr_send, "header_vars" );
-		if( ftr_vars ){
-			const ZnkVarp ua_var = ZnkVarpAry_find_byName( ftr_vars, "User-Agent", Znk_strlen_literal("User-Agent"), false );
-
-			/***
-			 * header_varsにUser-Agentの項目がないか、値がUNTOUCHである場合.
-			 * easter_default_uaを使う.
-			 */
-			const char* ua = ( ua_var == NULL ) ? easter_default_ua :
-				ZnkS_eq( ZnkVar_cstr(ua_var), "UNTOUCH" ) ? easter_default_ua : ZnkVar_cstr(ua_var);
-
-			if( RanoHtpModifier_modifySendHdrs( htp_hdrs.vars_, ua, msg ) ){
-				if( msg ){
-					ZnkStr_add( msg, "  RanoHtpModifier_modifySendHdrs : true\n" );
-				}
-			} else {
-				if( msg ){
-					ZnkStr_add( msg, "  RanoHtpModifier_modifySendHdrs : false\n" );
-				}
-			}
-		}
-	}
-
-	result = RanoHtpBoy_cipher_get_with404( hostname, unesc_req_urp, target,
-			&htp_hdrs,
-			parent_proxy,
-			tmpdir, cachebox, result_filename,
-			is_without_404, status_code, is_https,
-			NULL, msg );
-
-	if( !result && msg ){
-		ZnkStr_addf( msg,
-				"  RanoHtpBoy_cipher_get_with404 : result=[%d] hostname=[%s] req_urp=[%s]<br>"
-				"                    : target=[%s] parent_proxy=[%s] tmpdir=[%s]<br>"
-				"                    : result_filename=[%s].<br>",
-				result, hostname, unesc_req_urp, target, parent_proxy, tmpdir, ZnkStr_cstr(result_filename) );
-	}
-
-	ZnkHtpHdrs_dispose( &htp_hdrs );
-	return result;
-#endif
 }
 
 const char*
@@ -551,6 +485,16 @@ EstBase_escapeToAmpForm( ZnkStr str )
 	{
 		static ZnkOccTable_D( st_occ_tbl );
 		if( !ZnkOccTable_isInitialized( st_occ_tbl ) ){
+			ZnkMem_getLOccTable_forBMS( st_occ_tbl, (uint8_t*)"\n", 1 );
+		}
+		ZnkStrEx_replace_BMS( str, 0,
+				"\n", 1, st_occ_tbl,
+				"&lf;", 4,
+				Znk_NPOS, Znk_NPOS );
+	}
+	{
+		static ZnkOccTable_D( st_occ_tbl );
+		if( !ZnkOccTable_isInitialized( st_occ_tbl ) ){
 			ZnkMem_getLOccTable_forBMS( st_occ_tbl, (uint8_t*)"']", 2 );
 		}
 		ZnkStrEx_replace_BMS( str, 0,
@@ -571,6 +515,16 @@ EstBase_unescapeToAmpForm( ZnkStr str )
 		ZnkStrEx_replace_BMS( str, 0,
 				"&br;", 4, st_occ_tbl,
 				"\r\n", 2,
+				Znk_NPOS, Znk_NPOS );
+	}
+	{
+		static ZnkOccTable_D( st_occ_tbl );
+		if( !ZnkOccTable_isInitialized( st_occ_tbl ) ){
+			ZnkMem_getLOccTable_forBMS( st_occ_tbl, (uint8_t*)"&lf;", 4 );
+		}
+		ZnkStrEx_replace_BMS( str, 0,
+				"&lf;", 4, st_occ_tbl,
+				"\n", 1,
 				Znk_NPOS, Znk_NPOS );
 	}
 	{

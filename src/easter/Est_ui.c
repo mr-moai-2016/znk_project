@@ -12,6 +12,7 @@
 #include <Znk_str_ex.h>
 #include <Znk_str_fio.h>
 
+#define SJIS_HYO "\x95\x5c" /* 表 */
 
 static bool
 getHtmlBetweenPtn( ZnkStr ans, const char* filename, size_t max_count,
@@ -130,6 +131,7 @@ showPageSwitcher_ver2( ZnkStr result_ui, const char* query_string_base,
 		size_t idx;
 		const size_t max_width  = EstConfig_getPreviewMaxWidth();
 		const size_t max_height = EstConfig_getPreviewMaxHeight();
+		const char*  preview_style = EstConfig_getPreviewStyle();
 
 		if( page_switcher_name ){
 			ZnkStr_addf( result_ui, "<a name=\"%s\"></a>\n", page_switcher_name );
@@ -217,7 +219,7 @@ showPageSwitcher_ver2( ZnkStr result_ui, const char* query_string_base,
 						authentic_key, title, anchor );
 			}
 		}
-		ZnkStr_addf( result_ui, "件目へ移動\n" );
+		//ZnkStr_addf( result_ui, "件目へ移動\n" );
 		ZnkStr_addf( result_ui, "</div>\n" );
 
 		ZnkStr_addf( result_ui, "<br>" );
@@ -231,14 +233,18 @@ showPageSwitcher_ver2( ZnkStr result_ui, const char* query_string_base,
 		{
 			ZnkStr_addf( result_ui,
 					"&nbsp;&nbsp;<a class=MstyElemLink href='javascript:void(0);' "
-					"onclick=\"Easter_showPrev( this, %zu, %zu );\">"
+					"onclick=\"Easter_showPrev( this, %zu, %zu, '%s' );\">"
 					"プレビュー前<img src='/cgis/easter/publicbox/icons/prev_16.png'></a> \n",
-					max_width, max_height );
+					max_width, max_height, preview_style );
 			ZnkStr_addf( result_ui,
 					"&nbsp;&nbsp;<a class=MstyElemLink href='javascript:void(0);' "
-					"onclick=\"Easter_showNext( this, %zu, %zu );\">"
+					"onclick=\"Easter_showNext( this, %zu, %zu, '%s' );\">"
 					"プレビュー次<img src='/cgis/easter/publicbox/icons/next_16.png'></a> ",
-					max_width, max_height );
+					max_width, max_height, preview_style );
+			ZnkStr_addf( result_ui,
+					"&nbsp;&nbsp;<a class=MstyElemLink href='javascript:void(0);' "
+					"onclick=\"Easter_hidePreview( this );\">"
+					"非" SJIS_HYO "示</a> " );
 		}
 		ZnkStr_addf( result_ui, "</div>\n" );
 		ZnkStr_addf( result_ui, "<br>" );
@@ -269,6 +275,7 @@ EstUI_makeCheckedConfirmView( RanoCGIEVar* evar, ZnkVarpAry post_vars,
 	ZnkVarpAry cache_dir_list  = ZnkVarpAry_create( true );
 	ZnkVarpAry cache_file_list = ZnkVarpAry_create( true );
 	bool is_checked = true;
+	bool is_topic = false;
 
 	for( idx=0; idx<post_vars_size; ++idx ){
 		post_varp = post_vars_ptr[ idx ];
@@ -299,6 +306,20 @@ EstUI_makeCheckedConfirmView( RanoCGIEVar* evar, ZnkVarpAry post_vars,
 				ZnkVarpAry_push_bk( cache_file_list, new_elem );
 			}
 
+		} else if( ZnkS_isBegin( ZnkVar_name_cstr( post_varp ), "md5ext_" )){
+			/* file : md5ext_ */
+			path = ZnkVar_cstr( post_varp );
+			ZnkHtpURL_unescape_toStr( unesc_path, path, Znk_strlen(path) );
+			ZnkHtpURL_sanitizeReqUrpDir( unesc_path, true );
+
+			{
+				ZnkVarp new_elem = ZnkVarp_create( ZnkVar_name_cstr( post_varp ), "", 0, ZnkPrim_e_Str, NULL );
+				const char* vpath = ZnkStr_cstr( unesc_path );
+				ZnkVar_set_val_Str( new_elem, vpath, Znk_strlen(vpath) );
+				ZnkVarpAry_push_bk( cache_file_list, new_elem );
+			}
+			is_topic = true;
+
 		} else if( ZnkS_eq( ZnkVar_name_cstr( post_varp ), "cache_path" )){
 			/* file : cache_path */
 			path = ZnkVar_cstr( post_varp );
@@ -317,16 +338,24 @@ EstUI_makeCheckedConfirmView( RanoCGIEVar* evar, ZnkVarpAry post_vars,
 
 	/* file_list */
 	ZnkStr_add( caches, "<table><tr><td valign=top>\n" );
-	EstBoxUI_make_forFSysView( caches, cache_file_list,
-			0, Znk_NPOS, authentic_key, true, is_checked );
+	if( is_topic ){
+		EstBoxUI_make_forTopic( caches, cache_file_list,
+				0, Znk_NPOS, authentic_key, true, is_checked );
+	} else {
+		EstBoxUI_make_forFSysView( caches, cache_file_list,
+				0, Znk_NPOS, authentic_key, true, is_checked );
+	}
 	ZnkStr_addf( caches, "</td><td valign=top>%s<span id=preview></span></td></tr></table>\n", assort_msg );
 
 	/* dir_list */
 	if( ZnkVarpAry_size( cache_dir_list ) && ZnkVarpAry_size( cache_file_list ) ){
 		ZnkStr_addf( caches, "<hr>" );
 	}
-	EstBoxUI_make_forFSysView( caches, cache_dir_list,
-			0, Znk_NPOS, authentic_key, false, is_checked );
+	if( is_topic ){
+	} else {
+		EstBoxUI_make_forFSysView( caches, cache_dir_list,
+				0, Znk_NPOS, authentic_key, false, is_checked );
+	}
 
 	ZnkStr_delete( unesc_path );
 	ZnkVarpAry_destroy( cache_dir_list );

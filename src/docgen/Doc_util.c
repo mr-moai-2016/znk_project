@@ -3,13 +3,6 @@
 #include <Znk_myf.h>
 #include <Znk_s_base.h>
 #include <Znk_str_ex.h>
-//#include <Znk_stdc.h>
-//#include <Znk_bfr_bif.h>
-//#include <Znk_bif.h>
-//#include <Znk_dir.h>
-//#include <Znk_missing_libc.h>
-
-//#include <stdio.h>
 
 static void
 drawMenuBar2( ZnkStr ans, const char* query_urp, ZnkPrimpAry tbl, const char* query_category )
@@ -37,13 +30,16 @@ void
 DocUtil_drawHeader( ZnkStr ans, ZnkStrAry category_path, const char* urp, ZnkMyf menu_myf, const char* doc_title )
 {
 	ZnkStr_addf( ans, 
-			"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n"
+			//"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n"
+			"<!DOCTYPE html>"
 			"<html>\n"
 			"<head>\n"
 			"\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n"
 			"\t<meta http-equiv=\"Content-Script-Type\" content=\"text/javascript\">\n"
 			"\t<meta http-equiv=\"Content-Style-Type\" content=\"text/css\">\n"
+			"\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
 			"\t<link href=\"/msty.css\" rel=\"stylesheet\" type=\"text/css\">\n"
+			"\t<link href=\"/bulma.css\" rel=\"stylesheet\" type=\"text/css\">\n"
 	);
 	/* html_head */
 	{
@@ -59,6 +55,10 @@ DocUtil_drawHeader( ZnkStr ans, ZnkStrAry category_path, const char* urp, ZnkMyf
 
 	ZnkStr_addf( ans,
 			"<body>\n"
+			"<div class=\"section\">\n"
+			"<div class=\"container\">\n"
+			"<div class=\"content\">\n"
+
 			"<a name=TopBar></a>\n"
 			"<p><b><img src=\"/imgs/here_landmark.png\"> %s</b></p>\n\n",
 			doc_title ? doc_title : ""
@@ -87,3 +87,10 @@ DocUtil_drawHeader( ZnkStr ans, ZnkStrAry category_path, const char* urp, ZnkMyf
 	ZnkStr_addf( ans, "<br> <br>\n\n" );
 }
 	
+void
+DocUtil_drawEnd( ZnkStr ans )
+{
+	ZnkStr_add( ans, "</div>\n" );        /* content */
+	ZnkStr_add( ans, "</div>\n</div>\n" ); /* section, container */
+	ZnkStr_add( ans, "</body>\n</html>" );
+}

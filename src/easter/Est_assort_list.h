@@ -15,6 +15,10 @@ void
 EstAssortList_stock( ZnkBird bird,
 		RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr backto, ZnkStr assort_msg, ZnkStr msg, const char* authentic_key,
 		const char* bkt_manager, const char* bkt_vpath_key );
+void
+EstAssortList_favoritize_from_external( ZnkBird bird,
+		RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr backto, ZnkStr assort_msg, ZnkStr msg, const char* authentic_key,
+		const char* bkt_manager, const char* bkt_vpath_key );
 
 Znk_EXTERN_C_END
 

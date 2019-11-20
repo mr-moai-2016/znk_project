@@ -4,6 +4,7 @@
 #include "Mkf_include.h"
 #include <Znk_stdc.h>
 #include <Znk_dir.h>
+#include <Znk_missing_libc.h>
 
 static const char*
 getProductType( ZnkVarp varp )
@@ -38,10 +39,12 @@ isExistMainSrc( ZnkVarpAry product_list, const char* mainsrc )
 }
 
 bool
-MkfAndroid_generate( const ZnkMyf conf_myf, ZnkVarpAry product_list, MkfSeekFuncT_isInterestExt isSrcFileExt,
+MkfAndroid_generate_forNdkBuild( const ZnkMyf conf_myf,
+		ZnkStrAry list, ZnkStrAry dir_list,
+		ZnkVarpAry product_list, MkfSeekFuncT_isInterestExt isSrcFileExt,
 		const ZnkStrAry include_paths_common,
 		const ZnkStrAry dependency_libs_common, const ZnkStrAry runtime_additional,
-		const ZnkStrAry sublibs_list )
+		const ZnkStrAry sublibs_list, const char* template_dir )
 {
 	ZnkFile fp = NULL;
 	size_t product_idx;
@@ -51,6 +54,9 @@ MkfAndroid_generate( const ZnkMyf conf_myf, ZnkVarpAry product_list, MkfSeekFunc
 	const size_t sublib_size = ZnkStrAry_size( sublibs_list );
 	bool is_at_notation = false;
 
+	if( template_dir == NULL || ZnkS_empty( template_dir ) ){
+		template_dir = ".";
+	}
 	/***
 	 * TODO: 
 	 * もう mkf_android_install.sh のようなシェルスクリプトを別途出力させるべき.
@@ -140,13 +146,14 @@ MkfAndroid_generate( const ZnkMyf conf_myf, ZnkVarpAry product_list, MkfSeekFunc
 			Znk_fprintf( fp, "\n" );
 
 			{
-				ZnkStrAry dir_list = ZnkStrAry_create( true );
-				ZnkStrAry list = ZnkStrAry_create( true );
-				ZnkStrAry ignore_list = ZnkMyf_find_lines( conf_myf, "ignore_list" );
+				//ZnkStrAry dir_list = ZnkStrAry_create( true );
+				//ZnkStrAry list = ZnkStrAry_create( true );
+				//ZnkStrAry ignore_list = ZnkMyf_find_lines( conf_myf, "ignore_list" );
 				size_t size;
 				size_t idx;
 				const char* name;
-				MkfSeek_listDir( list, dir_list, ".", ignore_list, isSrcFileExt );
+				const char*  ext;
+				//MkfSeek_listDir( list, dir_list, ".", ignore_list, isSrcFileExt );
 		
 				size = ZnkStrAry_size( list );
 				Znk_fprintf( fp, "LOCAL_SRC_FILES := \\\n" );
@@ -155,7 +162,10 @@ MkfAndroid_generate( const ZnkMyf conf_myf, ZnkVarpAry product_list, MkfSeekFunc
 
 					{
 						if( !isExistMainSrc( product_list, name ) ){
-							Znk_fprintf( fp, "\t$S/%s \\\n", name );
+							ext  = ZnkS_get_extension( name, '.' );
+							if( isSrcFileExt( ext ) ){
+								Znk_fprintf( fp, "\t$S/%s \\\n", name );
+							}
 						}
 					}
 				}
@@ -216,6 +226,7 @@ MkfAndroid_generate( const ZnkMyf conf_myf, ZnkVarpAry product_list, MkfSeekFunc
 	}
 
 	/* Application.mk */
+#if 0
 	fp = Znk_fopen( "mkf_android/jni/Application.mk", "wb" );
 	if( fp == NULL ){
 		return false;
@@ -226,6 +237,13 @@ MkfAndroid_generate( const ZnkMyf conf_myf, ZnkVarpAry product_list, MkfSeekFunc
 		Znk_fprintf( fp, "APP_OPTIM    := release\n" );
 		Znk_fclose( fp );
 	}
+#else
+	{
+		char src_application_mk_path[ 256 ];
+		Znk_snprintf( src_application_mk_path, sizeof(src_application_mk_path), "%s/Application.mk", template_dir );
+		ZnkDir_copyFile_byForce( src_application_mk_path, "mkf_android/jni/Application.mk", NULL );
+	}
+#endif
 
 	return true;
 }

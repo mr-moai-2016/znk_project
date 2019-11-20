@@ -1,7 +1,7 @@
 #ifndef INCLUDE_GUARD__Doc_html_make_h__
 #define INCLUDE_GUARD__Doc_html_make_h__
 
-#include <Znk_base.h>
+#include <Znk_str.h>
 
 Znk_EXTERN_C_BEGIN
 
@@ -10,7 +10,7 @@ Znk_EXTERN_C_BEGIN
  *   inからHTMLを作成する.
  */
 bool
-DocHtml_make( const char* in_dir, const char* out_dir );
+DocHtml_make( const char* in_dir, const char* out_dir, ZnkStr ermsg );
 
 /***
  * ダミーコメント.

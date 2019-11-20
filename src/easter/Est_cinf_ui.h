@@ -21,7 +21,7 @@ EstCInfListUI_make( ZnkStr ans, ZnkVarpAry cinf_list,
 		size_t begin_idx, size_t end_idx,
 		const char* style_class_name, const char* new_linkid, const char* url_prefix, const char* id_prefix,
 		bool is_target_blank, size_t show_file_num, size_t line_file_num, size_t elem_pix_width,
-		const char* authentic_key, bool is_checked );
+		const char* authentic_key, bool is_checked, bool use_flexbox );
 
 Znk_EXTERN_C_END
 

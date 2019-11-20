@@ -1,142 +1,147 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html><html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta http-equiv="Content-Script-Type" content="text/javascript">
 	<meta http-equiv="Content-Style-Type" content="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<link href="/bulma.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+<div class="section">
+<div class="container">
+<div class="content">
 <a name=TopBar></a>
-<p><b><img src="/imgs/here_landmark.png"> Welcome to Moai+Easter System Ver $[MoaiVersion]$</b></p>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter System Ver $[MoaiVersion]$</b></p>
 
 <a class=MstyNowSelectedLink href="/">トップページ</a> &nbsp;
-<a class=MstyElemLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
-<a class=MstyElemLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">初級マニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index_expert.html">上級マニュアル</a> &nbsp;
 <a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
 <a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
-
-
+<a class=MstyElemLink href="/easter">Easter</a> &nbsp;
+<a class=MstyElemLink href="/cgis/custom_boy/custom_boy.cgi?cb_target=futaba&cb_type=automatic">VirtualUSERS</a> &nbsp;
+<a class=MstyElemLink href="/config?mode=upgrade">Moaiアップグレード</a> &nbsp;
+<a class=MstyElemLink href="#Link">一番下へ</a> &nbsp;
+<br> <br>
 
 <a name=AtFirst></a>
-<u><b>
-はじめに
-</b></u><br>
-<br>
-<div class=MstyIndent>
-この画面が表示されているということは、あなたはMoaiの起動に成功しています.<br>
-この画面より、以下のWebアプリケーションがお好きなブラウザ上で利用できます.<br>
-それでは始めましょう.<br>
-</div><br>
+<h1 class="title">はじめに</h1>
+<p>
+	この画面が表示されているということは、あなたはMoaiの起動に成功しています.<br>
+	ここから始めましょう. <br>
+	<div class=box>
+		お使いのブラウザにおいてここをブックマークやスタートページなどに登録しておくことをお勧めします.<br>
+	</div>
+	<!-- a href=/index_github.html>index_github</a --><br>
+</p>
 <br>
 
 
 <a name=WebApplication></a>
-<u><b>
-Webアプリケーション
-</b></u><br>
+<h1 class="title">基本ツール</h1>
+<p>
+	<a class=MstyElemLink href="/easter">Easter</a>
+	<span class=MstyAuthor> (Author: Zenkaku)</span><br>
+	<article class="message is-dark"><div class="message-body">
+		Easterは仮想ブラウジングを行うためのビューアです.<br>
+		仮想環境下で匿名掲示板を閲覧を行うことができます.<br>
+	</div></article>
+	<br>
+	<a class=MstyElemLink href="/cgis/custom_boy/custom_boy.cgi?cb_target=futaba&cb_type=automatic">VirtualUSERS</a>
+	<span class=MstyAuthor> (Author: K.Yakisoba.H and Zenkaku)</span><br>
+	<article class="message is-dark"><div class="message-body">
+		VirtualUSERSは、ランダムな仮想環境を自動的に構築/刷新するツールです.<br>
+		これは「すべておまかせボタン」を押すだけで自動的に行われます.<br>
+		<div class=box>
+			このボタンは好きな時に押しても構いませんが、最も適切なタイミングは<b>ルータリセットなどによりIPアドレスを変更した直後</b>です.<br>
+			Moaiを初めて起動した場合もまずはこのボタンを一回押しておくことをお勧めします.<br>
+		</div>
+	</div></article>
+	<br>
+	<a class=MstyElemLink href="/config?mode=upgrade">Moaiアップグレード</a>
+	<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+	<article class="message is-dark"><div class="message-body">
+		Moaiを最新バージョンへアップグレードするためのウィザードです.<br>
+		詳細については<a class=MstyElemLink href="/moai2.0/upgrade.html" target=_blank>Moaiのアップグレード方法</a>をご覧ください.<br>
+	</div></article>
 <br>
-<div class=MstyIndent>
-	<ul>
-		<li><a class=MstyAppLink href="/easter">Easter</a>
-		<span class=MstyAuthor> (Author: Zenkaku)</span><br>
-		</li>
-		<div class=MstyComment>
-			Easterは仮想ブラウジング(仮想環境下で匿名掲示板を閲覧)を行うためのビューアです.<br>
-			特別な設定は何も必要ありません.<br>
-			上のリンクより仮想ブラウジングを今すぐ開始できます.<br>
-		</div>
-	<br>
-		<li><a class=MstyAppLink href="/cgis/custom_boy/custom_boy.cgi?cb_target=futaba&cb_type=automatic">VirtualUSERS</a>
-		<span class=MstyAuthor> (Author: K.Yakisoba.H and Zenkaku)</span><br>
-		</li>
-		<div class=MstyComment>
-			VirtualUSERSは、ランダムな仮想環境を自動的に構築/刷新するツールです.<br>
-			これは上のリンクより表示される画面で、ボタン一つ押すだけで簡単に行えます.<br>
-	<br>
-			このボタンは別にいつ押しても構いません.<br>
-			しかし最も適切なタイミングはルータリセットなどによりIPアドレスを変更した直後です.<br>
-			またMoaiを初めて起動した場合もまずはこのボタンを一回押しておくことをお勧めします.<br>
-		</div>
-	<br>
-		<li><a class=MstyAppLink href="/config?mode=upgrade">Moaiアップグレード</a>
-		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
-		</li>
-		<div class=MstyComment>
-			Moaiシステム全体のアップグレードを行うためのウィザードです.<br>
-			「最新バージョンの確認」⇒「修正パッチのダウンロード」⇒「修正パッチを適用」<br>
-			この３つのボタンを順番に押すだけで、Moaiを最新バージョンへアップグレードできます.<br>
-			詳細については<a class=MstyElemLink href="/moai2.0/moai_cgi_developers.html" target=_blank>Moaiのアップグレード方法</a>をご覧ください.<br>
-		</div>
-	</ul>
-</div><br>
+</p>
 <br>
 
 
 <a name=ForExpertUser></a>
-<u><b>
-エキスパートユーザ向け
-</b></u><br>
-<br>
-<div class=MstyIndent>
-	<ul>
-		<li><a class=MstyAppLink href="/cgis/custom_boy/custom_boy.cgi?cb_target=futaba&cb_type=postvars">CustomBoy</a>
-		<span class=MstyAuthor> (Author: K.Yakisoba.H and Zenkaku)</span><br>
-		</li>
-		<div class=MstyComment>
-			CustomBoyとは、Moai/Easterの仮想環境を詳細にカスタマイズするエキスパートユーザ向けのツールです.<br>
-			我々が提供する仮想化ツールの中でもこれは最強のカスタマイズ性を有するものです.<br>
-		</div>
-	<br>
-		<li><a class=MstyAppLink href="/cgis/proxy_finder/proxy_finder.cgi">ProxyFinder</a>
-		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
-		</li>
-		<div class=MstyComment>
-			ProxyFinderは定番のプロキシ情報提供サイトへ接続し、現在有効なプロキシサーバのリストを自動的に取得するツールです.<br>
-			Moaiは使用するProxyサーバの候補をparent_proxy.txtというファイルから取得しますが、このファイルを作成/更新できます.<br>
-			(このようなプロキシの利用はIPアドレスの変更を実現する手段の一つではあります.<br>
-			しかしMoaiシステムではIPアドレスの変更としてルータリセット等をお勧めしています).<br>
-		</div>
-	<br>
-		<li><a class=MstyAppLink href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a>
-		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
-		</li>
-		<div class=MstyComment>
-			Moai CGI は Moaiとは独立した単独のCGIスクリプトを実行します.<br>
-			上記で挙げたWebアプリケーションもすべてMoai CGIで実現されています.<br>
-			更にはあなたがCGIスクリプトを独自に開発し、それをMoai CGI上で実行させることもできるのです！<br>
-	<br>
-			ここではこのようなWebアプリケーションを独自に作ってみたい野心溢れる方向けに、その開発方法を解説します.<br>
-			そして最終課題としてProxyFinderを例として挙げ、このようなツールが開発できるレベルを目指します.<br>
-		</div>
-	<br>
-		<li><a class=MstyAppLink href="/config">Moaiエンジン設定</a>
-		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
-		</li>
-		<div class=MstyComment>
+<h1 class="title">上級ツール</h1>
+<p>
+	<a class=MstyElemLink href="/config">Moaiエンジン設定</a>
+	<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+	<article class="message is-dark">
+		<div class="message-body">
 			Moaiエンジンの設定を行います.<br>
 			具体的にはプロキシの指定、POST確認表示モードのOn/Off、ログに関する指定、フィルタディレクトリの指定、<br>
 			Moai CGI用に提供するプロファイル用ディレクトリの指定などです.<br>
 			またセキュリティに関する設定や、Moaiのアップグレードなどもここで行えます.<br>
 		</div>
-	</ul>
-</div><br>
+	</article>
+	<br>
+	<a class=MstyElemLink href="/cgis/custom_boy/custom_boy.cgi?cb_target=futaba&cb_type=postvars">CustomBoy</a>
+	<span class=MstyAuthor> (Author: K.Yakisoba.H and Zenkaku)</span><br>
+	<article class="message is-dark">
+		<div class="message-body">
+			CustomBoyとは、Moai/Easterの仮想環境を詳細にカスタマイズするエキスパートユーザ向けのツールです.<br>
+			我々が提供する仮想化ツールの中でもこれは最強のカスタマイズ性を有するものです.<br>
+		</div>
+	</article>
+	<br>
+	<a class=MstyElemLink href="/cgis/proxy_finder/proxy_finder.cgi">ProxyFinder</a>
+	<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
+	<article class="message is-dark">
+		<div class="message-body">
+			ProxyFinderは定番のプロキシ情報提供サイトへ接続し、現在有効なプロキシサーバのリストを自動的に取得するツールです.<br>
+			Moaiは使用するProxyサーバの候補の情報を保持していますが、この情報を作成/更新できます.<br>
+			<div class=box>
+				このようなプロキシの利用はIPアドレスの変更を実現する手段の一つではあります.<br>
+				しかしMoaiシステムではIPアドレスの変更としてルータリセット等をお勧めしています.<br>
+			</div>
+		</div>
+	</article>
+	<br>
+</p>
 <br>
+
+
+<div class="card">
+	<u><b>This article was written by:</b></u><br>
+	<div class="card-content">
+		<div class="media">
+			<div class="media-left">
+				<figure class="image is-48x48">
+				<img src="/imgs/moai.png" alt="none image">
+				</figure>
+			</div>
+			<div class="media-content">
+				<p class="title is-4">Mr.Moai</p>
+				<p class="subtitle is-6">@znk project</p>
+			</div>
+		</div>
+	</div>
+</div>
 
 
 <a name=Link></a>
-<u><b>
-リンク
-</b></u><br>
-<br>
+<h1 class="title"></h1>
+<hr>
 <ul>
 	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
-	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
 	<li><a class=MstyElemLink href=/moai2.0/>Moaiドキュメント(オフライン)</a></li>
+	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moai公式サイト</a></li>
 	<li><a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project>znk_project(github)</a></li>
 </ul><br>
 
 
+</div>
+</div>
+</div>
 </body>
 </html>

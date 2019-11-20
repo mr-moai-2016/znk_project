@@ -1,9 +1,9 @@
 @def_quote [' ']
 
 @@V config
-doc_title = ['Moai+Easter エキスパートマニュアル']
-author = ['高速ヤキソバ変換']
-update = ['2017/10/04']
+doc_title = ['Moai+Easter 上級マニュアル']
+author = { ['K.Yakisoba.H'] }
+update = ['2019/07/29']
 category_path = { ['moai2_0_exp'] ['customboy'] }
 urp           = ['/moai2.0/customboy_hints_PostVars.html']
 nb_tags = { ['div'] ['ul'] ['li'] }
@@ -32,11 +32,9 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 	この値は必ず on にしておかなければならない.
 	
 	名前の由来は<s><b>女子小学s</b></s>無論<b>J</b>ava<b>S</b>criptである.
-	Javascriptを実行したかどうかを判断するためのものであり、
-	/bin/base4.js を実行すると on に設定される仕組みとなっている.
-	( 無論、Javascriptの/bin/base4.jsを実行させずとも、最初からこのPost変数 に on 値を設定しておけば良い. )
-	ふたばにおいてはこれを on にしておかないと「環境変数がありません(Javascriptがオフ？)」というエラーが表示され、
-	投稿に失敗するのは周知の通りである.
+	Javascriptを実行したかどうかを判断するためのものであり、/bin/base4ajax.js を実行すると on に設定される仕組みとなっている.
+	( 無論、Javascriptの/bin/base4ajax.jsを実行させずとも、最初からこのPost変数 に on 値を設定しておけば良い. )
+	ふたばにおいてはこれを on にしておかないと「環境変数がありません(Javascriptがオフ？)」というエラーが表示され、投稿に失敗するのは周知の通りである.
 @@.
 
 @@L pv_pthb
@@ -52,8 +50,7 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 	この値はfutaba.phpに初アクセスした時間(およびそれに類した値)である.
 	現状ではカタログに初めてアクセスするか、または初めてレス投稿した際にまずpthcに設定されるようである.
 	あるいは /bin/cachemt7.php にアクセスしたときにそれに類した値が生成される形となる.
-	おそらくワンタイムパスワードならぬ、ワンタイムユーザIDとでも呼ぶべき用途として発行し、
-	futaba.php内部で使っているのだろう.
+	おそらくワンタイムパスワードならぬ、ワンタイムユーザIDとでも呼ぶべき用途として発行し、futaba.php内部で使っているのだろう.
 
 	<b>一度目の投稿</b>においては、localStorage(futabapt)にpthcのコピー値も設定される.
 	また<b>二度目の投稿</b>において、さらにそのlocalStorage(futabapt)のコピー値がpthbへと設定される.
@@ -72,15 +69,12 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 	この値は頻繁にその意味が変更される歴史を持つ.
 	最初期はnavigator.userAgentの文字列値をそのまま格納していたため、名前に ua という文字が含まれているのであろう.
 	
-	現状での意味は、33個のものBrowserとそのVersion固有の真偽値をとるJavascriptコード片(Snippetと呼ぶ)の結果値を、
-	33bitのflag値にpackした上で10進数変換したものである.
-	この計算はレス投稿時に毎回 /bin/base4.js におけるptfk function内で行われており、
-	sphという名前の配列変数を検索すると該当処理を行っている行を見つけることができる.
+	現状での意味は、33個のものBrowserとそのVersion固有の真偽値をとるJavascriptコード片(Snippetと呼ぶ)の結果値を、33bitのflag値にpackした上で10進数変換したものである.
+	この計算はレス投稿時に毎回 /bin/base4ajax.js におけるptfk function内で行われており、sphという名前の配列変数を検索すると該当処理を行っている行を見つけることができる.
 	まあ派手に長い行なので目視でもすぐわかるが…
 	(尚、最大値は32bit非負整数のMaxを超える可能性があるため、浮動小数点数をベースとして行われている模様).
 	
-	要はBrowserとそのVersion固有の値の寄せ集めであるため、Browserそのもの(あるいは場合によってはそのVersionのみでも良いが)
-	を変更しない限り基本的に同じ値をとり続ける.
+	要はBrowserとそのVersion固有の値の寄せ集めであるため、Browserそのもの(あるいは場合によってはそのVersionのみでも良いが)を変更しない限り基本的に同じ値をとり続ける.
 	
 	尚、この値を乱数生成器などで出力される完全なrandomな整数値として割り当てても、少なくとも筆者の環境では現状問題ないようである.
 	しかしこの値からinvertすれば元のBrowser環境を(ある程度の範囲はあるとは言え)一意に推定することが可能である.
@@ -88,8 +82,7 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 	(というより、わざわざfutaba.phpがこのようなPost変数を導入した理由はそれしか考えられまい)
 	よってより万全を期すなら、このptuaの値を<b>それらしく</b>偽装する方が望ましいといえる.
 	
-	例えば下位8bitはIE(Edge)に関するものであるため、IE(Edge)以外のBrowserとして偽装したいなら、
-	その数字を必ず<b>256の倍数</b>にすれば「それらしく」偽装できる.
+	例えば下位8bitはIE(Edge)に関するものであるため、IE(Edge)以外のBrowserとして偽装したいなら、その数字を必ず<b>256の倍数</b>にすれば「それらしく」偽装できる.
 	それ以外にも各Snippetの意味を事細かに調べてBrowserとVersion毎に反映させていけば値の精度はより高まるであろう.
 	自力でツールなどを作ってこの値を偽装される方で、この辺りに拘りのある方は参考にされてはどうだろうか？
 	各Snippetの意味については、<a class=MstyElemLink href=/moai2.0/customboy_hints_Snippet.html>こちら</a>に完全なリファレンスを作成したので参照していただきたい.
@@ -102,11 +95,11 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 	名前の由来は <b>SC</b>reen<b>S</b>i<b>Z</b>e であろう. 
 	
 	この値は、あなたの使っているモニタの解像度と色深度の情報を示す.
-	(Javascriptにこれを取得するAPIがあり、レス投稿(ptfk function)時に毎回 /bin/base4.jsでこれを取得しているようである)
+	(Javascriptにこれを取得するAPIがあり、レス投稿(ptfk function)時に毎回 /bin/base4ajax.jsでこれを取得しているようである)
 	
-	<div class=MstyComment>
+	<div class=box><div class=MstyCode>
     	モニタ解像度の幅 x モニタ解像度の高さ x モニタの色深度ビット数
-	</div>
+	</div></div>
 
 	というフォーマットを持つ記述子となる.
 	例えば、640x480x24、1024x768x32といった値をとる.
@@ -128,11 +121,12 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 
 
 @@L pv_flrv
+	注：現在のふたばちゃんねるではこれは廃止されたようですが、一応ここでの説明は残しておきます.
+
 	この値は、Fingerprint値と呼ばれるものが格納される.
 	
 	少し歴史を述べると、当初これにはFingerprint値ではなくAdobe FlashのReVision番号が格納されていた.
-	しかしそれだと値が被り過ぎるためか、あるいはFlashに見切りをつけたためかは知らないが、
-	ある時ふたばはその仕様を廃止した.
+	しかしそれだと値が被り過ぎるためか、あるいはFlashに見切りをつけたためかは知らないが、ある時ふたばはその仕様を廃止した.
 	そしてこの変数名だけをそのまま流用して、替わりにここにFingerprint値を格納するようになった経緯がある.
 	名前に含まれる謎の「l」の文字はその名残である.
 	
@@ -162,6 +156,8 @@ title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
 @@.
 
 @@L pv_flvv
+	注：現在のふたばちゃんねるではこれは廃止されたようですが、一応ここでの説明は残しておきます.
+
 	この値も<a class=MstyElemLink href=#pv_flrv>flrv</a>と同じくFingerprint値と呼ばれるものが格納される.
 	flrvとflvvの違いはその取得する情報の種類だけである.
 	flrvが取得する全情報に加え、BrowserのPlugin情報文字列まで加味したものがflvvである.

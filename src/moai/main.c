@@ -1,6 +1,6 @@
 /***
- * Moai-Engine Ver2.1
- * -- CipherAgent --
+ * Moai-Engine Ver2.2
+ * -- ResponsiveStone --
  */
 #include "Moai_server.h"
 

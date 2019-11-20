@@ -26,7 +26,7 @@ CBWgtPrim_create( ZnkPrimType pm_type, double rate, ZnkElemDeleterFunc elem_dele
 void
 CBWgtPrim_destroy( CBWgtPrim wpm );
 
-ZnkPrim*
+ZnkPrim
 CBWgtPrim_prim( CBWgtPrim wpm );
 double
 CBWgtPrim_rate( const CBWgtPrim wpm );
@@ -107,7 +107,7 @@ CBWgtPrimAry_set( CBWgtPrimAry ary, size_t idx, CBWgtPrim obj ){
 CBWgtPrim
 CBWgtPrimAry_registStr( CBWgtPrimAry ary, const char* str, double rate );
 
-ZnkPrim*
+ZnkPrim
 CBWgtPrimAry_select( const CBWgtPrimAry ary );
 
 Znk_EXTERN_C_END

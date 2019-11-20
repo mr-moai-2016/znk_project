@@ -4,8 +4,12 @@
 #include "Est_sqi.h"
 #include "Est_recentory.h"
 #include "Est_box.h"
+
 #include <Rano_log.h>
 #include <Rano_cgi_util.h>
+#include <Rano_conf_util.h>
+#include <Rano_htp_boy.h>
+
 #include <Znk_dir.h>
 #include <stdio.h>
 
@@ -17,34 +21,40 @@ int main(int argc, char **argv)
 	RanoCGIEVar* evar = RanoCGIEVar_create();
 	EstSQI sqy = NULL;
 	ZnkVarpAry sqy_vars = ZnkVarpAry_create( true );
-	ZnkStr msg = ZnkStr_new( "" );
+	ZnkStr ermsg = ZnkStr_new( "" );
 	ZnkStr EstSM_result = ZnkStr_new( "" );
 	const char* authentic_key = "";
-	ZnkStr moai_dir = NULL;
+	const char* moai_dir = NULL;
 	size_t count = 0;
 
-	{
+	if( RanoConfUtil_rano_app_initiate( ".", false, ermsg ) ){
 		static const bool keep_open = true;
-		bool additional = false;
-		ZnkDir_mkdirPath( "./tmp", Znk_NPOS, '/', NULL );
-		RanoLog_open( "./tmp/log_task.log", keep_open, additional );
+		static const bool additional = false;
+		const char* tmpdir_common = RanoHtpBoy_getTmpDirCommon();
+		char logfile_path[ 256 ] = "";
+		Znk_snprintf( logfile_path, sizeof(logfile_path), "%s/cache_task.log", tmpdir_common );
+		RanoLog_open( logfile_path, keep_open, additional );
+	} else {
+		/* log自体を生成できないため、とりあえず無報告で終わる */
+		goto FUNC_END;
 	}
 
 	/* 認証 */
 	if( argc > 1 ){
 		authentic_key = argv[ 1 ];
 	}
-	moai_dir = EstConfig_getMoaiDir();
+	moai_dir = RanoConfUtil_moai_dir( NULL );
 	if( moai_dir == NULL ){
+		RanoLog_printf( "moai_dir is not found.\n" );
 		goto FUNC_END;
 	}
-	EstConfig_loadAuthenticKey( st_moai_authentic_key, sizeof(st_moai_authentic_key), ZnkStr_cstr(moai_dir) );
+	EstConfig_loadAuthenticKey( st_moai_authentic_key, sizeof(st_moai_authentic_key), moai_dir );
 	if( !ZnkS_eq( authentic_key, st_moai_authentic_key ) ){
 		RanoLog_printf( "Not authenticated.\n" );
 		goto FUNC_END;
 	}
 	RanoLog_printf( "OK. authenticated.\n" );
-	EstConfig_initiate( evar, ZnkStr_cstr(moai_dir), count );
+	EstConfig_initiate( evar, moai_dir, count );
 
 	{
 		const bool is_marge_tags = false;
@@ -62,13 +72,13 @@ int main(int argc, char **argv)
 	{
 		const size_t days_ago = EstConfig_getCacheDaysAgo();
 		const size_t sec_ago  = 0;
-		EstBase_moveOldDir( "cachebox", "dustbox", msg, days_ago, sec_ago );
+		EstBase_moveOldDir( "cachebox", "dustbox", ermsg, days_ago, sec_ago );
 	}
 	/* days_ago より前のファイルをdustboxから完全削除する. */
 	{
 		const size_t days_ago = EstConfig_getDustboxDaysAgo();
 		const size_t sec_ago  = 0;
-		EstBase_removeOldFile( "dustbox", msg, days_ago, sec_ago );
+		EstBase_removeOldFile( "dustbox", ermsg, days_ago, sec_ago );
 	}
 	/* days_ago より前のファイルをtmp/searchedから完全削除する. */
 	{
@@ -77,7 +87,7 @@ int main(int argc, char **argv)
 		const size_t sec_ago  = 0;
 		char searched_dir[ 256 ] = "";
 		Znk_snprintf( searched_dir, sizeof(searched_dir), "%s/tmp/searched", topics_dir );
-		EstBase_removeOldFile( searched_dir, msg, days_ago, sec_ago );
+		EstBase_removeOldFile( searched_dir, ermsg, days_ago, sec_ago );
 	}
 
 #if 0
@@ -93,7 +103,7 @@ int main(int argc, char **argv)
 				"", "",
 				"", "" );
 		sqy = EstSQI_create( sqy_vars );
-		EstSearchManager_searchInBox( sqy, msg, searched_key, force_fsys_scan );
+		EstSearchManager_searchInBox( sqy, ermsg, searched_key, force_fsys_scan );
 	}
 #endif
 
@@ -112,9 +122,11 @@ FUNC_END:
 	ZnkVarpAry_destroy( sqy_vars );
 	ZnkStr_delete( EstSM_result );
 	RanoCGIEVar_destroy( evar );
-	ZnkStr_delete( moai_dir );
 	EstConfig_finalize();
 
 	RanoLog_close();
+	RanoConfUtil_moai_dir_finalize();
+	RanoConfUtil_rano_app_finalize();
+	ZnkStr_delete( ermsg );
 	return 0;
 }

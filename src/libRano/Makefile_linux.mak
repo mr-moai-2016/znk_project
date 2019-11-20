@@ -134,20 +134,25 @@ $(DLIB_FILE0): $(OBJS0) $(SLIB_FILE0)
 
 ##
 # Pattern rule.
+#
 # We use not suffix rule but pattern rule for dealing flexibly with files in sub-directory.
 # In this case, there is very confusing specification, that is :
 # '\' to the left hand of ':' works as escape sequence, 
 # '\' to the right hand of ':' does not work as escape sequence. 
 # Hence, we have to duplicate '\' to the left hand of ':',
-# the other way, '\' to the right hand of ':' we have to put only single '\',
-# for example $O\\%.o: $S\%.c .
+# the other way, '\' to the right hand of ':' we have to put only single '\'.
+# Note that we have to duplicate '\' only before special charactor(% etc) in the left of ':'.
 #
-$O/tls_module/%.o: $S/tls_module/%.c
-	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c -fPIC $<
-
-$O/tls_module/%.o: $S/tls_module/%.cpp
-	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c -fPIC $<
-
+# For example 1 :
+#   $O\\mydir\\%.o: $S\%.c        .... NG
+#   $O\mydir\\%.o:  $S\%.c        .... OK
+# For example 2 :
+#   $O\\mydir\%.o:  $S\mydir\%.c  .... NG
+#   $O\mydir\\%.o:  $S\mydir\%.c  .... OK
+# In the case of example 2, we can write more simply :
+#   $O\\%.o: $S\%.c               .... OK
+#   (Because '%' is wildcard and it indicates patical path 'mydir\filename_base' recursively )
+#
 $O/%.o: $S/%.c
 	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c -fPIC $<
 
@@ -188,8 +193,8 @@ clean:
 	rm -rf $O/ 
 
 # Src and Headers Dependency
-Rano_cgi_util.o: Rano_cgi_util.h Rano_type.h Rano_log.h Rano_post.h
-Rano_conf_util.o: Rano_conf_util.h
+Rano_cgi_util.o: Rano_cgi_util.h Rano_type.h Rano_log.h Rano_post.h Rano_htp_boy.h
+Rano_conf_util.o: Rano_conf_util.h Rano_htp_boy.h
 Rano_dir_util.o: Rano_dir_util.h Rano_file_info.h
 Rano_file_info.o: Rano_file_info.h
 Rano_hash.o: Rano_hash.h

@@ -8,6 +8,7 @@ install_dir = ['$(MY_LIBS_ROOT)/$(DLIBS_DIR)']
 install_exec_dir = ['../../mkfsys/$(PLATFORM)']
 install_slib_dir = ['$(MY_LIBS_ROOT)/$(SLIBS_DIR)']
 gslconv = ['$O/gslconv.exe']
+is_android_ndk_build_support = ['true']
 @@.
 
 @@L include_paths_common

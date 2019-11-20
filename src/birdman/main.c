@@ -351,22 +351,27 @@ getPlatformID_fromCompilerIntrinsic( void )
 
 
 static bool
-confirm( const char* inst_dir, const char* cur_ver, const char* pat_ver, const char* moai_authentic_key )
+confirm( const char* inst_dir, const char* cur_ver, const char* pat_ver, const char* moai_authentic_key, bool is_apk )
 {
 	ZnkStr msg = ZnkStr_new( "" );
 	//ZnkStr_addf( msg, "Birdman : v%s(current_version) => v%s(after applying patch)<br>\n", cur_ver, pat_ver );
 	ZnkStr_addf( msg, "現在の Moai は Ver %s です.\n", cur_ver );
 	ZnkStr_addf( msg, "Moai を Ver %s へアップグレードすることができます.\n", pat_ver );
 	ZnkStr_addf( msg, "\n" );
-	ZnkStr_addf( msg, "まず最新版の修正パッチ(zipファイル)をダウンロードする必要があります.\n" );
-	ZnkStr_addf( msg, "(birdmanフォルダの直下にダウンロードされます).\n" );
-	ZnkStr_addf( msg, "「修正パッチのダウンロード」ボタンを押してください.\n" );
-	ZnkStr_addf( msg, "\n" );
-	ZnkStr_add(  msg, "<form action=\"/config?mode=upgrade\" method=\"POST\" enctype=\"multipart/form-data\">\n" );
-	ZnkStr_addf( msg, "<input type=hidden name=Moai_AuthenticKey value=\"%s\">\n", moai_authentic_key );
-	ZnkStr_add(  msg, "<input type=hidden name=Moai_UpgradeCmd   value=\"download\">\n" );
-	ZnkStr_add(  msg, "<input class=MstyWideButton type=submit value='修正パッチのダウンロード'>\n" );
-	ZnkStr_add(  msg, "</form>\n" );
+	if( is_apk ){
+		ZnkStr_addf( msg, "<a class=MstyWrapLink href=https://mr-moai-2016.github.io/download/moai-v2.2-android.apk>最新版のapkファイル</a>\n\n" );
+		ZnkStr_addf( msg, "<a class=MstyWrapLink href=http://localhost:8124/moai2.0/install.html#ForAndroid>インストール方法</a>\n\n" );
+	} else {
+		ZnkStr_addf( msg, "まず最新版の修正パッチ(zipファイル)をダウンロードする必要があります.\n" );
+		ZnkStr_addf( msg, "(birdmanフォルダの直下にダウンロードされます).\n" );
+		ZnkStr_addf( msg, "「修正パッチのダウンロード」ボタンを押してください.\n" );
+		ZnkStr_addf( msg, "\n" );
+		ZnkStr_add(  msg, "<form action=\"/config?mode=upgrade\" method=\"POST\" enctype=\"multipart/form-data\">\n" );
+		ZnkStr_addf( msg, "<input type=hidden name=Moai_AuthenticKey value=\"%s\">\n", moai_authentic_key );
+		ZnkStr_add(  msg, "<input type=hidden name=Moai_UpgradeCmd   value=\"download\">\n" );
+		ZnkStr_add(  msg, "<input class=MstyWideButton type=submit value='修正パッチのダウンロード'>\n" );
+		ZnkStr_add(  msg, "</form>\n" );
+	}
 	writeState( 100, ZnkStr_cstr(msg) );
 	ZnkStr_delete( msg );
 	return false;
@@ -390,12 +395,12 @@ getPatchPlatform()
 }
 
 static bool
-upgradeQuery( const char* cur_vtag_path, const char* main_app_dir, const char* authentic_key )
+upgradeQuery( const char* cur_vtag_path, const char* main_app_dir, const char* authentic_key, bool is_test_mode, bool is_apk )
 {
 	bool result = false;
 	const bool  is_https = true;
 	const char* hostname = "mr-moai-2016.github.io";
-	const char* vtag_rule_urp = "/patch/vtag_rule";
+	const char* vtag_rule_urp = is_test_mode ? "/patch/vtag_rule_test" : "/patch/vtag_rule";
 	const char* parent_proxy  = NULL;
 	ZnkStr result_filename = ZnkStr_new("");
 	ZnkStr ermsg           = ZnkStr_new( "" );
@@ -412,6 +417,9 @@ upgradeQuery( const char* cur_vtag_path, const char* main_app_dir, const char* a
 	dwn_info.pitch_ = 0;
 	dwn_info.msg_   = msg;
 
+	if( is_test_mode ){
+		ZnkStr_addf( msg, "This is TestMode.\n" );
+	}
 	ZnkStr_addf( msg, "Moaiを最新バージョンへアップグレード可" SJIS_NOU "かどうかを確認します.\n" );
 
 	ZnkStr_addf( msg, "Birdman : Downloading [%s] ...\n", vtag_rule_urp );
@@ -452,7 +460,7 @@ upgradeQuery( const char* cur_vtag_path, const char* main_app_dir, const char* a
 		goto FUNC_END;
 	}
 
-	confirm( main_app_dir, ZnkStr_cstr(cur_ver), ZnkStr_cstr(pat_ver), authentic_key );
+	confirm( main_app_dir, ZnkStr_cstr(cur_ver), ZnkStr_cstr(pat_ver), authentic_key, is_apk );
 
 	ZnkDir_mkdirPath( "tmp", Znk_NPOS, '/', NULL );
 	{
@@ -910,8 +918,10 @@ printUsage( void )
 
 int main( int argc, char** argv )
 {
-	const char* tls_module = "../libtls-17";
-	const char* cert_pem   = "../cert.pem";
+	const char* tls_module   = "../libtls-17";
+	const char* cert_pem     = "../cert.pem";
+	bool        is_test_mode = false;
+	bool        is_apk       = false;
 	bool   result  = false;
 	ZnkMyf myf      = ZnkMyf_create();
 	ZnkStr moai_dir = BdmBase_getMoaiDir();
@@ -979,6 +989,20 @@ int main( int argc, char** argv )
 					if( var ){
 						cert_pem = ZnkVar_cstr( var );
 					}
+					var = ZnkVarpAry_findObj_byName_literal( config, "is_test_mode", false );
+					if( var ){
+						if( ZnkS_eq( ZnkVar_cstr( var ), "true" ) ){
+							RanoLog_printf( "Birdman : Warning : test_mode is true !\n" );
+							is_test_mode = true;
+						}
+					}
+					var = ZnkVarpAry_findObj_byName_literal( config, "is_apk", false );
+					if( var ){
+						if( ZnkS_eq( ZnkVar_cstr( var ), "true" ) ){
+							RanoLog_printf( "Birdman : Warning : is_apk is true !\n" );
+							is_apk = true;
+						}
+					}
 				}
 
 				if( argc >= 3 ){
@@ -1009,7 +1033,7 @@ int main( int argc, char** argv )
 							NULL, NULL );
 				}
 
-				result = upgradeQuery( ZnkStr_cstr(cur_vtag_path), ZnkStr_cstr(moai_dir), authentic_key );
+				result = upgradeQuery( ZnkStr_cstr(cur_vtag_path), ZnkStr_cstr(moai_dir), authentic_key, is_test_mode, is_apk );
 				ZnkStr_delete( cur_vtag_path );
 				ZnkStr_delete( msg );
 			} else {

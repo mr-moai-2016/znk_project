@@ -251,7 +251,7 @@ updateReplaceCmdAry( ZnkMyf myf, const char* ftr_name, RanoTxtFilterAry txt_ftr_
 
 
 bool
-RanoModule_saveFilter( const RanoModule mod )
+RanoModule_saveFilter( const RanoModule mod, const char* filters_dir )
 {
 	bool result_send = false;
 	bool result_recv = false;
@@ -262,7 +262,7 @@ RanoModule_saveFilter( const RanoModule mod )
 
 	if( isValidSendFilter( mod->ftr_send_ ) ){
 		/* Send filter */
-		Znk_snprintf( filename, sizeof(filename), "filters/%s_send.myf", target_name );
+		Znk_snprintf( filename, sizeof(filename), "%s/%s_send.myf", filters_dir, target_name );
 		result_send = ZnkMyf_save( mod->ftr_send_, filename );
 		RanoFileInfo_getLastUpdatedTime( filename, &mod->ftr_send_date_ );
 	}
@@ -276,7 +276,7 @@ RanoModule_saveFilter( const RanoModule mod )
 		ZnkStrAry_copy( dst_ary, mod->ftr_css_additional_ );
 	}
 
-	Znk_snprintf( filename, sizeof(filename), "filters/%s_recv.myf", target_name );
+	Znk_snprintf( filename, sizeof(filename), "%s/%s_recv.myf", filters_dir, target_name );
 	result_recv = ZnkMyf_save( mod->ftr_recv_, filename );
 	RanoFileInfo_getLastUpdatedTime( filename, &mod->ftr_recv_date_ );
 

@@ -162,7 +162,8 @@ filterHtmlTags( ZnkStr tagname, ZnkVarpAry varp_ary, void* arg, ZnkStr tagend )
 		result = on_kind2( tagname, varp_ary, arg, tagend, end_kind );
 	}
 
-	return 0;
+	//return 0;
+	return result;
 }
 
 static bool
@@ -183,27 +184,36 @@ isMajorURLChar( uint8_t ch )
 	return (bool)( isalnum( ch ) != 0 );
 }
 
-bool
-EstFilter_replaceToAutolink( ZnkStr planetxt )
+static size_t
+replaceByScheme( ZnkStr planetxt, const char* scheme, size_t scheme_leng, bool is_append_a_tag )
 {
-	const char* cur = NULL;
 	const char* p = NULL;
 	const char* h = NULL;
-	ZnkStr new_str = ZnkStr_new( "" );
-	ZnkStr new_url = ZnkStr_new( "" );
 	char hostname[ 256 ] = "";
 	const char* target = NULL;
+	size_t replace_count = 0;
+	ZnkStr new_str = ZnkStr_new( "" );
+	ZnkStr new_url = ZnkStr_new( "" );
+	p = ZnkStr_cstr( planetxt );
 
-	cur = ZnkStr_cstr( planetxt );
-	while( *cur ){
-		p = Znk_strstr( cur, "http://" );
-		if( p ){
+	while( *p ){
+		if( *p == '<' ){
+			/* skip when planetxt contains other html tags */
+			++p;
+			while( *p ){
+				if( *p == '>' ){
+					++p;
+					break;
+				}
+				++p;
+			}
+		} else if( ZnkS_isBegin( p, scheme ) ){
 			size_t pos  = 0;
 			size_t leng = 0;
 			const char* q = p;
-			h = Znk_strchr( p + Znk_strlen_literal("http://"), '/' );
+			h = Znk_strchr( p + scheme_leng, '/' );
 			if( h ){
-				ZnkS_copy( hostname, sizeof(hostname), p + Znk_strlen_literal("http://"), h - p - Znk_strlen_literal("http://") );
+				ZnkS_copy( hostname, sizeof(hostname), p + scheme_leng, h - p - scheme_leng );
 			}
 			target = EstBase_findTargetName( EstConfig_target_myf(), hostname );
 			while( true ){
@@ -214,7 +224,7 @@ EstFilter_replaceToAutolink( ZnkStr planetxt )
 			}
 			pos  = p - ZnkStr_cstr( planetxt );
 			leng = q - p;
-	
+		
 			if( target ){
 				ZnkStr_set( new_url, "/easter?est_view=" );
 				ZnkStr_append( new_url, p, leng );
@@ -222,71 +232,83 @@ EstFilter_replaceToAutolink( ZnkStr planetxt )
 				ZnkStr_assign( new_url, 0, p, leng );
 			}
 
-			ZnkStr_set( new_str, "<a class=MstyOpenLink href=\"" );
-			ZnkStr_add( new_str, ZnkStr_cstr(new_url) );
-			ZnkStr_add( new_str, "\" target=_blank> <font color=\"#404000\"> Open </font>" );
-			ZnkStr_add( new_str, "</a>" );
+			ZnkStr_clear( new_str );
+			if( is_append_a_tag ){
+				ZnkStr_add( new_str, "<a class=MstyOpenLink href=\"" );
+				ZnkStr_add( new_str, ZnkStr_cstr(new_url) );
+				ZnkStr_add( new_str, "\" target=_blank>" );
+				ZnkStr_add( new_str, "<font color=\"#404000\"> Open </font>" );
+				ZnkStr_add( new_str, "</a>" );
+			}
 			if( target ){
-				ZnkStr_addf( new_str, "<span class=MstyAutoLinkTarget>%s</span>", ZnkStr_cstr(new_url) );
+				ZnkStr_addf( new_str, "<!-- a --><span class=MstyAutoLinkTarget>%s</span>", ZnkStr_cstr(new_url) );
 			} else {
 				ZnkStr_addf( new_str, "<span class=MstyAutoLinkOther>%s</span>", ZnkStr_cstr(new_url) );
 			}
-	
+		
 			ZnkStr_replace( planetxt, pos, leng, ZnkStr_cstr(new_str), ZnkStr_leng(new_str) );
-			cur = ZnkStr_cstr( planetxt ) + pos + ZnkStr_leng(new_str);
+			p = ZnkStr_cstr( planetxt ) + pos + ZnkStr_leng(new_str);
+			++replace_count;
 		} else {
-			break;
-		}
-	}
-
-	cur = ZnkStr_cstr( planetxt );
-	while( *cur ){
-		p = Znk_strstr( cur, "https://" );
-		if( p ){
-			size_t pos  = 0;
-			size_t leng = 0;
-			const char* q = p;
-			h = Znk_strchr( p + Znk_strlen_literal("https://"), '/' );
-			if( h ){
-				ZnkS_copy( hostname, sizeof(hostname), p + Znk_strlen_literal("https://"), h - p - Znk_strlen_literal("https://") );
-			}
-			target = EstBase_findTargetName( EstConfig_target_myf(), hostname );
-			while( true ){
-				if( !isMajorURLChar( *q ) ){
-					break;
-				}
-				++q;
-			}
-			pos  = p - ZnkStr_cstr( planetxt );
-			leng = q - p;
-	
-			if( target ){
-				ZnkStr_set( new_url, "/easter?est_view=http://" ); /* httpへ変更 */
-				ZnkStr_append( new_url, p + Znk_strlen_literal("https://"), leng - Znk_strlen_literal("https://") );
-			} else {
-				ZnkStr_assign( new_url, 0, p, leng );
-			}
-
-			ZnkStr_set( new_str, "<a class=MstyOpenLink href=\"" );
-			ZnkStr_add( new_str, ZnkStr_cstr(new_url) );
-			ZnkStr_add( new_str, "\" target=_blank> <font color=\"#404000\"> Open </font>" );
-			ZnkStr_add( new_str, "</a>" );
-			if( target ){
-				ZnkStr_addf( new_str, "<span class=MstyAutoLinkTarget>%s</span>", ZnkStr_cstr(new_url) );
-			} else {
-				ZnkStr_addf( new_str, "<span class=MstyAutoLinkOther>%s</span>", ZnkStr_cstr(new_url) );
-			}
-	
-			ZnkStr_replace( planetxt, pos, leng, ZnkStr_cstr(new_str), ZnkStr_leng(new_str) );
-			cur = ZnkStr_cstr( planetxt ) + pos + ZnkStr_leng(new_str);
-		} else {
-			break;
+			++p;
 		}
 	}
 
 	ZnkStr_delete( new_str );
 	ZnkStr_delete( new_url );
-	return true;
+	return replace_count;
+}
+
+size_t
+EstFilter_replaceToAutolink( ZnkStr planetxt, bool is_append_a_tag )
+{
+	size_t replace_count = 0;
+
+	/* 一旦すべてttp系へ変換 */
+	{
+		ZnkSRef old_ptn = { 0 };
+		ZnkSRef new_ptn = { 0 };
+		ZnkSRef_set_literal( &old_ptn, "http://" );
+		ZnkSRef_set_literal( &new_ptn, "ttp://" );
+		ZnkStrEx_replace_BF( planetxt, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+	{
+		ZnkSRef old_ptn = { 0 };
+		ZnkSRef new_ptn = { 0 };
+		ZnkSRef_set_literal( &old_ptn, "https://" );
+		ZnkSRef_set_literal( &new_ptn, "ttps://" );
+		ZnkStrEx_replace_BF( planetxt, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+
+	/* ttp系で処理 */
+	{
+		ZnkSRef scheme = { 0 };
+		ZnkSRef_set_literal( &scheme, "ttp://" );
+		replace_count += replaceByScheme( planetxt, scheme.cstr_, scheme.leng_, is_append_a_tag );
+	}
+	{
+		ZnkSRef scheme = { 0 };
+		ZnkSRef_set_literal( &scheme, "ttps://" );
+		replace_count += replaceByScheme( planetxt, scheme.cstr_, scheme.leng_, is_append_a_tag );
+	}
+
+	/* すべてhttp系へ変換 */
+	{
+		ZnkSRef old_ptn = { 0 };
+		ZnkSRef new_ptn = { 0 };
+		ZnkSRef_set_literal( &old_ptn, "ttp://" );
+		ZnkSRef_set_literal( &new_ptn, "http://" );
+		ZnkStrEx_replace_BF( planetxt, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+	{
+		ZnkSRef old_ptn = { 0 };
+		ZnkSRef new_ptn = { 0 };
+		ZnkSRef_set_literal( &old_ptn, "ttps://" );
+		ZnkSRef_set_literal( &new_ptn, "https://" );
+		ZnkStrEx_replace_BF( planetxt, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
+	}
+
+	return replace_count;
 }
 
 static int
@@ -296,6 +318,41 @@ filterPlaneTxt( ZnkStr planetxt, void* arg )
 	struct EstLinkInfo* link_info = Znk_force_ptr_cast( struct EstLinkInfo*, arg );
 	if( link_info && link_info->filter_module_ && link_info->filter_module_->on_plane_text_ ){
 		result = link_info->filter_module_->on_plane_text_( planetxt, arg );
+	}
+	return result;
+}
+static int
+filterPreModify( ZnkStr tagname, ZnkVarpAry varp_ary, void* arg, ZnkStr tagend, ZnkStr text, size_t cur )
+{
+	int result = 1;
+	struct EstLinkInfo* link_info = Znk_force_ptr_cast( struct EstLinkInfo*, arg );
+	const char* p = ZnkStr_cstr(text) + cur;
+	if( ZnkS_eqCase( ZnkStr_cstr(tagname), "a" ) ){
+		const bool is_append_a_tag = false;
+		const char* end_ptn = ZnkStr_first(tagname) == 'a' ? "</a>" : "<A/>";
+		const char* q = Znk_strstr( p, end_ptn );
+		if( q > p ){
+			size_t replace_count = 0;
+			ZnkStr wk_str  = ZnkStr_new( "" );
+			ZnkStr_assign( wk_str, 0, p, q-p ); 
+			replace_count = EstFilter_replaceToAutolink( wk_str, is_append_a_tag );
+			if( replace_count ){
+				ZnkStr_replace( text, cur, q-p, ZnkStr_cstr(wk_str), ZnkStr_leng(wk_str) );
+			}
+			ZnkStr_delete( wk_str );
+		}
+	}
+	return result;
+}
+
+static int
+changeHEAD2head( ZnkStr str, void* arg )
+{
+	if( ZnkStrEx_chompFirstStr( str, "<HEAD>", Znk_NPOS ) ){
+		ZnkStr_insert( str, 0, "<head>", Znk_NPOS );
+	}
+	if( ZnkStrEx_chompLastStr( str, "</HEAD>", Znk_NPOS ) ){
+		ZnkStr_add( str, "</head>" );
 	}
 	return 1;
 }
@@ -312,24 +369,33 @@ addVarEaster_hostname( ZnkStr str, void* arg )
 				"//--></script>\n",
 				ZnkStr_cstr(link_info->hostname_),
 				ZnkStr_cstr(link_info->hyperpost_url_) );
+
+		{
+			const char* xhr_auth_host = EstConfig_XhrAuthHost();
+			ZnkStr_addf( js, "<link href=\"http://%s/msty.css\" rel=\"stylesheet\" type=\"text/css\" />\n", xhr_auth_host );
+			ZnkStr_addf( js, "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" );
+			ZnkStr_addf( js, "<link href=\"http://%s/bulma.css\" rel=\"stylesheet\" type=\"text/css\" />\n", xhr_auth_host );
+		}
+
 		ZnkStr_insert( str, 0, ZnkStr_cstr(js), ZnkStr_leng(js) );
 		ZnkStr_delete( js );
 	}
 	return 1;
 }
 
-void
+bool
 EstFilter_insertBBSOperation( ZnkStr text, 
 		const char* result_filename, const char* landmark, const char* src, const char* bbs_id_name, ZnkStr console_msg )
 {
+	bool result = false;
 	const char* xhr_auth_host = EstConfig_XhrAuthHost();
 	ZnkStr dst = ZnkStr_new( "" );
 	ZnkStr hint_table = EstHint_getHintTable( "bbs_operation" );
 
 	ZnkStr_setf( dst, "%s\n", landmark );
 	ZnkStr_add( dst, "<a name='EasterThreadOperation'></a>" );
-	ZnkStr_add( dst, "<table><tr><td>" );
-	ZnkStr_add( dst, "<fieldset class=MstyBBSOperation><legend><font color=\"#808000\">Easter BBS Operation</font></legend>\n" );
+	ZnkStr_add( dst, "<br><article class=\"message is-dark\">\n" );
+	ZnkStr_add( dst, "<div class=\"message-header\">Easter BBS Operation</div><div class=\"message-body\">\n" );
 
 	ZnkStr_addf( dst, "<script type=\"text/javascript\" src=\"http://%s/cgis/easter/publicbox/easter.js\"></script>\n",
 			xhr_auth_host );
@@ -353,13 +419,12 @@ EstFilter_insertBBSOperation( ZnkStr text,
 	 */
 	ZnkStr_addf( dst,
 			"<a class=MstyQandALink href=\"javascript:void(0);\" onclick=\"displayQandA( 'Hint', 'aboutBBSOperation' );\">"
-			"<img src='/cgis/easter/publicbox/icons/question_16.png'></a>\n" );
+			"<img src='/cgis/easter/publicbox/icons/question_16.png'></a><br>\n" );
 	ZnkStr_addf( dst, "<font size=-1><div id=startLink></div></font>\n" );
 	ZnkStr_addf( dst, "<font size=-1><div id=aboutBBSOperation></div></font>\n" );
 	ZnkStr_addf( dst, "<a class=MstyElemLink href=\"/easter?est_reload=%s\" onClick=\"Easter_reload('%s', '%s'); return false;\" >リロード</a>",
 			src, src, bbs_id_name );
 
-	//ZnkStr_add( dst, "<br>" );
 	ZnkStr_add( dst, "&nbsp;" );
 
 	{
@@ -378,13 +443,15 @@ EstFilter_insertBBSOperation( ZnkStr text,
 
 	ZnkHtpURL_negateHtmlTagEffection( console_msg ); /* for XSS */
 
-	ZnkStr_addf( dst, "<a class=MstyElemLink href=\"http://%s/easter\" target=_blank>Easterトップページ</a><br>", xhr_auth_host );
+	ZnkStr_addf( dst, "<a class=MstyElemLink href=\"http://%s/easter\" target=_blank>Easter</a>&nbsp;", xhr_auth_host );
+	ZnkStr_addf( dst, "<a class=MstyElemLink href=\"http://%s/cgis/custom_boy/custom_boy.cgi?cb_target=futaba&cb_type=automatic\">VirtualUSERS</a>&nbsp;", xhr_auth_host );
+	ZnkStr_addf( dst, "<a class=MstyElemLink href=\"http://%s/\">Moai</a><br>", xhr_auth_host );
+	ZnkStr_add( dst, "<span id=EasterReloadState></span>" );
 	ZnkStr_add( dst, "<pre class=MstyMsgConsole>" );
 	ZnkStr_add( dst, "<b>Easter BBS Console:</b>\n" );
 	ZnkStr_add( dst, ZnkStr_cstr(console_msg) );
 	ZnkStr_add( dst, "</pre> " );
-	ZnkStr_add( dst, "</fieldset>\n" );
-	ZnkStr_add( dst, "</td></tr></table>\n" );
+	ZnkStr_add( dst, "</div></article>\n" );
 
 	/***
 	 * landmarkが複数ある場合もあり得る.
@@ -395,10 +462,12 @@ EstFilter_insertBBSOperation( ZnkStr text,
 				(uint8_t*)landmark, Znk_strlen(landmark), 1 );
 		if( dst_pos != Znk_NPOS ){
 			ZnkStr_replace( text, dst_pos, Znk_strlen(landmark), ZnkStr_cstr(dst), ZnkStr_leng(dst) );
+			result = true;
 		}
 	}
 
 	ZnkStr_delete( dst );
+	return result;
 }
 
 
@@ -420,12 +489,17 @@ EstFilter_main( const char* result_file,
 		/* HtmlTagフィルター及びHtmlプレーンテキストフィルター */
 		if( !EstParser_invokeHtmlTagEx( text, filterHtmlTags, &link_info,
 					filterPlaneTxt, &link_info,
+					filterPreModify, &link_info,
 					ermsg ) )
 		{
 			RanoLog_printf( "EstParser_invokeHtmlTagEx : failure. ermsg=[%s]\n", ZnkStr_cstr(ermsg) );
 		}
 
 		/* Easter_hostname */
+		ZnkStrPtn_invokeInQuote( text,
+				"<HEAD>", "</HEAD>",
+				NULL, NULL,
+				changeHEAD2head, NULL, true );
 		ZnkStrPtn_invokeInQuote( text,
 				"<head>", "</head>",
 				NULL, NULL,

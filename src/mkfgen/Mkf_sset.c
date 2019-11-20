@@ -10,3 +10,14 @@ MkfSSet_add( ZnkStrAry sset, const char* str )
 	}
 	return false;
 }
+
+bool
+MkfSSet_erase( ZnkStrAry sset, const char* str )
+{
+	const size_t idx = ZnkStrAry_find( sset, 0, str, Znk_NPOS );
+	if( idx != Znk_NPOS ){
+		ZnkStrAry_erase_byIdx( sset, idx );
+		return true;
+	}
+	return false;
+}

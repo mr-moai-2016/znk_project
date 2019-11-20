@@ -21,6 +21,21 @@ struct Info {
 	char* category_;
 };
 
+static const char*
+getImgPath( const char* author )
+{
+	if( ZnkS_eq( author, "Mr.Moai" ) ){
+		return "/imgs/moai.png";
+	}
+	if( ZnkS_eq( author, "Zenkaku" ) ){
+		return "/imgs/zenkaku.png";
+	}
+	if( ZnkS_eq( author, "K.Yakisoba.H" ) ){
+		return "/imgs/yakisoba.png";
+	}
+	return NULL;
+}
+
 static void
 drawConfig( ZnkStr ans, ZnkMyf in_myf, ZnkMyf menu_myf )
 {
@@ -30,11 +45,14 @@ drawConfig( ZnkStr ans, ZnkMyf in_myf, ZnkMyf menu_myf )
 	ZnkVarp     title_update_varp = ZnkVarpAry_findObj_byName_literal( global_config, "title_update", false );
 	const char* title_update      = title_update_varp ? ZnkVar_cstr( title_update_varp ) : "LastUpdate";
 	ZnkVarpAry  config = ZnkMyf_find_vars( in_myf, "config" );
-	ZnkVarp     author_varp = ZnkVarpAry_findObj_byName_literal( config, "author", false );
-	const char* author      = author_varp ? ZnkVar_cstr( author_varp ) : NULL;
-	ZnkVarp     update_varp = ZnkVarpAry_findObj_byName_literal( config, "update", false );
-	const char* update      = update_varp ? ZnkVar_cstr( update_varp ) : NULL;
+	ZnkVarp     author_varp  = ZnkVarpAry_findObj_byName_literal( config, "author", false );
+	ZnkStrAry   author_list  = ( author_varp && ZnkVar_prim_type( author_varp ) == ZnkPrim_e_StrAry ) ?
+		ZnkVar_str_ary( author_varp ) : NULL;
+	ZnkVarp     update_varp  = ZnkVarpAry_findObj_byName_literal( config, "update", false );
+	const char* update       = update_varp ? ZnkVar_cstr( update_varp ) : NULL;
 
+
+#if 0
 	if( author || update ){
 		ZnkStr_addf( ans,
 				"<div class=MstyComment>\n"
@@ -47,6 +65,57 @@ drawConfig( ZnkStr ans, ZnkMyf in_myf, ZnkMyf menu_myf )
 				title_author, author ? author : "",
 				title_update, update ? update : "" );
 	}
+#else
+	if( author_list ){
+		size_t author_list_size = ZnkStrAry_size( author_list );
+		size_t idx;
+
+		ZnkStr_addf( ans,
+				"<div class=\"card\">\n"
+				"	<u><b>%s</b></u><br>\n"
+				"	<div class=\"card-content\">\n", title_author );
+
+		for( idx=0; idx<author_list_size; ++idx ){
+			const char* author = ZnkStrAry_at_cstr( author_list, idx );
+			const char* imgpath = getImgPath( author );
+			if( imgpath ){
+				ZnkStr_addf( ans,
+						"		<div class=\"media\">\n"
+						"			<div class=\"media-left\">\n"
+						"				<figure class=\"image is-48x48\">\n"
+						"				<img src=\"%s\" alt=\"none image\">\n"
+						"				</figure>\n"
+						"			</div>\n"
+						"			<div class=\"media-content\">\n"
+						"				<p class=\"title is-4\">%s</p>\n"
+						"				<p class=\"subtitle is-6\">@znk project</p>\n"
+						"			</div>\n"
+						"		</div>\n", imgpath, author );
+			} else {
+				ZnkStr_addf( ans,
+						"		<div class=\"media\">\n"
+						"			<div class=\"media-content\">\n"
+						"				<p class=\"title is-4\">%s</p>\n"
+						"				<p class=\"subtitle is-6\">@znk project</p>\n"
+						"			</div>\n"
+						"		</div>\n", author );
+			}
+		}
+
+		if( update ){
+			/* 23:09 PM - 20 Jun 2019 */
+			ZnkStr_addf( ans,
+					"		<div class=\"content\">\n"
+					"		  <time datetime=\"2016-1-1\">%s</time>\n"
+					"		</div>\n", update );
+		}
+
+		ZnkStr_addf( ans,
+				"	</div>\n"
+				"</div>\n" );
+
+	}
+#endif
 	ZnkStr_add( ans, "\n\n" );
 }
 
@@ -135,15 +204,12 @@ drawAtFirst( ZnkStr ans, ZnkMyf in_myf, ZnkMyf menu_myf )
 		size_t       idx;
 
 		ZnkStr_add( ans, "<a name=AtFirst></a>\n" );
-		ZnkStr_add( ans, "<u><b>\n" );
-		ZnkStr_addf( ans, "%s\n", sec_title );
-		ZnkStr_add( ans, "</b></u><br>\n" );
-		ZnkStr_add( ans, "<br>\n" );
-		ZnkStr_add( ans, "<div class=MstyIndent>\n" );
+		ZnkStr_addf( ans, "<h1 class=\"title\">%s</h1>\n", sec_title );
+		ZnkStr_add( ans, "<p>\n" );
 		for( idx=0; idx<size; ++idx ){
 			drawLine( ans, atfirst, idx, nb_tags );
 		}
-		ZnkStr_add( ans, "</div><br>\n" );
+		ZnkStr_add( ans, "</p>\n" );
 		ZnkStr_add( ans, "<br>\n" );
 		ZnkStr_add( ans, "\n\n" );
 	}
@@ -159,9 +225,7 @@ drawIndex( ZnkStr ans, ZnkMyf in_myf, ZnkMyf menu_myf )
 		const size_t size = ZnkPrimpAry_size( index );
 		size_t idx;
 		ZnkStr_add( ans, "<a name=Index></a>\n" );
-		ZnkStr_add( ans, "<u><b>\n" );
-		ZnkStr_addf( ans, "%s\n", sec_title );
-		ZnkStr_add( ans, "</b></u><br>\n" );
+		ZnkStr_addf( ans, "<h1 class=\"title\">%s</h1>\n", sec_title );
 		ZnkStr_add( ans, "<br>\n" );
 		ZnkStr_add( ans, "<ul>\n" );
 		for( idx=0; idx<size; ++idx ){
@@ -193,9 +257,7 @@ drawSection( ZnkStr ans, ZnkMyf in_myf, ZnkMyf menu_myf, const char* sec_name, c
 		size_t       idx;
 
 		ZnkStr_addf( ans, "<a name=%s></a>\n", sec_name );
-		ZnkStr_add(  ans, "<u><b>\n" );
-		ZnkStr_addf( ans, "%s\n", sec_title );
-		ZnkStr_add( ans, "</b></u>" );
+		ZnkStr_addf( ans, "<h1 class=\"title\">%s</h1>\n", sec_title );
 		if( title_category ){
 			ZnkVarp     title_attr_fmt_varp = ZnkVarpAry_findObj_byName_literal( config, "title_attr_fmt", false );
 			const char* title_attr_fmt      = title_attr_fmt_varp ? ZnkVar_cstr( title_attr_fmt_varp ) : NULL;
@@ -203,17 +265,16 @@ drawSection( ZnkStr ans, ZnkMyf in_myf, ZnkMyf menu_myf, const char* sec_name, c
 				ZnkStr_addf( ans, title_attr_fmt, title_category );
 			}
 		}
-		ZnkStr_add( ans, "<br>\n" );
-		ZnkStr_add( ans, "<br>\n" );
-		ZnkStr_add( ans, "<div class=MstyIndent>\n" );
+		//ZnkStr_add( ans, "<p>\n" );
 		for( idx=0; idx<size; ++idx ){
 			drawLine( ans, sec, idx, nb_tags );
 		}
+		//ZnkStr_add( ans, "</p>\n" );
+
 		if( !index_hidden ){
 			ZnkStr_add( ans, "\t<br>\n" );
 			ZnkStr_addf( ans, "\t<b><a class=MstyElemLink href=#Index>%s</a></b><br>\n", msg_backto_index );
 		}
-		ZnkStr_add( ans, "</div><br>\n" );
 		ZnkStr_add( ans, "<br>\n" );
 		ZnkStr_add( ans, "\n\n" );
 		return true;
@@ -228,14 +289,14 @@ drawLink( ZnkStr ans, ZnkMyf in_myf, ZnkMyf menu_myf )
 	if( link ){
 		ZnkVarpAry   global_config  = ZnkMyf_find_vars( menu_myf, "config" );
 		ZnkVarp      sec_title_varp = ZnkVarpAry_findObj_byName_literal( global_config, "title_link", false );
-		const char*  sec_title      = sec_title_varp ? ZnkVar_cstr( sec_title_varp ) : "Link";
+		const char*  sec_title      = sec_title_varp ? ZnkVar_cstr( sec_title_varp ) : NULL;
 		const size_t size = ZnkPrimpAry_size( link );
 		size_t idx;
 		ZnkStr_add( ans, "<a name=Link></a>\n" );
-		ZnkStr_add( ans, "<u><b>\n" );
-		ZnkStr_addf( ans, "%s\n", sec_title );
-		ZnkStr_add( ans, "</b></u><br>\n" );
-		ZnkStr_add( ans, "<br>\n" );
+		if( sec_title ){
+			ZnkStr_addf( ans, "<h1 class=\"title\">%s</h1>\n", sec_title );
+		}
+		ZnkStr_add( ans, "<hr>\n" );
 		ZnkStr_add( ans, "<ul>\n" );
 		for( idx=0; idx<size; ++idx ){
 			ZnkPrimp  prim = ZnkPrimpAry_at( link, idx );
@@ -277,7 +338,7 @@ makeOne( ZnkStr ans, ZnkMyf in_myf, ZnkMyf menu_myf, const char* in_file_path, c
 		DocUtil_drawHeader( ans, category_path, urp, menu_myf, doc_title );
 	}
 
-	drawConfig( ans, in_myf, menu_myf );
+	//drawConfig( ans, in_myf, menu_myf );
 	drawAtFirst( ans, in_myf, menu_myf );
 
 	if( !index_hidden ){
@@ -310,8 +371,11 @@ makeOne( ZnkStr ans, ZnkMyf in_myf, ZnkMyf menu_myf, const char* in_file_path, c
 			}
 		}
 	}
+
+	drawConfig( ans, in_myf, menu_myf );
 	drawLink( ans, in_myf, menu_myf );
-	ZnkStr_add( ans, "</body>\n</html>" );
+
+	DocUtil_drawEnd( ans );
 
 	//convertSJIStoUTF8( ans );
 	{
@@ -381,13 +445,12 @@ makeIgnoreList( void )
 }
 
 bool
-DocHtml_make( const char* in_dir, const char* out_dir )
+DocHtml_make( const char* in_dir, const char* out_dir, ZnkStr ermsg )
 {
 	bool result = false;
 	ZnkMyf in_myf = ZnkMyf_create();
 	ZnkMyf menu_myf = ZnkMyf_create();
 	ZnkStr ans = ZnkStr_new( "" );
-	ZnkStr ermsg = ZnkStr_new( "" );
 	struct FilterInfo info = { 0 };
 
 	info.ans_      = ans;
@@ -404,8 +467,9 @@ DocHtml_make( const char* in_dir, const char* out_dir )
 		char menu_myf_path[ 256 ];
 		Znk_snprintf( menu_myf_path, sizeof(menu_myf_path), "%s/menu.myf", in_dir );
 		if( !ZnkMyf_load( menu_myf, menu_myf_path ) ){
-			Znk_printf_e( "docgen Error : Cannot load [%s].\n", menu_myf_path );
-			Znk_getchar();
+			if( ermsg ){
+				ZnkStr_addf( ermsg, "docgen Error : Cannot load [%s].\n", menu_myf_path );
+			}
 			goto FUNC_END;
 		}
 	}
@@ -418,7 +482,6 @@ DocHtml_make( const char* in_dir, const char* out_dir )
 
 	result = true;
 FUNC_END:
-	ZnkStr_delete( ermsg );
 	ZnkStr_delete( ans );
 	ZnkMyf_destroy( menu_myf );
 	ZnkMyf_destroy( in_myf );

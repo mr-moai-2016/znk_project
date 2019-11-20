@@ -1,10 +1,25 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html><head>
 	<META http-equiv="Content-type" content="text/html; charset=Shift_JIS">
 	<META http-equiv="Content-Script-Type" content="text/javascript">
 	<META http-equiv="Content-Style-Type" content="text/css">
-	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="/msty.css" rel="stylesheet" type="text/css" />
+	<link href="/bulma.css" rel="stylesheet" type="text/css" />
 	<title>Easterトピック</title>
+	<style type="text/css">
+	<!--
+		.tile.is-parent {
+			  padding: 0px;
+		}
+		
+		.tile.is-vertical>.tile.is-child {
+			margin-bottom: 2px !important;
+			margin-left:   0px !important;
+			margin-right:  0px !important;
+		}
+	--> 
+	</style>
 </head>
 
 <script type="text/javascript"><!--
@@ -16,13 +31,14 @@ var st_func_tbls = [];
 <script type="text/javascript" src="/cgis/easter/publicbox/hint.js"></script>
 <script type="text/javascript" src="/cgis/easter/publicbox/assort.js"></script>
 <script type="text/javascript" src="/cgis/easter/publicbox/preview.js"></script>
-	
-<body bgcolor="#EEFFEE" text="#808000" link="#0000EE" vlink="#0000EE" alink="#FF0000">
 
-<form action="/cgis/easter/easter.cgi?est_manager=topic" method="POST" name=fm_main>
+<body bgcolor="#EEFFEE" text="#808000" link="#0000EE" vlink="#0000EE" alink="#FF0000">
+<div class="section" id="section">
+<div class="container is-fluid">
+<div class="content">
 
 <a name="user-content-index"></a>
-<font size=+2><i><b>Easter</b></i></font><br>
+<font size=+2><b>Easter Topic Viewer</b></font><br>
 
 <br>
 <a class=MstyElemLink  href="/easter" >仮想ブラウジング</a> &nbsp;
@@ -30,60 +46,73 @@ var st_func_tbls = [];
 <a class=MstyElemLink  href="/easter?est_manager=config&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >設定</a> &nbsp;
 <br>
 
+<form action="/cgis/easter/easter.cgi?est_manager=topic" method="POST" name=fm_main>
 
 <input type=hidden name=Moai_AuthenticKey value="#[Moai_AuthenticKey]#">
 <button class=MstyDmyUpdateBtn disabled></button> <!-- For disable Enter key on text field -->
-
+<br>
 
 <a name="TopicViewer"></a>
-<br><b>TopicViewer</b><br>
-<table class=MstyManagerTable>
+<article class="message is-dark">
+	<div class="message-header">
+		コレクションの閲覧
+	</div>
+	<div class="message-body">
+		<font size=-1>
+		<a class=MstyQandALink href="javascript:void(0);" onclick="displayQandA( 'Hint', 'aboutTopicViewer' );"><img src='/cgis/easter/publicbox/icons/question_16.png'></a>
+		<br><div id=aboutTopicViewer></div>
+		</font>
+		<a class=MstyElemLink href="/easter?est_manager=search&amp;command=edit&amp;mode=from_topic&amp;searched_key=#[searched_key]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >このボックス内を検索</a> &nbsp;
+		<br>
+		#[EstTP_view]#
+		<a class=MstyElemLinkRed href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'topic', 'remove', 'this_is_dustbox=#[this_is_dustbox]#', '' )">Check項目の一括削除</a> 
+		<input type=hidden name=confirm id=confirm value=on >
+		<input type=hidden name=backto value="#[backto]#">
+		<br>
+	</div>
+</article>
 
-<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>コレクションの閲覧</legend>
-<font size=-1>
-<a class=MstyQandALink href="javascript:void(0);" onclick="displayQandA( 'Hint', 'aboutTopicViewer' );"><img src='/cgis/easter/publicbox/icons/question_16.png'></a>
-<br><div id=aboutTopicViewer></div>
-</font>
-<a class=MstyElemLink href="/easter?est_manager=search&amp;command=edit&amp;mode=from_topic&amp;searched_key=#[searched_key]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >検索して内容を更新</a> &nbsp;
-<br>
-#[EstTP_view]#
-<input type=hidden name=backto value="#[backto]#">
-<br>
-</fieldset></td></tr>
 
-<tr><td colspan=2>
 <a name="TagsView"></a>
-<a class=MstyAppLinkRed href="javascript:EjsAssort_submitCommandAndArg( document.fm_main, 'topic', 'stock', 'add_tags=true' )">Check項目を一括でストック</a>
-<a class=MstyAppLinkRed href="javascript:EjsAssort_submitCommandAndArg( document.fm_main, 'topic', 'favoritize', 'add_tags=true' )">Check項目を一括でお気に入りへ</a> 
-<br><div class=MstyAutoLinkOther>
-<b><u>タグ一覧(カテゴリ別に表示)</u></b><br> <br>
-#[category_select_bar]#
-<div class=MstyAutoLinkOther>
-#[tags_view]#
-</div>
-<br>
-<a class=MstyAppLinkRed href="javascript:EjsAssort_submitCommandAndArg( document.fm_main, 'topic', 'stock', 'add_tags=true' )">Check項目を一括でストック</a>
-<a class=MstyAppLinkRed href="javascript:EjsAssort_submitCommandAndArg( document.fm_main, 'topic', 'favoritize', 'add_tags=true' )">Check項目を一括でお気に入りへ</a> 
-</div>
-<br> <br>
+<article class="message is-dark">
+	<div class="message-header">
+		タグ一覧(カテゴリ別に表示)
+	</div>
+	<div class="message-body">
+		<a class=MstyAppLinkRed href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'topic', 'stock', 'add_tags=true', '' )">Check項目を一括でストック</a>
+		<a class=MstyAppLinkRed href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'topic', 'favoritize', 'add_tags=true', '' )">Check項目を一括でお気に入りへ</a> 
+		<a class=MstyAppLinkRed href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'topic', 'favoritize_from_external', 'add_tags=true', '' )">URLをお気に入りへ</a> 
+		<br> <br>
+		<input class=input type=text name=est_hyper_upload_path placeholder="URL" value="#[est_hyper_upload_path]#" >
+		<br> <br>
+		<div class="pagination-list">
+			#[category_select_bar]#
+		</div>
+		#[tags_view]#
+		<br>
+		<a class=MstyAppLinkRed href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'topic', 'stock', 'add_tags=true', '' )">Check項目を一括でストック</a>
+		<a class=MstyAppLinkRed href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'topic', 'favoritize', 'add_tags=true', '' )">Check項目を一括でお気に入りへ</a> 
+		<a class=MstyAppLinkRed href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'topic', 'favoritize_from_external', 'add_tags=true', '' )">URLをお気に入りへ</a> 
+	</div>
+</article>
 
-<a class=MstyElemLink href="javascript:EjsAssort_submitCommandAndArg( document.fm_main, 'tag_manager', 'view', 'edit_mode=tag#TagManager' )">タグマネージャーを開く</a>
-
-</td></tr>
-
-<tr><td colspan=2>
-<input type=checkbox id=msg_console_cbtn onclick="EjsAssort_switchVisibility('msg_console', '_cbtn', '_body', '_msg')">
-<b>Easter System Console </b><br>
-<div class=MstyMsgConsole id=msg_console_body style=display:none>#[msg]#</div>
-<font size=-1 color=#8888ff><div id=msg_console_msg>― 現在非表示です ―</div></font>
-</td></tr>
-
-</table>
+<a class=MstyElemLink href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'tag_manager', 'view', 'edit_mode=tag', '#TagManager' )">タグマネージャーを開く</a>
+<a class=MstyElemLink href="/easter?est_manager=topic&Moai_AuthenticKey=#[Moai_AuthenticKey]#" target=_blank>コレクション</a>
 
 </form>
+
+<div class=box>
+	<input type=checkbox id=msg_console_cbtn onclick="EjsAssort_switchVisibility('msg_console', '_cbtn', '_body', '_msg')">
+	<b>Easter System Console </b><br>
+	<div class=MstyMsgConsole id=msg_console_body style=display:none>#[msg]#</div>
+	<font size=-1 color=#8888ff><div id=msg_console_msg>― 現在非表示です ―</div></font>
+</div>
 
 
 <a class=MstyElemLink href="#user-content-index">一番上へ戻る</a> <a class=MstyElemLink href="/">Moaiトップページ</a>
 <br><br>
 
+</div>
+</div>
+</div>
 </body></html>

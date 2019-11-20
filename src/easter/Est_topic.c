@@ -25,6 +25,22 @@
 #define IS_OK( val ) (bool)( (val) != NULL )
 
 static void
+makeEstTopicSearchEditLink( ZnkStr ans,
+		const char* searched_key, const char* topic_name, const char* authentic_key )
+{
+	const char* style_class_name = "MstyElemLink";
+	ZnkStr uxs_topic_name = ZnkStr_new( topic_name );
+	ZnkStr query_string_base = ZnkStr_newf( "est_manager=search&amp;command=edit&amp;mode=from_topic&amp;searched_key=%s", searched_key );
+
+	ZnkHtpURL_negateHtmlTagEffection( uxs_topic_name ); /* for XSS */
+	ZnkStr_addf( ans, "<a class=%s href=/easter?%s&amp;Moai_AuthenticKey=%s>%s</a>\n",
+			style_class_name, ZnkStr_cstr(query_string_base), authentic_key, ZnkStr_cstr(uxs_topic_name) );
+
+	ZnkStr_delete( query_string_base );
+	ZnkStr_delete( uxs_topic_name );
+}
+
+static void
 makeEstTopicViewLink( ZnkStr ans,
 		const char* searched_key, const char* topic_name, bool is_search_result_mode,
 		size_t begin_idx, size_t end_idx, const char* authentic_key, bool with_checkbox )
@@ -396,14 +412,30 @@ viewTopic( ZnkBird bird, ZnkVarpAry post_vars, ZnkStr backto, ZnkStr msg, const 
 				EstAssort_addImgURLList( EstCM_img_url_list, finf_idx, begin_idx, end_idx, vpath );
 			}
 			ZnkStr_setf( query_string_base, "est_manager=topic&amp;command=view&amp;searched_key=%s", ZnkVar_cstr(searched_key) );
+
 			EstUI_showPageSwitcher( EstTP_view, ZnkStr_cstr(query_string_base),
 					EstFInfList_size( finf_list ),
 					show_file_num, begin_idx, authentic_key, "PageSwitcher" );
 
-			ZnkStr_add( EstTP_view, "<table><tr><td valign=top>\n" );
+#if 0
+			ZnkStr_add( EstTP_view, "<span id=upper_preview></span><br>\n" );
+			ZnkStr_add( EstTP_view, "<table class=table><tr><td valign=top>\n" );
 			EstBoxUI_make_forSearchResult( EstTP_view, finf_list,
 					begin_idx, end_idx, authentic_key );
-			ZnkStr_add( EstTP_view, "</td><td valign=top><span id=preview></span></td></tr></table>\n" );
+			ZnkStr_add( EstTP_view, "</td><td valign=top><span id=right_preview></span></td></tr></table>\n" );
+#else
+			ZnkStr_add( EstTP_view, "<span id=upper_preview></span><br>\n" );
+			ZnkStr_add( EstTP_view, "<div class=\"tile is-parent\">\n" );
+			ZnkStr_add( EstTP_view, "  <div class=\"tile is-child\">\n" );
+			EstBoxUI_make_forSearchResult( EstTP_view, finf_list,
+					begin_idx, end_idx, authentic_key );
+			ZnkStr_add( EstTP_view, "  </div>\n" );
+			ZnkStr_add( EstTP_view, "  <div class=\"tile is-child\">\n" );
+			ZnkStr_add( EstTP_view, "    <div class=MstyRightPreview><span id=right_preview></span></div>\n" );
+			ZnkStr_add( EstTP_view, "  </div>\n" );
+			ZnkStr_add( EstTP_view, "</div>\n" );
+			ZnkStr_add( EstTP_view, "<br>\n" );
+#endif
 		} else {
 			ZnkStr_addf( EstTP_view, "searched_key=[%s] does not exist.", ZnkVar_cstr(searched_key) );
 		}
@@ -446,6 +478,128 @@ viewTopic( ZnkBird bird, ZnkVarpAry post_vars, ZnkStr backto, ZnkStr msg, const 
 		ZnkStr_delete( EstTP_view );
 		EstFInfList_destroy( finf_list );
 	}
+}
+
+static void
+removeCaches( ZnkBird bird,
+		RanoCGIEVar* evar, ZnkVarpAry post_vars,
+		const char** template_html_file, ZnkStr EstCM_img_url_list,
+		ZnkStr backto, ZnkStr assort_msg, ZnkStr msg, const char* authentic_key,
+		bool this_is_dustbox, const char* est_manager )
+{
+	/***
+	 * TODO:
+	 * 以下を削除します.
+	 * 本当によろしいですか？
+	 * 画面を出し、「削除」ボタンを押すとカレントのEstBoxMapViewer画面に戻る.
+	 */
+	ZnkVarp confirm;
+	ZnkVarp varp;
+	ZnkStr  result_view = ZnkStr_new( "" );
+	ZnkStr  assort_ui = ZnkStr_new( "" );
+	ZnkStr  tag_editor_ui = ZnkStr_new( "" );
+	size_t  processed_count = 0;
+	bool    is_confirm = false;
+	const size_t show_file_num = EstConfig_getShowFileNum();
+	const char* style_class_name = "MstyElemLink";
+	const char* favorite_dir = EstConfig_favorite_dir();
+
+	*template_html_file = "templates/boxmap_viewer.html";
+
+	if( IS_OK( confirm = ZnkVarpAry_find_byName_literal( post_vars, "confirm", false ) )){
+		if( ZnkS_eq( ZnkVar_cstr(confirm), "on" ) ){
+			is_confirm = true;
+		}
+	}
+
+	if( is_confirm ){
+		*template_html_file = "templates/remove_confirm.html";
+		EstUI_makeCheckedConfirmView( evar, post_vars,
+				result_view, show_file_num, authentic_key,
+				ZnkStr_cstr(assort_msg) );
+
+		ZnkStr_add( result_view, "<br>\n" );
+		ZnkStr_add( result_view, "<font size=-1>\n" );
+		ZnkStr_add( result_view, "上記のものを削除しようとしています.<br>\n" );
+		ZnkStr_add( result_view, "よろしいですか?<br>\n" );
+		ZnkStr_add( result_view, "</font>\n" );
+		ZnkStr_add( result_view, "<br>\n" );
+
+		ZnkStr_add( result_view, "<br>\n" );
+		ZnkStr_addf( result_view, "<a class=%s href=\"javascript:EjsAssort_submitCommandEx( document.fm_main, '%s', 'remove', 'this_is_dustbox=%s', '' )\">",
+				style_class_name, est_manager, this_is_dustbox ? "true" : "false" );
+		ZnkStr_addf( result_view, "はい、実際に削除します.</a><br>\n" );
+
+		if( ZnkStr_leng(backto) ){
+			char bkt_vpath[ 256 ] = "";
+			unsigned int bkt_begin_idx = 0;
+			unsigned int bkt_end_idx   = 0;
+			sscanf( ZnkStr_cstr(backto), "%u,%u,%s", &bkt_begin_idx, &bkt_end_idx, bkt_vpath );
+			ZnkStr_addf( result_view,
+					"<a class=%s href=\"/easter?est_manager=%s&command=view&"
+					"searched_key=%s&est_cache_begin=%u&est_cache_end=%u&Moai_AuthenticKey=%s#PageSwitcher\">いいえ、何もせずに戻ります</a><br>",
+					style_class_name, est_manager,
+					bkt_vpath, bkt_begin_idx, bkt_end_idx, authentic_key );
+		} else {
+			ZnkStr_addf( result_view,
+					"<a class=%s href=\"/easter?est_manager=%s&command=view&"
+					"Moai_AuthenticKey=%s#PageSwitcher\">いいえ、何もせず戻ります.</a><br>",
+					style_class_name, est_manager,
+					authentic_key );
+		}
+	} else {
+		ZnkVarp pwd;
+		if( this_is_dustbox ){
+			processed_count = EstBox_remove(  post_vars, msg );
+		} else {
+			processed_count = EstBox_dustize( post_vars, msg );
+		}
+		if( IS_OK( pwd = ZnkVarpAry_find_byName_literal( post_vars, "est_cache_pwd", false ) )){
+			size_t begin_idx = 0;
+			size_t end_idx   = Znk_NPOS;
+
+			ZnkStr unesc_pwd = ZnkStr_new( "" );
+			ZnkHtpURL_unescape_toStr( unesc_pwd, ZnkVar_cstr(pwd), ZnkVar_str_leng(pwd) );
+			ZnkHtpURL_sanitizeReqUrpDir( unesc_pwd, true );
+
+			if( IS_OK( varp = ZnkVarpAry_find_byName_literal( post_vars, "est_cache_begin", false ) )){
+				ZnkS_getSzU( &begin_idx, ZnkVar_cstr(varp) );
+				ZnkStr_addf( msg, "est_cache_begin=[%zu]\n", begin_idx );
+			}
+			if( IS_OK( varp = ZnkVarpAry_find_byName_literal( post_vars, "est_cache_end", false ) )){
+				ZnkS_getSzU( &end_idx, ZnkVar_cstr(varp) );
+				ZnkStr_addf( msg, "est_cache_end=[%zu]\n", end_idx );
+			}
+
+			//makeCacheView( evar, result_view, ZnkStr_cstr(unesc_pwd), begin_idx, end_idx, show_file_num, authentic_key,
+			//		EstCM_img_url_list, favorite_dir, ZnkStr_cstr(assort_msg) );
+			ZnkStr_delete( unesc_pwd );
+		} else {
+			*template_html_file = "templates/command_complete.html";
+		}
+
+		ZnkStr_addf( result_view, "%zu 件削除しました.\n", processed_count );
+		if( ZnkStr_leng(backto) ){
+			char bkt_vpath[ 256 ] = "";
+			unsigned int bkt_begin_idx = 0;
+			unsigned int bkt_end_idx   = 0;
+			sscanf( ZnkStr_cstr(backto), "%u,%u,%s", &bkt_begin_idx, &bkt_end_idx, bkt_vpath );
+			ZnkStr_addf( result_view, "<br><a class=%s href=\"/easter?est_manager=%s&command=view&searched_key=%s&est_cache_begin=%u&est_cache_end=%u&Moai_AuthenticKey=%s#PageSwitcher\">戻る</a>",
+					style_class_name, est_manager,
+					bkt_vpath, bkt_begin_idx, bkt_end_idx, authentic_key );
+		} else {
+			ZnkStr_addf( result_view, "<br><br><font size=-1>このタブ画面はEasterではもはや使用されないため、不要ならブラウザのボタンでお閉じください.</font>" );
+		}
+	}
+
+	ZnkBird_regist( bird, "assort_ui",     ZnkStr_cstr(assort_ui) );
+	ZnkBird_regist( bird, "tag_editor_ui", ZnkStr_cstr(tag_editor_ui) );
+	ZnkBird_regist( bird, "result_view",   ZnkStr_cstr(result_view) );
+	ZnkBird_regist( bird, "backto",        ZnkStr_cstr(backto) );
+	ZnkBird_regist( bird, "manager",       est_manager );
+	ZnkStr_delete( result_view );
+	ZnkStr_delete( assort_ui );
+	ZnkStr_delete( tag_editor_ui );
 }
 
 static void
@@ -511,6 +665,7 @@ EstTopicManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const
 	bool   is_authenticated = false;
 	bool   is_unescape_val = false;
 	ZnkVarp varp;
+	ZnkStr EstCM_img_url_list = ZnkStr_new( "" );
 
 	RanoCGIUtil_getPostedFormData( evar, post_vars, mod, &htp_hdrs, pst_str, NULL, is_unescape_val );
 
@@ -521,7 +676,10 @@ EstTopicManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const
 	}
 	ZnkStr_addf( msg, "is_authenticated=[%d]\n", is_authenticated );
 
+
 	ZnkBird_regist( bird, "EstCM_img_url_list", "" );
+	ZnkBird_regist( bird, "this_is_dustbox", "false" );
+	ZnkBird_regist( bird, "est_hyper_upload_path", "" );
 	if( IS_OK( cmd = ZnkVarpAry_find_byName_literal( post_vars, "command", false ) )){
 		ZnkStr assort_msg = ZnkStr_new( "" );
 		ZnkStr  backto = ZnkStr_new( "" );
@@ -533,6 +691,19 @@ EstTopicManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const
 			/* backtoの値はviewTopicで得られるものを優先して上書き */
 			viewTopic( bird, post_vars, backto, msg, authentic_key );
 
+		} else if( is_authenticated && ZnkS_eq( ZnkVar_cstr(cmd), "remove" ) ){
+			bool this_is_dustbox = false;
+			varp = ZnkVarpAry_find_byName_literal( post_vars, "this_is_dustbox", false );
+			if( varp && ZnkS_eq( ZnkVar_cstr( varp ), "true" ) ){
+				this_is_dustbox = true;
+			}
+			removeCaches( bird,
+					evar, post_vars,
+					&template_html_file, EstCM_img_url_list,
+					backto, assort_msg, msg, authentic_key, this_is_dustbox, "topic" );
+			ZnkBird_regist( bird, "EstCM_img_url_list", ZnkStr_cstr(EstCM_img_url_list) );
+			ZnkBird_regist( bird, "Moai_AuthenticKey",  authentic_key );
+
 		} else if( is_authenticated && ZnkS_eq( ZnkVar_cstr(cmd), "favoritize" ) ){
 			/* この関数内ではadd_tags に応じた処理も内部で行う */
 			EstAssortList_favoritize( bird, evar, post_vars, backto, assort_msg, msg, authentic_key, "topic", "searched_key" );
@@ -541,6 +712,10 @@ EstTopicManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const
 			/* この関数内ではadd_tags に応じた処理も内部で行う */
 			EstAssortList_stock( bird, evar, post_vars, backto, assort_msg, msg, authentic_key, "topic", "searched_key" );
 			template_html_file = "templates/command_complete.html";
+		} else if( is_authenticated && ZnkS_eq( ZnkVar_cstr(cmd), "favoritize_from_external" ) ){
+			/* この関数内ではadd_tags に応じた処理も内部で行う */
+			EstAssortList_favoritize_from_external( bird, evar, post_vars, backto, assort_msg, msg, authentic_key, "topic", "searched_key" );
+			template_html_file = "templates/command_complete.html";
 		} else if( ZnkS_eq( ZnkVar_cstr(cmd), "remove_topic_list" ) ){
 			removeTopicList( bird, post_vars, backto, &template_html_file, msg, authentic_key );
 		}
@@ -548,17 +723,25 @@ EstTopicManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const
 		ZnkStr_delete( backto );
 		ZnkStr_delete( assort_msg );
 	} else {
+		ZnkStr EstTP_search = ZnkStr_new( "" );
 		ZnkStr EstTP_view  = ZnkStr_new( "" );
 		ZnkStr EstTP_entry = ZnkStr_new( "" );
-		template_html_file = "templates/topic_list.html";
+		template_html_file = "templates/collection_top.html";
 
+		{
+			makeEstTopicSearchEditLink( EstTP_search,
+					"favorite", "お気に入りボックスの中を検索", authentic_key );
+			ZnkStr_add( EstTP_search, "<br>\n" );
+			makeEstTopicSearchEditLink( EstTP_search,
+					"stockbox", "ストックボックスの中を検索", authentic_key );
+		}
 		{
 			size_t show_file_num = EstConfig_getShowFileNum();
 			makeEstTopicViewLink( EstTP_entry,
-					"favorite", "お気に入りボックス", false,
+					"favorite", "お気に入りボックスを全て閲覧", false,
 					0, show_file_num, authentic_key, false );
 			makeEstTopicViewLink( EstTP_entry,
-					"stockbox", "ストックボックス", false,
+					"stockbox", "ストックボックスを全て閲覧", false,
 					0, show_file_num, authentic_key, false );
 			makeEstTopicViewLink( EstTP_entry,
 					"recentory", "最近処理したもの", false,
@@ -572,8 +755,10 @@ EstTopicManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const
 		ZnkStr_addf( EstTP_view, "<input type=hidden name=confirm value='on'>\n" );
 
 		ZnkBird_regist( bird, "Moai_AuthenticKey",  authentic_key );
+		ZnkBird_regist( bird, "EstTP_search", ZnkStr_cstr(EstTP_search) );
 		ZnkBird_regist( bird, "EstTP_entry",  ZnkStr_cstr(EstTP_entry) );
 		ZnkBird_regist( bird, "EstTP_view",   ZnkStr_cstr(EstTP_view) );
+		ZnkStr_delete( EstTP_search );
 		ZnkStr_delete( EstTP_entry );
 		ZnkStr_delete( EstTP_view );
 	}
@@ -599,4 +784,5 @@ EstTopicManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, const
 	RanoCGIUtil_printTemplateHTML( evar, bird, template_html_file );
 	ZnkBird_destroy( bird );
 	ZnkStr_delete( pst_str );
+	ZnkStr_delete( EstCM_img_url_list );
 }

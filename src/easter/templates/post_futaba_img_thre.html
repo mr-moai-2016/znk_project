@@ -1,16 +1,14 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html><head>
 	<META http-equiv="Content-type" content="text/html; charset=Shift_JIS">
 	<META http-equiv="Content-Script-Type" content="text/javascript">
 	<META http-equiv="Content-Style-Type" content="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="/msty.css" rel="stylesheet" type="text/css" />
+	<link href="/bulma.css" rel="stylesheet" type="text/css" />
 	<title>Easter HyperPost</title>
 </head>
 
-<style type="text/css"><!-- /* for futaba like. */
-	.ftdc{ color:#800000; background-color:#eaa080; }
-	.ftdc_extra{ color:#808000; background-color:#eae080; }
---></style>
 
 <script type="text/javascript"><!--
 var st_Moai_AuthenticKey = "#[Moai_AuthenticKey]#";
@@ -20,147 +18,139 @@ var st_func_tbls = [];
 <script type="text/javascript" src="/cgis/easter/publicbox/hint.js"></script>
 <script type="text/javascript" src="/cgis/easter/publicbox/assort.js"></script>
 <script type="text/javascript" src="/cgis/easter/publicbox/preview.js"></script>
-	
+
 <body bgcolor="#EEFFEE" text="#808000" link="#0000EE" vlink="#0000EE" alink="#FF0000">
+<div class="section" id="section">
+<div class="container">
+<div class="content">
 
 <a name="user-content-index"></a>
-<font size=+2><i><b>Easter</b></i></font><br>
+<font size=+2><b>Easter</b></font><br>
 
 <br>
+<div class=pagination-list>
 <a class=MstyElemLink  href="/easter" >仮想ブラウジング</a> &nbsp;
 <a class=MstyElemLink  href="/easter?est_manager=topic&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >コレクション</a> &nbsp;
 <a class=MstyElemLink  href="/easter?est_manager=config&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >設定</a> &nbsp;
+</div>
 <br>
 
-<b>Easter HyperPost <font size=-1>for futaba</font></b><br>
-<table class=MstyManagerTable>
-
-<tr><td>
 <br>
-<font size=-1>
-	「#[send_button_name]#」ボタンにより実際に送信されます.
-	<a class=MstyQandALink href="javascript:void(0);" onclick="displayQandA( 'Hint', 'aboutHypePost' );"><img src='/cgis/easter/publicbox/icons/question_16.png'></a>
-	<div id=aboutHypePost></div>
-</font>
-</td></tr>
+<a name="HyperPost"></a>
+<article class="message is-dark">
+	<div class="message-header">
+		Easter HyperPost <font size=-1>for futaba</font>
+	</div>
+	<div class="message-body">
+		<font size=-1>
+		「#[send_button_name]#」ボタンにより実際に送信されます.
+		</font>
+		<a class=MstyQandALink href="javascript:void(0);" onclick="displayQandA( 'Hint', 'aboutHypePost' );"><img src='/cgis/easter/publicbox/icons/question_16.png'></a>
+		<font size=-1><div id=aboutHypePost></div></font>
 
-<tr><td>
-<form action="http://#[xhr_dmz]#/easter?est_post=#[post_dst]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" method="POST" enctype="#[post_enctype]#" name="fm_main">
-
-#[input_hiddens]#
-
-<table>
-	<tr><td class=ftdc><b>E-mail</b></td><td>  <input class=MstyInputField type=text name=email size="35" value="#[email]#" ><input type=submit class=MstyWideButton value="#[send_button_name]#"></td></tr>
-	<tr><td class=ftdc><b>コメント</b></td><td><textarea class=MstyInputField name=com cols=48 rows=4>#[com]#</textarea></td></tr>
-	<tr><td class=ftdc><b>削除キー</b></td><td><input class=MstyInputField type=text name=pwd size=9 maxlength=12 value="#[pwd]#"></td></tr>
-	
-	<tr><td class=ftdc><b>添付File</b></td><td>
-		<label for=upfile_label class=MstyElemLink>
-			ディスクからファイルを選択
-			<input type=file id=upfile_label name=upfile style="display:none;">
-		</label>
-		[<label><input type=checkbox name=textonly value=on>画像なし</label>]
-	</td></tr>
-	<br>
-	<tr><td class=ftdc_extra><b>添付URL</b></td><td><input class=MstyInputField type=text name=est_hyper_upload_path placeholder="URL" value="#[est_hyper_upload_path]#" size=65></td></tr>
-	<tr><td colspan=2>
-		<div class=MstyComment>
-		「添付URL」はURLの指定により画像の添付が行える拡張機能となります.<br>
-		例えば、Google画像検索の結果やEasterでコレクションされた画像などを即座に添付したい場合に便利です.<br>
-		この指定が行われている場合は「ディスクからファイルを選択」より優先されます.<br>
-		</div>
-	</td></tr>
-	<tr><td class=ftdc_extra><b>添付クリップボード</b></td><td>[<label><input type=checkbox name=est_clipboard_upload_mode value=on #[est_clipboard_upload_mode]#>クリップボードの内容をアップロード</label>]</td></tr>
-	<tr><td colspan=2>
-		<div class=MstyComment>
-		「添付クリップボード」はクリップボードの内容で画像の添付が行える拡張機能となります.<br>
-		例えば、ペイントソフト等で画像編集中の画像などを即座に添付したい場合に便利です.<br>
-		この指定がONの場合、「ディスクからファイルを選択」や「添付URL」より優先されます.<br>
-		<br>
-		現バージョンではWindows限定の機能であり、更に以下の注意点があります.<br>
-		<div style="padding:0.4em 1em">
-		・クリップボードに何も画像がコピーされていない場合はエラーとなります.<br>
-		・ImageMagicのconvertコマンドが別途必要です(手抜きで申し訳ない…).<br>
-		・png画像形式として投稿されます.<br>
-		</div>
-		詳しくは <a class=MstyElemLink href='/moai2.0/easter_reference.html#EasterHyperPost' target=_blank>こちら</a>をご覧下さい.
-		</div>
-	</td></tr>
-	<tr><td colspan=2>
-	<a class=MstyElemLinkRed href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'hyper_post', 'confirm', 'post_dst=#[post_dst]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#', '' )">送信画像の確認</a>
-	<br>
-	#[upfile_preview]#
-	</td></tr>
-</table>
-</form>
-
-<table>
-	<tr><td class=ftdc_extra><b>イメぐぐる</b></td><td>
-		<form method=get action="http://www.google.co.jp/images" target=_blank >
-		<input class=MstyInputField type=text name=q size=31 maxlength=255 placeholder="キーワード" value="">
-		<input type=hidden name=hl  value="ja">
-		<input type=hidden name=lr  value="lang_ja">
-		<input type=hidden name=num value="10">
-		<br>
-		<label for=btnG_label class=MstyElemLink>
-			Google画像検索を開く
-			<input type=submit id=btnG_label name=btnG style="display:none">
-		</label>
+		<form action="http://#[xhr_dmz]#/easter?est_post=#[post_dst]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" method="POST" enctype="#[post_enctype]#" name="fm_main">
+			<button class=MstyDmyUpdateBtn disabled></button> <!-- For disable Enter key on text field -->
+			#[input_hiddens]#
+			<span class=MstyOnlyIE8>E-mail  </span><input class=input type=text name=email value="#[email]#" placeholder="E-mail" ><input type=submit class=MstyWideButton value="#[send_button_name]#"> <a class=MstyElemLink href="/cgis/custom_boy/custom_boy.cgi?cb_target=futaba&cb_type=automatic">VirtualUSERS</a><br>
+			<span class=MstyOnlyIE8>コメント</span><textarea class=textarea name=com cols=48 rows=4>#[com]#</textarea><br>
+			<span class=MstyOnlyIE8>削除キー</span><input style="max-width:200px;" class=input type=text name=pwd size=9 maxlength=12 value="#[pwd]#" placeholder="削除キー" ><br>
+			<div class="file"><label class="file-label">
+				<input class="file-input" type="file" name=upfile ><span class="file-cta"><span class="file-label">
+					添付ファイル
+				</span></span>
+			</label></div>
+			[<label><input type=checkbox name=textonly value=on>画像なし</label>]<br>
+			<br>
+			添付URL
+			</span><input class=input type=text name=est_hyper_upload_path placeholder="添付URL" value="#[est_hyper_upload_path]#" >
+			<div class="box">
+				URLの指定により画像の添付が行えます.
+				この指定は「添付ファイル」より優先されます.
+			</div>
+			<br>
+			[<label><input type=checkbox name=est_clipboard_upload_mode value=on #[est_clipboard_upload_mode]#>クリップボードの内容をアップロード</label>]<br>
+			<div class="box">
+				Windowsにおいてクリップボードの内容で画像の添付が行えます.
+				例えば、ペイントソフト等で画像編集中の画像などを即座に添付できます.
+				この指定は「添付ファイル」や「添付URL」より優先されます.
+				現バージョンでは、いくつかの注意点があります.
+				詳しくは <a class=MstyElemLink href='/moai2.0/easter_reference.html#EasterHyperPost' target=_blank>こちら</a>をご覧下さい.
+			</div>
 		</form>
-	</td></tr>
-	<tr><td colspan=2><br></td></tr>
-</table>
+		<br>
+		<a class=MstyElemLinkRed href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'hyper_post', 'confirm', 'post_dst=#[post_dst]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#', '' )">送信画像の確認</a>
+		<br>
+		<div class="box">
+		#[upfile_preview]#
+		</div>
+	</div>
+</article>
 
-<tr><td colspan=2>
+<article class="message is-dark">
+	<div class="message-header">
+		イメぐぐる
+	</div>
+	<div class="message-body">
+		<form method=get action="http://www.google.co.jp/images" target=_blank >
+			<span class=MstyOnlyIE8>キーワード</span><input class=input type=text name=q size=31 maxlength=255 placeholder="キーワード" value="">
+			<input type=hidden name=hl  value="ja">
+			<input type=hidden name=lr  value="lang_ja">
+			<input type=hidden name=num value="10">
+			<br>
+			<label for=btnG_label class=MstyElemLink>
+				Google画像検索を開く
+				<input type=submit id=btnG_label name=btnG style="display:none">
+			</label>
+		</form>
+	</div>
+</article>
+
 <a class=MstyElemLink href="#" onclick="javascript:window.history.back(-1);return false;">戻る</a>
-</td></tr>
 
-</table>
+<article class="message is-dark">
+	<div class="message-header">
+		#[original_url]# のサマリー
+	</div>
+	<div class="message-body">
+		<font size=-1>
+		#[summary]#
+		</font>
+	</div>
+</article>
 
-<br>
-<b>#[original_url]# のサマリー</b><br>
-<table class=MstyManagerTable>
-<tr><td colspan=2>
-<br>
-<font size=-1>
-#[summary]#
-</font>
-<br>
-<br>
-</td></tr>
-</table>
-
-<br><b>仮想環境の確認</b><br>
-<table class=MstyManagerTable>
-
-<tr><td><font size=-1>
-「#[send_button_name]#」ボタンにより以下の内容が送信されます.<br>
-ご確認下さい.<br>
-</font></td></tr>
-
-<tr><td>
-	<div class=MstyComment style="white-space:normal;">
+<article class="message is-dark">
+	<div class="message-header">
+		仮想環境の確認
+	</div>
+	<div class="message-body">
+		<font size=-1>
+			「#[send_button_name]#」ボタンにより以下の内容が送信されます.
+		</font><br>
 		<u><b>HTTPヘッダの内容</b></u><br>
 		<br>
-		#[hdr_vars_str]#
-	</div>
-</td></tr>
-
-<tr><td>
-	<div class=MstyComment style="white-space:normal;">
+		<pre style="white-space:normal;"><code><font color=#222222>
+			#[hdr_vars_str]#
+		</font></code></pre>
 		<u><b>Post変数群の内容</b></u><br>
 		<br>
-		#[pst_vars_str]#
+		<pre style="white-space:normal;"><code><font color=#222222>
+			#[pst_vars_str]#
+		</font></code></pre>
 	</div>
-</td></tr>
+</article>
 
-<tr><td colspan=2>
-<input type=checkbox id=msg_console_cbtn onclick="EjsAssort_switchVisibility('msg_console', '_cbtn', '_body', '_msg')">
-<b>Easter System Console </b><br>
-<div class=MstyMsgConsole id=msg_console_body style=display:none><b>Easter System Console:</b><br>#[msg]#</div>
-<font size=-1 color=#8888ff><div id=msg_console_msg>― 現在非表示です ―</div></font>
-</td></tr>
+<div class=box>
+	<input type=checkbox id=msg_console_cbtn onclick="EjsAssort_switchVisibility('msg_console', '_cbtn', '_body', '_msg')">
+	<b>Easter System Console </b><br>
+	<div class=MstyMsgConsole id=msg_console_body style=display:none><b>Easter System Console:</b><br>#[msg]#</div>
+	<font size=-1 color=#8888ff><div id=msg_console_msg>― 現在非表示です ―</div></font>
+</div>
 
-</table>
 
+<a class=MstyElemLink href="#user-content-index">一番上へ戻る</a> <a class=MstyElemLink href="/">Moaiトップページ</a>
+<br><br>
+
+</div>
+</div>
+</div>
 </body></html>

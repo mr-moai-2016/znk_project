@@ -13,12 +13,10 @@ static bool st_is_dos_path = false;
 static CBConfigInfo st_cb_config_info_futaba = {
 	"futaba/ua_state.myf",
 	"futaba_send.myf",
-//	"futaba/futaba_send_save.myf",
 };
 static CBConfigInfo st_cb_config_info_5ch = {
 	"5ch/ua_state.myf",
 	"5ch_send.myf",
-//	"5ch/5ch_send_save.myf",
 };
 
 static char st_negotiating_target[ 256 ] = "futaba";
@@ -72,36 +70,6 @@ CBConfig_hint_base_PV( void )
 	return st_hint_base_PV;
 }
 
-
-static ZnkStr st_moai_dir = NULL;
-
-bool
-CBConfig_moai_dir_initiate( ZnkStr ermsg )
-{
-	if( st_moai_dir == NULL ){
-		const char dsp = st_is_dos_path ? '\\' : '/';
-		static const size_t depth = 5;
-		st_moai_dir = ZnkStr_new( "../" );
-		if( !ZnkStrPath_searchParentDir( st_moai_dir, depth, "target.myf", ZnkDirType_e_File, dsp ) ){
-			if( ermsg ){
-				ZnkStr_add( ermsg, "Searching moai_dir is failure. target.myf does not found." );
-			}
-			return false;
-		}
-	}
-	return true;
-}
-void
-CBConfig_moai_dir_finalize( void )
-{
-	ZnkStr_delete( st_moai_dir );
-}
-const char*
-CBConfig_moai_dir( void )
-{
-	CBConfig_moai_dir_initiate( NULL );
-	return ZnkStr_cstr( st_moai_dir );
-}
 
 static ZnkMyf st_custom_boy_myf = NULL;
 

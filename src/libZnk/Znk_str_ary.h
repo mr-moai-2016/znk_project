@@ -74,6 +74,10 @@ ZnkStrAry_set( ZnkStrAry ary, size_t idx, ZnkStr obj ){
 	ZnkObjAry_M_SET( ary, idx, obj );
 }
 Znk_INLINE void
+ZnkStrAry_set_cstr( ZnkStrAry ary, size_t idx, const char* cstr ){
+	ZnkStr_set( ZnkStrAry_at( ary, idx ), cstr );
+}
+Znk_INLINE void
 ZnkStrAry_swap( ZnkStrAry ary1, ZnkStrAry ary2 ){
 	ZnkObjAry_M_SWAP( ary1, ary2 );
 }
@@ -131,6 +135,9 @@ ZnkStrAry_copy( ZnkStrAry dst, const ZnkStrAry src )
 
 void
 ZnkStrAry_sort( ZnkStrAry ary );
+
+bool
+ZnkStrAry_eq( const ZnkStrAry ary1, const ZnkStrAry ary2 );
 
 Znk_EXTERN_C_END
 

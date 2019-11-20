@@ -29,9 +29,9 @@
 # 
 #
 @@V config
-doc_title = ['Moai+Easter エキスパートマニュアル']
-author = ['Mr.Moai']
-update = ['2018/08/14']
+doc_title = ['Moai+Easter 上級マニュアル']
+author = { ['Mr.Moai'] ['Zenkaku'] ['K.Yakisoba.H'] }
+update = ['2019/06/21']
 category_path = { ['moai2_0_exp'] }
 urp           = ['/moai2.0/index_expert.html']
 nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
@@ -39,50 +39,48 @@ index_hidden = ['true']
 @@.
 
 @@P Index
-{ ['#Information']   ['エキスパートマニュアルのご案内'] }
+{ ['#Information']   ['上級マニュアルのご案内'] }
 @@.
 
 @@L Information
 	ここではMoaiとそれに付随するシステムの<b>深部に関するハイレベルな</b>解説記事が掲載されています.
 	ここにあるすべてのドキュメントはエキスパートな方向けのものであり、通常のユーザーは読む必要はありません.
 	
-	上のリンクは階層構造となっており、現在あなたは「エキスパートマニュアル」の「入り口」を閲覧されている状態です.
-	「エキスパートマニュアル」には多くの記事があり、上のリンクの２段目に列挙されているものたちがそれに該当します.
+	上のリンクは階層構造となっており、現在あなたは「上級マニュアル」の「入り口」を閲覧されている状態です.
+	「上級マニュアル」には多くの記事があり、上のリンクの２段目に列挙されているものたちがそれに該当します.
 	ここではそれらの概要を紹介しましょう.
-	<ul>
-		<li><b>Moaiエンジン</b>
-		Moai Ver2.1 のエンジン本体に関して説明したリファレンスです.
+
+	<a class=MstyElemLink href="/moai2.0/moai_reference.html">Moaiエンジン</a>
+	<article class="message is-dark"><div class="message-body">
+		この記事はMoaiエンジン本体に関して説明したリファレンスです.
 		主にMoaiエンジンの設定画面に関するものや、フィルタ機能、MoaiCGIおよびその認証、新防御システムXhrDMZ、
 		不要な接続のブロック機能(広告のカットにも応用できます)、その他の応用的な機能についてです.
-		若干難易度が高い内容であり、またこれを知らなくてもさしあたって困らないと思われます.
-		</li>
+	</div></article>
 		
-		<li><b>CustomBoyエンジン</b>
+	<a class=MstyElemLink href="/moai2.0/customboy_reference.html">CustomBoyエンジン</a>
+	<article class="message is-dark"><div class="message-body">
+		この記事はCustomBoyエンジンについて説明したリファレンスです.
 		CustomBoyとは、Moai/Easterの仮想環境を詳細にカスタマイズするエキスパートユーザ向けのツールです.
-		(従って初心者の方がこのツールを使う必要はまずないと思われます)
-		我々が提供する仮想化ツールの中でもこれは最強のカスタマイズ性を有するものです.
-		ここではこのツールの使い方のガイドラインを示し、またUIのおける各項目の意味について辞書的なリファレンスを掲載しています.
-		（このツールの開発と各種情報の提供は高速ヤキソバ変換氏にご協力頂きました. 彼女にはこの場を借りてお礼申し上げます)
-		</li>
+		<div class=box>
+			このツールの開発と各種情報の提供は高速ヤキソバ変換氏にご協力頂きました. 彼女にはこの場を借りてお礼申し上げます.
+		</div>
+	</div></article>
 		
-		<li><b>HowToコンパイル</b>
-		Moaiを公式サイトより配布されている実行バイナリではなく、
-		githubにあるソースコードからビルドして使いたいといった潔癖な方、あるいは技術派な方もおられると思います.
-		これはそんな方向けのドキュメントです.
-		Moaiの全ソースコード(ライブラリも含む)をコンパイルする方法について、割とゼロベースから解説してあります.
-		コンパイラ(MinGWを使用)のインストール方法から解説している徹底ぶりですので、
+	<a class=MstyElemLink href="/moai2.0/how_to_compile.html">HowToコンパイル</a>
+	<article class="message is-dark"><div class="message-body">
+		この記事ではMoaiのソースコードをビルドする方法について解説しています.
+		Moai本体やシステムに付属するの全ソースコード(ライブラリも含む)をコンパイルする方法について、割とゼロベースから解説してあります.
 		コンパイルなんてしたことない方でも根気よく読めば出来ると思います(多分)
-		またVCプログラマの方向けにVCでコンパイルする方法、CygwinやMSYS、LinuxやAndroid向けに
-		コンパイルする方法も記載してあります.
-		</li>
+		コンパイル環境は MinGW、VC、Cygwin、MSYS、Linux、Android NDK と比較的多くの環境を取り扱っています.
+	</div></article>
 		
-		<li><b>Moai CGI Developers</b>
+	<a class=MstyElemLink href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a>
+	<article class="message is-dark"><div class="message-body">
 		Moai CGI は Moaiとは独立した単独のCGIスクリプトを実行します.
 		従って、あなたがCGIスクリプトを独自に開発し、それをMoai CGI上で実行させることもできるのです！
 		ここではこのようなWebアプリケーションを独自に作ってみたい野心溢れる方向けに、その開発方法を解説します.
 		そして最終課題としてProxyFinderを例として挙げ、このようなツールが開発できるレベルを目指します.
-		</li>
-	</ul>
+	</div></article>
 @@.
 
 @@P Link

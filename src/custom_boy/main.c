@@ -33,6 +33,8 @@
 #include <Rano_cgi_util.h>
 #include <Rano_html_ui.h>
 #include <Rano_log.h>
+#include <Rano_htp_boy.h>
+#include <Rano_conf_util.h>
 
 #include <Znk_str.h>
 #include <Znk_str_path.h>
@@ -43,6 +45,7 @@
 #include <Znk_net_base.h>
 
 #include <stdlib.h>
+#include <ctype.h>
 
 
 static char st_moai_authentic_key[ 256 ] = "";
@@ -302,36 +305,82 @@ parseQueryString( RanoCGIEVar* evar )
 	CBFgpInfo_destroy( fgp_info );
 }
 
+static void
+setupConfigDir( ZnkStr ans, const char* given_dir, const char* base_dir, const char* when_empty_dir )
+{
+	bool is_relative = true;
+	if( ZnkS_empty(given_dir) ){
+		given_dir = when_empty_dir;
+	} else {
+		if( given_dir[ 0 ] == '/' ){
+			/* UNIX fullpath */
+			is_relative = false;
+		} else if( given_dir[ 1 ] == ':' && isalpha( given_dir[ 0 ] ) ){
+			/* Windows fullpath */
+			is_relative = false;
+		}
+	}
+	if( is_relative ){
+		ZnkStr_setf( ans, "%s/%s", base_dir, given_dir );
+	} else {
+		ZnkStr_setf( ans, "%s", given_dir );
+	}
+}
+
 int main( int argc, char** argv ) 
 {
-	RanoCGIEVar* evar = RanoCGIEVar_create();
+	int          exit_result = EXIT_FAILURE;
+	RanoCGIEVar* evar        = RanoCGIEVar_create();
+	size_t       count       = 0;
+	const char*  moai_dir    = NULL;
+	ZnkStr       ermsg       = ZnkStr_new( "" );
+	ZnkMyf       custom_boy_myf = NULL;
 
-	bool result = false;
-	ZnkStr ermsg = ZnkStr_new( "" );
-	const char* moai_dir = NULL;
-	ZnkMyf custom_boy_myf = NULL;
+	/* rano app setup */
 
-	{
-		static const bool keep_open  = false;
-		ZnkDir_mkdirPath( "./tmp", Znk_NPOS, '/', NULL );
-		RanoCGIUtil_initLog( "./tmp/custom_boy", "./tmp/custom_boy_count.txt", 200, 5, keep_open );
+	if( RanoConfUtil_rano_app_initiate( ".", true, ermsg ) ){
+		static const bool is_multi_dir = false;
+		count = RanoCGIUtil_rano_app_init_log( "custom_boy", is_multi_dir );
+	} else {
+		RanoCGIUtil_rano_app_print_error( ZnkStr_cstr(ermsg) );
+		goto FUNC_END;
 	}
 
 	if( !ZnkZlib_initiate() ){
-		RanoLog_printf( "CustomBoy : ZnkZlib_initiate is failure.\n" );
+		RanoCGIUtil_rano_app_print_error( "ZnkZlib_initiate is failure.\n" );
 		return EXIT_FAILURE;
 	}
 	if( !ZnkNetBase_initiate( false ) ){
-		RanoLog_printf( "CustomBoy : ZnkNetBase_initiate is failure.\n" );
+		RanoCGIUtil_rano_app_print_error( "ZnkNetBase_initiate is failure.\n" );
 		return EXIT_FAILURE;
 	}
 
-
-	if( !CBConfig_moai_dir_initiate( ermsg ) ){
-		RanoLog_printf( "CustomBoy : %s\n", ZnkStr_cstr(ermsg) );
+	moai_dir = RanoConfUtil_moai_dir( NULL );
+	if( moai_dir == NULL ){
+		RanoCGIUtil_rano_app_print_error( "moai_dir is not found." );
 		goto FUNC_END;
 	}
-	moai_dir = CBConfig_moai_dir();
+
+	/* Application setup */
+
+	Znk_UNUSED( count );
+	custom_boy_myf = CBConfig_custom_boy_myf();
+	if( custom_boy_myf ){
+		double RE_random_factor = 0.7;
+		ZnkVarpAry vars = ZnkMyf_find_vars( custom_boy_myf, "config" );
+		if( vars ){
+			ZnkVarp var;
+
+			var = ZnkVarpAry_find_byName_literal( vars, "RE_random_factor", false );
+			if( var ){
+				ZnkS_getReal( &RE_random_factor, ZnkVar_cstr(var) );
+				CBVirtualizer_setRERandomFactor( RE_random_factor );
+			}
+		}
+	} else {
+		RanoCGIUtil_rano_app_print_error( "custom_boy.myf is not found." );
+		goto FUNC_END;
+	}
 
 	{
 		char path[ 256 ] = "";
@@ -345,8 +394,7 @@ int main( int argc, char** argv )
 	}
 
 	/***
-	 * filters_dir setting.
-	 * This must be relative directory from moai_dir
+	 * filters_dir setting ( from moai_dir/config.myf ).
 	 */
 	{
 		char filename[ 1024 ] = "";
@@ -355,51 +403,32 @@ int main( int argc, char** argv )
 		if( ZnkMyf_load( config, filename ) ){
 			ZnkVarpAry vars = ZnkMyf_find_vars( config, "config" );
 			if( vars ){
-				ZnkVarp var = ZnkVarpAry_find_byName_literal( vars, "filters_dir", false );
-				//ZnkS_copy( st_filters_dir, sizeof(st_filters_dir), ZnkVar_cstr(var), Znk_NPOS );
-				CBVirtualizer_setFiltersDir( ZnkVar_cstr(var) );
+				ZnkStr dir_str = ZnkStr_new( "" );
+				ZnkVarp var;
+
+				var = ZnkVarpAry_find_byName_literal( vars, "filters_dir", false );
+				if( var ){
+					setupConfigDir( dir_str, ZnkVar_cstr(var), moai_dir, "filters" );
+					CBVirtualizer_setFiltersDir( ZnkStr_cstr(dir_str) );
+				}
+
+				ZnkStr_delete( dir_str );
 			}
 		}
 		ZnkMyf_destroy( config );
 	}
 
-	custom_boy_myf = CBConfig_custom_boy_myf();
-	if( custom_boy_myf ){
-		double RE_random_factor = 0.7;
-		ZnkVarpAry vars = ZnkMyf_find_vars( custom_boy_myf, "config" );
-		ZnkVarp    varp = ZnkVarpAry_find_byName_literal( vars, "RE_random_factor", false );
-		ZnkS_getReal( &RE_random_factor, ZnkVar_cstr(varp) );
-		CBVirtualizer_setRERandomFactor( RE_random_factor );
-		result = true;
-	}
+	parseQueryString( evar );
 
-
-	/***
-	 * for Windows : change stdin to binary-mode.
-	 */
-	Znk_Internal_setMode( 0, true );
-	/***
-	 * for Windows : change stdout to binary-mode.
-	 */
-	Znk_Internal_setMode( 1, true );
-
-	if( result ){
-		parseQueryString( evar );
-	} else {
-		/* Error. */
-		RanoCGIMsg_initiate( true, NULL );
-		Znk_printf( "<table bgcolor=\"lightgray\"><tr><td><font size=-1>" );
-		Znk_printf( "<pre>\n" );
-		Znk_printf( "custom_boy.myf is not found.\n" );
-		Znk_printf( "</pre>" );
-		Znk_printf( "</font></td></tr></table>\n" );
-		RanoCGIMsg_finalize();
-	}
-
+	exit_result = EXIT_SUCCESS;
 FUNC_END:
 	RanoCGIEVar_destroy( evar );
-	CBConfig_moai_dir_finalize();
+	CBConfig_custom_boy_myf_destroy();
 
-	return EXIT_SUCCESS;
+	RanoConfUtil_rano_app_finalize();
+	RanoConfUtil_moai_dir_finalize();
+	ZnkStr_delete( ermsg );
+
+	return exit_result;
 }
 

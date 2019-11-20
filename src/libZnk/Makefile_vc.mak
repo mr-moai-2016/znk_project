@@ -41,14 +41,15 @@ include Makefile_version.mak
 BASENAME0=gslconv
 EXE_FILE0=$O\gslconv.exe
 OBJS0=\
-	$O\minizip/ioapi.obj \
-	$O\minizip/unzip.obj \
+	$O\minizip\ioapi.obj \
+	$O\minizip\unzip.obj \
 	$O\Znk_algo_vec.obj \
 	$O\Znk_bfr.obj \
 	$O\Znk_bfr_ary.obj \
 	$O\Znk_bfr_bif.obj \
 	$O\Znk_bird.obj \
 	$O\Znk_bms_find.obj \
+	$O\Znk_capacity.obj \
 	$O\Znk_cookie.obj \
 	$O\Znk_date.obj \
 	$O\Znk_dir.obj \
@@ -102,13 +103,14 @@ OBJS0=\
 	$O\Znk_thread.obj \
 	$O\Znk_tostr_double.obj \
 	$O\Znk_tostr_int.obj \
+	$O\Znk_uchar64.obj \
 	$O\Znk_var.obj \
 	$O\Znk_varp_ary.obj \
 	$O\Znk_vsnprintf.obj \
 	$O\Znk_yy_base.obj \
 	$O\Znk_zip.obj \
 	$O\Znk_zlib.obj \
-	$O\minizip/iowin32.obj \
+	$O\minizip\iowin32.obj \
 	$O\gslconv.obj \
 
 BASENAME1=Znk
@@ -117,14 +119,15 @@ DLIB_FILE1=$O\$(DLIB_NAME1)
 ILIB_FILE1=$O\Znk-$(DL_VER).imp.lib
 SLIB_FILE1=$O\Znk.lib
 OBJS1=\
-	$O\minizip/ioapi.obj \
-	$O\minizip/unzip.obj \
+	$O\minizip\ioapi.obj \
+	$O\minizip\unzip.obj \
 	$O\Znk_algo_vec.obj \
 	$O\Znk_bfr.obj \
 	$O\Znk_bfr_ary.obj \
 	$O\Znk_bfr_bif.obj \
 	$O\Znk_bird.obj \
 	$O\Znk_bms_find.obj \
+	$O\Znk_capacity.obj \
 	$O\Znk_cookie.obj \
 	$O\Znk_date.obj \
 	$O\Znk_dir.obj \
@@ -178,13 +181,14 @@ OBJS1=\
 	$O\Znk_thread.obj \
 	$O\Znk_tostr_double.obj \
 	$O\Znk_tostr_int.obj \
+	$O\Znk_uchar64.obj \
 	$O\Znk_var.obj \
 	$O\Znk_varp_ary.obj \
 	$O\Znk_vsnprintf.obj \
 	$O\Znk_yy_base.obj \
 	$O\Znk_zip.obj \
 	$O\Znk_zlib.obj \
-	$O\minizip/iowin32.obj \
+	$O\minizip\iowin32.obj \
 	$O\dll_main.obj \
 
 SUB_LIBS=\
@@ -317,6 +321,7 @@ Znk_bfr_ary.obj: Znk_bfr_ary.h
 Znk_bfr_bif.obj: Znk_bfr_bif.h Znk_bfr.h
 Znk_bird.obj: Znk_bird.h Znk_mem_find.h Znk_stdc.h Znk_varp_ary.h Znk_bms_find.h
 Znk_bms_find.obj: Znk_bms_find.h Znk_mem_find.h Znk_s_base.h Znk_stdc.h
+Znk_capacity.obj: Znk_capacity.h
 Znk_cookie.obj: Znk_cookie.h Znk_s_base.h Znk_stdc.h Znk_str_fio.h
 Znk_date.obj: Znk_date.h Znk_base.h Znk_str.h Znk_s_base.h
 Znk_dir.obj: Znk_dir.h Znk_dir_recursive.h Znk_stdc.h Znk_s_base.h Znk_missing_libc.h Znk_sys_errno.h
@@ -370,6 +375,7 @@ Znk_s_posix.obj: Znk_s_posix.h Znk_stdc.h
 Znk_thread.obj: Znk_thread.h Znk_bfr.h Znk_stdc.h Znk_mutex.h
 Znk_tostr_double.obj: Znk_tostr_double.h Znk_def_util.h
 Znk_tostr_int.obj: Znk_tostr_int.h Znk_base.h Znk_s_base.h Znk_def_util.h Znk_stdc.h
+Znk_uchar64.obj: Znk_uchar64.h Znk_s_base.h
 Znk_var.obj: Znk_var.h Znk_stdc.h
 Znk_varp_ary.obj: Znk_varp_ary.h Znk_s_base.h
 Znk_vsnprintf.obj: Znk_vsnprintf.h Znk_stdc.h Znk_def_util.h Znk_tostr_int.h Znk_tostr_double.h

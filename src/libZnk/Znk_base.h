@@ -393,6 +393,7 @@ struct id_name##_tag { int unused; }; typedef struct id_name##_tag* id_name;
 #  endif
 
 /* Windows98ˆÈ~‚Í•K{‚Æ‚·‚é. */
+#  undef  WINVER
 #  define WINVER 0x0410
 
 #endif

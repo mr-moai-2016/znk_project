@@ -13,6 +13,9 @@ Znk_EXTERN_C_BEGIN
 void
 DocUtil_drawHeader( ZnkStr ans, ZnkStrAry category_path, const char* urp, ZnkMyf menu_myf, const char* doc_title );
 
+void
+DocUtil_drawEnd( ZnkStr ans );
+
 Znk_EXTERN_C_END
 
 #endif /* INCLUDE_GUARD */

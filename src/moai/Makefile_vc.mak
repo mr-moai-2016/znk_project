@@ -35,6 +35,7 @@ CP=xcopy /H /C /Y
 INCLUDE_FLAG =  \
 	-I$(MY_LIBS_ROOT)/libZnk \
 	-I$(MY_LIBS_ROOT)/libRano \
+	-I$(MY_LIBS_ROOT)/libMoai \
 
 
 # We cannot use variables in include of nmake.
@@ -43,18 +44,6 @@ include Makefile_version.mak
 BASENAME0=moai
 EXE_FILE0=$O\moai.exe
 OBJS0=\
-	$O\Moai_cgi.obj \
-	$O\Moai_cgi_manager.obj \
-	$O\Moai_connection.obj \
-	$O\Moai_context.obj \
-	$O\Moai_fdset.obj \
-	$O\Moai_http.obj \
-	$O\Moai_info.obj \
-	$O\Moai_io_base.obj \
-	$O\Moai_post.obj \
-	$O\Moai_server.obj \
-	$O\Moai_server_info.obj \
-	$O\Moai_web_server.obj \
 	$O\main.obj \
 
 SUB_LIBS=\
@@ -73,6 +62,7 @@ RUNTIME_FILES= \
 	__mkg_sentinel_target__ \
 	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/Znk-$(DL_VER).dll \
 	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/Rano-$(DL_VER).dll \
+	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/Moai-$(DL_VER).dll \
 	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/libtls-17.dll \
 
 
@@ -87,8 +77,8 @@ $O:
 
 # Product files rule.
 $(EXE_FILE0): $(OBJS0) $(RES_FILE0)
-	@echo $(LINKER) /OUT:$(EXE_FILE0) $(RES_FILE0) {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib 
-	@     $(LINKER) /OUT:$(EXE_FILE0) $(RES_FILE0) $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib ws2_32.lib 
+	@echo $(LINKER) /OUT:$(EXE_FILE0) $(RES_FILE0) {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libMoai/out_dir/$(ABINAME)/Moai-$(DL_VER).imp.lib ws2_32.lib 
+	@     $(LINKER) /OUT:$(EXE_FILE0) $(RES_FILE0) $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libMoai/out_dir/$(ABINAME)/Moai-$(DL_VER).imp.lib ws2_32.lib 
 
 
 # Suffix rule.
@@ -162,16 +152,3 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-main.obj: Moai_server.h
-Moai_cgi.obj: Moai_cgi.h Moai_io_base.h Moai_server_info.h Moai_connection.h
-Moai_cgi_manager.obj: Moai_cgi.h
-Moai_connection.obj: Moai_connection.h
-Moai_context.obj: Moai_context.h
-Moai_fdset.obj: Moai_fdset.h Moai_connection.h
-Moai_http.obj: Moai_http.h Moai_io_base.h Moai_info.h
-Moai_info.obj: Moai_info.h Moai_server_info.h
-Moai_io_base.obj: Moai_io_base.h Moai_connection.h
-Moai_post.obj: Moai_post.h Moai_io_base.h Moai_server_info.h
-Moai_server.obj: Moai_server.h Moai_post.h Moai_context.h Moai_io_base.h Moai_connection.h Moai_info.h Moai_fdset.h Moai_http.h Moai_server_info.h Moai_web_server.h Moai_cgi.h
-Moai_server_info.obj: Moai_server_info.h
-Moai_web_server.obj: Moai_context.h Moai_io_base.h Moai_connection.h Moai_info.h Moai_fdset.h Moai_post.h Moai_server_info.h Moai_cgi.h

@@ -14,11 +14,12 @@ typedef enum {
 /**
  * @brief
  *  target固有のsendフィルタの初期化処理を行う.
- *  Web Configurationの「Virtual USERS Initiation」ボタンを押すとこの関数が呼び出される.
+ *  Moai Serverが起動した際の初期化処理の一環としてこの関数が呼び出される.
  * 
  * @param ftr_send:
  *  初期化対象となるフィルタへの参照である.
  *  pluginはこの関数内でこの値を参照および変更してかまわない.
+ *  これにより、ヘッダ、ポスト変数、Cookie変数の特別な初期化(仮想化やランダマイズ化)が可能となるだろう.
  * 
  * @param parent_proxy:
  *  Moaiが現在使用中の外部プロキシがhostname:portの形式で設定されている.
@@ -27,9 +28,8 @@ typedef enum {
  * 
  * @param result_msg:
  *  ここにはこの関数の処理をおこなった結果のメッセージを格納しなければならない.
- *  これは処理が成功した場合はそれをリポートメッセージであり、エラーが発生した場合はそれを示す
- *  エラーメッセージとなる.
- *  「Virtual USERS Initiation」ボタンを押すとすぐ下にこのメッセージが表示される形になる.
+ *  これは処理が成功した場合はそれをリポートメッセージであり、エラーが発生した場合はそれを示すエラーメッセージとなる.
+ *  このメッセージはMoaiエンジンがエラー報告用として使用する場合がある.
  */
 MoaiPluginState
 initiate( ZnkMyf ftr_send, const char* parent_proxy, ZnkStr result_msg );
@@ -42,6 +42,7 @@ initiate( ZnkMyf ftr_send, const char* parent_proxy, ZnkStr result_msg );
  * @param ftr_send:
  *  処理対象となるフィルタへの参照である.
  *  pluginはこの関数内でこの値を参照および変更してかまわない.
+ *  これにより、ヘッダ、ポスト変数、Cookie変数のさらなる柔軟なフィルタリングが可能となるだろう.
  *
  * @param hdr_vars:
  *  処理対象となるリクエストHTTP Headerの参照である.
@@ -59,6 +60,7 @@ on_post( ZnkMyf ftr_send,
  * @brief
  * target固有のレスポンスヘッダを受け取った場合における処理を行う.
  * レスポンスを受け取った場合に毎回呼び出される.
+ * text(これはHTML,CSS,Javascriptなどであったりする)を加工することが主な目的となるだろう.
  *
  * @param ftr_send:
  *  処理対象となるフィルタへの参照である.

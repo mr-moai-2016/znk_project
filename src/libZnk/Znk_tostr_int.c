@@ -1694,7 +1694,6 @@ UIntToStr_ALL_32( char *p, uint32_t uval, bool term_nul,
 		bool is_supplement, bool is_truncate,
 		bool use_general )
 {
-	//size_t digit_num_umax = B1::Private::DigitNumMax<T>()( radix );
 	const size_t digit_num_umax = getDigitNum_UMAX32( radix );
 	assert( width <= digit_num_umax );
 
@@ -2195,7 +2194,7 @@ UIntToStr_64( char* p, uint64_t uval, bool term_nul,
 }
 
 /***
- * B1_double_to_str で使用している部分があるため、
+ * Znk_tostr_double.c で使用している部分があるため、
  * とりあえず残している
  */
 char*

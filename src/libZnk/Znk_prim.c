@@ -4,14 +4,14 @@
 ZnkPrimp
 ZnkPrimp_create( ZnkPrimType prim_type, ZnkElemDeleterFunc elem_deleter )
 {
-	ZnkPrimp primp = (ZnkPrimp)Znk_alloc0( sizeof( ZnkPrim ) );
+	ZnkPrimp primp = (ZnkPrimp)Znk_alloc0( sizeof( struct ZnkPrim_tag ) );
 	ZnkPrim_compose( primp, prim_type, elem_deleter );
 	return primp;
 }
 ZnkPrimp
 ZnkPrimp_createPtr( void* ptr, ZnkElemDeleterFunc elem_deleter )
 {
-	ZnkPrimp primp = (ZnkPrimp)Znk_alloc0( sizeof( ZnkPrim ) );
+	ZnkPrimp primp = (ZnkPrimp)Znk_alloc0( sizeof( struct ZnkPrim_tag ) );
 	ZnkPrim_composePtr( primp, ptr, elem_deleter );
 	return primp;
 }

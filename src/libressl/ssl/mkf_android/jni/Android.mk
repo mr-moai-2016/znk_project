@@ -24,45 +24,45 @@ LOCAL_CFLAGS += -I.. \
 	-I../crypto \
 
 LOCAL_SRC_FILES := \
-	$S/t1_enc.c \
-	$S/ssl_init.c \
-	$S/ssl_srvr.c \
-	$S/d1_pkt.c \
-	$S/ssl_versions.c \
-	$S/t1_hash.c \
-	$S/t1_srvr.c \
-	$S/ssl_txt.c \
-	$S/s3_cbc.c \
-	$S/ssl_both.c \
-	$S/t1_meth.c \
-	$S/ssl_cert.c \
-	$S/d1_both.c \
-	$S/ssl_err.c \
-	$S/ssl_rsa.c \
-	$S/ssl_packet.c \
-	$S/ssl_algs.c \
-	$S/bs_ber.c \
-	$S/d1_srvr.c \
-	$S/ssl_lib.c \
-	$S/ssl_clnt.c \
-	$S/ssl_asn1.c \
-	$S/bs_cbs.c \
-	$S/d1_lib.c \
-	$S/ssl_pkt.c \
-	$S/d1_meth.c \
-	$S/ssl_ciph.c \
-	$S/ssl_stat.c \
-	$S/d1_enc.c \
-	$S/pqueue.c \
-	$S/d1_srtp.c \
-	$S/t1_clnt.c \
-	$S/bs_cbb.c \
 	$S/bio_ssl.c \
-	$S/s3_lib.c \
-	$S/ssl_tlsext.c \
-	$S/ssl_sess.c \
+	$S/bs_ber.c \
+	$S/bs_cbb.c \
+	$S/bs_cbs.c \
+	$S/d1_both.c \
 	$S/d1_clnt.c \
+	$S/d1_enc.c \
+	$S/d1_lib.c \
+	$S/d1_meth.c \
+	$S/d1_pkt.c \
+	$S/d1_srtp.c \
+	$S/d1_srvr.c \
+	$S/pqueue.c \
+	$S/s3_cbc.c \
+	$S/s3_lib.c \
+	$S/ssl_algs.c \
+	$S/ssl_asn1.c \
+	$S/ssl_both.c \
+	$S/ssl_cert.c \
+	$S/ssl_ciph.c \
+	$S/ssl_clnt.c \
+	$S/ssl_err.c \
+	$S/ssl_init.c \
+	$S/ssl_lib.c \
+	$S/ssl_packet.c \
+	$S/ssl_pkt.c \
+	$S/ssl_rsa.c \
+	$S/ssl_sess.c \
+	$S/ssl_srvr.c \
+	$S/ssl_stat.c \
+	$S/ssl_tlsext.c \
+	$S/ssl_txt.c \
+	$S/ssl_versions.c \
+	$S/t1_clnt.c \
+	$S/t1_enc.c \
+	$S/t1_hash.c \
 	$S/t1_lib.c \
+	$S/t1_meth.c \
+	$S/t1_srvr.c \
 	$S/dll_main.c \
 
 # Refer to prebuilt external-dynamic-libraries

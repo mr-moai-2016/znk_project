@@ -7,6 +7,7 @@
 Znk_EXTERN_C_BEGIN
 
 Znk_DECLARE_HANDLE( ZnkVarpAry );
+typedef ZnkVarpAry ZnkVarAry;
 
 
 /**

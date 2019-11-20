@@ -10,7 +10,7 @@
 #include <time.h>
 
 struct CBWgtPrimImpl {
-	ZnkPrim prim_;
+	struct ZnkPrim_tag prim_;
 	double  rate_;
 };
 
@@ -45,7 +45,7 @@ CBWgtPrim_destroy( CBWgtPrim wpm )
 	}
 }
 
-ZnkPrim*
+ZnkPrim
 CBWgtPrim_prim( CBWgtPrim wpm )
 {
 	return &wpm->prim_;
@@ -76,7 +76,7 @@ CBWgtPrimAry_registStr( CBWgtPrimAry ary, const char* str, double rate )
 	return wpm;
 }
 
-ZnkPrim*
+ZnkPrim
 CBWgtPrimAry_select( const CBWgtPrimAry ary )
 {
 	const size_t size    = CBWgtPrimAry_size( ary );
@@ -98,7 +98,7 @@ CBWgtPrimAry_select( const CBWgtPrimAry ary )
 		} else {
 			rate += wpm->rate_;
 			if( rnd_val < rate ){
-				return (ZnkPrim*)( &wpm->prim_ );
+				return (ZnkPrim)( &wpm->prim_ );
 			}
 		}
 	}
@@ -119,46 +119,10 @@ CBWgtPrimAry_select( const CBWgtPrimAry ary )
 		const CBWgtPrim wpm = wpm_ap[ idx ];
 		if( wpm->rate_ == -1.0 ){
 			if( re_idx == re_count ){
-				return (ZnkPrim*)( &wpm->prim_ );
+				return (ZnkPrim)( &wpm->prim_ );
 			}
 			++re_count;
 		}
 	}
 	return NULL;
 }
-
-#if 0
-static void
-initByLine( CBWgtPrimAry ary, ZnkStrAry lines, const char* quote_begin, const char* quote_end )
-{
-	const size_t size = ZnkStrAry_size( lines );
-	size_t idx;
-	ZnkStr line;
-	const size_t quote_begin_leng = Znk_strlen( quote_begin );
-	const size_t quote_end_leng   = Znk_strlen( quote_end );
-	ZnkStr val = ZnkStr_new( "" );
-	for( idx=0; idx<size; ++idx ){
-		line = ZnkStrAry_at( lines, idx );
-		if( ZnkStr_isBegin( line, quote_begin ) ){
-			const char* begin;
-			const char* end;
-			ZnkStr_set( val, ZnkStr_cstr( line ) + quote_begin_leng );
-			begin = ZnkStr_cstr( val );
-			end   = strstr( begin, quote_end );
-			if( end ){
-				const char* p = end + quote_end_leng;
-				const char* q = strchr( p, '*' );
-				double rate = -1.0;
-				if( q ){
-					++q;
-					ZnkS_getReal( &rate, q );
-				}
-				ZnkStr_releng( val, end-begin );
-				CBWgtPrimAry_registStr( ary, ZnkStr_cstr(val), rate );
-			}
-		}
-	}
-	ZnkStr_delete( val );
-}
-
-#endif

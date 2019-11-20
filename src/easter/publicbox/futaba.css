@@ -1,0 +1,82 @@
+
+.dice{color:#f00;}
+.extendWebm{float: left;}
+.cancel:before,.cancel:after{
+	margin:2px 10px;
+	display: block;
+	content: '';
+	width: 5px;
+	height: 20px;
+	-webkit-transform: rotate(-45deg);
+	-o-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+	background-color: #800;
+	border-radius: 10px;
+	position: absolute;
+}
+.cancel:after{
+	-webkit-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.cancelbk{
+	margin:2px 2px;
+	float:left;
+	width:25px;
+	height:25px;
+}
+
+.cancelbk:hover > .cancel:before,.cancelbk:hover > .cancel:after {
+	background-color: #f00;
+}
+.clearboth{
+	clear:both;
+}
+
+blockquote{
+	margin:15px; !important;
+	background-color: transparent; !important;
+	border-left: 0px; !important;
+	padding: 0em 0em; !important;
+}
+.content blockquote{
+	margin:15px; !important;
+	background-color: transparent; !important;
+	border-left: 0px; !important;
+	padding: 0em 0em; !important;
+}
+
+.column {
+	padding: 0px;
+	margin-bottom: 2px !important;
+}
+
+.ci{margin:2px 180px 2px 4px;text-align: center;}
+.ch{margin:2px 4px 2px 40px;}
+.cu{display:table-cell;vertical-align: middle;padding:1px;font-size:small;white-space: nowrap;}
+.cu img{border:0px;}
+.cs{display:inline-block;border:1px solid black;margin:1px;overflow:hidden;text-align:left;}
+.cs0{width:56px;height:85px;}
+.cs1{width:79px;height:110px;}
+.cs2{width:104px;height:135px;}
+.cs3{width:129px;height:160px;}
+.cs4{width:154px;height:185px;}
+.cs5{width:179px;height:210px;}
+.cs6{width:254px;height:285px;}
+#catnext{font-size:135%;text-align: center;}
+#catnext span{text-decoration: underline;color:blue;}
+#catnext span:hover{color:red;cursor:pointer;}
+.csb{color:#cc1105;font-weight:bold;margin:0 5px;}/*sub*/
+.cnm{color:#117743;font-weight:bold;margin:0 5px;}/*name*/
+.cnw{margin:0 5px;}/*now*/
+.cno{margin:0 15px 0 5px;text-decoration:underline}/*No.*/
+.cno:hover{color:red;cursor:pointer;}/*No.*/
+.pdmm{width:180px;height:200px;border:solid 1px #800;background-color:#ffe;box-shadow:2px 2px 3px 0px #777;border-radius:5px;z-index:1;}
+.pdms{margin:20px 5px;padding:5px;text-decoration:underline;cursor:pointer;z-index:1;}
+.pdms:hover{color:red;}
+.pdmshide{color:silver;cursor:not-allowed;z-index:1;}
+.pdmshide:hover{color:silver;}
+.pdmf{margin:20px 5px;padding:5px;z-index:1;}
+.catlink{margin:12px 0px;}
+.catlink a{font-size:150%;margin:0px 3px;}
+

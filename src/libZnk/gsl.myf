@@ -35,6 +35,7 @@ ZnkBfr_push_bk
 ZnkBfr_push_bk_16
 ZnkBfr_push_bk_32
 ZnkBfr_push_bk_64
+ZnkBfr_push_bk_previous
 ZnkBfr_push_bk_ptr
 ZnkBfr_replace
 ZnkBfr_reserve
@@ -67,6 +68,7 @@ ZnkBmsFinder_destroy
 ZnkBmsFinder_end_ptn
 ZnkBmsFinder_end_ptn_leng
 ZnkBmsFinder_getBetweenRange
+ZnkCapacity_calc
 ZnkCookie_extend_toCookieStatement
 ZnkCookie_load
 ZnkCookie_regist_byAssignmentStatement
@@ -390,6 +392,7 @@ ZnkStockBIO_getRecverResult
 ZnkStockBIO_read
 ZnkStockBIO_readLineCRLF
 ZnkStrAry_create
+ZnkStrAry_eq
 ZnkStrAry_find
 ZnkStrAry_find_isMatch
 ZnkStrAry_push_bk_cstr
@@ -467,6 +470,10 @@ ZnkToStr_I64_getStr
 ZnkToStr_Private_UInt32ToStr
 ZnkToStr_U32_getStr
 ZnkToStr_U64_getStr
+ZnkUChar64Enc_find
+ZnkUChar64Enc_func_get
+ZnkUChar64Enc_func_increment
+ZnkUChar64Enc_id
 ZnkVarpAry_create
 ZnkVarpAry_findIdx_byName
 ZnkVarpAry_findIdx_byStrVal

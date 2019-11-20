@@ -25,6 +25,7 @@ LOCAL_CFLAGS += -I.. \
 	-I$(MY_LIBS_ROOT)/libZnk \
 
 LOCAL_SRC_FILES := \
+	$S/docgen.c \
 	$S/Doc_html.c \
 	$S/Doc_source.c \
 	$S/Doc_util.c \

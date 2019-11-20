@@ -20,6 +20,21 @@ renderOpen( ZnkStr ans, const char* style_class_name, const char* manager,
 			unesc_url, authentic_key,
 			is_target_blank ? "target=_blank" : "" );
 }
+static void
+renderPreview( ZnkStr ans, const char* style_class_name, const char* manager,
+		const char* esc_url,
+		size_t max_width, size_t max_height, const char* preview_style,
+		const char* xhr_dmz, const char* authentic_key, const bool is_target_blank )
+{
+
+	ZnkStr_add( ans, "<a " );
+	if( style_class_name ){
+		ZnkStr_addf( ans, "class=%s ", style_class_name );
+	}
+	ZnkStr_add( ans, "name=ahref_previewable " );
+	ZnkStr_addf( ans, "href=\"javascript:void(0);\" onclick=\"Easter_showPreview( this, 'http://%s/cgis/easter/%s', %zu, %zu, '%s' );\">Preview</a>",
+			xhr_dmz, esc_url, max_width, max_height, preview_style );
+}
 
 static void
 renderThumbA( ZnkStr ans, const char* unesc_url, const char* esc_url,
@@ -40,7 +55,8 @@ renderThumbA( ZnkStr ans, const char* unesc_url, const char* esc_url,
 		ZnkStr_addf( ans, "<img src='http://%s/cgis/easter/publicbox/icons/html.png' width=%zu height=%zu>",
 				xhr_dmz, width, height );
 	} else if( is_thumbnail ){
-		ZnkStr_addf( ans, "<img src='http://%s/cgis/easter/%s' width=%zu height=%zu>",
+		//ZnkStr_addf( ans, "<img src='http://%s/cgis/easter/%s' width=%zu height=%zu>",
+		ZnkStr_addf( ans, "<img src='http://%s/cgis/easter/%s' class=MstyThumbnail>",
 				xhr_dmz, esc_url, width, height );
 	} else {
 		ZnkStr_addf( ans, "<img src='http://%s/cgis/easter/publicbox/icons/file.png' width=%zu height=%zu>",
@@ -48,34 +64,42 @@ renderThumbA( ZnkStr ans, const char* unesc_url, const char* esc_url,
 	}
 
 	ZnkStr_add( ans, "</a>" );
+	ZnkStr_add( ans, "<br>" );
 }
 
 static void
-renderImgElem( ZnkStr ans, const char* style_class_name,
+renderImgElem( ZnkStr ans, const char* style_class_name, const char* manager,
 		const char* unesc_url, const char* esc_url, const char* elem_name,
 		size_t width, size_t height,
-		const char* xhr_dmz, const bool is_target_blank )
+		const char* xhr_dmz, const char* authentic_key, const bool is_target_blank )
 {
 	const bool is_thumbnail = true;
 	const size_t max_width  = EstConfig_getPreviewMaxWidth();
 	const size_t max_height = EstConfig_getPreviewMaxHeight();
 
-	ZnkStr_add( ans, "<br>" );
+	ZnkStr_add( ans, "<br>\n" );
 	ZnkStr_add( ans, "<a " );
 	if( style_class_name ){
 		ZnkStr_addf( ans, "class=%s ", style_class_name );
 	}
 
+#if 0
 	ZnkStr_add( ans, "name=ahref_previewable " );
 	ZnkStr_addf( ans, "href=\"javascript:void(0);\" onclick=\"Easter_showPreview( this, 'http://%s/cgis/easter/%s', %zu, %zu );\">",
 			xhr_dmz, esc_url, max_width, max_height );
+#else
+	ZnkStr_addf( ans, "href=\"/easter?est_manager=%s&amp;command=open&amp;cache_path=%s&amp;Moai_AuthenticKey=%s\" %s>",
+			manager,
+			unesc_url, authentic_key,
+			is_target_blank ? "target=_blank" : "" );
+#endif
 
 	ZnkStr_add( ans, "<img src='/cgis/easter/publicbox/icons/file.png'>" );
 	ZnkStr_addf( ans, " %s", elem_name );
 
 	ZnkStr_add( ans, "</a>" );
 
-	ZnkStr_add( ans, "<br>" );
+	ZnkStr_add( ans, "<br>\n" );
 	renderThumbA( ans, unesc_url, esc_url,
 			xhr_dmz, is_target_blank,
 			width, height, is_thumbnail );
@@ -83,7 +107,7 @@ renderImgElem( ZnkStr ans, const char* style_class_name,
 
 static void
 viewSearchFileItem( ZnkStr ans, EstFInf finf,
-		const char* url, const char* esc_url, const char* id, ZnkStr title,
+		const char* url, const char* unesc_url, const char* esc_url, const char* id, ZnkStr title,
 		const char* style_class_name, bool is_target_blank,
 		const char* authentic_key )
 {
@@ -95,14 +119,15 @@ viewSearchFileItem( ZnkStr ans, EstFInf finf,
 	size_t height = EstConfig_getThumbSize();
 	size_t max_width  = EstConfig_getPreviewMaxWidth();
 	size_t max_height = EstConfig_getPreviewMaxHeight();
+	const char* preview_style = EstConfig_getPreviewStyle();
 
-	renderOpen( ans, style_class_name, "img_viewer",
-			url, authentic_key, is_target_blank );
+	//renderOpen( ans, style_class_name, "img_viewer",
+	//		url, authentic_key, is_target_blank );
+	renderPreview( ans, style_class_name, "img_viewer",
+			esc_url,
+			max_width, max_height, preview_style,
+			xhr_dmz, authentic_key, is_target_blank );
 
-	ZnkStr_add( ans, "<a " );
-	if( style_class_name ){
-		ZnkStr_addf( ans, "class=%s ", style_class_name );
-	}
 
 	if( p ){ elem_name = p+1; }
 
@@ -111,6 +136,12 @@ viewSearchFileItem( ZnkStr ans, EstFInf finf,
 	 */
 	if( ZnkS_eqCase( ZnkS_get_extension(url,'.'), "htm" ) || ZnkS_eqCase( ZnkS_get_extension(url,'.'), "html" ) ){
 		const char* url_for_dmz = NULL;
+
+		ZnkStr_add( ans, "<a " );
+		if( style_class_name ){
+			ZnkStr_addf( ans, "class=%s ", style_class_name );
+		}
+
 		if( ZnkS_isBegin_literal( url, "cachebox/" ) ){
 			url_for_dmz = url + Znk_strlen_literal( "cachebox/" );
 			url_for_dmz = Znk_strchr( url_for_dmz, '/' );
@@ -133,10 +164,16 @@ viewSearchFileItem( ZnkStr ans, EstFInf finf,
 		ZnkStr_addf( ans, " : [%s]", ZnkStr_cstr( title ) );
 		is_thumbnail = false;
 
+		ZnkStr_add( ans, "<br>" );
+		renderThumbA( ans, url, esc_url,
+				xhr_dmz, is_target_blank,
+				width, height, is_thumbnail );
+
 	} else if( ZnkS_eqCase( ZnkS_get_extension(url,'.'), "jpg" )
 	        || ZnkS_eqCase( ZnkS_get_extension(url,'.'), "png" )
 	        || ZnkS_eqCase( ZnkS_get_extension(url,'.'), "gif" )
 	){
+#if 0
 		ZnkStr_add( ans, "name=ahref_previewable " );
 		ZnkStr_addf( ans, "href=\"javascript:void(0);\" onclick=\"Easter_showPreview( this, 'http://%s/cgis/easter/%s', %zu, %zu );\">",
 				xhr_dmz, esc_url, max_width, max_height );
@@ -144,13 +181,27 @@ viewSearchFileItem( ZnkStr ans, EstFInf finf,
 		ZnkStr_add( ans, "<img src='/cgis/easter/publicbox/icons/file.png'>" );
 		ZnkStr_addf( ans, " %s", elem_name );
 		ZnkStr_add( ans, "</a>" );
+#endif
+		renderImgElem( ans, style_class_name, "img_viewer",
+				unesc_url, esc_url, elem_name,
+				width, height,
+				xhr_dmz, authentic_key, is_target_blank );
 	} else {
+		ZnkStr_add( ans, "<a " );
+		if( style_class_name ){
+			ZnkStr_addf( ans, "class=%s ", style_class_name );
+		}
 		ZnkStr_addf( ans, "href=\"http://%s/cgis/easter/%s\" %s>",
 				xhr_dmz, esc_url, is_target_blank ? "target=_blank" : "" );
 
 		ZnkStr_addf( ans, "<img src='/cgis/easter/publicbox/icons/file.png'>" );
 		ZnkStr_addf( ans, " %s", elem_name );
 		ZnkStr_add( ans, "</a>" );
+
+		ZnkStr_add( ans, "<br>" );
+		renderThumbA( ans, url, esc_url,
+				xhr_dmz, is_target_blank,
+				width, height, is_thumbnail );
 	}
 
 	if( finf ){
@@ -163,26 +214,23 @@ viewSearchFileItem( ZnkStr ans, EstFInf finf,
 		EstFInf_access_time( finf, &access_time );
 		ZnkDate_getStr( access_time_str, 0, &access_time, ZnkDateStr_e_Std );
 
-		ZnkStr_add( ans, "<br>" );
-		renderThumbA( ans, url, esc_url,
-				xhr_dmz, is_target_blank,
-				width, height, is_thumbnail );
-
-		ZnkStr_add( ans, "<span style=display:inline-block;vertical-align:top;padding:4px>" );
+		//ZnkStr_add( ans, "<span style=display:inline-block;vertical-align:top;padding:4px>" );
+		ZnkStr_add( ans, "<span class=MstyNoun>" );
 
 		/* file_path */
-		ZnkStr_addf( ans, "<font size=-1>%s</font><br>", file_path );
+		ZnkStr_addf( ans, "%s<br>", file_path );
 
 		/* file_tags */
-		ZnkStr_addf( ans, "<font size=-1>%s</font><br>", file_tags );
+		ZnkStr_addf( ans, "%s<br>", file_tags );
 
 		/* access_time */
-		ZnkStr_addf( ans, "<font size=-1>%s</font> &nbsp;", ZnkStr_cstr( access_time_str ) );
+		ZnkStr_addf( ans, "%s &nbsp;", ZnkStr_cstr( access_time_str ) );
 
 		/* file_size */
-		ZnkStr_addf( ans, "<font size=-1>%zuB</font>", file_size );
+		ZnkStr_addf( ans, "%zuB", file_size );
 
 		ZnkStr_add( ans, "</span>" );
+		ZnkStr_add( ans, "<br>" );
 	}
 }
 
@@ -195,7 +243,7 @@ viewSearchFInf( ZnkStr ans, void* inf_ptr,
 {
 	EstFInf finf = Znk_force_ptr_cast( EstFInf, inf_ptr );
 	viewSearchFileItem( ans, finf,
-			url, esc_url, id, title,
+			url, unesc_url, esc_url, id, title,
 			style_class_name, is_target_blank,
 			authentic_key );
 }
@@ -225,13 +273,15 @@ EstBoxUI_make_forSearchResult( ZnkStr ans, ZnkVarpAry finf_list,
 	const size_t show_file_num = EstConfig_getShowFileNum();
 	const size_t line_file_num = EstConfig_getLineFileNum();
 	const size_t thumb_size    = EstConfig_getThumbSize();
+	const bool   use_flexbox   = EstConfig_getUseFlexBox();  
 
 	EstCInfListUI_make( ans,
 			finf_list, view_func, get_elem_func,
 			begin_idx, end_idx,
 			style_class_name, new_linkid, url_prefix, id_prefix,
 			is_target_blank, show_file_num, line_file_num, thumb_size,
-			authentic_key, is_checked );
+			authentic_key, is_checked, use_flexbox );
+
 }
 
 static void
@@ -241,9 +291,11 @@ viewFSysElem( ZnkStr ans, void* inf_ptr,
 		const char* style_class_name, bool is_target_blank,
 		const char* authentic_key )
 {
-	//bool is_thumbnail = true;
 	size_t width  = EstConfig_getThumbSize();
 	size_t height = EstConfig_getThumbSize();
+	size_t max_width  = EstConfig_getPreviewMaxWidth();
+	size_t max_height = EstConfig_getPreviewMaxHeight();
+	const char* preview_style = EstConfig_getPreviewStyle();
 	const size_t show_file_num = EstConfig_getShowFileNum();
 	const char* xhr_dmz = EstConfig_XhrDMZ();
 
@@ -310,13 +362,17 @@ viewFSysElem( ZnkStr ans, void* inf_ptr,
 		        || ZnkS_eqCase( ZnkS_get_extension(unesc_url,'.'), "png" )
 		        || ZnkS_eqCase( ZnkS_get_extension(unesc_url,'.'), "gif" )
 		){
-			renderOpen( ans, style_class_name, "img_viewer",
-					unesc_url, authentic_key, is_target_blank );
+			//renderOpen( ans, style_class_name, "img_viewer",
+			//		unesc_url, authentic_key, is_target_blank );
+			renderPreview( ans, style_class_name, "img_viewer",
+					esc_url,
+					max_width, max_height, preview_style,
+					xhr_dmz, authentic_key, is_target_blank );
 
-			renderImgElem( ans, style_class_name,
+			renderImgElem( ans, style_class_name, "img_viewer",
 					unesc_url, esc_url, elem_name,
 					width, height,
-					xhr_dmz, is_target_blank );
+					xhr_dmz, authentic_key, is_target_blank );
 
 		} else if( ZnkS_eqCase( ZnkS_get_extension(unesc_url,'.'), "webm" )
 		){
@@ -376,13 +432,150 @@ EstBoxUI_make_forFSysView( ZnkStr ans, ZnkVarpAry cinf_list,
 	const size_t show_file_num = EstConfig_getShowFileNum();
 	const size_t line_file_num = EstConfig_getLineFileNum();
 	const size_t thumb_size    = EstConfig_getThumbSize();
+	const bool   use_flexbox   = EstConfig_getUseFlexBox();  
 
 	EstCInfListUI_make( ans,
 			cinf_list, view_func, get_elem_func,
 			begin_idx, end_idx,
 			style_class_name, new_linkid, url_prefix, id_prefix,
 			is_target_blank, show_file_num, line_file_num, thumb_size,
-			authentic_key, is_checked );
+			authentic_key, is_checked, use_flexbox );
+}
+
+static void
+viewTopicElem( ZnkStr ans, void* inf_ptr,
+		const char* url_prefix, const char* url, const char* unesc_url, const char* esc_url,
+		const char* id, ZnkStr title,
+		const char* style_class_name, bool is_target_blank,
+		const char* authentic_key )
+{
+	size_t width  = EstConfig_getThumbSize();
+	size_t height = EstConfig_getThumbSize();
+	size_t max_width  = EstConfig_getPreviewMaxWidth();
+	size_t max_height = EstConfig_getPreviewMaxHeight();
+	const char* preview_style = EstConfig_getPreviewStyle();
+	const size_t show_file_num = EstConfig_getShowFileNum();
+	const char* xhr_dmz = EstConfig_XhrDMZ();
+
+	if( ZnkS_isBegin_literal( id, "md5ext_" ) ){
+		const char* p   = Znk_strrchr( unesc_url, '/' );
+		const char* elem_name = unesc_url;
+		if( p ){ elem_name = p+1; }
+
+		/***
+		 * HTMLの場合、DMZにおいて開く.
+		 */
+		if( ZnkS_eqCase( ZnkS_get_extension(unesc_url,'.'), "htm" ) || ZnkS_eqCase( ZnkS_get_extension(unesc_url,'.'), "html" ) ){
+			const char* url_for_dmz = NULL;
+
+			ZnkStr_add( ans, "<a " );
+			if( style_class_name ){
+				ZnkStr_addf( ans, "class=%s ", style_class_name );
+			}
+
+			if( ZnkS_isBegin_literal( unesc_url, "cachebox/" ) ){
+				url_for_dmz = unesc_url + Znk_strlen_literal( "cachebox/" );
+				url_for_dmz = Znk_strchr( url_for_dmz, '/' );
+				if( url_for_dmz ){
+					++url_for_dmz;
+				}
+				if( url_for_dmz ){
+					ZnkStr_addf( ans, "href=\"http://%s/easter?est_get=%s\" %s>",
+							xhr_dmz,
+							url_for_dmz, is_target_blank ? "target=_blank" : "" );
+				} else {
+					ZnkStr_addf( ans, "href=\"/cgis/easter/%s\" %s>",
+							unesc_url, is_target_blank ? "target=_blank" : "" );
+				}
+			} else {
+				ZnkStr_addf( ans, "href=\"http://%s/cgis/easter/%s\" %s>",
+						xhr_dmz,
+						unesc_url, is_target_blank ? "target=_blank" : "" );
+			}
+
+			ZnkStr_addf( ans, "<img src='/cgis/easter/publicbox/icons/file.png'> %s</a>", elem_name );
+
+			EstUIBase_getHtmlTitle( title, unesc_url, 10 );
+			ZnkStr_addf( ans, " : [%s]", ZnkStr_cstr( title ) );
+
+		} else if( ZnkS_eqCase( ZnkS_get_extension(unesc_url,'.'), "jpg" )
+		        || ZnkS_eqCase( ZnkS_get_extension(unesc_url,'.'), "png" )
+		        || ZnkS_eqCase( ZnkS_get_extension(unesc_url,'.'), "gif" )
+		){
+			//renderOpen( ans, style_class_name, "img_viewer",
+			//		unesc_url, authentic_key, is_target_blank );
+			renderPreview( ans, style_class_name, "img_viewer",
+					esc_url,
+					max_width, max_height, preview_style,
+					xhr_dmz, authentic_key, is_target_blank );
+
+			renderImgElem( ans, style_class_name, "img_viewer",
+					unesc_url, esc_url, elem_name,
+					width, height,
+					xhr_dmz, authentic_key, is_target_blank );
+
+		} else if( ZnkS_eqCase( ZnkS_get_extension(unesc_url,'.'), "webm" )
+		){
+			renderOpen( ans, style_class_name, "video_viewer",
+					unesc_url, authentic_key, is_target_blank );
+
+			ZnkStr_add( ans, "<a " );
+
+			if( style_class_name ){
+				ZnkStr_addf( ans, "class=%s ", style_class_name );
+			}
+			ZnkStr_addf( ans, "href=\"http://%s/cgis/easter/%s\" %s>",
+					xhr_dmz, esc_url, is_target_blank ? "target=_blank" : "" );
+
+			ZnkStr_addf( ans, "<img src='/cgis/easter/publicbox/icons/file.png'> %s</a>", elem_name );
+
+
+		} else {
+			renderOpen( ans, style_class_name, "img_viewer",
+					unesc_url, authentic_key, is_target_blank );
+
+			ZnkStr_add( ans, "<a " );
+
+			if( style_class_name ){
+				ZnkStr_addf( ans, "class=%s ", style_class_name );
+			}
+			ZnkStr_addf( ans, "href=\"http://%s/cgis/easter/%s\" %s>",
+					xhr_dmz, esc_url, is_target_blank ? "target=_blank" : "" );
+
+			ZnkStr_addf( ans, "<img src='/cgis/easter/publicbox/icons/file.png'> %s</a>", elem_name );
+		}
+
+	}
+}
+
+void
+EstBoxUI_make_forTopic( ZnkStr ans, ZnkVarpAry cinf_list,
+		size_t begin_idx, size_t end_idx, const char* authentic_key,
+		bool is_target_blank, bool is_checked )
+{
+	static const EstCInfViewFuncT    view_func     = viewTopicElem;
+	static const EstCInfGetElemFuncT get_elem_func = getFSysElem;
+	static const char* style_class_name = "MstyFInfElemLink";
+	static const char* new_linkid       = "";
+	static const char* url_prefix       = "/easter?est_manager=topic&amp;command=view&amp;cache_path=";
+	static const char* id_prefix        = "";
+	const size_t show_file_num = EstConfig_getShowFileNum();
+	const size_t line_file_num = EstConfig_getLineFileNum();
+	const size_t thumb_size    = EstConfig_getThumbSize();
+	const bool   use_flexbox   = EstConfig_getUseFlexBox();  
+
+	EstCInfListUI_make( ans,
+			cinf_list, view_func, get_elem_func,
+			begin_idx, end_idx,
+			style_class_name, new_linkid, url_prefix, id_prefix,
+			is_target_blank, show_file_num, line_file_num, thumb_size,
+			authentic_key, is_checked, use_flexbox );
+}
+
+static bool
+isValidURL( const char* url, const char* q )
+{
+	return (bool)( q > url || *q == '/' );
 }
 
 static void
@@ -415,7 +608,8 @@ viewLinks( ZnkStr ans, void* inf_ptr,
 		ZnkStr_addf( ans, "<img src='/cgis/easter/publicbox/icons/%s_16.png'> ", target );
 
 		if( ZnkS_empty(comment) ){
-			ZnkStr_addf( ans, "%s%s", q > url ? "" : "http://", url );
+			ZnkStr_addf( ans, "%s%s", isValidURL( url, q ) ? "" : "http://", url );
+			ZnkStr_addf( ans, url );
 		} else {
 			ZnkStr_add( ans, comment );
 		}
@@ -423,14 +617,14 @@ viewLinks( ZnkStr ans, void* inf_ptr,
 	} else {
 		/* 基本的に targetにないURLはEasterで閲覧すべきでなく、従ってEaster-URL変換すべきではない. */
 		ZnkStr_addf( ans, "href=\"%s%s\" %s>",
-				q > url ? "" : "http://", url,
+				isValidURL( url, q ) ? "" : "http://", url,
 				is_target_blank ? "target=_blank" : "" );
 		ZnkStr_add(  ans, " <font color=\"#404000\"> Open </font></a>" );
 		ZnkStr_add(  ans, "<span class=MstyAutoLinkOther>" );
 		ZnkStr_add(  ans, "<img src='/cgis/easter/publicbox/icons/others_16.png'> " );
 
 		if( ZnkS_empty(comment) ){
-			ZnkStr_addf( ans, "%s%s", q > url ? "" : "http://", url );
+			ZnkStr_addf( ans, "%s%s", isValidURL( url, q ) ? "" : "http://", url );
 		} else {
 			ZnkStr_add( ans, comment );
 		}
@@ -462,6 +656,7 @@ EstBoxUI_make_forLinks( ZnkStr ans, ZnkVarpAry linf_list,
 	static const bool  is_checked       = false;
 	const size_t show_file_num = EstConfig_getShowFileNum();
 	const size_t line_file_num = 1;
+	const bool   use_flexbox   = true; /* これは固定でtrueでよい */
 	ZnkStr url_prefix = ZnkStr_new( "" );
 	const char* xhr_dmz = EstConfig_XhrDMZ();
 	const size_t elem_pix_width = 512;
@@ -473,7 +668,7 @@ EstBoxUI_make_forLinks( ZnkStr ans, ZnkVarpAry linf_list,
 			begin_idx, end_idx,
 			style_class_name, new_linkid, ZnkStr_cstr(url_prefix), id_prefix,
 			is_target_blank, show_file_num, line_file_num, elem_pix_width,
-			authentic_key, is_checked );
+			authentic_key, is_checked, use_flexbox );
 	ZnkStr_delete( url_prefix );
 }
 

@@ -13,8 +13,8 @@ struct ZnkMyfSectionImpl {
 	ZnkMyfSectionType type_;
 	union Data_tag {
 		ZnkStrAry   lines_;
-		ZnkVarpAry  vars_;
-		ZnkPrimpAry prims_;
+		ZnkVarAry   vars_;
+		ZnkPrimAry  prims_;
 	} u_;
 };
 
@@ -24,13 +24,13 @@ ZnkMyfSection_lines( const ZnkMyfSection sec )
 	assert( sec->type_ == ZnkMyfSection_e_Lines );
 	return sec->u_.lines_;
 }
-ZnkVarpAry
+ZnkVarAry
 ZnkMyfSection_vars( const ZnkMyfSection sec )
 {
 	assert( sec->type_ == ZnkMyfSection_e_Vars );
 	return sec->u_.vars_;
 }
-ZnkPrimpAry
+ZnkPrimAry
 ZnkMyfSection_prims( const ZnkMyfSection sec )
 {
 	assert( sec->type_ == ZnkMyfSection_e_Prims );
@@ -465,13 +465,13 @@ MistakeDetection:
 	return -1;
 }
 static bool
-parseVarDirective( ZnkVarpAry vars, const char* sec_name, ZnkStr line,
+parseVarDirective( ZnkVarAry vars, const char* sec_name, ZnkStr line,
 		ZnkFile fp, const char* nl, size_t* count, ZnkStr rhs_tmp,
 		const char* quote_begin, const char* quote_end, size_t quote_begin_leng, size_t quote_end_leng )
 {
 	size_t key_begin; size_t key_end;
 	size_t val_begin; size_t val_end;
-	ZnkVarp varp = NULL;
+	ZnkVar varp = NULL;
 	const char* p      = ZnkStr_cstr(line);
 	size_t      p_leng = ZnkStr_leng(line);
 	int  state = -1;
@@ -529,12 +529,12 @@ parseVarDirective( ZnkVarpAry vars, const char* sec_name, ZnkStr line,
 	return true;
 }
 static bool
-parsePrimDirective( ZnkPrimpAry prims, const char* sec_name, ZnkStr line,
+parsePrimDirective( ZnkPrimAry prims, const char* sec_name, ZnkStr line,
 		ZnkFile fp, const char* nl, size_t* count, ZnkStr rhs_tmp,
 		const char* quote_begin, const char* quote_end, size_t quote_begin_leng, size_t quote_end_leng )
 {
 	size_t val_begin; size_t val_end;
-	ZnkPrimp prim = NULL;
+	ZnkPrim prim = NULL;
 	const char* p      = ZnkStr_cstr(line);
 	int  state = -1;
 
@@ -963,7 +963,7 @@ ZnkMyf_save( ZnkMyf myf, const char* filename )
 				break;
 			case ZnkMyfSection_e_Vars:
 			{
-				ZnkVarp  varp  = NULL;
+				ZnkVar varp  = NULL;
 				Znk_fprintf( fp, "@@V %s%s", ZnkStr_cstr(sec->name_),  nl );
 				size = ZnkVarpAry_size( sec->u_.vars_ );
 				for( idx=0; idx<size; ++idx ){
@@ -990,7 +990,7 @@ ZnkMyf_save( ZnkMyf myf, const char* filename )
 			}
 			case ZnkMyfSection_e_Prims:
 			{
-				ZnkPrimp primp = NULL;
+				ZnkPrim primp = NULL;
 				Znk_fprintf( fp, "@@P %s%s", ZnkStr_cstr(sec->name_),  nl );
 				size = ZnkPrimpAry_size( sec->u_.prims_ );
 				for( idx=0; idx<size; ++idx ){
@@ -1031,14 +1031,14 @@ ZnkMyf_save( ZnkMyf myf, const char* filename )
 	return false;
 }
 
-ZnkVarp
+ZnkVar
 ZnkMyf_refVar( ZnkMyf myf, const char* sec_name, const char* var_name )
 {
-	ZnkVarpAry vars = ZnkMyf_find_vars( myf, sec_name );
+	ZnkVarAry vars = ZnkMyf_find_vars( myf, sec_name );
 	if( vars ){
 		size_t size = ZnkVarpAry_size( vars );
 		size_t idx;
-		ZnkVarp varp;
+		ZnkVar varp;
 		for( idx=0; idx<size; ++idx ){
 			varp = ZnkVarpAry_at( vars, idx );
 			if( ZnkStr_eq( varp->name_, var_name ) ){

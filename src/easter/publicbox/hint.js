@@ -3,7 +3,7 @@ function titleQandA( title, id )
 {
 	var msg = "";
 	msg += "<u><b>" + title + "</b></u>";
-	msg += "<a class=MstyHintCloseButton href='javascript:void(0);' onclick='closeQandA( \"" + id + "\" );'>X</a><br> <br>";
+	msg += "<a class=delete href='javascript:void(0);' onclick='closeQandA( \"" + id + "\" );'>X</a><br> <br>";
 	return msg;
 }
 function textQandA( id ){
@@ -16,9 +16,11 @@ function closeQandA( id ){
 }
 function displayQandA( title, id ){
 	var msg = "";
-	msg += "<div class=MstyQandABody>";
+	msg += "<div class=content>";
+	msg += "<div class=notification>";
 	msg += titleQandA( title, id );
 	msg += textQandA( id );
+	msg += "</div>";
 	msg += "</div>";
 	document.getElementById( id ).innerHTML=msg;
 }

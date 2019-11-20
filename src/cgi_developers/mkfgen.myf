@@ -71,6 +71,8 @@ exec progress progress.c
 *.js   publicbox
 *.go   publicbox
 *.go   protected
+#*.rrk  publicbox
+#*.rrk  protected
 @@.
 
 @@L ignore_list

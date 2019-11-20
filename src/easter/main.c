@@ -15,6 +15,7 @@
 #include <Rano_log.h>
 #include <Rano_cgi_util.h>
 #include <Rano_htp_boy.h>
+#include <Rano_conf_util.h>
 
 #include <Znk_str.h>
 #include <Znk_s_base.h>
@@ -91,7 +92,7 @@ parseQueryString( RanoCGIEVar* evar )
 			if( ZnkS_eq( manager, "link" ) ){
 				EstLinkManager_main( evar, post_vars, msg, EstConfig_authenticKey() );
 			} else if( ZnkS_eq( manager, "cache" ) ) {
-				EstCacheManager_main( evar, post_vars, msg, EstConfig_authenticKey() );
+				EstBoxMapViewer_main( evar, post_vars, msg, EstConfig_authenticKey() );
 			} else if( ZnkS_eq( manager, "search" ) ) {
 				EstSearchManager_main( evar, post_vars, msg, EstConfig_authenticKey() );
 			} else if( ZnkS_eq( manager, "img_viewer" ) ) {
@@ -131,13 +132,13 @@ parseQueryString( RanoCGIEVar* evar )
 }
 
 static bool
-runCacheTask( void )
+runCacheTask( const char* lasttime_dat_path )
 {
 	const char* argv[] = { "cache_task.cgi", NULL };
 	bool        is_wait = false;
 	ZnkDate date = { 0 };
 	ZnkDate current = { 0 };
-	ZnkFile fp = Znk_fopen( "cache_task_lasttime.dat", "rb" );
+	ZnkFile fp = Znk_fopen( lasttime_dat_path, "rb" );
 	bool    is_run = false;
 	if( fp ){
 		char buf[ 4096 ] = "";
@@ -158,7 +159,7 @@ runCacheTask( void )
 		 * 標準出力を継承さぜずに子プロセスを起動する.
 		 */
 		ZnkProcess_execChild( Znk_NARY(argv), argv, is_wait, ZnkProcessConsole_e_Detached );
-		fp = Znk_fopen( "cache_task_lasttime.dat", "wb" );
+		fp = Znk_fopen( lasttime_dat_path, "wb" );
 		if( fp ){
 			ZnkStr str = ZnkStr_new( "" );
 			ZnkDate_getStr( str, Znk_NPOS, &current, ZnkDateStr_e_Std );
@@ -172,34 +173,42 @@ runCacheTask( void )
 
 int main( int argc, char** argv ) 
 {
-	RanoCGIEVar* evar = RanoCGIEVar_create();
+	int          exit_result = EXIT_FAILURE;
+	RanoCGIEVar* evar        = RanoCGIEVar_create();
+	size_t       count       = 0;
+	const char*  moai_dir    = NULL;
+	ZnkStr       ermsg       = ZnkStr_new( "" );
 
-	int exit_result = EXIT_FAILURE;
-	size_t count = 0;
-	ZnkStr moai_dir = EstConfig_getMoaiDir();
+	/* rano app setup */
 
-	if( moai_dir == NULL ){
+	if( RanoConfUtil_rano_app_initiate( ".", true, ermsg ) ){
+		static const bool is_multi_dir = true;
+		count = RanoCGIUtil_rano_app_init_log( "easter", is_multi_dir );
+	} else {
+		RanoCGIUtil_rano_app_print_error( ZnkStr_cstr(ermsg) );
 		goto FUNC_END;
-	}
-
-	{
-		static const bool keep_open  = false;
-		ZnkDir_mkdirPath( "./tmp", Znk_NPOS, '/', NULL );
-		count = RanoCGIUtil_initMultiDirLog( "./tmp/log_", "./tmp/easter_count.txt", 1000, 10, keep_open );
 	}
 
 	if( !ZnkZlib_initiate() ){
-		RanoLog_printf( "Easter : ZnkZlib_initiate is failure.\n" );
+		RanoCGIUtil_rano_app_print_error( "ZnkZlib_initiate is failure.\n" );
 		goto FUNC_END;
 	}
 	if( !ZnkNetBase_initiate( false ) ){
-		RanoLog_printf( "Easter : ZnkNetBase_initiate is failure.\n" );
+		RanoCGIUtil_rano_app_print_error( "ZnkNetBase_initiate is failure.\n" );
 		goto FUNC_END;
 	}
 
+	moai_dir = RanoConfUtil_moai_dir( NULL );
+	if( moai_dir == NULL ){
+		RanoCGIUtil_rano_app_print_error( "moai_dir is not found." );
+		goto FUNC_END;
+	}
+
+	/* Application setup */
+
 	{
 		char cert_pem_path[ 256 ] = "";
-		Znk_snprintf( cert_pem_path, sizeof(cert_pem_path), "%s/cert.pem", ZnkStr_cstr(moai_dir) );
+		Znk_snprintf( cert_pem_path, sizeof(cert_pem_path), "%s/cert.pem", moai_dir );
 #if defined(__CYGWIN__)
 		RanoHtpBoy_initiateHttpsModule( "cygtls-17", cert_pem_path );
 #else
@@ -207,30 +216,28 @@ int main( int argc, char** argv )
 #endif
 	}
 
-	EstConfig_initiate( evar, ZnkStr_cstr(moai_dir), count );
-
-	/***
-	 * for Windows : change stdin to binary-mode.
-	 */
-	Znk_Internal_setMode( 0, true );
-	/***
-	 * for Windows : change stdout to binary-mode.
-	 */
-	Znk_Internal_setMode( 1, true );
+	EstConfig_initiate( evar, moai_dir, count );
 
 	parseQueryString( evar );
 
 	/***
 	 * Cache-Task.
 	 */
-	runCacheTask();
+	{
+		const char* tmpdir_common = RanoHtpBoy_getTmpDirCommon();
+		char lasttime_dat_path[ 256 ] = "";
+		Znk_snprintf( lasttime_dat_path, sizeof(lasttime_dat_path), "%s/cache_task_lasttime.dat", tmpdir_common );
+		runCacheTask( lasttime_dat_path );
+	}
 
 	exit_result = EXIT_SUCCESS;
 FUNC_END:
 	RanoCGIEVar_destroy( evar );
-	ZnkStr_delete( moai_dir );
-
 	EstConfig_finalize();
+
+	RanoConfUtil_rano_app_finalize();
+	RanoConfUtil_moai_dir_finalize();
+	ZnkStr_delete( ermsg );
 
 	return exit_result;
 }

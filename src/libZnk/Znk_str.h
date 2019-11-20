@@ -70,12 +70,12 @@ ZnkStr_normalize( ZnkBfr zkbfr, bool plus_one );
  *     Ç¢ÇÌÇ‰ÇÈÉTÉCÉYÇÕèÌÇ… 1 Ç…ê›íËÇ≥ÇÍÇƒÇ¢ÇÈ)
  */
 ZnkStr
-ZnkStr_create_ex( const char* init_data, size_t leng, ZnkBfrType type );
+ZnkStr_create_ex( const char* init_data, size_t leng, ZnkCapacityType type );
 
 Znk_INLINE ZnkStr
 ZnkStr_create( const char* init_data, size_t leng )
 {
-	return ZnkStr_create_ex( init_data, leng, ZnkBfr_Pad128 );
+	return ZnkStr_create_ex( init_data, leng, ZnkCapacity_Pad128 );
 }
 
 Znk_INLINE void

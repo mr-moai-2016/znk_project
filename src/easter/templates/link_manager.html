@@ -1,10 +1,23 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html><head>
-	<META http-equiv="Cmntent-type" content="text/html; charset=Shift_JIS">
+	<META http-equiv="Content-type" content="text/html; charset=Shift_JIS">
 	<META http-equiv="Content-Script-Type" content="text/javascript">
 	<META http-equiv="Content-Style-Type" content="text/css">
-	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="/msty.css" rel="stylesheet" type="text/css" />
+	<link href="/bulma.css" rel="stylesheet" type="text/css" />
 	<title>Easter 仮想ブラウジング</title>
+	<style type="text/css">
+	<!--
+		.tile.is-parent {
+			  padding: 0px;
+		}
+		
+		.tile.is-vertical>.tile.is-child {
+			margin-bottom: 2px !important;
+		}
+	--> 
+	</style>
 </head>
 
 <script type="text/javascript"><!--
@@ -16,97 +29,106 @@ var st_func_tbls = [];
 //--></script>
 <script type="text/javascript" src="/cgis/easter/publicbox/hint.js"></script>
 <script type="text/javascript" src="/cgis/easter/publicbox/assort.js"></script>
-	
-<body bgcolor="#EEFFEE" text="#505000" link="#0000EE" vlink="#0000EE" alink="#FF0000">
 
-<form action="/cgis/easter/easter.cgi?est_manager=link" method="POST" name="fm_main">
+<body bgcolor="#EEFFEE" text="#808000" link="#0000EE" vlink="#0000EE" alink="#FF0000">
+<div class="section">
+<div class="container">
+<div class="content">
+
 
 <a name="user-content-index"></a>
-<font size=+2><i><b>Easter</b></i></font><br>
+<font size=+2><b>Easter</b></font><br>
 
 <br>
 <a class=MstyNowSelectedLink href="/easter" >仮想ブラウジング</a> &nbsp;
 <a class=MstyElemLink  href="/easter?est_manager=topic&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >コレクション</a> &nbsp;
 <a class=MstyElemLink  href="/easter?est_manager=config&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >設定</a> &nbsp;
 <br>
+<a class=MstyElemLink  href="/" >Moai</a> &nbsp;
+<a class=MstyElemLink  href="#LinkEditor" >リンクの登録/編集</a> &nbsp;
+<a class=MstyElemLink  href="#Link" >一番下へ</a> &nbsp;
+
+<form action="/cgis/easter/easter.cgi?est_manager=link" method="POST" name="fm_main">
 
 <input type=hidden name=Moai_AuthenticKey value="#[Moai_AuthenticKey]#">
 <button class=MstyDmyUpdateBtn disabled></button> <!-- For disable Enter key on text field -->
+<br>
 
 <a name="LinkManager"></a>
-<br><b>LinkManager</b><br>
-<table class=MstyManagerTable>
+<article class="message is-dark">
+	<div class="message-header">
+		仮想環境のスタート
+	</div>
+	<div class="message-body">
+		サイトを仮想環境で閲覧します.
+		<a class=MstyQandALink href="javascript:void(0);" onclick="displayQandA( 'Hint', 'startLink' );"><img src='/cgis/easter/publicbox/icons/question_16.png'></a>
+		<font size=-1><div id=startLink></div></font>
+		<br>
+		#[links]#
+	</div>
+</article>
 
-
-<tr><td colspan=2>
-<font size=-1>
-「Open」をクリックするとリンク先のサイトを仮想環境で閲覧します.<br>
-<span style="vertical-align:-40%; margin-right:4px"><img src='/cgis/easter/publicbox/icons/question_16.png'></span>マークをクリックすると使い方のヒントが表示されます.<br> <br>
-</font>
-</td></tr>
-
-
-<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>仮想環境のスタート</legend>
-<a class=MstyQandALink href="javascript:void(0);" onclick="displayQandA( 'Hint', 'startLink' );"><img src='/cgis/easter/publicbox/icons/question_16.png'></a>
-<font size=-1><div id=startLink></div></font>
-<br>
-#[links]#
-</fieldset></td></tr>
-
-<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>リンクの登録/編集</legend>
 <a name="LinkEditor"></a>
+<article class="message is-dark">
+	<div class="message-header">
+		リンクの登録/編集
+	</div>
+	<div class="message-body">
+		Easterで閲覧する新たなURLをここで登録できます.
+		<a class=MstyQandALink href="javascript:void(0);" onclick="displayQandA( 'Hint', 'registLink' );"><img src='/cgis/easter/publicbox/icons/question_16.png'></a>
+		<div id=registLink></div>
+		<br>
+		<a class=MstyElemLinkRed href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'link', 'open_registlink', '', '#LinkEditor' )">リンクの新規登録</a>
+		<a class=MstyElemLinkRed href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'link', 'open_editlink',   '', '#LinkEditor' )">選択したリンクを編集</a>
+		<br>
+		#[EstLM_edit_ui]#
+	</div>
+</article>
 
-<font size=-1>Easterでの閲覧のスタートとなる新たなURLをここで登録できます.
-<a class=MstyQandALink href="javascript:void(0);" onclick="displayQandA( 'Hint', 'registLink' );"><img src='/cgis/easter/publicbox/icons/question_16.png'></a>
-<div id=registLink></div>
-</font>
-<br>
-<a class=MstyElemLinkRed href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'link', 'open_registlink', '', '#LinkEditor' )">
-リンクの新規登録
-</a>
-<a class=MstyElemLinkRed href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'link', 'open_editlink', '', '#LinkEditor' )">
-チェックしたリンクを編集
-</a>
-<br> #[EstLM_edit_ui]#
-</fieldset></td></tr>
+<a name="LinkEditor"></a>
+<article class="message is-dark">
+	<div class="message-header">
+		リンクの並び替え
+	</div>
+	<div class="message-body">
+		リンク集の順番を並び替えるための操作です.
+		<a class=MstyQandALink href="javascript:void(0);" onclick="displayQandA( 'Hint', 'sortLink' );"><img src='/cgis/easter/publicbox/icons/question_16.png'></a>
+		<font size=-1><div id=sortLink></div></font>
+		<br>
+		<a class=MstyElemLinkRed href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'link', 'age_link',      '', '#LinkManager' )">選択したリンクを一番上へ移動</a>
+		<a class=MstyElemLinkRed href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'link', 'sort_category', '', '#LinkManager' )">カテゴリ毎に集める</a>
+	</div>
+</article>
 
-<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>リンクの並び替え</legend>
-<font size=-1>リンク集の順番をここで並び替えできます.
-<a class=MstyQandALink href="javascript:void(0);" onclick="displayQandA( 'Hint', 'sortLink' );"><img src='/cgis/easter/publicbox/icons/question_16.png'></a>
-<font size=-1><div id=sortLink></div></font>
-</font>
-<br>
-<a class=MstyElemLinkRed href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'link', 'age_link', '', '#LinkManager' )">
-チェックしたリンクを一番上へ移動
-</a>
-<a class=MstyElemLinkRed href="javascript:EjsAssort_submitCommandEx( document.fm_main, 'link', 'sort_category', '', '#LinkManager' )">
-カテゴリ毎に集める
-</a>
+<a name="LinkDelete"></a>
+<article class="message is-dark">
+	<div class="message-header">
+		リンクの削除
+	</div>
+	<div class="message-body">
+		リンク集の中で不要なものをここで削除できます.
+		<a class=MstyQandALink href="javascript:void(0);" onclick="displayQandA( 'Hint', 'deleteLink' );"><img src='/cgis/easter/publicbox/icons/question_16.png'></a>
+		<font size=-1><div id=deleteLink></div></font>
+		<br>
+		<a class=MstyElemLinkRed href="javascript:EjsAssort_submitCommandAndArg( document.fm_main, 'link', 'remove_link', 'confirm=on' )">選択したリンクを一括削除</a>
+	</div>
+</article>
 
-<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>リンクの削除</legend>
-<font size=-1>リンク集の中で不要なものをここで削除できます.
-<a class=MstyQandALink href="javascript:void(0);" onclick="displayQandA( 'Hint', 'deleteLink' );"><img src='/cgis/easter/publicbox/icons/question_16.png'></a>
-<font size=-1><div id=deleteLink></div></font>
-</font>
-<br>
-<a class=MstyElemLinkRed href="javascript:EjsAssort_submitCommandAndArg( document.fm_main, 'link', 'remove_link', 'confirm=on' )">
-チェックしたリンクを一括削除
-</a>
-<br>
-</fieldset></td></tr>
 
-<tr><td colspan=2>
-<input type=checkbox id=msg_console_cbtn onclick="EjsAssort_switchVisibility('msg_console', '_cbtn', '_body', '_msg')">
-<b>Easter System Console </b><br>
-<div class=MstyMsgConsole id=msg_console_body style=display:none><b>Easter System Console:</b><br>#[msg]#</div>
-<font size=-1 color=#8888ff><div id=msg_console_msg>― 現在非表示です ―</div></font>
-</td></tr>
-
-</table>
+<div class=box>
+	<input type=checkbox id=msg_console_cbtn onclick="EjsAssort_switchVisibility('msg_console', '_cbtn', '_body', '_msg')">
+	<b>Easter System Console </b><br>
+	<div class=MstyMsgConsole id=msg_console_body style=display:none><b>Easter System Console:</b><br>#[msg]#</div>
+	<font size=-1 color=#8888ff><div id=msg_console_msg>― 現在非表示です ―</div></font>
+</div>
 
 </form>
 
+<a name="Link"></a>
 <a class=MstyElemLink href="#user-content-index">一番上へ戻る</a> <a class=MstyElemLink href="/">Moaiトップページ</a>
 <br><br>
 
+</div>
+</div>
+</div>
 </body></html>

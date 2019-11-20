@@ -139,8 +139,8 @@ RanoDirUtil_moveDir( const char* src_dir, const char* dst_dir,
 		const char* title, ZnkStr ermsg,
 		RanoDirUtilFuncT is_processFile_func, void* is_processFile_arg )
 {
-	bool is_err_ignore = true;
-	FilterInfo info = { 0 };
+	static const bool is_err_ignore = true;
+	FilterInfo      info  = { 0 };
 	ZnkDirRecursive recur = NULL;
 
 	info.title_      = title;
@@ -150,9 +150,9 @@ RanoDirUtil_moveDir( const char* src_dir, const char* dst_dir,
 	info.is_processFile_arg_  = is_processFile_arg;
 	
 	recur = ZnkDirRecursive_create( is_err_ignore,
-			onEnterDir_report,&info,
-			processFile_move, &info,
-			onExitDir_rmdir,  &info );
+			onEnterDir_report, &info,
+			processFile_move,  &info,
+			onExitDir_rmdir,   &info );
 	ZnkDirRecursive_traverse( recur, src_dir, NULL );
 	ZnkDirRecursive_destroy( recur );
 }
@@ -162,8 +162,8 @@ RanoDirUtil_removeDir( const char* topdir,
 		const char* title, ZnkStr ermsg,
 		RanoDirUtilFuncT is_processFile_func, void* is_processFile_arg )
 {
-	bool is_err_ignore = true;
-	FilterInfo info = { 0 };
+	static const bool is_err_ignore = true;
+	FilterInfo      info  = { 0 };
 	ZnkDirRecursive recur = NULL;
 
 	info.title_      = title;
@@ -212,12 +212,12 @@ static bool processFile_filter( ZnkDirRecursive recur, const char* file_path, vo
 void
 RanoDirUtil_filterDir( const char* src_dir, const char* dst_dir,
 		const char* title, ZnkStr ermsg,
-		RanoDirUtilFuncT       is_processFile_func,  void* is_processFile_arg,
-		RanoDirUtilFilterFuncT filterFile_func,      void* filterFile_arg,
-		const ZnkDirRecursiveFuncT isIgnoreDir_func, void* isIgnoreDir_arg )
+		RanoDirUtilFuncT       is_processFile_func, void* is_processFile_arg,
+		RanoDirUtilFilterFuncT filterFile_func,     void* filterFile_arg,
+		ZnkDirRecursiveFuncT   isIgnoreDir_func,    void* isIgnoreDir_arg )
 {
-	bool is_err_ignore = true;
-	FilterInfo info = { 0 };
+	static const bool is_err_ignore = true;
+	FilterInfo      info  = { 0 };
 	ZnkDirRecursive recur = NULL;
 
 	info.title_      = title;
@@ -230,9 +230,9 @@ RanoDirUtil_filterDir( const char* src_dir, const char* dst_dir,
 	info.filterFile_arg_      = filterFile_arg;
 	
 	recur = ZnkDirRecursive_create( is_err_ignore,
-			onEnterDir_report,&info,
+			onEnterDir_report,  &info,
 			processFile_filter, &info,
-			onExitDir,  &info );
+			onExitDir,          &info );
 
 	if( isIgnoreDir_func ){
 		ZnkDirRecursive_config_isIgnoreDir( recur,
@@ -241,6 +241,26 @@ RanoDirUtil_filterDir( const char* src_dir, const char* dst_dir,
 
 	ZnkDirRecursive_traverse( recur, src_dir, NULL );
 	ZnkDirRecursive_destroy( recur );
+}
+
+static bool
+copyFile_func( const char* in_file_path, const char* out_file_path, void* arg )
+{
+	ZnkStr ermsg = Znk_force_ptr_cast( ZnkStr, arg );
+	return ZnkDir_copyFile_byForce( in_file_path, out_file_path, ermsg );
+}
+
+void
+RanoDirUtil_installDir( const char* src_dir, const char* dst_dir,
+		const char* title, ZnkStr ermsg,
+		RanoDirUtilFuncT     is_processFile_func, void* is_processFile_arg,
+		ZnkDirRecursiveFuncT isIgnoreDir_func,    void* isIgnoreDir_arg )
+{
+	RanoDirUtil_filterDir( src_dir, dst_dir,
+			title, ermsg,
+			is_processFile_func, is_processFile_arg,
+			copyFile_func,       ermsg,
+			isIgnoreDir_func,    isIgnoreDir_arg );
 }
 
 bool

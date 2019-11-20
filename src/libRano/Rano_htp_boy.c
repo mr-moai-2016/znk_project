@@ -37,6 +37,11 @@ RanoHtpBoy_setTmpDirCommon( const char* tmpdir_common )
 		}
 	}
 }
+const char*
+RanoHtpBoy_getTmpDirCommon( void )
+{
+	return st_tmpdir_common;
+}
 
 /***
  * User-Agent, Referer, Cookie‚È‚Ç‚ÅHTTPƒwƒbƒ_‚ğ‘•ü‚·‚é.

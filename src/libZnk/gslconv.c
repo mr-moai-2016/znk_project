@@ -416,6 +416,10 @@ gslgen( ZnkMyf gsl, const char* gslmyf_filename, const char* target_slib, const 
 				if( ZnkStrAry_find( ignore_symbols, 0, ZnkStr_cstr(line_ref), Znk_NPOS ) != Znk_NPOS ){
 					continue; /* skip */
 				}
+				/* skip C++ mangling symbol */
+				if( ZnkStrEx_strchr( line_ref, '@' ) ){
+					continue; /* skip */
+				}
 				ZnkStrAry_push_bk_cstr( export_symbols, ZnkStr_cstr(line_ref), Znk_NPOS );
 			}
 

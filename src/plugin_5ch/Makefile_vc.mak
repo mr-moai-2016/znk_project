@@ -66,7 +66,7 @@ RUNTIME_FILES= \
 
 
 # Entry rule.
-all: $O $(DLIB_FILE0) 
+all: $O $(DLIB_FILE0) $(SLIB_FILE0) 
 
 # Mkdir rule.
 $O:

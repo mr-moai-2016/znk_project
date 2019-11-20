@@ -1,18 +1,22 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html><html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta http-equiv="Content-Script-Type" content="text/javascript">
 	<meta http-equiv="Content-Style-Type" content="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<link href="/bulma.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+<div class="section">
+<div class="container">
+<div class="content">
 <a name=TopBar></a>
-<p><b><img src="/imgs/here_landmark.png"> Moai+Easter エキスパートマニュアル</b></p>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter 上級マニュアル</b></p>
 
 <a class=MstyElemLink href="/">トップページ</a> &nbsp;
-<a class=MstyElemLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">初級マニュアル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">上級マニュアル</a> &nbsp;
 <a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
 <a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
@@ -30,137 +34,108 @@
 <a class=MstyElemLink href="/moai2.0/futaba_note.html">Futaba Note</a> &nbsp;
 <br> <br>
 
-<div class=MstyComment>
-<u><b>記事担当者</b></u> : 高速ヤキソバ変換<br>
-<br>
-<u><b>最終更新日</b></u> : 2017/12/29<br>
-<br>
-</div>
-<br>
-
-
 <a name=AtFirst></a>
-<u><b>
-はじめに
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">はじめに</h1>
+<p>
 	ここではCustomBoyに関する機能を簡易に解説する.<br>
 	尚、この記事およびこのCustomBoyというツールはエキスパートな方向けのものである.<br>
-</div><br>
+</p>
 <br>
 
 
 <a name=Index></a>
-<u><b>
-目次
-</b></u><br>
+<h1 class="title">目次</h1>
 <br>
 <ul>
-	<li><b><a class=MstyElemLink href=#CustomBoy>Overview of CustomBoy</a></b></li>
-	<li><b><a class=MstyElemLink href=#CustomUSERS>CustomUSERS：Tutorial of Customize for your User-Agent and all Post variables</a></b></li>
-	<li><b><a class=MstyElemLink href=#CustomCookie>CustomCookie：Tutorial of Customize for your all Cookie values</a></b></li>
-	<li><b><a class=MstyElemLink href=#CustomFeature>CustomFeature：Tutorial of Customize for your all Fingerprint values</a></b></li>
+	<li><b><a class=MstyElemLink href=#CustomBoy>CustomBoyの概要</a></b></li>
+	<li><b><a class=MstyElemLink href=#CustomUSERS>CustomUSERS：User-Agentと全てのPost変数をカスタマイズする</a></b></li>
+	<li><b><a class=MstyElemLink href=#CustomCookie>CustomCookie：全てのCookie値をカスタマイズする</a></b></li>
+	<li><b><a class=MstyElemLink href=#CustomFeature>CustomFeature：ブラウザ固有の環境特性値をカスタマイズする</a></b></li>
 </ul><br>
 
 
 <a name=CustomBoy></a>
-<u><b>
-Overview of CustomBoy
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">CustomBoyの概要</h1>
+<p>
 	通常、CustomBoyの思考routineは与えられた環境Categoryを入力として、それに矛盾しない範囲において最適なUA/Post変数をランダムに出力する.<br>
 	このランダマイズはCustomBoyの持つKnowledge-Baseを基にした確率的アルゴリズムによって行われる.<br>
-	このアルゴリズムを一言で総括すると確率が付加されたBNF上で展開を行い、結果としてUA/Post変数として有意なMarkov chain的なシーケンスを無数に決定できるというものである.<br>
+	このKnowledge-Baseは確率が付加されたBNFである. CustomBoyエンジンはこの展開を行い、結果としてUA/Post変数として有意なMarkov chain的なシーケンスを無数に決定する.<br>
 	さらにCustomFeatureでは、その際に参照するMachine/Browser固有の各要素値をexplicitに上書き指定可能であり、生成されるFingerprint値の究極なるCutomizeを行うができる.<br>
 	CustomBoyは以下の３つのUIをあなたに提供する.<br>
-	<ul>
-		<li>CustomUSERS<br>
-		</li>
-		<li>CustomCookie<br>
-		</li>
-		<li>CustomFeature<br>
-		</li>
-	</ul>
+<br>
+	<div class=content><ul>
+		<li>CustomUSERS：User-Agentと全てのPost変数をカスタマイズする</li>
+		<li>CustomCookie：全てのCookie値をカスタマイズする</li>
+		<li>CustomFeature：ブラウザ固有の環境特性値をカスタマイズする</li>
+	</ul></div>
 	<br>
-	<div class=MstyComment>
+	<div class=box>
 		正確に言えばVirtualUSERSもCustomBoyの一機能として実装されていますが、ここでは別枠扱いとします.<br>
 	</div>
 	<br>
 	以下ではこれら３つについてのTutorialを述べる.<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=CustomUSERS></a>
-<u><b>
-CustomUSERS：Tutorial of Customize for your User-Agent and all Post variables
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">CustomUSERS：User-Agentと全てのPost変数をカスタマイズする</h1>
+<p>
 	CustomUSERSはUA(User-Agent)およびPost変数値を直接設定可能なinterfaceである.<br>
 	Tutorialとして次の手順をご紹介しよう.<br>
-	<ol>
+	<div class=content><ol type="1">
 		<li><b>Step1</b>ボタンにより仮想環境を構築する.<br>
-		このときCustomUSERSにおいてほぼすべての情報の構築は自動的に完了しており、<br>
-		一連の情報は選択された環境Categoryに矛盾しないよう適切にセットされている.<br>
+		これによりCustomUSERSにおけるほぼすべての情報の構築は自動的に完了し、一連の情報は選択された環境Categoryに矛盾しないよう適切なデフォルトにセットされる.<br>
 		</li>
 		<br>
-		<li>このままの状態でも全く構わないと思うが、さらに各固有の値に拘りのある方は、<br>
-		これを微調整して修正した上で<b>UA/Post変数の更新</b>ボタンを押す.<br>
+		<li>このままの状態でも全く構わないと思うが、さらに各固有の値に拘りのある方は、これを微調整して修正した上で<b>UA/Post変数の更新</b>ボタンを押す.<br>
 		これによりその調整が反映されたUA/Post変数がセットされる.<br>
 		</li>
 		<br>
 		<li><b>Step2</b>ボタンを押すことで最終状態を確定させる.<br>
 		これで完了である.<br>
 		</li>
-	</ol>
+	</ol></div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=CustomCookie></a>
-<u><b>
-CustomCookie：Tutorial of Customize for your all Cookie values
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">CustomCookie：全てのCookie値をカスタマイズする</h1>
+<p>
 	CustomCookieはCookie値を直接設定可能なinterfaceである.<br>
 	Tutorialとして次の手順をご紹介しよう.<br>
-	<ol>
-		<li><b>Cookieの仮想環境</b>フレームには現在のあなたの環境の仮想的なCookie値が設定されてある.<br>
+	<div class=content><ol type="1">
+		<li><b>Cookieの仮想環境</b>フレームには現在の仮想的なCookie値が設定されてある.<br>
 		このフレームではここにリストされた任意の項目を直接書き換え可能である.<br>
 		</li>
 		<br>
 		<li>Cookie値の書き換えが終わったら、<b>上記で強制書き換え</b>ボタンを押す.<br>
-		「空値のものは項目自体を消去」にチェックを入れてこのボタンを押せば、<br>
-		読んで字のごとく値が空のCookieの項目については、その項目そのものを消去できる.<br>
 		これで完了である.<br>
+		<div class=box>
+			「空値のものは項目自体を消去」にチェックを入れてこのボタンを押せば、<br>
+			読んで字のごとく値が空のCookieの項目については、その項目そのものを消去できる.<br>
+		</div>
 		</li>
-	</ol>
+	</ol></div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=CustomFeature></a>
-<u><b>
-CustomFeature：Tutorial of Customize for your all Fingerprint values
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">CustomFeature：ブラウザ固有の環境特性値をカスタマイズする</h1>
+<p>
 	CustomFeatureはFingerprint値およびSnippet(javascriptによる判定コード)の値を直接設定可能なinterfaceである.<br>
 	Tutorialとして次の手順をご紹介しよう.<br>
-	<ol>
+	<div class=content><ol type="1">
 		<li><b>Step1</b>ボタンにより仮想環境を構築する.<br>
-		このときCustomFeatureにおいてほぼすべての情報の構築は自動的に完了しており、<br>
-		一連の情報は選択された環境Categoryに矛盾しないよう適切にセットされている.<br>
+		これによりCustomFeatureにおけるほぼすべての情報の構築は自動的に完了し、一連の情報は選択された環境Categoryに矛盾しないよう適切なデフォルトにセットされる.<br>
 		</li>
 		<br>
 		<li>このままの状態でも全く構わないと思うが、さらに各固有の値に拘りのある方は、<br>
@@ -173,18 +148,37 @@ CustomFeature：Tutorial of Customize for your all Fingerprint values
 		<li><b>Step2</b>ボタンを押すことで最終状態を確定させよう.<br>
 		これで完了である.<br>
 		</li>
-	</ol>
+	</ol></div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
+
+
+<div class="card">
+	<u><b>This article was written by:</b></u><br>
+	<div class="card-content">
+		<div class="media">
+			<div class="media-left">
+				<figure class="image is-48x48">
+				<img src="/imgs/yakisoba.png" alt="none image">
+				</figure>
+			</div>
+			<div class="media-content">
+				<p class="title is-4">K.Yakisoba.H</p>
+				<p class="subtitle is-6">@znk project</p>
+			</div>
+		</div>
+		<div class="content">
+		  <time datetime="2016-1-1">2019/06/21</time>
+		</div>
+	</div>
+</div>
 
 
 <a name=Link></a>
-<u><b>
-リンク
-</b></u><br>
-<br>
+<h1 class="title"></h1>
+<hr>
 <ul>
 	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
 	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
@@ -192,5 +186,8 @@ CustomFeature：Tutorial of Customize for your all Fingerprint values
 </ul><br>
 
 
+</div>
+</div>
+</div>
 </body>
 </html>

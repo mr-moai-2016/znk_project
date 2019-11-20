@@ -76,13 +76,24 @@ $(EXE_FILE0): $(OBJS0)
 
 ##
 # Pattern rule.
+#
 # We use not suffix rule but pattern rule for dealing flexibly with files in sub-directory.
 # In this case, there is very confusing specification, that is :
 # '\' to the left hand of ':' works as escape sequence, 
 # '\' to the right hand of ':' does not work as escape sequence. 
 # Hence, we have to duplicate '\' to the left hand of ':',
-# the other way, '\' to the right hand of ':' we have to put only single '\',
-# for example $O\\%.o: $S\%.c .
+# the other way, '\' to the right hand of ':' we have to put only single '\'.
+# Note that we have to duplicate '\' only before special charactor(% etc) in the left of ':'.
+#
+# For example 1 :
+#   $O\\mydir\\%.o: $S\%.c        .... NG
+#   $O\mydir\\%.o:  $S\%.c        .... OK
+# For example 2 :
+#   $O\\mydir\%.o:  $S\mydir\%.c  .... NG
+#   $O\mydir\\%.o:  $S\mydir\%.c  .... OK
+# In the case of example 2, we can write more simply :
+#   $O\\%.o: $S\%.c               .... OK
+#   (Because '%' is wildcard and it indicates patical path 'mydir\filename_base' recursively )
 #
 $O\\%.o: $S\%.c
 	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c $<
@@ -111,6 +122,8 @@ install_data:
 	@if exist "pat_make.sh" @$(CP) /F "pat_make.sh" ..\..\patgen\ $(CP_END)
 	@if exist "pat_diff.bat" @$(CP) /F "pat_diff.bat" ..\..\patgen\ $(CP_END)
 	@if exist "pat_diff.sh" @$(CP) /F "pat_diff.sh" ..\..\patgen\ $(CP_END)
+	@if exist "set_ver.bat" @$(CP) /F "set_ver.bat" ..\..\patgen\ $(CP_END)
+	@if exist "set_ver.sh" @$(CP) /F "set_ver.sh" ..\..\patgen\ $(CP_END)
 	@if exist "apply_this_scripts\android\*" @$(CP) /F "apply_this_scripts\android\*" ..\..\patgen\apply_this_scripts\android\ $(CP_END)
 	@if exist "apply_this_scripts\cygwin\*" @$(CP) /F "apply_this_scripts\cygwin\*" ..\..\patgen\apply_this_scripts\cygwin\ $(CP_END)
 	@if exist "apply_this_scripts\linux\*" @$(CP) /F "apply_this_scripts\linux\*" ..\..\patgen\apply_this_scripts\linux\ $(CP_END)

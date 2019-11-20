@@ -1,18 +1,22 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html><html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta http-equiv="Content-Script-Type" content="text/javascript">
 	<meta http-equiv="Content-Style-Type" content="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<link href="/bulma.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+<div class="section">
+<div class="container">
+<div class="content">
 <a name=TopBar></a>
-<p><b><img src="/imgs/here_landmark.png"> Moai+Easter エキスパートマニュアル</b></p>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter 上級マニュアル</b></p>
 
 <a class=MstyElemLink href="/">トップページ</a> &nbsp;
-<a class=MstyElemLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">初級マニュアル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">上級マニュアル</a> &nbsp;
 <a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
 <a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
@@ -27,21 +31,9 @@
 <a class=MstyElemLink href="/moai2.0/mkfgen.html">mkfgenリファレンス</a> &nbsp;
 <br> <br>
 
-<div class=MstyComment>
-<u><b>記事担当者</b></u> : Mr.Moai<br>
-<br>
-<u><b>最終更新日</b></u> : 2018/03/31<br>
-<br>
-</div>
-<br>
-
-
 <a name=AtFirst></a>
-<u><b>
-はじめに
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">はじめに</h1>
+<p>
 	この記事ではMoai CGI上で動くWebアプリケーションの実践的な開発方法について述べます.<br>
 	<br>
 	尚、これは Moai CGI 入門編の続きです.<br>
@@ -50,14 +42,12 @@
 	ここではライブラリを使ったMoai CGIを開発する方法について述べます.<br>
 	そして最終課題としてproxy_finderに該当するツールを作成してみます.<br>
 	難易度はやや高めです.<br>
-</div><br>
+</p>
 <br>
 
 
 <a name=Index></a>
-<u><b>
-目次
-</b></u><br>
+<h1 class="title">目次</h1>
 <br>
 <ul>
 	<li><b><a class=MstyElemLink href=#MoaiCGI_pragmatic_introduction>準備</a></b></li>
@@ -72,11 +62,8 @@
 
 
 <a name=MoaiCGI_pragmatic_introduction></a>
-<u><b>
-準備
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">準備</h1>
+<p>
 	ライブラリを指定するには、mkfgen.myfにその記述を追加する必要があります.<br>
 	mkfgenについては一応<a class=MstyElemLink href="/moai2.0/mkfgen.html" target=_blank>こちら</a>に作者によるリファレンスがありますが、<br>
 	この内容は大変難しいため、ムリに読む必要はないでしょう.<br>
@@ -251,18 +238,15 @@
 		<br>
 		この仕様により各CGIディレクトリに冗長にも同じDLLをコピーせずに済むというわけです.<br>
 	</div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=MoaiCGI_evar2></a>
-<u><b>
-Hello 環境変数!(実践バージョン)
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">Hello 環境変数!(実践バージョン)</h1>
+<p>
 	なんだか見覚えのあるタイトルです.<br>
 	入門編でやった環境変数を表示するサンプルですね.<br>
 	今度はあれをlibZnkとlibRanoを使って実装してみます.<br>
@@ -270,7 +254,7 @@ Hello 環境変数!(実践バージョン)
 	<b><u>CGIへのリンクとソースコード</u></b><br>
 	<br>
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/evar2.cgi">http://localhost:8124/cgis/cgi_developers/protected/evar2.cgi</a>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/cgi_developers/protected/evar2.cgi">http://localhost:8124/cgis/cgi_developers/protected/evar2.cgi</a>
 		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/evar2.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
@@ -332,18 +316,15 @@ Hello 環境変数!(実践バージョン)
 		XSSについてはWebアプリケーション開発におけるセキュリティーの話題で最も有名なものですし、<br>
 		星の数ほど解説サイトがあるでしょうから、ここでの説明は割愛します.<br>
 	</div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=MoaiCGI_query_string2></a>
-<u><b>
-Hello Query String!(実践バージョン)
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">Hello Query String!(実践バージョン)</h1>
+<p>
 	なんか<b>入門編の焼き直しばっかり</b>じゃん！<br>
 	<br>
 	お気づきになられましたか？<br>
@@ -354,7 +335,7 @@ Hello Query String!(実践バージョン)
 	<b><u>CGIへのリンクとソースコード</u></b><br>
 	<br>
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/query_string2.cgi?mode=cat&sort=1">http://localhost:8124/cgis/cgi_developers/protected/query_string2.cgi?mode=cat&sort=1</a>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/cgi_developers/protected/query_string2.cgi?mode=cat&sort=1">http://localhost:8124/cgis/cgi_developers/protected/query_string2.cgi?mode=cat&sort=1</a>
 		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/query_string2.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
@@ -442,25 +423,22 @@ Hello Query String!(実践バージョン)
 			これらの関数はスレッドセーフであり、マルチスレッド下でも問題なく使えます.<br>
 		</div>
 	</div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=MoaiCGI_post2></a>
-<u><b>
-Hello Post!(実践バージョン)
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">Hello Post!(実践バージョン)</h1>
+<p>
 	今回はいよいよ Moai CGI へフォームの内容をPOSTしてみます.<br>
 	つまりlibZnkとlibRanoを使った場合、それをどうやって受信するのかを学ぶというわけです.<br>
 	<br>
 	<b><u>CGIへのリンクとソースコード</u></b><br>
 	<br>
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/post2.cgi">http://localhost:8124/cgis/cgi_developers/protected/post2.cgi</a>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/cgi_developers/protected/post2.cgi">http://localhost:8124/cgis/cgi_developers/protected/post2.cgi</a>
 		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/post2.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
@@ -647,18 +625,15 @@ Hello Post!(実践バージョン)
 		このとき、ZnkVar_data( var ) よりそのバイナリデータ本体へのポインタが得られます.<br>
 		またZnkVar_data_size( var ) よりそのバイナリデータ全体のバイトサイズが得られます.<br>
 	</div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=MoaiCGI_hello_template></a>
-<u><b>
-テンプレートHTMLを使って表示する.
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">テンプレートHTMLを使って表示する.</h1>
+<p>
 	今までのサンプルではCGI上で表示させるHTMLを出力させるためにprintfで一行ずつ書いていました.<br>
 	しかしこれは、内部にダブルクォートなどが含まれる場合はそれをエスケープしなければなりませんし、<br>
 	各行を書くたびに毎回最初にprintfを付けるのは煩わしいでしょう.<br>
@@ -669,7 +644,7 @@ Hello Post!(実践バージョン)
 	<b><u>CGIへのリンクとソースコード</u></b><br>
 	<br>
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/hello_template.cgi">http://localhost:8124/cgis/cgi_developers/protected/hello_template.cgi</a>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/cgi_developers/protected/hello_template.cgi">http://localhost:8124/cgis/cgi_developers/protected/hello_template.cgi</a>
 		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/hello_template.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
@@ -757,18 +732,15 @@ Hello Post!(実践バージョン)
 		より柔軟性のある表示ができるわけです.<br>
 		HTMLテンプレートについてはおおよそお分かり頂けたでしょうか？<br>
 	</div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=MoaiCGI_progress></a>
-<u><b>
-時間のかかる処理の途中経過を表示する
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">時間のかかる処理の途中経過を表示する</h1>
+<p>
 	Moai CGI で時間のかかる処理を行いたい場合、その途中経過を表示するサンプルです.<br>
 	大規模なデータを扱ったり検索をするなどで時間のかかる処理を Moai CGI 上から行うとき、<br>
 	その途中経過をどのように表示すればよいかのヒントとなればと思います.<br>
@@ -776,7 +748,7 @@ Hello Post!(実践バージョン)
 	<b><u>CGIへのリンクとソースコード</u></b><br>
 	<br>
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/progress.cgi">http://localhost:8124/cgis/cgi_developers/protected/progress.cgi</a>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/cgi_developers/protected/progress.cgi">http://localhost:8124/cgis/cgi_developers/protected/progress.cgi</a>
 		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/progress.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
@@ -878,18 +850,15 @@ Hello Post!(実践バージョン)
 		その値が100になったところで終了です.<br>
 		この例ではダミーの処理として Sleep処理を入れてあります.<br>
 	</div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=MoaiCGI_proxy_finder></a>
-<u><b>
-ProxyFinderを作成してみる
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">ProxyFinderを作成してみる</h1>
+<p>
 	いよいよ卒業課題です.<br>
 	Moai CGIでProxyFinderに相当するものを作ってみましょう.<br>
 	今回はCGIへのリンクとソースコードを最初には示しません.<br>
@@ -1044,7 +1013,7 @@ ProxyFinderを作成してみる
 		インストールされたcgiスクリプトは以下のリンクから実行できるはずです.<br>
 		ProxyFinderと同じような画面が表示されるかテストしてみましょう.<br>
 		<br>
-		<a class=MstyAppLink href=http://localhost:8124/cgis/protected/my_proxy_finder/my_proxy_finder.cgi>http://localhost:8124/cgis/protected/my_proxy_finder/my_proxy_finder.cgi</a><br>
+		<a class=MstyWrapLink href=http://localhost:8124/cgis/protected/my_proxy_finder/my_proxy_finder.cgi>http://localhost:8124/cgis/protected/my_proxy_finder/my_proxy_finder.cgi</a><br>
 		<br>
 		cgis/protected内にあるため、最初に例の画面が表示されますが、気にせず「Please retry this」を押します.<br>
 		すると以下のようなメッセージが表示されたのではないでしょうか？<br>
@@ -1084,7 +1053,7 @@ ProxyFinderを作成してみる
 		<br>
 		では最後に再び下記のリンクで実際の動作を確認してみます.<br>
 		<br>
-		<a class=MstyAppLink href=http://localhost:8124/cgis/protected/my_proxy_finder/my_proxy_finder.cgi>http://localhost:8124/cgis/protected/my_proxy_finder/my_proxy_finder.cgi</a><br>
+		<a class=MstyWrapLink href=http://localhost:8124/cgis/protected/my_proxy_finder/my_proxy_finder.cgi>http://localhost:8124/cgis/protected/my_proxy_finder/my_proxy_finder.cgi</a><br>
 		<br>
 		今度こそうまく表示されたのではないでしょうか？<br>
 		「Proxyを取得する」ボタンの右にあるメニューが空ですが、これはproxy_finder.myfがまだ存在してないからです.<br>
@@ -1110,35 +1079,51 @@ ProxyFinderを作成してみる
 		例の「Please retry this」の画面が最初に表示されるのが気にならなければ、<br>
 		別にここまでする必要はありません.<br>
 	</div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=MoaiCGI_at_end></a>
-<u><b>
-おわりに
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">おわりに</h1>
+<p>
 	大変長かったですが、これでMoai CGI Developers講座も終了です.<br>
 	お疲れ様でした.<br>
 	この講座があなたのCGI開発の一助となれば幸いです.<br>
 	そしてこれをきっかけに、いつかはあなたがEasterやCustomBoyのようなツール、<br>
 	あるいはそれを超える何かを作られる日が来るのであれば、我々にとってこれ以上の喜びはありません.<br>
 	我々開発チーム一同、そんな日が来ることを心待ちにしています.<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
+
+
+<div class="card">
+	<u><b>This article was written by:</b></u><br>
+	<div class="card-content">
+		<div class="media">
+			<div class="media-left">
+				<figure class="image is-48x48">
+				<img src="/imgs/moai.png" alt="none image">
+				</figure>
+			</div>
+			<div class="media-content">
+				<p class="title is-4">Mr.Moai</p>
+				<p class="subtitle is-6">@znk project</p>
+			</div>
+		</div>
+		<div class="content">
+		  <time datetime="2016-1-1">2018/03/31</time>
+		</div>
+	</div>
+</div>
 
 
 <a name=Link></a>
-<u><b>
-リンク
-</b></u><br>
-<br>
+<h1 class="title"></h1>
+<hr>
 <ul>
 	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
 	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
@@ -1146,5 +1131,8 @@ ProxyFinderを作成してみる
 </ul><br>
 
 
+</div>
+</div>
+</div>
 </body>
 </html>

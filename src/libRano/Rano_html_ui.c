@@ -13,7 +13,7 @@ RanoHtmlUI_makeSelectBox( ZnkStr html,
 	const char* val  = "";
 	const char* name = "";
 
-	ZnkStr_addf2( html, "<select name=\"%s\" %s>\n", varname, readonly_str );
+	ZnkStr_addf2( html, "<select class=select name=\"%s\" %s>\n", varname, readonly_str );
 
 	for( idx=0; idx<size; ++idx ){
 		val  = ZnkStrAry_at_cstr( val_list, idx );

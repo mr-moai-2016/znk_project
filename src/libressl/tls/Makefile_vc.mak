@@ -55,21 +55,21 @@ DLIB_FILE0=$O\$(DLIB_NAME0)
 ILIB_FILE0=$O\libtls-17.imp.lib
 SLIB_FILE0=$O\libtls.lib
 OBJS0=\
-	$O\tls_conninfo.obj \
-	$O\tls_verify.obj \
-	$O\tls_bio_cb.obj \
-	$O\tls_config.obj \
-	$O\tls_keypair.obj \
-	$O\tls_server.obj \
-	$O\tls_peer.obj \
-	$O\compat/pwrite.obj \
-	$O\compat/getuid.obj \
-	$O\compat/pread.obj \
-	$O\compat/ftruncate.obj \
-	$O\tls_client.obj \
-	$O\tls_ocsp.obj \
+	$O\compat\ftruncate.obj \
+	$O\compat\getuid.obj \
+	$O\compat\pread.obj \
+	$O\compat\pwrite.obj \
 	$O\tls.obj \
+	$O\tls_bio_cb.obj \
+	$O\tls_client.obj \
+	$O\tls_config.obj \
+	$O\tls_conninfo.obj \
+	$O\tls_keypair.obj \
+	$O\tls_ocsp.obj \
+	$O\tls_peer.obj \
+	$O\tls_server.obj \
 	$O\tls_util.obj \
+	$O\tls_verify.obj \
 	$O\dll_main.obj \
 
 SUB_LIBS=\
@@ -165,14 +165,14 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-tls_conninfo.obj: tls_internal.h
-tls_verify.obj: tls_internal.h
-tls_bio_cb.obj: tls_internal.h
-tls_config.obj: tls_internal.h
-tls_keypair.obj: tls_internal.h
-tls_server.obj: tls_internal.h
-tls_peer.obj: tls_internal.h
-tls_client.obj: tls_internal.h
-tls_ocsp.obj: tls_internal.h
 tls.obj: tls_internal.h
+tls_bio_cb.obj: tls_internal.h
+tls_client.obj: tls_internal.h
+tls_config.obj: tls_internal.h
+tls_conninfo.obj: tls_internal.h
+tls_keypair.obj: tls_internal.h
+tls_ocsp.obj: tls_internal.h
+tls_peer.obj: tls_internal.h
+tls_server.obj: tls_internal.h
 tls_util.obj: tls_internal.h
+tls_verify.obj: tls_internal.h

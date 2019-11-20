@@ -4,12 +4,28 @@
 #include <Znk_base.h>
 #include <limits.h>
 
+/*****************************************************************************/
+/***
+ * Static Expression
+ */
+
 #define Znk_CLAMP_MIN( val, min ) ( ((val)<(min)) ? (val)=(min) : (val) )
 #define Znk_CLAMP_MAX( val, max ) ( ((val)>(max)) ? (val)=(max) : (val) )
 #define Znk_CLAMP_MINMAX( val, min, max ) \
 	( ((val)>(max)) ? (val)=(max) : Znk_CLAMP_MIN((val),(min)) )
 #define Znk_MIN(x,y) ( (x)<(y) ? (x) : (y) )
 #define Znk_MAX(x,y) ( (x)>(y) ? (x) : (y) )
+
+/***
+ * size を unit 幾つ分で被覆(cover)できるかを求める.
+ */
+#define Znk_COVER_NUM( size, unit )  ( ((size) + ((unit)-1)) /(unit) )
+
+/*
+ * endof Static Expression
+ ***/
+/*****************************************************************************/
+
 
 /*****************************************************************************/
 /***
@@ -102,5 +118,31 @@
  * endof Bit Flag
  ***/
 /*****************************************************************************/
+
+
+/*****************************************************************************/
+/***
+ * Common FuncType
+ */
+
+typedef void        (*ZnkFuncT_VV)( void );
+typedef bool        (*ZnkFuncT_BV)( void );   /* 叙述型 */
+typedef int         (*ZnkFuncT_IV)( void );   /* int値取得型 */
+typedef const char* (*ZnkFuncT_SV)( void );   /* 文字列取得型 */
+typedef void*       (*ZnkFuncT_PZ)( size_t ); /* malloc型 */
+typedef void        (*ZnkFuncT_VP)( void* );  /* free型 */
+typedef void*       (*ZnkFuncT_PP)( void* );  /* thread型 */
+
+/***
+ * 使用時は args は()で括る必要がある.
+ * 例えば ZnkFuncT_INVOKE( func, (arg1, arg2) ); のようにして使う.
+ */
+#define ZnkFuncT_INVOKE( func, args ) do if( func ){ func args; } while( 0 )
+
+/*
+ * endof Common FuncType
+ ***/
+/*****************************************************************************/
+
 
 #endif /* INCLUDE_GUARD */

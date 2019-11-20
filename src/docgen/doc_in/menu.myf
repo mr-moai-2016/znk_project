@@ -1,29 +1,35 @@
 @def_quote [' ']
 
 @@V config
-title_author     = ['記事担当者']
+title_author     = ['This article was written by:']
 title_update     = ['最終更新日']
 title_atfirst    = ['はじめに']
 title_index      = ['目次']
-title_link       = ['リンク']
+title_link       = ['']
 msg_backto_index = ['目次に戻る']
 @@.
 
 @@P root
-{ ['/']                          ['トップページ'] }
-{ ['/moai2.0/index.html']        ['ユーザーマニュアル']     ['moai2_0_user'] }
-{ ['/moai2.0/index_expert.html'] ['エキスパートマニュアル'] ['moai2_0_exp'] }
+{ ['/']                          ['トップページ'] ['top_tools'] }
+{ ['/moai2.0/index.html']        ['初級マニュアル'] ['moai2_0_user'] }
+{ ['/moai2.0/index_expert.html'] ['上級マニュアル'] ['moai2_0_exp'] }
 { ['/announcement.html']         ['アナウンスメント'] }
 { ['/FAQ.html']                  ['FAQ'] }
+@@.
+
+@@P top_tools
+{ ['/easter']              ['Easter'] }
+{ ['/cgis/custom_boy/custom_boy.cgi?cb_target=futaba&cb_type=automatic'] ['VirtualUSERS'] }
+{ ['/config?mode=upgrade'] ['Moaiアップグレード'] }
+{ ['#Link']                ['一番下へ'] }
 @@.
 
 @@P moai2_0_user
 { ['/moai2.0/index.html']            ['ご案内'] }
 { ['/moai2.0/install.html']          ['インストールガイド'] }
-{ ['/moai2.0/moai_feature.html']     ['Moaiの特徴'] }
-{ ['/moai2.0/easter_reference.html'] ['Easter']           ['easter'] }
-{ ['/moai2.0/virtual_users.html']    ['VirtualUSERS'] }
-{ ['/moai2.0/upgrade.html']          ['Moaiのアップグレード方法'] }
+{ ['/moai2.0/easter_reference.html'] ['Easterの使い方']           ['easter'] }
+{ ['/moai2.0/virtual_users.html']    ['VirtualUSERSの使い方'] }
+{ ['/moai2.0/upgrade.html']          ['Moaiを最新バージョンにする'] }
 @@.
 
 @@P moai2_0_exp

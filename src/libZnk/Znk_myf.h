@@ -22,7 +22,7 @@ typedef enum {
 ZnkStrAry
 ZnkMyfSection_lines( const ZnkMyfSection sec );
 
-ZnkVarpAry
+ZnkVarAry
 ZnkMyfSection_vars( const ZnkMyfSection sec );
 
 ZnkPrimpAry
@@ -97,7 +97,7 @@ ZnkMyf_load( ZnkMyf myf, const char* filename );
 bool
 ZnkMyf_save( ZnkMyf myf, const char* filename );
 
-ZnkVarp
+ZnkVar
 ZnkMyf_refVar( ZnkMyf myf, const char* sec_name, const char* var_name );
 
 Znk_INLINE ZnkMyfSection
@@ -112,7 +112,7 @@ ZnkMyf_find_lines( const ZnkMyf myf, const char* sec_name )
 	ZnkMyfSection sec = ZnkMyf_findSection( myf, sec_name, ZnkMyfSection_e_Lines );
 	return sec ? ZnkMyfSection_lines( sec ) : NULL;
 }
-Znk_INLINE ZnkVarpAry
+Znk_INLINE ZnkVarAry
 ZnkMyf_find_vars( const ZnkMyf myf, const char* sec_name )
 {
 	ZnkMyfSection sec = ZnkMyf_findSection( myf, sec_name, ZnkMyfSection_e_Vars );
@@ -131,7 +131,7 @@ ZnkMyf_intern_lines( const ZnkMyf myf, const char* sec_name )
 	ZnkMyfSection sec = ZnkMyf_internSection( myf, sec_name, ZnkMyfSection_e_Lines );
 	return ZnkMyfSection_lines( sec );
 }
-Znk_INLINE ZnkVarpAry
+Znk_INLINE ZnkVarAry
 ZnkMyf_intern_vars( const ZnkMyf myf, const char* sec_name )
 {
 	ZnkMyfSection sec = ZnkMyf_internSection( myf, sec_name, ZnkMyfSection_e_Vars );

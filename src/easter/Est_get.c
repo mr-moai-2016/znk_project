@@ -320,7 +320,7 @@ EstGet_procHead( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val )
 		const char* tmpdir_pid = EstConfig_getTmpDirPID( true );
 		const char* tmpdir_com = EstConfig_getTmpDirCommon( true );
 
-		ZnkStr      result_filename = ZnkStr_newf( "./%sresult.dat", tmpdir_pid );
+		ZnkStr      result_filename = ZnkStr_newf( "%sresult.dat", tmpdir_pid );
 		const char* ua              = EstConfig_getEasterDefaultUA();
 		const char* parent_proxy    = EstConfig_parent_proxy();
 		bool        static_cached      = false;
@@ -388,7 +388,7 @@ saveLastModifiedData( const ZnkVarpAry lmd )
 	char dat_path[ 256 ] = "";
 
 	ZnkDir_mkdirPath( tmpdir_com, Znk_NPOS, '/', NULL );
-	Znk_snprintf( dat_path, sizeof(dat_path), "./%s/last_modified.dat", tmpdir_com );
+	Znk_snprintf( dat_path, sizeof(dat_path), "%s/last_modified.dat", tmpdir_com );
 	fp = Znk_fopen( dat_path, "wb" );
 	if( fp ){
 		const size_t size = ZnkVarpAry_size( lmd );
@@ -418,7 +418,7 @@ loadLastModifiedData( ZnkVarpAry lmd )
 	char dat_path[ 256 ] = "";
 	char file_path[ 256 ] = "";
 
-	Znk_snprintf( dat_path, sizeof(dat_path), "./%s/last_modified.dat", tmpdir_com );
+	Znk_snprintf( dat_path, sizeof(dat_path), "%s/last_modified.dat", tmpdir_com );
 	fp = Znk_fopen( dat_path, "rb" );
 	if( fp ){
 		ZnkStr line = ZnkStr_new( "" );
@@ -488,31 +488,34 @@ modifyTextForce_onReload( ZnkStr text, void* arg )
 	if( display_text_info->is_404_ ){
 		ZnkSRef_set_literal( &old_ptn, "</body></html>" );
 		ZnkSRef_set_literal( &new_ptn,
-				"<script type=\"text/javascript\"><!--\n"
+				"<script type=\"text/javascript\">\n"
 				"document.write( window.document.lastModified );\n"
-				"contd=document.getElementById(\"contdisp\");\n"
-				"contd.innerHTML = \"404 Not found.\";\n"
-				"--></script>\n"
+				"var reloaded_state=document.getElementById(\"EasterReloadState\");\n"
+				"if( reloaded_state ){ reloaded_state.innerHTML = \"404 Not found.\"; }\n"
+				"</script>\n"
+				"<script type=\"text/javascript\" src=\"/cgis/easter/publicbox/easter_end.js\"></script>\n"
 				"</body></html>" );
 		ZnkStrEx_replace_BF( text, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
 	} else if( display_text_info->updated_ ){
 		ZnkSRef_set_literal( &old_ptn, "</body></html>" );
 		ZnkSRef_set_literal( &new_ptn,
-				"<script type=\"text/javascript\"><!--\n"
+				"<script type=\"text/javascript\">\n"
 				"document.write( window.document.lastModified );\n"
-				"contd=document.getElementById(\"contdisp\");\n"
-				"contd.innerHTML = \"更新されました\";\n"
-				"--></script>\n"
+				"var reloaded_state=document.getElementById(\"EasterReloadState\");\n"
+				"if( reloaded_state ){ reloaded_state.innerHTML = \"更新されました\"; }\n"
+				"</script>\n"
+				"<script type=\"text/javascript\" src=\"/cgis/easter/publicbox/easter_end.js\"></script>\n"
 				"</body></html>" );
 		ZnkStrEx_replace_BF( text, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
 	} else {
 		ZnkSRef_set_literal( &old_ptn, "</body></html>" );
 		ZnkSRef_set_literal( &new_ptn,
-				"<script type=\"text/javascript\"><!--\n"
+				"<script type=\"text/javascript\">\n"
 				"document.write( window.document.lastModified );\n"
-				"contd=document.getElementById(\"contdisp\");\n"
-				"contd.innerHTML = \"新着なし\";\n"
-				"--></script>\n"
+				"var reloaded_state=document.getElementById(\"EasterReloadState\");\n"
+				"if( reloaded_state ){ reloaded_state.innerHTML = \"新着なし\"; }\n"
+				"</script>\n"
+				"<script type=\"text/javascript\" src=\"/cgis/easter/publicbox/easter_end.js\"></script>\n"
 				"</body></html>" );
 		ZnkStrEx_replace_BF( text, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
 	}
@@ -843,7 +846,7 @@ EstGet_procGet( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, bo
 		const char* tmpdir_com = EstConfig_getTmpDirCommon( true );
 		const char* tmpdir_pid = EstConfig_getTmpDirPID( true );
 
-		ZnkStr       result_filename = ZnkStr_newf( "./%sresult.dat", tmpdir_pid );
+		ZnkStr       result_filename = ZnkStr_newf( "%sresult.dat", tmpdir_pid );
 		const char*  ua              = EstConfig_getEasterDefaultUA();
 		const char*  parent_proxy    = EstConfig_parent_proxy();
 		bool         static_cached   = false;

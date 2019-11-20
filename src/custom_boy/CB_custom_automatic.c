@@ -1,4 +1,5 @@
 #include <CB_custom_automatic.h>
+#include <Rano_conf_util.h>
 
 typedef enum {
 	 Cmd_e_Get
@@ -75,7 +76,7 @@ CBCustomAutomatic_main( RanoCGIEVar* evar, ZnkVarpAry cb_vars, const char* cb_sr
 		ZnkVarpAry main_vars, uint64_t* ptua64, ZnkStr msg, ZnkStr category, ZnkStr lacking_var,
 		CBConfigInfo* info, bool is_authenticated, bool all_cookie_clear )
 {
-	const char* moai_dir = CBConfig_moai_dir();
+	const char* moai_dir = RanoConfUtil_moai_dir( NULL );
 	const char* target = CBConfig_theNegotiatingTarget();
 
 	bool is_update_main = false;

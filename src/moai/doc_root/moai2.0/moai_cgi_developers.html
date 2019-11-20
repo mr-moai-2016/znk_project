@@ -1,18 +1,22 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html><html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta http-equiv="Content-Script-Type" content="text/javascript">
 	<meta http-equiv="Content-Style-Type" content="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<link href="/bulma.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+<div class="section">
+<div class="container">
+<div class="content">
 <a name=TopBar></a>
-<p><b><img src="/imgs/here_landmark.png"> Moai+Easter エキスパートマニュアル</b></p>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter 上級マニュアル</b></p>
 
 <a class=MstyElemLink href="/">トップページ</a> &nbsp;
-<a class=MstyElemLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">初級マニュアル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">上級マニュアル</a> &nbsp;
 <a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
 <a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
@@ -27,21 +31,9 @@
 <a class=MstyElemLink href="/moai2.0/mkfgen.html">mkfgenリファレンス</a> &nbsp;
 <br> <br>
 
-<div class=MstyComment>
-<u><b>記事担当者</b></u> : Mr.Moai<br>
-<br>
-<u><b>最終更新日</b></u> : 2018/05/04<br>
-<br>
-</div>
-<br>
-
-
 <a name=AtFirst></a>
-<u><b>
-はじめに
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">はじめに</h1>
+<p>
 	この記事ではMoai CGI上で動くWebアプリケーションの開発方法について述べます.<br>
 	<br>
 	Moai CGI では基本的にApache上などで動く通常のCGIを動作させることもできます.<br>
@@ -54,14 +46,12 @@
 	勿論使用する言語はCのみならず、あなたの得意なスクリプト言語でもOK.<br>
 	必要な知識は使用する言語における標準出力をする方法(Cならprintfなど)、基本的なHTMLやJavascriptを扱う程度で事足りるでしょう.<br>
 	(凝ったものを作ろうとすればそれなりに大変ではありましょうが…)<br>
-</div><br>
+</p>
 <br>
 
 
 <a name=Index></a>
-<u><b>
-目次
-</b></u><br>
+<h1 class="title">目次</h1>
 <br>
 <ul>
 	<li><b><a class=MstyElemLink href=#MoaiCGI_Introduction>Moai CGI 開発入門</a></b></li>
@@ -78,11 +68,8 @@
 
 
 <a name=MoaiCGI_Introduction></a>
-<u><b>
-Moai CGI 開発入門
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">Moai CGI 開発入門</h1>
+<p>
 	これはCGIスクリプトなんて作ったことがない方向けのチュートリアルとなります.<br>
 	またプログラムなんて少々かじった程度である方でも大丈夫と思います(多分…).<br>
 	<br>
@@ -106,24 +93,21 @@ Moai CGI 開発入門
 	<br>
 	尚、以下で紹介しているサンプルコードのうち、私Mr.MoaiがAuthorとなっているもののライセンスは<a class=MstyElemLink href="http://www.kmonos.net/nysl" target=_blank>NYSL</a>とします.<br>
 	それ以外のものについては気になるようであればオリジナル配布元にてご確認ください(多分たいした制限はないと思います).<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=MoaiCGI_hello></a>
-<u><b>
-Hello World!
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">Hello World!</h1>
+<p>
 	まずは Moai CGI で単純にメッセージを出力してみます.<br>
 	<br>
 	<b><u>CGIへのリンクとソースコード</u></b><br>
 	<br>
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/hello.cgi">http://localhost:8124/cgis/cgi_developers/protected/hello.cgi</a>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/cgi_developers/protected/hello.cgi">http://localhost:8124/cgis/cgi_developers/protected/hello.cgi</a>
 		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/hello.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
@@ -255,24 +239,21 @@ Hello World!
 		そこにcgiファイルがインストールされます.<br>
 		<br>
 	</div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=MoaiCGI_evar1></a>
-<u><b>
-Hello 環境変数!
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">Hello 環境変数!</h1>
+<p>
 	Moai CGI で使われる環境変数の内容をテスト出力してみます.<br>
 	<br>
 	<b><u>CGIへのリンクとソースコード</u></b><br>
 	<br>
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/evar1.cgi">http://localhost:8124/cgis/cgi_developers/protected/evar1.cgi</a>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/cgi_developers/protected/evar1.cgi">http://localhost:8124/cgis/cgi_developers/protected/evar1.cgi</a>
 		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/evar1.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
@@ -316,18 +297,15 @@ Hello 環境変数!
 		<br>
 		環境変数は様々なCGIスクリプトに使われるものですので、これも押さえておいてください.<br>
 	</div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=MoaiCGI_query_string1></a>
-<u><b>
-Hello Query String!
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">Hello Query String!</h1>
+<p>
 	なんか<b>Helloばっかり</b>じゃん！<br>
 	<br>
 	お気づきになられましたか？<br>
@@ -337,7 +315,7 @@ Hello Query String!
 	<b><u>CGIへのリンクとソースコード</u></b><br>
 	<br>
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/query_string1.cgi?mode=cat&sort=1">http://localhost:8124/cgis/protected/cgi_developers/query_string1.cgi?mode=cat&sort=1</a>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/cgi_developers/protected/query_string1.cgi?mode=cat&sort=1">http://localhost:8124/cgis/protected/cgi_developers/query_string1.cgi?mode=cat&sort=1</a>
 		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/query_string1.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
@@ -464,25 +442,22 @@ Hello Query String!
 			libZnk が提供する関数 <span class=MstyCode>ZnkEnvVar_get</span> と<span class=MstyCode>ZnkEnvVar_set</span>はgetenvとputenvに関するこの種の問題を解消したものです.<br>
 		</div>
 	</div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=MoaiCGI_post1></a>
-<u><b>
-Hello Post!
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">Hello Post!</h1>
+<p>
 	今回はいよいよ Moai CGI へフォームの内容をPOSTしてみます.<br>
 	つまりC言語ではそれをCGI側でどうやって受信するのかを学ぶというわけです.<br>
 	<br>
 	<b><u>CGIへのリンクとソースコード</u></b><br>
 	<br>
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/post1.cgi">http://localhost:8124/cgis/cgi_developers/protected/post1.cgi</a> 
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/cgi_developers/protected/post1.cgi">http://localhost:8124/cgis/cgi_developers/protected/post1.cgi</a> 
 		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/post1.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
@@ -545,18 +520,15 @@ Hello Post!
 		最後に取得したstdin_bfrの内容を表示しています.<br>
 		<br>
 	</div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=MoaiCGI_transfer_chunked></a>
-<u><b>
-Transfer-Encoding: chunked転送モードに関する実験
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">Transfer-Encoding: chunked転送モードに関する実験</h1>
+<p>
 	今回は Moai CGI でTransfer-Encoding: chunked 転送モードがどのように機能しているかを確認してみます.<br>
 	何の暗号ですかソレは？な方もご安心ください.<br>
 	これが一体何なのか、そしてどのような場合に使うのかも説明致します.<br>
@@ -564,7 +536,7 @@ Transfer-Encoding: chunked転送モードに関する実験
 	<b><u>CGIへのリンクとソースコード</u></b><br>
 	<br>
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/transfer_chunked.cgi">http://localhost:8124/cgis/cgi_developers/protected/transfer_chunked.cgi</a>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/cgi_developers/protected/transfer_chunked.cgi">http://localhost:8124/cgis/cgi_developers/protected/transfer_chunked.cgi</a>
 		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/transfer_chunked.c">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
@@ -595,24 +567,21 @@ Transfer-Encoding: chunked転送モードに関する実験
 		実際にサンプルを表示させてみた方がわかりやすいと思います.<br>
 		fflushを区切りとして段階的に表示されていく様子が確認できると思います.<br>
 	</div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=MoaiCGI_post_go></a>
-<u><b>
-Hello Post!(GO言語版)
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">Hello Post!(GO言語版)</h1>
+<p>
 	今回はちょっと趣向を変えて、Moai CGI でGO言語を実行するデモをご紹介します.<br>
 	<br>
 	<b><u>CGIへのリンクとソースコード</u></b><br>
 	<br>
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/post_go.go">http://localhost:8124/cgis/cgi_developers/protected/post_go.go</a>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/cgi_developers/protected/post_go.go">http://localhost:8124/cgis/cgi_developers/protected/post_go.go</a>
 		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/post_go.go">ソースコード</a>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span><br>
 		<div class=MstyComment>
@@ -632,24 +601,21 @@ Hello Post!(GO言語版)
 		GO1.10.1 を使った場合は、正常に動作することを確認していますが、<br>
 		もっと古いバージョンでも大丈夫だと思います.<br>
 	</div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=MoaiCGI_futaba_php></a>
-<u><b>
-他サイトで公開されているPHPスクリプトなどを実行させてみる(その1)
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">他サイトで公開されているPHPスクリプトなどを実行させてみる(その1)</h1>
+<p>
 	今回は Moai CGI でPHPスクリプトを実行するデモをご紹介します.<br>
 	<br>
 	<b><u>CGIへのリンクとソースコード</u></b><br>
 	<br>
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/protected/futaba_bbs/futaba.php">http://localhost:8124/cgis/protected/futaba_bbs/futaba.php</a>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/protected/futaba_bbs/futaba.php">http://localhost:8124/cgis/protected/futaba_bbs/futaba.php</a>
 		<a class=MstyElemLink href="http://www.2chan.net/script" target=_blank>オリジナル配布元</a>
 		<span class=MstyAuthor> (Author: Ms.Futaba-Kanrinin)</span><br>
 		<div class=MstyComment>
@@ -677,24 +643,21 @@ Hello Post!(GO言語版)
 		現在ふたばちゃんねるで使っているPHPはVer5.6.30のようですのでおそらくそのバージョンでも動作はするのでしょう.<br>
 		残念ながら最新バージョンのPHPではこのスクリプトは正常に動作しないようです.<br>
 	</div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=MoaiCGI_up_php></a>
-<u><b>
-他サイトで公開されているPHPスクリプトなどを実行させてみる(その2)
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">他サイトで公開されているPHPスクリプトなどを実行させてみる(その2)</h1>
+<p>
 	Moai CGI でPHPスクリプトを実行するデモの続きです.<br>
 	<br>
 	<b><u>CGIへのリンクとソースコード</u></b><br>
 	<br>
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/protected/futaba_up/up.php">http://localhost:8124/cgis/protected/futaba_up/up.php</a>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/protected/futaba_up/up.php">http://localhost:8124/cgis/protected/futaba_up/up.php</a>
 		<a class=MstyElemLink href="http://www.2chan.net/script" target=_blank>オリジナル配布元</a>
 		<span class=MstyAuthor> (Author: Ms.Futaba-Kanrinin)</span><br>
 		<div class=MstyComment>
@@ -720,35 +683,51 @@ Hello Post!(GO言語版)
 		php-4.4.6-Win32を使った場合は、正常に動作することを確認しています.<br>
 		現在ふたばちゃんねるで使っているPHPはVer5.6.30のようですのでおそらくそのバージョンでも動作はするのでしょう.<br>
 	</div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=MoaiCGI_next></a>
-<u><b>
-さて、この次は？
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">さて、この次は？</h1>
+<p>
 	これで一通りC言語によるCGI開発の入門編が終わりました.<br>
 	お疲れ様でした.<br>
 	<br>
 	お次はライブラリを使ったCGIの開発、すなわち<a class=MstyElemLink href=/moai2.0/moai_cgi_developers_pragmatic.html>MoaiCGI 実践編</a>になります.<br>
 	ですが、まだまだ先は長いのです.<br>
 	次へ進む前にここで一旦コーヒーブレークとしましょう.<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
+
+
+<div class="card">
+	<u><b>This article was written by:</b></u><br>
+	<div class="card-content">
+		<div class="media">
+			<div class="media-left">
+				<figure class="image is-48x48">
+				<img src="/imgs/moai.png" alt="none image">
+				</figure>
+			</div>
+			<div class="media-content">
+				<p class="title is-4">Mr.Moai</p>
+				<p class="subtitle is-6">@znk project</p>
+			</div>
+		</div>
+		<div class="content">
+		  <time datetime="2016-1-1">2018/05/04</time>
+		</div>
+	</div>
+</div>
 
 
 <a name=Link></a>
-<u><b>
-リンク
-</b></u><br>
-<br>
+<h1 class="title"></h1>
+<hr>
 <ul>
 	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
 	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
@@ -756,5 +735,8 @@ Hello Post!(GO言語版)
 </ul><br>
 
 
+</div>
+</div>
+</div>
 </body>
 </html>

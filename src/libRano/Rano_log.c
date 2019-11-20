@@ -1,6 +1,7 @@
 #include "Rano_log.h"
 #include <Znk_stdc.h>
 #include <Znk_s_base.h>
+#include <Znk_mutex.h>
 #include <stdarg.h>
 
 static char st_filename[ 256 ] = "";
@@ -9,6 +10,7 @@ static ZnkFile st_fp = NULL;
 void
 RanoLog_open( const char* filename, bool keep_open, bool additional )
 {
+	ZnkGlobalMutex_lock();
 	/* ëΩèdopenñhé~ */
 	if( st_fp == NULL ){
 		ZnkFile fp = Znk_fopen( filename, additional ? "ab" : "wb" );
@@ -21,15 +23,18 @@ RanoLog_open( const char* filename, bool keep_open, bool additional )
 			}
 		}
 	}
+	ZnkGlobalMutex_unlock();
 }
 void
 RanoLog_close( void )
 {
+	ZnkGlobalMutex_lock();
 	if( st_fp ){
 		Znk_fclose( st_fp );
 	}
 	st_filename[ 0 ] = '\0';
 	st_fp = NULL;
+	ZnkGlobalMutex_unlock();
 }
 
 void

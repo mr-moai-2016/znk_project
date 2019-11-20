@@ -457,6 +457,7 @@ bool
 EstParser_invokeHtmlTagEx( ZnkStr text,
 		const EstParserProcessFuncT         tag_event_handler,      void* tag_event_arg,
 		const EstParserPlaneTxtProcessFuncT planetxt_event_handler, void* planetxt_event_arg,
+		const EstParserPreModifyProcessFuncT premodify_event_handler, void* premodify_event_arg,
 		ZnkStr msg )
 {
 	const char* p = ZnkStr_cstr(text);
@@ -654,6 +655,16 @@ EstParser_invokeHtmlTagEx( ZnkStr text,
 			}
 
 			/***
+			 * premodify_event_handler:
+			 * このevent_handlerではタグの直後の文字列を直接編集できる.
+			 */
+			if( premodify_event_handler ){
+				/* premodify_event_handlerでtextがreallocされる可能性がある */
+				size_t cur = p - ZnkStr_cstr( text );
+				premodify_event_handler( tagname, varp_ary, premodify_event_arg, tagend, text, cur );
+				p = ZnkStr_cstr( text ) + cur; /* p値を確実に更新 */
+			}
+			/***
 			 * call_tag_event_handler:
 			 */
 			if( call_tag_event_handler ){
@@ -731,7 +742,7 @@ EstParser_test( const char* r_filename, const char* w_filename )
 		}
 		ZnkStr_delete( tmp );
 
-		EstParser_invokeHtmlTagEx( text, filterTest, NULL, NULL, NULL, NULL );
+		EstParser_invokeHtmlTagEx( text, filterTest, NULL, NULL, NULL, NULL, NULL, NULL );
 		Znk_fclose( r_fp );
 	}
 

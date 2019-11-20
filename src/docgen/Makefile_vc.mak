@@ -33,16 +33,18 @@ SLIBS_DIR=slib\$(PLATFORM)
 CP=xcopy /H /C /Y
 
 INCLUDE_FLAG =  \
-	-I$(MY_LIBS_ROOT)/libRano \
 	-I$(MY_LIBS_ROOT)/libZnk \
+	-I$(MY_LIBS_ROOT)/libRano \
 
 
 # We cannot use variables in include of nmake.
 include Makefile_version.mak
 
 BASENAME0=docgen
-EXE_FILE0=$O\docgen.exe
+EXE_FILE0=$O\docgen.cgi
 OBJS0=\
+	$O\cgi_helper.obj \
+	$O\docgen.obj \
 	$O\Doc_html.obj \
 	$O\Doc_source.obj \
 	$O\Doc_util.obj \
@@ -60,6 +62,8 @@ PRODUCT_EXECS= \
 
 RUNTIME_FILES= \
 	__mkg_sentinel_target__ \
+	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/Znk-$(DL_VER).dll \
+	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/Rano-$(DL_VER).dll \
 
 
 
@@ -73,8 +77,8 @@ $O:
 
 # Product files rule.
 $(EXE_FILE0): $(OBJS0) 
-	@echo $(LINKER) /OUT:$(EXE_FILE0)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano.lib $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk.lib ws2_32.lib 
-	@     $(LINKER) /OUT:$(EXE_FILE0)  $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano.lib $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk.lib ws2_32.lib 
+	@echo $(LINKER) /OUT:$(EXE_FILE0)  {[objs]} $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib
+	@     $(LINKER) /OUT:$(EXE_FILE0)  $(OBJS0) $(SUB_LIBS) $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/Znk-$(DL_VER).imp.lib $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/Rano-$(DL_VER).imp.lib
 
 
 # Suffix rule.
@@ -94,12 +98,15 @@ __mkg_sentinel_target__:
 
 # Install data rule.
 install_data:
+	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\docgen @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\docgen 
+	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\docgen\templates @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\docgen\templates 
+	@if exist "docgen.myf" @$(CP) /F "docgen.myf" ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\docgen\ $(CP_END)
+	@if exist "templates\*.html" @$(CP) /F "templates\*.html" ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\docgen\templates\ $(CP_END)
 
 # Install exec rule.
 install_exec: $(EXE_FILE0)
-	@if not exist ..\..\docgen\$(PLATFORM) @mkdir ..\..\docgen\$(PLATFORM) 
-	@if exist "$(EXE_FILE0)" @$(CP) /F "$(EXE_FILE0)" ..\..\docgen\$(PLATFORM)\ $(CP_END)
-	@for %%a in ( $(RUNTIME_FILES) ) do @if exist "%%a" @$(CP) /F "%%a" ..\..\docgen\$(PLATFORM)\ $(CP_END)
+	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\docgen @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\docgen 
+	@if exist "$(EXE_FILE0)" @$(CP) /F "$(EXE_FILE0)" ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\docgen\ $(CP_END)
 
 # Install dlib rule.
 install_dlib:
@@ -108,7 +115,7 @@ install_dlib:
 install_slib:
 
 # Install rule.
-install: all install_exec 
+install: all install_exec install_data 
 
 
 # Clean rule.
@@ -116,7 +123,9 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-Doc_html.obj: Doc_html.h
-Doc_source.obj: Doc_source.h
+cgi_helper.obj: cgi_helper.h
+docgen.obj: Doc_html.h
+Doc_html.obj: Doc_html.h Doc_util.h
+Doc_source.obj: Doc_source.h Doc_util.h
 Doc_util.obj: Doc_util.h
-main.obj: Doc_html.h Doc_source.h
+main.obj: cgi_helper.h Doc_html.h Doc_source.h

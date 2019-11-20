@@ -12,10 +12,14 @@ Znk_EXTERN_C_BEGIN
 typedef enum {
 	 EstRpsc_e_Replace=0
 	,EstRpsc_e_ReplaceEx
+	,EstRpsc_e_ReplaceInqT
+	,EstRpsc_e_ReplaceInqF
 	,EstRpsc_e_ClearT
 	,EstRpsc_e_ClearF
 	,EstRpsc_e_ClearSrcT
 	,EstRpsc_e_ClearSrcF
+	,EstRpsc_e_AddInqT
+	,EstRpsc_e_AddInqF
 } EstRpscType;
 
 bool

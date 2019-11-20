@@ -24,6 +24,9 @@
 #include <Rano_module_ary.h>
 #include <Rano_file_info.h>
 #include <Rano_conf_util.h>
+#include <Rano_htp_boy.h>
+#include <Rano_html_ui.h>
+
 #include <time.h>
 #include <ctype.h>
 
@@ -31,7 +34,6 @@ static char          st_moai_authentic_key[ 256 ] = "";
 static ZnkStr        st_moai_dir = NULL;
 
 static char          st_acceptable_host[ 256 ] = "ANY";
-static char          st_filters_dir[ 256 ] = "filters";
 
 static ZnkMyf        st_easter_myf;
 static ZnkMyf        st_tags_myf;
@@ -46,12 +48,14 @@ static RanoModuleAry st_mod_ary;
 static ZnkStr     st_direct_img_link = NULL;
 static ZnkStr     st_auto_link = NULL;
 
+static ZnkStr     st_filters_dir = NULL;
 static ZnkStr     st_profile_dir = NULL;
 static ZnkStr     st_favorite_dir = NULL;
 static ZnkStr     st_stockbox_dir = NULL;
 static ZnkStr     st_userbox_dir  = NULL;
 static ZnkStr     st_topics_dir  = NULL;
 static char       st_xhr_dmz[ 256 ] = "";
+static char       st_xhr_authhost[ 256 ] = "";
 static uint16_t   st_moai_port = 8124;
 static uint16_t   st_xhr_dmz_port = 8125;
 static char       st_parent_proxy[ 4096 ] = "NONE";
@@ -66,6 +70,8 @@ static size_t     st_cache_days_ago   = 7;
 static size_t     st_dustbox_days_ago = 10;
 static char       st_explicit_referer[ 4096 ] = "https://www.google.co.jp";
 static char       st_easter_default_ua[ 4096 ] = "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0";
+static bool       st_use_flexbox = false;
+static char       st_preview_style[ 256 ] = "upper";
 
 const char*
 EstConfig_getTmpDirPID( bool with_end_dsp )
@@ -74,11 +80,11 @@ EstConfig_getTmpDirPID( bool with_end_dsp )
 	static char st_tmpdir_dsp[ 256 ] = "tmp/pid/";
 	static bool st_initialized = false;
 	if( !st_initialized ){
-		//unsigned int pid = ZnkProcess_getCurrentProcessId();
 		size_t pid = st_count;
+		const char* tmpdir_common = RanoHtpBoy_getTmpDirCommon();
 		st_initialized = true;
-		Znk_snprintf( st_tmpdir,     sizeof(st_tmpdir),     "tmp/pid/%zu",  pid );
-		Znk_snprintf( st_tmpdir_dsp, sizeof(st_tmpdir_dsp), "tmp/pid/%zu/", pid );
+		Znk_snprintf( st_tmpdir,     sizeof(st_tmpdir),     "%s/pid/%zu",  tmpdir_common, pid );
+		Znk_snprintf( st_tmpdir_dsp, sizeof(st_tmpdir_dsp), "%s/pid/%zu/", tmpdir_common, pid );
 	}
 	return with_end_dsp ? st_tmpdir_dsp : st_tmpdir;
 }
@@ -87,6 +93,13 @@ EstConfig_getTmpDirCommon( bool with_end_dsp )
 {
 	static char st_tmpdir[ 256 ] = "tmp/common";
 	static char st_tmpdir_dsp[ 256 ] = "tmp/common/";
+	static bool st_initialized = false;
+	if( !st_initialized ){
+		const char* tmpdir_common = RanoHtpBoy_getTmpDirCommon();
+		st_initialized = true;
+		Znk_snprintf( st_tmpdir,     sizeof(st_tmpdir),     "%s/common",  tmpdir_common );
+		Znk_snprintf( st_tmpdir_dsp, sizeof(st_tmpdir_dsp), "%s/common/", tmpdir_common );
+	}
 	return with_end_dsp ? st_tmpdir_dsp : st_tmpdir;
 }
 size_t
@@ -144,7 +157,18 @@ EstConfig_getEasterDefaultUA( void )
 {
 	return st_easter_default_ua;
 }
+bool
+EstConfig_getUseFlexBox( void )
+{
+	return st_use_flexbox;
+}
+const char*
+EstConfig_getPreviewStyle( void )
+{
+	return st_preview_style;
+}
 
+#if 0
 ZnkStr
 EstConfig_getMoaiDir( void )
 {
@@ -158,6 +182,7 @@ EstConfig_getMoaiDir( void )
 	}
 	return moai_dir;
 }
+#endif
 bool
 EstConfig_loadAuthenticKey( char* authentic_key_buf, size_t authentic_key_buf_size, const char* moai_dir )
 {
@@ -186,6 +211,28 @@ getRealPath( ZnkStr ans, ZnkVarpAry vars, const char* conf_varname, size_t defau
 		return true;
 	}
 	return false;
+}
+
+static void
+setupConfigDir( ZnkStr ans, const char* given_dir, const char* base_dir, const char* when_empty_dir )
+{
+	bool is_relative = true;
+	if( ZnkS_empty(given_dir) ){
+		given_dir = when_empty_dir;
+	} else {
+		if( given_dir[ 0 ] == '/' ){
+			/* UNIX fullpath */
+			is_relative = false;
+		} else if( given_dir[ 1 ] == ':' && isalpha( given_dir[ 0 ] ) ){
+			/* Windows fullpath */
+			is_relative = false;
+		}
+	}
+	if( is_relative ){
+		ZnkStr_setf( ans, "%s/%s", base_dir, given_dir );
+	} else {
+		ZnkStr_setf( ans, "%s", given_dir );
+	}
 }
 
 bool
@@ -240,6 +287,7 @@ EstConfig_initiate( RanoCGIEVar* evar, const char* moai_dir, size_t count )
 		ZnkMyf config = ZnkMyf_create();
 		Znk_snprintf( filename, sizeof(filename), "%sconfig.myf", ZnkStr_cstr(st_moai_dir) );
 
+		st_filters_dir = ZnkStr_newf( "%s/filters",      ZnkStr_cstr(st_moai_dir) );
 		st_profile_dir = ZnkStr_newf( "%s/moai_profile", ZnkStr_cstr(st_moai_dir) );
 
 		if( ZnkMyf_load( config, filename ) ){
@@ -254,29 +302,12 @@ EstConfig_initiate( RanoCGIEVar* evar, const char* moai_dir, size_t count )
 
 				var = ZnkVarpAry_findObj_byName_literal( vars, "filters_dir", false );
 				if( var ){
-					ZnkS_copy( st_filters_dir, sizeof(st_filters_dir), ZnkVar_cstr(var), Znk_NPOS );
+					setupConfigDir( st_filters_dir, ZnkVar_cstr(var), ZnkStr_cstr(st_moai_dir), "filters" );
 				}
 
 				var = ZnkVarpAry_findObj_byName_literal( vars, "profile_dir", false );
 				if( var ){
-					const char* profile_dir = ZnkVar_cstr(var);
-					bool is_relative = true;
-					if( ZnkS_empty(profile_dir) ){
-						profile_dir = "../moai_profile";
-					} else {
-						if( profile_dir[ 0 ] == '/' ){
-							/* UNIX fullpath */
-							is_relative = false;
-						} else if( profile_dir[ 1 ] == ':' && isalpha( profile_dir[ 0 ] ) ){
-							/* Windows fullpath */
-							is_relative = false;
-						}
-					}
-					if( is_relative ){
-						ZnkStr_setf( st_profile_dir, "%s/%s", ZnkStr_cstr(st_moai_dir), profile_dir );
-					} else {
-						ZnkStr_setf( st_profile_dir, "%s", profile_dir );
-					}
+					setupConfigDir( st_profile_dir, ZnkVar_cstr(var), ZnkStr_cstr(st_moai_dir), "moai_profile" );
 				}
 
 				var = ZnkVarpAry_findObj_byName_literal( vars, "parent_proxy", false );
@@ -361,11 +392,6 @@ EstConfig_initiate( RanoCGIEVar* evar, const char* moai_dir, size_t count )
 	if( ZnkDir_getType( "easter.myf" ) != ZnkDirType_e_File ){ 
 		ZnkDir_copyFile_byForce( "default/easter.myf", "easter.myf", NULL );
 	}
-#if 0
-	if( ZnkDir_getType( "input_hiddens.myf" ) != ZnkDirType_e_File ){ 
-		ZnkDir_copyFile_byForce( "default/input_hiddens.myf", "input_hiddens.myf", NULL );
-	}
-#endif
 
 	/* load easter.myf */
 	result = ZnkMyf_load( st_easter_myf, "easter.myf" );
@@ -380,9 +406,6 @@ EstConfig_initiate( RanoCGIEVar* evar, const char* moai_dir, size_t count )
 
 		varp = ZnkVarpAry_findObj_byName_literal( vars, "auto_link", false );
 		st_auto_link = ZnkVar_str(varp);
-
-
-		//st_allow_js_hosts = ZnkMyf_find_lines( st_easter_myf, "allow_js_hosts" );
 
 		varp = ZnkVarpAry_findObj_byName_literal( vars, "show_file_num", false );
 		if( varp ){
@@ -423,6 +446,15 @@ EstConfig_initiate( RanoCGIEVar* evar, const char* moai_dir, size_t count )
 			ZnkS_getSzU( &st_dustbox_days_ago, ZnkVar_cstr(varp) );
 		}
 
+		varp = ZnkVarpAry_findObj_byName_literal( vars, "use_flexbox", false );
+		if( varp ){
+			st_use_flexbox = ZnkS_eq( ZnkVar_cstr(varp), "on" );
+		}
+		varp = ZnkVarpAry_findObj_byName_literal( vars, "preview_style", false );
+		if( varp ){
+			ZnkS_copy( st_preview_style, sizeof(st_preview_style), ZnkVar_cstr(varp), ZnkVar_str_leng(varp) );
+		}
+
 		varp = ZnkVarpAry_findObj_byName_literal( vars, "explicit_referer", false );
 		if( varp ){
 			ZnkS_copy( st_explicit_referer, sizeof(st_explicit_referer), ZnkVar_cstr(varp), ZnkVar_str_leng(varp) );
@@ -431,6 +463,7 @@ EstConfig_initiate( RanoCGIEVar* evar, const char* moai_dir, size_t count )
 		if( varp ){
 			ZnkS_copy( st_easter_default_ua, sizeof(st_easter_default_ua), ZnkVar_cstr(varp), ZnkVar_str_leng(varp) );
 		}
+
 	}
 	{
 		char topic_list_myf_path[ 256 ] = "";
@@ -480,7 +513,8 @@ EstConfig_initiate( RanoCGIEVar* evar, const char* moai_dir, size_t count )
 	EstHint_initiate();
 
 	st_mod_ary = RanoModuleAry_create( true );
-	Znk_snprintf( path_filters, sizeof(path_filters), "%s%s", moai_dir, st_filters_dir );
+	//Znk_snprintf( path_filters, sizeof(path_filters), "%s%s", moai_dir, st_filters_dir );
+	Znk_snprintf( path_filters, sizeof(path_filters), "%s", ZnkStr_cstr(st_filters_dir) );
 	Znk_snprintf( path_plugins, sizeof(path_plugins), "%splugins", moai_dir );
 	RanoModuleAry_loadAllModules( st_mod_ary, st_target_myf, path_filters, path_plugins );
 
@@ -496,6 +530,7 @@ EstConfig_initiate( RanoCGIEVar* evar, const char* moai_dir, size_t count )
 				char private_ipstr[ 64 ] = "";
 				ZnkNetIP_getIPStr_fromU32( private_ip, private_ipstr, sizeof(private_ipstr) );
 				Znk_snprintf( st_xhr_dmz, sizeof(st_xhr_dmz), "%s:%u", private_ipstr, st_xhr_dmz_port );
+				Znk_snprintf( st_xhr_authhost, sizeof(st_xhr_authhost), "%s:%u", private_ipstr, st_moai_port );
 			} else {
 				Znk_snprintf( st_xhr_dmz, sizeof(st_xhr_dmz), "127.0.0.1:%u", st_xhr_dmz_port );
 			}
@@ -509,12 +544,13 @@ EstConfig_initiate( RanoCGIEVar* evar, const char* moai_dir, size_t count )
 void
 EstConfig_finalize( void )
 {
+	const char* tmpdir_pid = EstConfig_getTmpDirPID( false );
 	ZnkMyf_destroy( st_easter_myf );
 	ZnkMyf_destroy( st_target_myf );
 	ZnkMyf_destroy( st_hosts_myf );
 	RanoModuleAry_destroy( st_mod_ary );
 
-	EstBase_removeOldFile( "tmp/pid", NULL, 0, 600 );
+	EstBase_removeOldFile( tmpdir_pid, NULL, 0, 600 );
 	EstBase_removeOldFile( "publicbox/state", NULL, 0, 3600 );
 }
 
@@ -589,7 +625,6 @@ EstConfig_XhrDMZ( void )
 const char*
 EstConfig_XhrAuthHost( void )
 {
-	static char st_xhr_authhost[ 256 ] = "";
 	if( ZnkS_empty( st_xhr_authhost ) ){
 		Znk_snprintf( st_xhr_authhost, sizeof(st_xhr_authhost), "127.0.0.1:%zu", st_moai_port );
 	}
@@ -617,7 +652,10 @@ EstConfig_moai_dir( void )
 const char*
 EstConfig_filter_dir( void )
 {
-	return st_filters_dir;
+	if( st_filters_dir ){
+		return ZnkStr_cstr( st_filters_dir );
+	}
+	return "filters";
 }
 const char*
 EstConfig_parent_proxy( void )
@@ -709,7 +747,7 @@ EstConfig_readRecvHdrSetCookie( RanoModule mod, const char* target )
 		return;
 	}
 
-	Znk_snprintf( result_dir, sizeof(result_dir), "./%s/%s", tmpdir_pid, target );
+	Znk_snprintf( result_dir, sizeof(result_dir), "%s/%s", tmpdir_pid, target );
 	ZnkDir_mkdirPath( result_dir, Znk_NPOS, '/', NULL );
 
 	Znk_snprintf( filename, sizeof(filename), "%s/recv_hdr.dat", result_dir );
@@ -738,7 +776,8 @@ EstConfig_readRecvHdrSetCookie( RanoModule mod, const char* target )
 		{
 			char        filename[ 256 ];
 			const char* target_name = RanoModule_target_name( mod );
-			Znk_snprintf( filename, sizeof(filename), "%s%s/%s_send.myf", ZnkStr_cstr(st_moai_dir), st_filters_dir, target_name );
+			//Znk_snprintf( filename, sizeof(filename), "%s%s/%s_send.myf", ZnkStr_cstr(st_moai_dir), st_filters_dir, target_name );
+			Znk_snprintf( filename, sizeof(filename), "%s/%s_send.myf", ZnkStr_cstr(st_filters_dir), target_name );
 			if( !ZnkMyf_save( ftr_send, filename ) ){
 				RanoLog_printf( "  Response : Cannot save %s\n", filename );
 			}
@@ -824,6 +863,10 @@ updateSizeVar( ZnkBird bird, ZnkVarpAry post_vars, ZnkVarpAry em_vars,
 		if( ZnkS_getSzU( &tmp, ZnkVar_cstr(varp) ) ){
 			if( tmp >= min_val && tmp <= max_val ){
 				ZnkVarp em_varp = ZnkVarpAry_findObj_byName( em_vars, var_key, Znk_NPOS, false );
+				if( em_varp == NULL ){
+					em_varp = ZnkVarp_create( var_key, "", 0, ZnkPrim_e_Str, NULL );
+					ZnkVarpAry_push_bk( em_vars, em_varp );
+				}
 				*dst_var = tmp;
 				ZnkStr_copy( ZnkVar_str(em_varp), ZnkVar_str(varp) );
 				ZnkBird_regist( bird, var_key, ZnkVar_cstr(varp) );
@@ -834,6 +877,118 @@ updateSizeVar( ZnkBird bird, ZnkVarpAry post_vars, ZnkVarpAry em_vars,
 	if( !result ){
 		ZnkStr_addf( ermsg, "無効な値の指定があります : %s <br>この値は %zu 以上 %zu 以下でなければなりません.<br>",
 				var_ui_name, min_val, max_val );
+	}
+	return result;
+}
+static bool
+updateBoolVar( ZnkBird bird, ZnkVarpAry post_vars, ZnkVarpAry em_vars,
+		const char* var_key, bool* dst_var,
+		const char* var_ui_name, ZnkStr ermsg )
+{
+	bool result = false;
+	ZnkVarp varp = NULL;
+	result = IS_OK( varp = ZnkVarpAry_findObj_byName( post_vars, var_key, Znk_NPOS, false ) );
+	/* var_keyが存在しないのはcheckboxのチェックがされていない場合である */
+	{
+		ZnkVarp em_varp = ZnkVarpAry_findObj_byName( em_vars, var_key, Znk_NPOS, false );
+		if( em_varp == NULL ){
+			em_varp = ZnkVarp_create( var_key, "", 0, ZnkPrim_e_Str, NULL );
+			ZnkVarpAry_push_bk( em_vars, em_varp );
+		}
+		*dst_var = result;
+		ZnkStr_set( ZnkVar_str(em_varp), result ? "on" : "off" );   /* config.myfへ */
+		ZnkBird_regist( bird, var_key,   result ? "checked" : "" ); /* checkboxへ */
+	}
+	return result;
+}
+static bool
+updateStrVar( ZnkBird bird, ZnkVarpAry post_vars, ZnkVarpAry em_vars,
+		const char* var_key, char* dst_var, size_t dst_var_size,
+		const char* var_ui_name, ZnkStr ermsg )
+{
+	bool result = false;
+	ZnkVarp varp = NULL;
+	if( IS_OK( varp = ZnkVarpAry_findObj_byName( post_vars, var_key, Znk_NPOS, false ) ) ){
+		const char* tmp = ZnkVar_cstr(varp);
+		{
+			ZnkVarp em_varp = ZnkVarpAry_findObj_byName( em_vars, var_key, Znk_NPOS, false );
+			if( em_varp == NULL ){
+				em_varp = ZnkVarp_create( var_key, "", 0, ZnkPrim_e_Str, NULL );
+				ZnkVarpAry_push_bk( em_vars, em_varp );
+			}
+			ZnkS_copy( dst_var, dst_var_size, tmp, Znk_NPOS );
+			ZnkStr_set( ZnkVar_str(em_varp), tmp );
+			ZnkBird_regist( bird, var_key, tmp );
+			result = true;
+		}
+	}
+	if( !result ){
+		ZnkStr_addf( ermsg, "無効な値の指定があります : %s(%s) <br>この値は定義されていません.<br>",
+				var_ui_name, var_key );
+	}
+	return result;
+}
+
+typedef void (*GetSelectUIFuncT)( ZnkStr selui, const char* select_name, const char* select_id );
+
+static void
+getSelectUI_preview_style( ZnkStr selui, const char* select_name, const char* select_id )
+{
+	struct Info_tag{
+		const char* id_;
+		const char* name_;
+	};
+	static struct Info_tag id_list[] = {
+		{ "auto"   , "自動" },
+		{ "upper"  , "上側" },
+		{ "right"  , "右側or下側" },
+	};
+	ZnkStrAry val_list  = ZnkStrAry_create( true );
+	ZnkStrAry name_list = ZnkStrAry_create( true );
+	size_t idx;
+
+	for( idx=0; idx<Znk_NARY(id_list); ++idx ){
+		ZnkStrAry_push_bk_cstr( val_list,  id_list[idx].id_,   Znk_NPOS );
+		ZnkStrAry_push_bk_cstr( name_list, id_list[idx].name_, Znk_NPOS );
+	}
+	RanoHtmlUI_makeSelectBox( selui,
+			select_name, select_id, true,
+			val_list, name_list );
+
+	ZnkStrAry_destroy( val_list );
+	ZnkStrAry_destroy( name_list );
+
+}
+
+static bool
+updateSelectVar( ZnkBird bird, ZnkVarpAry post_vars, ZnkVarpAry em_vars,
+		const char* var_key, char* dst_var, size_t dst_var_size,
+		const char* var_ui_name, const char* var_ui_key, GetSelectUIFuncT get_select_ui_func, ZnkStr ermsg )
+{
+	bool result = false;
+	ZnkVarp varp = NULL;
+	if( IS_OK( varp = ZnkVarpAry_findObj_byName( post_vars, var_key, Znk_NPOS, false ) ) ){
+		const char* tmp = ZnkVar_cstr(varp);
+		{
+			ZnkVarp em_varp = ZnkVarpAry_findObj_byName( em_vars, var_key, Znk_NPOS, false );
+			if( em_varp == NULL ){
+				em_varp = ZnkVarp_create( var_key, "", 0, ZnkPrim_e_Str, NULL );
+				ZnkVarpAry_push_bk( em_vars, em_varp );
+			}
+			ZnkS_copy( dst_var, dst_var_size, tmp, Znk_NPOS );
+			ZnkStr_set( ZnkVar_str(em_varp), tmp );
+			{
+				ZnkStr selui = ZnkStr_new( "" );
+				get_select_ui_func( selui, var_key, tmp );
+				ZnkBird_regist( bird, var_ui_key, ZnkStr_cstr(selui) );
+				ZnkStr_delete( selui );
+			}
+			result = true;
+		}
+	}
+	if( !result ){
+		ZnkStr_addf( ermsg, "無効な値の指定があります : %s(%s) <br>この値は定義されていません.<br>",
+				var_ui_name, var_key );
 	}
 	return result;
 }
@@ -897,6 +1052,16 @@ EstConfigManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, cons
 
 		Znk_snprintf( str, sizeof(str), "%zu", st_dustbox_days_ago );
 		ZnkBird_regist( bird, "dustbox_days_ago", str );
+
+		Znk_snprintf( str, sizeof(str), "%s", st_use_flexbox ? "checked" : "" );
+		ZnkBird_regist( bird, "use_flexbox", str );
+
+		{
+			ZnkStr selui = ZnkStr_new( "" );
+			getSelectUI_preview_style( selui, "preview_style", st_preview_style );
+			ZnkBird_regist( bird, "preview_style_ui", ZnkStr_cstr( selui ) );
+			ZnkStr_delete( selui );
+		}
 	}
 
 	if( IS_OK( cmd = ZnkVarpAry_findObj_byName_literal( post_vars, "command", false ) )){
@@ -972,6 +1137,19 @@ EstConfigManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, cons
 					"dustbox_days_ago", &st_dustbox_days_ago, 1, 30,
 					"ダストボックスの保存日数", ermsg );
 			ZnkStr_addf( msg, "dustbox_days_ago=[%zu]\n", st_dustbox_days_ago );
+
+			/* use_flexbox */
+			updateBoolVar( bird, post_vars, em_vars,
+					"use_flexbox", &st_use_flexbox,
+					"flexboxを使う", ermsg );
+			ZnkStr_addf( msg, "use_flexbox=[%zu]\n", st_use_flexbox );
+			
+			/* preview_style */
+			updateSelectVar( bird, post_vars, em_vars,
+					"preview_style", st_preview_style, sizeof(st_preview_style),
+					"プレビューを表示する位置", "preview_style_ui", getSelectUI_preview_style, ermsg );
+			ZnkStr_addf( msg, "preview_style=[%s]\n", st_preview_style );
+
 
 			/* explicit_referer */
 			{

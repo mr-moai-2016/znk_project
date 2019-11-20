@@ -52,6 +52,7 @@ CP=cp
 INCLUDE_FLAG+=  \
 	-I$(MY_LIBS_ROOT)/libZnk \
 	-I$(MY_LIBS_ROOT)/libRano \
+	-I$(MY_LIBS_ROOT)/libMoai \
 
 
 include Makefile_version.mak
@@ -59,18 +60,6 @@ include Makefile_version.mak
 BASENAME0=moai
 EXE_FILE0=$O/moai
 OBJS0=\
-	$O/Moai_cgi.o \
-	$O/Moai_cgi_manager.o \
-	$O/Moai_connection.o \
-	$O/Moai_context.o \
-	$O/Moai_fdset.o \
-	$O/Moai_http.o \
-	$O/Moai_info.o \
-	$O/Moai_io_base.o \
-	$O/Moai_post.o \
-	$O/Moai_server.o \
-	$O/Moai_server_info.o \
-	$O/Moai_web_server.o \
 	$O/main.o \
 
 SUB_LIBS=\
@@ -89,6 +78,7 @@ RUNTIME_FILES= \
 	__mkg_sentinel_target__ \
 	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/libZnk-$(DL_VER).so \
 	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/libRano-$(DL_VER).so \
+	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/libMoai-$(DL_VER).so \
 	$(MY_LIBS_ROOT)/$(DLIBS_DIR)/libtls-17.so \
 
 
@@ -103,19 +93,30 @@ $O:
 
 # Product files rule.
 $(EXE_FILE0): $(OBJS0)
-	@echo $(LINKER) -o $(EXE_FILE0) {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).so $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).so -lpthread -ldl -lstdc++ 
-	@     $(LINKER) -o $(EXE_FILE0) $(OBJS0) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).so $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).so -lpthread -ldl -lstdc++ 
+	@echo $(LINKER) -o $(EXE_FILE0) {[objs]} $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).so $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).so $(MY_LIBS_ROOT)/libMoai/out_dir/$(ABINAME)/libMoai-$(DL_VER).so -lpthread -ldl -lstdc++ 
+	@     $(LINKER) -o $(EXE_FILE0) $(OBJS0) $(SUB_LIBS) -Wl,-rpath,. $(MY_LIBS_ROOT)/libZnk/out_dir/$(ABINAME)/libZnk-$(DL_VER).so $(MY_LIBS_ROOT)/libRano/out_dir/$(ABINAME)/libRano-$(DL_VER).so $(MY_LIBS_ROOT)/libMoai/out_dir/$(ABINAME)/libMoai-$(DL_VER).so -lpthread -ldl -lstdc++ 
 
 
 ##
 # Pattern rule.
+#
 # We use not suffix rule but pattern rule for dealing flexibly with files in sub-directory.
 # In this case, there is very confusing specification, that is :
 # '\' to the left hand of ':' works as escape sequence, 
 # '\' to the right hand of ':' does not work as escape sequence. 
 # Hence, we have to duplicate '\' to the left hand of ':',
-# the other way, '\' to the right hand of ':' we have to put only single '\',
-# for example $O\\%.o: $S\%.c .
+# the other way, '\' to the right hand of ':' we have to put only single '\'.
+# Note that we have to duplicate '\' only before special charactor(% etc) in the left of ':'.
+#
+# For example 1 :
+#   $O\\mydir\\%.o: $S\%.c        .... NG
+#   $O\mydir\\%.o:  $S\%.c        .... OK
+# For example 2 :
+#   $O\\mydir\%.o:  $S\mydir\%.c  .... NG
+#   $O\mydir\\%.o:  $S\mydir\%.c  .... OK
+# In the case of example 2, we can write more simply :
+#   $O\\%.o: $S\%.c               .... OK
+#   (Because '%' is wildcard and it indicates patical path 'mydir\filename_base' recursively )
 #
 $O/%.o: $S/%.c
 	$(COMPILER) -I$S $(INCLUDE_FLAG) -o $@ -c -fPIC $<
@@ -186,16 +187,3 @@ clean:
 	rm -rf $O/ 
 
 # Src and Headers Dependency
-main.o: Moai_server.h
-Moai_cgi.o: Moai_cgi.h Moai_io_base.h Moai_server_info.h Moai_connection.h
-Moai_cgi_manager.o: Moai_cgi.h
-Moai_connection.o: Moai_connection.h
-Moai_context.o: Moai_context.h
-Moai_fdset.o: Moai_fdset.h Moai_connection.h
-Moai_http.o: Moai_http.h Moai_io_base.h Moai_info.h
-Moai_info.o: Moai_info.h Moai_server_info.h
-Moai_io_base.o: Moai_io_base.h Moai_connection.h
-Moai_post.o: Moai_post.h Moai_io_base.h Moai_server_info.h
-Moai_server.o: Moai_server.h Moai_post.h Moai_context.h Moai_io_base.h Moai_connection.h Moai_info.h Moai_fdset.h Moai_http.h Moai_server_info.h Moai_web_server.h Moai_cgi.h
-Moai_server_info.o: Moai_server_info.h
-Moai_web_server.o: Moai_context.h Moai_io_base.h Moai_connection.h Moai_info.h Moai_fdset.h Moai_post.h Moai_server_info.h Moai_cgi.h

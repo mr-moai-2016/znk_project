@@ -113,6 +113,7 @@ install_data:
 	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\custom_boy\RE @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\custom_boy\RE 
 	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\custom_boy\UA @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\custom_boy\UA 
 	@if exist "custom_boy.myf" @$(CP) /F "custom_boy.myf" ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\custom_boy\ $(CP_END)
+	@if exist "rano_app.myf" @$(CP) /F "rano_app.myf" ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\custom_boy\ $(CP_END)
 	@if exist "templates\*.html" @$(CP) /F "templates\*.html" ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\custom_boy\templates\ $(CP_END)
 	@if exist "publicbox\*" @$(CP) /F "publicbox\*" ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\custom_boy\publicbox\ $(CP_END)
 	@if exist "RE\*.png" @$(CP) /F "RE\*.png" ..\..\moai-v$(REL_VER)-$(PLATFORM)\cgis\custom_boy\RE\ $(CP_END)

@@ -154,99 +154,6 @@ Buf_findByte( const void* buf, size_t buf_size, uint8_t ch )
  * それが示す部分を修正すればよい.
  */
 
-#if 0
-/**
- * interpretBitsToSignedInt
- * 任意の整数データ(ポインタ型は除く)型を与え、まずそれを同サイズのsigned型と見なす.
- * (与えたデータが unsigned A型の場合、static_cast<signed A>(unsigned A)というように処理する)
- * このとき、bitレベルでの変化は発生しない.
- * signedとみなされたデータをintmax_t型として取得する.
- *
- * interpretBitsToUnsignedInt
- * 任意の整数データ(ポインタ型は除く)型を与え、まずそれを同サイズのunsigned型と見なす.
- * (与えたデータが signed A型の場合、static_cast<unsigned A>(signed A)というように処理する)
- * このとき、bitレベルでの変化は発生しない.
- * unsignedとみなされたデータをuintmax_t型として取得する.
- *
- * 通常、signed と unsigned 版の双方を明確に持つデータならば、このような変換を行う場合、
- * 以下のようにすれば済む.
- *
- *   unsigned A a = initA_bySomeBitPattern();
- *   static_cast<intmax_t>( static_cast<signed A>( a ) );
- *
- *   signed B b = initB_bySomeBitPattern();
- *   static_cast<uintmax_t>( static_cast<unsigned B>( b ) );
- *
- * しかし、size_t や ptrdiff_t 等、それと同等のサイズでしかも対応するsigned(unsigned)な
- * データタイプ型が明確に存在しないものについては、このような変換をするには環境依存な
- * 記述になってしまう.
- *
- * interpretBitsToSignedInt と interpretBitsToUnsignedInt は、
- * 環境毎に#ifdefで切り替えることなく、これを実現することを目指したものである.
- * ただし、コンパイラはテンプレートの特殊化をサポートしている必要がある.
- *
- * 注意:
- * 1. Unix等にある ssize_t は標準ではないためここでは考慮しない.
- * 2. #ifdef で切り替えるといった手法をとらない理由は、
- *    未知の環境や新規環境での対応が煩雑になるため.
- *    (このような切り替えはなるべくB1_c_baseで閉じておくべき)
- *    ここで採用したtemplate の特殊化を用いる手法でも、新規環境に対応する必要性は残されているが、
- *    それはせいぜい32,64,128bit型といったデータサイズの調整と
- *    size_t, ptrdiff_t と同類の新しいデータ型の追加作業に限定される.
- *    以下に示すとおり、そのような対応のための記述は非常に簡潔に行える.
- */
-template< typename T, size_t data_size > inline intmax_t interpretBitsToSignedInt_impl( T val );
-#define M_DEF_SPECIALIZE_interpretBTSI( type, bit ) \
-	template<> inline intmax_t interpretBitsToSignedInt_impl<type, bit>( type val ){\
-		return static_cast<intmax_t>( static_cast<int##bit##_t>( val ) );\
-	}
-template< typename T, size_t data_size > inline uintmax_t interpretBitsToUnsignedInt_impl( T val );
-#define M_DEF_SPECIALIZE_interpretBTUI( type, bit ) \
-	template<> inline uintmax_t interpretBitsToUnsignedInt_impl<type, bit>( type val ){\
-		return static_cast<uintmax_t>( static_cast<uint##bit##_t>( val ) );\
-	}
-
-
-/**
- * BitExtend
- * N bit データ型に対応させるには、以下を追加すればよい.
- * M_DEF_SPECIALIZE_interpretBTSI( type, N )
- * M_DEF_SPECIALIZE_interpretBTUI( type, N )
- */
-#define M_DEF_SPECIALIZE_interpretBTSI_ALL( type ) \
-	M_DEF_SPECIALIZE_interpretBTSI( type, 8 ) \
-	M_DEF_SPECIALIZE_interpretBTSI( type, 16 ) \
-	M_DEF_SPECIALIZE_interpretBTSI( type, 32 ) \
-	M_DEF_SPECIALIZE_interpretBTSI( type, 64 ) \
-
-#define M_DEF_SPECIALIZE_interpretBTUI_ALL( type ) \
-	M_DEF_SPECIALIZE_interpretBTUI( type, 8 ) \
-	M_DEF_SPECIALIZE_interpretBTUI( type, 16 ) \
-	M_DEF_SPECIALIZE_interpretBTUI( type, 32 ) \
-	M_DEF_SPECIALIZE_interpretBTUI( type, 64 ) \
-
-/**
- * 新しいデータ型 type に対応させるには、以下を追加すればよい.
- * type が unsigned 型のデータである場合:
- *   M_DEF_SPECIALIZE_interpretBTSI_ALL( type )
- * type が signed 型のデータである場合:
- *   M_DEF_SPECIALIZE_interpretBTUI_ALL( type )
- */
-M_DEF_SPECIALIZE_interpretBTSI_ALL( size_t )
-M_DEF_SPECIALIZE_interpretBTUI_ALL( ptrdiff_t )
-M_DEF_SPECIALIZE_interpretBTSI_ALL( clock_t )
-
-template< typename T > inline
-intmax_t interpretBitsToSignedInt( T val ){
-	return interpretBitsToSignedInt_impl<T, sizeof(T)*8>(val);
-}
-template< typename T > inline
-uintmax_t interpretBitsToUnsignedInt( T val ){
-	return interpretBitsToUnsignedInt_impl<T, sizeof(T)*8>(val);
-}
-#endif
-
-
 
 Znk_INLINE uintmax_t
 cast_to_uintmax_t_from_ptrdiff_t( ptrdiff_t src )
@@ -854,7 +761,7 @@ getBody_forInteger( ZnkVSNPrintfCtx* vsnp_ctx,
 		 * uint16_t の環境の場合で、渡された値が 65534 であった場合、ここは -2 と表示される.
 		 * これは %d とあるところへ (巨大な値の)unsigned int の値を指定した場合の挙動に準ずる.
 		 * Unix等にあるssize_t は標準ではない. 例えばVC,bccではエラーになる. size_t のサイズ
-		 * は一般にはわからないため、以下ではB1_M_CAST_TO_SINTを用いて同型かつ異符号への
+		 * は一般にはわからないため、以下では cast_to_intmax_t_from_size_t を用いて同型かつ異符号への
 		 * 抽象化されたキャストを実現している.
 		 */
 		switch (length_modifier) {
@@ -895,7 +802,7 @@ getBody_forInteger( ZnkVSNPrintfCtx* vsnp_ctx,
 		 * みなすことにする. 例えば ptrdiff_t の実体が int16_t の環境の場合で、渡された値が
 		 * -2 であり、%tu と指定されている場合、ここは 65534 と表示される.
 		 * これは %u とあるところへ signed int の負の値を指定した場合の挙動に準ずる.
-		 * ptrdiff_t のサイズは一般にはわからないため、以下ではB1_M_CAST_TO_UINTを用いて
+		 * ptrdiff_t のサイズは一般にはわからないため、以下では cast_to_uintmax_t_from_ptrdiff_t を用いて
 		 * 同型かつ異符号への抽象化されたキャストを実現している.
 		 */
 		switch (length_modifier) {
@@ -1469,7 +1376,7 @@ parsePercentFormat( const char* p, ZnkVSNPrintfCtx* vsnp_ctx, VAWrap* vawp )
 	 * `const struct std::string' through `...'; call will abort at runtime
 	 * さらに実際上の警告通り、実行時に Abortする.
 	 *
-	 * std::basic_string に %S を対応させようと考えていたが、これは不可能である.
+	 * 従って std::basic_string に %S を対応させるような仕様は不可能である.
 	 **/
 
 	case 'd': case 'u':

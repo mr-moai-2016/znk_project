@@ -3,6 +3,7 @@ set LIST=%LIST% libRano
 set LIST=%LIST% libressl\crypto
 set LIST=%LIST% libressl\ssl
 set LIST=%LIST% libressl\tls
+set LIST=%LIST% libMoai
 set LIST=%LIST% moai
 set LIST=%LIST% easter
 set LIST=%LIST% custom_boy

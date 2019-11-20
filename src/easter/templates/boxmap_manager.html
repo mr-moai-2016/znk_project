@@ -1,9 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html><head>
 	<META http-equiv="Content-type" content="text/html; charset=Shift_JIS">
 	<META http-equiv="Content-Script-Type" content="text/javascript">
 	<META http-equiv="Content-Style-Type" content="text/css">
-	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="/msty.css" rel="stylesheet" type="text/css" />
+	<link href="/bulma.css" rel="stylesheet" type="text/css" />
 	<title>Easter BoxMapビューア</title>
 </head>
 
@@ -16,11 +18,14 @@ var st_func_tbls = [];
 <script type="text/javascript" src="/cgis/easter/publicbox/hint.js"></script>
 <script type="text/javascript" src="/cgis/easter/publicbox/assort.js"></script>
 <script type="text/javascript" src="/cgis/easter/publicbox/preview.js"></script>
-	
+
 <body bgcolor="#EEFFEE" text="#808000" link="#0000EE" vlink="#0000EE" alink="#FF0000">
+<div class="section" id="section">
+<div class="container">
+<div class="content">
 
 <a name="user-content-index"></a>
-<font size=+2><i><b>Easter</b></i></font><br>
+<font size=+2><b>Easter BoxMap Viewer</b></font><br>
 
 <br>
 <a class=MstyElemLink  href="/easter" >仮想ブラウジング</a> &nbsp;
@@ -29,94 +34,98 @@ var st_func_tbls = [];
 <a class=MstyNowSelectedLink href="/easter?est_manager=cache&amp;command=view&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >BoxMapビューア</a> &nbsp;
 <br>
 
-<table class=MstyManagerTable>
-<tr><td colspan=2>
 <font size=-1 color=red>　注: このパネルはエキスパート向けのもので通常は利用する必要はありません。　</font>
-</td></tr>
-</table>
 
 <form action="/cgis/easter/easter.cgi?est_manager=cache#BoxMapManager" method="POST" id="ua_fm">
+
 <input type=hidden name=Moai_AuthenticKey value="#[Moai_AuthenticKey]#">
 <button class="MstyDmyUpdateBtn" disabled></button> <!-- For disable Enter key on text field -->
 
 <a name="BoxMapManager"></a>
-<br><b>BoxMapビューア</b><br>
-<table class=MstyManagerTable>
+<article class="message is-dark">
+	<div class="message-header">
+		概要
+	</div>
+	<div class="message-body">
+		Easterではコレクションやキャッシュが格納された特殊ディレクトリを特に<b>Box</b>と呼びます. 
+		ここではBoxの中身をファイルシステム上の実ディレクトリレベルで直接閲覧したり管理を行うことができます. 
+		Easterには現在、以下にリストされたBoxが存在します. 
+		<ul>
+			<li>
+			<a class=MstyAppLink href="/easter?est_manager=cache&amp;command=view&amp;cache_path=favorite&amp;est_cache_begin=0&amp;est_cache_end=#[show_file_num]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >favorite</a>
+			</li>
+			<div class=box>
+				お気に入り登録されたファイルの実体はこのBoxに格納されています. 
+				デフォルトではmoai_profile/favoriteディレクトリが実体となります. 
+				これは問題等発生した場合のメンテナンス用のためのものであり、通常はここからファイルを閲覧する必要はありません. 
+				「コレクション」画面にある「お気に入りボックス」より閲覧するのがほとんどの場合望ましいです. 
+			</div>
 
-<tr><td colspan=2>
-<font size=-1><br>
-<u><b>概要</b></u><br> <br>
-Easterではコレクションやキャッシュが格納された特殊ディレクトリを特に<b>Box</b>と呼びます.<br>
-ここではBoxの中身をファイルシステム上の実ディレクトリレベルで直接閲覧したり管理を行うことができます.<br>
-<br>
-Easterには現在、以下にリストされたBoxが存在します. <br>
-</font>
-</td></tr>
+			<li>
+			<a class=MstyAppLink href="/easter?est_manager=cache&amp;command=view&amp;cache_path=stockbox&amp;est_cache_begin=0&amp;est_cache_end=#[show_file_num]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >stockbox</a>
+			</li>
+			<div class=box>
+				ストックされた画像などはこのBoxに格納されています. 
+				デフォルトではmoai_profile/stockboxディレクトリが実体となります. 
+				これは問題等発生した場合のメンテナンス用のためのものであり、通常はここからファイルを閲覧する必要はありません. 
+				「コレクション」画面にある「ストックボックス」より閲覧するのがほとんどの場合望ましいです. 
+			</div>
+			
+			<li>
+			<a class=MstyAppLink href="/easter?est_manager=cache&amp;command=view&amp;cache_path=cachebox&amp;est_cache_begin=0&amp;est_cache_end=#[show_file_num]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >cachebox</a>
+			</li>
+			<div class=box>
+				Easterが使用するキャッシュ(Easterキャッシュと呼びます)はこのBoxに格納されています. 
+				(この中身は、古いものより定期的にEasterのゴミ箱へ移されます). 
+				Moaiディレクトリ直下のcgis/easter/cacheboxディレクトリが実体となります. 
+				これは問題等発生した場合のメンテナンス用のためのものであり、通常はここからファイルを閲覧する必要はありません. 
+			</div>
+			
+			<li>
+			<a class=MstyAppLink href="/easter?est_manager=cache&amp;command=view&amp;cache_path=dustbox&amp;est_cache_begin=0&amp;est_cache_end=#[show_file_num]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >dustbox</a>
+			</li>
+			<div class=box>
+				Easterのゴミ箱です. 
+				(この中身は、古いものより定期的に完全削除されます). 
+				Moaiディレクトリ直下のcgis/easter/dustboxディレクトリが実体となります. 
+				これは問題等発生した場合のメンテナンス用のためのものであり、通常はここからファイルを閲覧する必要はありません. 
+			</div>
+			
+			<li>
+			<a class=MstyAppLink href="/easter?est_manager=cache&amp;command=view&amp;cache_path=userbox&amp;est_cache_begin=0&amp;est_cache_end=#[show_file_num]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >userbox</a>
+			</li>
+			<div class=box>
+				このBoxはユーザが自由な用途で使用できます. 
+				デフォルトではmoai_profile/userboxディレクトリが実体となります. 
+				このBoxの典型的な使用例については、<a class=MstyElemLink href=/moai2.0/easter_boxmap_viewer.html#BoxMapViewer_UserBox target=_blank>こちら</a>で解説してありますので参照してください. 
+			</div>
+		</ul>
+	</div>
+</article>
 
-<tr><td colspan=2>
-<ul>
-<li>
-<a class=MstyAppLink href="/easter?est_manager=cache&amp;command=view&amp;cache_path=favorite&amp;est_cache_begin=0&amp;est_cache_end=#[show_file_num]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >favorite</a>
-</li>
-<div class=MstyComment>お気に入り登録されたファイルの実体はこのBoxに格納されています.<br>
-デフォルトではmoai_profile/favoriteディレクトリが実体となります.<br>
-これは問題等発生した場合のメンテナンス用のためのものであり、通常はここからファイルを閲覧する必要はありません.<br>
-「コレクション」画面にある「お気に入りボックス」より閲覧するのがほとんどの場合望ましいです.<br>
-</div>
-
-<li>
-<a class=MstyAppLink href="/easter?est_manager=cache&amp;command=view&amp;cache_path=stockbox&amp;est_cache_begin=0&amp;est_cache_end=#[show_file_num]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >stockbox</a>
-</li>
-<div class=MstyComment>ストックされた画像などはこのBoxに格納されています.<br>
-デフォルトではmoai_profile/stockboxディレクトリが実体となります.<br>
-これは問題等発生した場合のメンテナンス用のためのものであり、通常はここからファイルを閲覧する必要はありません.<br>
-「コレクション」画面にある「ストックボックス」より閲覧するのがほとんどの場合望ましいです.<br>
-</div>
-
-<li>
-<a class=MstyAppLink href="/easter?est_manager=cache&amp;command=view&amp;cache_path=cachebox&amp;est_cache_begin=0&amp;est_cache_end=#[show_file_num]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >cachebox</a>
-</li>
-<div class=MstyComment>Easterが使用するキャッシュ(Easterキャッシュと呼びます)はこのBoxに格納されています.<br>
-(この中身は、古いものより定期的にEasterのゴミ箱へ移されます).<br>
-Moaiディレクトリ直下のcgis/easter/cacheboxディレクトリが実体となります.<br>
-これは問題等発生した場合のメンテナンス用のためのものであり、通常はここからファイルを閲覧する必要はありません.<br>
-</div>
-
-<li>
-<a class=MstyAppLink href="/easter?est_manager=cache&amp;command=view&amp;cache_path=dustbox&amp;est_cache_begin=0&amp;est_cache_end=#[show_file_num]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >dustbox</a>
-</li>
-<div class=MstyComment>Easterのゴミ箱です.<br>
-(この中身は、古いものより定期的に完全削除されます).<br>
-Moaiディレクトリ直下のcgis/easter/dustboxディレクトリが実体となります.<br>
-これは問題等発生した場合のメンテナンス用のためのものであり、通常はここからファイルを閲覧する必要はありません.<br>
-</div>
-
-<li>
-<a class=MstyAppLink href="/easter?est_manager=cache&amp;command=view&amp;cache_path=userbox&amp;est_cache_begin=0&amp;est_cache_end=#[show_file_num]#&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >userbox</a>
-</li>
-<div class=MstyComment>このBoxはユーザが自由な用途で使用できます.<br>
-デフォルトではmoai_profile/userboxディレクトリが実体となります.<br>
-このBoxの典型的な使用例については、<a class=MstyElemLink href=/moai2.0/easter_boxmap_viewer.html#BoxMapViewer_UserBox target=_blank>こちら</a>で解説してありますので参照してください.<br>
-</div>
-</ul>
-</td></tr>
-
-<tr><td colspan=2>
-#[mapping_status]#
-</td></tr>
-
-<tr><td colspan=2>
-<input type=checkbox id=msg_console_cbtn onclick="EjsAssort_switchVisibility('msg_console', '_cbtn', '_body', '_msg')">
-<b>Easter System Console </b><br>
-<div class=MstyMsgConsole id=msg_console_body style=display:none><b>Easter System Console:</b><br>#[msg]#</div>
-<font size=-1 color=#8888ff><div id=msg_console_msg>― 現在非表示です ―</div></font>
-</td></tr>
-
-</table>
+<article class="message is-dark">
+	<div class="message-header">
+		Mapping Status	
+	</div>
+	<div class="message-body">
+		#[mapping_status]#
+	</div>
+</article>
 
 </form>
+
+<div class=box>
+	<input type=checkbox id=msg_console_cbtn onclick="EjsAssort_switchVisibility('msg_console', '_cbtn', '_body', '_msg')">
+	<b>Easter System Console </b><br>
+	<div class=MstyMsgConsole id=msg_console_body style=display:none>#[msg]#</div>
+	<font size=-1 color=#8888ff><div id=msg_console_msg>― 現在非表示です ―</div></font>
+</div>
 
 
 <a class=MstyElemLink href="#user-content-index">一番上へ戻る</a> <a class=MstyElemLink href="/">Moaiトップページ</a>
 <br><br>
 
+</div>
+</div>
+</div>
+</body></html>

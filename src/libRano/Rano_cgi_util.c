@@ -2,6 +2,7 @@
 #include <Rano_type.h>
 #include <Rano_log.h>
 #include <Rano_post.h>
+#include <Rano_htp_boy.h>
 
 #include <Znk_str.h>
 #include <Znk_str_ex.h>
@@ -13,6 +14,7 @@
 #include <Znk_missing_libc.h>
 #include <Znk_envvar.h>
 #include <Znk_dir.h>
+#include <Znk_mutex.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -559,11 +561,13 @@ RanoCGIUtil_initLog( const char* log_filebasename, const char* count_filename,
 	RanoLog_open( log_filepath, keep_open, additional );
 	RanoLog_printf( "\n==== %zu ====\n", count );
 
+	ZnkGlobalMutex_lock();
 	fp = Znk_fopen( count_filename, "wb" );
 	if( fp ){
 		Znk_fprintf( fp, "%zu", count+1 );
 		Znk_fclose( fp );
 	}
+	ZnkGlobalMutex_unlock();
 	return count;
 }
 
@@ -578,7 +582,7 @@ RanoCGIUtil_initMultiDirLog( const char* logdir_basename, const char* count_file
 	size_t  log_no = 0;
 	ZnkFile fp = NULL;
 	
-	/* TODO : Global lockが必要 */
+	ZnkGlobalMutex_lock();
 	fp = Znk_fopen( count_filename, "rb" );
 	if( fp ){
 		char buf[ 256 ] = "0";
@@ -591,7 +595,7 @@ RanoCGIUtil_initMultiDirLog( const char* logdir_basename, const char* count_file
 		Znk_fprintf( fp, "%zu", count+1 );
 		Znk_fclose( fp );
 	}
-	/* TODO : Global unlockが必要 */
+	ZnkGlobalMutex_unlock();
 
 	log_no = ( count / pitch_of_count ) % pitch_of_logfiles;
 	Znk_snprintf( log_dirpath, sizeof(log_dirpath), "%s%zu", logdir_basename, log_no );
@@ -604,3 +608,41 @@ RanoCGIUtil_initMultiDirLog( const char* logdir_basename, const char* count_file
 	return count;
 }
 
+size_t
+RanoCGIUtil_rano_app_init_log( const char* app_name, bool is_multi_dir )
+{
+	size_t count = 0;
+	static const bool keep_open  = false;
+	const char* tmpdir_common    = RanoHtpBoy_getTmpDirCommon();
+	ZnkStr      count_filename   = ZnkStr_newf( "%s/%s_count.txt", tmpdir_common, app_name );
+
+	if( is_multi_dir ){
+		ZnkStr      logdir_basename  = ZnkStr_newf( "%s/log_", tmpdir_common );
+	
+		count = RanoCGIUtil_initMultiDirLog( ZnkStr_cstr(logdir_basename), ZnkStr_cstr(count_filename), 1000, 10, keep_open );
+	
+		ZnkStr_delete( logdir_basename );
+	} else {
+		ZnkStr      log_filebasename = ZnkStr_newf( "%s/%s",   tmpdir_common, app_name );
+
+		count = RanoCGIUtil_initLog( ZnkStr_cstr(log_filebasename), ZnkStr_cstr(count_filename), 200, 5, keep_open );
+
+		ZnkStr_delete( log_filebasename );
+	}
+
+	ZnkStr_delete( count_filename );
+	return count;
+}
+
+void
+RanoCGIUtil_rano_app_print_error( const char* msg )
+{
+	/* Error. */
+	RanoCGIMsg_initiate( true, NULL );
+	Znk_printf( "<table bgcolor=\"lightgray\"><tr><td><font size=-1>" );
+	Znk_printf( "<pre>\n" );
+	Znk_printf( "%s\n", msg );
+	Znk_printf( "</pre>" );
+	Znk_printf( "</font></td></tr></table>\n" );
+	RanoCGIMsg_finalize();
+}

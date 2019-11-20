@@ -35,9 +35,11 @@ const char*
 EstConfig_getExplicitReferer( void );
 const char*
 EstConfig_getEasterDefaultUA( void );
+bool
+EstConfig_getUseFlexBox( void );
+const char*
+EstConfig_getPreviewStyle( void );
 
-ZnkStr
-EstConfig_getMoaiDir( void );
 bool
 EstConfig_loadAuthenticKey( char* authentic_key_buf, size_t authentic_key_buf_size, const char* moai_dir );
 

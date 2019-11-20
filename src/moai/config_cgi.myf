@@ -153,6 +153,7 @@ easter = ['cgis/easter/easter.cgi']
 @@L public_urp
 /moai.png
 /msty.css
+/bulma.css
 /cgis/easter/publicbox/*
 /cgis/cgi_developers/publicbox/*
 @@.
@@ -191,4 +192,5 @@ stockbox = { ['/cgis/easter/stockbox'] ['#[profile_dir]#/stockbox'] ['EST_STOCKB
 userbox  = { ['/cgis/easter/userbox']  ['#[profile_dir]#/userbox']  ['EST_USERBOX_DIR'] }
 mydoc    = { ['/mydoc']    ['#[profile_dir]#/mydoc']    ['EST_MYDOC_DIR'] }
 MathJax  = { ['/MathJax']  ['#[profile_dir]#/MathJax']  ['EST_MATHJAX_DIR'] }
+separate = { ['/separate'] ['#[profile_dir]#/separate'] ['EST_SEPARATE_DIR'] }
 @@.

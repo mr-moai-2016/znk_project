@@ -115,37 +115,46 @@ EstImgViewer_makeNowLoading( ZnkStr ans, RanoTextType txt_type, const char* resu
 	const char* xhr_auth_host = EstConfig_XhrAuthHost();
 	switch( txt_type ){
 	case RanoText_Image:
-		ZnkStr_addf( ans, "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n" );
+		ZnkStr_addf( ans, "<!DOCTYPE html>\n" );
 		ZnkStr_addf( ans, "<html>\n" );
 		ZnkStr_addf( ans, "<head>\n" );
 		ZnkStr_addf( ans, "<META HTTP-EQUIV=\"refresh\" content=\"0;URL=http://%s/easter?est_manager=img_viewer&amp;cache_path=%s\">\n",
 				xhr_auth_host, result_filename );
+		ZnkStr_addf( ans, "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" );
 		ZnkStr_addf( ans, "<link href=\"http://%s/msty.css\" rel=\"stylesheet\" type=\"text/css\" />\n", xhr_auth_host );
+		ZnkStr_addf( ans, "<link href=\"http://%s/bulma.css\" rel=\"stylesheet\" type=\"text/css\" />\n", xhr_auth_host );
 		ZnkStr_addf( ans, "</head>\n" );
 		ZnkStr_addf( ans, "<body>\n" );
+		ZnkStr_addf( ans, "<div class=\"section\" id=\"section\"><div class=\"container\"><div class=\"content\">\n" );
 	
-		ZnkStr_addf( ans, "<font size=\"-1\" color=\"#808000\">Easter Image Viewer</font> <br>" );
+		ZnkStr_addf( ans, "<font size=+2><b>Easter Image Viewer</b></font><br>\n" );
 
 		EstImgViewer_makeTopbarUI_forLoading2( ans, EstViewerType_e_Img );
 		
 		ZnkStr_addf( ans, "<br>\n" );
+		//ZnkStr_addf( ans, "<div class=MstyComment>\n" );
 		ZnkStr_addf( ans, "<img src=\"/cgis/easter/%s\"><br>\n", result_filename );
+		//ZnkStr_addf( ans, "</div>\n" );
+		ZnkStr_addf( ans, "</div></div></div>\n" );
 		break;
 	case RanoText_Video:
-		ZnkStr_addf( ans, "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n" );
+		ZnkStr_addf( ans, "<!DOCTYPE html>\n" );
 		ZnkStr_addf( ans, "<html>\n" );
 		ZnkStr_addf( ans, "<head>\n" );
 		ZnkStr_addf( ans, "<META HTTP-EQUIV=\"refresh\" content=\"0;URL=http://%s/easter?est_manager=video_viewer&amp;cache_path=%s\">\n",
 				xhr_auth_host, result_filename );
+		ZnkStr_addf( ans, "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" );
 		ZnkStr_addf( ans, "<link href=\"http://%s/msty.css\" rel=\"stylesheet\" type=\"text/css\" />\n", xhr_auth_host );
+		ZnkStr_addf( ans, "<link href=\"http://%s/bulma.css\" rel=\"stylesheet\" type=\"text/css\" />\n", xhr_auth_host );
 		ZnkStr_addf( ans, "</head>\n" );
 		ZnkStr_addf( ans, "<body>\n" );
+		ZnkStr_addf( ans, "<div class=\"section\" id=\"section\"><div class=\"container\"><div class=\"content\">\n" );
 
 		/***
 		 * Easterでは動画ファイルもキャッシュされる.
 		 * サムネなどを表示すれば良いが現段階ではそこまでせず、単にキャッシュへのリンクを示すだけとする.
 		 */
-		ZnkStr_addf( ans, "<font size=\"-1\" color=\"#808000\">Easter Video Cache</font> <br>" );
+		ZnkStr_addf( ans, "<font size=+2><b>Easter Video Viewer</b></font><br>\n" );
 		ZnkStr_addf( ans, "This video is cached at <a class=MstyElemLink href=\"/cgis/easter/%s\">/cgis/easter/%s</a> by Easter.<br>\n",
 				result_filename, result_filename );
 
@@ -159,6 +168,7 @@ EstImgViewer_makeNowLoading( ZnkStr ans, RanoTextType txt_type, const char* resu
 				ZnkStr_addf( ans, "<span class=\"MstyElemLink\"><font color=#888888>動画が格納されたキャッシュディレクトリを開く</font></span>\n" );
 			}
 		}
+		ZnkStr_addf( ans, "</div></div></div>\n" );
 		break;
 	default:
 		break;

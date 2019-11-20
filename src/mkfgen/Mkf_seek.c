@@ -7,7 +7,7 @@
 static bool
 isIgnoreDirOrFile( ZnkStrAry ignore_list, const char* name )
 {
-	if( ZnkStrAry_find( ignore_list, 0, name, Znk_strlen(name) ) != Znk_NPOS ){
+	if( ignore_list && ZnkStrAry_find( ignore_list, 0, name, Znk_strlen(name) ) != Znk_NPOS ){
 		return true;
 	}
 	return false;

@@ -1,10 +1,10 @@
 @def_quote [' ']
 
 @@V config
-doc_title = ['Moai+Easter ユーザーマニュアル']
-author = ['Mr.Moai']
+doc_title = ['Moai+Easter アナウンスメント']
+author = { ['Mr.Moai'] }
 update = ['2018/03/25']
-category_path = { ['moai2_0_user'] }
+category_path = {}
 urp           = ['/moai2.0/moai_feature.html']
 nb_tags = { ['div'] ['ul'] ['li'] }
 @@.
@@ -21,7 +21,7 @@ nb_tags = { ['div'] ['ul'] ['li'] }
 
 @@L AboutFunctions
 	機能的な面に関しては以下の点が挙げられます.
-	<ul>
+	<div class="content"><ul type="1" >
 		<li><b>MoaiCGI</b>
 		以下に挙げるCGIアプリケーションを実現するための下地となるWebサーバ機能を提供します.
 		(Moaiエンジンの機能)
@@ -82,7 +82,7 @@ nb_tags = { ['div'] ['ul'] ['li'] }
 		またこのとき指定する外部プロキシサーバのいくつかの候補を自動的に取得することもできます.
 		(ProxyFinderの機能)
 		</li>
-	</ul>
+	</ul></div>
 @@.
 
 

@@ -16,6 +16,11 @@ EstBoxUI_make_forFSysView( ZnkStr ans, ZnkVarpAry cinf_list,
 		bool is_target_blank, bool is_checked );
 
 void
+EstBoxUI_make_forTopic( ZnkStr ans, ZnkVarpAry cinf_list,
+		size_t begin_idx, size_t end_idx, const char* authentic_key,
+		bool is_target_blank, bool is_checked );
+
+void
 EstBoxUI_make_forLinks( ZnkStr ans, ZnkVarpAry link_list,
 		size_t begin_idx, size_t end_idx, const char* authentic_key );
 

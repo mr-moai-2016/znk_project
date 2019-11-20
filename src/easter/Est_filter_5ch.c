@@ -91,12 +91,6 @@ on_form( ZnkStr tagname, ZnkVarpAry varp_ary, void* arg, ZnkStr tagend, bool end
 }
 
 static int
-landmarkEaster( ZnkStr str, void* arg )
-{
-	ZnkStr_add( str, " <font size=\"-1\" color=\"#808000\">via Easter on XhrDMZ</font>" );
-	return 1;
-}
-static int
 filter5chBBSTable( ZnkStr str, void* arg )
 {
 	ZnkStr_insert( str, 0, "<br> <br>", Znk_NPOS );
@@ -108,18 +102,13 @@ static int
 on_other( ZnkStr text, void* arg, const char* landmarking )
 {
 	struct EstLinkInfo* link_info = Znk_force_ptr_cast( struct EstLinkInfo*, arg );
-
-	/* 5ch : via Easter on XhrDMZ landmarking */
-	ZnkStrPtn_invokeInQuote( text,
-			"<h1 class=\"title\">", "\n",
-			NULL, NULL,
-			landmarkEaster, link_info, false );
+	const char* xhr_auth_host = EstConfig_XhrAuthHost();
 
 	/* 5ch smart phone : via Easter on XhrDMZ landmarking */
 	{
 		ZnkSRef old_ptn = { 0 };
 		ZnkStr  new_ptn = ZnkStr_newf( "<span id=\"title\" class=\"threadview_response_title\"></span> "
-				"<font size=\"-1\" color=\"#808000\">%s</font>", landmarking );
+				"<font size=\"-1\" color=\"#808000\"><a href=http://%s/easter>%s</a></font>", xhr_auth_host, landmarking );
 		ZnkSRef_set_literal( &old_ptn, "<div id=\"title\" class=\"threadview_response_title\"></div>" );
 		ZnkStrEx_replace_BF( text, 0, old_ptn.cstr_, old_ptn.leng_, ZnkStr_cstr(new_ptn), ZnkStr_leng(new_ptn), Znk_NPOS, Znk_NPOS ); 
 		ZnkStr_delete( new_ptn );
@@ -144,7 +133,8 @@ static int
 on_plane_text( ZnkStr planetxt, void* arg )
 {
 	if( EstConfig_isAutoLink() ){
-		EstFilter_replaceToAutolink( planetxt );
+		const bool is_append_a_tag = true;
+		EstFilter_replaceToAutolink( planetxt, is_append_a_tag );
 	}
 	return 1;
 }

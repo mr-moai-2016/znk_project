@@ -5,63 +5,18 @@ struct ZnkBfrImpl {
 	void*  data_;
 	size_t size_;
 	size_t capacity_;
-	ZnkBfrType type_;
+	ZnkCapacityType type_;
 };
-
-#define GET_EXP2_CAPACITY( size, base ) \
-		( (size) <= ((base)>>2) ) ? \
-		    ( (size) <= ((base)>>3) ? ((base)>>3) : ((base)>>2) ) \
-		:   ( (size) <= ((base)>>1) ? ((base)>>1) : (base) )
 
 #define GET_PAD_E2( size, pad ) ( ((size) + (pad)-1 ) & ~((pad)-1) )
 
-Znk_INLINE size_t
-calcCapacityExp2( size_t size )
-{
-	if( size <= 0x00000100 ){
-		size = GET_EXP2_CAPACITY( size, 0x00000100 );
-	} else if( size <= 0x00001000 ){
-		size = GET_EXP2_CAPACITY( size, 0x00001000 );
-	} else if( size <= 0x00010000 ){
-		size = GET_EXP2_CAPACITY( size, 0x00010000 );
-	} else if( size <= 0x00100000 ){
-		size = GET_EXP2_CAPACITY( size, 0x00100000 );
-	} else if( size <= 0x01000000 ){
-		size = GET_EXP2_CAPACITY( size, 0x01000000 );
-	} else {
-		size = GET_PAD_E2( size, 0x01000000 );
-	}
-	return size;
-}
-
-Znk_INLINE size_t
-calcCapacity( size_t size, ZnkBfrType type )
-{
-	switch( type ){
-	case ZnkBfr_Pad8:    return GET_PAD_E2( size, 8 );
-	case ZnkBfr_Pad16:   return GET_PAD_E2( size, 16 );
-	case ZnkBfr_Pad32:   return GET_PAD_E2( size, 32 );
-	case ZnkBfr_Pad64:   return GET_PAD_E2( size, 64 );
-	case ZnkBfr_Pad128:  return GET_PAD_E2( size, 128 );
-	case ZnkBfr_Pad256:  return GET_PAD_E2( size, 256 );
-	case ZnkBfr_Pad512:  return GET_PAD_E2( size, 512 );
-	case ZnkBfr_Pad1024: return GET_PAD_E2( size, 1024 );
-	case ZnkBfr_Pad2048: return GET_PAD_E2( size, 2048 );
-	case ZnkBfr_Pad4096: return GET_PAD_E2( size, 4096 );
-	case ZnkBfr_Exp2:
-	default:
-		break;
-	}
-	return calcCapacityExp2( size );
-}
-
 ZnkBfr
-ZnkBfr_create( const uint8_t* init_data, size_t size, bool with_zero, ZnkBfrType type )
+ZnkBfr_create( const uint8_t* init_data, size_t size, bool with_zero, ZnkCapacityType type )
 {
 	ZnkBfr zkbfr = Znk_malloc( sizeof(struct ZnkBfrImpl) );
 	if( zkbfr ){
 		if( size > 0 ){
-			const size_t capacity = calcCapacity( size, type );
+			const size_t capacity = ZnkCapacity_calc( size, type );
 			void* data = with_zero ? Znk_alloc0( capacity ) : Znk_malloc( capacity );
 			if( data ){
 				zkbfr->data_ = data;
@@ -106,11 +61,11 @@ ZnkBfr_clear_and_minimize( ZnkBfr zkbfr )
 	zkbfr->capacity_ = 0;
 }
 
-bool
-ZnkBfr_reserve( ZnkBfr zkbfr, size_t req_capacity )
+Znk_INLINE bool
+I_reserve( ZnkBfr zkbfr, size_t req_capacity )
 {
 	if( zkbfr->capacity_ < req_capacity ){
-		const size_t new_capacity = calcCapacity( req_capacity, zkbfr->type_ );
+		const size_t new_capacity = ZnkCapacity_calc( req_capacity, zkbfr->type_ );
 		void* new_data = Znk_realloc( zkbfr->data_, new_capacity );
 		if( new_data ){
 			/* 成功した場合のみ情報を更新する */
@@ -124,11 +79,10 @@ ZnkBfr_reserve( ZnkBfr zkbfr, size_t req_capacity )
 	/* この場合は常に成功とみなす */
 	return true;
 }
-
-bool
-ZnkBfr_resize( ZnkBfr zkbfr, size_t size )
+Znk_INLINE bool
+I_resize( ZnkBfr zkbfr, size_t size )
 {
-	if( ZnkBfr_reserve( zkbfr, size ) ){
+	if( I_reserve( zkbfr, size ) ){
 		zkbfr->size_ = size;
 		return true;
 	}
@@ -136,14 +90,26 @@ ZnkBfr_resize( ZnkBfr zkbfr, size_t size )
 }
 
 bool
+ZnkBfr_reserve( ZnkBfr zkbfr, size_t req_capacity )
+{
+	return I_reserve( zkbfr, req_capacity );
+}
+
+bool
+ZnkBfr_resize( ZnkBfr zkbfr, size_t size )
+{
+	return I_resize( zkbfr, size );
+}
+
+bool
 ZnkBfr_resize_fill( ZnkBfr zkbfr, size_t size, uint8_t val )
 {
 	const size_t old_size = zkbfr->size_;
 	if( size < old_size ){
-		return ZnkBfr_resize( zkbfr, size );
+		return I_resize( zkbfr, size );
 	} else if( size > old_size ){
 		const size_t delta_size = size - old_size;
-		if( !ZnkBfr_resize( zkbfr, size ) ){
+		if( !I_resize( zkbfr, size ) ){
 			return false;
 		}
 		Znk_memset( (uint8_t*)zkbfr->data_ + old_size, val, delta_size );
@@ -207,7 +173,7 @@ ZnkBfr_slide_hole( ZnkBfr zkbfr, const size_t dst_pos, const size_t dst_leng, co
 	const size_t dst_end     = Znk_clampSize( dst_pos + dst_leng, zkbfr->size_ );
 	const size_t remain_size = zkbfr->size_ - dst_end;
 	const size_t new_size    = dst_pos + new_leng + remain_size;
-	if( ZnkBfr_resize( zkbfr, new_size ) ){
+	if( I_resize( zkbfr, new_size ) ){
 		Znk_memmove( (uint8_t*)zkbfr->data_ + new_size - remain_size, (uint8_t*)zkbfr->data_ + dst_end, remain_size );
 		return true;
 	}
@@ -231,7 +197,7 @@ ZnkBfr_append_dfr( ZnkBfr zkbfr, const uint8_t* src, size_t src_leng )
 {
 	const size_t old_size = zkbfr->size_;
 	const size_t new_size = zkbfr->size_ + src_leng;
-	if( ZnkBfr_resize( zkbfr, new_size ) ){
+	if( I_resize( zkbfr, new_size ) ){
 		Znk_memmove( (uint8_t*)zkbfr->data_ + old_size, src, src_leng );
 		return true;
 	}
@@ -267,7 +233,7 @@ ZnkBfr_append_dfr( ZnkBfr zkbfr, const uint8_t* src, size_t src_leng )
 bool
 ZnkBfr_push_bk( ZnkBfr zkbfr, uint8_t val )
 {
-	if( ZnkBfr_reserve( zkbfr, zkbfr->size_ + 1 ) ){
+	if( I_reserve( zkbfr, zkbfr->size_ + 1 ) ){
 		((uint8_t*)zkbfr->data_)[ zkbfr->size_ ] = val; 
 		++zkbfr->size_;
 		return true;
@@ -278,7 +244,7 @@ bool
 ZnkBfr_push_bk_16( ZnkBfr zkbfr, uint16_t val, bool is_LE )
 {
 	const size_t old_size = zkbfr->size_;
-	if( ZnkBfr_resize( zkbfr, old_size + sizeof(uint16_t) ) ){
+	if( I_resize( zkbfr, old_size + sizeof(uint16_t) ) ){
 		uint8_t* dst = (uint8_t*)( zkbfr->data_ ) + old_size;
 		SET_VAL16( dst, val, is_LE )
 		return true;
@@ -289,7 +255,7 @@ bool
 ZnkBfr_push_bk_32( ZnkBfr zkbfr, uint32_t val, bool is_LE )
 {
 	const size_t old_size = zkbfr->size_;
-	if( ZnkBfr_resize( zkbfr, old_size + sizeof(uint32_t) ) ){
+	if( I_resize( zkbfr, old_size + sizeof(uint32_t) ) ){
 		uint8_t* dst = (uint8_t*)( zkbfr->data_ ) + old_size;
 		SET_VAL32( dst, val, is_LE )
 		return true;
@@ -300,7 +266,7 @@ bool
 ZnkBfr_push_bk_64( ZnkBfr zkbfr, uint64_t val, bool is_LE )
 {
 	const size_t old_size = zkbfr->size_;
-	if( ZnkBfr_resize( zkbfr, old_size + sizeof(uint64_t) ) ){
+	if( I_resize( zkbfr, old_size + sizeof(uint64_t) ) ){
 		uint8_t* dst = (uint8_t*)( zkbfr->data_ ) + old_size;
 		SET_VAL64( dst, val, is_LE )
 		return true;
@@ -317,6 +283,16 @@ ZnkBfr_push_bk_ptr( ZnkBfr zkbfr, void* ptr )
 	return ZnkBfr_push_bk_32( zkbfr, (uint32_t)(uintptr_t)ptr, is_LE );
 #endif
 }
+uint8_t*
+ZnkBfr_push_bk_previous( ZnkBfr zkbfr, size_t delta )
+{
+	uint8_t* last_p = NULL;
+	if( I_reserve( zkbfr, zkbfr->size_ + delta ) ){
+		last_p = ((uint8_t*)zkbfr->data_) + zkbfr->size_;
+		zkbfr->size_ += delta;
+	}
+	return last_p;
+}
 
 size_t
 ZnkBfr_pop_bk_ex( ZnkBfr zkbfr, uint8_t* data, size_t data_size )
@@ -327,7 +303,7 @@ ZnkBfr_pop_bk_ex( ZnkBfr zkbfr, uint8_t* data, size_t data_size )
 	}
 	/* サイズの減少であるため、reallocが呼ばれることはないが、
 	 * 一応一番最後にこれを実行する */
-	ZnkBfr_resize( zkbfr, zkbfr->size_ - data_size );
+	I_resize( zkbfr, zkbfr->size_ - data_size );
 	return data_size;
 }
 

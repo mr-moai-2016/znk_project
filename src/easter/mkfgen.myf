@@ -60,6 +60,7 @@ exec cache_task cache_task.c
 
 @@L install_data_list
 core_behavior.myf
+rano_app.myf
 default/*.myf
 templates/*.html
 templates/*.myf

@@ -1,18 +1,22 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html><html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta http-equiv="Content-Script-Type" content="text/javascript">
 	<meta http-equiv="Content-Style-Type" content="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<link href="/bulma.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+<div class="section">
+<div class="container">
+<div class="content">
 <a name=TopBar></a>
-<p><b><img src="/imgs/here_landmark.png"> Moai+Easter エキスパートマニュアル</b></p>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter 上級マニュアル</b></p>
 
 <a class=MstyElemLink href="/">トップページ</a> &nbsp;
-<a class=MstyElemLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">初級マニュアル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">上級マニュアル</a> &nbsp;
 <a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
 <a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
@@ -23,261 +27,297 @@
 <a class=MstyElemLink href="/moai2.0/moai_cgi_developers.html">Moai CGI Developers</a> &nbsp;
 <br> <br>
 
-<div class=MstyComment>
-<u><b>記事担当者</b></u> : Mr.Moai ＆ 全角<br>
-<br>
-<u><b>最終更新日</b></u> : 2018/12/01<br>
-<br>
-</div>
-<br>
-
-
 <a name=AtFirst></a>
-<u><b>
-はじめに
-</b></u><br>
-<br>
-<div class=MstyIndent>
-	この記事では、Moaiのソースコードから実行バイナリ(exeファイル等)を作る手順について、<br>
-	全くの初心者でもできるように丁寧に説明します.<br>
+<h1 class="title">はじめに</h1>
+<p>
+	この記事では、Moaiのソースコードから実行バイナリ(exeファイル等)を作る手順について、全くの初心者でもできるように丁寧に説明します.<br>
 	この作業を<b>コンパイル</b>、これを行うためのツールを<b>コンパイラ</b>と呼びます.<br>
-	(この解説記事の作成にあたっては、一部は全角君にも協力頂きました)<br>
-</div><br>
+	コンパイルは<b>ビルド</b>と呼ばれることもあります.<br>
+	作成した実行バイナリとそれに付属するその他のファイルは、最終的に所定の位置へコピーする必要がありますが、この過程を<b>インストール</b>と呼びます.<br>
+</p>
 <br>
 
 
 <a name=Index></a>
-<u><b>
-目次
-</b></u><br>
+<h1 class="title">目次</h1>
 <br>
 <ul>
 	<li><b><a class=MstyElemLink href=#WhyWeCompile>なぜソースコードからコンパイルするのか？</a></b></li>
 	<li><b><a class=MstyElemLink href=#get_source_code>Moaiのソースコードの入手方法</a></b></li>
-	<li><b><a class=MstyElemLink href=#windows_next>Windowsな方へ、はじめてのコンパイル</a></b></li>
-	<li><b><a class=MstyElemLink href=#get_mingw>MinGWの入手およびインストール方法</a></b></li>
-	<li><b><a class=MstyElemLink href=#compile_by_mingw>WindowsでMinGWを使ってコンパイルする</a></b></li>
-	<li><b><a class=MstyElemLink href=#compile_by_vc>WindowsでVCを使ってコンパイルする</a></b></li>
-	<li><b><a class=MstyElemLink href=#compile_on_linux>Linuxを使ってコンパイルする</a></b></li>
-	<li><b><a class=MstyElemLink href=#compile_on_cygwin>Cygwinでコンパイルする</a></b></li>
-	<li><b><a class=MstyElemLink href=#compile_on_msys>MSYSを使ってコンパイルする</a></b></li>
-	<li><b><a class=MstyElemLink href=#compile_on_others_windows>WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使ってコンパイルする</a></b></li>
-	<li><b><a class=MstyElemLink href=#compile_on_android>Android版をコンパイルする</a></b></li>
+	<li><b><a class=MstyElemLink href=#introduction>はじめてのコンパイル</a></b></li>
+	<li><b><a class=MstyElemLink href=#get_mingw>MinGWの入手と開発環境の構築</a></b></li>
+	<li><b><a class=MstyElemLink href=#compile_by_mingw>Windows版をコンパイルする(MinGWを使用)</a></b></li>
+	<li><b><a class=MstyElemLink href=#compile_by_vc>Windows版をコンパイルする(VCを使用)</a></b></li>
+	<li><b><a class=MstyElemLink href=#compile_on_cygwin>Windows版をコンパイルする(Cygwinを使用)</a></b></li>
+	<li><b><a class=MstyElemLink href=#compile_on_msys>Windows版をコンパイルする(MSYSを使用)</a></b></li>
+	<li><b><a class=MstyElemLink href=#compile_on_others_windows>Windows版をコンパイルする(BCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使用)</a></b></li>
+	<li><b><a class=MstyElemLink href=#compile_on_linux>Linux版をコンパイルする</a></b></li>
+	<li><b><a class=MstyElemLink href=#compile_for_android_term>Android版をコンパイルする(ターミナルエミュレータ上で動作するバイナリ)</a></b></li>
+	<li><b><a class=MstyElemLink href=#compile_for_apk>Android版をコンパイルする(単独でインストールと動作可能なapkファイル) (執筆中)</a></b></li>
 	<li><b><a class=MstyElemLink href=#about_libressl>付属ライブラリlibresslについて</a></b></li>
 	<li><b><a class=MstyElemLink href=#about_macos>MacOSについて</a></b></li>
 </ul><br>
 
 
 <a name=WhyWeCompile></a>
-<u><b>
-なぜソースコードからコンパイルするのか？
-</b></u><br>
-<br>
-<div class=MstyIndent>
-	Moaiはオープンソースなツールであり、ソースコードを公開していますが、<br>
-	世にある多くのツールと同様に実行形式(実行バイナリとも呼びます)も提供しています.<br>
-	( Windows版とLinux版とAndroid版の実行形式となります ).<br>
+<h1 class="title">なぜソースコードからコンパイルするのか？</h1>
+<p>
+	Moaiはオープンソースなツールでありソースコードを公開していますが、世にある多くのツールと同様に実行形式(実行バイナリとも呼びます)も提供しています.<br>
+	これらはWindows版とLinux版とAndroid版の実行形式であり、それぞれの環境でただちに実行して使うことができます.<br>
+	勿論、提供されている実行形式をそのまま使っていただいてかまいません.<br>
+	多くの方は普通そうされるかと思います. そのような方についてはこの記事は不要です.<br>
 	ではなぜソースコードからわざわざコンパイルして使う方法をここで解説するのでしょうか？<br>
 	<br>
-	勿論、提供されている実行形式をそのまま使っていただいてかまいません.<br>
-	多くの方は普通そうされるかと思います.<br>
-	そのような方についてはこの記事は不要です.<br>
-	<br>
-	しかし、中にはこのバイナリが<b>安全であるという確証</b>がなければ安心して使えないという用心深い方もおられると思います.<br>
+	中にはこのバイナリが<b>安全であるという確証</b>がなければ安心して使えないという用心深い方もおられると思います.<br>
 	残念ながら「いくらこれは安全です」と作者である我々が言ったところで、ほとんど何の確証にもなりません.<br>
-	おかげさまで我々が今まで開発してきたツールのことを皆様は大分よく知っていて、<br>
-	そのような心配をなさる方も最近は見られなくなってはきたのですが、<br>
-	そうではない方にとっては、これに関する唯一確実な方法はソースコードを見て納得してもらう他ありません. <br>
+	おかげさまで我々が今まで開発してきたツールのことを皆様は大分よく知っていて、そのような心配をなさる方も最近は見られなくなってはきたのですが、
+	そうではない方にとってはこれに関する唯一確実な方法はソースコードを見て納得してもらう他ありません. <br>
 	<br>
-	とはいえ、我々プログラマでさえオープンソースのツールを使うとき、<br>
-	そのコードの隅々まで読んでから使うなど稀なことです.<br>
+	とはいえ、我々プログラマでさえオープンソースのツールを使うとき、そのコードの隅々まで読んでから使うなど稀なことです.<br>
 	ましてやプログラマでもない方にこれをせよというのは酷というものでしょう.<br>
 	<br>
-	ではどうすればよいでしょうか？<br>
-	現時点で我々の出せるその答えとしては以下のようなものです.<br>
+	ではどうすればよいでしょうか？ 現時点で我々の出せるその答えとしては以下のようなものです.<br>
 	<ul>
-		<li>ソースコードが公開されている事実だけでよしとして、それ以上は気にしないという考え方.<br>
-		(割とこのような方が多いかもしれません. この記事の筆者もこのタイプです)<br>
+		<li><b>ソースコードが公開されている事実だけでよしとして、それ以上は気にしないという考え方.</b><br>
+		割とこのような方が多いのかもしれません. この記事の筆者もこのタイプです.<br>
 		</li>
 		<br>
-		<li>ソースコードの内容を一応検査してから使いたいという慎重派な方は、<br>
+		<li><b>ソースコードの内容を一応検査してから使う.</b><br>
 		あなたにプログラミングに詳しい知り合いがいるなら、このソースコードをざっくりとチェックしてもらう.<br>
 		そんな知り合いはいない方は、プログラミングを扱う掲示板などでこのツールのソースコードのありか(GithubのURL)を記す.<br>
 		そしてこのツールのソースコードについての意見を聞き、あなたなりの納得を得る.<br>
 		</li>
 		<br>
-		<li>さらに潔癖な方は、付属するソースコードをコンパイルしてそれを使用する.<br>
-		勿論、我々が提供している実行バイナリは、このソースコードからコンパイルしたものに他ならないのですが、<br>
-		例えばあなたがそのことを疑って、本当にそうであるという確証が欲しいと思ったとします.<br>
+		<li><b>付属するソースコードを自らがコンパイルしてそれを使用する.</b><br>
+		勿論、我々が提供している実行バイナリは、このソースコードからコンパイルしたものに他なりません.<br>
+		ですが例えばあなたがそのことを疑って、本当にそうであるという確証が欲しいと思ったとします.<br>
 		そのためには、あなた自らがソースコードをコンパイルし、出来上がった実行バイナリを使ってもらうしかありません.<br>
 		</li>
 	</ul>
-	というわけで、この記事では主にMinGWを例にコンパイラの入手方法、インストール/設定方法、<br>
-	実行方法に至るまで、全くの初心者でもわかるようこれでもかというくらい丁寧にその手順を書いたつもりです.<br>
+	というわけで、この記事では主にMinGWを例にコンパイラの入手方法、インストール/設定方法、実行方法に至るまで、
+	全くの初心者でもわかるようこれでもかというくらい丁寧にその手順を書いたつもりです.<br>
 	機械的な作業なので言うほど難しくはない…と我々は思うのですが….<br>
 	<br>
-	普段は別に気にせず配布されている実行形式を使っているが、<br>
-	Moaiのソースコードにも興味あるのでコンパイルもしてみたいという技術派な方にとっても有用な内容となっています.<br>
+	普段は別に気にせず配布されている実行形式を使っているが、Moaiのソースコードにも興味あるのでコンパイルもしてみたいという技術派な方にとっても有用な内容となっています.<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=get_source_code></a>
-<u><b>
-Moaiのソースコードの入手方法
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">Moaiのソースコードの入手方法</h1>
+<p>
 	現在の最新版はzipファイルとなっており、以下より入手できます.<br>
 	<br>
-	<a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a><br>
+	<a class=MstyWrapLink href=https://github.com/mr-moai-2016/znk_project/releases/latest>https://github.com/mr-moai-2016/znk_project/releases/latest</a><br>
 	<br>
 	ソースコードはAssetsにあるSource code とあるzipファイルにアーカイブとしてまとめられているので、これをダウンロードします.<br>
 	これはお使いのPCのどのディレクトリへダウンロードして展開してもらっても構いません.<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
-<a name=windows_next></a>
-<u><b>
-Windowsな方へ、はじめてのコンパイル
-</b></u><br>
-<br>
-<div class=MstyIndent>
-	ソースコードからのコンパイルなどやったことがない、<br>
-	あるいは何から手をつければよいかわからない、と言う方も多いことでしょう.<br>
-	<br>
-	Windowsを使っている方ならば、まずはC言語のコンパイラをインストールする必要があります.<br>
-	この記事では<b>MinGW</b>と呼ばれている最もメジャーなものの一つを使います.<br>
-	もちろんフリーウェアです.<br>
-	<br>
-	<a class=MstyElemLink href=#get_mingw>MinGWの入手方法</a>の項へと進みましょう.<br>
-	既にMinGWをインストールしてある方はこれをスルーして<a class=MstyElemLink href=#compile_by_mingw>WindowsでMinGWを使ってコンパイルする</a>を参照して下さい.<br>
-	<br>
-	尚、MinGWではなくVC(Visual C++)を使いたいという方は<a class=MstyElemLink href=#compile_by_vc>WindowsでVCを使ってコンパイルする</a>を参照して下さい.<br>
-<br>
-	<div class=MstyComment>
-		VCの入手とインストール方法についてはここでは解説しません. <br>
-		(多分、こちらを選ばれる方は、ある程度わかっている方だと思うので)<br>
-		Microsoftよりフリーで提供されているVCとして Visual Studio Express がありますが、通常はそれで十分です.<br>
+<a name=introduction></a>
+<h1 class="title">はじめてのコンパイル</h1>
+<p>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		基本知識<br>
 	</div>
+	<div class="message-body">
+		ソースコードからのコンパイルなどやったことがない、あるいは何から手をつければよいかわからないと言う方も多いことでしょう.<br>
+		C/C++での開発において最低限必要となる基本コマンドは、以下の通りです.<br>
+		<ul>
+			<li><b>Cコンパイラ</b><br>
+			Cファイルをオブジェクトファイルに変換します.<br>
+			ここで言うオブジェクトファイルとは、最終的な実行バイナリ(アプリ)になる前の中間形態のファイルという程度の認識で十分です.<br>
+			</li>
+			<li><b>C++コンパイラ</b><br>
+			C++ファイルをオブジェクトファイルに変換します.<br>
+			</li>
+			<li><b>リンカ</b><br>
+			オブジェクトファイルやライブラリを寄せ集めて最終的な実行バイナリに変換します.<br>
+			あるいは動的ライブラリを作成する場合もこれを使います.<br>
+			</li>
+			<li><b>ライブラリアン</b><br>
+			オブジェクトファイルを寄せ集めて静的なライブラリを作成します.<br>
+			</li>
+			<li><b>ビルドスクリプト</b><br>
+			通常は上記のコマンドを必要に応じて定義された規則で呼び出すビルドスクリプトを使います.<br>
+			これがなくても上記のコマンド群は単独で実行可能なので厳密に言えばこれは必須コマンドではありません.<br>
+			しかし、そのような単独実行を毎回イチイチやっていては大変な手間となるのでこのビルドスクリプトは準必須項目と考えてよいでしょう.<br>
+			現在数多くのビルドスクリプトが出回っているようですが、ここではその代表例として Makefile を使います.<br>
+			</li>
+		</ul>
+		よって、まずはこれらのコマンドツール一式を取り揃える必要があります.<br>
+		色々あって大変と思われるかもしれませんが、心配ありません.<br>
+		以下でこれについても詳しく説明いたします.<br>
+	</div>
+</article><br>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Windows版をコンパイルしてみたい方へ<br>
+	</div>
+	<div class="message-body">
+		<ul>
+			<li><b>コンパイラなど使ったことないという方</b><br>
+			<b>MinGW</b>と呼ばれているCコンパイラを使うとよいでしょう.<br>
+			<a class=MstyElemLink href=#get_mingw>MinGWの入手と開発環境の構築</a>の項へと進みましょう.<br>
+			</li>
+<br>
+			<li><b>既にMinGWをインストールしてある方</b><br>
+			<a class=MstyElemLink href=#compile_by_mingw>WindowsでMinGWを使ってコンパイルする</a>を参照して下さい.<br>
+			</li>
+<br>
+			<li><b>MinGWではなくVC(Visual C++)を使いたいという方</b><br>
+			<a class=MstyElemLink href=#compile_by_vc>WindowsでVCを使ってコンパイルする</a>を参照して下さい.<br>
+			<div class=box>
+				VCの入手とインストール方法についてはここでは解説しません. <br>
+				多分、こちらを選ばれる方は、ある程度わかっている方だと思うので.<br>
+				Microsoftよりフリーで提供されているVCとして Visual Studio Express がありますが、通常はそれで十分です.<br>
+			</div>
+			</li>
+<br>
+			<li><b>上記どれでもないCコンパイラを使いたいという方</b><br>
+			目次よりご希望のコンパイラ環境があればそれを参照してください.<br>
+			</li>
+		</ul>
+	</div>
+</article><br>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Linux版をコンパイルしてみたい方へ<br>
+	</div>
+	<div class="message-body">
+		<a class=MstyElemLink href=#compile_on_linux>Linux版をコンパイルする</a>を参照して下さい.<br>
+	</div>
+</article><br>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Android版をコンパイルしてみたい方へ<br>
+	</div>
+	<div class="message-body">
+		<a class=MstyElemLink href=#compile_for_android_term>Android版をコンパイルする</a>を参照して下さい.<br>
+		ただしこれは特に開発環境の構築が初心者にはかなり難しいです.<br>
+		バージョン間の組み合わせによっては相性の問題が出たりと色々と厄介な要素もあり、忍耐力も必要になるかと思います.<br>
+	</div>
+</article><br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=get_mingw></a>
-<u><b>
-MinGWの入手およびインストール方法
-</b></u><br>
-<br>
-<div class=MstyIndent>
-	MinGWはメジャーなC言語コンパイラであり、入手およびインストール方法が解説されたサイトはごまんとありますが、<br>
-	この記事でも私流に説明しておきましょう.<br>
-	<br>
-	まずダウンロードサイトである<a class=MstyElemLink href=https://sourceforge.net/downloads/mingw target=_blank>https://sourceforge.net/downloads/mingw</a>へアクセスします.<br>
-	<div class=MstyComment>
-		MinGWの公式サイトは<a class=MstyElemLink href=http://www.mingw.org target=_blank>http://www.mingw.org</a>なのですが<br>
-		MinGWは現在、ダウンロードするファイル群はすべてsourceforgeの方へ置いてあります.<br>
-		公式サイトのDownloadsリンクから迂回しても結局上記と同じ場所に導かれます.<br>
+<h1 class="title">MinGWの入手と開発環境の構築</h1>
+<p>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		MinGW Cコンパイラのインストール<br>
 	</div>
-	<br>
-	「Download Latest Version mingw-get-setup.exe」と書かれた一番目立つ緑のボタンがあると思うので、<br>
-	それをクリックします.<br>
-	mingw-get-setup.exe を促すダイアログが出るのでそれをダウンロードします.<br>
-	たとえばC:\MinGWというフォルダを作ってその中に保存しておくとよいでしょう.<br>
-	(これのファイルサイズは85KBと極めて小さいです).<br>
-	<br>
-	次にこの mingw-get-setup.exe を実行します.<br>
-	このプログラムはMinGWのインストーラを自動でダウンロードするといういわば<br>
-	<b>インストーラをインストールするインストーラ</b>です(わかりにくい言い回しですが).<br>
-	<br>
-	さて、これを実行したらいよいよインストールのスタートです.<br>
-	次の手順で行います.<br>
-	<br>
-	<ol>
-		<li>多分最初に<s>アホな</s>Windowsが「セキュリティの警告」を表示してくるかもしれませんが<br>
-		<b>MinGWにその種の問題があろうはずもない</b>ので、構わず「実行」します.<br>
-		</li>
+	<div class="message-body">
+		MinGWはメジャーなC言語コンパイラであり、入手およびインストール方法が解説されたサイトはごまんとありますが、この記事でも私流に説明しておきましょう.<br>
 		<br>
-		<li>「MinGW Installation Manager Setup Tool」ウィンドウが表示されるので「Install」を押します.<br>
-		</li>
-		<br>
-		<li>次の画面でインストール先を指定できます. <br>
-<br>
-		<div class=MstyComment>
-			デフォルトでは C:\MinGWとなっていますが「Change」でこれを変えることもできます.<br>
-			(その場合は以下の説明でC:\MinGWとなっている部分をそのフォルダで読み替えて下さい).<br>
-			最終的に180MB程度必要ですので、万一余裕がなければ他のドライブに変えるなどしてください.<br>
+		まずダウンロードサイトである<a class=MstyWrapLink href=https://sourceforge.net/downloads/mingw target=_blank>https://sourceforge.net/downloads/mingw</a>へアクセスします.<br>
+		<div class=box>
+			MinGWの公式サイトは<a class=MstyWrapLink href=http://www.mingw.org target=_blank>http://www.mingw.org</a>です.<br>
+			しかしダウンロードするファイル群はそこではなく、そのすべてが sourceforge の方へ置いてあります.<br>
+			公式サイトのDownloadsリンクから迂回しても結局上記と同じ場所に導かれます.<br>
 		</div>
-<br>
-		その他特に弄る必要はないのでこの指定を終えたら「Continue」を押します.<br>
-		</li>
 		<br>
-		<li>するとC:\MinGW配下へファイル群が自動でダウンロードされます.<br>
-		ここでダウンロードされるのはMinGW本体ではなくそのインストーラであり、<br>
-		合計サイズにしておよそ2MBほどです.<br>
-		100%と表示されたらダウンロードが終わったということです.<br>
-		「Continue」を押して次へ進みます.<br>
-		ここでうっかり間違って「Quit」を押すとウィンドウが閉じてしまいますが…<br>
+		「Download Latest Version mingw-get-setup.exe」と書かれた一番目立つ緑のボタンがあると思うので、それをクリックします.<br>
+		mingw-get-setup.exe を促すダイアログが出るのでそれをダウンロードします.<br>
+		たとえばC:\MinGWというフォルダを作ってその中に保存しておくとよいでしょう.<br>
+		(これのファイルサイズは85KBと極めて小さいです).<br>
 		<br>
-		<b>C:\MinGW\bin\mingw-get.exeを実行すれば続きが表示されます</b>のでご安心を！<br>
+		次にこの mingw-get-setup.exe を実行します.<br>
+		このプログラムはMinGWのインストーラを自動でダウンロードするといういわば<b>インストーラをインストールするインストーラ</b>です(わかりにくい言い回しですが).<br>
 		<br>
-		この C:\MinGW\bin\mingw-get.exe こそがMinGWの本当のインストーラであり、<br>
-		Installation Managerと呼ばれるものです.<br>
-		</li>
+		さて、これを実行したらいよいよインストールのスタートです.<br>
+		次の手順で行います.<br>
 		<br>
-		<li>「MinGW Installation Manager」と書かれたウィンドウが表示されるので<br>
-		ここからインストールしたい項目を選びます.<br>
-		<br>
-		全部選んでいたらとんでもない分量になるし、その必要も全くありません.<br>
-		ここでは<b>mingw32-base</b> と <b>mingw32-g++</b>だけを選べば十分です.<br>
-		(これだけでも合計180MB程度となり、実のところ結構な分量にはなります).<br>
-		<br>
-		まず左側のペインにおいて「Basic Setup」を選んだ状態にし、<br>
-		右側のペインで<b>mingw32-base</b>とある行の四角形のところをクリックします(あるいは右クリックでもよいです).<br>
-		このときプルダウンメニューが表示されるので「Mark for Installation」を選びます.<br>
-		四角形のところに<b>オレンジ色の矢印マーク</b>が表示されれば選択された状態になったことを意味します.<br>
-		<b>mingw32-g++</b>についても同様にして選択状態にしておきましょう.<br>
-		<br>
-		繰り返しますがこれら以外は必要ありません. 必要最小限のインストールこそ我々のモットーです.<br>
-		しかし将来その他が必要になることもあるかもしれないし…これだけで本当に大丈夫なのか？<br>
-		と心配症な方は…<br>
-		<br>
-		<b>C:\MinGW\bin\mingw-get.exeを実行すれば後からでも追加インストールできます</b>のでご安心を！<br>
-		<br>
-		この C:\MinGW\bin\mingw-get.exe こそがMinGWの本当のインストーラであり、<br>
-		Installation Managerと呼ばれるものであるッ！(大事なことなのでもう一度言いました）.<br>
-		</li>
-		<br>
-		<li>いよいよ実際のパッケージ本体をダウンロードおよびインストールします.<br>
-		一番左上にある「Installation」メニューを開き、「Apply Changes」を選びます.<br>
-		「Schedule of Pending Actions」というウィンドウが現れるので「Apply」ボタンを押せば<br>
-		実際にパッケージ群がずらーっとダウンロードおよびインストールされます.<br>
-		<br>
-		パッケージは勿論圧縮されてあるのでダウンロードは大して時間は掛かりません.<br>
-		ネットワークが特別混雑していないなら、筆者の貧弱な回線でも３分ほどで終る分量です.<br>
-		またインストールといってもたいしたことをしているわけではなく、<br>
-		C:\MinGW配下に必要な圧縮ファイルが解凍されるだけのことです.<br>
-		上でも述べた通り、<b>mingw32-base</b> と <b>mingw32-g++</b> だけの場合、展開後は合計180MBほどになります.<br>
-		</li>
-		<br>
-		<li>「Applying Scaduled Changes」というウィンドウが出て「All changes were applied successfully;」<br>
-		などと書いてあれば成功です. 「Close」ボタンを押して終わりにしましょう.<br>
-		「MinGW Installation Manager」ウィンドウがまだ表示されていると思いますがこれも右上のxボタンで閉じてよいです.<br>
-		</li>
-	</ol>
+		<ol>
+			<li>多分最初に<s>アホな</s>Windowsが「セキュリティの警告」を表示してくるかもしれません.<br>
+			ですが<b>MinGWにその種の問題があろうはずもない</b>ので、構わず「実行」します.<br>
+			</li>
+			<br>
+			<li>「MinGW Installation Manager Setup Tool」ウィンドウが表示されるので「Install」を押します.<br>
+			</li>
+			<br>
+			<li>次の画面でインストール先を指定できます. <br>
 	<br>
-	非常に長かったですが、これにて一件落着インストール完了です.<br>
-	<a class=MstyElemLink href=#compile_by_mingw>WindowsでMinGWを使ってコンパイルする</a>の項へと進みましょう.<br>
+			<div class=box>
+				デフォルトでは C:\MinGWとなっていますが「Change」でこれを変えることもできます.<br>
+				その場合は以下の説明で C:\MinGW となっている部分をそのフォルダで読み替えて下さい.<br>
+				最終的に180MB程度必要ですので、万一余裕がなければ他のドライブに変えるなどしてください.<br>
+			</div>
 	<br>
-	<div class=MstyComment>
-		<u><b>補足1 : インストールされるものの内訳</b></u> <br>
+			その他特に弄る必要はないのでこの指定を終えたら「Continue」を押します.<br>
+			</li>
+			<br>
+			<li>するとC:\MinGW配下へファイル群が自動でダウンロードされます.<br>
+			ここでダウンロードされるのはMinGW本体ではなくそのインストーラであり、合計サイズにしておよそ2MBほどです.<br>
+			100%と表示されたらダウンロードが終わったということです.　「Continue」を押して次へ進みます.<br>
+			ここでうっかり間違って「Quit」を押すとウィンドウが閉じてしまいますが…<br>
+			<br>
+			<b>C:\MinGW\bin\mingw-get.exeを実行すれば続きが表示されます</b>のでご安心を！<br>
+			<br>
+			この C:\MinGW\bin\mingw-get.exe こそがMinGWの本当のインストーラであり Installation Managerと呼ばれるものです.<br>
+			</li>
+			<br>
+			<li>「MinGW Installation Manager」と書かれたウィンドウが表示されるのでここからインストールしたい項目を選びます.<br>
+			<br>
+			全部選んでいたらとんでもない分量になるし、その必要も全くありません.<br>
+			ここでは<b>mingw32-base</b> と <b>mingw32-g++</b>だけを選べば十分です.<br>
+			これだけでも合計180MB程度となり、実のところ結構な分量にはなります.<br>
+			<br>
+			まず左側のペインにおいて「Basic Setup」を選んだ状態にし、右側のペインで<b>mingw32-base</b>とある行の四角形のところをクリックします(あるいは右クリックでもよいです).<br>
+			このときプルダウンメニューが表示されるので「Mark for Installation」を選びます.<br>
+			四角形のところに<b>オレンジ色の矢印マーク</b>が表示されれば選択された状態になったことを意味します.<br>
+			<b>mingw32-g++</b>についても同様にして選択状態にしておきましょう.<br>
+			<br>
+			繰り返しますがこれら以外は必要ありません. 必要最小限のインストールこそ我々のモットーです.<br>
+			しかし将来その他が必要になることもあるかもしれないし…これだけで本当に大丈夫なのか？<br>
+			と心配症な方は…<br>
+			<br>
+			<b>C:\MinGW\bin\mingw-get.exeを実行すれば後からでも追加インストールできます</b>のでご安心を！<br>
+			<br>
+			この C:\MinGW\bin\mingw-get.exe こそがMinGWの本当のインストーラであり、Installation Managerと呼ばれるものです.<br>
+			(大事なことなのでもう一回書きました）.<br>
+			</li>
+			<br>
+			<li>いよいよ実際のパッケージ本体をダウンロードおよびインストールします.<br>
+			一番左上にある「Installation」メニューを開き、「Apply Changes」を選びます.<br>
+			「Schedule of Pending Actions」というウィンドウが現れるので「Apply」ボタンを押せば実際にパッケージ群がずらーっとダウンロードおよびインストールされます.<br>
+			<br>
+			パッケージは勿論圧縮されてあるのでダウンロードは大して時間は掛かりません.<br>
+			ネットワークが特別混雑していないなら、筆者の貧弱な回線でも３分ほどで終る分量です.<br>
+			またインストールといってもたいしたことをしているわけではなく、C:\MinGW 配下に必要な圧縮ファイルが解凍されるだけのことです.<br>
+			上でも述べた通り、<b>mingw32-base</b> と <b>mingw32-g++</b> だけの場合、展開後は合計180MBほどになります.<br>
+			</li>
+			<br>
+			<li>「Applying Scaduled Changes」というウィンドウが出て「All changes were applied successfully;」などと書いてあれば成功です.<br>
+			「Close」ボタンを押して終わりにしましょう.<br>
+			「MinGW Installation Manager」ウィンドウがまだ表示されていると思いますがこれも右上のxボタンで閉じてよいです.<br>
+			</li>
+		</ol>
+		<br>
+		非常に長かったですが、これにて一件落着MinGW Cコンパイラのインストール完了です.<br>
+		<a class=MstyElemLink href=#compile_by_mingw>WindowsでMinGWを使ってコンパイルする</a>の項へと進みましょう.<br>
+	</div>
+</article><br>
+	<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		補足1 : インストールされるものの内訳</b></u> <br>
+	</div>
+	<div class="message-body">
 		<b>mingw32-base</b>によりインストールされるのは以下です.<br>
 		<br>
 		<ul>
@@ -300,225 +340,293 @@ MinGWの入手およびインストール方法
 		<li>標準C++ライブラリ(libstdc++)</li>
 		</ul>
 		<br>
-		よって、もしC++は全く扱わず、つまり本当にC言語だけしか扱わないのであれば、<br>
-		実のところmingw32-baseだけで十分であり、つまりmingw32-g++は不要です.<br>
+		よって、もしC++は全く扱わず、つまり本当にC言語だけしか扱わないのであれば、実のところmingw32-baseだけで十分であり、つまりmingw32-g++は不要です.<br>
 		(mingw32-baseだけの場合、30MBほど節約できて全部で合計150MB程度になる).<br>
-		とはいえ、実際には C++ のコードも C と一緒くたになって巷に多く溢れかえっており、<br>
-		これがコンパイルできないようでは困るので今回はこれも必須項目としました.<br>
+		とはいえ、実際には C++ のコードも C と一緒くたになって巷に多く溢れかえっており、これがコンパイルできないようでは困るので今回はこれも必須項目としました.<br>
 		<br>
-		尚、gccは様々な言語のフロントエンドになっており、C++をコンパイルする際も<br>
-		コマンドとしてはgccコマンドを使えばよいでしょう(gccは拡張子によってCかC++かを自動的に判断します).<br>
-		ではもしmingw32-g++をインストールしていない場合に、gccからC++のコードをコンパイルしようとすると<br>
-		何が起こるのでしょうか？<br>
+		尚、gccは様々な言語のフロントエンドになっており、C++をコンパイルする際もコマンドとしてはgccコマンドを使えばよいでしょう(gccは拡張子によってCかC++かを自動的に判断します).<br>
+		ではもしmingw32-g++をインストールしていない場合に、gccからC++のコードをコンパイルしようとすると何が起こるのでしょうか？<br>
 		このときgccは以下のような非常にわかりにくいエラーメッセージを出すので注意が必要です. <br>
 		<br>
 		<div class=MstyCode>
 			gcc: error: CreateProcess: No such file or directory<br>
 		</div>
 		<br>
-		もしもこれが表示されたなら mingw32-g++をインストールし忘れているか、<br>
-		失敗しているかしているのでもう一度mingw-get.exe(Installation Manager)を起動して<br>
-		これを再インストールしましょう.<br>
+		もしもこれが表示されたなら mingw32-g++をインストールし忘れているか、失敗しているかしているのでもう一度mingw-get.exe(Installation Manager)を起動してこれを再インストールしましょう.<br>
 	</div>
+</article><br>
 	<br>
-	<div class=MstyComment>
-		<u><b>補足2 : アンインストール、移動、バックアップ、インストール失敗時の対処方法</b></u><br>
-		<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		補足2 : アンインストール、移動、バックアップ、インストール失敗時の対処方法<br>
+	</div>
+	<div class="message-body">
 		<b>mingw32-base</b> および <b>mingw32-g++</b> はクリーンかつハンディです.<br>
 		これのインストールにおいてはレジストリなどの書き込みなどは行われません.<br>
 		従ってアンインストールしたい場合は単にC:\MinGWをそのフォルダ毎削除すればよいです.<br>
 		<br>
 		またインストールした後、そのフォルダを丸ごと別の場所へ移動してもかまいません.<br>
 		例えばあなたの２台目のマシンにそのフォルダ毎コピーするだけで、そのマシンでも使えます.<br>
-		つまり２台目のマシン上で再び上記の手順でインストールする必要はないということです<br>
-		(してもよいけれども).<br>
+		つまり２台目のマシン上で再び上記の手順でインストールする必要はないということです(してもよいけれども).<br>
 		<br>
 		そしてバックアップについても同様に行えます. <br>
-		例えばMinGWが用済みになってしばらく使う予定がないので今はPCから削除したいが、<br>
-		今度また使うこともあるかもしれないなと思われるなら、MinGWフォルダ全体を一枚のCDに焼いておき、<br>
-		次回必要になった時、CD内のそのフォルダをそのまま丸ごとPCへコピーすれば即座に復元できます.<br>
+		例えばMinGWが用済みになってしばらく使う予定がないので今はPCから削除したいが、今度また使うこともあるかもしれないなと思われるなら、MinGWフォルダ全体を一枚のCDに焼いておき、次回必要になった時、CD内のそのフォルダをそのまま丸ごとPCへコピーすれば即座に復元できます.<br>
 		<br>
-		ダウンロードされたアーカイブは、C:\MinGW\var\cache\mingw-get\packages内に一時保存されているので、<br>
-		この点が気になる方はそちらを確認されるとよいでしょう.<br>
+		ダウンロードされたアーカイブは、C:\MinGW\var\cache\mingw-get\packages内に一時保存されているので、この点が気になる方はそちらを確認されるとよいでしょう.<br>
 		インストールが完全に終った後であれば、このフォルダ内のアーカイブファイルは削除して構いません.<br>
 		(拡張子がxz、lzmaとなっているものがそれに該当する).<br>
 		<br>
-		また万一、通信の過程でこれらのアーカイブが壊れているかダウンロードが不完全であった場合は<br>
-		再ダウンロードが必要となりますが、その場合もこのフォルダ内の該当アーカイブを手動で消す必要があります.<br>
+		また万一、通信の過程でこれらのアーカイブが壊れているかダウンロードが不完全であった場合は再ダウンロードが必要となりますが、その場合もこのフォルダ内の該当アーカイブを手動で消す必要があります.<br>
 		さらにその場合はデフォルトでお使いのブラウザのキャッシュも消去しておく必要があります<br>
 		( mingw-get.exeはダウンロード時、お使いのブラウザの機能を内部で利用しているためです ).<br>
 	</div>
+</article><br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=compile_by_mingw></a>
-<u><b>
-WindowsでMinGWを使ってコンパイルする
-</b></u><br>
-<br>
-<div class=MstyIndent>
-	まず環境変数<b>ZNK_MINGW32_DIR</b>にMinGW32がインストールされたトップディレクトリを正しく設定します.<br>
-	次にsrcフォルダの直下にある<b>make_world.bat</b>を実行します.<br>
-	<br>
-	<div class=MstyComment>
-		<img src=/imgs/auto_trigger_run_mingw.png width=100%><br>
+<h1 class="title">Windows版をコンパイルする(MinGWを使用)</h1>
+<p>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		必要なコマンド群<br>
 	</div>
-	<br>
-	古き良き時代を彷彿とさせるコマンドラインベースでのメニュー選択UIが表示されるので、<br>
-	「3. switch debug-mode」を何回か選んでDEBUG_MODEを「optimize」にし、<br>
-	「4. switch mkfid」を何回か選んでMKF_IDを「mingw」にし、<br>
-	「5. switch machine」を何回か選んでMACHINEを「x86」にし、<br>
-	最後に「1. make install」を選びます.<br>
-	<br>
-	<div class=MstyComment>
+	<div class="message-body">
+		<a class=MstyElemLink href=#introduction>はじめてのコンパイル</a>では、C/C++での開発において最低限必要となる基本コマンドについて述べました.<br>
+		では、MinGW環境におけるこれらのコマンドはそれぞれ何に対応するかを以下に列挙しましょう.<br>
+		<ul>
+			<li><b>Cコンパイラ</b><br>
+			gcc<br>
+			</li>
+			<li><b>C++コンパイラ</b><br>
+			g++<br>
+			</li>
+			<li><b>リンカ</b><br>
+			ld<br>
+			</li>
+			<li><b>ライブラリアン</b><br>
+			ar および ranlib<br>
+			</li>
+			<li><b>ビルドスクリプト</b><br>
+			mingw32-make ( GNU Makefile )<br>
+			</li>
+		</ul>
+		即ち、これらのコマンドが実行できるように必要に応じてインストールすればよいということになります.<br>
+		これらを個別にインストールしてもよいですが、通常は MinGW が提供するインストーラーを使ってインストールすることになります.<br>
+		MinGWをまだインストールされていない方は<a class=MstyElemLink href=#get_mingw>MinGWの入手と開発環境の構築</a>を参照してください.<br>
+	</div>
+</article><br>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Moaiのコンパイルおよびインストール<br>
+	</div>
+	<div class="message-body">
+		まず環境変数<b>ZNK_MINGW32_DIR</b>にMinGW32がインストールされたトップディレクトリを正しく設定します.<br>
+		次にsrcフォルダの直下にある<b>make_world.bat</b>を実行します.<br>
+		<br>
+		<div class=MstyImgBox>
+			<img src=/imgs/auto_trigger_run_mingw.png /><br>
+		</div>
+		<br>
+		古き良き時代を彷彿とさせるコマンドラインベースでのメニュー選択UIが表示されますので次の手順を行ってください.<br>
+		<ol>
+			<li>「3. switch debug-mode」を何回か選んでDEBUG_MODEを「optimize」にします.<br>
+			</li>
+			<li>「4. switch mkfid」を何回か選んでMKF_IDを「mingw」にします.<br>
+			</li>
+			<li>「5. switch machine」を何回か選んでMACHINEを「x86」にします.<br>
+			</li>
+			<li>「1. make install」を選びます.<br>
+			</li>
+		</ol>
 		ここで「選ぶ」というのは、一番先頭にある数字のキーを押せばよいです.<br>
 		またはその項目までカーソルキーで移動してEnterキーを押してもよいです.<br>
 		メニュー項目 3, 4, 5 については「選ぶ」毎にその値が循環的に変化していきます.<br>
+		<br>
+		MinGWが適切にインストールされているならば、これですべてのコンパイルが自動で行われます.<br>
+		それぞれのプロジェクトのフォルダ内にout_dirというフォルダが自動的に生成され、その中に目的の実行バイナリが生成されるはずです.<br>
+	<br>
+		<div class=box>
+			尚、上記メニュー項目 5 のMACHINEで「x64」を選んだ場合は64bit版バイナリが生成されます.<br>
+			ただし mingw_x86_64_win(mingw64)をインストールし、環境変数ZNK_MINGW64_DIRを設定しておく必要があります.<br>
+			こちらは初心者の方には若干敷居が高いです.<br>
+			32bit版バイナリでも64bit Windows上で動きますから、特に拘りのない方は32bit版のバイナリで十分です.<br>
+		</div>
+		さらに、srcディレクトリの一つ上の階層にmoai-v2.*-win32ディレクトリが生成され、コンパイルされた実行バイナリや設定ファイルなどの必要なものすべてが、そのディレクトリへとインストールされます.<br>
+	<br>
+		<div class=box>
+			なんらかの理由でこのインストール処理だけを省略し、つまり純粋にコンパイルだけを行いたい場合は、「1. make install」の替わりに「0. make」を選んでください.<br>
+		</div>
+		以上でWindows版のMoaiのコンパイルとインストールはすべて完了です.<br>
+		お疲れ様でした.<br>
 	</div>
-	<br>
-	MinGWが適切にインストールされているならば、これですべてのコンパイルが自動で行われます.<br>
-	それぞれのプロジェクトのフォルダ内にout_dirというフォルダが自動的に生成され、<br>
-	その中に目的の実行バイナリが生成されるはずです.<br>
-	<br>
-	<div class=MstyComment>
-		尚、上記メニュー項目 5 のMACHINEで「x64」を選んだ場合は64bit版バイナリが生成されます.<br>
-		ただし mingw_x86_64_win(mingw64)をインストールし、環境変数ZNK_MINGW64_DIRを設定しておく必要があります.<br>
-		こちらは初心者の方には若干敷居が高いです.<br>
-		32bit版バイナリでも64bit Windows上で動きますから、特に拘りのない方は32bit版のバイナリで十分です.<br>
-	</div>
-	<br>
-	さらに、srcディレクトリの一つ上の階層にmoai-v2.0-win32ディレクトリが生成され、<br>
-	コンパイルされた実行バイナリや設定ファイルなどの必要なものすべてが、そのディレクトリへとインストールされます.<br>
-	(なんらかの理由でこのインストール処理だけを省略し、つまり純粋にコンパイルだけを行いたい場合は、<br>
-	「1. make install」の替わりに「0. make」を選んでください)<br>
-	<br>
-	以上でWindows版のMoaiのコンパイルとインストールはすべて完了です.<br>
-	お疲れ様でした.<br>
-	<br>
-	<div class=MstyComment>
-		Ver1.1.8以前にあった compile_by_mingw.bat と install_bin_for_win32.bat は<br>
-		Ver2.0では廃止/削除されました.<br>
-	</div>
+</article><br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=compile_by_vc></a>
-<u><b>
-WindowsでVCを使ってコンパイルする
-</b></u><br>
+<h1 class="title">Windows版をコンパイルする(VCを使用)</h1>
+<p>
+以下ではVC(Visual C++)でのコンパイル方法について説明します.<br>
+VCは既にお使いのPCにインストールされているものと仮定して話を進めます.<br>
 <br>
-<div class=MstyIndent>
-	以下ではVC(Visual C++)でのコンパイル方法について説明します.<br>
-	VCは既にお使いのPCにインストールされているものと仮定して話を進めます.<br>
+Moaiのコンパイルはすべてコマンドラインベースで行われます.<br>
+IDEを起動する必要はありません.<br>
 <br>
-	Moaiのコンパイルはすべてコマンドラインベースで行われます.<br>
-	(IDEを起動する必要はありません)<br>
-<br>
-	<div class=MstyComment>
-		<u><b>Note. VCでのコンパイルに関する一般知識</b></u><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		VCでコマンドラインよりコンパイルする場合に関する基礎知識<br>
+	</div>
+	<div class="message-body">
 <br>
 		VCの場合、内部的にはnmakeコマンドがMakefile_vc.makを実行することでビルドが行われます.<br>
 		その際、いくつかの必要な環境変数をあらかじめ設定しておく必要があります.<br>
 		通常、これらを手動で設定する必要はなく、替わりに変数設定用バッチファイルを実行させます.<br>
 	<br>
-		この変数設定用バッチファイルは、VCのインストールディレクトリ配下に存在するのですが、<br>
-		厄介なことに、VCのバージョンやマシン環境によってそのありかやファイル名が異なるのです.<br>
+		この変数設定用バッチファイルはVCのインストールディレクトリ配下に存在するのですが、厄介なことにVCのバージョンやマシン環境によってそのありかやファイル名が異なるのです.<br>
 		例えばVC11.0のx86環境向けなら、これはvsvars32.bat という名前になっており、<br>
 <br>
-		C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\Tools<br>
+		<div class=MstyCode>
+			C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\Tools<br>
+		</div>
 <br>
 		などといったフォルダ内に存在します. あるいは<br>
 <br>
-		C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin<br>
+		<div class=MstyCode>
+			C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin<br>
+		</div>
 <br>
 		などといったフォルダ内に同様の(しかし名前は異なる)ファイルが存在することもあります.<br>
-		またx64環境(VCではamd64やx86_amd64などと表記されます)向けの場合、詳細は省略しますが<br>
-		状況はさらに複雑です.<br>
+		またx64環境(VCではamd64やx86_amd64などと表記されます)向けの場合、詳細は省略しますが状況はさらに複雑です.<br>
 	</div>
+</article><br>
 <br>
-	Moaiでは、通常は以下で述べる手順に従うことによりコンパイルを簡単に行うことが可能です.<br>
-	特にVC6.0以上VC14.0以下のx86環境向けならこれはうまく機能すると思います.<br>
 <br>
-	しかし上で挙げたVCのバージョン以外では、この手順は失敗するかもしれません.<br>
-	その場合は、以下のNoteで述べます特別な環境変数をまずは明示的に指定した上で<br>
-	再度この手順をお試しください.<br>
-	<br>
-	では手順の説明に入ります.<br>
-	まずsrcフォルダの直下にある<b>make_world.bat</b>を実行します.<br>
-	<br>
-	<div class=MstyComment>
-		<img src=/imgs/auto_trigger_run_vc.png width=100%><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		必要なコマンド群<br>
 	</div>
-	<br>
-	古き良き時代を彷彿とさせるコマンドラインベースでのメニュー選択UIが表示されるので、<br>
-	「3. switch debug-mode」を何回か選んでDEBUG_MODEを「optimize」にし、<br>
-	「4. switch mkfid」を何回か選んでMKF_IDを「vc」にし、<br>
-	「5. switch machine」を何回か選んでMACHINEを「x86」あるいは「x64」にし、<br>
-	最後に「1. make install」を選びます.<br>
-	<br>
-	<div class=MstyComment>
-		ここで「選ぶ」というのは、一番先頭にある数字のキーを押せばよいです.<br>
-		またはその項目までカーソルキーで移動してEnterキーを押してもよいです.<br>
-		メニュー項目 3, 4, 5 については「選ぶ」毎にその値が循環的に変化していきます.<br>
+	<div class="message-body">
+		<a class=MstyElemLink href=#introduction>はじめてのコンパイル</a>では、C/C++での開発において最低限必要となる基本コマンドについて述べました.<br>
+		では、VC環境におけるこれらのコマンドはそれぞれ何に対応するかを以下に列挙しましょう.<br>
+		<ul>
+			<li><b>Cコンパイラ</b><br>
+			cl<br>
+			</li>
+			<li><b>C++コンパイラ</b><br>
+			cl<br>
+			</li>
+			<li><b>リンカ</b><br>
+			link<br>
+			</li>
+			<li><b>ライブラリアン</b><br>
+			lib<br>
+			</li>
+			<li><b>ビルドスクリプト</b><br>
+			nmake<br>
+			</li>
+		</ul>
+		これらのコマンドはVCをインストールすれば付属しています.<br>
+		さらに上述した環境変数設定用バッチファイルを実行させれば、これらのコマンドの存在するディレクトリへのPATHが設定されます.<br>
+		これでコマンドラインからこれらのコマンドが普通に使えるようになります.<br>
 	</div>
-	<br>
-	VCが適切にインストールされているならば、これですべてのコンパイルが自動で行われます.<br>
-	それぞれのプロジェクトのフォルダ内にout_dirというフォルダが自動的に生成され、<br>
-	その中に目的の実行バイナリが生成されるはずです.<br>
-	<br>
-	<div class=MstyComment>
-		尚、上記メニュー項目 5 のMACHINEで「x64」を選んだ場合は64bit版バイナリが生成されます.<br>
-		ただし VCのバージョンによっては64bit用のコンパイルが可能なように色々と設定しておく必要があるかもしれません.<br>
-		こちらは初心者の方には若干敷居が高いです.<br>
-		32bit版バイナリでも64bit Windows上で動きますから、特に拘りのない方は32bit版のバイナリで十分です.<br>
+</article><br>
+<br>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Moaiのコンパイルおよびインストール<br>
 	</div>
+	<div class="message-body">
+		Moaiでは、通常は以下で述べる手順に従うことによりコンパイルを簡単に行うことが可能です.<br>
+		特にVC6.0以上VC14.0以下のx86環境向けならこれはうまく機能すると思います.<br>
 	<br>
-	さらに、srcディレクトリの一つ上の階層にmoai-v2.0-win32ディレクトリが生成され、<br>
-	コンパイルされた実行バイナリや設定ファイルなどの必要なものすべてが、そのディレクトリへとインストールされます.<br>
-	(なんらかの理由でこのインストール処理だけを省略したい、つまり純粋にコンパイルだけを行いたい場合は、<br>
-	「1. make install」の替わりに「0. make」を選んでください)<br>
-	<br>
-	以上でWindows版のMoaiのコンパイルとインストールはすべて完了です.<br>
-	お疲れ様でした.<br>
-	<br>
+		しかし上で挙げたVCのバージョン以外では、この手順は失敗するかもしれません.<br>
+		その場合は、以下のNoteで述べます特別な環境変数をまずは明示的に指定した上で再度この手順をお試しください.<br>
+		<br>
+		では手順の説明に入ります.<br>
+		まずsrcフォルダの直下にある<b>make_world.bat</b>を実行します.<br>
+		<br>
+		<div class=MstyImgBox>
+			<img src=/imgs/auto_trigger_run_vc.png /><br>
+		</div>
+		<br>
+		古き良き時代を彷彿とさせるコマンドラインベースでのメニュー選択UIが表示されますので次の手順を行ってください.<br>
+		<ol>
+			<li>「3. switch debug-mode」を何回か選んでDEBUG_MODEを「optimize」にします.<br>
+			</li>
+			<li>「4. switch mkfid」を何回か選んでMKF_IDを「vc」にします.<br>
+			</li>
+			<li>「5. switch machine」を何回か選んでMACHINEを「x86」あるいは「x64」にします.<br>
+			</li>
+			<li>「1. make install」を選びます.<br>
+			</li>
+		</ol>
+		<br>
+		<div class=box>
+			ここで「選ぶ」というのは、一番先頭にある数字のキーを押せばよいです.<br>
+			またはその項目までカーソルキーで移動してEnterキーを押してもよいです.<br>
+			メニュー項目 3, 4, 5 については「選ぶ」毎にその値が循環的に変化していきます.<br>
+		</div>
+		VCが適切にインストールされているならば、これですべてのコンパイルが自動で行われます.<br>
+		それぞれのプロジェクトのフォルダ内にout_dirというフォルダが自動的に生成され、<br>
+		その中に目的の実行バイナリが生成されるはずです.<br>
+		<br>
+		<div class=box>
+			尚、上記メニュー項目 5 のMACHINEで「x64」を選んだ場合は64bit版バイナリが生成されます.<br>
+			ただし VCのバージョンによっては64bit用のコンパイルが可能なように色々と設定しておく必要があるかもしれません.<br>
+			こちらは初心者の方には若干敷居が高いです.<br>
+			32bit版バイナリでも64bit Windows上で動きますから、特に拘りのない方は32bit版のバイナリで十分です.<br>
+		</div>
+		さらに、srcディレクトリの一つ上の階層にmoai-v2.0-win32ディレクトリが生成され、<br>
+		コンパイルされた実行バイナリや設定ファイルなどの必要なものすべてが、そのディレクトリへとインストールされます.<br>
+		(なんらかの理由でこのインストール処理だけを省略したい、つまり純粋にコンパイルだけを行いたい場合は、<br>
+		「1. make install」の替わりに「0. make」を選んでください)<br>
+		<br>
+		以上でWindows版のMoaiのコンパイルとインストールはすべて完了です.<br>
+		お疲れ様でした.<br>
+	</div>
+</article><br>
 <br>
-	<div class=MstyComment>
-		<u><b>Note. 上記の手順で失敗する場合のトラブルシューティング</b></u><br>
-<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		上記の手順で失敗する場合のトラブルシューティング<br>
+	</div>
+	<div class="message-body">
 		Moaiのビルドシステムは、あなたのPCにインストールされているVCを自動的に認識します.<br>
 		内部的にはこの自動認識は src\bat_utils\setenv_vc.bat というバッチファイルにおいて行われます.<br>
 		上記の手順で失敗する場合、この自動認識が失敗していると考えられます.<br>
 <br>
-		VCがインストールされている場合、VS??COMNTOOLS (??にはVCの内部バージョン番号が入る)という形式の名前の<br>
-		環境変数が設定されているはずです. これは例えばVisual Studio 2012の場合ですと、<br>
-		( 2012ではVCの内部バージョンは11.0になりますので )環境変数名は VS110COMNTOOLS であり、<br>
-		その値は<br>
+		VCがインストールされている場合、VS??COMNTOOLS (??にはVCの内部バージョン番号が入る)という形式の名前の環境変数が設定されているはずです.<br>
+		これは例えばVisual Studio 2012の場合ですと、( 2012ではVCの内部バージョンは11.0になりますので )環境変数名は VS110COMNTOOLS であり、その値は<br>
 <br>
-		C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\Tools<br>
+		<div class=MstyCode>
+			C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\Tools<br>
+		</div>
 <br>
-		などとなっています.<br>
-		これによりVCのインストールフォルダのパスが明らかとなるわけです.<br>
-		また、上記のNote「VCでのコンパイルに関する一般知識」でも述べましたが、<br>
-		このフォルダにはVCにおける変数設定用バッチファイルも存在します.<br>
+		などとなっています. これによりVCのインストールフォルダのパスが明らかとなるわけです.<br>
+		また、上記のNote「VCでのコンパイルに関する一般知識」でも述べましたが、このフォルダにはVCにおける変数設定用バッチファイルも存在します.<br>
+	</div>
+</article><br>
 <br>
-		では次にMoaiのビルドシステムで用意されている環境変数について説明します.<br>
-		未知のバージョンのVCなどで上記の自動認識に失敗する場合でも、<br>
-		これらの環境変数をうまく指定することにより、Moaiのビルドシステムでのコンパイルが可能となります.<br>
+では次にMoaiのビルドシステムで用意されている環境変数について説明します.<br>
+未知のバージョンのVCなどで上記の自動認識に失敗する場合でも、これらの環境変数をうまく指定することにより、Moaiのビルドシステムでのコンパイルが可能となります.<br>
 <br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		環境変数 ZNK_VSCOMNTOOLS<br>
+	</div>
+	<div class="message-body">
+		この環境変数が明示的に指定されている場合、src\bat_utils\setenv_vc.batは上記で述べた環境変数 VS??COMNTOOLS を参照する替わりにこのZNK_VSCOMNTOOLSの指定値を使います.<br>
 <br>
-		<u><b>環境変数 ZNK_VSCOMNTOOLS</b></u><br>
-		<br>
-		環境変数ZNK_VSCOMNTOOLSが明示的に指定されている場合、src\bat_utils\setenv_vc.batは<br>
-		上記で述べた環境変数 VS??COMNTOOLS を参照する替わりにこのZNK_VSCOMNTOOLSの指定値を使います.<br>
-<br>
-		src\bat_utils\setenv_vc.batは、この環境変数値が示すフォルダの配下に、<br>
-		さらに以下のbatファイル群が存在するかどうかを調査します.<br>
+		src\bat_utils\setenv_vc.batは、この環境変数値が示すフォルダの配下に、さらに以下のbatファイル群が存在するかどうかを調査します.<br>
 		もしも存在するならそれを採用して実行するという流れになります.<br>
 		<ul>
 			<li>vsvars32.bat</li>
@@ -529,24 +637,26 @@ WindowsでVCを使ってコンパイルする
 			<li>..\..\VC\bin\x86_amd64\vcvarsx86_amd64.bat</li>
 			<li>VsDevCmd.bat</li>
 		</ul>
-		よってお使いのVCにおいて上記のbatファイルの存在するフォルダの位置がわかれば、<br>
-		ZNK_VSCOMNTOOLSにそのフォルダのフルパスを指定すればよいことになります.<br>
+		よってお使いのVCにおいて上記のbatファイルの存在するフォルダの位置がわかれば、ZNK_VSCOMNTOOLSにそのフォルダのフルパスを指定すればよいことになります.<br>
 <br>
 		一つ注意点があります.<br>
-		例えば「Program Files」のように途中で半角スペースが入るフォルダ名の場合でも<br>
-		ZNK_VSCOMNTOOLSで指定する文字列はダブルクォートで括らないようにして設定してください.<br>
+		例えば「Program Files」のように途中で半角スペースが入るフォルダ名の場合でもZNK_VSCOMNTOOLSで指定する文字列はダブルクォートで括らないようにして設定してください.<br>
 		その理由は src\bat_utils\setenv_vc.bat の内部でZNK_VSCOMNTOOLSをダブルクォートで括って扱っているためです.<br>
-		このときバッチファイルの文法に起因して、二重にダブルクォートで括ってしまう状況が発生してしまい、<br>
-		これによりうまく機能しません.<br>
+		このときバッチファイルの文法に起因して二重にダブルクォートで括ってしまう状況が発生してしまい、これによりうまく機能しません.<br>
+	</div>
+</article><br>
 <br>
-<br>
-		<u><b>環境変数 ZNK_VC_SETENV32_CMD と ZNK_VC_SETENV32_ARGS</b></u><br>
-		<br>
-		環境変数ZNK_VC_SETENV32_CMDが明示的に指定されている場合、src\bat_utils\setenv_vc.batは<br>
-		その指定値をx86向け変数設定用バッチファイルのありか(フルパス)とみなします.<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		環境変数 ZNK_VC_SETENV32_CMD と ZNK_VC_SETENV32_ARGS<br>
+	</div>
+	<div class="message-body">
+		環境変数ZNK_VC_SETENV32_CMDが明示的に指定されている場合、src\bat_utils\setenv_vc.batはその指定値をx86向け変数設定用バッチファイルのありか(フルパス)とみなします.<br>
 		例えばVC11の場合ですと<br>
 <br>
-		C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\Tools\vsvars32.bat<br>
+		<div class=MstyCode>
+			C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\Tools\vsvars32.bat<br>
+		</div>
 <br>
 		などといった値が考えられます(VC11の場合はこの値を明示的に指定する必要はないとは思いますが).<br>
 		さらにこのバッチファイルになんらかのオプション引数を与えたいとします.<br>
@@ -554,17 +664,21 @@ WindowsでVCを使ってコンパイルする
 <br>
 		ZNK_VSCOMNTOOLSのときと同様の注意点があります.<br>
 		途中で半角スペースが入る場合などであっても、指定する文字列はダブルクォートで括らないようにしてください.<br>
-		尚、この環境変数とZNK_VSCOMNTOOLSを両方設定した場合は、ZNK_VSCOMNTOOLSの値より<br>
-		この環境変数の値の方が優先されます.<br>
+		尚、この環境変数とZNK_VSCOMNTOOLSを両方設定した場合は、ZNK_VSCOMNTOOLSの値よりこの環境変数の値の方が優先されます.<br>
+	</div>
+</article><br>
 <br>
-<br>
-		<u><b>環境変数 ZNK_VC_SETENV64_CMD と ZNK_VC_SETENV64_ARGS</b></u><br>
-		<br>
-		環境変数ZNK_VC_SETENV64_CMDが明示的に指定されている場合、src\bat_utils\setenv_vc.batは<br>
-		その指定値をx64向け変数設定用バッチファイルのありか(フルパス)とみなします.<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		環境変数 ZNK_VC_SETENV64_CMD と ZNK_VC_SETENV64_ARGS<br>
+	</div>
+	<div class="message-body">
+		環境変数ZNK_VC_SETENV64_CMDが明示的に指定されている場合、src\bat_utils\setenv_vc.batはその指定値をx64向け変数設定用バッチファイルのありか(フルパス)とみなします.<br>
 		例えばVC11の場合ですと<br>
 <br>
-		C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\vsvarsx86_amd64.bat<br>
+		<div class=MstyCode>
+			C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\vsvarsx86_amd64.bat<br>
+		</div>
 <br>
 		などといった値が考えられます(VC11の場合はこの値を明示的に指定する必要はないとは思いますが).<br>
 		さらにこのバッチファイルになんらかのオプション引数を与えたいとします.<br>
@@ -574,585 +688,735 @@ WindowsでVCを使ってコンパイルする
 		途中で半角スペースが入る場合などであっても、指定する文字列はダブルクォートで括らないようにしてください.<br>
 		尚、この環境変数とZNK_VSCOMNTOOLSを両方設定した場合は、ZNK_VSCOMNTOOLSの値より<br>
 		この環境変数の値の方が優先されます.<br>
-<br>
 	</div>
+</article><br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
-<br>
-
-
-<a name=compile_on_linux></a>
-<u><b>
-Linuxを使ってコンパイルする
-</b></u><br>
-<br>
-<div class=MstyIndent>
-	これを使われているような方は既にある程度わかっておられる方だとは思います.<br>
-	<br>
-	以下のコマンドが実行できるように必要に応じてこれらをインストールします.<br>
-	<br>
-	<div class=MstyComment>
-		gcc<br>
-		g++<br>
-		ld<br>
-		ar<br>
-		ranlib<br>
-		make<br>
-	</div>
-	<br>
-	これらはどれも C/C++での開発において最低限必要となる基本コマンドばかりです.<br>
-	個別にインストールしてもよいですが、Development系のカテゴリにある基本パッケージをインストールすれば<br>
-	まずすべて自動でインストールされるでしょう（例えばArch Linuxなら pacman で base-devel をインストールする). <br>
-	具体的なインストール方法はそれぞれのLinuxディストリビューションによって千差万別なのでここでは記載しません. <br>
-	ディストリビューションによっては最初からインストールされている可能性も高いですね.<br>
-	<br>
-	その上でターミナル(xterm, urxvtなど)を開き、srcディレクトリ内の以下のシェルスクリプトを実行します.<br>
-	<br>
-	<div class=MstyComment>
-		<div class=MstyCode>
-			sh ./make_world.sh install<br>
-		</div>
-	</div>
-	<br>
-	上記の基本コマンドが適切にインストールされているならば、これですべてのコンパイルが自動で行われます.<br>
-	<br>
-	<div class=MstyComment>
-		このシェルスクリプトにより、Makefile_linux.mak の存在する各ディレクトリへ自動的に移動しつつ<br>
-		make -f Makefile_linux.mak が実行されます.<br>
-		コンパイル後の実行バイナリは各ディレクトリ内のout_dirに格納されます.<br>
-	</div>
-	<br>
-	尚、環境変数MACHINEに「x86」または「x64」を明示的に設定して上記を実行した場合は、<br>
-	それぞれ32bit版または64bit版バイナリが生成されます.<br>
-	この環境変数を指定していない場合は、Makefile_linux.mak 内で uname -m コマンドが実行され、<br>
-	その結果により 32bit版か64bit版かが自動的に決定されます.<br>
-	<br>
-	さらに、srcディレクトリの一つ上の階層にmoai-v2.0-linux32ディレクトリが生成され、<br>
-	コンパイルされた実行バイナリや設定ファイルなどの必要なものすべてが、そのディレクトリへとインストールされます.<br>
-	(なんらかの理由でこのインストール処理だけを省略したい、つまり純粋にコンパイルだけを行いたい場合は、<br>
-	「sh ./make_world.sh install」の替わりに「sh ./make_world.sh」と実行してください)<br>
-	<br>
-	以上でMoaiのコンパイルとインストールはすべて完了です.<br>
-	<br>
-	<div class=MstyComment>
-		Ver1.1.8以前にあった compile_on_linux.sh と install_bin_for_linux.sh は<br>
-		Ver2.0では廃止/削除されました.<br>
-	</div>
-	<br>
-	念のため、コンパイルおよびインストールされたmoaiが起動するか確認しておきましょう.<br>
-	srcディレクトリを出てmoai-v2.0-linux64ディレクトリへと移動し、moaiを起動します.<br>
-	以下のようなメッセージが表示されればmoaiは無事起動しています.<br>
-	<br>
-	<div class=MstyComment>
-		Moai : config load OK.<br>
-		Moai : target load OK.<br>
-		Moai : analysis load OK.<br>
-		Moai : Filter Loading [filters/….myf]<br>
-		Moai : Plugin Loading [plugins/….so]<br>
-		…<br>
-		Moai : acceptable_host=[LOOPBACK]<br>
-		Moai : blocking_mode=[0]<br>
-		Moai : AutoGet PrivateIP=[192.168.…].<br>
-		Moai : Listen port 8124...<br>
-		<br>
-		Moai : ObserveR : 1-th sock events by select.<br>
-	</div>
-	<br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=compile_on_cygwin></a>
-<u><b>
-Cygwinでコンパイルする
-</b></u><br>
+<h1 class="title">Windows版をコンパイルする(Cygwinを使用)</h1>
+<p>
+既にCygwinを愛用されており、MinGWなどの競合開発環境をわざわざインストールしたくない方もおられると思います.<br>
+この項目はそのような方向けです.<br>
 <br>
-<div class=MstyIndent>
-	既にCygwinを愛用されており、MinGWなどの競合開発環境をわざわざインストールしたくない方もおられると思います.<br>
-	この項目はそのような方向けです.<br>
+<div class=box>
+	<u><b>注意</b></u><br>
 	<br>
-	<div class=MstyComment>
-		<u><b>注意</b></u><br>
-		<br>
-		Cygwinではややこしいことに、この上で動作するMinGWをインストールすることもできます.<br>
-		その場合gccオプションとして -mno-cygwinを使うことで(Cygwin版gccではなく)MinGW版gccを呼び出すこともできます.<br>
-		ここではムダにややこしくしたくないため、そのような使い方については対応しません.<br>
-		つまり作成を目指す実行バイナリは純粋なWindows APIをベースとしたプログラムではなく、<br>
-		cygwin1.dllなどのCygwin固有のdllをベースとしたUNIXエミュレーションで動作するプログラムとします.<br>
-		(Cygwin本来の趣旨は後者でしょう).<br>
-		<br>
-		MinGWでWindows純正のプログラムとしてコンパイルしたい場合は、<br>
-		上記<a class=MstyElemLink href=#compile_by_mingw>WindowsでMinGWを使ってコンパイルする</a>を参照して下さい.<br>
-		あるいはMSYSを使うという手もあります.<br>
-		下記<a class=MstyElemLink href=#compile_on_msys>MSYSを使ってコンパイルする</a>を参照して下さい.<br>
-		どうしてもCygwin上でMinGWを使いたい方は MSYS の状況に一番近いことから考えて、Makefile_msys.makを<br>
-		各自修正するのが一番簡単であると思います.<br>
-		生成されるdll名の微調整やコマンドラインオプション -mno-cygwin を追加する程度の変更で済むと思います.<br>
-		<br>
+	Cygwinではややこしいことに、この上で動作するMinGWをインストールすることもできます.<br>
+	その場合gccオプションとして -mno-cygwinを使うことで(Cygwin版gccではなく)MinGW版gccを呼び出すこともできます.<br>
+	ここではムダにややこしくしたくないため、そのような使い方については対応しません.<br>
+	つまり作成を目指す実行バイナリは純粋なWindows APIをベースとしたプログラムではなく、cygwin1.dllなどのCygwin固有のdllをベースとしたUNIXエミュレーションで動作するプログラムとします.<br>
+	(Cygwin本来の趣旨は後者でしょう).<br>
+	<br>
+	MinGWでWindows純正のプログラムとしてコンパイルしたい場合は、上記<a class=MstyElemLink href=#compile_by_mingw>WindowsでMinGWを使ってコンパイルする</a>を参照して下さい.<br>
+<br>
+	あるいはMSYSを使うという手もあります.<br>
+	下記<a class=MstyElemLink href=#compile_on_msys>MSYSを使ってコンパイルする</a>を参照して下さい.<br>
+<br>
+	どうしてもCygwin上でMinGWを使いたい方は MSYS の状況に一番近いことから考えて、Makefile_msys.makを各自修正するのが一番簡単であると思います.<br>
+	生成されるdll名の微調整やコマンドラインオプション -mno-cygwin を追加する程度の変更で済むと思います.<br>
+</div>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		必要なコマンド群<br>
 	</div>
-	<br>
-	Cygwinインストーラ(setup-x86.exe)では、gcc-core, gcc-g++, make, binutilsをインストールしておきます.<br>
-	( binutilsとは、ld, ar, ranlib, asコマンドなどを含むパッケージです ).<br>
-	これらはどれも C/C++での開発において最低限必要となる基本パッケージです.<br>
-	setup-x86.exe においてこれらを個別にインストールしてもよいですが、<br>
-	Develカテゴリにこれらは全て含まれているので面倒ならこのカテゴリごと一括でインストールしてもよいです.<br>
-	<br>
-	その上でCygwinターミナルを開き、srcディレクトリ内の以下のシェルスクリプトを実行します.<br>
-	<br>
-	<div class=MstyComment>
-		<div class=MstyCode>
+	<div class="message-body">
+		<a class=MstyElemLink href=#introduction>はじめてのコンパイル</a>では、C/C++での開発において最低限必要となる基本コマンドについて述べました.<br>
+		では、Cygwin環境におけるこれらのコマンドはそれぞれ何に対応するかを以下に列挙しましょう.<br>
+		<ul>
+			<li><b>Cコンパイラ</b><br>
+			gcc<br>
+			</li>
+			<li><b>C++コンパイラ</b><br>
+			g++<br>
+			</li>
+			<li><b>リンカ</b><br>
+			ld<br>
+			</li>
+			<li><b>ライブラリアン</b><br>
+			ar および ranlib<br>
+			</li>
+			<li><b>ビルドスクリプト</b><br>
+			make (GNU Makefile)<br>
+			</li>
+		</ul>
+		Cygwinインストーラ(setup-x86.exe)では、gcc-core, gcc-g++, make, binutilsをインストールしておきます.<br>
+		( binutilsとは、ld, ar, ranlib, asコマンドなどを含むパッケージです ).<br>
+		setup-x86.exe においてこれらを個別にインストールしてもよいですが、Develカテゴリにこれらは全て含まれているので面倒ならこのカテゴリごと一括でインストールしてもよいです.<br>
+	</div>
+</article><br>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Moaiのコンパイルおよびインストール<br>
+	</div>
+	<div class="message-body">
+		Cygwinターミナルを開き、srcディレクトリ内の以下のシェルスクリプトを実行します.<br>
+		<br>
+		<div class=box><div class=MstyCode>
 			sh ./make_world.sh install<br>
+		</div></div>
+		<br>
+		上記の基本コマンドが適切にインストールされているならば、これですべてのコンパイルが自動で行われます.<br>
+		<br>
+		<div class=box>
+			このシェルスクリプトにより、Makefile_cygwin.mak の存在する各ディレクトリへ自動的に移動しつつmake -f Makefile_cygwin.mak が実行されます.<br>
+			コンパイル後の実行バイナリは各ディレクトリ内のout_dirに格納されます.<br>
 		</div>
+		<br>
+		尚、Cygwinの場合、出来上がるdllの名前にはcygプリフィックスをつける仕様としてあります.<br>
+		これは別に必須というわけではないのですが、Cygwin用のdllはVCやMinGWにより生成する普通のdllとは一部異なるため、区別するためにこのようにしてあります. <br>
+		<br>
+		さらに、srcディレクトリの一つ上の階層にmoai-v2.*-cygwin32ディレクトリが生成され、コンパイルされた実行バイナリや設定ファイルなどの必要なものすべてが、そのディレクトリへとインストールされます.<br>
+		(なんらかの理由でこのインストール処理だけを省略し、つまり純粋にコンパイルだけを行いたい場合は、「sh ./make_world.sh install」の替わりに「sh ./make_world.sh」と実行してください)<br>
+		<br>
+		以上でMoaiのコンパイルとインストールはすべて完了です.<br>
 	</div>
+</article><br>
 	<br>
-	上記の基本コマンドが適切にインストールされているならば、これですべてのコンパイルが自動で行われます.<br>
-	<br>
-	<div class=MstyComment>
-		このシェルスクリプトにより、Makefile_cygwin.mak の存在する各ディレクトリへ自動的に移動しつつ<br>
-		make -f Makefile_cygwin.mak が実行されます.<br>
-		コンパイル後の実行バイナリは各ディレクトリ内のout_dirに格納されます.<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		動作確認<br>
 	</div>
-	<br>
-	尚、Cygwinの場合、出来上がるdllの名前にはcygプリフィックスをつける仕様としてあります.<br>
-	これば別に必須というわけではないのですが、Cygwin用のdllはVCやMinGWにより生成する普通のdllとは一部異なるため、<br>
-	区別するためにこのようにしてあります. <br>
-	<br>
-	さらに、srcディレクトリの一つ上の階層にmoai-v2.0-cygwin32ディレクトリが生成され、<br>
-	コンパイルされた実行バイナリや設定ファイルなどの必要なものすべてが、そのディレクトリへとインストールされます.<br>
-	(なんらかの理由でこのインストール処理だけを省略し、つまり純粋にコンパイルだけを行いたい場合は、<br>
-	「sh ./make_world.sh install」の替わりに「sh ./make_world.sh」と実行してください)<br>
-	<br>
-	以上でMoaiのコンパイルとインストールはすべて完了です.<br>
-	<br>
-	<div class=MstyComment>
-		Ver1.1.8以前にあった compile_on_cygwin.sh と install_bin_for_cygwin.sh は<br>
-		Ver2.0では廃止/削除されました.<br>
+	<div class="message-body">
+		念のため、コンパイルおよびインストールされたmoaiが起動するか確認しておきましょう.<br>
+		srcディレクトリを出てmoai-v2.*-cygwin32ディレクトリへと移動し、moaiを起動します.<br>
+		以下のようなメッセージが表示されればmoaiは無事起動しています.<br>
+		<br>
+		<div class=box><div class=MstyCode>
+			Moai : config load OK.<br>
+			Moai : target load OK.<br>
+			Moai : analysis load OK.<br>
+			Moai : Filter Loading [filters/….myf]<br>
+			Moai : Plugin Loading [plugins/….so]<br>
+			…<br>
+			Moai : acceptable_host=[LOOPBACK]<br>
+			Moai : blocking_mode=[0]<br>
+			Moai : AutoGet PrivateIP=[192.168.…].<br>
+			Moai : Listen port 8124...<br>
+			<br>
+			Moai : ObserveR : 1-th sock events by select.<br>
+		</div></div>
 	</div>
-	<br>
-	確認のため、srcディレクトリを出てmoai-v2.0-cygwin32ディレクトリへと移動し、moaiを起動してみましょう.<br>
-	起動時に表示されるメッセージ等はLinux版と同じです.<br>
+</article><br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=compile_on_msys></a>
-<u><b>
-MSYSを使ってコンパイルする
-</b></u><br>
+<h1 class="title">Windows版をコンパイルする(MSYSを使用)</h1>
+<p>
+ここではMSYS1.0を使用したMinGWによるコンパイル手順を示します.<br>
+申し訳ありませんがMSYS2.0の場合は解説いたしません.<br>
 <br>
-<div class=MstyIndent>
-	ここではMSYS1.0を使用したMinGWによるコンパイル手順を示します.<br>
-	(申し訳ありませんがMSYS2.0の場合は<s>さらに面倒なので</s>解説いたしません).<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		必要なコマンド群<br>
+	</div>
+	<div class="message-body">
+		<a class=MstyElemLink href=#introduction>はじめてのコンパイル</a>では、C/C++での開発において最低限必要となる基本コマンドについて述べました.<br>
+		では、MSYS環境におけるこれらのコマンドはそれぞれ何に対応するかを以下に列挙しましょう.<br>
+		<ul>
+			<li><b>Cコンパイラ</b><br>
+			gcc<br>
+			</li>
+			<li><b>C++コンパイラ</b><br>
+			g++<br>
+			</li>
+			<li><b>リンカ</b><br>
+			ld<br>
+			</li>
+			<li><b>ライブラリアン</b><br>
+			ar および ranlib<br>
+			</li>
+			<li><b>ビルドスクリプト</b><br>
+			mingw32-make (GNU Makefile)<br>
+			</li>
+		</ul>
+		というかそもそもMSYSとはMinGWと組み合わせて使うものですから、これらは当然ながらMinGWといっしょです.<br>
+		そしてMinGWとMSYSをインストールしておけばこれらのコマンドも当然使えます.<br>
+		MinGWをまだインストールされていない方は、まずは<a class=MstyElemLink href=#get_mingw>MinGWの入手と開発環境の構築</a>を先にご一読下さい.<br>
+		MSYSのインストール方法については以下で詳しく述べます.<br>
+	</div>
+</article><br>
 	<br>
-	この手順では、まずMinGWとMSYS1.0の二つをインストールしておく必要があります.<br>
-	MinGWをまだインストールされていない方は、まずは<a class=MstyElemLink href=#get_mingw>MinGWの入手方法</a>を先にご一読下さい.<br>
-	既にそちらをご一読されている方はもうお分かりですね？<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		MSYSのインストール<br>
+	</div>
+	<div class="message-body">
+		この手順では、MinGWのインストールは既に完了しているものとして話をすすめます.<br>
+		MinGWのインストールについては<a class=MstyElemLink href=#get_mingw>MinGWの入手と開発環境の構築</a>で解説いたしました.<br>
+		既にそちらをご一読されている方はもうお分かりですね？<br>
 	<br>
-	<b>C:\MinGW\bin\mingw-get.exeを実行すれば後からでも追加インストールできます</b>のでご安心を<br>
-	…いただけるのでした.<br>
+		<b>C:\MinGW\bin\mingw-get.exeを実行すれば後からでも追加インストールできます</b>のでご安心をいただけるのでした.<br>
+		この C:\MinGW\bin\mingw-get.exe こそがMinGWの本当のインストーラであり、Installation Managerと呼ばれるものであるッ！のでした.<br>
 	<br>
-	この C:\MinGW\bin\mingw-get.exe こそがMinGWの本当のインストーラであり、<br>
-	Installation Managerと呼ばれるものであるッ！<br>
-	…のでした.<br>
-	<br>
-	実はこのInstallation ManagerからMSYS1.0も追加インストールできます.<br>
-	というわけで、まずはこれを起動するため mingw-get.exe を実行しましょう.<br>
-	次に具体的な手順を以下に示します.<br>
-	<ol>
-		<li>「MinGW Installation Manager」と書かれたウィンドウが表示されるので<br>
-		ここからインストールしたい項目を選びます.<br>
-		<br>
-		まず左側のペインにおいて「Basic Setup」を選んだ状態にし、<br>
-		右側のペインで<b>msys-base</b>とある行の四角形のところをクリックします(あるいは右クリックでもよいです).<br>
-		このときプルダウンメニューが表示されるので「Mark for Installation」を選びます.<br>
-		四角形のところに<b>オレンジ色の矢印マーク</b>が表示されれば選択された状態になったことを意味します.<br>
-		</li>
-		<br>
-		<li>いよいよ実際のパッケージ本体をダウンロードおよびインストールします.<br>
-		一番左上にある「Installation」メニューを開き、「Apply Changes」を選びます.<br>
-		「Schedule of Pending Actions」というウィンドウが現れるので「Apply」ボタンを押せば<br>
-		実際にパッケージ群がずらーっとダウンロードおよびインストールされます.<br>
-		<br>
-		パッケージは勿論圧縮されてあるのでダウンロードは大して時間は掛かりません.<br>
-		またインストールといってもたいしたことをしているわけではなく、<br>
-		C:\MinGW配下に必要な圧縮ファイルが解凍されるだけのことです.<br>
-		<b>msys-base</b> だけの場合、展開後は合計20MBほどになります.<br>
-		</li>
-		<br>
-		<li>「Applying Scaduled Changes」というウィンドウが出て「All changes were applied successfully;」<br>
-		などと書いてあれば成功です. 「Close」ボタンを押してこれを閉じましょう.<br>
-		「MinGW Installation Manager」ウィンドウがまだ表示されていると思いますがこれも右上のxボタンで閉じてよいです.<br>
-		</li>
-		<br>
-		<li>C:\MinGWフォルダを開いてみます.<br>
-		<b>msys\1.0</b>というフォルダが新しく出来ているはずであり、これがMSYSの本体です.<br>
-		この中に入るとmsys.batというファイルがあるのがわかります.<br>
-		これをクリックして実行するとMSYSのターミナルウィンドウが開きます.<br>
-		毎回このフォルダまで入ってこれをクリックするのが面倒なら、<br>
-		デスクトップにこのmsys.batへのショートカットを作っておくとよいでしょう.<br>
-		<br>
-		プロンプトの部分に「/home/あなたのユーザ名」のような表示がなされているはずです.<br>
-		これはカレントディレクトリを示していますが、これは一体どこなのでしょうか？<br>
-		</li>
-		<br>
-		<li>そう！<b>我々が最初に打つべきコマンドは mount です</b>.<br>
-		現在どのWindows上のどのフォルダが、MSYS内のどのディレクトリにマウントされているのか？<br>
-		mountコマンドを打つことでこれを確認できます.<br>
-		では早速確認してみましょう.<br>
-		<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
+		実はこのInstallation ManagerからMSYS1.0も追加インストールできます.<br>
+		というわけで、まずはこれを起動するため mingw-get.exe を実行しましょう.<br>
+		次に具体的な手順を以下に示します.<br>
+		<ol>
+			<li>「MinGW Installation Manager」と書かれたウィンドウが表示されるのでここからインストールしたい項目を選びます.<br>
+			まず左側のペインにおいて「Basic Setup」を選んだ状態にし、右側のペインで<b>msys-base</b>とある行の四角形のところをクリックします(あるいは右クリックでもよいです).<br>
+			このときプルダウンメニューが表示されるので「Mark for Installation」を選びます.<br>
+			四角形のところに<b>オレンジ色の矢印マーク</b>が表示されれば選択された状態になったことを意味します.<br>
+			</li>
+			<br>
+			<li>いよいよ実際のパッケージ本体をダウンロードおよびインストールします.<br>
+			一番左上にある「Installation」メニューを開き、「Apply Changes」を選びます.<br>
+			「Schedule of Pending Actions」というウィンドウが現れるので「Apply」ボタンを押せば実際にパッケージ群がずらーっとダウンロードおよびインストールされます.<br>
+			<br>
+			パッケージは勿論圧縮されてあるのでダウンロードは大して時間は掛かりません.<br>
+			またインストールといってもたいしたことをしているわけではなく、C:\MinGW配下に必要な圧縮ファイルが解凍されるだけのことです.<br>
+			<b>msys-base</b> だけの場合、展開後は合計20MBほどになります.<br>
+			</li>
+			<br>
+			<li>「Applying Scaduled Changes」というウィンドウが出て「All changes were applied successfully;」などと書いてあれば成功です. 「Close」ボタンを押してこれを閉じましょう.<br>
+			「MinGW Installation Manager」ウィンドウがまだ表示されていると思いますがこれも右上のxボタンで閉じてよいです.<br>
+			</li>
+			<br>
+			<li>C:\MinGWフォルダを開いてみます.<br>
+			<b>msys\1.0</b>というフォルダが新しく出来ているはずであり、これがMSYSの本体です.<br>
+			この中に入るとmsys.batというファイルがあるのがわかります.<br>
+			これをクリックして実行するとMSYSのターミナルウィンドウが開きます.<br>
+			毎回このフォルダまで入ってこれをクリックするのが面倒なら、デスクトップにこのmsys.batへのショートカットを作っておくとよいでしょう.<br>
+			<br>
+			プロンプトの部分に「/home/あなたのユーザ名」のような表示がなされているはずです.<br>
+			これはカレントディレクトリを示していますが、これは一体どこなのでしょうか？<br>
+			</li>
+			<br>
+			<li><b>我々が最初に打つべきコマンドは mount です</b>.<br>
+			現在どのWindows上のどのフォルダが、MSYS内のどのディレクトリにマウントされているのか？<br>
+			mountコマンドを打つことでこれを確認できます.<br>
+			では早速確認してみましょう.<br>
+			<br>
+			<div class=box><div class=MstyCode>
 				$ mount<br>
 				C:\MinGW\msys\1.0 on /usr   type user (binmode,noumount)<br>
 				C:\MinGW\msys\1.0 on /      type user (binmode,noumount)<br>
 				C:\MinGW\msys\1.0 on /mingw type user (binmode)<br>
 				C:\Users\Zenkaku\AppData\Local\Temp on /tmp type user (binmode,noumount)<br>
 				c: on /c type user (binmode,noumount)<br>
-			</div>
-		</div>
-		<br>
-		上記より、ルートディレクトリ(/)はC:\MinGW\msys\1.0であることがわかりますね.<br>
-		つまりMSYS上で例えば「/home/Zenkaku」となっていれば、その実体は「C:\MinGW\msys\1.0\home\Zenkaku」フォルダということです.<br>
-		</li>
-		<br>
-		<li>次にmakeコマンドが使えるかどうかを確認します.<br>
-		<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
+			</div></div>
+			<br>
+			上記より、ルートディレクトリ(/)はC:\MinGW\msys\1.0であることがわかりますね.<br>
+			つまりMSYS上で例えば「/home/Zenkaku」となっていれば、その実体は「C:\MinGW\msys\1.0\home\Zenkaku」フォルダということです.<br>
+			</li>
+			<br>
+			<li>次にmakeコマンドが使えるかどうかを確認します.<br>
+			<br>
+			<div class=box><div class=MstyCode>
 				$ make<br>
 				make: *** No targets specified and no makefile found.  Stop.<br>
-			</div>
-		</div>
-		<br>
-		無事上記のような表示になれば、MSYSはmakeコマンドを認識しています.<br>
-		whichコマンドを使えば、make.exeの実体は「C:\MinGW\msys\1.0\bin\make.exe」ということもわかります.<br>
-		<br>
-		<div class=MstyComment>
-			万一 sh: make command not found などと表示されたら、何らかの理由で<br>
-			make.exe がきちんとインストールされていないということです.<br>
-			念のため、上記に戻って「MinGW Installation Manager」からmsys-baseをインストールしなおした方がよいでしょう.<br>
+			</div></div>
 			<br>
-			また左ペインにおいて「All Packages」⇒「MSYS」⇒「MSYS Base System」を選ぶと<br>
-			msys-make がインストールされているかどうかをピンポイントで確認することもできます.<br>
-			万一これがインストール状態になっているにも関わらずこの症状が出るなら、<br>
-			おそらくは「C:\MinGW\var\cache\mingw-get\packages\make-3.81-3-msys-1.0.13-bin.tar.lzma」が壊れています.<br>
-			(あなたの環境ではこのファイル名は若干異なるかもしれません).<br>
-			まずはこのファイルを削除し、さらにあなたが普段使っているブラウザのキャッシュを消した上で<br>
-			再度インストールを試みた方がいいでしょう.<br>
-		</div>
-		</li>
-		<br>
-		<li>次にgccコマンドが使えるかどうかを確認します.<br>
-		<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
+			無事上記のような表示になれば、MSYSはmakeコマンドを認識しています.<br>
+			whichコマンドを使えば、make.exeの実体は「C:\MinGW\msys\1.0\bin\make.exe」ということもわかります.<br>
+			<br>
+			<div class=box>
+				万一 sh: make command not found などと表示されたら、何らかの理由でmake.exe がきちんとインストールされていないということです.<br>
+				念のため、上記に戻って「MinGW Installation Manager」からmsys-baseをインストールしなおした方がよいでしょう.<br>
+				<br>
+				また左ペインにおいて「All Packages」⇒「MSYS」⇒「MSYS Base System」を選ぶとmsys-make がインストールされているかどうかをピンポイントで確認することもできます.<br>
+				万一これがインストール状態になっているにも関わらずこの症状が出るなら、おそらくは「C:\MinGW\var\cache\mingw-get\packages\make-3.81-3-msys-1.0.13-bin.tar.lzma」が壊れています.<br>
+				(あなたの環境ではこのファイル名は若干異なるかもしれません).<br>
+				まずはこのファイルを削除し、さらにあなたが普段使っているブラウザのキャッシュを消した上で再度インストールを試みた方がいいでしょう.<br>
+			</div>
+			</li>
+			<br>
+			<li>次にgccコマンドが使えるかどうかを確認します.<br>
+			<br>
+			<div class=box><div class=MstyCode>
 				$ gcc<br>
 				sh: gcc: command not found<br>
-			</div>
-		</div>
-		<br>
-		無事上記のような表示になれば…、いや無事ではないですね！<br>
-		MSYSはgccコマンドを認識していません！<br>
-		なぜでしょうか？<br>
-		<br>
-		我々は既にMinGW本体をインストールしています.<br>
-		そして gcc.exe の実体はC:\MinGW\bin配下にあるはずです.<br>
-		つまりこの位置をMSYSに教えねばならないということです.<br>
-		そのためにはMinGWのトップフォルダ C:\MinGW をMSYSでの /mingw ディレクトリとして<br>
-		<b>マウント</b>させなければなりません.<br>
-		<br>
-		C:\MinGW\msys\1.0\etc\fstab.conf をテキストエディタで開きます.<br>
-		もしもこれが存在しなければ、まず同フォルダ内の fstab.sample を fstab.conf と言う名前でコピーしてそれを開きます.<br>
-		このファイルでは # で始まる行は単なる説明文なので無視してよく、それ以外の行に注目しましょう.<br>
-		次のような行があると思います.<br>
-		<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
+			</div></div>
+			<br>
+			無事上記のような表示になれば…、いや無事ではないですね！<br>
+			MSYSはgccコマンドを認識していません！ なぜでしょうか？<br>
+			<br>
+			我々は既にMinGW本体をインストールしています. そして gcc.exe の実体はC:\MinGW\bin配下にあるはずです.<br>
+			つまりこの位置をMSYSに教えねばならないということです.<br>
+			そのためにはMinGWのトップフォルダ C:\MinGW をMSYSでの /mingw ディレクトリとして<b>マウント</b>させなければなりません.<br>
+			<br>
+			C:\MinGW\msys\1.0\etc\fstab.conf をテキストエディタで開きます.<br>
+			もしもこれが存在しなければ、まず同フォルダ内の fstab.sample を fstab.conf と言う名前でコピーしてそれを開きます.<br>
+			このファイルでは # で始まる行は単なる説明文なので無視してよく、それ以外の行に注目しましょう.<br>
+			次のような行があると思います.<br>
+			<br>
+			<div class=box><div class=MstyCode>
 				c:/mingw	/mingw<br>
-			</div>
-		</div>
-		<br>
-		二つ値がありますね.<br>
-		左側が Windows での実体をあらわすパス、右側がその MSYS 上でのディレクトリを示します.<br>
-		今回は /mingw に相当する実体をあらわすパスを設定したいのですから、我々が確認すべきはこの左側です.<br>
-		もしもあなたの MinGW がインストールされたフォルダが C:\MinGW ではないなら、<br>
-		上記の左側( c:/mingw の部分 )をあなたのMinGWがインストールされたフォルダのパスへ<br>
-		正しく書き換える必要があります( C:\MinGW なら何も修正する必要はありません ).<br>
-		書き換えたらこのファイルを上書き保存しましょう.<br>
-		</li>
-		<br>
-		<li>再度gccコマンドが使えるかどうかを確認します.<br>
-		<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
+			</div></div>
+			<br>
+			二つ値がありますね.<br>
+			左側が Windows での実体をあらわすパス、右側がその MSYS 上でのディレクトリを示します.<br>
+			今回は /mingw に相当する実体をあらわすパスを設定したいのですから、我々が確認すべきはこの左側です.<br>
+			もしもあなたの MinGW がインストールされたフォルダが C:\MinGW ではないなら、上記の左側( c:/mingw の部分 )をあなたのMinGWがインストールされたフォルダのパスへ正しく書き換える必要があります( C:\MinGW なら何も修正する必要はありません ).<br>
+			書き換えたらこのファイルを上書き保存しましょう.<br>
+			</li>
+			<br>
+			<li>再度gccコマンドが使えるかどうかを確認します.<br>
+			<br>
+			<div class=box><div class=MstyCode>
 				$ gcc<br>
 				sh: gcc: command not found<br>
-			</div>
-		</div>
-		<br>
-		無事に sh: gcc: command not found と表示されたでしょうか？<br>
-		そう！まだダメです！<br>
-		なぜでしょうか？<br>
-		<br>
-		実は我々はまだ最後の仕上げを一つ忘れているのでした.<br>
-		そう！<b>我々が最後に打つべきコマンドは mount です</b>.<br>
-		上記の /etc/fstab.conf に書かれた内容を反映させるには、次のようにしてmountコマンドを実行する必要があります.<br>
-		<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
+			</div></div>
+			<br>
+			無事に sh: gcc: command not found と表示されたでしょうか？<br>
+			そう！まだダメです！なぜでしょうか？<br>
+			<br>
+			実は我々はまだ最後の仕上げを一つ忘れているのでした.<br>
+			<b>我々が最後に打つべきコマンドは mount です</b>.<br>
+			上記の /etc/fstab.conf に書かれた内容を反映させるには、次のようにしてmountコマンドを実行する必要があります.<br>
+			<br>
+			<div class=box><div class=MstyCode>
 				$ mount /mingw<br>
 			</div>
-		</div>
-		<br>
-		万一 '/mingw' is already mounted などと表示されたら、一旦/mingwをアンマウントしてから、<br>
-		再度マウントする必要があります. 次のようになるでしょう.<br>
-		<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
+			<br>
+			万一 '/mingw' is already mounted などと表示されたら、一旦/mingwをアンマウントしてから、再度マウントする必要があります. 次のようになるでしょう.<br>
+			<br>
+			<div class=box><div class=MstyCode>
 				$ umount /mingw<br>
 				$ mount /mingw<br>
-			</div>
-		</div>
+			</div></div>
+			<br>
+			将来、MinGWフォルダの位置を移動するなどして /etc/fstab.confの内容を書き直したらこのアンマウント/マウントを再度実行する必要があるので注意しましょう.<br>
+			<br>
+			今度こそ gcc が無事起動できるようになったはずです.<br>
+			gcc と単独で実行したとき、「no input files」などと表示されればOKです.<br>
+			</li>
+		</ol>
+		非常に長かったですが、これにて一件落着インストール完了です.<br>
+	</div>
+</article><br>
+	<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Moaiのコンパイルおよびインストール<br>
+	</div>
+	<div class="message-body">
+		MSYSターミナルを開き、srcディレクトリ内の以下のシェルスクリプトを実行します.<br>
 		<br>
-		将来、MinGWフォルダの位置を移動するなどして /etc/fstab.confの内容を書き直したら<br>
-		このアンマウント/マウントを再度実行する必要があるので注意しましょう.<br>
-		<br>
-		今度こそ gcc が無事起動できるようになったはずです.<br>
-		gcc と単独で実行したとき、「no input files」などと表示されればOKです.<br>
-		</li>
-	</ol>
-	<br>
-	非常に長かったですが、これにて一件落着インストール完了です.<br>
-	<br>
-	あとはMSYSターミナルを開き、srcディレクトリ内の以下のシェルスクリプトを実行します.<br>
-	<br>
-	<div class=MstyComment>
-		<div class=MstyCode>
+		<div class=box><div class=MstyCode>
 			sh ./make_world.sh install<br>
+		</div></div>
+		<br>
+		上記の基本コマンドが適切にインストールされているならば、これですべてのコンパイルが自動で行われます.<br>
+		<br>
+		<div class=box>
+			このシェルスクリプトにより、Makefile_msys.mak の存在する各ディレクトリへ自動的に移動しつつ make -f Makefile_msys.mak が実行されます.<br>
+			コンパイル後の実行バイナリは各ディレクトリ内のout_dirに格納されます.<br>
 		</div>
+		<br>
+		さらに、srcディレクトリの一つ上の階層にmoai-v2.0-win32ディレクトリが生成され、<br>
+		コンパイルされた実行バイナリや設定ファイルなどの必要なものすべてが、そのディレクトリへとインストールされます.<br>
+<br>
+		<div class=box>
+			なんらかの理由でこのインストール処理だけを省略し、つまり純粋にコンパイルだけを行いたい場合は、「sh ./make_world.sh install」の替わりに「sh ./make_world.sh」と実行してください.<br>
+		</div>
+		以上でMoaiのコンパイルとインストールはすべて完了です.<br>
+		moai-v2.0-win32 フォルダを開き、moai.exeが起動できるかどうかを確認しましょう.<br>
 	</div>
-	<br>
-	上記の基本コマンドが適切にインストールされているならば、これですべてのコンパイルが自動で行われます.<br>
-	<br>
-	<div class=MstyComment>
-		このシェルスクリプトにより、Makefile_msys.mak の存在する各ディレクトリへ自動的に移動しつつ<br>
-		make -f Makefile_msys.mak が実行されます.<br>
-		コンパイル後の実行バイナリは各ディレクトリ内のout_dirに格納されます.<br>
-	</div>
-	<br>
-	さらに、srcディレクトリの一つ上の階層にmoai-v2.0-win32ディレクトリが生成され、<br>
-	コンパイルされた実行バイナリや設定ファイルなどの必要なものすべてが、そのディレクトリへとインストールされます.<br>
-	(なんらかの理由でこのインストール処理だけを省略し、つまり純粋にコンパイルだけを行いたい場合は、<br>
-	「sh ./make_world.sh install」の替わりに「sh ./make_world.sh」と実行してください)<br>
-	<br>
-	以上でMoaiのコンパイルとインストールはすべて完了です.<br>
-	<br>
-	<div class=MstyComment>
-		MSYSを使ったMoaiのコンパイルに正式に対応しているのは Moai Ver2.0以降です.<br>
-		Moai Ver1.1.8以前ではMSYSでのコンパイルには対応していません.<br>
-		(Ver1.1.8では、MSYS用 のMakefile( Makefile_msys.mak )が標準では用意されていません.<br>
-		このようなMakefileをあなたが自分で作れば、多分大丈夫だろうけども.)<br>
-	</div>
-	<br>
-	moai-v2.0-win32 フォルダを開き、moai.exeが起動できるかどうかを確認しましょう.<br>
+</article><br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=compile_on_others_windows></a>
-<u><b>
-WindowsでBCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使ってコンパイルする
-</b></u><br>
+<h1 class="title">Windows版をコンパイルする(BCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使用)</h1>
+<p>
+軍曹…キミが(MinGWでもVCでもCygwinでもなく)あえてこれらを選ぶというなら、我々もそれを支援すべくそのヒントをここで示そう.<br>
+尚ここでの説明ではイチイチ丁寧語は使わないぞ？<br>
 <br>
-<div class=MstyIndent>
-	軍曹…キミが(MinGWでもVCでもCygwinでもなく)あえてこれらを選ぶというなら、もはや我々は何も言うまい.<br>
-	我々もそれを支援すべく、そのヒントをここで示そう.<br>
-	(尚ここでの説明ではイチイチ丁寧語は使わないぞ？)<br>
+こんなの選ぶくらいだ.<br>
+今更基本知識の説明はいらんな？<br>
+<br>
+こんな変態御用達なmakefileまで用意してはかさばるのでソースコードに同梱はしていない.<br>
+だが実のところlibZnkやMoaiのソースコード自体はこれらでもコンパイルできるように移植性に一応配慮してある.<br>
+興味がある<b>変態野郎な方</b>は、以下を参考に各自Makefileを作れ.<br>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		BCC5.5(Borland C++ Compiler 5.5) における必要なコマンド群<br>
+	</div>
+	<div class="message-body">
+		こんなの選ぶくらいだ.<br>
+		知ってると思うが一応書いとくぞ？<br>
+		<ul>
+			<li><b>Cコンパイラ</b><br>
+			bcc32<br>
+			</li>
+			<li><b>C++コンパイラ</b><br>
+			bcc32<br>
+			</li>
+			<li><b>リンカ</b><br>
+			ilink32<br>
+			</li>
+			<li><b>ライブラリアン</b><br>
+			tlib<br>
+			</li>
+			<li><b>ビルドスクリプト</b><br>
+			一応BCCに付属しているmakeコマンドがあるにはある.<br>
+			VCのnmakeと互換であるようだが、微妙に完全互換ではない.<br>
+			これではなく GNU Makefile を使うことを強くお勧めしておく.<br>
+			</li>
+		</ul>
+	</div>
+</article><br>
 	<br>
-	こんな変態御用達なmakefileまで用意してはかさばるのでソースコードに同梱はしていない.<br>
-	だが実のところlibZnkやMoaiのソースコード自体はこれらでもコンパイルできるように移植性に一応配慮してある.<br>
-	興味がある<b>変態野郎な方</b>は、以下を参考に各自makefileを作成して欲しい.<br>
-	<br>
-	<ul>
-		<li><b>BCC5.5(Borland C++ Compiler 5.5)</b><br>
-		<br>
-		objを作る場合の指定方法(コンパイラはbcc32となる)<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		BCC5.5(Borland C++ Compiler 5.5) におけるコンパイルとそのオプション指定<br>
+	</div>
+	<div class="message-body">
+		<ul>
+			<li><b>objを作る場合の指定方法</b><br>
+			これは何てことはない至って普通な感じだ.<br>
+			<div class=box><div class=MstyCode>
 				bcc32 -w -RT -c -oYourFile.obj YouFile.c<br>
-			</div>
-		</div>
-		<br>
-		exeを作る場合の指定方法(リンカはilink32となる)<br>
-		OBJSは、+記号で各objファイルを連結したものを指定するという変態仕様である.<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
+			</div></div>
+			</li>
+<br>
+			<li><b>exeを作る場合の指定方法</b><br>
+			OBJSは、+記号で各objファイルを連結したものを指定するという変態仕様である.<br>
+			<div class=box><div class=MstyCode>
 				ilink32 -w -Gn -C -Tpe -ap c0x32.obj $(OBJS) $(LFLAGS),YourApplication.exe,,import32.lib cw32mt.lib,,YourResource.res<br>
-			</div>
-		</div>
+			</div></div>
+			</li>
 		<br>
-		静的ライブラリ(lib)を作る場合の指定方法(ライブラリアンはtlibとなる)<br>
-		オプション /P4096 はページサイズとなり、OMF形式ではこれを明示的に指定する必要がある.<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
+			<li><b>静的ライブラリ(lib)を作る場合の指定方法</b><br>
+			オプション /P4096 はページサイズとなり、OMF形式ではこれを明示的に指定する必要がある.<br>
+			<div class=box><div class=MstyCode>
 				tlib YourStaticLib.lib /P4096 $(OBJS)<br>
-			</div>
-		</div>
-		<br>
-		dllおよびそれに対応するインポートライブラリを作る場合の指定方法.<br>
-		(インポートライブラリはimplibを使用してdllあるいはdefファイルから自動生成する.)<br>
-		(尚、この方法は__stdcallには対応しない)<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
+			</div></div>
+			</li>
+<br>
+			<li><b>dllおよびそれに対応するインポートライブラリを作る場合の指定方法</b><br>
+			インポートライブラリはimplibを使用してdllあるいはdefファイルから自動生成する.<br>
+			尚、この方法は__stdcallには対応しない.<br>
+			<div class=box><div class=MstyCode>
 				ilink32 -w -Gn -C -Tpd c0d32x.obj $(OBJS) $(LFLAGS),YourDLL.dll,,import32.lib cw32mt.lib,YourDLL.def<br>
 				implib -f -a YourDLL.lib YourDLL.dll<br>
 				( あるいは implib -f -a YourDLL.lib YourDLL.def )<br>
-			</div>
-		</div>
-		</li>
+			</div></div>
+			</li>
+		</ul>
+	</div>
+</article><br>
 		<br>
-		<li><b>DMC(Digital Mars C/C++)</b> <br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		DMC(Digital Mars C/C++) における必要なコマンド群<br>
+	</div>
+	<div class="message-body">
+		こんなの選ぶくらいだ.<br>
+		知ってると思うが一応書いとくぞ？<br>
+		<ul>
+			<li><b>Cコンパイラ</b><br>
+			dmc<br>
+			</li>
+			<li><b>C++コンパイラ</b><br>
+			dmc<br>
+			</li>
+			<li><b>リンカ</b><br>
+			link<br>
+			</li>
+			<li><b>ライブラリアン</b><br>
+			lib<br>
+			</li>
+			<li><b>ビルドスクリプト</b><br>
+			一応DMCに付属しているmakeコマンドがあるにはある.<br>
+			だがアレは腐っているッ！<br>
+			GNU Makefile を使うことを強くお勧めしておく.<br>
+			</li>
+		</ul>
+	</div>
+</article><br>
 		<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		DMC(Digital Mars C/C++) におけるコンパイルとそのオプション指定<br>
+	</div>
+	<div class="message-body">
 		我々が実際にテストしたのは最新バージョン(Ver8.57)のみである.<br>
-		<br>
-		objを作る場合の指定方法(コンパイラはdmcとなる)<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
+		<ul>
+			<li><b>objを作る場合の指定方法</b><br>
+			イキナリ吐きそうなほどのオプション指定の応酬である.<br>
+			<div class=box><div class=MstyCode>
 				dmc -HP99 -Bj -j0 -Ab -Ae -Ar -w6 -c -oYourFile.obj YouFile.c<br>
-			</div>
-		</div>
-		<br>
-		exeを作る場合の指定方法(リンカはlinkとなる)<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
+			</div></div>
+			</li>
+			<br>
+			<li><b>exeを作る場合の指定方法</b><br>
+			カンマがウザいあたりはBCCと同じだ.<br>
+			<div class=box><div class=MstyCode>
 				link -EXET:NT $(OBJS),YourApplication.exe,,ws2_32.lib user32.lib kernel32.lib,,YourResource.res<br>
-			</div>
-		</div>
-		<br>
-		静的ライブラリ(lib)を作る場合の指定方法(ライブラリアンはlibとなる)<br>
-		オプション -p4096 はページサイズとなり、OMF形式ではこれを明示的に指定する必要がある.<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
+			</div></div>
+			</li>
+			<br>
+			<li><b>静的ライブラリ(lib)を作る場合の指定方法</b><br>
+			オプション -p4096 はページサイズとなり、OMF形式ではこれを明示的に指定する必要がある.<br>
+			<div class=box><div class=MstyCode>
 				lib -c -p4096 YourStaticLib.lib $(OBJS)<br>
-			</div>
-		</div>
-		<br>
-		dllおよびそれに対応するインポートライブラリを作る場合の指定方法.<br>
-		(インポートライブラリはimplibを使用してdllから自動生成する.)<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
+			</div></div>
+			</li>
+			<br>
+			<li><b>dllおよびそれに対応するインポートライブラリを作る場合の指定方法</b><br>
+			インポートライブラリはimplibを使用してdllから自動生成する.<br>
+			<div class=box><div class=MstyCode>
 				link -EXET:NT $(OBJS),YourDLL.dll,,ws2_32.lib user32.lib kernel32.lib,YourDLL.def<br>
 				implib /system YourDLL.lib YourDLL.dll<br>
-			</div>
-		</div>
-		</li>
-	</ul>
+			</div></div>
+			</li>
+		</ul>
+	</div>
+</article><br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
-<a name=compile_on_android></a>
-<u><b>
-Android版をコンパイルする
-</b></u><br>
+<a name=compile_on_linux></a>
+<h1 class="title">Linux版をコンパイルする</h1>
+<p>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		必要なコマンド群<br>
+	</div>
+	<div class="message-body">
+		<a class=MstyElemLink href=#introduction>はじめてのコンパイル</a>では、C/C++での開発において最低限必要となる基本コマンドについて述べました.<br>
+		では、Linux環境におけるこれらのコマンドはそれぞれ何に対応するかを以下に列挙しましょう.<br>
+		<ul>
+			<li><b>Cコンパイラ</b><br>
+			gcc<br>
+			</li>
+			<li><b>C++コンパイラ</b><br>
+			g++<br>
+			</li>
+			<li><b>リンカ</b><br>
+			ld<br>
+			</li>
+			<li><b>ライブラリアン</b><br>
+			ar および ranlib<br>
+			</li>
+			<li><b>ビルドスクリプト</b><br>
+			make ( GNU Makefile )<br>
+			</li>
+		</ul>
+		即ち、これらのコマンドが実行できるように必要に応じてインストールすればよいということになります.<br>
+		これらを個別にインストールしてもよいですが、Development系のカテゴリにある基本パッケージをインストールすればまずすべて自動でインストールされるでしょう.<br>
+		例えば Arch Linux なら pacman で base-devel をインストールする形になります. <br>
+		具体的なインストール方法はそれぞれのLinuxディストリビューションによって千差万別なのでここでは記載しません. <br>
+		ディストリビューションによっては最初からインストールされている可能性も高いですね.<br>
+	</div>
+</article><br>
+	<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Moaiのコンパイルおよびインストール<br>
+	</div>
+	<div class="message-body">
+		上記「基本知識」で述べた必須コマンドはすべてシステムにインストールされているものとして話をすすめます.<br>
+		ターミナル(xterm, urxvtなど)を開き、srcディレクトリ内の以下のシェルスクリプトを実行します.<br>
 <br>
-<div class=MstyIndent>
-	Androidは基本的にLinuxですが、PC Linuxとは大きく異なる部分もあります.<br>
-	そして通常、AndroidにおけるアプリはJava VMをベースとして(エントリポイントとして)提供されます.<br>
-	Java VMベースなアプリでは、グラフィカルなアイコンがホーム画面に表示され、それをタップすることで起動します.<br>
+		<div class=box><div class=MstyCode>
+			sh ./make_world.sh install<br>
+		</div></div>
 	<br>
-	しかしながら、今回コンパイルする Moai for Android はJava VMベースではなく<br>
-	AndroidのLinux上で直接走るネイティブアプリとしてC言語で開発します.<br>
-	この場合ホーム画面にMoai用の特別なアイコンが表示されることはありません.<br>
-	Moaiを起動するには、まず端末エミュレータを開き、cdコマンドにより<br>
-	moai実行バイナリが存在するディレクトリ(moai-v2.0-android-armeabi)へと移動してから<br>
-	moai実行バイナリを直接起動する形になります.<br>
-	要するにLinux環境のターミナルなどでプログラムを起動するのと同じ要領で行います.<br>
+		これですべてのコンパイルが自動で行われます.<br>
+<br>
+		<div class=box>
+			このシェルスクリプトにより、Makefile_linux.mak の存在する各ディレクトリへ自動的に移動しつつ <span class=MstyCodeIn>make -f Makefile_linux.mak</span> が実行されます.<br>
+			コンパイル後の実行バイナリは各ディレクトリ内のout_dirに格納されます.<br>
+		</div>
 	<br>
-	前置きが長くなりましたが、ネイティブアプリとしてC言語のソースコードをコンパイルするには<br>
-	<b>Android NDK</b>を使います.<br>
-	<br>
-	<div class=MstyComment>
-		この記事では、執筆時点で配布されているr14を例にとります.<br>
-		あなたが入手するAndroid NDK最新バージョンでは、仕様が変わっている可能性もあることをご了承下さい)<br>
+		尚、環境変数MACHINEに「x86」または「x64」を明示的に設定して上記を実行した場合は、それぞれ32bit版または64bit版バイナリが生成されます.<br>
+		この環境変数を指定していない場合は、Makefile_linux.mak 内で uname -m コマンドが実行され、その結果により 32bit版か64bit版かが自動的に決定されます.<br>
+		<br>
+		さらに、srcディレクトリの一つ上の階層にmoai-v2.0-linux32ディレクトリが生成され、コンパイルされた実行バイナリや設定ファイルなどの必要なものすべてが、そのディレクトリへとインストールされます.<br>
+		なんらかの理由でこのインストール処理だけを省略したい、つまり純粋にコンパイルだけを行いたい場合は、「sh ./make_world.sh install」の替わりに「sh ./make_world.sh」と実行してください.<br>
+		<br>
+		以上でMoaiのコンパイルとインストールはすべて完了です.<br>
 	</div>
+</article><br>
 	<br>
-	Android NDKは <a class=MstyElemLink href=https://developer.android.com/ndk/downloads/index.html target=_blank>http://developer.android.com/ndk/downloads/index.html</a>よりダウンロードできます.<br>
-	また開発はAndroid上では行えないためPCが必要です.<br>
-	つまり Android NDK をあなたの開発用PCへダウンロードし、このPC上にて開発を行う形になります.<br>
-	<br>
-	Android NDK のファイルサイズはかなり大きいので注意して下さい.<br>
-	ダウンロードするzipファイルは約750MB程度もあり、さらにこれを解凍展開するとなんと<b>3GB</b>ほどにもなります！<br>
-	つまりこれらを単純に合計しただけでもディスクの空きが4GB程度必要となります.<br>
-	<br>
-	<div class=MstyComment>
-		尚、Android Studio および android-sdk は<b>必要ありません</b>.<br>
-		インストールさえも不要です.<br>
-		同様にJDK(Java Development Kit)やJREなども<b>必要ありません</b>.<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		動作確認<br>
 	</div>
-	<br>
-	Android NDKをダウンロードしたら、これをディスクへ解凍展開します.<br>
-	無事解凍できたでしょうか？<br>
-	なにせファイルサイズが馬鹿デカイため、下手すると解凍ツールの実行段階でさえエラーを起こし兼ねません.<br>
-	念のためエラー表示等が出ていないかを確認しましょう.<br>
-	<br>
-	さて、いよいよAndroid NDKを利用したコンパイル作業に入ります.<br>
-	ここではWindows上でコンパイルする場合について述べます.<br>
-	LinuxあるいはCygwin上で行う場合については後述の「ndk-buildコマンドを用いてコンパイルする方法」を参照して下さい.<br>
-	ただし、Moai Ver2.0 ではこのndk-buildを用いたコンパイルは推奨しません.<br>
-	<br>
-	まず環境変数<b>ZNK_NDK_DIR</b>にAndroid NDKのトップディレクトリを正しく設定します.<br>
-	次にsrcフォルダの直下にある<b>make_world.bat</b>を実行します.<br>
-	<br>
-	<div class=MstyComment>
-		<img src=/imgs/auto_trigger_run_mingw.png width=100%><br>
+	<div class="message-body">
+		念のため、コンパイルおよびインストールされたmoaiが起動するか確認しておきましょう.<br>
+		srcディレクトリを出てmoai-v2.0-linux64ディレクトリへと移動し、moaiを起動します.<br>
+		以下のようなメッセージが表示されればmoaiは無事起動しています.<br>
+		<br>
+		<div class=box><div class=MstyCode>
+			Moai : config load OK.<br>
+			Moai : target load OK.<br>
+			Moai : analysis load OK.<br>
+			Moai : Filter Loading [filters/….myf]<br>
+			Moai : Plugin Loading [plugins/….so]<br>
+			…<br>
+			Moai : acceptable_host=[LOOPBACK]<br>
+			Moai : blocking_mode=[0]<br>
+			Moai : AutoGet PrivateIP=[192.168.…].<br>
+			Moai : Listen port 8124...<br>
+			<br>
+			Moai : ObserveR : 1-th sock events by select.<br>
+		</div></div>
 	</div>
+</article><br>
+</p>
 	<br>
-	古き良き時代を彷彿とさせるコマンドラインベースでのメニュー選択UIが表示されるので、<br>
-	「3. switch debug-mode」を何回か選んでDEBUG_MODEを「optimize」にし、<br>
-	「4. switch mkfid」を何回か選んでMKF_IDを「android」にし、<br>
-	「5. switch machine」を何回か選んでMACHINEを「armeabi」にし、<br>
-	最後に「1. make install」を選びます.<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+<br>
+
+
+<a name=compile_for_android_term></a>
+<h1 class="title">Android版をコンパイルする(ターミナルエミュレータ上で動作するバイナリ)</h1>
+<p>
+Androidは基本的にLinuxですが、PC Linuxとは大きく異なる部分もあります.<br>
+そして通常、AndroidにおけるアプリはJava VMをベースとして(エントリポイントとして)提供されます.<br>
+Java VMベースなアプリでは、グラフィカルなアイコンがホーム画面に表示され、それをタップすることで起動します.<br>
+<br>
+しかしながら、今回コンパイルする Moai for Android はJava VMベースではなくAndroid Terminal Emulatorの上で動作するプログラムとしてC言語で開発します.<br>
+この場合ホーム画面にMoai用の特別なアイコンが表示されることはありません.<br>
+Moaiを起動するには、まず端末エミュレータを開き、cdコマンドによりmoai実行バイナリが存在するディレクトリ(moai-v2.*-android-armeabi-v7a)へと移動してから<br>
+moai実行バイナリを直接起動する形になります.<br>
+要するにLinux環境のターミナルなどでプログラムを起動するのと同じ要領で行います.<br>
 	<br>
-	<div class=MstyComment>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		必要なコマンド群<br>
+	</div>
+	<div class="message-body">
+		<a class=MstyElemLink href=#introduction>はじめてのコンパイル</a>では、C/C++での開発において最低限必要となる基本コマンドについて述べました.<br>
+		では、Android環境におけるこれらのコマンドはそれぞれ何に対応するかを以下に列挙しましょう.<br>
+		<ul>
+			<li><b>Cコンパイラ</b><br>
+			gcc<br>
+			</li>
+			<li><b>C++コンパイラ</b><br>
+			g++<br>
+			</li>
+			<li><b>リンカ</b><br>
+			ld<br>
+			</li>
+			<li><b>ライブラリアン</b><br>
+			ar および ranlib<br>
+			</li>
+			<li><b>ビルドスクリプト</b><br>
+			make ( GNU Makefile )<br>
+			</li>
+		</ul>
+		即ち、これらのコマンドが実行できるように必要に応じてインストールすればよいということになります.<br>
+		ただし実際に開発を行うマシンはAndroid端末ではなくPCです.<br>
+		これらのコマンド一式は<b>Android NDK</b>と呼ばれるものに含まれており、それを入手して使います.<br>
+	</div>
+</article><br>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Android NDKの入手<br>
+	</div>
+	<div class="message-body">
+		<div class=box>
+			この記事では、執筆時点で配布されているr14を例にとります.<br>
+			あなたが入手するAndroid NDK最新バージョンでは、仕様が変わっている可能性もあることをご了承下さい.<br>
+		</div>
+		<br>
+		Android NDKは <a class=MstyWrapLink href=https://developer.android.com/ndk/downloads/index.html target=_blank>http://developer.android.com/ndk/downloads/index.html</a>よりダウンロードできます.<br>
+		また開発はAndroid上では行えないためPCが必要です.<br>
+		つまり Android NDK をあなたの開発用PCへダウンロードし、このPC上にて開発を行う形になります.<br>
+		<br>
+		Android NDK のファイルサイズはかなり大きいので注意して下さい.<br>
+		ダウンロードするzipファイルは約750MB程度もあり、さらにこれを解凍展開するとなんと<b>3GB</b>ほどにもなります！<br>
+		つまりこれらを単純に合計しただけでもディスクの空きが4GB程度必要となります.<br>
+		<br>
+		<div class=box>
+			このターミナルエミュレーション上で動作するAndroid版Moaiについては、Android Studio および android-sdk は<b>必要ありません</b>.<br>
+			インストールさえも不要です. 同様にJDK(Java Development Kit)やJREなども<b>必要ありません</b>.<br>
+		</div>
+		<br>
+		Android NDKをダウンロードしたら、これをディスクへ解凍展開します. 無事解凍できたでしょうか？<br>
+		なにせファイルサイズが馬鹿デカイため、下手すると解凍ツールの実行段階でさえエラーを起こし兼ねません.<br>
+		念のためエラー表示等が出ていないかを確認しましょう.<br>
+	</div>
+</article><br>
+	<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Moaiのコンパイルおよびインストール<br>
+	</div>
+	<div class="message-body">
+		さて、いよいよAndroid NDKを利用したコンパイル作業に入ります. ここではWindows上でコンパイルする場合について述べます.<br>
+		LinuxあるいはCygwin上で行う場合については後述の「ndk-buildコマンドを用いてコンパイルする方法」を参照して下さい.<br>
+		ただし、Moai Ver2.0 ではこのndk-buildを用いたコンパイルは推奨しません.<br>
+		<br>
+		まず環境変数<b>ZNK_NDK_DIR</b>にAndroid NDKのトップディレクトリを正しく設定します.<br>
+		次にsrcフォルダの直下にある<b>make_world.bat</b>を実行します.<br>
+		<br>
+		<div class=MstyImgBox>
+			<img src=/imgs/auto_trigger_run_mingw.png /><br>
+		</div>
+<br>
+		古き良き時代を彷彿とさせるコマンドラインベースでのメニュー選択UIが表示されますので次の手順を行ってください.<br>
+		<ol>
+			<li>「3. switch debug-mode」を何回か選んでDEBUG_MODEを「optimize」にします.<br>
+			</li>
+			<li>「4. switch mkfid」を何回か選んでMKF_IDを「android」にします.<br>
+			</li>
+			<li>「5. switch machine」を何回か選んでMACHINEを「armeabi-v7a」にします.<br>
+			</li>
+			<li>「1. make install」を選びます.<br>
+			</li>
+		</ol>
 		ここで「選ぶ」というのは、一番先頭にある数字のキーを押せばよいです.<br>
 		またはその項目までカーソルキーで移動してEnterキーを押してもよいです.<br>
 		メニュー項目 3, 4, 5 については「選ぶ」毎にその値が循環的に変化していきます.<br>
-	</div>
-	<br>
-	Android NDKが適切にインストールされているならば、これですべてのコンパイルが自動で行われます.<br>
-	それぞれのプロジェクトのフォルダ内にout_dirというフォルダが自動的に生成され、<br>
-	その中に目的の実行バイナリが生成されるはずです.<br>
-	<br>
-	さらに、srcディレクトリの一つ上の階層にmoai-v2.0-android-armeabiディレクトリが生成され、<br>
-	コンパイルされた実行バイナリや設定ファイルなどの必要なものすべてが、そのディレクトリへとインストールされます.<br>
-	(なんらかの理由でこのインストール処理だけを省略し、つまり純粋にコンパイルだけを行いたい場合は、<br>
-	「1. make install」の替わりに「0. make」を選んでください)<br>
-	<br>
-	以上でAndroid版のMoaiのコンパイルとインストールは一応完了です.<br>
-	<br>
-	ただしインストールが完了したといっても、これはまだPC上にあってAndroid実機にあるわけではありませんから、<br>
-	最後に出来上がった moai-v2.0-android-armeabi を実機に転送しなければなりません.<br>
-	これには色々方法がありますが、とりあえずはmoai-v2.0-android-armeabiを一旦zipファイルに固めて適当なWebサイト上にアップし<br>
-	実機からこれをダウンロードするというクソ回りくどい方法が<s>ここで説明するには</s>一番簡単です.<br>
-	どんな方法でもよいですがとりあえずこれを実機へと転送して下さい.<br>
-	<br>
-	<div class=MstyComment>
-		Ver1.1.8以前にあった android_compile.sh android_install_bin.sh は<br>
-		Ver2.0では廃止/削除されました.<br>
-	</div>
-	<br>
-	<div class=MstyComment>
-		<u><b>ndk-buildコマンドを用いてコンパイルする方法</b></u><br>
 		<br>
+		Android NDKが適切にインストールされているならば、これですべてのコンパイルが自動で行われます.<br>
+		それぞれのプロジェクトのフォルダ内にout_dirというフォルダが自動的に生成され、その中に目的の実行バイナリが生成されるはずです.<br>
+		<br>
+		さらに、srcディレクトリの一つ上の階層にmoai-v2.*-android-armeabi-v7aディレクトリが生成され、<br>
+		コンパイルされた実行バイナリや設定ファイルなどの必要なものすべてが、そのディレクトリへとインストールされます.<br>
+<br>
+		<div class=box>
+			なんらかの理由でこのインストール処理だけを省略し、つまり純粋にコンパイルだけを行いたい場合は、「1. make install」の替わりに「0. make」を選んでください.<br>
+		</div>
+		以上でAndroid版のMoaiのコンパイルとインストールは一応完了です.<br>
+	</div>
+</article><br>
+	<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		インストールディレクトリを実機へと転送<br>
+	</div>
+	<div class="message-body">
+		ここまででインストールは完了しましたが、これはまだPC上にあってAndroid実機にあるわけではありません.<br>
+		最後に出来上がったインストールディレクトリ moai-v2.*-android-armeabi-v7a を実機に転送しなければなりません.<br>
+		これには色々方法がありますが、とりあえずはmoai-v2.*-android-armeabiを一旦zipファイルに固めて適当なWebサイト上にアップし実機からこれをダウンロードするというクソ回りくどい方法が<s>ここで説明するには</s>一番簡単です.<br>
+<br>
+		<div class=box>
+			その他にも adb コマンドを利用するなどの手がありますが、その場合は別途それ用のツールなどを入手しなければなりません.<br>
+		</div>
+		どんな方法でもよいですがとりあえずこれを実機へと転送して下さい.<br>
+	</div>
+</article><br>
+	<br>
+	<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		ndk-buildコマンドを用いてコンパイルする方法<br>
+	</div>
+	<div class="message-body">
 		Moai で提供されている Makefile_android.mak は純粋にWindows上でコンパイルするためのものです.<br>
 		即ち、このMakefile_android.mak は CygwinやLinux上においては使用できません.<br>
 		CygwinやLinux上でコンパイルするには、<b>ndk-build</b> コマンドを使用する必要があります.<br>
@@ -1161,158 +1425,239 @@ Android版をコンパイルする
 		まずは環境変数 ZNK_NDK_DIR に Android NDK のトップディレクトリのパスをセットしましょう.<br>
 		例えば以下のような感じです.<br>
 		<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
-				export NK_NDK_DIR=/cygdrive/c/android-ndk-r10e<br>
-			</div>
-		</div>
+		<div class=box><div class=MstyCode>
+			export NK_NDK_DIR=/cygdrive/c/android-ndk-r10e<br>
+		</div></div>
 		<br>
 		ndk-build コマンドの実体は $ZNK_NDK_DIR 直下、あるいは $ZNK_NDK_DIR/build ディレクトリの下にあります.<br>
 		つまり以下のように環境変数PATHをセットすれば、ndk-buildが実行できるようになるはずです.<br>
 		<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
-				export PATH=$PATH:$ZNK_NDK_DIR:$ZNK_NDK_DIR/build<br>
-			</div>
-		</div>
+		<div class=box><div class=MstyCode>
+			export PATH=$PATH:$ZNK_NDK_DIR:$ZNK_NDK_DIR/build<br>
+		</div></div>
 		<br>
-		各プロジェクトディレクトリに入ると mkf_android というディレクトリがあるので、<br>
-		さらにこの中へ移動してから ndk-build コマンドを実行するとコンパイルが始まります.<br>
+		各プロジェクトディレクトリに入ると mkf_android というディレクトリがあるので、さらにこの中へ移動してから ndk-build コマンドを実行するとコンパイルが始まります.<br>
 		例えばlibZnkなら、以下のようになります.<br>
 		<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
-				cd libZnk/mkf_android<br>
-				ndk-build<br>
-			</div>
-		</div>
+		<div class=box><div class=MstyCode>
+			cd libZnk/mkf_android<br>
+			ndk-build<br>
+		</div></div>
 		<br>
-		mkf_androidの中で ndk-buildを実行すると、同ディレクトリに libs, obj ディレクトリが生成され、<br>
-		コンパイルしたバイナリやライブラリなどがここに出力されます.<br>
+		mkf_androidの中で ndk-buildを実行すると、同ディレクトリに libs, obj ディレクトリが生成され、コンパイルしたバイナリやライブラリなどがここに出力されます.<br>
 		ちなみに同ディレクトリ内のjniディレクトリには、ndk_-buildでコンパイルするためのMakefileが格納されてあります.<br>
 		<br>
 		尚、この方法の場合、申し訳ありませんがインストール等を自動で行う方法を現時点では提供していません.<br>
-		(この方法を現バージョンでは非推奨にしている理由の一つがそれです)<br>
-		libsディレクトリ内に作成されたバイナリを手動で適切なインストール配置へコピーするという<br>
-		とてつもなく面倒な作業をする必要があります.<br>
-		(それでも構わないという方は、公式サイトにてAndroid版のバイナリを提供しているので、<br>
-		それのディレクトリ構成を参考にして下さい)<br>
+		この方法を現バージョンでは非推奨にしている理由の一つがそれです.<br>
+		libsディレクトリ内に作成されたバイナリを手動で適切なインストール配置へコピーするというとてつもなく面倒な作業をする必要があります.<br>
+		それでも構わないという方は、公式サイトにてAndroid版のバイナリを提供しているので、それのディレクトリ構成を参考にして下さい.<br>
 		<br>
-		Moaiでは ndk-buildを使ったコンパイルのテストはあまり行っていないため、<br>
-		NDKのバージョンによっては上記でもうまくいかないかもしれません.<br>
+		Moaiでは ndk-buildを使ったコンパイルのテストはあまり行っていないため、NDKのバージョンによっては上記でもうまくいかないかもしれません.<br>
 	</div>
+</article><br>
 	<br>
-	<div class=MstyComment>
-		<u><b>実行するにあたっての注意</b></u><br>
-		<br>
-		詳細については<a class=MstyElemLink href=/moai2.0/install.html#ForAndroid>インストールガイド</a>を参照して頂いた方がよいですが、<br>
-		ここでも一応簡単に説明しておきます.<br>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Android Terminal Emulator上でMoaiを動作確認する<br>
+	</div>
+	<div class="message-body">
+		詳細については<a class=MstyElemLink href=/moai2.0/install.html#ForAndroid>インストールガイド</a>を参照して頂いた方がよいですが、ここでも一応簡単に説明しておきます.<br>
 		<ol>
 			<li>ホームディレクトリ以外では書き込み権限および実行権限の関係で実行できないことがあります.<br>
-			よってまず「端末エミュレータ」を開き、cd コマンドよりホームディレクトリへ移動します.<br>
-			(単にcdと入力してEnterを押す).<br>
-			<br>
-			そしてmoai-v2.0-android-armeabi.zipをダウンロードなどした場合は、<br>
-			Downloadディレクトリからホームディレクトリへこれをコピーしなければなりません.<br>
-			Downloadディレクトリはデフォルトのブラウザの場合、/storage/sdcard0/Download などに存在し、<br>
-			その配下にダウンロードしたファイルも置かれています.<br>
-			以下のように実行することでこれをホームディレクトリへコピーできます.<br>
-			<br>
-			<div class=MstyComment>
-				<div class=MstyCode>
-					cp /storage/sdcard0/Download/moai-v2.0-android-armeabi.zip ~/<br>
-				</div>
-			</div>
-		</li>
+				よってまず「端末エミュレータ」を開き、cd コマンドよりホームディレクトリへ移動します.<br>
+				(単にcdと入力してEnterを押す).<br>
+				<br>
+				そしてmoai-v2.*-android-armeabi-v7a.zipをダウンロードなどした場合は、それは /sdcard/Download 配下に置かれています.<br>
+				これを Android Terminal Emulator のホームディレクトリへコピーしなければなりません.<br>
+				以下のように実行します.<br>
+				<br>
+				<div class=box><div class=MstyCode>
+					cp /sdcard/Download/moai-v2.*-android-armeabi-v7a.zip ~/<br>
+				</div></div>
+			</li>
 		<br>
-		<li>moai-v2.0-android-armeabi.zip をホームディレクトリへコピーしたら、以下を実行しこれを解凍します.<br>
-			<br>
-			<div class=MstyComment>
-				<div class=MstyCode>
-					unzip moai-v2.0-android-armeabi.zip<br>
-				</div>
-			</div>
-			<br>
-			次に cd moai-v2.0-android-armeabi で実行バイナリのあるディレクトリ内へと移動し、<br>
-			moai_for_android.sh を実行します. <br>
-			<br>
-			<div class=MstyComment>
-				<div class=MstyCode>
+			<li>moai-v2.*-android-armeabi-v7a.zip をホームディレクトリへコピーしたら、以下を実行しこれを解凍します.<br>
+<br>
+				<div class=box><div class=MstyCode>
+					unzip moai-v2.*-android-armeabi-v7a.zip<br>
+				</div></div>
+				次に cd moai-v2.*-android-armeabi-v7a で実行バイナリのあるディレクトリ内へと移動し、moai_for_android.sh を実行します. <br>
+				<br>
+				<div class=box><div class=MstyCode>
 					sh moai_for_android.sh<br>
-				</div>
-			</div>
-		</li>
+				</div></div>
+			</li>
 		</ol>
 		うまくいけばこれでMoaiが起動するはずです.<br>
 		上記「Linuxの場合」で説明したのと同様のメッセージが表示されれば成功です.<br>
 	</div>
+</article><br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
+<br>
+
+
+<a name=compile_for_apk></a>
+<h1 class="title">Android版をコンパイルする(単独でインストールと動作可能なapkファイル) (執筆中)</h1>
+<p>
+	<font color=red>この記事は現在執筆中で未完成です. Ver2.2リリースのタイミングで完成予定ですのでしばらくお待ちください.</font><br>
+<br>
+	一つ前のセクションでは、ターミナルエミュレータ上で動作するandroid版実行バイナリのコンパイル方法について述べました.<br>
+	これは何と言うかAndroidを非常に(その正体であり核である)Linux的に見たやり方であり、それゆえに複雑な手順が必要となったわけです.<br>
+<br>
+	一方、通常Androidのアプリというものは apk ファイルという形をとって配布されインストールされます.<br>
+	apkファイルであれば、これをタップするだけでインストールが行えますし、インストールしたアプリはメニューやアイコンから起動することができます.<br>
+	apkファイルは、多くの場合 Google Play と呼ばれるサイトから提供されるわけですが、別にこれは必須ではありません.<br>
+	Google Play 以外のサイトからでも apk ファイルをダウンロードしてアプリをインストールすることができます.<br>
+<br>
+	<div class=box>
+		Google Play を経由して apk を配布したい場合、Googleが決めた特別な取り決めなどを色々と満たす必要があります.<br>
+		Google Play には商業的な側面もあり、そのような目的のためには考慮しなければならないことも多いのでしょう.<br>
+		しかし我々は今、Androidのアプリでお金もうけしたいわけではありませんのでここでは特に Google Play は考慮しませんし、それについてこれ以上触れることもしません.<br>
+	</div>
+<br>
+	ここでは apk ファイルの作成方法と、このファイルによるandroid実機へのインストール方法について技術的な解説をします.<br>
+	ここではAndroid Studioは使用せず、最小限の構成で開発を進めます.<br>
+	必要なのはjre、gradle、android-sdk、android-ndkとなります.<br>
+<br>
+	以下の手順で述べます.<br>
+	<ol>
+		<li>jreのインストール<br>
+		いわゆるJavaランタイムである.<br>
+	    以下に述べるgradleを動作するのに必要となる.<br>
+		</li>
+<br>
+		<li>gradle-2.14.1のインストール<br>
+	    androidアプリにおける java のコンパイルはgradleと呼ばれるツールによって行われる.<br>
+		</li>
+<br>
+		<li>sdk-toolsによるandroid-sdkのインストール<br>
+		Android SDK はandroid アプリを生成するための主にjavaに関連したツール、API群からなる.<br>
+		</li>
+<br>
+		<li>android-ndkのインストール<br>
+		Android NDK はandroid版実行バイナリを生成するためのcコンパイラやツール、ライブラリ群からなる.<br>
+		</li>
+<br>
+		<li>apk作成のためのgradleおよびjni環境のフォルダ構成.<br>
+		apk作成のためのソースプロジェクトとでも言うべき骨格であり、apk作成のための全作業はこのフォルダ内で行われる.<br>
+		</li>
+<br>
+		<li>build.gradle、AndroidManifest.xml等の記述.<br>
+		gradleはbuild.gradleと呼ばれるファイルの記述にしたがって実行される.<br>
+		ちょうどmakeがMakefileを参照しながら動作するのに似ている.<br>
+		</li>
+<br>
+		<li>javaソースによるActivityクラスの記述.<br>
+		Activityクラスとはアプリのエントリポイントとなるjavaのクラスである.<br>
+		</li>
+<br>
+		<li>cソースによるJNIインターフェースの記述.<br>
+		Activityクラス内から呼び出されるCのコードである.<br>
+		ここで記述したcファイルはndk内のCコンパイラによってコンパイルされ、同じくndk内のリンカによって最終的にシェアードライブラリ(libmain.soファイル)となる.<br>
+		</li>
+<br>
+		<li>ネイティブライブラリのリンクとAndroid.mkでの記述.<br>
+		libZnkなどcで記述されたその他のライブラリをリンクする方法である.<br>
+		</li>
+<br>
+		<li>gradle実行によるjavaソースのコンパイルとapkファイルの生成.<br>
+		7で記述したjavaソースをコンパイルし、8で生成したlibmain.so、9で指定したその他のライブラリ(libZnk.so)、<br>
+		その他リソースファイルやassetsファイルなどを統合し、最終的にapkファイルとしてまとめる.<br>
+		この作業をgradleが行う.<br>
+		</li>
+<br>
+		<li>生成したapkファイルを実機へとインストールする各種方法<br>
+		</li>
+	</ol>
+</p>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
 
 
 <a name=about_libressl></a>
-<u><b>
-付属ライブラリlibresslについて
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">付属ライブラリlibresslについて</h1>
+<p>
 	Moai システムでは HTTPS を実現するために、libressl ライブラリを使用しています.<br>
 	Moaiのソースコード内にはこの libressl のソースコードも付属しています.<br>
 	( 少し古いVCでもコンパイル可能とするため、若干コードを手直ししたものになります ).<br>
 	これに関しては以下の点に注意してください.<br>
 <br>
 	<ul>
-		<li>src フォルダ直下の make_world.bat または make_world.sh を初めて実行した場合、<br>
-		この libressl も自動的にビルドされます.<br>
+		<li>src フォルダ直下の make_world.bat または make_world.sh を初めて実行した場合、この libressl も自動的にビルドされます.<br>
 		</li>
 <br>
-		<li>src フォルダ直下の make_world.bat または make_world.sh により clean を実行した場合、<br>
-		libresslの配下は clean されません.<br>
+		<li>src フォルダ直下の make_world.bat または make_world.sh により clean を実行した場合、libresslの配下は clean されません.<br>
 <br>
-		<div class=MstyComment>
+		<div class=box>
 			<b><u>Note.</u></b><br>
 <br>
 			proj_list_skip_clean.bat(proj_list_skip_clean.sh) というファイルによって、これらが clean されないように設定してあります.<br>
-			なぜこのようにしているのかと言えば、libressl のコンパイルは時間がかかることと、<br>
-			Moai自体のバージョンが上がっても、libressl自体は通常はコンパイルし直す必要性はないものと考えられるからです.<br>
+			なぜこのようにしているのかと言えば、libressl のコンパイルは時間がかかることと、Moai自体のバージョンが上がっても、libressl自体は通常はコンパイルし直す必要性はないものと考えられるからです.<br>
 		</div>
 <br>
 		<li>libressl単体をビルドしたい場合は、libressl フォルダ内に入り、その中にある make_world.bat または make_world.sh を実行します.<br>
-		尚、このフォルダ内で make_world.bat または make_world.sh により clean を実行した場合は、<br>
-		( src フォルダ直下の場合と異なり )今度は libressl 全体が clean されます.<br>
+		尚、このフォルダ内で make_world.bat または make_world.sh により clean を実行した場合は、( src フォルダ直下の場合と異なり )今度は libressl 全体が clean されます.<br>
 		</li>
 	</ul>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=about_macos></a>
-<u><b>
-MacOSについて
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">MacOSについて</h1>
+<p>
 	現状では未サポートです.<br>
 	仮にコンパイルを試みるなら(手元にないので未確認ですが)Darwinを使うことになると思います.<br>
-	これにgcc, makeコマンドなどLinuxと同様のツールが含まれており、<br>
-	多分Makefile_linux.makを少し手直しすれば同様の方法でコンパイルできると考えられます.<br>
-	(ダイナミックリンクライブラリの拡張子はsoではなくdylibやtbdといったものになるようです.<br>
-	その他リンカldのオプションもおそらくMacOS独自のものを指定しなければならないでしょう)<br>
+	これにgcc, makeコマンドなどLinuxと同様のツールが含まれており、多分Makefile_linux.makを少し手直しすれば同様の方法でコンパイルできると考えられます.<br>
+	ダイナミックリンクライブラリの拡張子はsoではなくdylibやtbdといったものになるようです.<br>
+	その他リンカldのオプションもおそらくMacOS独自のものを指定しなければならないでしょう.<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
+
+
+<div class="card">
+	<u><b>This article was written by:</b></u><br>
+	<div class="card-content">
+		<div class="media">
+			<div class="media-left">
+				<figure class="image is-48x48">
+				<img src="/imgs/moai.png" alt="none image">
+				</figure>
+			</div>
+			<div class="media-content">
+				<p class="title is-4">Mr.Moai</p>
+				<p class="subtitle is-6">@znk project</p>
+			</div>
+		</div>
+		<div class="media">
+			<div class="media-left">
+				<figure class="image is-48x48">
+				<img src="/imgs/zenkaku.png" alt="none image">
+				</figure>
+			</div>
+			<div class="media-content">
+				<p class="title is-4">Zenkaku</p>
+				<p class="subtitle is-6">@znk project</p>
+			</div>
+		</div>
+		<div class="content">
+		  <time datetime="2016-1-1">2019/07/29</time>
+		</div>
+	</div>
+</div>
 
 
 <a name=Link></a>
-<u><b>
-リンク
-</b></u><br>
-<br>
+<h1 class="title"></h1>
+<hr>
 <ul>
 	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
 	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
@@ -1320,5 +1665,8 @@ MacOSについて
 </ul><br>
 
 
+</div>
+</div>
+</div>
 </body>
 </html>

@@ -53,45 +53,45 @@ DLIB_FILE0=$O\$(DLIB_NAME0)
 ILIB_FILE0=$O\libssl-45.imp.lib
 SLIB_FILE0=$O\libssl.lib
 OBJS0=\
-	$O\t1_enc.obj \
-	$O\ssl_init.obj \
-	$O\ssl_srvr.obj \
-	$O\d1_pkt.obj \
-	$O\ssl_versions.obj \
-	$O\t1_hash.obj \
-	$O\t1_srvr.obj \
-	$O\ssl_txt.obj \
-	$O\s3_cbc.obj \
-	$O\ssl_both.obj \
-	$O\t1_meth.obj \
-	$O\ssl_cert.obj \
-	$O\d1_both.obj \
-	$O\ssl_err.obj \
-	$O\ssl_rsa.obj \
-	$O\ssl_packet.obj \
-	$O\ssl_algs.obj \
-	$O\bs_ber.obj \
-	$O\d1_srvr.obj \
-	$O\ssl_lib.obj \
-	$O\ssl_clnt.obj \
-	$O\ssl_asn1.obj \
-	$O\bs_cbs.obj \
-	$O\d1_lib.obj \
-	$O\ssl_pkt.obj \
-	$O\d1_meth.obj \
-	$O\ssl_ciph.obj \
-	$O\ssl_stat.obj \
-	$O\d1_enc.obj \
-	$O\pqueue.obj \
-	$O\d1_srtp.obj \
-	$O\t1_clnt.obj \
-	$O\bs_cbb.obj \
 	$O\bio_ssl.obj \
-	$O\s3_lib.obj \
-	$O\ssl_tlsext.obj \
-	$O\ssl_sess.obj \
+	$O\bs_ber.obj \
+	$O\bs_cbb.obj \
+	$O\bs_cbs.obj \
+	$O\d1_both.obj \
 	$O\d1_clnt.obj \
+	$O\d1_enc.obj \
+	$O\d1_lib.obj \
+	$O\d1_meth.obj \
+	$O\d1_pkt.obj \
+	$O\d1_srtp.obj \
+	$O\d1_srvr.obj \
+	$O\pqueue.obj \
+	$O\s3_cbc.obj \
+	$O\s3_lib.obj \
+	$O\ssl_algs.obj \
+	$O\ssl_asn1.obj \
+	$O\ssl_both.obj \
+	$O\ssl_cert.obj \
+	$O\ssl_ciph.obj \
+	$O\ssl_clnt.obj \
+	$O\ssl_err.obj \
+	$O\ssl_init.obj \
+	$O\ssl_lib.obj \
+	$O\ssl_packet.obj \
+	$O\ssl_pkt.obj \
+	$O\ssl_rsa.obj \
+	$O\ssl_sess.obj \
+	$O\ssl_srvr.obj \
+	$O\ssl_stat.obj \
+	$O\ssl_tlsext.obj \
+	$O\ssl_txt.obj \
+	$O\ssl_versions.obj \
+	$O\t1_clnt.obj \
+	$O\t1_enc.obj \
+	$O\t1_hash.obj \
 	$O\t1_lib.obj \
+	$O\t1_meth.obj \
+	$O\t1_srvr.obj \
 	$O\dll_main.obj \
 
 SUB_LIBS=\
@@ -178,41 +178,41 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-t1_enc.obj: ssl_locl.h
-ssl_init.obj: ssl_locl.h
-ssl_srvr.obj: ssl_locl.h bytestring.h ssl_tlsext.h
-d1_pkt.obj: ssl_locl.h bytestring.h
-ssl_versions.obj: ssl_locl.h
-t1_hash.obj: ssl_locl.h
-t1_srvr.obj: ssl_locl.h
-ssl_txt.obj: ssl_locl.h
-s3_cbc.obj: ssl_locl.h
-ssl_both.obj: ssl_locl.h bytestring.h
-t1_meth.obj: ssl_locl.h
-ssl_cert.obj: ssl_locl.h
-d1_both.obj: ssl_locl.h bytestring.h
-ssl_err.obj: ssl_locl.h
-ssl_rsa.obj: ssl_locl.h
-ssl_packet.obj: ssl_locl.h bytestring.h
-ssl_algs.obj: ssl_locl.h
-bs_ber.obj: bytestring.h
-d1_srvr.obj: ssl_locl.h
-ssl_lib.obj: ssl_locl.h bytestring.h
-ssl_clnt.obj: ssl_locl.h bytestring.h ssl_tlsext.h
-ssl_asn1.obj: ssl_locl.h bytestring.h
-bs_cbs.obj: bytestring.h
-d1_lib.obj: ssl_locl.h
-ssl_pkt.obj: ssl_locl.h bytestring.h
-d1_meth.obj: ssl_locl.h
-ssl_ciph.obj: ssl_locl.h
-ssl_stat.obj: ssl_locl.h
-d1_enc.obj: ssl_locl.h
-d1_srtp.obj: ssl_locl.h bytestring.h srtp.h
-t1_clnt.obj: ssl_locl.h
-bs_cbb.obj: bytestring.h
 bio_ssl.obj: ssl_locl.h
-s3_lib.obj: ssl_locl.h bytestring.h
-ssl_tlsext.obj: ssl_locl.h bytestring.h ssl_tlsext.h
-ssl_sess.obj: ssl_locl.h
+bs_ber.obj: bytestring.h
+bs_cbb.obj: bytestring.h
+bs_cbs.obj: bytestring.h
+d1_both.obj: ssl_locl.h bytestring.h
 d1_clnt.obj: ssl_locl.h bytestring.h
+d1_enc.obj: ssl_locl.h
+d1_lib.obj: ssl_locl.h
+d1_meth.obj: ssl_locl.h
+d1_pkt.obj: ssl_locl.h bytestring.h
+d1_srtp.obj: ssl_locl.h bytestring.h srtp.h
+d1_srvr.obj: ssl_locl.h
+s3_cbc.obj: ssl_locl.h
+s3_lib.obj: ssl_locl.h bytestring.h
+ssl_algs.obj: ssl_locl.h
+ssl_asn1.obj: ssl_locl.h bytestring.h
+ssl_both.obj: ssl_locl.h bytestring.h
+ssl_cert.obj: ssl_locl.h
+ssl_ciph.obj: ssl_locl.h
+ssl_clnt.obj: ssl_locl.h bytestring.h ssl_tlsext.h
+ssl_err.obj: ssl_locl.h
+ssl_init.obj: ssl_locl.h
+ssl_lib.obj: ssl_locl.h bytestring.h
+ssl_packet.obj: ssl_locl.h bytestring.h
+ssl_pkt.obj: ssl_locl.h bytestring.h
+ssl_rsa.obj: ssl_locl.h
+ssl_sess.obj: ssl_locl.h
+ssl_srvr.obj: ssl_locl.h bytestring.h ssl_tlsext.h
+ssl_stat.obj: ssl_locl.h
+ssl_tlsext.obj: ssl_locl.h bytestring.h ssl_tlsext.h
+ssl_txt.obj: ssl_locl.h
+ssl_versions.obj: ssl_locl.h
+t1_clnt.obj: ssl_locl.h
+t1_enc.obj: ssl_locl.h
+t1_hash.obj: ssl_locl.h
 t1_lib.obj: ssl_locl.h bytestring.h ssl_tlsext.h
+t1_meth.obj: ssl_locl.h
+t1_srvr.obj: ssl_locl.h

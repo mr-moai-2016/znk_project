@@ -105,6 +105,8 @@ install_data:
 	@if exist "pat_make.sh" @$(CP) /F "pat_make.sh" ..\..\patgen\ $(CP_END)
 	@if exist "pat_diff.bat" @$(CP) /F "pat_diff.bat" ..\..\patgen\ $(CP_END)
 	@if exist "pat_diff.sh" @$(CP) /F "pat_diff.sh" ..\..\patgen\ $(CP_END)
+	@if exist "set_ver.bat" @$(CP) /F "set_ver.bat" ..\..\patgen\ $(CP_END)
+	@if exist "set_ver.sh" @$(CP) /F "set_ver.sh" ..\..\patgen\ $(CP_END)
 	@if exist "apply_this_scripts\android\*" @$(CP) /F "apply_this_scripts\android\*" ..\..\patgen\apply_this_scripts\android\ $(CP_END)
 	@if exist "apply_this_scripts\cygwin\*" @$(CP) /F "apply_this_scripts\cygwin\*" ..\..\patgen\apply_this_scripts\cygwin\ $(CP_END)
 	@if exist "apply_this_scripts\linux\*" @$(CP) /F "apply_this_scripts\linux\*" ..\..\patgen\apply_this_scripts\linux\ $(CP_END)

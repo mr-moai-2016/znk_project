@@ -13,6 +13,9 @@ Znk_EXTERN_C_BEGIN
 bool
 MkfSSet_add( ZnkStrAry sset, const char* str );
 
+bool
+MkfSSet_erase( ZnkStrAry sset, const char* str );
+
 Znk_EXTERN_C_END
 
 #endif /* INCLUDE_GUARD */

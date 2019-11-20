@@ -1,18 +1,22 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html><html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta http-equiv="Content-Script-Type" content="text/javascript">
 	<meta http-equiv="Content-Style-Type" content="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<link href="/bulma.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+<div class="section">
+<div class="container">
+<div class="content">
 <a name=TopBar></a>
-<p><b><img src="/imgs/here_landmark.png"> Moai+Easter エキスパートマニュアル</b></p>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter 上級マニュアル</b></p>
 
 <a class=MstyElemLink href="/">トップページ</a> &nbsp;
-<a class=MstyElemLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">初級マニュアル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/index_expert.html">上級マニュアル</a> &nbsp;
 <a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
 <a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
@@ -28,30 +32,16 @@
 <a class=MstyNowSelectedLink href="/moai2.0/hacking.html">プラグイン開発のためのヒント</a> &nbsp;
 <br> <br>
 
-<div class=MstyComment>
-<u><b>記事担当者</b></u> : 全角 ＆ Mr.Moai<br>
-<br>
-<u><b>最終更新日</b></u> : 2018/07/31<br>
-<br>
-</div>
-<br>
-
-
 <a name=AtFirst></a>
-<u><b>
-はじめに
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">はじめに</h1>
+<p>
 	この記事ではMoaiのplugin開発について、そのヒントを説明します.<br><br>
-</div><br>
+</p>
 <br>
 
 
 <a name=Index></a>
-<u><b>
-目次
-</b></u><br>
+<h1 class="title">目次</h1>
 <br>
 <ul>
 	<li><b><a class=MstyElemLink href=#lang>開発言語について</a></b></li>
@@ -65,256 +55,292 @@
 
 
 <a name=lang></a>
-<u><b>
-開発言語について
-</b></u><br>
+<h1 class="title">開発言語について</h1>
+<p>
+Moaiでは開発言語としてCを使います.<br>
+そして基本的に実行効率より確実性を最優先します.<br>
+C++を使っていない理由も簡単に述べておきます.<br>
+<ul>
+	<li><b>多くの場合Cの方が高速である.</b><br>
+	</li>
 <br>
-<div class=MstyIndent>
-	Moaiでは開発言語としてCを使ってある.<br>
-	そして基本的に実行効率より確実性を最優先にしてある.<br>
-	<br>
-	C++を使っていない理由も簡単に述べておこう.<br>
-	<ul>
-		<li>多くの場合Cの方が高速である.</li>
+	<li><b>C++ はデバッガでも追跡困難なバグを誘発しやすい.</b><br>
+	一般に C よりも C++ の方が記述は簡潔になるケースが多いです.<br>
+	つまり C だと多くの複雑な処理を行う形になるものを、C++ならそれを見かけ上隠蔽して単純に書けます.<br>
+	一見するとこれはメリットしかないように思えるかもしれませんが、デバッグの際にはむしろ逆です.<br>
 <br>
-		<li>C++ はデバッガでも追跡困難なバグを誘発しやすい.<br>
-		<div class=MstyComment>
-			一般に C よりも C++ の方が記述は簡潔になるケースが多い.<br>
-			つまり C だと多くの複雑な処理を行う形になるものを、C++ならそれを見かけ上隠蔽して単純に書ける.<br>
-			一見するとこれはメリットしかないように思えるかもしれないが、デバッグの際にはむしろ逆である.<br>
+	現在の OS およびデバッガは( 一部 C++ を解釈できる部分もあるが )基本的には C の文を基本単位とします.<br>
+	従ってもし高度に抽象化された C++ 記述の部分にバグを入れると、非シーケンシャルかつ非直感的な処理に阻まれ、デバッガによる追跡を困難にします.<br>
+	例えばコンストラクタやデストラクタの発動のタイミングなどでこのようなことが起きます.<br>
 <br>
-			現在の OS およびデバッガは( 一部 C++ を解釈できる部分もあるが )基本的には C の文を基本単位とする.<br>
-			従ってもし、例えば高度に抽象化された C++ 記述の部分にバグを入れると、<br>
-			非シーケンシャルかつ非直感的な処理に阻まれ、デバッガによる値の追跡等を困難にする.<br>
-			例えばコンストラクタやデストラクタの発動のタイミングなどでこのようなことが起きる.<br>
+	C でも記述を簡潔化したければ関数やマクロを<b>適切に</b>使い、さらに大規模になればライブラリ化すればよいわけで本プロジェクトでも基本的にはその戦略をとります.<br>
+	</li>
 <br>
-			C でも記述を簡潔化したければ関数やマクロを<b>適切に</b>使い、さらに大規模になればライブラリ化すればよいわけで<br>
-			本プロジェクトでも基本的にはその戦略をとっている.<br>
-		</div>
+	<li><b>C++ はコンパイラ依存の差異や癖などに起因する問題を誘発しやすい.</b><br>
+	</li>
+</ul>
+というわけで我々はどうでもいい開発にはC++を使うこともありますがそうではない場合はC++は基本的に使いません.<br>
+しかし、基本ライブラリであるlibZnkはC/C++いずれからでも使用可能です.<br>
 <br>
-		</li>
-		<li>C++ はコンパイラ依存の差異や癖などに起因する問題を誘発しやすい.</li>
-	</ul>
-	というわけで我々はどうでもいい開発にはC++を使うこともあるがそうではない場合はC++は基本的に使わない.<br>
-	しかし、基本ライブラリであるlibZnkはC/C++いずれからでも使用可能である.<br>
-	<br>
-	その他メジャーなスクリプト言語(rubyやpython、goなど)は大抵の場合良い選択だが、<br>
-	インタプリタや付属ライブラリのバージョンアップなどで、今まで問題なく動作していたものが<br>
-	突然エラーになるなどよくある話ではある. <br>
-	また万一その言語に未知のバグがあったりドキュメントされていないある種の癖に由来した挙動が発生した場合、<br>
-	スクリプト環境に付属した膨大なコードから原因を分析するなどやってられないので今回は不採用とした.<br>
+その他メジャーなスクリプト言語(rubyやpython、goなど)は大抵の場合良い選択です.<br>
+しかしこのような言語は<b>長い目で見た場合</b>雲行きが怪しくなってきます.<br>
+インタプリタや付属ライブラリのバージョンアップなどで、今まで問題なく動作していたものが突然エラーになるのはよくある話です. <br>
+また万一その言語に未知のバグがあったり、アンドキュメントなある種の癖に由来した挙動が発生した場合、スクリプト環境に付属した膨大なコードから原因を分析する必要が生じます.<br>
+<b>こんなのやってらんない</b>ので今回は不採用とします.<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=message></a>
-<u><b>
-改造に挑戦される方へ
-</b></u><br>
-<br>
-<div class=MstyIndent>
-	あなたが開発したプラグインは公開してもらっても勿論構わない.<br>
-	我々がPolipoを参考に新しくMoaiを開発したように、<br>
-	今度はあなたがMoaiのpluginを作られてみるのもまた一興ではないだろうか？<br>
-	技術のある方は是非挑戦してもらいたい.<br>
-	Moaiのライセンスは<a class=MstyElemLink href=http://www.kmonos.net/nysl target=_blank>NYSL</a>であり、某ライセンスのようなソースコード開示の義務はない.<br>
+<h1 class="title">改造に挑戦される方へ</h1>
+<p>
+あなたが開発したプラグインは公開してもらっても勿論構いません.<br>
+我々がPolipoを参考に新しくMoaiを開発したように、今度はあなたがMoaiのpluginを作られてみるのもまた一興ではないでしょうか？<br>
+Moaiのライセンスは<a class=MstyElemLink href=http://www.kmonos.net/nysl target=_blank>NYSL</a>であり、某ライセンスのようなソースコード開示の義務はありません.<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=dependency></a>
-<u><b>
-ライブラリの依存関係について
-</b></u><br>
+<h1 class="title">ライブラリの依存関係について</h1>
+<p>
+まずMoaiシステム全体において、各ツールおよびライブラリの依存関係を以下に簡単に示しておきます.<br>
+<ul>
+	<li><b>libZnk</b><br>
+	依存ライブラリはなし(zlibを使用しているがソース内に同梱されてある).<br>
+	</li>
+	<br>
+	<li><b>libRano</b><br>
+	libZnk<br>
+	libresslを動的モジュールとしてロード(万一libresslが存在しなければそれをスルーする)<br>
+	</li>
+	<br>
+	<li><b>moai</b><br>
+	libZnk<br>
+	libRano<br>
+	</li>
+	<br>
+	<li><b>easter</b><br>
+	libZnk<br>
+	libRano<br>
+	</li>
+	<br>
+	<li><b>custom_boy</b><br>
+	libZnk<br>
+	libRano<br>
+	</li>
+	<br>
+	<li><b>proxy_finder</b><br>
+	libZnk<br>
+	libRano<br>
+	</li>
 <br>
-<div class=MstyIndent>
-	まずMoaiシステム全体において、各ツールおよびライブラリの依存関係を以下に簡単に示しておく.<br>
-	<ul>
-		<li><b>libZnk</b><br>
-		依存ライブラリはなし(zlibを使用しているがソース内に同梱されてある).<br>
-		</li>
-		<br>
-		<li><b>libRano</b><br>
-		libZnk<br>
-		libresslを動的モジュールとしてロード(万一libresslが存在しなければそれをスルーする)<br>
-		</li>
-		<br>
-		<li><b>moai</b><br>
-		libZnk<br>
-		libRano<br>
-		</li>
-		<br>
-		<li><b>easter</b><br>
-		libZnk<br>
-		libRano<br>
-		</li>
-		<br>
-		<li><b>custom_boy</b><br>
-		libZnk<br>
-		libRano<br>
-		</li>
-		<br>
-		<li><b>proxy_finder</b><br>
-		libZnk<br>
-		libRano<br>
-		</li>
-<br>
-		<li><b>birdman</b><br>
-		libZnk<br>
-		libRano<br>
-		</li>
-		<br>
-		<li><b>plugin_futaba</b><br>
-		libZnk<br>
-		</li>
-		<br>
-		<li><b>plugin_5ch</b><br>
-		libZnk<br>
-		</li>
-	</ul>
+	<li><b>birdman</b><br>
+	libZnk<br>
+	libRano<br>
+	</li>
+	<br>
+	<li><b>plugin_futaba</b><br>
+	libZnk<br>
+	</li>
+	<br>
+	<li><b>plugin_5ch</b><br>
+	libZnk<br>
+	</li>
+</ul>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=moai_src></a>
-<u><b>
-moai本体のソースコードの構成について
-</b></u><br>
+<h1 class="title">moai本体のソースコードの構成について</h1>
+<p>
+このセクションではMoaiエンジンのソースを分析したい方のために、そのソースを構成するファイルの概要を示します.<br>
 <br>
-<div class=MstyIndent>
-	このセクションではMoaiエンジンのソースを分析したい方のために、そのソースを構成するファイルの概要を示す.<br>
-	<ul>
-		<li><b>Moai_connection</b><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Moai_connection<br>
+	</div>
+	<div class="message-body">
 		MoaiConnection型とその寿命を管理する.<br>
 		MoaiConnectionとは、ProxyにおけるI側とO側のソケットをペアに持ち、その他それに関係する情報を保持する構造体である.<br>
 		ここで I側とはHTTPリクエストの発行元であり、O側とはそのリクエストをそのまま(あるいは加工して)送信する先である.<br>
 		またO側からそのリクエストに対する応答(レスポンス)が返され、I側へそれをそのまま(あるいは加工して)送信する形になる.<br>
 		TCPコネクション処理に関する管理やコールバックなどもここで保持する.<br>
-		</li>
-		<br>
-		<li><b>Moai_info</b><br>
+	</div>
+</article><br>
+	<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Moai_info<br>
+	</div>
+	<div class="message-body">
 		MoaiInfo型とその寿命を管理する.<br>
 		MoaiInfoとはHTTPに関する必要な情報を保持する型である.<br>
-		また、MoaiInfoIDという64bit整数により、このMoaiInfo型本体へアクセスすることができるような機構を備える.<br>
-		(一種の連想配列である)<br>
-		</li>
-		<br>
-		<li><b>Moai_io_base</b><br>
-		ZnkSocketのクローズやそれらに関する報告用メッセージの作成補助、<br>
-		textデータのsend、パターンやサイズを加味したrecvを行う.<br>
-		</li>
-		<br>
-		<li><b>Moai_post</b><br>
-		MoaiにおけるPOST処理一般に関する処理.<br>
+		また、MoaiInfoIDという64bit整数により、このMoaiInfo型本体へアクセスすることができるような機構を備える(一種の連想配列である).<br>
+	</div>
+</article><br>
+	<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Moai_io_base<br>
+	</div>
+	<div class="message-body">
+		ZnkSocketのクローズやそれらに関する報告用メッセージの作成補助、textデータのsend、パターンやサイズを加味したrecvを行う.<br>
+	</div>
+</article><br>
+	<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Moai_post<br>
+	</div>
+	<div class="message-body">
+		MoaiにおけるPOST処理一般に関する処理. <br>
 		POST変数やCookie変数のフィルタリングやpost_confirm用メッセージの構築などを行う.<br>
-		</li>
-		<br>
-		<li><b>Moai_context</b><br>
+	</div>
+</article><br>
+	<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Moai_context<br>
+	</div>
+	<div class="message-body">
 		Moai_server内におけるscanHttpFirstから始まる一連の処理に使われる変数群を格納したもの.<br>
-		</li>
+	</div>
+</article><br>
 <br>
-		<li><b>Moai_http</b><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Moai_http<br>
+	</div>
+	<div class="message-body">
 		HTTPに関する下請け処理などを纏めてある.<br>
-		</li>
-		<br>
-		<li><b>Moai_module</b><br>
-		filterファイル(myf)やplugin(dll/so)などの管理やロード、関数の実行などを行う.<br>
-		</li>
-		<br>
-		<li><b>Moai_server</b><br>
+	</div>
+</article><br>
+	<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Moai_server<br>
+	</div>
+	<div class="message-body">
 		サーバ処理のコア部分であり、selectメインループが存在する.<br>
-		main関数から呼ばれたMoaiServer_mainは、config.myfやmoduleのロードなどの初期化処理を終えた後、<br>
-		ポート8124をリッスンし、selectメインループに入る.<br>
+		main関数から呼ばれたMoaiServer_mainは、config.myfやmoduleのロードなどの初期化処理を終えた後、ポート8124をリッスンし、selectメインループに入る.<br>
+		また同時にXhrDMZとしてポート8125をリッスンする.<br>
 		<br>
-		このループ内では MoaiFdSet_select において、データの入力発生(read)や接続の成功(write)、<br>
-		タイムアウト(timeout)といったイベントの発生を待ち、これらのうちのいずれかが発生した場合に制御を返す.<br>
-		特にデータ入力発生(read)が発生した場合においては、MoaiFdSet_process関数を介して<br>
-		recv_and_sendがコールバックとして呼ばれ、入力されたデータの状態をまずscanHttpFirstで解析する.<br>
+		このループ内では MoaiFdSet_select において、データの入力発生(read)や接続の成功(write)、タイムアウト(timeout)といったイベントの発生を待ち、これらのうちのいずれかが発生した場合に制御を返す.<br>
+		特にデータ入力発生(read)が発生した場合においては、MoaiFdSet_process関数を介してrecv_and_sendがコールバックとして呼ばれ、入力されたデータの状態をまずscanHttpFirstで解析する.<br>
 		<br>
-		この解析の結果、それがHTTPリクエストの開始であるのか、あるいはその応答の開始であるのか、<br>
-		あるいはそれらの途中の部分であるのかが明らかになる.<br>
-		またこの解析では中継先の取得も行われ、その結果によってWebサーバとして動作するのか<br>
-		ローカルプロキシとして動作するのかの判断も行われる.<br>
-		</li>
+		この解析の結果、それがHTTPリクエストの開始であるのか、あるいはその応答の開始であるのか、あるいはそれらの途中の部分であるのかが明らかになる.<br>
+		またこの解析では中継先の取得も行われ、その結果によってWebサーバとして動作するのかローカルプロキシとして動作するのかの判断も行われる.<br>
+	</div>
+</article><br>
 <br>
-		<li><b>Moai_server_info</b><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Moai_server_info<br>
+	</div>
+	<div class="message-body">
 		サーバとしての基本情報を保持する.<br>
-		</li>
+	</div>
+</article><br>
 <br>
-		<li><b>Moai_web_server</b><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Moai_web_server<br>
+	</div>
+	<div class="message-body">
 		Webサーバ処理のコア部分である.<br>
 		HTMLなどのファイルの中身をクライアントに送信したり、Moai CGIのエントリ処理などを行う.<br>
 		XhrDMZオリジンへの振り分け等も行う.<br>
-		</li>
+	</div>
+</article><br>
 <br>
-		<li><b>Moai_cgi Moai_cgi_manager</b><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Moai_cgi Moai_cgi_manager<br>
+	</div>
+	<div class="message-body">
 		Moai CGIコアエンジンである.<br>
 		CGI用の子プロセスを立ち上げ、標準入力と標準出力に関するパイプを作成する.<br>
-		このパイプにおいてクライアントからのSocket受信を子プロセスの標準入力へ繋ぎ替え、<br>
-		一方、子プロセスの標準出力をクライアントへのSocket送信へと繋ぎ替えることにより、<br>
-		CGIの動作を実現する.<br>
-		</li>
-		<br>
-		<li><b>Moai_fdset</b><br>
+		このパイプにおいてクライアントからのSocket受信を子プロセスの標準入力へ繋ぎ替える.<br>
+		また一方、子プロセスの標準出力をクライアントへのSocket送信へと繋ぎ替える.<br>
+		この二つを同時に制御することにより、CGIの動作を実現する.<br>
+	</div>
+</article><br>
+	<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Moai_fdset<br>
+	</div>
+	<div class="message-body">
 		selectイベントに関するsocketの登録、観察(Observe)用.<br>
-		</li>
-		<br>
-		<li><b>main</b><br>
+	</div>
+</article><br>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Rano_module<br>
+	</div>
+	<div class="message-body">
+		これはlibRanoに存在する.<br>
+		filterファイル(myf)やplugin(dll/so)などの管理やロード、関数の実行などを行う.<br>
+	</div>
+</article><br>
+	<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		main<br>
+	</div>
+	<div class="message-body">
 		mainが存在するエントリー部である.<br>
-		</li>
-	</ul>
+	</div>
+</article><br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=libZnk></a>
-<u><b>
-libZnkについて
-</b></u><br>
-<br>
-<div class=MstyIndent>
-	基本ライブラリ libZnk はこのプロジェクトに存在する全てのツールの開発において使われている.<br>
-	よってこれの解説を抜きにするわけにはいかないのであるが、このライブラリの仕様を詳しく解説していたら<br>
-	それこそ紙面と時間がいくらあっても足らないので、とりあえず<a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project/blob/master/src/libZnk/README.md target=_blank>こちら</a>に
-	<b>猛烈に手抜きな</b>概要を書いておいた.<br>
+<h1 class="title">libZnkについて</h1>
+<p>
+	基本ライブラリ libZnk はこのプロジェクトに存在する全てのツールの開発において使われています.<br>
+	よってこれの解説を抜きにするわけにはいかないのですが、このライブラリの仕様を詳しく解説していたらそれこそ紙面と時間がいくらあっても足らないので、
+	とりあえず<a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project/blob/master/src/libZnk/README.md target=_blank>こちら</a>に
+	<b>猛烈に手抜きな</b>概要を書いておきます.<br>
 	<br>
-	あとはlibZnkのソースコードやコメントなどを適宜参照して戴きたい.<br>
-	時間があればそのうち詳細なドキュメントも用意したいところであるが、いつになるかは未定である.<br>
+	あとはlibZnkのソースコードやコメントなどを適宜参照して下さい.<br>
+	時間があればそのうち詳細なドキュメントも用意したいところですが、いつになるかは未定です.<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=plugin></a>
-<u><b>
-プラグインインターフェース
-</b></u><br>
-<br>
-<div class=MstyIndent>
-	Moaiプラグインでは以下のダイナミックロード可能なグローバル関数をC言語により実装する.<br>
-	このバージョンにおいてサポートされる関数は以下である.<br>
+<h1 class="title">プラグインインターフェース</h1>
+<p>
+Moaiプラグインでは以下のダイナミックロード可能なグローバル関数をC言語により実装します.<br>
+このバージョンにおいてサポートされる関数は以下です.<br>
 	<br>
-	<div class=MstyCode>
-	<b>bool initiate( ZnkMyf ftr_send, const char* parent_proxy, ZnkStr result_msg );</b><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		<span class=MstyCode>bool initiate( ZnkMyf ftr_send, const char* parent_proxy, ZnkStr result_msg );</span><br>
 	</div>
-<br>
-	<div class=MstyIndent>
-		target固有のsendフィルタの初期化処理を行う.<br>
-		Web Configurationの「Virtual USERS Initiation」ボタンを押すとこの関数が呼び出される.<br>
+	<div class="message-body">
+ 		Moai Serverが起動した際の初期化処理の一環としてこの関数が呼び出される.<br>
+		フィルター処理に特別な初期化が必要な場合などに利用できる.<br>
 		<br>
 		<div class=MstyCode>
-		@param ftr_send:<br>
+			@param ftr_send:<br>
 		</div>
-		<div class=MstyComment>
+		<div class=box>
 			初期化対象となるフィルタへの参照である.<br>
 			あなたのpluginはこの関数内でこの値を参照および変更してかまわない.<br>
 			これにより、ヘッダ、ポスト変数、Cookie変数の特別な初期化(仮想化やランダマイズ化)が可能となるだろう.<br>
@@ -323,7 +349,7 @@ libZnkについて
 		<div class=MstyCode>
 			@param parent_proxy:<br>
 		</div>
-		<div class=MstyComment>
+		<div class=box>
 			Moaiが現在使用中の外部プロキシがhostname:portの形式で設定されている.<br>
 			(外部プロキシを使用していない場合はこの値が空値であるかまたはNONEであるかまたは:0が指定されている)<br>
 			あなたのpluginはこの関数内でこの値の参照は可能だが変更することはできない.<br>
@@ -332,26 +358,26 @@ libZnkについて
 		<div class=MstyCode>
 			@param result_msg:<br>
 		</div>
-		<div class=MstyComment>
+		<div class=box>
 			ここにはこの関数の処理をおこなった結果のメッセージを格納しなければならない.<br>
-			これは処理が成功した場合はそれをリポートメッセージであり、<br>
-			エラーが発生した場合はそれを示すエラーメッセージとなる.<br>
+			これは処理が成功した場合はそれをリポートメッセージであり、エラーが発生した場合はそれを示すエラーメッセージとなる.<br>
 			このメッセージはMoaiエンジンがエラー報告用として使用する場合がある.<br>
 		</div>
 	</div>
+</article><br>
 <br>
-	<div class=MstyCode>
-	<b>bool on_post( ZnkMyf ftr_send, ZnkVarpAry hdr_vars, ZnkVarpAry post_vars );</b><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		<span class=MstyCode>bool on_post( ZnkMyf ftr_send, ZnkVarAry hdr_vars, ZnkVarAry post_vars );</span><br>
 	</div>
-<br>
-	<div class=MstyIndent>
+	<div class="message-body">
 		target固有のPOST直前時の処理を行う.<br>
 		POST直前に毎回呼び出される.<br>
 		<br>
 		<div class=MstyCode>
 		@param ftr_send:<br>
 		</div>
-		<div class=MstyComment>
+		<div class=box>
 			処理対象となるフィルタへの参照である.<br>
 			あなたのpluginはこの関数内でこの値を参照および変更してかまわない.<br>
 			これにより、ヘッダ、ポスト変数、Cookie変数のさらなる柔軟なフィルタリングが可能となるだろう.<br>
@@ -360,7 +386,7 @@ libZnkについて
 		<div class=MstyCode>
 		@param hdr_vars:<br>
 		</div>
-		<div class=MstyComment>
+		<div class=box>
 			処理対象となるリクエスト HTTP Headerの参照である.<br>
 			あなたのpluginはこの関数内でこの値を参照および変更してかまわない.<br>
 		</div>
@@ -368,81 +394,94 @@ libZnkについて
 		<div class=MstyCode>
 			@param post_vars:<br>
 		</div>
-		<div class=MstyComment>
+		<div class=box>
 			処理対象となるPOST変数の参照である.<br>
 			あなたのpluginはこの関数内でこの値を参照および変更してかまわない.<br>
 		</div>
 	</div>
+</article><br>
 <br>
-	<div class=MstyCode>
-	<b>bool on_response( ZnkMyf ftr_send, ZnkVarpAry hdr_vars, ZnkStr text, const char* req_urp );</b><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		<span class=MstyCode>bool on_response( ZnkMyf ftr_send, ZnkVarAry hdr_vars, ZnkStr text, const char* req_urp );</span><br>
 	</div>
-<br>
-	<div class=MstyIndent>
+	<div class="message-body">
 		target固有のレスポンスを受け取った場合における処理を行う.<br>
 		レスポンスを受け取った場合に毎回呼び出される.<br>
 		text(これはHTML,CSS,Javascriptなどであったりする)を加工することが主な目的となるだろう.<br>
 		<br>
 		<div class=MstyCode>
-		@param ftr_send:<br>
+			@param ftr_send:<br>
 		</div>
-		<div class=MstyComment>
+		<div class=box>
 			処理対象となるフィルタへの参照である.<br>
 			あなたのpluginはこの関数内でこの値を参照および変更してかまわない.<br>
 		</div>
 		<br>
 		<div class=MstyCode>
-		@param hdr_vars:<br>
+			@param hdr_vars:<br>
 		</div>
-		<div class=MstyComment>
+		<div class=box>
 			処理対象となるレスポンスHTTP ヘッダへの参照である.<br>
 			あなたのpluginはこの関数内でこの値を参照および変更してかまわない.<br>
 		</div>
 		<div class=MstyCode>
-		@param text:<br>
+			@param text:<br>
 		</div>
-		<div class=MstyComment>
+		<div class=box>
 			処理対象となるレスポンステキストデータへの参照である.<br>
 			あなたのpluginはこの関数内でこの値を参照および変更してかまわない.<br>
 		</div>
 		<div class=MstyCode>
-		@param req_urp:<br>
+			@param req_urp:<br>
 		</div>
-		<div class=MstyComment>
+		<div class=box>
 			処理対象となるURIのpath部分(URIにおけるオーソリティより後ろの部分)が渡される.<br>
 			あなたのpluginはこの関数内でこの値の参照は可能だが変更することはできない.<br>
 		</div>
 	</div>
+</article><br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=Znk_in_plugin></a>
-<u><b>
-プラグインインターフェースで登場するlibZnk
-</b></u><br>
+<h1 class="title">プラグインインターフェースで登場するlibZnk</h1>
+<p>
+plugin開発において出現するlibZnk特有の型に関して、以下に極一部を紹介します.<br>
+(libZnk Ver2.2に準拠するものとします).<br>
 <br>
-<div class=MstyIndent>
-	plugin開発において出現するlibZnk特有の型に関して、以下に極一部を紹介しておこう.<br>
-	<ul>
-		<li><b>ZnkMyf</b><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		ZnkMyf<br>
+	</div>
+	<div class="message-body">
 		libZnkが提供する汎用の設定用ファイルフォーマットmyfのデータを格納するための構造体である.<br>
 		全フィールドは隠蔽されており、それらに対する操作はすべて関数を通じて行う.<br>
 		インターフェースはZnk_myf.h によって提供され、Znk_myf.cがその実装部である.<br>
-		</li>
+	</div>
+</article><br>
 		<br>
-		<li><b>ZnkStr</b><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		ZnkStr<br>
+	</div>
+	<div class="message-body">
 		libZnkが提供する動的拡張可能な汎用文字列型を実現するための構造体である.<br>
 		全フィールドは隠蔽されており、それらに対する操作はすべて関数を通じて行う.<br>
 		インターフェースはZnk_str.h によって提供され、Znk_str.cがその実装部である.<br>
 		(実装にあたってはZnkBfr(Znk_bfr.h)というさらに基本的な汎用バイト列型を利用している)<br>
-		</li>
+	</div>
+</article><br>
 		<br>
-		<li><b>ZnkPrim</b><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		ZnkPrim<br>
+	</div>
+	<div class="message-body">
 		以下を格納可能なコンテナというか汎用型である.<br>
-<br>
 		<ul>
 			<li>整数</li>
 			<li>実数</li>
@@ -453,37 +492,32 @@ libZnkについて
 			<li>ZnkStrの配列</li>
 			<li>ZnkPrimそのものの配列</li>
 		</ul>
-		<br>
-		フィールドは公開されているが、異コンパイラ間でのポータビリティに配慮すべく<br>
-		アラインメントに関して可能な限りの配慮がなされている.<br>
-		<br>
+		フィールドは公開されているが、異コンパイラ間でのポータビリティに配慮すべくアラインメントに関して可能な限りの配慮がなされている.<br>
 		以下のような形で使用する.<br>
-<br>
-		<div class=MstyComment>
-			<div class=MstyCode>
-				ZnkPrim prim;<br>
-				ZnkPrimType type;<br>
-				ZnkPrim_compose( &amp;prim, ZnkPrim_e_Real ); /* 初期化 */<br>
-				<br>
-				type = ZnkPrim_type( &amp;prim ); /* 内部にどのタイプの値が入っているかを取得 */<br>
-				if( type == ZnkPrim_e_Real ){<br>
-				&nbsp;&nbsp;prim.r64_ = 0.123; /* 内部が実数型なら実数をセットするなど */<br>
-				}<br>
-				<br>
-				ZnkPrim_dispose( &amp;prim ); /* 破棄 */<br>
-			</div>
-		</div>
-		<br>
+		<div class=box><div class=MstyCode>
+			ZnkPrim_instance( prim );<br>
+			ZnkPrimType type;<br>
+			ZnkPrim_compose( &amp;prim, ZnkPrim_e_Real ); /* 初期化 */<br>
+			<br>
+			type = ZnkPrim_type( &amp;prim ); /* 内部にどのタイプの値が入っているかを取得 */<br>
+			if( type == ZnkPrim_e_Real ){<br>
+			&nbsp;&nbsp;prim.r64_ = 0.123; /* 内部が実数型なら実数をセットするなど */<br>
+			}<br>
+			<br>
+			ZnkPrim_dispose( &amp;prim ); /* 破棄 */<br>
+		</div></div>
 		インターフェースはZnk_prim.h によって提供される.<br>
-		</li>
+	</div>
+</article><br>
 		<br>
-		<li><b>ZnkVarp</b><br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		ZnkVar<br>
+	</div>
+	<div class="message-body">
 		ZnkPrimに加え、nameとfilenameをそのフィールドに持つ.<br>
-		いわゆる「変数」のような構造を実現した型である.<br>
-		すなわちnameが変数名であり、ZnkPrimがその値となる.<br>
-		主な関数を一部紹介しよう.<br>
-		これらのインターフェースはZnk_var.h によって提供され、Znk_var.cがその実装部である.<br>
-<br>
+		いわゆる「変数」のような構造を実現した型である. すなわちnameが変数名であり、ZnkPrimがその値となる.<br>
+		主な関数を一部紹介しよう. これらのインターフェースはZnk_var.h によって提供され、Znk_var.cがその実装部である.<br>
 		<ul>
 			<li><b>ZnkVar_compose</b><br>
 			初期化を行う.<br>
@@ -493,39 +527,73 @@ libZnkについて
 			破棄を行う.<br>
 			</li>
 			<br>
-			<li><b>const char* ZnkVar_name_cstr( const ZnkVar* var )</b><br>
+			<li><b>const char* ZnkVar_name_cstr( const ZnkVar var )</b><br>
 			変数varの名前をC文字列として取得する.<br>
 			</li>
 			<br>
-			<li><b>ZnkVar_set_val_Str( ZnkVar* var, const char* data, size_t data_size )</b><br>
+			<li><b>ZnkVar_set_val_Str( ZnkVar var, const char* data, size_t data_size )</b><br>
 			varを文字列型変数として文字列dataで値をセットする.<br>
 			</li>
 			<br>
-			<li><b>const char* ZnkVar_cstr( ZnkVar* var )</b><br>
+			<li><b>const char* ZnkVar_cstr( ZnkVar var )</b><br>
 			var が文字列型変数の場合に限り使用できる簡易関数で、その値をC文字列として取得できる.<br>
 			</li>
 		</ul>
-		</li>
+	</div>
+</article><br>
 		<br>
-		<li><b>ZnkVarpAry</b><br>
-		ZnkVarpの動的拡張可能な配列である.<br>
-		HTTPヘッダ全体、POST変数群、Cooking変数群などは要するにすべて(値が文字列型である)<br>
-		変数の配列であって、いずれもこの型で実現できる.<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		ZnkVarAry<br>
+	</div>
+	<div class="message-body">
+		ZnkVarの動的拡張可能な配列である.<br>
+		HTTPヘッダ全体、POST変数群、Cooking変数群などは要するにすべて(値が文字列型である)変数の配列であって、いずれもこの型で実現できる.<br>
 		インターフェースはZnk_varp_ary.h によって提供され、Znk_varp_ary.cがその実装部である.<br>
-		(実装にあたってはZnkObjAry(Znk_obj_ary.h)というさらに基本的なポインタ型汎用配列を利用している)<br>
-		</li>
-	</ul>
+		実装にあたってはZnkObjAry(Znk_obj_ary.h)というさらに基本的なポインタ型汎用配列を利用している.<br>
+	</div>
+</article><br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
+
+
+<div class="card">
+	<u><b>This article was written by:</b></u><br>
+	<div class="card-content">
+		<div class="media">
+			<div class="media-left">
+				<figure class="image is-48x48">
+				<img src="/imgs/moai.png" alt="none image">
+				</figure>
+			</div>
+			<div class="media-content">
+				<p class="title is-4">Mr.Moai</p>
+				<p class="subtitle is-6">@znk project</p>
+			</div>
+		</div>
+		<div class="media">
+			<div class="media-left">
+				<figure class="image is-48x48">
+				<img src="/imgs/zenkaku.png" alt="none image">
+				</figure>
+			</div>
+			<div class="media-content">
+				<p class="title is-4">Zenkaku</p>
+				<p class="subtitle is-6">@znk project</p>
+			</div>
+		</div>
+		<div class="content">
+		  <time datetime="2016-1-1">2019/07/28</time>
+		</div>
+	</div>
+</div>
 
 
 <a name=Link></a>
-<u><b>
-リンク
-</b></u><br>
-<br>
+<h1 class="title"></h1>
+<hr>
 <ul>
 	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
 	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
@@ -533,5 +601,8 @@ libZnkについて
 </ul><br>
 
 
+</div>
+</div>
+</div>
 </body>
 </html>

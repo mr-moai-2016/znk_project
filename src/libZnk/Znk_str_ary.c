@@ -121,3 +121,26 @@ ZnkStrAry_sort( ZnkStrAry ary )
 			compareStr, swapStr );
 }
 
+bool
+ZnkStrAry_eq( const ZnkStrAry ary1, const ZnkStrAry ary2 )
+{
+	const size_t size1 = ZnkStrAry_size( ary1 );
+	const size_t size2 = ZnkStrAry_size( ary2 );
+
+	if( size1 != size2 ){
+		return false;
+	} else {
+		const size_t size = size1;
+		size_t       idx;
+		ZnkStr       str1 = NULL;
+		ZnkStr       str2 = NULL;
+		for( idx=0; idx<size; ++idx ){
+			str1 = ZnkStrAry_at( ary1, idx );
+			str2 = ZnkStrAry_at( ary2, idx );
+			if( !ZnkStr_eq( str1, ZnkStr_cstr(str2) ) ){
+				return false;
+			}
+		}
+	}
+	return true;
+}

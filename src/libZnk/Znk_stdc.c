@@ -241,7 +241,7 @@ vfprintf_C99( FILE* fp, const char* fmt, va_list ap )
 			 * 確保/解放を伴うため低速だが、そもそもこれほど長い文字列を出力させることは滅多にない上
 			 * 長い文字列を扱うことそのものにかかる時間と比較した場合のコストとしては許容範囲内であると考える.
 			 */
-			ZnkBfr tmp =  ZnkBfr_create( NULL, str_len+1, false, ZnkBfr_Pad8 );
+			ZnkBfr tmp =  ZnkBfr_create( NULL, str_len+1, false, ZnkCapacity_Pad8 );
 			str_len = Znk_vsnprintf_C99( (char*)ZnkBfr_data(tmp), ZnkBfr_size(tmp), fmt, ap );
 			fputs( (char*)ZnkBfr_data(tmp), fp );
 			ZnkBfr_destroy( tmp );

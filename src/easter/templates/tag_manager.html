@@ -1,9 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html><head>
 	<META http-equiv="Content-type" content="text/html; charset=Shift_JIS">
 	<META http-equiv="Content-Script-Type" content="text/javascript">
 	<META http-equiv="Content-Style-Type" content="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<link href="/bulma.css" rel="stylesheet" type="text/css" />
 	<title>Easterタグマネージャー</title>
 </head>
 
@@ -16,73 +18,72 @@ var st_func_tbls = [];
 //--></script>
 <script type="text/javascript" src="/cgis/easter/publicbox/hint.js"></script>
 <script type="text/javascript" src="/cgis/easter/publicbox/assort.js"></script>
-	
-<body bgcolor="#EEFFEE" text="#505000" link="#0000EE" vlink="#0000EE" alink="#FF0000">
 
-<form action="/cgis/easter/easter.cgi?est_manager=tag_manager" method="POST" name="fm_main">
+<body bgcolor="#EEFFEE" text="#505000" link="#0000EE" vlink="#0000EE" alink="#FF0000">
+<div class="section" id="section">
+<div class="container">
+<div class="content">
 
 <a name="user-content-index"></a>
-<font size=+2><i><b>Easter</b></i></font><br>
+<font size=+2><b>Easter Collection</b></font><br>
 
 <br>
+<div class=pagination-list>
 <a class=MstyElemLink  href="/easter" >仮想ブラウジング</a> &nbsp;
 <a class=MstyElemLink  href="/easter?est_manager=topic&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >コレクション</a> &nbsp;
 <a class=MstyElemLink  href="/easter?est_manager=config&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >設定</a> &nbsp;
 <a class=MstyNowSelectedLink href="/easter?est_manager=tag_manager&amp;command=view&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >タグマネージャー</a> &nbsp;
+</div>
 <br>
-
-<a name="TagManager"></a>
-<br><b>TagManager</b><br>
-<table class=MstyManagerTable>
-<tr><td colspan=2>
-<br>
+<div class=pagination-list>
 <a class=MstyNowSelectedLink href="/easter?est_manager=tag_manager&amp;command=view&amp;edit_mode=tag&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >タグエディター</a> &nbsp;
 <a class=MstyElemLink  href="/easter?est_manager=tag_manager&amp;command=view&amp;edit_mode=group&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >グループエディター</a> &nbsp;
 <a class=MstyElemLink  href="/easter?est_manager=tag_manager&amp;command=view&amp;edit_mode=category&amp;Moai_AuthenticKey=#[Moai_AuthenticKey]#" >カテゴリーエディター</a> &nbsp;
-<br>
-</td></tr>
-</table>
+</div>
+
+<form action="/cgis/easter/easter.cgi?est_manager=tag_manager" method="POST" name="fm_main">
 
 <input type=hidden name=Moai_AuthenticKey value="#[Moai_AuthenticKey]#">
 <button class="MstyDmyUpdateBtn" disabled></button> <!-- For disable Enter key on text field -->
 
 <a name="TagEditor"></a>
-<br><b>TagEditor</b><br>
-<table class=MstyManagerTable>
+<article class="message is-dark">
+	<div class="message-header">
+		タグ一覧：カテゴリー[#[current_category_name]#]
+	</div>
+	<div class="message-body">
+		<a class=MstyQandALink href="javascript:void(0);" onclick="displayQandA( 'Hint', 'aboutTagEditor' );"><img src='/cgis/easter/publicbox/icons/question_16.png'></a>
+		<font size=-1><div id=aboutTagEditor></div></font>
+		#[category_select_bar]#
+		<br>
+		#[tags_list]#
+	</div>
+</article>
 
-<tr><td colspan=2>
-<font size=-1>
-<span style="vertical-align:-40%; margin-right:4px"><img src='/cgis/easter/publicbox/icons/question_16.png'></span>マークをクリックすると使い方のヒントが表示されます.<br> <br>
-</font>
-</td></tr>
-
-<tr><td colspan=2>
-<a class=MstyQandALink href="javascript:void(0);" onclick="displayQandA( 'Hint', 'aboutTagEditor' );"><img src='/cgis/easter/publicbox/icons/question_16.png'></a>
-<font size=-1><div id=aboutTagEditor></div></font>
-#[category_select_bar]#
-</td></tr>
-
-<tr><td colspan=2><fieldset class=MstyStdFieldSet><legend>タグ一覧：カテゴリー[#[current_category_name]#]</legend>
-<br>
-#[tags_list]#
-</fieldset></td></tr>
-
-<tr><td colspan=2>
-#[editor_ui]#
-</td></tr>
-
-<tr><td colspan=2>
-<input type=checkbox id=msg_console_cbtn onclick="EjsAssort_switchVisibility('msg_console', '_cbtn', '_body', '_msg')">
-<b>Easter System Console </b><br>
-<div class=MstyMsgConsole id=msg_console_body style=display:none>#[msg]#</div>
-<font size=-1 color=#8888ff><div id=msg_console_msg>― 現在非表示です ―</div></font>
-</td></tr>
-
-</table>
+<a name="TagList"></a>
+<article class="message is-dark">
+	<div class="message-header">
+		タグ編集
+	</div>
+	<div class="message-body">
+		#[editor_ui]#
+	</div>
+</article>
 
 </form>
+
+<div class=box>
+	<input type=checkbox id=msg_console_cbtn onclick="EjsAssort_switchVisibility('msg_console', '_cbtn', '_body', '_msg')">
+	<b>Easter System Console </b><br>
+	<div class=MstyMsgConsole id=msg_console_body style=display:none>#[msg]#</div>
+	<font size=-1 color=#8888ff><div id=msg_console_msg>― 現在非表示です ―</div></font>
+</div>
+
 
 <a class=MstyElemLink href="#user-content-index">一番上へ戻る</a> <a class=MstyElemLink href="/">Moaiトップページ</a>
 <br><br>
 
+</div>
+</div>
+</div>
 </body></html>

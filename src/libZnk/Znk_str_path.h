@@ -70,7 +70,7 @@ ZnkStrPath_cutLastDSP( ZnkStr ans_dir ){
 }
 /**
  * @brief:
- * ans_dir‚ÌÅŒã‚Ì•¶š—ñAw’è‚µ‚½ dsp ‚Æ‚È‚é‚æ‚¤‚É‹¸³‚·‚é.
+ * ans_dir‚ÌÅŒã‚Ì•¶š—ñ‚ªw’è‚µ‚½ dsp ‚Æ‚È‚é‚æ‚¤‚É‹¸³‚·‚é.
  */
 Znk_INLINE void
 ZnkStrPath_appendLastDSP( ZnkStr ans_dir, char dsp ){

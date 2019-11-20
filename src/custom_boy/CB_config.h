@@ -29,6 +29,7 @@ CBConfig_hint_base_Snp( void );
 const char*
 CBConfig_hint_base_PV( void );
 
+#if 0
 bool
 CBConfig_moai_dir_initiate( ZnkStr ermsg );
 
@@ -37,6 +38,7 @@ CBConfig_moai_dir_finalize( void );
 
 const char*
 CBConfig_moai_dir( void );
+#endif
 
 ZnkMyf
 CBConfig_custom_boy_myf( void );

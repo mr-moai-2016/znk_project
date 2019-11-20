@@ -18,7 +18,6 @@ LOCAL_CFLAGS += -I.. \
 
 LOCAL_SRC_FILES := \
 	$S/minizip/ioapi.c \
-	$S/minizip/iowin32.c \
 	$S/minizip/unzip.c \
 	$S/Znk_algo_vec.c \
 	$S/Znk_bfr.c \
@@ -26,6 +25,7 @@ LOCAL_SRC_FILES := \
 	$S/Znk_bfr_bif.c \
 	$S/Znk_bird.c \
 	$S/Znk_bms_find.c \
+	$S/Znk_capacity.c \
 	$S/Znk_cookie.c \
 	$S/Znk_date.c \
 	$S/Znk_dir.c \
@@ -79,6 +79,7 @@ LOCAL_SRC_FILES := \
 	$S/Znk_thread.c \
 	$S/Znk_tostr_double.c \
 	$S/Znk_tostr_int.c \
+	$S/Znk_uchar64.c \
 	$S/Znk_var.c \
 	$S/Znk_varp_ary.c \
 	$S/Znk_vsnprintf.c \
@@ -97,7 +98,6 @@ LOCAL_CFLAGS += -I.. \
 
 LOCAL_SRC_FILES := \
 	$S/minizip/ioapi.c \
-	$S/minizip/iowin32.c \
 	$S/minizip/unzip.c \
 	$S/Znk_algo_vec.c \
 	$S/Znk_bfr.c \
@@ -105,6 +105,7 @@ LOCAL_SRC_FILES := \
 	$S/Znk_bfr_bif.c \
 	$S/Znk_bird.c \
 	$S/Znk_bms_find.c \
+	$S/Znk_capacity.c \
 	$S/Znk_cookie.c \
 	$S/Znk_date.c \
 	$S/Znk_dir.c \
@@ -158,6 +159,7 @@ LOCAL_SRC_FILES := \
 	$S/Znk_thread.c \
 	$S/Znk_tostr_double.c \
 	$S/Znk_tostr_int.c \
+	$S/Znk_uchar64.c \
 	$S/Znk_var.c \
 	$S/Znk_varp_ary.c \
 	$S/Znk_vsnprintf.c \

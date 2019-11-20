@@ -10,7 +10,10 @@
 Znk_EXTERN_C_BEGIN
 
 Znk_DECLARE_HANDLE( ZnkPrimpAry );
+typedef ZnkPrimpAry ZnkPrimAry;
+
 typedef struct ZnkPrim_tag* ZnkPrimp;
+typedef ZnkPrimp ZnkPrim;
 
 typedef enum {
 	 ZnkPrim_e_None = 0
@@ -54,15 +57,15 @@ typedef union ZnkPrimU_tag {
 	ZnkPrimpAry pda_; /* prim ary */
 } ZnkPrimU;
 
-typedef struct ZnkPrim_tag {
+struct ZnkPrim_tag {
 	ZnkAlign64PtrU type__;    /* must not access directly */
 	ZnkPrimU       u_;
 	ZnkAlign64PtrU deleter__; /* must not access directly */
-} ZnkPrim;
+};
 
-#define ZnkPrim_D( name ) ZnkPrim name = { { 0 }, { 0 }, { 0 } }
+#define ZnkPrim_instance( name ) struct ZnkPrim_tag name = { { 0 }, { 0 }, { 0 } }
 Znk_INLINE void ZnkPrim_set_null( ZnkPrimp prim ){
-	ZnkPrim_D( zero ); *prim = zero;
+	ZnkPrim_instance( zero ); *prim = zero;
 }
 
 Znk_INLINE ZnkPrimType

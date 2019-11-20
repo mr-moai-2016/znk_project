@@ -73,7 +73,7 @@ ZnkStr_normalize( ZnkBfr zkbfr, bool plus_one )
 }
 
 ZnkStr
-ZnkStr_create_ex( const char* init_data, size_t leng, ZnkBfrType type )
+ZnkStr_create_ex( const char* init_data, size_t leng, ZnkCapacityType type )
 {
 	ZnkBfr zkbfr;
 	if( init_data ){

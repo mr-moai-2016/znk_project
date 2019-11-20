@@ -29,8 +29,8 @@
 # 
 #
 @@V config
-doc_title = ['Moai+Easter エキスパートマニュアル']
-author = ['Mr.Moai']
+doc_title = ['Moai+Easter 上級マニュアル']
+author = { ['Mr.Moai'] }
 update = ['2018/05/04']
 category_path = { ['moai2_0_exp'] ['moai_cgi_developers'] }
 urp           = ['/moai2.0/moai_cgi_developers.html']
@@ -97,7 +97,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 	<b><u>CGIへのリンクとソースコード</u></b>
 	
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/hello.cgi">http://localhost:8124/cgis/cgi_developers/protected/hello.cgi</a><\>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/cgi_developers/protected/hello.cgi">http://localhost:8124/cgis/cgi_developers/protected/hello.cgi</a><\>
 		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/hello.c">ソースコード</a><\>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span>
 		<div class=MstyComment>
@@ -237,7 +237,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 	<b><u>CGIへのリンクとソースコード</u></b>
 	
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/evar1.cgi">http://localhost:8124/cgis/cgi_developers/protected/evar1.cgi</a><\>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/cgi_developers/protected/evar1.cgi">http://localhost:8124/cgis/cgi_developers/protected/evar1.cgi</a><\>
 		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/evar1.c">ソースコード</a><\>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span>
 		<div class=MstyComment>
@@ -293,7 +293,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 	<b><u>CGIへのリンクとソースコード</u></b>
 	
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/query_string1.cgi?mode=cat&sort=1">http://localhost:8124/cgis/protected/cgi_developers/query_string1.cgi?mode=cat&sort=1</a><\>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/cgi_developers/protected/query_string1.cgi?mode=cat&sort=1">http://localhost:8124/cgis/protected/cgi_developers/query_string1.cgi?mode=cat&sort=1</a><\>
 		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/query_string1.c">ソースコード</a><\>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span>
 		<div class=MstyComment>
@@ -430,7 +430,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 	<b><u>CGIへのリンクとソースコード</u></b>
 	
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/post1.cgi">http://localhost:8124/cgis/cgi_developers/protected/post1.cgi</a> <\>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/cgi_developers/protected/post1.cgi">http://localhost:8124/cgis/cgi_developers/protected/post1.cgi</a> <\>
 		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/post1.c">ソースコード</a><\>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span>
 		<div class=MstyComment>
@@ -504,7 +504,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 	<b><u>CGIへのリンクとソースコード</u></b>
 	
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/transfer_chunked.cgi">http://localhost:8124/cgis/cgi_developers/protected/transfer_chunked.cgi</a><\>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/cgi_developers/protected/transfer_chunked.cgi">http://localhost:8124/cgis/cgi_developers/protected/transfer_chunked.cgi</a><\>
 		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/transfer_chunked.c">ソースコード</a><\>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span>
 		<div class=MstyComment>
@@ -544,7 +544,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 	<b><u>CGIへのリンクとソースコード</u></b>
 	
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/cgi_developers/protected/post_go.go">http://localhost:8124/cgis/cgi_developers/protected/post_go.go</a><\>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/cgi_developers/protected/post_go.go">http://localhost:8124/cgis/cgi_developers/protected/post_go.go</a><\>
 		<a class=MstyElemLink href="/cgis/cgi_developers/publicbox/post_go.go">ソースコード</a><\>
 		<span class=MstyAuthor> (Author: Mr.Moai)</span>
 		<div class=MstyComment>
@@ -573,7 +573,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 	<b><u>CGIへのリンクとソースコード</u></b>
 	
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/protected/futaba_bbs/futaba.php">http://localhost:8124/cgis/protected/futaba_bbs/futaba.php</a><\>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/protected/futaba_bbs/futaba.php">http://localhost:8124/cgis/protected/futaba_bbs/futaba.php</a><\>
 		<a class=MstyElemLink href="http://www.2chan.net/script" target=_blank>オリジナル配布元</a><\>
 		<span class=MstyAuthor> (Author: Ms.Futaba-Kanrinin)</span>
 		<div class=MstyComment>
@@ -609,7 +609,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 	<b><u>CGIへのリンクとソースコード</u></b>
 	
 	<div class=MstyIndent>
-		<a class=MstyAppLink href="http://localhost:8124/cgis/protected/futaba_up/up.php">http://localhost:8124/cgis/protected/futaba_up/up.php</a><\>
+		<a class=MstyWrapLink href="http://localhost:8124/cgis/protected/futaba_up/up.php">http://localhost:8124/cgis/protected/futaba_up/up.php</a><\>
 		<a class=MstyElemLink href="http://www.2chan.net/script" target=_blank>オリジナル配布元</a><\>
 		<span class=MstyAuthor> (Author: Ms.Futaba-Kanrinin)</span>
 		<div class=MstyComment>

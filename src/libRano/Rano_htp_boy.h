@@ -10,6 +10,8 @@ Znk_EXTERN_C_BEGIN
 
 void
 RanoHtpBoy_setTmpDirCommon( const char* tmpdir_common );
+const char*
+RanoHtpBoy_getTmpDirCommon( void );
 
 bool
 RanoHtpBoy_initiateHttpsModule( const char* lib_basename, const char* cert_pem );

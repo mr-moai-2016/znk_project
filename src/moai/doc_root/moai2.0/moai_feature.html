@@ -1,53 +1,36 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html><html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta http-equiv="Content-Script-Type" content="text/javascript">
 	<meta http-equiv="Content-Style-Type" content="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<link href="/bulma.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+<div class="section">
+<div class="container">
+<div class="content">
 <a name=TopBar></a>
-<p><b><img src="/imgs/here_landmark.png"> Moai+Easter ユーザーマニュアル</b></p>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter アナウンスメント</b></p>
 
 <a class=MstyElemLink href="/">トップページ</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/index.html">ユーザーマニュアル</a> &nbsp;
-<a class=MstyElemLink href="/moai2.0/index_expert.html">エキスパートマニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">初級マニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index_expert.html">上級マニュアル</a> &nbsp;
 <a class=MstyElemLink href="/announcement.html">アナウンスメント</a> &nbsp;
 <a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
-<a class=MstyElemLink href="/moai2.0/index.html">ご案内</a> &nbsp;
-<a class=MstyElemLink href="/moai2.0/install.html">インストールガイド</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/moai_feature.html">Moaiの特徴</a> &nbsp;
-<a class=MstyElemLink href="/moai2.0/easter_reference.html">Easter</a> &nbsp;
-<a class=MstyElemLink href="/moai2.0/virtual_users.html">VirtualUSERS</a> &nbsp;
-<a class=MstyElemLink href="/moai2.0/upgrade.html">Moaiのアップグレード方法</a> &nbsp;
-<br> <br>
-
-<div class=MstyComment>
-<u><b>記事担当者</b></u> : Mr.Moai<br>
-<br>
-<u><b>最終更新日</b></u> : 2018/03/25<br>
-<br>
-</div>
-<br>
-
 
 <a name=AtFirst></a>
-<u><b>
-はじめに
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">はじめに</h1>
+<p>
 	この記事ではMoaiの特徴について列挙してあります.<br>
-</div><br>
+</p>
 <br>
 
 
 <a name=Index></a>
-<u><b>
-目次
-</b></u><br>
+<h1 class="title">目次</h1>
 <br>
 <ul>
 	<li><b><a class=MstyElemLink href=#AboutFunctions>機能面</a></b></li>
@@ -57,13 +40,10 @@
 
 
 <a name=AboutFunctions></a>
-<u><b>
-機能面
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">機能面</h1>
+<p>
 	機能的な面に関しては以下の点が挙げられます.<br>
-	<ul>
+	<div class="content"><ul type="1" >
 		<li><b>MoaiCGI</b><br>
 		以下に挙げるCGIアプリケーションを実現するための下地となるWebサーバ機能を提供します.<br>
 		(Moaiエンジンの機能)<br>
@@ -124,19 +104,16 @@
 		またこのとき指定する外部プロキシサーバのいくつかの候補を自動的に取得することもできます.<br>
 		(ProxyFinderの機能)<br>
 		</li>
-	</ul>
+	</ul></div>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=AboutSecurity></a>
-<u><b>
-安全性
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">安全性</h1>
+<p>
 	Moai+Easterでは、その安全性にも万全を期してあります.<br>
 <br>
 	Easterは一般のブラウザが行うような外部サイトへのアクセスならびにキャッシュ管理システムを完備しています.<br>
@@ -146,18 +123,15 @@
 <br>
 	XhrDMZの詳細については<a class=MstyElemLink href=/moai2.0/moai_reference.html#XhrDMZ>こちら</a>をご覧下さい.<br>
 	ただしこの記事の内容はかなり難しいですし、Moaiを普通に使う上でXhrDMZの詳細を知っておく必要も全くありません.<br>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
 
 
 <a name=AboutTransparency></a>
-<u><b>
-処理の透明性、移植性、および動作環境
-</b></u><br>
-<br>
-<div class=MstyIndent>
+<h1 class="title">処理の透明性、移植性、および動作環境</h1>
+<p>
 	処理の透明性、安全性、移植性、および動作環境に関して以下の点が挙げられます.<br>
 	<ul>
 		<li>Moaiは完全なオープンソースであり、ブラックボックスな部分は一切存在しません.<br>
@@ -184,17 +158,36 @@
 		MacOSやiPhoneでは残念ながらサポートされていません.<br>
 		</li>
 	</ul>
+</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-</div><br>
 <br>
+
+
+<div class="card">
+	<u><b>This article was written by:</b></u><br>
+	<div class="card-content">
+		<div class="media">
+			<div class="media-left">
+				<figure class="image is-48x48">
+				<img src="/imgs/moai.png" alt="none image">
+				</figure>
+			</div>
+			<div class="media-content">
+				<p class="title is-4">Mr.Moai</p>
+				<p class="subtitle is-6">@znk project</p>
+			</div>
+		</div>
+		<div class="content">
+		  <time datetime="2016-1-1">2018/03/25</time>
+		</div>
+	</div>
+</div>
 
 
 <a name=Link></a>
-<u><b>
-リンク
-</b></u><br>
-<br>
+<h1 class="title"></h1>
+<hr>
 <ul>
 	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
 	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
@@ -202,5 +195,8 @@
 </ul><br>
 
 
+</div>
+</div>
+</div>
 </body>
 </html>

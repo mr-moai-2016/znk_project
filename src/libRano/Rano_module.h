@@ -25,7 +25,7 @@ RanoModule_load( RanoModule mod, const char* target_name,
 		const char* filters_dir, const char* plugins_dir );
 
 bool
-RanoModule_saveFilter( const RanoModule mod );
+RanoModule_saveFilter( const RanoModule mod, const char* filters_dir );
 
 const char*
 RanoModule_target_name( const RanoModule mod );

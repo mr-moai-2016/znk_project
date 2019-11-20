@@ -18,31 +18,15 @@ getLastUpdatedTime_forUNIX( const char* filepath, ZnkDate* date )
 {
 	struct stat fi;
 	if( stat( filepath, &fi) == 0 ){
+		struct tm  t_instance = { 0 };
 		struct tm* t;
-#if 0
-		/* ファイル情報を表示 */
-		{
-			printf( "デバイスID : %d\n"，                      fi.st_dev);
-			printf( "inode番号 : %d\n"，                       fi.st_ino);
-			printf( "アクセス保護 : %o\n"，                    fi.st_mode);
-			printf( "ハードリンクの数 : %d\n"，                fi.st_nlink);
-			printf( "所有者のユーザID : %d\n"，                fi.st_uid);
-			printf( "所有者のグループID : %d\n"，              fi.st_gid);
-			printf( "デバイスID（特殊ファイルの場合） : %d\n"，fi.st_rdev);
-			printf( "容量（バイト単位） : %d\n"，              fi.st_size);
-			printf( "ファイルシステムのブロックサイズ : %d\n"，fi.st_blksize);
-			printf( "割り当てられたブロック数 : %d\n"，        fi.st_blocks);
-			printf( "最終アクセス時刻 : %s"，ctime( &fi.st_atime ) );
-			printf( "最終修正時刻 : %s"，    ctime( &fi.st_mtime ) );
-			printf( "最終状態変更時刻 : %s"，ctime( &fi.st_ctime ) );
-		}
-#endif
+		time_t ctime = fi.st_ctime;
 		
 		/***
-		 * localtimeの代りにgmtimeでうまく動くならtimezone設定を見直せということになる.
-		 * マルチスレッドなプログラムならlocaltime_rを使えって事になる.
+		 * localtime_r が存在するのはUNIX系のみである.
 		 */
-		t = localtime( &fi.st_ctime );
+		t = localtime_r( &ctime, &t_instance);
+		//t = localtime( &ctime );
 		
 		ZnkDate_set_year(  date, (uint16_t)(t->tm_year+1900) );
 		ZnkDate_set_month( date, (uint8_t )(t->tm_mon+1) );

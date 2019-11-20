@@ -37,10 +37,31 @@ function window_load() {
 */
 
 
-function Easter_showPreview( obj, img_url, max_width, max_height )
+function Easter_showPreview( obj, img_url, max_width, max_height, preview_style )
 {
+	var preview_id = "upper_preview";
+
+	if( preview_style == 'upper' ){
+		preview_id = "upper_preview";
+	} else if( preview_style == 'right' ){
+		preview_id = "right_preview";
+	} else {
+		if( window.innerWidth < 1200 ){
+			preview_id = "upper_preview";
+		} else {
+			preview_id = "right_preview";
+		}
+		if( typeof window.addEventListener == 'undefined' && typeof document.getElementsByClassName == 'undefined' ){
+			// IE8lt
+			preview_id = "upper_preview";
+		} else if( !!document.uniqueID && document.documentMode <= 10 ){
+			// IE10lt
+			preview_id = "upper_preview";
+		}
+	}
+
 	if( previewing_img_url == img_url ){
-		document.getElementById("preview").innerHTML = "";
+		document.getElementById(preview_id).innerHTML = "";
 		previewing_img_url = "";
 		now_showing_idx = -1;
 		var ahref_previewables = document.getElementsByName("ahref_previewable");
@@ -60,12 +81,13 @@ function Easter_showPreview( obj, img_url, max_width, max_height )
 		 */
 		img.onload = function(){
 			if( img.width < max_width && img.height < max_height){
-				document.getElementById("preview").innerHTML = ""
+				document.getElementById(preview_id).innerHTML = ""
 						+ "Original Size:" + img.width + "x" + img.height + " This preview is original size."
 						+ "<br>"
-						+ "<div class=MstyComment>"
+						//+ "<div class=MstyComment>"
 						+ "<a href=\"" + img_url + "\" target=_blank>"
-						+ "<img src=\"" + img_url + "\" class=MstyImgPreview></a></div>";
+						+ "<img src=\"" + img_url + "\" class=MstyImgPreview></a>";
+						//+ "</div>";
 			} else if( img.width >= max_width || img.height >= max_height ){
 				var rate_x = max_width  / img.width;
 				var rate_y = max_height / img.height;
@@ -78,12 +100,13 @@ function Easter_showPreview( obj, img_url, max_width, max_height )
 					mod_width  = img.width  * rate_y;
 					mod_height = img.height * rate_y;
 				}
-				document.getElementById("preview").innerHTML = ""
+				document.getElementById(preview_id).innerHTML = ""
 						+ "Original Size:" + img.width + "x" + img.height + " max_width=" + max_width + " max_height=" + max_height + " This preview may be shrinked."
 						+ "<br>"
-						+ "<div class=MstyComment>"
+						//+ "<div class=MstyComment>"
 						+ "<a href=\"" + img_url + "\" target=_blank>"
-						+ "<img src=\"" + img_url + "\" width=" + mod_width + " height=" + mod_height + "></a></div>";
+						+ "<img src=\"" + img_url + "\" width=" + mod_width + " height=" + mod_height + "></a>";
+						//+ "</div>";
 			} else {
 				var authentic_key = "";
 				var cache_path = "";
@@ -114,19 +137,20 @@ function Easter_showPreview( obj, img_url, max_width, max_height )
 				} else {
 					rate_str = rate_i + "." + rate_r;
 				}
-				document.getElementById("preview").innerHTML = ""
+				document.getElementById(preview_id).innerHTML = ""
 						+ "Original Size:" + img.width + "x" + img.height + " This preview may NOT be original size."
 						+ "<a href=\"" + img_url + "\" target=_blank>" + " Original Image is Here." + "</a>"
-						+ "<br><div class=MstyComment>"
+						+ "<br>"
+						//+ "<div class=MstyComment>"
 						+ "<a href=\"" + img_url + "\" target=_blank>"
-						//+ "<img src=\"" + img_url + "\" class=" + class_name + "></a></div>";
-						+ "<img src=\"" + img_url + "\" width=100%></a></div>";
+						+ "<img src=\"" + img_url + "\" width=100%></a>"
+						//+ "</div>";
 			}
 			previewing_img_url = img_url;
 			now_showing_idx = findUrlList( previewing_img_url );
 		};
 		img.onerror = function(){
-			document.getElementById("preview").innerHTML = "<a href=\"" + img_url + "\" target=_blank>" + "Original Image" + "</a>"
+			document.getElementById(preview_id).innerHTML = "<a href=\"" + img_url + "\" target=_blank>" + "Original Image" + "</a>"
 					+ "<br>Image loading error.<br>"
 			previewing_img_url = img_url;
 			now_showing_idx = findUrlList( previewing_img_url );
@@ -137,11 +161,11 @@ function Easter_showPreview( obj, img_url, max_width, max_height )
 		}
 		changeObjBGColor( obj, '#a0a0ff' );
 	
-		document.getElementById("preview").innerHTML = img_url + "<br>Now loading...<br>"
+		document.getElementById(preview_id).innerHTML = img_url + "<br>Now loading...<br>"
 		img.src = img_url;
 	}
 }
-function Easter_showNext( obj, max_width, max_height )
+function Easter_showNext( obj, max_width, max_height, preview_style )
 {
 	if( img_url_list.length ){
 		var new_img_url = "";
@@ -160,13 +184,13 @@ function Easter_showNext( obj, max_width, max_height )
 
 		{
 			var ahref_previewables = document.getElementsByName("ahref_previewable");
-			Easter_showPreview( ahref_previewables[show_idx], new_img_url, max_width, max_height );
-			document.getElementById("now_showing_path").innerHTML = new_img_url;
+			Easter_showPreview( ahref_previewables[show_idx], new_img_url, max_width, max_height, preview_style );
+			//document.getElementById("now_showing_path").innerHTML = new_img_url;
 		}
 	}
 
 }
-function Easter_showPrev( obj, max_width, max_height )
+function Easter_showPrev( obj, max_width, max_height, preview_style )
 {
 	if( img_url_list.length ){
 		var new_img_url = "";
@@ -185,8 +209,23 @@ function Easter_showPrev( obj, max_width, max_height )
 
 		{
 			var ahref_previewables = document.getElementsByName("ahref_previewable");
-			Easter_showPreview( ahref_previewables[show_idx], new_img_url, max_width, max_height );
-			document.getElementById("now_showing_path").innerHTML = new_img_url;
+			Easter_showPreview( ahref_previewables[show_idx], new_img_url, max_width, max_height, preview_style );
+			//document.getElementById("now_showing_path").innerHTML = new_img_url;
 		}
 	}
+}
+function Easter_hidePreview( obj )
+{
+	Easter_showPreview( obj, previewing_img_url, 0, 0, 'right' );
+	Easter_showPreview( obj, previewing_img_url, 0, 0, 'upper' );
+}
+
+function EasterModal_open() {
+	var elem = document.getElementById("Easter_modal_img");
+	elem.src = "/moai.png";
+	document.getElementById('Easter_modal').classList.add('is-active');
+}
+
+function EasterModal_close() {
+	document.getElementById('Easter_modal').classList.remove('is-active');
 }

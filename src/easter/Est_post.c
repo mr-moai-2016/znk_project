@@ -180,7 +180,7 @@ replaceUploadFile_forMPFD( const ZnkVarpAry hpvs, const char* query_post_var_nam
 
 static bool
 doHyperUpload( ZnkVarpAry post_vars,
-		const char* new_filename, const char* upfile_varname, const char* ua, const char* evar_http_cookie, RanoModule mod,
+		const char* new_filename, const char* upfile_varname, const char* ua, RanoModule mod,
 		ZnkStr result_filename )
 {
 	bool   is_updated = false;
@@ -331,11 +331,15 @@ static bool
 uploadClipboard( ZnkVarpAry post_vars, const char* upfile_varname, ZnkStr ermsg )
 {
 	bool   result = false;
+	const char* tmpdir_common = RanoHtpBoy_getTmpDirCommon();
+	char filename_path[ 256 ] = "";
+
+	Znk_snprintf( filename_path, sizeof(filename_path), "%s/clipboard_save.bmp" );
 
 	/***
 	 * Test : GetClipboardData (only windows)
 	 */
-	result = getClipboardData( "tmp/clipboard_save.bmp", ermsg );
+	result = getClipboardData( filename_path, ermsg );
 	if( !result ){
 		goto FUNC_END;
 	}
@@ -347,15 +351,17 @@ uploadClipboard( ZnkVarpAry post_vars, const char* upfile_varname, ZnkStr ermsg 
 	 * 尚、現時点ではまだマルチプロセス処理に対する排他制御は行っていない.
 	 */
 	if( ZnkDir_getType( "convert.exe" ) == ZnkDirType_e_File ){
+		ZnkStr cmd = ZnkStr_newf( "convert.exe %s cachebox/upload/clipboard_save.png", filename_path );
 		ZnkDir_mkdirPath( "cachebox/upload", Znk_NPOS, '/', NULL );
 		ZnkDir_deleteFile_byForce( "cachebox/upload/clipboard_save.png" );
-		system( "convert.exe tmp/clipboard_save.bmp cachebox/upload/clipboard_save.png" );
+		system( ZnkStr_cstr(cmd) );
 		if( ZnkDir_getType( "cachebox/upload/clipboard_save.png" ) == ZnkDirType_e_File ){
-			ZnkDir_deleteFile_byForce( "tmp/clipboard_save.bmp" );
+			ZnkDir_deleteFile_byForce( filename_path );
 			if( replaceUploadFile_forMPFD( post_vars, upfile_varname, "cachebox/upload/clipboard_save.png" ) ){
 				result = true;
 			}
 		}
+		ZnkStr_delete( cmd );
 	} else {
 		ZnkStr_addf( ermsg, "Easter HyperPost : Error.<br>" );
 		ZnkStr_addf( ermsg, "<br>" );
@@ -471,7 +477,7 @@ func_proc_post_vars( ZnkVarpAry post_vars, void* arg, const char* content_type, 
 					const char* ua = ( ua_var == NULL ) ? easter_default_ua :
 						ZnkS_eq( ZnkHtpHdrs_val_cstr(ua_var,0), "UNTOUCH" ) ? easter_default_ua : ZnkHtpHdrs_val_cstr(ua_var,0);
 
-					result = doHyperUpload( post_vars, new_filename, upfile_varname, ua, evar->http_cookie_, mod, upfile_filename );
+					result = doHyperUpload( post_vars, new_filename, upfile_varname, ua, mod, upfile_filename );
 					if( !result ){
 						/***
 						 * Downloadに失敗したと思われる.
@@ -743,7 +749,7 @@ EstPost_procPost( RanoCGIEVar* evar, ZnkVarpAry post_vars, const char* est_val, 
 		const char* parent_proxy  = EstConfig_parent_proxy();
 		bool result = false;
 		ZnkVarpAry  cookie        = ZnkVarpAry_create( true );
-		ZnkStr result_filename = ZnkStr_newf( "./%sresult.dat", tmpdir );
+		ZnkStr result_filename = ZnkStr_newf( "%sresult.dat", tmpdir );
 		const char* cachebox = "./cachebox/";
 		ZnkStr console_msg = ZnkStr_new( "" );
 
