@@ -73,6 +73,9 @@ pat_diff.bat
 pat_diff.sh
 set_ver.bat
 set_ver.sh
+_zip_one.bat
+kick_zip.bat
+to_zip.sh
 apply_this_scripts/android/*
 apply_this_scripts/cygwin/*
 apply_this_scripts/linux/*

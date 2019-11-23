@@ -21,16 +21,18 @@
 <a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
 <br> <br>
 <a class=MstyElemLink href="/moai2.0/index.html">ご案内</a> &nbsp;
-<a class=MstyNowSelectedLink href="/moai2.0/install.html">インストールガイド</a> &nbsp;
+<a class=MstyNowSelectedLink href="/moai2.0/install.html">インストール方法(PC版)</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/install_android.html">インストール方法(Android版)</a> &nbsp;
 <a class=MstyElemLink href="/moai2.0/easter_reference.html">Easterの使い方</a> &nbsp;
 <a class=MstyElemLink href="/moai2.0/virtual_users.html">VirtualUSERSの使い方</a> &nbsp;
-<a class=MstyElemLink href="/moai2.0/upgrade.html">Moaiを最新バージョンにする</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/upgrade.html">Moaiアップグレードの使い方</a> &nbsp;
 <br> <br>
 
 <a name=AtFirst></a>
 <h1 class="title">はじめに</h1>
 <p>
-	ここではMoaiの入手およびインストール方法、さらには初回起動までの手順について詳細に解説します.<br>
+	ここではMoai PC版の入手およびインストール方法、さらには初回起動までの手順について詳細に解説します.<br>
+	Android版については<a class=MstyWrapLink href=/moai2.0/install_android.html>こちら</a>を参照してください.<br>
 </p>
 <br>
 
@@ -41,8 +43,6 @@
 <ul>
 	<li><b><a class=MstyElemLink href=#ForWindows>Windows版の入手およびインストール方法</a></b></li>
 	<li><b><a class=MstyElemLink href=#ForLinux>Linux版の入手およびインストール方法</a></b></li>
-	<li><b><a class=MstyElemLink href=#ForAndroid>Android版の入手およびインストール方法</a></b></li>
-	<li><b><a class=MstyElemLink href=#ForAndroidTerm>Android Terminal Emulator版の入手およびインストール方法</a></b></li>
 	<li><b><a class=MstyElemLink href=#ForCygwin>Cygwin版の入手およびインストール方法</a></b></li>
 	<li><b><a class=MstyElemLink href=#AboutMoaiProfile>moai_profile</a></b></li>
 	<li><b><a class=MstyElemLink href=#AboutDiskSize_ofMoaiEaster>Moai+Easter本体が使うディスク容量について</a></b></li>
@@ -241,255 +241,6 @@
 <br>
 
 
-<a name=ForAndroid></a>
-<h1 class="title">Android版の入手およびインストール方法</h1>
-<p>
-<article class="message is-dark"><br>
-	<div class="message-header">
-		apk版について<br>
-	</div>
-	<div class="message-body">
-		Androidでのアプリといえば、Google Play を経由してインストールするというイメージをお持ちの方も多いでしょう.<br>
-		しかし、必ずしも Google Play を経由しなければならないということはなく、apk ファイルさえあればアプリをインストールすることができます.<br>
-		apk ファイルは Google Play 以外を経由して入手(ダウンロード)したものとなりますので、いわゆる「野良アプリ」と呼ばれるものになります.<br>
-		Moai Ver2.2以降では、この apk ファイルによるインストールをサポートします.<br>
-<br>
-		<b>Android 4.0.3 ( Ice Cream Sandwich ) 以前の古いシステムでは、この apk 版を使用することはできません.<br>
-		Terminal Emulator 版の方であれば使用可能です.</b><br>
-	</div>
-</article><br>
-<br>
-<article class="message is-dark"><br>
-	<div class="message-header">
-		apk版でのインストール手順<br>
-	</div>
-	<div class="message-body">
-		<ol>
-			<li>以下より最新の apk ファイルをダウンロードします.<br>
-			<a class=MstyWrapLink target=_blank href=https://mr-moai-2016.github.io/download/moai-v2.2-android.apk>https://mr-moai-2016.github.io/download/moai-v2.2-android.apk</a><br>
-			</li>
-<br>
-			<li>ダウンロードした apk ファイルは /sdcard/Download 直下にあると思われますので、Androidのファイルマネージャでこのフォルダを開きましょう.<br>
-			</li>
-<br>
-			<li>この apk ファイルをタップして実行しさえすれば Moai をインストールできるのですが、<br>
-			お使いのAndroidのデフォルトの設定では、apk ファイルによるインストール自体が不許可となっている可能性が高いです.<br>
-			<div class=box>
-				例えば「インストールはブロックされました」や「セキュリティ上の理由から、お使いのスマートフォンではこの提供元からの不明なアプリをインストールすることはできません」などのメッセージが表示されると思います.<br>
-				つまり Google Play 以外を経由して入手した「野良アプリ」をインストールさせないという設定となっているわけですが<br>
-				明確な意思を持って、(むしろGoogle Playよりも)手間の掛かる apk ファイルによるインストールを試みているところに<br>
-				こんな設定は邪魔でしかないと思いますので、解除してしまいましょう.<br>
-			</div>
-			この設定を解除する方法について解説したサイトは非常にたくさんありますのでググってもらう方が確実そうですが、一応ここでも解説しておきます.<br>
-			</li>
-<br>
-			<li>Android のバージョンによっても微妙に異なりますが、このインストール制限は概してセキュリティの設定によるものです.<br>
-			例えば、「設定」→「詳細設定」→「セキュリティ」と開いていき、「提供元不明のアプリ」の項目で「許可する」をONにします.<br>
-			</li>
-<br>
-			<li>改めて apk ファイルを実行してみます.<br>
-			無事「インストールされました」と表示されたら、アプリ一覧に「Moai for Android」という項目が登録されていると思います.<br>
-			それを選択すれば Moai が起動します.<br>
-			Moai for Android 起動を意味するシンプルな画面が表示されますので、一旦それをクリアして閉じます.<br>
-			(閉じてもMoaiのサーバスレッドはしばらくは生きています)<br>
-			</li>
-<br>
-			<li>お使いのAndroidシステムにあるWebブラウザ(なんでもよいですが)を起動します.<br>
-			http://127.0.0.1:8124にアクセスします.<br>
-			Moaiのトップページが表示されれば成功です.<br>
-			</li>
-<br>
-			<li>長時間何もせずに放置すると、そのうちMoaiのサーバスレッドがAndroidシステム(Zygoteプロセス)によって終了させられると思います.<br>
-			そのときは再度Moai for Androidを起動してください.<br>
-			</li>
-		</ol>
-	</div>
-</article><br>
-<br>
-<article class="message is-dark"><br>
-	<div class="message-header">
-		apk 版でのアンインストールについて<br>
-	</div>
-	<div class="message-body">
-		通常のAndroid アプリのアンインストールと同じ要領でMoaiをアンインストールできます.<br>
-		ただしこのアンインストールを行っても<b><font color=red>moai_profileディレクトリだけは削除されずに残る</font></b>ようになっています.<br>
-		これについては、<a class=MstyElemLink href=#AboutMoaiProfile>moai_profile</a>を参照してください.<br>
-	</div>
-</article><br>
-</p>
-	<br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-<br>
-
-
-<a name=ForAndroidTerm></a>
-<h1 class="title">Android Terminal Emulator版の入手およびインストール方法</h1>
-<p>
-<article class="message is-dark"><br>
-	<div class="message-header">
-		Terminal Emulator版について<br>
-	</div>
-	<div class="message-body">
-		Android版には、Terminal Emulator 版というのもあります.<br>
-		Ver2.1まではでは、このTerminal Emulator版のみをサポートしていました.<br>
-		これはいわゆる一般的なAndroidアプリとは異なり、Terminal Emulatorと呼ばれるソフトウェアの上でMoaiを動作させるという方式です.<br>
-<br>
-		<b>Android 5.0 (Lollipop) 以降をご使用の方は、このTerminal Emulator版を使用することはできません.<br>
-		apk 版の方をインストールして頂きますようお願いします</b>.<br>
-<br>
-		Android上で動作する代表的な Terminal Emulator として Android Terminal Emulator (Jack Palevich著) と Termux (Fredrik Fornwall著) があります.<br>
-		どちらの上でも Moai が動作することを確認しておりますが、ここでは Android Terminal Emulator を使った方法を解説します.<br>
-		この方法ではアルファベットを多く入力するため、Hacker's Keyboard (Klaus Weidner著) というアプリをインストールした方が作業がしやすいかもしれません.<br>
-<br>
-		<div class=box>
-			この Terminal Emulator 版は 非PIEと呼ばれるネイティブ実行形式で作成してあります.<br>
-			一方、apk 版は PIEと呼ばれるネイティブ実行形式で作成してあります.<br>
-			この違いにより、それぞれの版で使用できるAndroidのバージョンが異なります.<br>
-<br>
-			<b><u>Android 5.0 (Lollipop) 以降</u></b><br>
-<br>
-			ネイティブ実行形式に関する仕様が変更となり、<br>
-			PIE( Position Independent Executable ) 形式のみをサポートするようになりました.<br>
-			そのため、この環境では Terminal Emulator版(非PIE)は、以下のエラーメッセージを出力して起動することができません.<br>
-<br>
-			<div class=box><div class=MstyCode>
-				error: only position independent executables (PIE) are supported.<br>
-			</div></div>
-<br>
-			<b><u>Android 4.1 ( Jelly Bean ) 以降 Android 4.4 ( KitKat ) 以前まで</u></b><br>
-<br>
-			この範囲のバージョンのAndroidでは、PIE 形式と非PIE形式の両方がサポートされています.<br>
-			よってこのバージョンのAndroidをご使用であれば、apk版とTerminal Emulator版のどちらでも使用可能です.<br>
-<br>
-			<b><u>Android 4.0.3 (Ice Cream Sandwich) 以前</u></b><br>
-<br>
-			これ以前の古いシステムでは、今度は逆に PIE 形式がサポートされず非PIE形式のみのサポートとなります.<br>
-			そのため、この環境では apk 版(PIE)は、起動することができません.<br>
-			(PIE形式を起動するとエラーもなくクラッシュします).<br>
-<br>
-			ここまでの説明でおわかりと思いますが、結局PIEと非PIEのいずれもすべてのAndroidバージョンをカバーできません.<br>
-			ここにジレンマがありますが、Moaiでは apk 版 Moai では、新しいAndroidを重視して PIE形式とし、<br>
-			Terminal Emulator版 Moai では、(古いAndroid環境への救済措置という位置づけで)従来どおり非PIE形式とする形としました.<br>
-		</div>
-		<br>
-	</div>
-</article><br>
-<br>
-<article class="message is-dark"><br>
-	<div class="message-header">
-		Terminal Emulator版でのインストール手順<br>
-	</div>
-	<div class="message-body">
-		<ol>
-			<li>最新版はzipファイルとなっており、以下より入手できます.<br>
-			<br>
-			<a class=MstyWrapLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/v2.1>https://github.com/mr-moai-2016/znk_project/releases/v2.1</a><br>
-			<br>
-			Assetsにある moai-v2.1-android-armeabi.zip がAndroid版となります.<br>
-			これをダウンロードしてください.<br>
-	<br>
-			<div class=box>
-				moai-v2.1-android-x86.zip は、PC(x86)上のAndroidエミュレータなどで動作させるためのバイナリとなります.<br>
-				通常のユーザはこれらをダウンロードする必要はありません.<br>
-			</div>
-			</li>
-			<br>
-			<li>Android Terminal Emulator (Jack Palevich著) をインストールすると<br>
-			Androidのホーム画面に以下のような「端末エミュレータ」アイコンがあると思います.<br>
-			これを実行して端末エミュレータウィンドウを開きましょう.<br>
-	<br>
-			<div class=MstyImgBox>
-				<img src=/imgs/android_terminal_icon.png><br>
-			</div>
-			</li>
-			<br>
-			<li>ホームディレクトリへ移動します.<br>
-			以下のように文字入力(半角英数字)しEnterを押します.<br>
-	<br>
-			<div class=box><div class=MstyCode>
-				cd<br>
-			</div></div>
-	<br>
-			最初なのでこの様子を示したスクリーンショットも一緒に載せておきます.<br>
-			(以降の操作の分については省略します).<br>
-	<br>
-			<div class=MstyImgBox>
-				<img src=/imgs/android_terminal_cd.png><br>
-			</div>
-			</li>
-			<br>
-			<li>上記1でダウンロードした zipファイルは /sdcard/Download ディレクトリなどに保存されている場合があります.<br>
-			(システム構成によっては違う場所に保存されているかもしれません. その場合はその場所に読み替えてください). <br>
-			ホームディレクトリ以外でMoaiを実行すると、書き込み許可等の関係で何かと不便なことが起こりがちですので、<br>
-			まずはダウンロードした zip ファイルをホームディレクトリへ移動またはコピーする必要があります.<br>
-			以下のように入力しEnterを押します.<br>
-	<br>
-			<div class=box><div class=MstyCode>
-		    	cp /sdcard/Download/moai-v2.1-android-armeabi.zip ~/<br>
-			</div></div>
-			</li>
-			<br>
-			<li>zipファイルを展開します.<br>
-			以下のように入力しEnterを押します.<br>
-			(以降の説明でも同様に入力後にEnterを押してコマンドを実行してください).<br>
-	<br>
-			<div class=box><div class=MstyCode>
-		    	unzip moai-v2.1-android-armeabi.zip<br>
-			</div></div>
-			</li>
-			<br>
-			<li>展開したディレクトリへ移動します.<br>
-			以下のように入力しEnterを押します.<br>
-	<br>
-			<div class=box><div class=MstyCode>
-		    	cd moai-v2.1-android-armeabi<br>
-			</div></div>
-			</li>
-<br>
-			<li>moaiを一旦起動させます.<br>
-			以下のように入力しEnterを押します.<br>
-	<br>
-			<div class=box><div class=MstyCode>
-				sh moai_for_android.sh<br>
-			</div></div>
-			</li>
-			<br>
-			<li>展開ディレクトリと同列の場所に moai_profile ディレクトリが作成されたことを念のため確認してください<br>
-			</li>
-		</ol>
-		インストールについては以上です.<br>
-<br>
-		上記 1 から 8 までの手順は最初の一回だけ必要です.<br>
-		これらを一度済ませてしまえば以降は上記 2、3、6、7 だけでMoaiが起動可能です.<br>
-		<br>
-		Moaiを明示的に終了させる必要性は通常ありませんが、<br>
-		終了させたい場合はプロセスごとkillして構いません.<br>
-		( プロセスのkill の仕方がわからない方は、替りに「端末エミュレータウィンドウ」ごと閉じてもいいでしょう ).<br>
-<br>
-		<div class=box>
-			Android には Zygote と呼ばれるすべてのプロセスの大元となるプロセスが常駐しています.<br>
-			Zygote はユーザがアプリを明示的に終了させても、効率のためしばらくはそのスレッドを生存させている場合がありますが、<br>
-			これは時間が経つと自然に消滅しますので、気にする必要はありません.<br>
-		</div>
-	</div>
-</article><br>
-	<br>
-<article class="message is-dark"><br>
-	<div class="message-header">
-		Terminal Emulator版でのアンインストールについて<br>
-	</div>
-	<div class="message-body">
-		Moaiをアンインストールするには展開ディレクトリをそのまま削除すればよいです.<br>
-		ただし基本的に<b><font color=red>moai_profileディレクトリだけは削除せず残しておく方がよいでしょう.</font></b><br>
-		これについては、<a class=MstyElemLink href=#AboutMoaiProfile>moai_profile</a>を参照してください.<br>
-	</div>
-</article><br>
-</p>
-	<br>
-	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
-<br>
-
-
 <a name=ForCygwin></a>
 <h1 class="title">Cygwin版の入手およびインストール方法</h1>
 <p>
@@ -613,10 +364,7 @@
 		この位置は、環境変数 MOAI_PROFILE_DIR の値としてそのフルパスを設定することで強制的に指定することもでき、<br>
 		これが指定されている場合は Moaiエンジンの設定よりもこれが優先されます.<br>
 <br>
-		初期設定では、この位置はWindowsやLinuxの場合は Moai 本体のディレクトリより一つ上になっています.<br>
-		Androidの場合、Ver2.1では、Moai 本体ディレクトリより一つ上です.<br>
-		Ver2.2以降では Android apk版の場合、データフォルダのファイルマネージャ直下(/sdcard/moai_profile) となります.<br>
-		(Androidではシステムに様々な取り決めがあるため、moai_profileのデフォルトの位置を変えることはあまりお勧めできません)<br>
+		初期設定では、この位置はWindowsやLinuxの場合、Moai 本体のディレクトリより一つ上になっています.<br>
 		moai_profile がまだ存在しない場合、Moai はこの位置へ moai_profile を自動的に生成します.<br>
 	</div>
 </article><br>
@@ -660,7 +408,7 @@
 			</div>
 		</div>
 		<div class="content">
-		  <time datetime="2016-1-1">2019/07/25</time>
+		  <time datetime="2016-1-1">2019/11/22</time>
 		</div>
 	</div>
 </div>

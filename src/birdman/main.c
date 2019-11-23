@@ -359,8 +359,8 @@ confirm( const char* inst_dir, const char* cur_ver, const char* pat_ver, const c
 	ZnkStr_addf( msg, "Moai を Ver %s へアップグレードすることができます.\n", pat_ver );
 	ZnkStr_addf( msg, "\n" );
 	if( is_apk ){
-		ZnkStr_addf( msg, "<a class=MstyWrapLink href=https://mr-moai-2016.github.io/download/moai-v2.2-android.apk>最新版のapkファイル</a>\n\n" );
-		ZnkStr_addf( msg, "<a class=MstyWrapLink href=http://localhost:8124/moai2.0/install.html#ForAndroid>インストール方法</a>\n\n" );
+		//ZnkStr_addf( msg, "<a class=MstyWrapLink href=https://mr-moai-2016.github.io/download/moai-v2.2-android.apk>最新版のapkファイル</a>\n\n" );
+		ZnkStr_addf( msg, "<a class=MstyWrapLink href=https://mr-moai-2016.github.io/moai2.0/install_android.html#ForApk>インストール方法</a>\n\n" );
 	} else {
 		ZnkStr_addf( msg, "まず最新版の修正パッチ(zipファイル)をダウンロードする必要があります.\n" );
 		ZnkStr_addf( msg, "(birdmanフォルダの直下にダウンロードされます).\n" );

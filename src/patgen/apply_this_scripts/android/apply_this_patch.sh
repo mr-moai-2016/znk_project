@@ -1,7 +1,7 @@
 #!/system/bin/sh
 
-old_parent_ver=2.0
-new_parent_ver=2.1
+old_parent_ver=2.1
+new_parent_ver=2.2
 if test -e set_ver.sh ; then source ./set_ver.sh ; fi
 
 birdman_exe=./birdman

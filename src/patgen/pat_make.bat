@@ -1,8 +1,8 @@
 @echo off
 set old_parent_ver=2.1
 set old_ver=2.1
-set new_parent_ver=2.1
-set new_ver=2.1
+set new_parent_ver=2.2
+set new_ver=2.2
 
 set CP=xcopy /H /C /Y
 if exist set_ver.bat call set_ver.bat
@@ -27,10 +27,10 @@ set patch_basename_old=moai-v%old_parent_ver%-patch-v%old_ver%
 mkdir %patch_basename%
 mkdir %patch_basename%\moai-common\
 mkdir %patch_basename%\moai-android-armeabi\
-mkdir %patch_basename%\moai-android-armeabi-v7a\
+REM mkdir %patch_basename%\moai-android-armeabi-v7a\
 mkdir %patch_basename%\moai-android-x86\
 win64\patgen make diff_android-armeabi.pmk     %patch_basename%\moai-common %patch_basename%\moai-android-armeabi     android-armeabi
-win64\patgen make diff_android-armeabi-v7a.pmk %patch_basename%\moai-common %patch_basename%\moai-android-armeabi-v7a android-armeabi-v7a
+REM win64\patgen make diff_android-armeabi-v7a.pmk %patch_basename%\moai-common %patch_basename%\moai-android-armeabi-v7a android-armeabi-v7a
 win64\patgen make diff_android-x86.pmk         %patch_basename%\moai-common %patch_basename%\moai-android-x86         android-x86
 if exist apply_this_scripts\android\apply_this_patch.sh %CP% apply_this_scripts\android\apply_this_patch.sh %patch_basename%\
 if exist set_ver.sh %CP% set_ver.sh %patch_basename%\

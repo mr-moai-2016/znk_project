@@ -126,6 +126,9 @@ install_data:
 	for tgt in pat_diff.sh ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/ ; fi ; done
 	for tgt in set_ver.bat ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/ ; fi ; done
 	for tgt in set_ver.sh ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/ ; fi ; done
+	for tgt in _zip_one.bat ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/ ; fi ; done
+	for tgt in kick_zip.bat ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/ ; fi ; done
+	for tgt in to_zip.sh ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/ ; fi ; done
 	for tgt in apply_this_scripts/android/* ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/apply_this_scripts/android/ ; fi ; done
 	for tgt in apply_this_scripts/cygwin/* ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/apply_this_scripts/cygwin/ ; fi ; done
 	for tgt in apply_this_scripts/linux/* ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/apply_this_scripts/linux/ ; fi ; done

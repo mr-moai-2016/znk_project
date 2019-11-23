@@ -2,8 +2,8 @@
 
 old_parent_ver=2.1
 old_ver=2.1
-new_parent_ver=2.1
-new_ver=2.1
+new_parent_ver=2.2
+new_ver=2.2
 
 if test -e set_ver.sh ; then source ./set_ver.sh ; fi
 

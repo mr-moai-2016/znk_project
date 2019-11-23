@@ -10,7 +10,7 @@ developed for Windows, Linux, Cygwin, and Android.
 This repository have following :  
 * libZnk : Basically C/C++ library.  
 * Moai: Yet another Portable Web-Server and  Local-Proxy Engine.  
-  Current version is 2.1.  
+  Current version is 2.2.  
 * Easter : Easter is a client-viewer system on your virtual browser environment of Moai filters.
   You can also manage your image collections gotten from Image BBS,
 * CustomBoy : CustomBoy is the next-generation of USERS(User-Agent Screen-size and Everything Randomizer System)

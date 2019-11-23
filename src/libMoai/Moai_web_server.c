@@ -564,9 +564,9 @@ printUpgrade( ZnkSocket sock, ZnkStrAry result_msgs, uint32_t peer_ipaddr, bool 
 				"　Android(apk使用)版では現在Moaiアップグレードをサポートしていません.<br>\n"
 				"　お手数ですが最新版へのアップグレードはapkファイルより行って下さい.</font>\n" );
 		ZnkStr_addf( html, "<br><br>\n" );
-		ZnkStr_addf( html, "<a class=MstyWrapLink href='https://mr-moai-2016.github.io/download/moai-v2.2-android.apk'>最新版のapkファイル</a>\n\n" );
-		ZnkStr_addf( html, "<br><br>\n" );
-		ZnkStr_addf( html, "<a class=MstyWrapLink href='https://mr-moai-2016.github.io/moai2.0/install.html#ForAndroid'>インストール方法</a>\n\n" );
+		//ZnkStr_addf( html, "<a class=MstyWrapLink href='https://mr-moai-2016.github.io/download/moai-v2.2-android.apk'>最新版のapkファイル</a>\n\n" );
+		//ZnkStr_addf( html, "<br><br>\n" );
+		ZnkStr_addf( html, "<a class=MstyWrapLink href='https://mr-moai-2016.github.io/moai2.0/install_android.html#ForApk'>インストール方法</a>\n\n" );
 		ZnkStr_addf( html, "<br><br>\n" );
 	} else {
 		ZnkStr_add( html, "<font size=-1 color=red>　!この画面ではMoaiシステム全体をアップグレードします.</font>\n" );
