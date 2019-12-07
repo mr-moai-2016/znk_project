@@ -52,8 +52,8 @@
 	<li><b><a class=MstyElemLink href=#compile_on_msys>Windows版をコンパイルする(MSYSを使用)</a></b></li>
 	<li><b><a class=MstyElemLink href=#compile_on_others_windows>Windows版をコンパイルする(BCC5.5(Borland C++ Compiler 5.5)またはDMC(Digital Mars C/C++)を使用)</a></b></li>
 	<li><b><a class=MstyElemLink href=#compile_on_linux>Linux版をコンパイルする</a></b></li>
-	<li><b><a class=MstyElemLink href=#compile_for_android_term>Android版をコンパイルする(ターミナルエミュレータ上で動作するバイナリ)</a></b></li>
-	<li><b><a class=MstyElemLink href=#compile_for_apk>Android版をコンパイルする(単独でインストールと動作可能なapkファイル) (執筆中)</a></b></li>
+	<li><b><a class=MstyElemLink href=#compile_for_android_term>Android Terminal Emulator版をコンパイルする</a></b></li>
+	<li><b><a class=MstyElemLink href=#compile_for_apk>Android APK版を作成する[執筆中]</a></b></li>
 	<li><b><a class=MstyElemLink href=#about_libressl>付属ライブラリlibresslについて</a></b></li>
 	<li><b><a class=MstyElemLink href=#about_macos>MacOSについて</a></b></li>
 </ul><br>
@@ -1280,7 +1280,7 @@ IDEを起動する必要はありません.<br>
 
 
 <a name=compile_for_android_term></a>
-<h1 class="title">Android版をコンパイルする(ターミナルエミュレータ上で動作するバイナリ)</h1>
+<h1 class="title">Android Terminal Emulator版をコンパイルする</h1>
 <p>
 Androidは基本的にLinuxですが、PC Linuxとは大きく異なる部分もあります.<br>
 そして通常、AndroidにおけるアプリはJava VMをベースとして(エントリポイントとして)提供されます.<br>
@@ -1288,7 +1288,7 @@ Java VMベースなアプリでは、グラフィカルなアイコンがホー�
 <br>
 しかしながら、今回コンパイルする Moai for Android はJava VMベースではなくAndroid Terminal Emulatorの上で動作するプログラムとしてC言語で開発します.<br>
 この場合ホーム画面にMoai用の特別なアイコンが表示されることはありません.<br>
-Moaiを起動するには、まず端末エミュレータを開き、cdコマンドによりmoai実行バイナリが存在するディレクトリ(moai-v2.*-android-armeabi-v7a)へと移動してから<br>
+Moaiを起動するには、まず端末エミュレータを開き、cdコマンドによりmoai実行バイナリが存在するディレクトリ(moai-v2.*-android-armeabi)へと移動してから<br>
 moai実行バイナリを直接起動する形になります.<br>
 要するにLinux環境のターミナルなどでプログラムを起動するのと同じ要領で行います.<br>
 	<br>
@@ -1373,7 +1373,7 @@ moai実行バイナリを直接起動する形になります.<br>
 			</li>
 			<li>「4. switch mkfid」を何回か選んでMKF_IDを「android」にします.<br>
 			</li>
-			<li>「5. switch machine」を何回か選んでMACHINEを「armeabi-v7a」にします.<br>
+			<li>「5. switch machine」を何回か選んでMACHINEを「armeabi」にします.<br>
 			</li>
 			<li>「1. make install」を選びます.<br>
 			</li>
@@ -1385,7 +1385,7 @@ moai実行バイナリを直接起動する形になります.<br>
 		Android NDKが適切にインストールされているならば、これですべてのコンパイルが自動で行われます.<br>
 		それぞれのプロジェクトのフォルダ内にout_dirというフォルダが自動的に生成され、その中に目的の実行バイナリが生成されるはずです.<br>
 		<br>
-		さらに、srcディレクトリの一つ上の階層にmoai-v2.*-android-armeabi-v7aディレクトリが生成され、<br>
+		さらに、srcディレクトリの一つ上の階層にmoai-v2.*-android-armeabiディレクトリが生成され、<br>
 		コンパイルされた実行バイナリや設定ファイルなどの必要なものすべてが、そのディレクトリへとインストールされます.<br>
 <br>
 		<div class=box>
@@ -1401,7 +1401,7 @@ moai実行バイナリを直接起動する形になります.<br>
 	</div>
 	<div class="message-body">
 		ここまででインストールは完了しましたが、これはまだPC上にあってAndroid実機にあるわけではありません.<br>
-		最後に出来上がったインストールディレクトリ moai-v2.*-android-armeabi-v7a を実機に転送しなければなりません.<br>
+		最後に出来上がったインストールディレクトリ moai-v2.*-android-armeabi を実機に転送しなければなりません.<br>
 		これには色々方法がありますが、とりあえずはmoai-v2.*-android-armeabiを一旦zipファイルに固めて適当なWebサイト上にアップし実機からこれをダウンロードするというクソ回りくどい方法が<s>ここで説明するには</s>一番簡単です.<br>
 <br>
 		<div class=box>
@@ -1462,27 +1462,27 @@ moai実行バイナリを直接起動する形になります.<br>
 		Android Terminal Emulator上でMoaiを動作確認する<br>
 	</div>
 	<div class="message-body">
-		詳細については<a class=MstyElemLink href=/moai2.0/install.html#ForAndroid>インストールガイド</a>を参照して頂いた方がよいですが、ここでも一応簡単に説明しておきます.<br>
+		詳細については<a class=MstyElemLink target=_blank href=/moai2.0/install_android.html#ForTerm>インストール方法(Android版)</a>を参照して頂いた方がよいですが、ここでも一応簡単に説明しておきます.<br>
 		<ol>
 			<li>ホームディレクトリ以外では書き込み権限および実行権限の関係で実行できないことがあります.<br>
 				よってまず「端末エミュレータ」を開き、cd コマンドよりホームディレクトリへ移動します.<br>
 				(単にcdと入力してEnterを押す).<br>
 				<br>
-				そしてmoai-v2.*-android-armeabi-v7a.zipをダウンロードなどした場合は、それは /sdcard/Download 配下に置かれています.<br>
+				そしてmoai-v2.*-android-armeabi.zipをダウンロードなどした場合は、それは /sdcard/Download 配下に置かれています.<br>
 				これを Android Terminal Emulator のホームディレクトリへコピーしなければなりません.<br>
 				以下のように実行します.<br>
 				<br>
 				<div class=box><div class=MstyCode>
-					cp /sdcard/Download/moai-v2.*-android-armeabi-v7a.zip ~/<br>
+					cp /sdcard/Download/moai-v2.*-android-armeabi.zip ~/<br>
 				</div></div>
 			</li>
 		<br>
-			<li>moai-v2.*-android-armeabi-v7a.zip をホームディレクトリへコピーしたら、以下を実行しこれを解凍します.<br>
+			<li>moai-v2.*-android-armeabi.zip をホームディレクトリへコピーしたら、以下を実行しこれを解凍します.<br>
 <br>
 				<div class=box><div class=MstyCode>
-					unzip moai-v2.*-android-armeabi-v7a.zip<br>
+					unzip moai-v2.*-android-armeabi.zip<br>
 				</div></div>
-				次に cd moai-v2.*-android-armeabi-v7a で実行バイナリのあるディレクトリ内へと移動し、moai_for_android.sh を実行します. <br>
+				次に cd moai-v2.*-android-armeabi で実行バイナリのあるディレクトリ内へと移動し、moai_for_android.sh を実行します. <br>
 				<br>
 				<div class=box><div class=MstyCode>
 					sh moai_for_android.sh<br>
@@ -1500,78 +1500,216 @@ moai実行バイナリを直接起動する形になります.<br>
 
 
 <a name=compile_for_apk></a>
-<h1 class="title">Android版をコンパイルする(単独でインストールと動作可能なapkファイル) (執筆中)</h1>
+<h1 class="title">Android APK版を作成する[執筆中]</h1>
 <p>
-	<font color=red>この記事は現在執筆中で未完成です. Ver2.2リリースのタイミングで完成予定ですのでしばらくお待ちください.</font><br>
+<font color=red>この記事は現在執筆中で未完成です. 完成までしばらくお待ちください.</font><br>
 <br>
-	一つ前のセクションでは、ターミナルエミュレータ上で動作するandroid版実行バイナリのコンパイル方法について述べました.<br>
-	これは何と言うかAndroidを非常に(その正体であり核である)Linux的に見たやり方であり、それゆえに複雑な手順が必要となったわけです.<br>
-<br>
-	一方、通常Androidのアプリというものは apk ファイルという形をとって配布されインストールされます.<br>
-	apkファイルであれば、これをタップするだけでインストールが行えますし、インストールしたアプリはメニューやアイコンから起動することができます.<br>
-	apkファイルは、多くの場合 Google Play と呼ばれるサイトから提供されるわけですが、別にこれは必須ではありません.<br>
-	Google Play 以外のサイトからでも apk ファイルをダウンロードしてアプリをインストールすることができます.<br>
-<br>
-	<div class=box>
-		Google Play を経由して apk を配布したい場合、Googleが決めた特別な取り決めなどを色々と満たす必要があります.<br>
-		Google Play には商業的な側面もあり、そのような目的のためには考慮しなければならないことも多いのでしょう.<br>
-		しかし我々は今、Androidのアプリでお金もうけしたいわけではありませんのでここでは特に Google Play は考慮しませんし、それについてこれ以上触れることもしません.<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		Introduction of Making APK<br>
 	</div>
+	<div class="message-body">
+		一つ前のセクションでは、ターミナルエミュレータ上で動作するandroid版実行バイナリのコンパイル方法について述べました.<br>
+		これはAndroidを非常に(その正体であり核である)Linux的に見たやり方であり、それゆえに複雑な手順が必要となったわけです.<br>
+	<br>
+		一方、通常Androidのアプリというものは apk ファイルという形をとって配布されインストールされます.<br>
+		apkファイルであれば、これをタップするだけでインストールが行えますし、インストールしたアプリはメニューやアイコンから起動することができます.<br>
+		apkファイルは、多くの場合 Google Play と呼ばれるサイトから提供されるわけですが、別にこれは必須ではありません.<br>
+		Google Play 以外のサイトからでも apk ファイルをダウンロードしてアプリをインストールすることができます.<br>
+	<br>
+		<div class=box>
+			Google Play を経由して apk を配布したい場合、Googleが決めた特別な取り決めなどを色々と満たす必要があります.<br>
+			Google Play には商業的な側面もあり、そのような目的のためには考慮しなければならないことも多いのでしょう.<br>
+			しかし我々は今、Androidのアプリでお金もうけしたいわけではありませんので、ここでは Google Play は考慮しませんし、それについてこれ以上触れることもしません.<br>
+		</div>
+	<br>
+		ここでは apk ファイルの作成方法と、このファイルによるandroid実機へのインストール方法について技術的な解説をします.<br>
+		ここではAndroid Studioは使用せず、最小限の構成で開発を進めます.<br>
+		必要なのはjre、gradle、android-sdk、android-ndkとなります.<br>
 <br>
-	ここでは apk ファイルの作成方法と、このファイルによるandroid実機へのインストール方法について技術的な解説をします.<br>
-	ここではAndroid Studioは使用せず、最小限の構成で開発を進めます.<br>
-	必要なのはjre、gradle、android-sdk、android-ndkとなります.<br>
+		必要最小限こと我々のモットーです.<br>
+		これこそが処理の透明性です.<br>
+		ただしこれはかなり茨の道であることも付け加えておきます.<br>
+	</div>
+</article><br>
 <br>
-	以下の手順で述べます.<br>
-	<ol>
-		<li>jreのインストール<br>
-		いわゆるJavaランタイムである.<br>
-	    以下に述べるgradleを動作するのに必要となる.<br>
-		</li>
 <br>
-		<li>gradle-2.14.1のインストール<br>
-	    androidアプリにおける java のコンパイルはgradleと呼ばれるツールによって行われる.<br>
-		</li>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		JRE( Java Rutime Environment) のインストール<br>
+	</div>
+	<div class="message-body">
+		いわゆるJavaランタイムです.<br>
+	    以下に述べるgradleを動作するのに必要となります.<br>
+		筆者の環境は JRE Ver8.0 と比較的新しいものをインストールしています.<br>
+	</div>
+</article><br>
 <br>
-		<li>sdk-toolsによるandroid-sdkのインストール<br>
-		Android SDK はandroid アプリを生成するための主にjavaに関連したツール、API群からなる.<br>
-		</li>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		gradleのインストール<br>
+	</div>
+	<div class="message-body">
+		gradle は androidアプリにおける java ソースのコンパイル、apkファイルの作成までを一括で行ってくれるスクリプトです.<br>
+		これらの作業に必要なファイルがない場合はそのダウンロードまで自動で行ってくれるという徹底ぶりですが、<br>
+		そのことがかえって仇となり、なんらかの問題がある場合にエラーが報告されるまで異常な時間待たされるといったようなことも起こり得ます.<br>
+		これはTry and Errorで力任せに色々試そうという戦術をとる場合かなり苦戦を強いられます.<br>
 <br>
-		<li>android-ndkのインストール<br>
-		Android NDK はandroid版実行バイナリを生成するためのcコンパイラやツール、ライブラリ群からなる.<br>
-		</li>
+		特にAndroid NDK と Android SDK そして gradleのバージョンにおける不整合が頻繁に起こり、(割と大きなサイズの)ダウンロードが<br>
+		勝手に裏で何度もやり直されるといった、かなり拷問に近い状況が発生します.<br>
+		それでも色々試した結果、Android NDK と Android SDK 自体のターゲットバージョンを少し古いものに想定した場合、<br>
+		どうやら最新のgradleでは問題が発生することがわかります.<br>
+		ではどのバージョンのgradleならばよいのでしょうか？<br>
 <br>
-		<li>apk作成のためのgradleおよびjni環境のフォルダ構成.<br>
-		apk作成のためのソースプロジェクトとでも言うべき骨格であり、apk作成のための全作業はこのフォルダ内で行われる.<br>
-		</li>
+		可能なバージョンの組み合わせはかなりシビアで、ネット上に転がっているgradleのサンプルなどはほぼ全滅という惨憺たる状況です.<br>
+		（そもそもAndroid Studioを使わずに gradle android-sdk android-ndk だけでなんとかしようというのは世界的にみて少数派です.<br>
+		ましてやMoaiの場合 android-ndkもあります.)<br>
 <br>
-		<li>build.gradle、AndroidManifest.xml等の記述.<br>
-		gradleはbuild.gradleと呼ばれるファイルの記述にしたがって実行される.<br>
-		ちょうどmakeがMakefileを参照しながら動作するのに似ている.<br>
-		</li>
+		それでも何とかして筆者の環境では gradle-2.14.1 という一つの解(割と古いバージョンですが)にたどり着けました.<br>
+	</div>
+</article><br>
 <br>
-		<li>javaソースによるActivityクラスの記述.<br>
-		Activityクラスとはアプリのエントリポイントとなるjavaのクラスである.<br>
-		</li>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		sdk-toolsによるandroid-sdkのインストール<br>
+	</div>
+	<div class="message-body">
+		Android SDK はandroid アプリを生成するための主にjavaに関連したツール、API群からなります.<br>
+		ではなぜここで sdk-tools なるものが手前にワンクッションあるのかということですが、<br>
+		ターゲットとするAndroidのバージョンによって必要なファイル群が異なるためです.<br>
+		つまりまずはAndroid SDKのインストーラをインストールせよということですね.<br>
 <br>
-		<li>cソースによるJNIインターフェースの記述.<br>
-		Activityクラス内から呼び出されるCのコードである.<br>
-		ここで記述したcファイルはndk内のCコンパイラによってコンパイルされ、同じくndk内のリンカによって最終的にシェアードライブラリ(libmain.soファイル)となる.<br>
-		</li>
+		https://developer.android.com/studio へアクセスします.<br>
+		最後にstudioとありますが、この記事ではAndroid Studioは一切使いません.<br>
+		クソうざったいAndroid Studioのでかでかとした宣伝画像を一切無視して一番下の方にある Command line tools only へ一直線に画面をスクロールします.<br>
+		欲しいものはこれだけです. 筆者は sdk-tools として sdk-tools-windows-4333796.zip (これでも148MBもありますが)をダウンロードしました.<br>
 <br>
-		<li>ネイティブライブラリのリンクとAndroid.mkでの記述.<br>
-		libZnkなどcで記述されたその他のライブラリをリンクする方法である.<br>
-		</li>
+		ここに次にように書かれてあります.<br>
 <br>
-		<li>gradle実行によるjavaソースのコンパイルとapkファイルの生成.<br>
-		7で記述したjavaソースをコンパイルし、8で生成したlibmain.so、9で指定したその他のライブラリ(libZnk.so)、<br>
-		その他リソースファイルやassetsファイルなどを統合し、最終的にapkファイルとしてまとめる.<br>
-		この作業をgradleが行う.<br>
-		</li>
+		If you do not need Android Studio, you can download the basic Android command line tools below.<br>
+		You can use the included sdkmanager to download other SDK packages.<br>
 <br>
-		<li>生成したapkファイルを実機へとインストールする各種方法<br>
-		</li>
-	</ol>
+		sdk-tools-windows-4333796.zip 内に sdkmanager というプログラムがあり、<br>
+		これを実行することで Android SDKがダウンロード可能であると<b>一応</b>書かれてます.<br>
+		早速このzipを展開して、<s>あまり期待せず</s>sdkmanagerなるものを捜しますと、tools/bin/sdkmanager.bat というのがありました.<br>
+		batファイルですのでただちにテキストエディタで開き、内部のソースを読みます.<br>
+<br>
+		JAVA_HOME環境変数にJREのインストールディレクトリを指定しなければならないことが即座にわかります.<br>
+		そしてこれを元に %JAVA_HOME%/bin/java.exe をインタプリタとして tools/lib 内にあるjarファイルを実行しているようです.<br>
+<br>
+		sdkmanager.bat 内にはこれ以上の情報はありません.<br>
+		そこで次に sdkmanagerに与えるコマンドラインオプションについて知る必要があります.<br>
+		https://developer.android.com/studio/command-line/sdkmanager へアクセスします.<br>
+<br>
+		これによれば、platforms-tools と 自分の望むAPIレベルのSDKツール、この二つインストールする必要があるらしいことがわかります.<br>
+		つまりこのように実行すればよいわけですね.<br>
+<br>
+		sdkmanager.bat "platform-tools" "platforms;android-自分の望むAPIレベル"<br>
+<br>
+		むしろ問題はどのAPIレベルを選択すればよいのかということになります.<br>
+		これを調べるのがまた面倒です. AndroidのドロドロとしたバージョンとAPIの対応の歴史を調べよというわけですか…。<br>
+		紆余曲折の末、筆者の環境では android-26 に落ち着きました.<br>
+<br>
+		つまりこうですね.<br>
+<br>
+		sdkmanager.bat "platform-tools" "platforms;android-26"<br>
+<br>
+		改めて android-sdk というフォルダを作り、これらをこの中に置きます.<br>
+		このandroid-sdkの位置を C:/share_7/AndroidSDK/android-sdk としました.<br>
+	</div>
+</article><br>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		android-ndkのインストール<br>
+	</div>
+	<div class="message-body">
+		こちらはAndroid Terminal Emulator版でももうおなじみ、Android NDKです.<br>
+		Android NDK はandroid版実行バイナリを生成するためのcコンパイラやツール、ライブラリ群からなります.<br>
+		ただし今回はgradle や Android SDKなども絡んできますので油断は禁物です.<br>
+		今回筆者は android-ndk-r14b を使いました.<br>
+		android-ndkの位置は E:/share_e/trunk_id1/Android/android-ndk-r14b としました.<br>
+<br>
+		またNDKにおけるplatformsについては android-14 を使う形にしました.<br>
+		(色々紛らわしいですが、このandroid-14は android-ndk-r14b のr14bとは関係ないですし、SDKのandroid-26ともはまた別のものです)<br>
+	</div>
+</article><br>
+<br>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		apk作成のためのgradleおよびjni環境のフォルダ構成.<br>
+	</div>
+	<div class="message-body">
+		apk作成のためのソースプロジェクトとでも言うべき骨格であり、apk作成のための全作業はこのフォルダ内で行われます.<br>
+		[執筆中]<br>
+	</div>
+</article><br>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		build.gradle、AndroidManifest.xml等の記述.<br>
+	</div>
+	<div class="message-body">
+		gradleはbuild.gradleと呼ばれるファイルの記述にしたがって実行されます.<br>
+		ちょうどmakeがMakefileを参照しながら動作するのに似ています.<br>
+		[執筆中]<br>
+	</div>
+</article><br>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		javaソースによるActivityクラスの記述.<br>
+	</div>
+	<div class="message-body">
+		Activityクラスとはアプリのエントリポイントとなるjavaのクラスです.<br>
+		[執筆中]<br>
+	</div>
+</article><br>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		cソースによるJNIインターフェースの記述.<br>
+	</div>
+	<div class="message-body">
+		Activityクラス内から呼び出されるCのコードです.<br>
+		ここで記述したcファイルはndk内のCコンパイラによってコンパイルされ、<br>
+		同じくndk内のリンカによって最終的にシェアードライブラリ(libmain.soファイル)となります.<br>
+		[執筆中]<br>
+	</div>
+</article><br>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		ネイティブライブラリのリンクとAndroid.mkでの記述.<br>
+	</div>
+	<div class="message-body">
+		ここではlibZnkなどcで記述されたその他のライブラリをリンクする方法について述べます.<br>
+		[執筆中]<br>
+	</div>
+</article><br>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		gradle実行によるjavaソースのコンパイルとapkファイルの生成.<br>
+	</div>
+	<div class="message-body">
+		上述したjavaソースをコンパイルし、生成したlibmain.so、指定したその他のライブラリ(libZnk.soなど)、<br>
+		その他リソースファイルやassetsファイルなどを統合し、最終的にapkファイルとしてまとめる処理となります.<br>
+		make_apk.batというファイルを実行します.<br>
+		[執筆中]<br>
+	</div>
+</article><br>
+<br>
+<article class="message is-dark"><br>
+	<div class="message-header">
+		生成したapkファイルを実機へとインストールする各種方法<br>
+	</div>
+	<div class="message-body">
+		adb_install_apk.batに関する解説を述べる予定.<br>
+		[執筆中]<br>
+	</div>
+</article><br>
 </p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>

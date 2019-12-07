@@ -71,8 +71,8 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 			<li>改めて apk ファイルを実行してみます.
 			無事「インストールされました」と表示されたら、アプリ一覧に「Moai for Android」という項目が登録されていると思います.
 			それを選択すれば Moai が起動します.
-			Moai for Android 起動を意味するシンプルな画面が表示されますので、一旦それをクリアして閉じます.
-			(閉じてもMoaiのサーバスレッドはしばらくは生きています)
+			Moai for Android 起動を意味するシンプルな画面が表示されますので、一旦その画面をクリアします.
+			(画面をクリアしてもMoaiのサーバプロセスはしばらくは生きています)
 			</li>
 
 			<li>お使いのAndroidシステムにあるWebブラウザ(なんでもよいですが)を起動します.
@@ -80,15 +80,15 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 			Moaiのトップページが表示されれば成功です.
 			</li>
 
-			<li>長時間何もせずに放置すると、そのうちMoaiのサーバスレッドがAndroidシステム(Zygoteプロセス)によって終了させられると思います.
+			<li>長時間何もせずに放置すると、そのうちMoaiのサーバプロセスがAndroidシステム(Zygoteプロセス)によって終了させられると思います.
 			こうなるとブラウザから http://127.0.0.1:8124 を開けなくなりますので、再度Moai for Androidを起動してください.
 			</li>
 		</ol>
 
 		<div class=box>
 			Android には Zygote と呼ばれるすべてのプロセスの大元となるプロセスが常駐しています.
-			Zygote はユーザがアプリを明示的に終了させても、効率のためしばらくはそのスレッドを生存させている場合がありますが、
-			これは時間が経つと自然に消滅しますので、気にする必要はありません.
+			ユーザがアプリを明示的に終了させても、効率のためしばらくはそのプロセスが生存している場合がありますが、
+			これは時間が経つとZygoteによって自然に終了させられます.
 		</div>
 	</div>
 </article>
@@ -112,7 +112,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 		Terminal Emulator版について
 	</div>
 	<div class="message-body">
-		Android版には、Terminal Emulator 版というのもあります.
+		apk版の他に、Terminal Emulator 版というものも用意してあります.
 		Ver2.1まではでは、このTerminal Emulator版のみをサポートしていました.
 		これはいわゆる一般的なAndroidアプリとは異なり、Terminal Emulatorと呼ばれるソフトウェアの上でMoaiを動作させるという方式です.
 
@@ -131,23 +131,21 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 		Terminal Emulator版でのインストール手順
 	</div>
 	<div class="message-body">
-		<ol>
-			<li>最新版はzipファイルとなっており、以下より入手できます.
-			
-			<a class=MstyWrapLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/v2.1>https://github.com/mr-moai-2016/znk_project/releases/v2.1</a>
-			
-			Assetsにある moai-v2.1-android-armeabi.zip がAndroid版となります.
-			これをダウンロードしてください.
-	
-			<div class=box>
-				moai-v2.1-android-x86.zip は、PC(x86)上のAndroidエミュレータなどで動作させるためのバイナリとなります.
-				通常のユーザはこれらをダウンロードする必要はありません.
-			</div>
+		最新版はzipファイルとなっており、以下よりダウンロードできます.
+
+		<ul>
+			<li>Android Terminal Emulator版
+			<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/download/v2.2/moai-v2.2-android-armeabi.zip>moai-v2.2-android-armeabi.zip</a>
 			</li>
-			
-			<li>Android Terminal Emulator (Jack Palevich著) をインストールすると
-			Androidのホーム画面に以下のような「端末エミュレータ」アイコンがあると思います.
-			これを実行して端末エミュレータウィンドウを開きましょう.
+		</ul>
+
+		ダウンロードしましたら次の手順でインストールします.
+		基本的にはLinuxにおける手順に準じます.
+
+		<ol>
+			<li>お使いのAndroidに Android Terminal Emulator (Jack Palevich著) がインストールされているならば、
+			ホーム画面に以下のような「端末エミュレータ」アイコンがあるはずです.
+			まずはこれをタップして端末エミュレータウィンドウを開きましょう.
 	
 			<div class=MstyImgBox>
 				<img src=/imgs/android_terminal_icon.png>
@@ -169,14 +167,14 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 			</div>
 			</li>
 			
-			<li>上記1でダウンロードした zipファイルは /sdcard/Download ディレクトリなどに保存されている場合があります.
+			<li>上記1でダウンロードした zipファイルは /sdcard/Download ディレクトリに保存されていると思われます.
 			(システム構成によっては違う場所に保存されているかもしれません. その場合はその場所に読み替えてください). 
 			ホームディレクトリ以外でMoaiを実行すると、書き込み許可等の関係で何かと不便なことが起こりがちですので、
 			まずはダウンロードした zip ファイルをホームディレクトリへ移動またはコピーする必要があります.
 			以下のように入力しEnterを押します.
 	
 			<div class=box><div class=MstyCode>
-		    	cp /sdcard/Download/moai-v2.1-android-armeabi.zip ~/
+		    	cp /sdcard/Download/moai-v2.2-android-armeabi.zip ~/
 			</div></div>
 			</li>
 			
@@ -185,7 +183,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 			(以降の説明でも同様に入力後にEnterを押してコマンドを実行してください).
 	
 			<div class=box><div class=MstyCode>
-		    	unzip moai-v2.1-android-armeabi.zip
+		    	unzip moai-v2.2-android-armeabi.zip
 			</div></div>
 			</li>
 			
@@ -193,7 +191,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 			以下のように入力しEnterを押します.
 	
 			<div class=box><div class=MstyCode>
-		    	cd moai-v2.1-android-armeabi
+		    	cd moai-v2.2-android-armeabi
 			</div></div>
 			</li>
 
@@ -211,16 +209,15 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 		インストールについては以上です.
 
 		上記 1 から 8 までの手順は最初の一回だけ必要です.
-		これらを一度済ませてしまえば以降は上記 2、3、6、7 だけでMoaiが起動可能です.
+		これらを一度済ませてしまえば以降は上記 1、2、5、6 だけでMoaiが起動可能です.
 		
 		Moaiを明示的に終了させる必要性は通常ありませんが、
 		終了させたい場合はプロセスごとkillして構いません.
 		( プロセスのkill の仕方がわからない方は、替りに「端末エミュレータウィンドウ」ごと閉じてもいいでしょう ).
 
 		<div class=box>
-			Android には Zygote と呼ばれるすべてのプロセスの大元となるプロセスが常駐しています.
-			Zygote はユーザがアプリを明示的に終了させても、効率のためしばらくはそのスレッドを生存させている場合がありますが、
-			これは時間が経つと自然に消滅しますので、気にする必要はありません.
+			Terminal Emulator版の場合、プロセスがZygoteによって自動的に終了させられるかどうかは
+			お使いの Terminal Emulator の実装に依存すると思われます.
 		</div>
 	</div>
 </article>
@@ -248,7 +245,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 		一方、Terminal Emulator 版は 非PIEと呼ばれるネイティブ実行形式で作成してあります.
 		この違いにより、それぞれの版で使用できるAndroidのバージョンが異なります.
 
-		<b><u>Android 5.0 (Lollipop) 以降</u></b>
+		<b><u>Android 5.0 ( Lollipop ) 以降</u></b>
 
 		このバージョンのAndroidでは、これまでとネイティブ実行形式に関する仕様が変更となり、
 		PIE( Position Independent Executable ) 形式のみをサポートするようになりました.
@@ -263,7 +260,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 		この範囲のバージョンのAndroidでは、PIE 形式と非PIE形式の両方がサポートされています.
 		よってこのバージョンのAndroidをご使用であれば、apk版とTerminal Emulator版のどちらでも使用可能です.
 
-		<b><u>Android 4.0.3 (Ice Cream Sandwich) 以前</u></b>
+		<b><u>Android 4.0.3 ( Ice Cream Sandwich ) 以前</u></b>
 
 		これ以前の古いAndroidでは、今度は逆に PIE 形式がサポートされず非PIE形式のみのサポートとなります.
 		そのため、この環境では apk 版(PIE)は、起動することができません.
@@ -309,19 +306,21 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 
 <article class="message is-dark">
 	<div class="message-header">
-		moai_profile の位置は変更できるのか？
+		moai_profile の位置は？
 	</div>
 	<div class="message-body">
+		Android apk版の場合、データフォルダのファイルマネージャ直下(/sdcard/moai_profile) となります.
+
+		Android Terminal Emulator版の場合、Moai 本体ディレクトリより一つ上です.
+		moai_profile がまだ存在しない場合、Moai はこの位置へ moai_profile を自動的に生成します.
+
 		moai_profile の位置は Moaiエンジンの設定画面で変えることができます.
 		例えば現在のディスク容量に余裕がなく、moai_profile のみを他のディスクに移動させたい場合などに柔軟に対応できます.
 		この位置は、環境変数 MOAI_PROFILE_DIR の値としてそのフルパスを設定することで強制的に指定することもでき、
 		これが指定されている場合は Moaiエンジンの設定よりもこれが優先されます.
 
-		初期設定では、この位置はAndroidの場合、Ver2.1では、Moai 本体ディレクトリより一つ上です.
-		moai_profile がまだ存在しない場合、Moai はこの位置へ moai_profile を自動的に生成します.
-
-		Ver2.2以降では Android apk版の場合、データフォルダのファイルマネージャ直下(/sdcard/moai_profile) となります.
-		(Androidではシステムに様々な取り決めがあるため、moai_profileのデフォルトの位置を変えることはあまりお勧めできません)
+		ただしAndroidではシステムに様々な取り決めがあるため、特にapk版に関しては
+		moai_profileのデフォルトの位置を変えることはあまりお勧めできません.
 	</div>
 </article>
 @@.

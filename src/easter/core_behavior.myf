@@ -52,6 +52,9 @@ replace_ex ['<table class="ftbl" id="ftbl">'] ['<div id="tfm"></div><table class
 replace_ex ['class="ftbl"'] ['class="table"']
 replace_ex ['class="ftb2"'] ['class="table"']
 replace_ex ['<meta name="viewport" content="width=device-width,initial-scale=0.47">'] ['']
+#replace_ex [' class="rsc"'] [' class=MstyElemLink']
+add_inq_t ['<span id="delcheck'] ['</span>'] ['<a class=MstyElemLink>E</a>']
+add_inq_t ['value=delete id=delcheck'] ['>'] ['<a class=MstyElemLink>E</a>']
 
 # for Top
 replace_ex ['www.2chan.net/"'] ['www.2chan.net/index2.html"']

@@ -571,3 +571,12 @@ body {
 	max-width:  none;
 	max-height: none;
 }
+.MstyCtrlPopup {
+	border:none;
+	background-color: #F0F0E6;
+	box-shadow:1px 1px 3px 1px #777;
+	border-radius:5px;
+#	z-index:100;
+	font-size:small;
+	padding:2px 8px;
+}

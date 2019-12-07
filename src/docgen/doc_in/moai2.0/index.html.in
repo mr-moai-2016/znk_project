@@ -54,11 +54,13 @@ index_hidden = ['true']
 	「初級マニュアル」には多くの記事があり、上のリンクの２段目に列挙されているものたちがそれに該当します.
 	ここではそれらの概要を紹介しましょう.
 
-	<a class=MstyElemLink href="/moai2.0/install.html">インストールガイド</a>
+	<a class=MstyElemLink href="/moai2.0/install.html">インストール方法(PC版)</a>
+	<a class=MstyElemLink href="/moai2.0/install.html">インストール方法(Android版)</a>
 	<article class="message is-dark"><div class="message-body">
 		この記事では最新版のMoaiをインストールしてそれを初めて起動するまでを解説してあります.
 		<div class=box>
-			Moaiはマルチプラットフォームであるため、インストール方法はWindows, Linux, Androidなど環境によって異なります.
+			Moaiはマルチプラットフォームであるため、インストール方法はPC版(Windows, Linux等), Android版によって異なります.
+			(MacOSやiPhoneについては、残念ながらサポートしておりません)
 			よってそれぞれの環境について別途解説してあります.
 		</div>
 	</div></article>
@@ -78,7 +80,7 @@ index_hidden = ['true']
 		この記事ではVirtualUSERSで仮想環境を簡単構築する方法を解説しています.
 	</div></article>
 
-	<a class=MstyElemLink href="/moai2.0/upgrade.html">Moaiを最新バージョンにする</a>
+	<a class=MstyElemLink href="/moai2.0/upgrade.html">Moaiアップグレードの使い方</a>
 	<article class="message is-dark"><div class="message-body">
 		この記事ではMoaiを最新バージョンへアップグレードする方法について解説しています.
 	</div></article>

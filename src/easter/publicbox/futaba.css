@@ -52,7 +52,7 @@ blockquote{
 }
 
 .ci{margin:2px 180px 2px 4px;text-align: center;}
-.ch{margin:2px 4px 2px 40px;}
+.ch{margin:2px 4px 2px 4px;}
 .cu{display:table-cell;vertical-align: middle;padding:1px;font-size:small;white-space: nowrap;}
 .cu img{border:0px;}
 .cs{display:inline-block;border:1px solid black;margin:1px;overflow:hidden;text-align:left;}
@@ -71,12 +71,29 @@ blockquote{
 .cnw{margin:0 5px;}/*now*/
 .cno{margin:0 15px 0 5px;text-decoration:underline}/*No.*/
 .cno:hover{color:red;cursor:pointer;}/*No.*/
-.pdmm{width:180px;height:200px;border:solid 1px #800;background-color:#ffe;box-shadow:2px 2px 3px 0px #777;border-radius:5px;z-index:1;}
-.pdms{margin:20px 5px;padding:5px;text-decoration:underline;cursor:pointer;z-index:1;}
+.pdmm{border:solid 1px #800;background-color:#ffe;box-shadow:2px 2px 3px 0px #777;border-radius:5px;z-index:1;}
+.pdms{margin:8px 5px;padding:5px;text-decoration:underline;cursor:pointer;z-index:1;white-space:nowrap;}
 .pdms:hover{color:red;}
 .pdmshide{color:silver;cursor:not-allowed;z-index:1;}
 .pdmshide:hover{color:silver;}
-.pdmf{margin:20px 5px;padding:5px;z-index:1;}
+.pdmf{margin:8px 5px;padding:5px;z-index:1;}
 .catlink{margin:12px 0px;}
 .catlink a{font-size:150%;margin:0px 3px;}
 
+.qtjmp{font-size:small;text-decoration:underline;color:blue;cursor:pointer;margin-bottom:5px;display:inline-block;}
+.qtjmp:hover{color:red;}
+.qtd{border:none;background-color: #F0E0D6;box-shadow:1px 1px 3px 1px #777;border-radius:5px;z-index:1;font-size:small;padding:2px 8px;}
+.qsd{cursor:pointer;}
+.qsd:hover{color:red;}
+
+.pdd{position:absolute;border:solid 1px #800;background-color:#ffe;box-shadow:2px 2px 3px 0px #777;border-radius:5px;z-index:1;}
+.pdds{margin:0px 5px;padding:5px;text-decoration:underline;cursor:pointer;z-index:1;white-space:nowrap;}
+.pdds:hover{color:red;}
+.pddt1{font-size:small;cursor:move;}
+.pddtip{padding:8px;position:absolute;border:solid 1px #800;background-color:#ffe;box-shadow:2px 2px 3px 0px #777;border-radius:5px;z-index:1;}
+
+.rsc{font-size:small;}
+.slp{border:solid 1px #800;background-color:#ffe;box-shadow:2px 2px 3px 0px #777;border-radius:5px;z-index:101;}
+.slp1{font-size:small;margin:1px;padding:2px;cursor:pointer;z-index:1;white-space:nowrap;}
+.slp1:hover{color:red;}
+#slptmp{display:none;}

@@ -569,7 +569,7 @@ printUpgrade( ZnkSocket sock, ZnkStrAry result_msgs, uint32_t peer_ipaddr, bool 
 		ZnkStr_addf( html, "<a class=MstyWrapLink href='https://mr-moai-2016.github.io/moai2.0/install_android.html#ForApk'>インストール方法</a>\n\n" );
 		ZnkStr_addf( html, "<br><br>\n" );
 	} else {
-		ZnkStr_add( html, "<font size=-1 color=red>　!この画面ではMoaiシステム全体をアップグレードします.</font>\n" );
+		ZnkStr_add( html, "<font size=-1 color=red>　この画面ではMoaiシステム全体をアップグレードします.</font>\n" );
 	}
 	ZnkStr_add( html, "</td></tr>\n" );
 	ZnkStr_add( html, "</table>\n" );

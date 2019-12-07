@@ -28,20 +28,24 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 		インストール手順
 	</div>
 	<div class="message-body">
-		<ol>
-			<li>最新版はzipファイルとなっており、以下より入手できます.
-		
-			<a class=MstyWrapLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/v2.1>https://github.com/mr-moai-2016/znk_project/releases/v2.1</a>
-			
-			Assets にある moai-v2.1-win32.zip もしくは moai-v2.1-win64.zip がWindows版となります.
-			32bit Windowsをお使いの方は前者を、64bit Windowsをお使いの方は後者をダウンロードしてください.
-			よくわからない方は前者をダウンロードしてください.
-			
-			znk_project というフォルダを一つ作り、その中にダウンロードして展開することをお勧めします.
-			znk_project に属する他のアプリもこの中にまとめて置いておいた方が見通しがよくなるためです.
+		最新版はzipファイルとなっており、以下よりダウンロードできます.
+		32bit Windowsをお使いの方や、どちらを使っていいかよくわからない方は 32bit 版の方をダウンロードしてください.
+
+		<ul>
+			<li>Windows(64bit)版
+			<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/download/v2.2/moai-v2.2-win64.zip>moai-v2.2-win64.zip</a>
 			</li>
-			
+			<li>Windows(32bit)版
+			<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/download/v2.2/moai-v2.2-win32.zip>moai-v2.2-win32.zip</a>
+			</li>
+		</ul>
+
+		ダウンロードしましたら次の手順でインストールします.
+
+		<ol>
 			<li>ダウンロードしたzipファイルを展開します.
+			znk_project というフォルダを一つ作り、その中にこのzipファイルを展開することをお勧めします.
+			znk_project に属する他のアプリもこの中にまとめて置いておいた方が見通しがよくなるためです.
 		
 			<div class=box>
 				展開直後の時点での全体のサイズ合計はせいぜい15MB程度なのですが、将来に備えてディスク容量にさらに150MB程度の余裕がある方が望ましいです.
@@ -141,18 +145,29 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 		インストール手順
 	</div>
 	<div class="message-body">
-		<ol>
-			<li>最新版はzipファイルとなっており、以下より入手できます.
-			
-			<a class=MstyWrapLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/v2.1>https://github.com/mr-moai-2016/znk_project/releases/v2.1</a>
-			
-			Assetsにある moai-v2.1-linux32.zip もしくは moai-v2.1-linux64.zip がLinux版となります.
-			32bit Linuxをお使いの方は前者を、64bit Linuxをお使いの方は後者をダウンロードしてください.
+		最新版はzipファイルとなっており、以下よりダウンロードできます.
+		<div class=box>
+			64bit Linux で 32bit版Moaiを動作させることも可能ではありますが、場合によってはそのための環境を配備する必要があるかもしれません.
+			お使いのLinuxが64bit版なのか32bit版なのかを確認し、合致する方をダウンロードした方が確実でしょう.
 			どちらのLinuxをお使いであるかわからない場合は unameコマンドなどで確認できるかと思います.
-			以下では64bit Linuxと仮定して説明します.
+			ただ昨今のPC版Linuxは64bitと考えてほぼ間違いないとは思います.
+		</div>
+
+		<ul>
+			<li>Linux(64bit)版
+			<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/download/v2.2/moai-v2.2-linux64.zip>moai-v2.2-linux64.zip</a>
 			</li>
-			
+			<li>Linux(32bit)版
+			<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/download/v2.2/moai-v2.2-linux32.zip>moai-v2.2-linux32.zip</a>
+			</li>
+		</ul>
+
+		ダウンロードしましたら次の手順でインストールします.
+		以下では64bit Linuxと仮定して説明します.
+
+		<ol>
 			<li>ダウンロードしたzipファイルを展開します.
+			unzipコマンドを使うとよいでしょう( Command not foundと表示される場合はこれをLinuxにインストールしておきましょう ).
 	
 			<div class=box>
 				展開直後の時点での全体のサイズ合計はせいぜい15MB程度なのですが、将来に備えてディスク容量にさらに150MB程度の余裕がある方が望ましいです.
@@ -164,7 +179,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 			以下のように入力しEnterを押します.
 	
 			<div class=box><div class=MstyCode>
-				cd moai-v2.1-linux64
+				cd moai-v2.2-linux64
 			</div></div>
 			</li>
 	
@@ -210,25 +225,30 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 		インストール手順
 	</div>
 	<div class="message-body">
-		<ol>
-			<li>最新版はzipファイルとなっており、以下より入手できます.
-			
-			<a class=MstyWrapLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/v2.1>https://github.com/mr-moai-2016/znk_project/releases/v2.1</a>
-			
-			Assetsにある moai-v2.1-cygwin32.zip がCygwin版となります.
-			64bit Windows の方もこれをお使いください.
-		
-			<div class=box>
-				Cygwinの64bit版専用実行バイナリは提供しておりません.
-				(Cygwin環境本体がWOWで動作する32bitというケースもあり得るため、このあたりの組み合わせは割と煩雑です).
-				
-				そもそもWindows版がある中、わざわざCygwin版を選ぶといった方はソースコードから自分でビルドして使いたいという方がほとんどだと思います.
-				従って、わざわざ実行バイナリを提供する意味自体あまり感じないのですが、その場合でもビルド後の構成がどうなっているのかは確認できますので、
-				32bit版実行バイナリのみ提供しております.
-			</div>
+		最新版はzipファイルとなっており、以下よりダウンロードできます.
+		64bit Windows の方もこれをお使いください.
+
+		<ul>
+			<li>Cygwin(32bit)版
+			<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/download/v2.2/moai-v2.2-cygwin32.zip>moai-v2.2-cygwin32.zip</a>
 			</li>
+		</ul>
+
+		<div class=box>
+			Cygwinの64bit版専用実行バイナリは提供しておりません.
+			(Cygwin環境本体がWOWで動作する32bitというケースもあり得るため、このあたりの組み合わせは割と煩雑です).
 			
+			そもそもWindows版がある中、わざわざCygwin版を選ぶといった方はソースコードから自分でビルドして使いたいという方がほとんどだと思います.
+			従って、わざわざ実行バイナリを提供する意味自体あまり感じないのですが、その場合でもビルド後の構成がどうなっているのかは確認できますので、
+			32bit版実行バイナリのみ提供しております.
+		</div>
+
+		ダウンロードしましたら次の手順でインストールします.
+		基本的にはLinuxにおける手順に準じます.
+			
+		<ol>
 			<li>ダウンロードしたzipファイルを展開します.
+			unzipコマンドを使うとよいでしょう( Command not foundと表示される場合はマウスクリックして展開してしまってもよいでしょう ).
 	
 			<div class=box>
 				展開直後の時点での全体のサイズ合計はせいぜい15MB程度なのですが、将来に備えてディスク容量にさらに150MB程度の余裕がある方が望ましいです.
@@ -240,7 +260,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 			以下のように入力しEnterを押します.
 	
 			<div class=box><div class=MstyCode>
-		    	cd moai-v2.1-cygwin32
+		    	cd moai-v2.2-cygwin32
 			</div></div>
 			</li>
 
@@ -312,16 +332,16 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 
 <article class="message is-dark">
 	<div class="message-header">
-		moai_profile の位置は変更できるのか？
+		moai_profile の位置は？
 	</div>
 	<div class="message-body">
+		初期設定では、Moai 本体のディレクトリより一つ上になっています.
+		moai_profile がまだ存在しない場合、Moai はこの位置へ moai_profile を自動的に生成します.
+
 		moai_profile の位置は Moaiエンジンの設定画面で変えることができます.
 		例えば現在のディスク容量に余裕がなく、moai_profile のみを他のディスクに移動させたい場合などに柔軟に対応できます.
 		この位置は、環境変数 MOAI_PROFILE_DIR の値としてそのフルパスを設定することで強制的に指定することもでき、
 		これが指定されている場合は Moaiエンジンの設定よりもこれが優先されます.
-
-		初期設定では、この位置はWindowsやLinuxの場合、Moai 本体のディレクトリより一つ上になっています.
-		moai_profile がまだ存在しない場合、Moai はこの位置へ moai_profile を自動的に生成します.
 	</div>
 </article>
 @@.

@@ -31,7 +31,7 @@
 @@V config
 doc_title     = ['インフォメーション']
 author        = { ['Mr.Moai'] }
-update        = ['2019/06/21']
+update        = ['2019/11/23']
 category_path = {}
 urp           = ['/']
 nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['article'] }
@@ -52,6 +52,40 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['article'] }
 
 
 @@L WhatsNew
+<article class="message is-dark">
+	<div class="message-header">
+		2019/11/22: Moai Ver2.2 ―ResposiveStone― リリース.
+	</div>
+	<div class="message-body">
+		メジャーバージョンアップとなります.
+		( 下記で述べたふたばちゃんねるにおける新仕様にも対応したバージョンとなります )
+		以下よりダウンロードできます.
+
+		<ul>
+			<li>Windows(64bit)版
+			<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/download/v2.2/moai-v2.2-win64.zip>moai-v2.2-win64.zip</a>
+			</li>
+			<li>Windows(32bit)版
+			<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/download/v2.2/moai-v2.2-win32.zip>moai-v2.2-win32.zip</a>
+			</li>
+			<li>Linux(64bit)版
+			<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/download/v2.2/moai-v2.2-linux64.zip>moai-v2.2-linux64.zip</a>
+			</li>
+			<li>Android(Ver4.1 Jelly Bean以降)版
+			<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/download/v2.2/moai-v2.2-android.apk>moai-v2.2-android.apk</a>
+			</li>
+		</ul>
+
+		インストール方法については以下を参考にしてください.
+		<a class=MstyElemLink target=_blank href=/moai2.0/install.html>PC版のインストール方法</a>
+		<a class=MstyElemLink target=_blank href=/moai2.0/install_android.html>Android版のインストール方法</a>
+
+		その他の環境のダウンロードについては<\>
+		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/v2.2>こちら</a>の Assets 欄をご覧下さい.
+		このバージョンで追加された新機能については<a class=MstyElemLink href="/announcement.html#WhatIsChanging_latest">こちら</a>にまとめてあります.
+	</div>
+</article>
+
 <article class="message is-dark">
 	<div class="message-header">
 		2019/11/18: ふたばちゃんねるにおけるカタログの仕様変更について.
@@ -80,45 +114,10 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['article'] }
 		2018/12/25: Moai Ver2.1.5 リリース.
 	</div>
 	<div class="message-body">
-		Ver2.1系列でのマイナーバージョンアップとなりますので、Moaiアップグレードのみでの提供とさせて頂きます.
-
-		ふたばちゃんねるにおいて返信フォームの仕様変更により、Easter HyperPost画面が開けなくなるという不具合が発生しました.
-		今回この不備を修正してあります.
+		Ver2.1系列での最終バージョンとなります.
 
 		このリリースの詳細は<\>
-		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/latest>こちら</a>をご覧下さい. <\>
-		過去のリリースにおける修正内容の全履歴は<a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project/tree/master/src/ReleaseNote.md target=_blank>リリースノート</a>に纏めてあります.
-
-		既に Moai Ver2.1以降をインストールされている方は、<a class=MstyElemLink target=_blank href=/moai2.0/upgrade.html#MoaiUpgrade>Moaiアップグレード</a>を行うことでこのバージョンへアップグレードできます.
-		Moaiを新規にインストールされる方は、まずは<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/v2.1>Moai Ver2.1</a>を新規インストールし、そこから<a class=MstyElemLink target=_blank href=/moai2.0/upgrade.html#MoaiUpgrade>Moaiアップグレード</a>を行って下さい.
-
-		<div class=box>
-			<u><b>「Moaiアップグレード」機能が動作しない不具合について.</b></u>
-
-			AndroidとCygwin環境において、万一Moaiアップグレードが機能しない場合は、お手数ですが Moai Ver2.1 のディレクトリに入り、以下のコマンドを実行して頂いた上で、再度「Moaiアップグレード」をお試し下さい.
-			(この問題はすべてUNIX上での実行権限の付加に失敗するために発生するものです).
-
-			<div class=box>
-				chmod 755 birdman/birdman
-			</div>
-
-			また万一CygwinにおいてMoaiそのものが起動しなくなった場合、以下のコマンドもお試しください.
-
-			<div class=box>
-				chmod 755 *.dll
-			</div>
-
-			尚、この問題は Ver2.1.1より修正されております.
-		</div>
-
-		<div class=box>
-			<b><u>「Moaiアップグレード」機能が動作するバージョンについて</u></b>
-
-			「Moaiアップグレード」機能は Ver2.1以降で動作します.
-			それより古いバージョンではこれは機能しません.
-			Ver2.1より古いバージョンをお使いの場合は、まずは Ver2.1 を新規インストールして頂きますようお願いします.
-		</div>
-		</li>
+		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/v2.1.5>こちら</a>をご覧下さい.
 	</div>
 </article>
 
@@ -130,8 +129,6 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['article'] }
 		メジャーバージョンアップとなります.
 		このリリースの詳細は<\>
 		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/v2.1>こちら</a>をご覧下さい.
-		このバージョンで追加された新機能については<a class=MstyElemLink href="/announcement.html#WhatIsChanging_v2_1">こちら</a>にもまとめてあります.
-		</li>
 	</div>
 </article>
 		
@@ -151,18 +148,6 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['article'] }
 	<div class="message-body">
 		このリリースの詳細は<\>
 		<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/v2.0>こちら</a>をご覧下さい.
-		このバージョンで追加された新機能については<a class=MstyElemLink href="/announcement.html#WhatIsChanging_v2_0">こちら</a>にもまとめてあります.
-		</li>
-	</div>
-</article>
-		
-<article class="message is-dark">
-	<div class="message-header">
-		2016/10/07: Moai Ver1.1.8 リリース.
-	</div>
-	<div class="message-body">
-		これはVer1.1系の最終リリースとなります.  Ver1.1系は既にサポートを終了しております.
-		まだ旧バージョン1.1.8をご使用の方は、<a class=MstyElemLink href="/announcement.html#WhatIsChanging_v2_0">こちら</a>をご一読いただければと思います.
 	</div>
 </article>
 		
@@ -172,6 +157,15 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['article'] }
 	</div>
 	<div class="message-body">
 		最初の正式版リリース.
+	</div>
+</article>
+
+<article class="message is-dark">
+	<div class="message-header">
+		過去のリリースにおける修正内容の全履歴
+	</div>
+	<div class="message-body">
+		<a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project/tree/master/src/ReleaseNote.md target=_blank>リリースノート</a>をご覧ください.
 	</div>
 </article>
 

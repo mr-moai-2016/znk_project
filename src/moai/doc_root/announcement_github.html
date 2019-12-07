@@ -1,0 +1,256 @@
+<!DOCTYPE html><html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="/msty.css" rel="stylesheet" type="text/css">
+	<link href="/bulma.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="section">
+<div class="container">
+<div class="content">
+<a name=TopBar></a>
+<p><b><img src="/imgs/here_landmark.png"> Moai+Easter アナウンスメント</b></p>
+
+<a class=MstyElemLink href="/">トップページ</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index.html">初級マニュアル</a> &nbsp;
+<a class=MstyElemLink href="/moai2.0/index_expert.html">上級マニュアル</a> &nbsp;
+<a class=MstyNowSelectedLink href="/announcement.html">アナウンスメント</a> &nbsp;
+<a class=MstyElemLink href="/FAQ.html">FAQ</a> &nbsp;
+<br> <br>
+
+<a name=AtFirst></a>
+<h1 class="title">はじめに</h1>
+<p>
+	このアナウンスメントでは我々Moai開発チームより皆様へ、主に以下に関する情報をお知らせします.<br>
+	<div class="content"><ul type="1" >
+		<li>Moaiの次期バージョンの開発状況.</li>
+		<li>Moaiの最新バージョンで追加された新機能.</li>
+		<li>Moaiの全般的な特徴についてなど.</li>
+		<li>その他連絡事項等.</li>
+	</ul></div>
+	現在のMoaiの最新バージョンは2.2 です.<br>
+	(Moai Ver2.2は2019年11月22日にリリースされました).<br>
+	尚、Ver1.0系列(Ver1.1.8以前)の配布およびサポートは既に終了しております.<br>
+</p>
+<br>
+
+
+<a name=Index></a>
+<h1 class="title">目次</h1>
+<br>
+<ul>
+	<li><b><a class=MstyElemLink href=#NextDevelopment>Moai 次期バージョンの開発状況</a></b></li>
+	<li><b><a class=MstyElemLink href=#WhatIsChanging_latest>Moai 最新バージョンの新機能および修正内容</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiFeature>Moai の全般的な特徴</a></b></li>
+	<li><b><a class=MstyElemLink href=#WhatIsChanging_v2_0>旧バージョン1.1.8をご使用の方へ</a></b></li>
+	<li><b><a class=MstyElemLink href=#license>ライセンス</a></b></li>
+	<li><b><a class=MstyElemLink href=#as_is>免責事項</a></b></li>
+	<li><b><a class=MstyElemLink href=#acknowledge>謝辞</a></b></li>
+</ul><br>
+
+
+<a name=NextDevelopment></a>
+<h1 class="title">Moai 次期バージョンの開発状況</h1>
+<p>
+現在、Moaiの最新バージョンは2.2です.<br><br>
+次期バージョンMoai Ver2.3( コードネーム Raraku )のリリースに向け開発中です.<br>
+次回のバージョンでは以下の修正や新機能の導入を予定しています.<br>
+<br>
+<article class="message is-dark">
+	<div class="message-header">
+		プログラミング言語Raraku<br>
+	</div>
+	<div class="message-body">
+		Moai独自のプログラミング言語Raraku(Ver1.0)を搭載します.<br>
+		これは以下のようなものになる予定です.<br>
+		<ul>
+			<li>ソースコード(拡張子rrkのファイル)はRaraku コンパイラにより Raraku バイトコード(拡張子rrx)にコンパイルされる.</li>
+			<li>Raraku バイトコード(rrxファイル)は Raraku VM というスタック型仮想マシン上で動作する.</li>
+			<li>Moai CGIとして使う場合、rrxファイルをCGIとして実行する形となる.</li>
+			<li>静的型付け言語である.</li>
+			<li>C言語等で書かれた動的ライブラリ(DLLやSOファイル)の関数を呼び出せる.</li>
+		</ul>
+		この言語はこれ自体で単独のアプリなどの開発と実行が行えますが、<br>
+		Moaiシステムの観点からはMoai CGIの開発などをこれを用いて行えるようにすることが当面の主な狙いとなります.<br>
+	</div>
+</article>
+<br><br>
+</p>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+<br>
+
+
+<a name=WhatIsChanging_latest></a>
+<h1 class="title">Moai 最新バージョンの新機能および修正内容</h1>
+<p>
+<article class="message is-dark">
+	<div class="message-header">
+		Androidに関する既存の問題点の大幅な修正<br>
+	</div>
+	<div class="message-body">
+		Moai Ver2.1以前ではAndroid 5.0( Lollipop )以降におけるMoai起動の不具合などが確認されていました.<br>
+		この不具合が全面修正されています.<br>
+		また Moai Ver2.1以前ではAndroidで使用する場合ターミナルエミュレータを使う必要がありましたが、<br>
+		Moai Ver2.2ではそれを不要とし、通常のアプリ同様apkファイルをタップすることでインストールを可能とし、<br>
+		アイコンをタップすることでMoaiを起動可能となっています.<br>
+		<div class="box">
+			ただしapkファイルのGoogle Play経由での配布はせず、Moai公式サイトからこれをダウンロードする形となります.<br>
+		</div>
+		またレスポンシブデザインの導入により、スマホでのユーザーマニュアルやツールの画面の見やすさ、使いやすさが改良されています.<br>
+	</div>
+</article>
+<br><br>
+</p>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+<br>
+
+
+<a name=MoaiFeature></a>
+<h1 class="title">Moai の全般的な特徴</h1>
+<p>
+	Moaiの基本的な特徴については<a class=MstyElemLink href=/moai2.0/moai_feature.html>こちら</a>を参照してください.<br><br>
+<br>
+	moaiが起動中は、あなたのマシンはローカルなプロキシサーバとウェブサーバとして同時に機能します.<br>
+	特にMoai Ver2.0では後者が重要な役割を果たします. ウェブサーバの大きな役割は２つあります.<br>
+	<br>
+	一つ目は、ブラウザからURL指定を行うことにより、アクセス先のサーバ内に置かれたHTMLや画像などを閲覧できるようにすることです.<br>
+	Moaiの場合、ブラウザから例えば http://127.0.0.1:8124/*.html や http://127.0.0.1:8124/*.jpg といったURL指定によりmoaiディレクトリ配下のdoc_rootに置かれたHTMLや画像などを閲覧することができます(他にもいくつか規則があります).<br>
+	<br>
+	二つ目は、ブラウザからURL指定を行うことにより、アクセス先のサーバ内に置かれたCGIスクリプトなどを実行させ、その結果をブラウザへ送信することです.<br>
+	Moaiの場合でもこれが可能で、これを Moai CGI と呼び、Moaiとは独立した単独のWebアプリケーションとして機能します.<br>
+	また、その気になればあなたがCGIスクリプトを独自に開発し、それをMoai CGI上で実行させることもできます.<br>
+</p>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+<br>
+
+
+<a name=WhatIsChanging_v2_0></a>
+<h1 class="title">旧バージョン1.1.8をご使用の方へ</h1>
+<p>
+	古くよりこのツールにお付き合い頂きありがとうございます.<br>
+	Moai Ver2.0以降は、基本的に<b>旧バージョン1.1.8とは全く互換性がない別のアプリケーション</b>とお考え下さい.<br>
+	以下では、1.1.8から2.0以降でMoaiがどのように変わったのか、その概略を説明します.<br>
+	<br>
+	まず旧 Moai 1.1.8 で仮想環境を実現するためにあなたが行わなければならないステップは以下でした.<br>
+	<div class="content"><ol type="1" >
+		<li>最初にmoaiというプログラムを一つ起動します.</li>
+		<li>あなたの好きなブラウザにて「プロキシの設定」ダイアログを開き、ローカルプロキシを経由させるための設定を行います.</li>
+		<li>そのブラウザよりネット掲示板などへアクセスします.</li>
+	</ol></div>
+	一方 Moai 2.0 以降で仮想環境を実現するためにあなたが行わなければならないステップは以下です.<br>
+	<div class="content"><ol type="1" >
+		<li>最初にmoaiというプログラムを一つ起動します.</li>
+		<li>あなたの好きなブラウザより普通に http://127.0.0.1:8124 へアクセスします.</li>
+		<li>そのブラウザより表示される画面のリンク(Easter)よりネット掲示板などへアクセスします.</li>
+	</ol></div>
+	いかがでしょうか？<br>
+	Moai2.0 では<b>ブラウザにて「ローカルプロキシの設定」を行っておく必要がありません</b>.<br>
+	ただし毎回必ず http://127.0.0.1:8124 というURLより開かれる画面から始める必要があります.<br>
+	毎回このURLを打ち込むのも面倒ですので、このURLをブックマークしておくとよいでしょう.<br>
+	<br><br>
+	その他、VirtualUSERSについても Ver2.0以降では CustomBoyという新型の仮想環境構築エンジンを使っており、<br>
+	このエンジン下では user_agent.txt は廃止され、User-Agentは CustomBoy の知識ベースおよび確率的アルゴリズムによって無から自動的に構築されます.<br>
+	そしてそのランダム化のアルゴリズムはより強力なものに改良されています.<br>
+	<br><br>
+	旧バージョン1.1.8は既にサポートを終了しております.<br>
+	この機会に是非とも最新バージョンのMoaiを新規インストールして頂ければと思います.<br>
+	<br>
+	<div class=box>
+		実はバージョン2.0以降でも旧来通りMoaiをローカルプロキシとして使うこともできます.<br>
+		ローカルプロキシの場合は基本的にどのようなサイトにでも常に機能するという強力さがあります.<br>
+		一方、バージョン2.0で導入されたEasterを使って仮想環境を実現する場合、<br>
+		その適用範囲はEasterがサポートするサイトに限られます.<br>
+	</div>
+</p>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+<br>
+
+
+<a name=license></a>
+<h1 class="title">ライセンス</h1>
+<p>
+	Moai本体およびそれに付随するシステムのうち、我々Moai開発チームが開発したものに関しては、そのライセンスはすべて<a class=MstyElemLink href=http://www.kmonos.net/nysl target=_blank>NYSL</a>(煮るなり焼くなり好きにしろ)とします.<br>
+	厳密に言えば、このシステムに含まれるzlib、libresslについてはそれぞれが規定したライセンスに従うものとなりますが、これらのライセンスもNYSLと基本的に競合せず、その主張に大差はないとは思います.<br>
+<br>
+	尚、このシステム内のすべてのソースコードにおいては、そのライセンスがGPLおよびLGPLであるようなものは一切含まれておりません.<br>
+	また将来のバージョンにおいてもそのようなものを含める予定はありません.<br>
+<br>
+	現時点での公式のソースリポジトリは https://github.com/mr-moai-2016/znk_project ですが再配布はご自由にどうぞ.<br>
+</p>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+<br>
+
+
+<a name=as_is></a>
+<h1 class="title">免責事項</h1>
+<p>
+	本ソフトウェアは「現状のまま」で、明示であるか暗黙であるかを問わず、何らの保証もなく提供されます.<br>
+	本ソフトウェアの使用によって生じるいかなる損害についても、作者は一切の責任を負わないものとします.<br>
+		<br>
+	This software is provided 'as-is', without any express or implied warranty.<br>
+	In no event will the authors be held liable for any damages arising<br>
+	from the use of this software.<br>
+</p>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+<br>
+
+
+<a name=acknowledge></a>
+<h1 class="title">謝辞</h1>
+<p>
+	Moai開発にあたっては、勿論参考としたツールがあります.<br>
+	Polipoというツールがそれにあたりますが、これもCで記述されたオープンソースです.<br>
+	Polipoは非常に優れたローカルプロキシであり、多くの部分を参考にさせてもらいました.<br>
+	この場を借りてJuliusz Chroboczek氏には感謝致します.<br>
+	ポート番号8123はPolipoで使われていたものであり、それに敬意を表しMoaiではこれに続く後輩という意味で8124をデフォルトポートとしました.<br>
+</p>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+<br>
+
+
+<div class="card">
+	<u><b>This article was written by:</b></u><br>
+	<div class="card-content">
+		<div class="media">
+			<div class="media-left">
+				<figure class="image is-48x48">
+				<img src="/imgs/moai.png" alt="none image">
+				</figure>
+			</div>
+			<div class="media-content">
+				<p class="title is-4">Mr.Moai</p>
+				<p class="subtitle is-6">@znk project</p>
+			</div>
+		</div>
+		<div class="content">
+		  <time datetime="2016-1-1">2019/11/22</time>
+		</div>
+	</div>
+</div>
+
+
+<a name=Link></a>
+<h1 class="title"></h1>
+<hr>
+<ul>
+	<li><a class=MstyElemLink href=#TopBar>一番上へ</a></li>
+	<li><a class=MstyElemLink href=https://mr-moai-2016.github.io>Moaiドキュメント(オンライン)</a></li>
+	<li><a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project>znk_project(github)</a></li>
+</ul><br>
+
+
+</div>
+</div>
+</div>
+</body>
+</html>
