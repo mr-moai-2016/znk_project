@@ -1,9 +1,9 @@
 @def_quote [' ']
 
 @@V config
-doc_title = ['myfファイルの仕様']
-author = ['全角']
-update = ['2018/08/01']
+doc_title     = ['myfファイルの仕様']
+author        = { ['Zenkaku'] }
+update        = ['2018/08/01']
 category_path = {}
 urp           = ['/common/myf_spec.html']
 nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['table'] ['tr'] ['td'] }

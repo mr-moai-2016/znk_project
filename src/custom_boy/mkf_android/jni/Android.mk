@@ -19,7 +19,7 @@ LOCAL_SRC_FILES := $(MY_LIBS_ROOT)/libRano/mkf_android/libs/$(TARGET_ARCH_ABI)/l
 include $(PREBUILT_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := custom_boy
+LOCAL_MODULE := custom_boy.cgi
 LOCAL_CFLAGS += -I.. \
 	-I$(MY_LIBS_ROOT)/libZnk \
 	-I$(MY_LIBS_ROOT)/libRano \

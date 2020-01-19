@@ -110,7 +110,7 @@ EstConfig_saveEasterMyf( void );
 void
 EstConfig_readRecvHdrSetCookie( RanoModule mod, const char* target );
 bool
-EstConfig_isInputHiddensPostVarNames( const char* target, const char* query_varname );
+EstConfig_queryInputHiddens( const char* target, const char* query_varname, ZnkStrAry tkns );
 
 ZnkStrAry
 EstConfig_getCoreBehaviorLines( const char* sec_name );

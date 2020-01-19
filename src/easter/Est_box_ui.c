@@ -74,8 +74,6 @@ renderImgElem( ZnkStr ans, const char* style_class_name, const char* manager,
 		const char* xhr_dmz, const char* authentic_key, const bool is_target_blank )
 {
 	const bool is_thumbnail = true;
-	const size_t max_width  = EstConfig_getPreviewMaxWidth();
-	const size_t max_height = EstConfig_getPreviewMaxHeight();
 
 	ZnkStr_add( ans, "<br>\n" );
 	ZnkStr_add( ans, "<a " );
@@ -83,16 +81,10 @@ renderImgElem( ZnkStr ans, const char* style_class_name, const char* manager,
 		ZnkStr_addf( ans, "class=%s ", style_class_name );
 	}
 
-#if 0
-	ZnkStr_add( ans, "name=ahref_previewable " );
-	ZnkStr_addf( ans, "href=\"javascript:void(0);\" onclick=\"Easter_showPreview( this, 'http://%s/cgis/easter/%s', %zu, %zu );\">",
-			xhr_dmz, esc_url, max_width, max_height );
-#else
 	ZnkStr_addf( ans, "href=\"/easter?est_manager=%s&amp;command=open&amp;cache_path=%s&amp;Moai_AuthenticKey=%s\" %s>",
 			manager,
 			unesc_url, authentic_key,
 			is_target_blank ? "target=_blank" : "" );
-#endif
 
 	ZnkStr_add( ans, "<img src='/cgis/easter/publicbox/icons/file.png'>" );
 	ZnkStr_addf( ans, " %s", elem_name );
@@ -454,7 +446,6 @@ viewTopicElem( ZnkStr ans, void* inf_ptr,
 	size_t max_width  = EstConfig_getPreviewMaxWidth();
 	size_t max_height = EstConfig_getPreviewMaxHeight();
 	const char* preview_style = EstConfig_getPreviewStyle();
-	const size_t show_file_num = EstConfig_getShowFileNum();
 	const char* xhr_dmz = EstConfig_XhrDMZ();
 
 	if( ZnkS_isBegin_literal( id, "md5ext_" ) ){

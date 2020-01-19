@@ -1,0 +1,29 @@
+@def_quote [' ']
+
+@@V cat
+pattern = ['/bin/cat.js']
+str     = ['
+<!-- require modules for futaba cat.js -->
+<script type="text/javascript" src="/cgis/easter/publicbox/pascua/pascua_event.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/pascua/pascua_cookie.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/pascua/pascua_gui.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/easter.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/bbs_futaba/core.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/bbs_futaba/modifier_cat.js"></script>
+']
+@@.
+
+@@V base4
+pattern = ['/bin/base4']
+str     = ['
+<!-- require modules for futaba base4*.js -->
+<script type="text/javascript" src="/cgis/easter/publicbox/pascua/pascua_event.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/pascua/pascua_cookie.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/pascua/pascua_gui.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/easter.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/bbs_futaba/core.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/bbs_futaba/eqtab.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/bbs_futaba/tegaki.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/bbs_futaba/modifier_base4.js"></script>
+']
+@@.

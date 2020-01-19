@@ -40,18 +40,18 @@
 <h1 class="title">目次</h1>
 <br>
 <ul>
-	<li><b><a class=MstyElemLink href=#MoaiUpgrade>Moaiアップグレードを用いた簡単アップグレード(Ver2.1以降)</a></b></li>
+	<li><b><a class=MstyElemLink href=#MoaiUpgrade>Moaiアップグレードの使い方</a></b></li>
+	<li><b><a class=MstyElemLink href=#AboutBirdman>Moaiアップグレードの詳細(Birdmanについて)</a></b></li>
 	<li><b><a class=MstyElemLink href=#TakeOverMoaiProfile>Moaiを新規インストールした場合にmoai_profileをそれへ引き継ぐ方法</a></b></li>
 	<li><b><a class=MstyElemLink href=#DetailOfPatch>Moaiアップグレードが内部で使用する修正パッチの詳細</a></b></li>
 </ul><br>
 
 
 <a name=MoaiUpgrade></a>
-<h1 class="title">Moaiアップグレードを用いた簡単アップグレード(Ver2.1以降)</h1>
+<h1 class="title">Moaiアップグレードの使い方</h1>
 <p>
-	Moai Ver2.1より <b>Moaiアップグレード</b>という機能が導入されました.<br>
-	これはボタンを押すだけでMoaiシステム全体を自動的に最新のバージョンにアップグレードできるというものです.<br>
-	このようなソフトウェアの更新機能は、最近のアプリケーションではブラウザをはじめとしてよく見かけると思います.<br>
+	<b>Moaiアップグレード</b>とはボタンを押すだけでMoaiシステム全体を自動的に最新のバージョンにアップグレードできるというものです.<br>
+	このようなソフトウェアの更新機能は、最近のアプリケーションではよく見かけると思います.<br>
 <br>
 	<div class=box>
 		<u><b>Moaiアップグレードが使えない環境およびバージョンについて</b></u><br>
@@ -64,96 +64,120 @@
 		<a class=MstyElemLink href=#TakeOverMoaiProfile>こちらの記事</a>を参考にしてください.<br>
 	</div>
 <br>
-	Moaiトップページ(http://127.0.0.1:8124、またはhttp://localhost:8124)を開くと「Moaiエンジン設定」というリンクがあります.<br>
-	このリンク先を開き、更に一番上のガイドメニューから「Moaiアップグレード」を選ぶと、以下のような画面が表示されます.<br>
-<br>
-	<div class=MstyImgBox>
-		<img src=/imgs/birdman_console1.png /><br>
-	</div>
-<br>
-	「Birdman Console」では、これから処理される内容の詳細が報告されます.<br>
-	開始時には何も処理されていないため、メッセージの部分が「None.」と表示されています.<br>
-<br>
-	<div class=box>
-		「Birdman」というのはMoaiアップグレードを行うための内部プログラムで、Ver2.1より新規導入されました.<br>
-		MoaiアップグレードによりMoaiエンジン本体も更新され得るのですが、その処理はMoaiとは別のプログラムが行う必要があります.<br>
-		その役目を担うのがBirdmanです.<br>
-		一方、Birdman自身も更新される場合があり、これについてはMoai本体がその処理を担います.<br>
-		そういう意味ではこの二つのプログラムは相補的な関係にあります.<br>
-<br>
-		ちなみに名前の由来はEaster島の鳥人伝説です.<br>
-		この伝説によれば、卵を手渡された鳥人はその瞬間に新たなる鳥人となるのだそうです.<br>
-	</div>
-<br>
-	それでは「最新バージョンの確認」ボタンを押してみましょう.<br>
-	現在ご利用のMoaiが最新バージョンである場合、以下のように表示されます.<br>
-<br>
-	<div class=MstyImgBox>
-		<img src=/imgs/birdman_console2.png /><br>
-	</div>
-<br>
-	色々と報告されていますが、ここでユーザが確認すべき情報は画面の最後にある通りです.<br>
-	即ち、今現在利用しているMoaiは既に最新バージョンであり、これ以上は何もする必要がないということです.<br>
-	今はMoaiのトップページに戻りましょう.<br>
-	また時をあらためてこのボタンを押し、最新バージョンにアップグレード可能か否かを定期的に確認するなどすればよろしいでしょう.<br>
-<br>
-	<div class=box>
-		Birdman は vtag_rule というファイルをダウンロードし、これを分析することでMoaiが最新バージョンであるかどうかを確認します.<br>
-	</div>
-<br>
-	一方、Moaiをさらなる新しいバージョンへアップグレード可能である場合、以下のように表示されます.<br>
-<br>
-	<div class=MstyImgBox>
-		<img src=/imgs/birdman_console3.png /><br>
-	</div>
-<br>
-	画面の指示に従い、「修正パッチのダウンロード」ボタンを押します.<br>
-	以下のような画面が表示されると思います.<br>
-<br>
-	<div class=MstyImgBox>
-		<img src=/imgs/birdman_console4.png /><br>
-	</div>
-<br>
-	色々と報告されていますが、要するにここまでで修正パッチを適用できる直前までの状態が整ったということです.<br>
-	(実際にはまだ適用されていません).<br>
-	最後にこれを実際に適用するため、「修正パッチを適用」ボタンを押します.<br>
-<br>
-	<div class=box>
-		Birdmanは github のMoai公式サイトへアクセスし、最新バージョンへの修正パッチを自動的にダウンロードします.<br>
-		修正パッチは zip 形式となっていますので、さらにこれを解凍しなければなりません.<br>
-		この解凍処理も自動的に行われます.<br>
-		これらの実体はMoaiフォルダ直下のbirdman/tmpフォルダに一時的に置かれます.<br>
-		また「最新バージョンの確認」ボタンを押すタイミングでこれは削除されます.<br>
-	</div>
-<br>
-	<div class=MstyImgBox>
-		<img src=/imgs/birdman_console5.png /><br>
-	</div>
-<br>
-	上記のように表示され、古いバージョンのMoaiフォルダ内に対し、新しいファイルのコピー処理などが行われます.<br>
-	またこのとき、一瞬Moai本体が終了し再度起動すると思います.<br>
-	(これはMoai本体を上書きするためには、これを一度終了させる必要があるためです.)<br>
-<br>
-	最後に「OK. All upgrade is successfully done.」のように表示されていれば成功です.<br>
-	一応Moaiのトップページに戻り、バージョンの表示されている部分が最新版の数字になっていることを確認してください.<br>
-	( 一番上にある「Welcome to Moai+Easter World」と書かれている部分のすぐ右です ).<br>
-<br>
-	いかがでしょうか？<br>
-	まとめますと以下の３つのボタンを順番に押すだけです.<br>
+	使い方を極端的に言いますと、以下の３つのボタンを順番に押すというものです.<br>
 	<ol>
 		<li>最新バージョンの確認</li>
 		<li>修正パッチのダウンロード</li>
 		<li>修正パッチを適用</li>
 	</ol>
 <br>
+	では以下にその手順を図等を例示しながら少し詳しく述べます.<br>
+	<ol>
+		<li>Moaiトップページを開くと「Moaiアップグレード」というリンクがあります.<br>
+			このリンク先を開くと、以下のような画面が表示されます.<br>
+<br>
+			<div class=MstyImgBox>
+				<img src=/imgs/birdman_console1.png /><br>
+			</div>
+		</li>
+<br>
+		<li>「最新バージョンの確認」ボタンを押します.<br>
+			このとき、次の二通りのシナリオが考えられ、例えば次のように表示されます.<br>
+			<ul>
+				<li>現在ご利用のMoaiより新しいバージョンが<b>ない</b>場合<br>
+<br>
+					<div class=MstyImgBox>
+						<img src=/imgs/birdman_console2.png /><br>
+					</div>
+					現時点ではこれ以上は何もする必要がありません.<br>
+					今はMoaiのトップページに戻りましょう.<br>
+					新しいバージョンがリリースされた場合はMoai公式サイトでアナウンスされますので、<br>
+					そのときにあらためてこのボタンを押し、最新バージョンにアップグレードするとよいでしょう.<br>
+				</li>
+<br>
+				<li>現在ご利用のMoaiより新しいバージョンが<b>ある</b>場合<br>
+<br>
+					<div class=MstyImgBox>
+						<img src=/imgs/birdman_console3.png /><br>
+					</div>
+					Moaiを新しいバージョンにアップグレード可能であることを示します.<br>
+					この場合は、さらに次のステップへ進みます.<br>
+				</li>
+			</ul>
+		</li>
+<br>
+		<li>「修正パッチのダウンロード」ボタンを押します.<br>
+			例えば以下のような画面が表示されると思います.<br>
+<br>
+			<div class=MstyImgBox>
+				<img src=/imgs/birdman_console4.png /><br>
+			</div>
+			ここでは、修正パッチを適用できる直前までの状態が整ったというが述べられています.<br>
+			(実際にはまだ適用されていません).<br>
+		</li>
+<br>
+		<li>「修正パッチを適用」ボタンを押します.<br>
+			例えば次のように表示され、古いバージョンのMoaiフォルダ内に対し、新しいファイルのコピー処理などが行われます.<br>
+<br>
+			<div class=MstyImgBox>
+				<img src=/imgs/birdman_console5.png /><br>
+			</div>
+			またこのとき、一瞬Moai本体が終了し再度起動すると思います.<br>
+			(これはMoai本体を上書きするためには、Moaiを一度終了させる必要があるためです)<br>
+		</li>
+<br>
+		<li>最後に「OK. All upgrade is successfully done.」のように表示されていれば成功です.<br>
+			念のため、Moaiのトップページに戻り、バージョンの表示されている部分が最新版の数字になっていることを確認してください.<br>
+			(一番上にある「Welcome to Moai+Easter World」と書かれている部分のすぐ右です)<br>
+		</li>
+	</ol>
+</p>
+	<br>
+	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
+<br>
+
+
+<a name=AboutBirdman></a>
+<h1 class="title">Moaiアップグレードの詳細(Birdmanについて)</h1>
+<p>
+	ここではMoaiアップグレードが内部で何を行っているかについて解説します.<br>
+	このセクションはそのような内部挙動に興味ある方のための解説であり、<br>
+	Moaiアップグレードを単に使うだけならば、ここに書いてある内容を読む必要はありません.<br>
+<br>
+	Moaiアップグレードを行うための内部プログラムは我々が「Birdman」と呼んでいるものとなります.<br>
+	このプログラムは Moai Ver2.1 より新規導入されました.<br>
+<br>
 	<div class=box>
-		そんな三段階に分けなくても、一つのボタンで一括で全部やっちゃえば？と思われる方もいるかもしれません.<br>
+		ちなみに名前の由来はEaster島の鳥人伝説です.<br>
+		この伝説によれば、卵を手渡された鳥人はその瞬間に新たなる鳥人となるのだそうです.<br>
+	</div>
+<br>
+	MoaiアップグレードによりMoaiエンジン本体も更新され得るのですが、その処理はMoaiとは別のプログラムが行う必要があります.<br>
+	その役目を担うのがBirdmanです.<br>
+	一方、Birdman自身も更新される場合があり、これについてはMoai本体がその処理を担います.<br>
+	そういう意味ではこの二つのプログラムは相補的な関係にあります.<br>
+<br>
+	Moaiアップグレード画面では、Birdman が出力する内容が事細かに表示されます.<br>
+	我々はこれを「Birdman Console」と呼んでいます.<br>
+	開始時には何も処理されていないため、メッセージの部分が「None.」と表示されます.<br>
+<br>
+	Birdmanは最初に github のMoai公式サイトへアクセスし、そこに置かれた vtag_rule というファイルをダウンロードします.<br>
+	これを分析することで、今現在インストールされているMoaiが最新バージョンであるかどうかを確認します.<br>
+<br>
+	この分析の結果、現在のMoaiが古いバージョンであったと判明した場合、<br>
+	Birdmanは github のMoai公式サイトへ再びアクセスし、最新バージョンへの修正パッチを自動的にダウンロードします.<br>
+	修正パッチは zip 形式となっていますので、さらにこれを解凍しなければなりません.<br>
+	この解凍処理も自動的に行われます.<br>
+	これらの実体はMoaiフォルダ直下のbirdman/tmpフォルダに一時的に置かれます.<br>
+	また「最新バージョンの確認」ボタンを押すタイミングでこれは削除されます.<br>
+<br>
+	<div class=box>
+		ボタンを三段階に分けなくても、一つのボタンで一括で全部やっちゃえば？と思われる方もいるかもしれません.<br>
 <br>
 		しかし万一途中で問題が発生した場合でもどの時点でそれが起きたかを一目瞭然とすることは重要です.<br>
 		また、Moaiの哲学として「処理の透明性」を主要なポリシーの一つとして掲げているというのもあります.<br>
 		そのような理由で、現時点ではこのように三つのフェーズに分けてあります.<br>
 	</div>
-<br>
 </p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>

@@ -1345,7 +1345,7 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 					ZnkStr_addf( msg_str, "<p><b><u>What this?</u></b></p>\n" );
 					ZnkStr_addf( msg_str, "<div class=MstyIndent>\n" );
 					ZnkStr_addf( msg_str, "We must affix Moai_AuthenticKey to our URL to execute this CGI.<br>\n" );
-					ZnkStr_addf( msg_str, "<a class=MstyAppLink href=\"/authentic/%s%s\">Please retry this.</a><br>\n",
+					ZnkStr_addf( msg_str, "<a class=MstyElemLink href=\"/authentic/%s%s\">Please retry this.</a><br>\n",
 							moai_authentic_key, ZnkStr_cstr(req_urp) );
 					ZnkStr_addf( msg_str, "</div>\n" );
 					ret = MoaiIO_sendTxtf( sock, "text/html", ZnkStr_cstr(msg_str) ); /* XSS-safe */
@@ -1382,7 +1382,7 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 					ZnkStr_addf( msg_str, "<p><b><u>What this?</u></b></p>\n" );
 					ZnkStr_addf( msg_str, "<div class=MstyIndent>\n" );
 					ZnkStr_addf( msg_str, "We must affix Moai_AuthenticKey to our URL to get this resource. <br>\n" );
-					ZnkStr_addf( msg_str, "<a class=MstyAppLink href=\"/authentic/%s%s\">Please retry this</a><br>\n",
+					ZnkStr_addf( msg_str, "<a class=MstyElemLink href=\"/authentic/%s%s\">Please retry this</a><br>\n",
 							moai_authentic_key, ZnkStr_cstr(req_urp) );
 					ZnkStr_addf( msg_str, "</div>\n" );
 					ret = MoaiIO_sendTxtf( sock, "text/html", ZnkStr_cstr(msg_str) ); /* XSS-safe */
@@ -1409,7 +1409,7 @@ do_get( ZnkSocket sock, ZnkStr req_urp,
 					ZnkStr_addf( msg_str, "<p><b><u>What this?</u></b></p>\n" );
 					ZnkStr_addf( msg_str, "<div class=MstyIndent>\n" );
 					ZnkStr_addf( msg_str, "&nbsp;&nbsp;We must affix authentication key to our URL to get this resource. <br>\n" );
-					ZnkStr_addf( msg_str, "<a class=MstyAppLink href=\"/authentic/%s%s\">Please retry this</a><br>\n",
+					ZnkStr_addf( msg_str, "<a class=MstyElemLink href=\"/authentic/%s%s\">Please retry this</a><br>\n",
 							moai_authentic_key, ZnkStr_cstr(req_urp) );
 					ZnkStr_addf( msg_str, "</div>\n" );
 					ret = MoaiIO_sendTxtf( sock, "text/html", ZnkStr_cstr(msg_str) ); /* XSS-safe */

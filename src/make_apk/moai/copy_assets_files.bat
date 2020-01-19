@@ -50,6 +50,21 @@ call xcopy_end.bat
 
 
 REM
+REM easter
+REM
+call xcopy_begin.bat %MY_LIBS_ROOT%\easter %ASSETS_DIR%\cgis\easter
+set LIST=%LIST% core_behavior.myf
+call xcopy_end.bat
+
+call xcopy_begin.bat %MY_LIBS_ROOT%\easter\platform\android %ASSETS_DIR%\cgis\easter
+set LIST=%LIST% rano_app.myf
+call xcopy_end.bat
+
+set SUBDIRS=default publicbox templates
+for %%a in ( %SUBDIRS% ) do call xcopy_dir.bat %MY_LIBS_ROOT%\easter\%%a %ASSETS_DIR%\cgis\easter\%%a
+
+
+REM
 REM custom_boy
 REM
 call xcopy_begin.bat %MY_LIBS_ROOT%\custom_boy %ASSETS_DIR%\cgis\custom_boy
@@ -65,18 +80,14 @@ for %%a in ( %SUBDIRS% ) do call xcopy_dir.bat %MY_LIBS_ROOT%\custom_boy\%%a %AS
 
 
 REM
-REM easter
+REM proxy_finder
 REM
-call xcopy_begin.bat %MY_LIBS_ROOT%\easter %ASSETS_DIR%\cgis\easter
-set LIST=%LIST% core_behavior.myf
+call xcopy_begin.bat %MY_LIBS_ROOT%\proxy_finder %ASSETS_DIR%\cgis\proxy_finder
+set LIST=%LIST% proxy_finder.myf
 call xcopy_end.bat
 
-call xcopy_begin.bat %MY_LIBS_ROOT%\easter\platform\android %ASSETS_DIR%\cgis\easter
-set LIST=%LIST% rano_app.myf
-call xcopy_end.bat
-
-set SUBDIRS=default publicbox templates
-for %%a in ( %SUBDIRS% ) do call xcopy_dir.bat %MY_LIBS_ROOT%\easter\%%a %ASSETS_DIR%\cgis\easter\%%a
+set SUBDIRS=templates
+for %%a in ( %SUBDIRS% ) do call xcopy_dir.bat %MY_LIBS_ROOT%\proxy_finder\%%a %ASSETS_DIR%\cgis\proxy_finder\%%a
 
 
 REM

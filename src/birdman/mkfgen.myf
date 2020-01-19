@@ -62,6 +62,7 @@ exec birdman main.c
 
 @@L install_data_list
 birdman.myf
+rano_app.myf
 @@.
 
 @@L ignore_list

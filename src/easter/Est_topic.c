@@ -502,7 +502,6 @@ removeCaches( ZnkBird bird,
 	bool    is_confirm = false;
 	const size_t show_file_num = EstConfig_getShowFileNum();
 	const char* style_class_name = "MstyElemLink";
-	const char* favorite_dir = EstConfig_favorite_dir();
 
 	*template_html_file = "templates/boxmap_viewer.html";
 
@@ -571,8 +570,6 @@ removeCaches( ZnkBird bird,
 				ZnkStr_addf( msg, "est_cache_end=[%zu]\n", end_idx );
 			}
 
-			//makeCacheView( evar, result_view, ZnkStr_cstr(unesc_pwd), begin_idx, end_idx, show_file_num, authentic_key,
-			//		EstCM_img_url_list, favorite_dir, ZnkStr_cstr(assort_msg) );
 			ZnkStr_delete( unesc_pwd );
 		} else {
 			*template_html_file = "templates/command_complete.html";

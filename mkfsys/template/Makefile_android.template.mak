@@ -32,7 +32,7 @@ COMPILER := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc \
 	-MMD -MP \
 	-fpic -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv5te -mtune=xscale -msoft-float -mthumb -Os \
 	-g -DNDEBUG -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 \
-	-DANDROID \
+	-DANDROID -fPIE \
 	-Wa,--noexecstack -Wformat -Werror=format-security -Wall $[compiler_option_special]$ \
 	-I$(PLATFORMS_LEVEL)/arch-arm/usr/include
 

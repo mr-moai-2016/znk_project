@@ -32,7 +32,7 @@ COMPILER := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc \
 	-MMD -MP \
 	-fpic -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv5te -mtune=xscale -msoft-float -mthumb -Os \
 	-g -DNDEBUG -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 \
-	-DANDROID \
+	-DANDROID -fPIE \
 	-Wa,--noexecstack -Wformat -Werror=format-security -Wall  \
 	-I$(PLATFORMS_LEVEL)/arch-arm/usr/include
 
@@ -170,6 +170,7 @@ __mkg_sentinel_target__:
 install_data:
 	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\birdman @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\birdman 
 	@if exist "birdman.myf" @$(CP) /F "birdman.myf" ..\..\moai-v$(REL_VER)-$(PLATFORM)\birdman\ $(CP_END)
+	@if exist "rano_app.myf" @$(CP) /F "rano_app.myf" ..\..\moai-v$(REL_VER)-$(PLATFORM)\birdman\ $(CP_END)
 
 # Install exec rule.
 install_exec: $(EXE_FILE0)
@@ -192,5 +193,5 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-Bdm_base.o: Bdm_base.h
-main.o: Bdm_base.h
+$O\Bdm_base.o: Bdm_base.h
+$O\main.o: Bdm_base.h

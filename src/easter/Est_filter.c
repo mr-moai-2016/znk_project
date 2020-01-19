@@ -325,7 +325,7 @@ static int
 filterPreModify( ZnkStr tagname, ZnkVarpAry varp_ary, void* arg, ZnkStr tagend, ZnkStr text, size_t cur )
 {
 	int result = 1;
-	struct EstLinkInfo* link_info = Znk_force_ptr_cast( struct EstLinkInfo*, arg );
+	//struct EstLinkInfo* link_info = Znk_force_ptr_cast( struct EstLinkInfo*, arg );
 	const char* p = ZnkStr_cstr(text) + cur;
 	if( ZnkS_eqCase( ZnkStr_cstr(tagname), "a" ) ){
 		const bool is_append_a_tag = false;
@@ -385,7 +385,7 @@ addVarEaster_hostname( ZnkStr str, void* arg )
 
 bool
 EstFilter_insertBBSOperation( ZnkStr text, 
-		const char* result_filename, const char* landmark, const char* src, const char* bbs_id_name, ZnkStr console_msg )
+		const char* result_filename, const char* landmark, const char* src, const char* bbs_id_name, ZnkStr console_msg, ZnkStr require_js )
 {
 	bool result = false;
 	const char* xhr_auth_host = EstConfig_XhrAuthHost();
@@ -397,8 +397,12 @@ EstFilter_insertBBSOperation( ZnkStr text,
 	ZnkStr_add( dst, "<br><article class=\"message is-dark\">\n" );
 	ZnkStr_add( dst, "<div class=\"message-header\">Easter BBS Operation</div><div class=\"message-body\">\n" );
 
-	ZnkStr_addf( dst, "<script type=\"text/javascript\" src=\"http://%s/cgis/easter/publicbox/easter.js\"></script>\n",
-			xhr_auth_host );
+	if( require_js ){
+		ZnkStr_addf( dst, "%s\n", ZnkStr_cstr( require_js ) );
+	} else {
+		ZnkStr_addf( dst, "<script type=\"text/javascript\" src=\"http://%s/cgis/easter/publicbox/easter.js\"></script>\n",
+				xhr_auth_host );
+	}
 	ZnkStr_addf( dst, "<script type=\"text/javascript\"><!--\n" );
 	ZnkStr_addf( dst, "var st_func_tbls = [];\n" );
 	ZnkStr_addf( dst, "%s\n", ZnkStr_cstr( hint_table ) );

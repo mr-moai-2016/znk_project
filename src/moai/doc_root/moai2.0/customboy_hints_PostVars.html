@@ -65,8 +65,8 @@
 	この値は必ず on にしておかなければならない.<br>
 	<br>
 	名前の由来は<s><b>女子小学s</b></s>無論<b>J</b>ava<b>S</b>criptである.<br>
-	Javascriptを実行したかどうかを判断するためのものであり、/bin/base4ajax.js を実行すると on に設定される仕組みとなっている.<br>
-	( 無論、Javascriptの/bin/base4ajax.jsを実行させずとも、最初からこのPost変数 に on 値を設定しておけば良い. )<br>
+	Javascriptを実行したかどうかを判断するためのものであり、/bin/base4qt.js を実行すると on に設定される仕組みとなっている.<br>
+	( 無論、Javascriptの/bin/base4qt.jsを実行させずとも、最初からこのPost変数 に on 値を設定しておけば良い. )<br>
 	ふたばにおいてはこれを on にしておかないと「環境変数がありません(Javascriptがオフ？)」というエラーが表示され、投稿に失敗するのは周知の通りである.<br>
 </p>
 	<br>
@@ -127,7 +127,7 @@
 	最初期はnavigator.userAgentの文字列値をそのまま格納していたため、名前に ua という文字が含まれているのであろう.<br>
 	<br>
 	現状での意味は、33個のものBrowserとそのVersion固有の真偽値をとるJavascriptコード片(Snippetと呼ぶ)の結果値を、33bitのflag値にpackした上で10進数変換したものである.<br>
-	この計算はレス投稿時に毎回 /bin/base4ajax.js におけるptfk function内で行われており、sphという名前の配列変数を検索すると該当処理を行っている行を見つけることができる.<br>
+	この計算はレス投稿時に毎回 /bin/base4qt.js におけるptfk function内で行われており、sphという名前の配列変数を検索すると該当処理を行っている行を見つけることができる.<br>
 	まあ派手に長い行なので目視でもすぐわかるが…<br>
 	(尚、最大値は32bit非負整数のMaxを超える可能性があるため、浮動小数点数をベースとして行われている模様).<br>
 	<br>
@@ -157,7 +157,7 @@
 	名前の由来は <b>SC</b>reen<b>S</b>i<b>Z</b>e であろう. <br>
 	<br>
 	この値は、あなたの使っているモニタの解像度と色深度の情報を示す.<br>
-	(Javascriptにこれを取得するAPIがあり、レス投稿(ptfk function)時に毎回 /bin/base4ajax.jsでこれを取得しているようである)<br>
+	(Javascriptにこれを取得するAPIがあり、レス投稿(ptfk function)時に毎回 /bin/base4qt.jsでこれを取得しているようである)<br>
 	<br>
 	<div class=box><div class=MstyCode>
     	モニタ解像度の幅 x モニタ解像度の高さ x モニタの色深度ビット数<br>
@@ -262,7 +262,7 @@
 			</div>
 		</div>
 		<div class="content">
-		  <time datetime="2016-1-1">2019/07/29</time>
+		  <time datetime="2016-1-1">2020/01/11</time>
 		</div>
 	</div>
 </div>

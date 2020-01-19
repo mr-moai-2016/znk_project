@@ -5,8 +5,8 @@
 
 Znk_EXTERN_C_BEGIN
 
-ZnkStr
-BdmBase_getMoaiDir( void );
+//ZnkStr
+//BdmBase_getMoaiDir( void );
 bool
 BdmBase_loadAuthenticKey( char* authentic_key_buf, size_t authentic_key_buf_size, const char* moai_dir );
 

@@ -30,6 +30,8 @@
 #include <time.h>
 #include <ctype.h>
 
+#define SJIS_HYO "\x95\x5c" /* 表 */
+
 static char          st_moai_authentic_key[ 256 ] = "";
 static ZnkStr        st_moai_dir = NULL;
 
@@ -814,7 +816,7 @@ EstConfig_getCoreBehaviorVars( const char* sec_name )
 	return ZnkMyf_find_vars( st_core_behavior_myf, sec_name );
 }
 bool
-EstConfig_isInputHiddensPostVarNames( const char* target, const char* query_varname )
+EstConfig_queryInputHiddens( const char* target, const char* query_varname, ZnkStrAry tkns )
 {
 	ZnkStrAry lines = NULL;
 
@@ -828,13 +830,16 @@ EstConfig_isInputHiddensPostVarNames( const char* target, const char* query_varn
 		size_t size = ZnkStrAry_size( lines );
 		for( idx=0; idx<size; ++idx ){
 			val = ZnkStrAry_at_cstr( lines, idx );
-			if( ZnkS_eq( val, query_varname ) ){
+			ZnkStrAry_clear( tkns );
+			ZnkStrEx_addSplitCSet( tkns, val, Znk_NPOS, " \t", 2, 2 );
+			if( ZnkStrAry_size(tkns) > 0 && ZnkS_eq( ZnkStrAry_at_cstr(tkns,0), query_varname ) ){
 				/* found */
 				return true;
 			}
 		}
 	}
 	/* not found */
+	ZnkStrAry_clear( tkns );
 	return false;
 }
 ZnkVarpAry
@@ -1147,7 +1152,7 @@ EstConfigManager_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg, cons
 			/* preview_style */
 			updateSelectVar( bird, post_vars, em_vars,
 					"preview_style", st_preview_style, sizeof(st_preview_style),
-					"プレビューを表示する位置", "preview_style_ui", getSelectUI_preview_style, ermsg );
+					"プレビューを" SJIS_HYO "示する位置", "preview_style_ui", getSelectUI_preview_style, ermsg );
 			ZnkStr_addf( msg, "preview_style=[%s]\n", st_preview_style );
 
 

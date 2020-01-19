@@ -4,9 +4,9 @@
 ## <a name="index"></a>最新バージョンのドキュメント
 -----------------------------------
 
-  最新バージョンであるMoai Ver2.1のユーザーマニュアルは <a href="https://mr-moai-2016.github.io/moai2.0/index.html">こちら</a>からご覧になれます.
+  Moaiの最新バージョンのユーザーマニュアルは <a href="https://mr-moai-2016.github.io/moai2.0/index.html">こちら</a>からご覧になれます.
   またMoaiリファレンスは、その内容が難解であるという意見が寄せられたことを踏まえ、
-  Ver2.1よりエキスパートマニュアルというカテゴリに再配置しており、<a href="https://mr-moai-2016.github.io/moai2.0/moai_reference.html">こちら</a>からご覧になれます.
+  現在は上級マニュアルというカテゴリに再配置しており、<a href="https://mr-moai-2016.github.io/moai2.0/moai_reference.html">こちら</a>からご覧になれます.
 
 
 ## <a name="index"></a>旧バージョン(Ver1.1.8以前)をお使いの方へ
@@ -16,9 +16,9 @@
 
   このたびMoai Ver1.1.8のサポートは終了いたしました.
   これに伴い、Moai Ver1.1系列の のリファレンスマニュアルの提供も終了しております.
-  最新バージョンはMoai Ver2.1となりますので、この際是非ともそちらを新規インストール頂ければと思います.
+  この際是非とも最新バージョンを新規インストール頂ければと思います.
 
-  Ver2.1の機能については、<a href="https://mr-moai-2016.github.io/moai2.0/index.html">Moaiの特徴</a>をご覧ください.
+  Moai2.0以降の全般的な特徴については、<a href="https://mr-moai-2016.github.io/moai2.0/index.html">Moaiの特徴</a>をご覧ください.
   旧バージョンとの比較について、<a href="https://mr-moai-2016.github.io/announcement.html">アナウンスメント</a>に記載しております.
   インストール方法については<a href="https://mr-moai-2016.github.io/moai2.0/install.html">インストールガイド</a>をご覧下さい.
 

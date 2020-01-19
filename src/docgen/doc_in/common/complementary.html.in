@@ -1,9 +1,9 @@
 @def_quote [' ']
 
 @@V config
-doc_title = ['コンプリメンタリー']
-author = ['全角']
-update = ['2018/03/29']
+doc_title     = ['コンプリメンタリー']
+author        = { ['Zenkaku'] }
+update        = ['2018/03/29']
 category_path = {}
 urp           = ['/common/complementary.html']
 nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['table'] ['tr'] ['td'] }

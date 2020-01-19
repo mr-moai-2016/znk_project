@@ -65,7 +65,7 @@ parseSrcInclude( ZnkVarpAry vary, const char* filename, ZnkStr line, ZnkStrAry l
 	}
 }
 void
-MkfSrcDepend_get( ZnkStr text, ZnkStrAry list, const char* obj_sfx, const char* nl, MkfSeekFuncT_isInterestExt is_interest_ext )
+MkfSrcDepend_get( ZnkStr text, ZnkStrAry list, const char* obj_sfx, const char* nl, MkfSeekFuncT_isInterestExt is_interest_ext, char dsp )
 {
 	size_t size;
 	size_t idx;
@@ -93,7 +93,8 @@ MkfSrcDepend_get( ZnkStr text, ZnkStrAry list, const char* obj_sfx, const char* 
 				 * elem_size == 0 ÇÃèÍçáÇÕÇ±ÇÍÇè»ó™Ç∑ÇÈ.
 				 */
 				size_t elem_idx;
-				ZnkStr_addf( text, "%s:", ZnkVar_name_cstr( varp ) );
+				//ZnkStr_addf( text, "%s:", ZnkVar_name_cstr( varp ) );
+				ZnkStr_addf( text, "$O%c%s:", dsp, ZnkVar_name_cstr( varp ) );
 				for( elem_idx=0; elem_idx<elem_size; ++elem_idx ){
 					const char* elem = ZnkStrAry_at_cstr( varp->prim_.u_.sda_, elem_idx );
 					ZnkStr_addf( text, " %s", elem );

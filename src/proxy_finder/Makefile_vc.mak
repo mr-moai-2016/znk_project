@@ -121,7 +121,7 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-cgi_helper.obj: cgi_helper.h
-main.obj: proxy_finder.h cgi_helper.h
-proxy_finder.obj: proxy_finder.h proxy_info.h
-proxy_info.obj: proxy_info.h
+$O\cgi_helper.obj: cgi_helper.h
+$O\main.obj: proxy_finder.h cgi_helper.h
+$O\proxy_finder.obj: proxy_finder.h proxy_info.h
+$O\proxy_info.obj: proxy_info.h

@@ -18,7 +18,7 @@ code.jquery.com
 @@L input_hiddens_futaba
 mode
 MAX_FILE_SIZE
-baseform
+baseform baseform
 pthb
 pthc
 pthd
@@ -51,10 +51,13 @@ replace_ex ['<span id="tit">'] ['<span id="tit" class="title">']
 replace_ex ['<table class="ftbl" id="ftbl">'] ['<div id="tfm"></div><table class="ftbl" id="ftbl">']
 replace_ex ['class="ftbl"'] ['class="table"']
 replace_ex ['class="ftb2"'] ['class="table"']
-replace_ex ['<meta name="viewport" content="width=device-width,initial-scale=0.47">'] ['']
+clear_f ['<meta name="viewport" content="width=device-width,initial-scale='] ['">']
+replace_ex ['<meta name="viewport" content="width=device-width,initial-scale=">'] ['<meta name="viewport" content="width=device-width,initial-scale=1">'] ['']
 #replace_ex [' class="rsc"'] [' class=MstyElemLink']
 add_inq_t ['<span id="delcheck'] ['</span>'] ['<a class=MstyElemLink>E</a>']
 add_inq_t ['value=delete id=delcheck'] ['>'] ['<a class=MstyElemLink>E</a>']
+replace_ex ['</b><span id="oebtnd"></span></td><td>']  ['</b></td><td><span id="oebtnd"></span>']
+replace_ex ['setoebtn();'] ['']
 
 # for Top
 replace_ex ['www.2chan.net/"'] ['www.2chan.net/index2.html"']
@@ -73,14 +76,14 @@ replace_ex ['<div style="width:336px;height:280px;margin:2px;float:left;">'] ['<
 
 # for Catalog
 replace_ex ['id='cattable''] ['id='cattable' class="table is-fullwidth"']
-replace_ex ['src="//may.2chan.net/bin/cat.js?'] ['src="/cgis/easter/publicbox/easter_cat.js?']
+#replace_ex ['src="//may.2chan.net/bin/cat.js?'] ['src="/cgis/easter/publicbox/easter_cat.js?']
 
 # for Form
 replace_ex ['class="ftdc"'] ['class=MstyDmyUpdateBtn']
 replace_ex ['<input type=text name=name']  ['<input class=input type=text name=name  placeholder="おなまえ"']
 replace_ex ['<input type=text name=email'] ['<input class=input type=text name=email placeholder="E-mail"']
 replace_ex ['<input type=text name=sub']   ['<input class=input type=text name=sub   placeholder="題 名"']
-replace_ex ['<input type=text'] ['<input class=input type=text']
+#replace_ex ['<input type=text'] ['<input class=input type=text']
 replace_ex ['<input type=password name=pwd'] ['<input class=input type=text name=pwd placeholder="削除キー"']
 replace_ex ['<input type=file name=upfile size="35">'] ['<div class="file"><label class="file-label"><input class="file-input" type="file" name=upfile ><span class="file-cta"><span class="file-label">添付ファイル</span></span></label></div>']
 replace_ex ['<label><input type=checkbox'] ['<label class="checkbox"><input type=checkbox']

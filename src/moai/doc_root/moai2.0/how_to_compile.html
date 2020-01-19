@@ -1562,7 +1562,7 @@ moai実行バイナリを直接起動する形になります.<br>
 		ではどのバージョンのgradleならばよいのでしょうか？<br>
 <br>
 		可能なバージョンの組み合わせはかなりシビアで、ネット上に転がっているgradleのサンプルなどはほぼ全滅という惨憺たる状況です.<br>
-		（そもそもAndroid Studioを使わずに gradle android-sdk android-ndk だけでなんとかしようというのは世界的にみて少数派です.<br>
+		（そもそもAndroid Studioを使わずに gradle と android-sdk だけでなんとかしようというのは世界的にみて少数派です.<br>
 		ましてやMoaiの場合 android-ndkもあります.)<br>
 <br>
 		それでも何とかして筆者の環境では gradle-2.14.1 という一つの解(割と古いバージョンですが)にたどり着けました.<br>
@@ -1577,11 +1577,12 @@ moai実行バイナリを直接起動する形になります.<br>
 		Android SDK はandroid アプリを生成するための主にjavaに関連したツール、API群からなります.<br>
 		ではなぜここで sdk-tools なるものが手前にワンクッションあるのかということですが、<br>
 		ターゲットとするAndroidのバージョンによって必要なファイル群が異なるためです.<br>
-		つまりまずはAndroid SDKのインストーラをインストールせよということですね.<br>
+		つまりまずはAndroid SDKのインストーラをインストールせよということになります.<br>
 <br>
 		https://developer.android.com/studio へアクセスします.<br>
 		最後にstudioとありますが、この記事ではAndroid Studioは一切使いません.<br>
-		クソうざったいAndroid Studioのでかでかとした宣伝画像を一切無視して一番下の方にある Command line tools only へ一直線に画面をスクロールします.<br>
+		Android Studioのでかでかとした宣伝画像を一切無視して一番下へスクロールします.<br>
+		「Command line tools only」と書かれた部分がみつかると思います. <br>
 		欲しいものはこれだけです. 筆者は sdk-tools として sdk-tools-windows-4333796.zip (これでも148MBもありますが)をダウンロードしました.<br>
 <br>
 		ここに次にように書かれてあります.<br>
@@ -1606,8 +1607,8 @@ moai実行バイナリを直接起動する形になります.<br>
 <br>
 		sdkmanager.bat "platform-tools" "platforms;android-自分の望むAPIレベル"<br>
 <br>
-		むしろ問題はどのAPIレベルを選択すればよいのかということになります.<br>
-		これを調べるのがまた面倒です. AndroidのドロドロとしたバージョンとAPIの対応の歴史を調べよというわけですか…。<br>
+		ではどのAPIレベルを選択すればよいでしょうか？<br>
+		これを決定するには、AndroidのドロドロとしたバージョンとAPIの対応の歴史を調べる必要があるわけですが…。<br>
 		紆余曲折の末、筆者の環境では android-26 に落ち着きました.<br>
 <br>
 		つまりこうですね.<br>
@@ -1787,7 +1788,7 @@ moai実行バイナリを直接起動する形になります.<br>
 			</div>
 		</div>
 		<div class="content">
-		  <time datetime="2016-1-1">2019/07/29</time>
+		  <time datetime="2016-1-1">2019/12/10</time>
 		</div>
 	</div>
 </div>

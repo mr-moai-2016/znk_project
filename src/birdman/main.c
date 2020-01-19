@@ -7,6 +7,7 @@
 #include <Rano_log.h>
 #include <Rano_dir_util.h>
 #include <Rano_cgi_util.h>
+#include <Rano_conf_util.h>
 
 #include <Znk_base.h>
 #include <Znk_s_base.h>
@@ -27,6 +28,23 @@
 #include <stdlib.h>
 
 #define SJIS_NOU "\x94\x5c" /* 能 */
+
+const char*
+getPatchPlatform()
+{
+#if defined( __CYGWIN__ )
+	return "cygwin";
+
+#elif defined( __ANDROID__ )
+	return "android";
+
+#elif defined( Znk_TARGET_WINDOWS )
+	return "windows";
+
+#else
+	return "linux";
+#endif
+}
 
 static bool
 getVTagStr( ZnkStr str, const char* vtag_path )
@@ -107,6 +125,18 @@ isNewPatch( const char* pat_ver,  const char* cur_ver )
 }
 
 static bool
+isIncludePlatform( const char* platform_list, const char* query_platform )
+{
+	size_t    idx = Znk_NPOS;
+	ZnkStrAry ary = ZnkStrAry_create( true );
+
+	ZnkStrEx_addSplitC( ary, platform_list, Znk_NPOS, ',', false, 4 );
+	idx = ZnkStrAry_find( ary, 0, query_platform, Znk_NPOS );
+	ZnkStrAry_destroy( ary );
+	return (bool)( idx != Znk_NPOS );
+}
+
+static bool
 queryVTagRule( const char* vtag_rule_path, const char* query_parent_ver, ZnkStr pat_ver )
 {
 	bool result = false;
@@ -121,9 +151,27 @@ queryVTagRule( const char* vtag_rule_path, const char* query_parent_ver, ZnkStr 
 			}
 			ZnkStr_chompNL( line );
 			ZnkStrAry_clear( tkns );
-			ZnkStrEx_addSplitC( tkns, ZnkStr_cstr(line), Znk_NPOS, ' ', false, 2 );
+			ZnkStrEx_addSplitC( tkns, ZnkStr_cstr(line), Znk_NPOS, ' ', false, 4 );
 			tkns_size = ZnkStrAry_size( tkns );
-			if( tkns_size == 2 ){
+			if( tkns_size >= 3 ){
+				const char* cmd = ZnkStrAry_at_cstr(tkns,2);
+				if( ZnkS_eq( cmd, "platform" ) ){
+					/* 指定したplatform時のみこの行を適用 */
+					/* Exam: 2.0 2.1 platform windows,android,cygwin */
+					if( tkns_size >= 4 ){
+						const char* platform_list  = ZnkStrAry_at_cstr(tkns,3);
+						const char* patch_platform = getPatchPlatform();
+						if( !isIncludePlatform( platform_list, patch_platform ) ){
+							/* platform_list に指定がないためskip */
+							continue;
+						}
+					}
+				} else {
+					/* unknown cmd */
+					/* この場合はcmdは何も指定されていないとみなす */
+				}
+			}
+			if( tkns_size >= 2 ){
 				const char* parent_ver = ZnkStrAry_at_cstr(tkns,0);
 				if( ZnkS_eq( parent_ver, query_parent_ver ) ){
 					/* found */
@@ -265,9 +313,10 @@ download( const char* hostname, const char* unesc_req_urp, const char* target,
 		const char* parent_proxy,
 		ZnkStr result_filename, ZnkStr ermsg, struct DownloadInfo* dwn_info, RanoModule mod, int* status_code, bool is_https )
 {
-	bool        result   = false;
-	const char* tmpdir   = "tmp/";
-	const char* cachebox = "tmp/cachebox/";
+	bool   result   = false;
+	ZnkStr tmpdir   = ZnkStr_newf( "%s/", RanoHtpBoy_getTmpDirCommon() );
+	ZnkStr cachebox = ZnkStr_newf( "%s/cachebox/", ZnkStr_cstr(tmpdir) );
+
 	struct ZnkHtpHdrs_tag htp_hdrs = { 0 };
 	bool is_without_404 = true;
 	ZnkHtpOnRecvFuncArg prog_fnca = { 0 };
@@ -298,7 +347,7 @@ download( const char* hostname, const char* unesc_req_urp, const char* target,
 	result = RanoHtpBoy_cipher_get_with404( hostname, unesc_req_urp, target,
 			&htp_hdrs,
 			parent_proxy,
-			tmpdir, cachebox, result_filename,
+			ZnkStr_cstr(tmpdir), ZnkStr_cstr(cachebox), result_filename,
 			is_without_404, status_code, is_https,
 			&prog_fnca, ermsg );
 
@@ -307,10 +356,12 @@ download( const char* hostname, const char* unesc_req_urp, const char* target,
 				"  RanoHtpBoy_cipher_get_with404 : result=[%d] hostname=[%s] req_urp=[%s]\n"
 				"                    : target=[%s] parent_proxy=[%s] tmpdir=[%s]\n"
 				"                    : result_filename=[%s].\n",
-				result, hostname, unesc_req_urp, target, parent_proxy, tmpdir, ZnkStr_cstr(result_filename) );
+				result, hostname, unesc_req_urp, target, parent_proxy, ZnkStr_cstr(tmpdir), ZnkStr_cstr(result_filename) );
 	}
 
 	ZnkHtpHdrs_dispose( &htp_hdrs );
+	ZnkStr_delete(tmpdir);
+	ZnkStr_delete(cachebox);
 	return result;
 }
 
@@ -377,21 +428,20 @@ confirm( const char* inst_dir, const char* cur_ver, const char* pat_ver, const c
 	return false;
 }
 
-const char*
-getPatchPlatform()
+static ZnkStr
+thePatchBasenameFilename( void )
 {
-#if defined( __CYGWIN__ )
-	return "cygwin";
-
-#elif defined( __ANDROID__ )
-	return "android";
-
-#elif defined( Znk_TARGET_WINDOWS )
-	return "windows";
-
-#else
-	return "linux";
-#endif
+	static ZnkStr st_str = NULL;
+	if( st_str == NULL ){
+		st_str = ZnkStr_newf( "%s/patch_basename.dat", RanoHtpBoy_getTmpDirCommon() );
+	}
+	return st_str;
+}
+static ZnkFile
+fopenPatchBasenameFile( const char* mode )
+{
+	const char* filename = ZnkStr_cstr( thePatchBasenameFilename() );
+	return Znk_fopen( filename, mode );
 }
 
 static bool
@@ -399,17 +449,19 @@ upgradeQuery( const char* cur_vtag_path, const char* main_app_dir, const char* a
 {
 	bool result = false;
 	const bool  is_https = true;
-	const char* hostname = "mr-moai-2016.github.io";
-	const char* vtag_rule_urp = is_test_mode ? "/patch/vtag_rule_test" : "/patch/vtag_rule";
-	const char* parent_proxy  = NULL;
+	const char* hostname       = "mr-moai-2016.github.io";
+	const char* vtag_rule_urp  = is_test_mode ? "/patch/vtag_rule_test" : "/patch/vtag_rule";
+	const char* parent_proxy   = NULL;
+	const char* tmpdir_common  = RanoHtpBoy_getTmpDirCommon();
+	const char* vtag_rule_path = NULL;
+
 	ZnkStr result_filename = ZnkStr_new("");
 	ZnkStr ermsg           = ZnkStr_new( "" );
 	int    status_code     = 0;
-	ZnkStr pat_ver      = ZnkStr_new( "" );
-	ZnkStr cur_ver      = ZnkStr_new( "" );
-	ZnkStr parent_ver   = ZnkStr_new( "" );
-	ZnkStr patch_basename = ZnkStr_new( "" );
-	const char* vtag_rule_path = NULL;
+	ZnkStr pat_ver         = ZnkStr_new( "" );
+	ZnkStr cur_ver         = ZnkStr_new( "" );
+	ZnkStr parent_ver      = ZnkStr_new( "" );
+	ZnkStr patch_basename  = ZnkStr_new( "" );
 	ZnkStr msg = ZnkStr_new( "" );
 	struct DownloadInfo dwn_info = { 0 };
 
@@ -462,9 +514,9 @@ upgradeQuery( const char* cur_vtag_path, const char* main_app_dir, const char* a
 
 	confirm( main_app_dir, ZnkStr_cstr(cur_ver), ZnkStr_cstr(pat_ver), authentic_key, is_apk );
 
-	ZnkDir_mkdirPath( "tmp", Znk_NPOS, '/', NULL );
+	ZnkDir_mkdirPath( tmpdir_common, Znk_NPOS, '/', NULL );
 	{
-		ZnkFile fp = Znk_fopen( "tmp/patch_basename.dat", "wb" );
+		ZnkFile fp = fopenPatchBasenameFile( "wb" );
 		const char* patch_platform = getPatchPlatform();
 		ZnkStr_setf( patch_basename, "moai-v%s-patch-v%s-%s", ZnkStr_cstr(parent_ver), ZnkStr_cstr(pat_ver), patch_platform );
 		Znk_fputs( ZnkStr_cstr(patch_basename), fp );
@@ -506,7 +558,7 @@ downloadZip( const char* authentic_key )
 	ZnkStr zip_urp         = ZnkStr_new( "" );
 	ZnkStr patch_basename  = ZnkStr_new( "" );
 	ZnkStr msg             = ZnkStr_new( "" );
-	ZnkFile fp = Znk_fopen( "tmp/patch_basename.dat", "rb" );
+	ZnkFile fp = fopenPatchBasenameFile( "rb" );
 	struct DownloadInfo dwn_info = { 0 };
 
 	dwn_info.bytes_ = 0;
@@ -539,6 +591,8 @@ downloadZip( const char* authentic_key )
 		ZnkStr_addf( msg, "Birdman : download [%s%s%s] 404 not found.\n", 
 				is_https ? "https://" : "http://", hostname, ZnkStr_cstr(zip_urp) );
 	} else if( result ){
+		const char* tmpdir_common = RanoHtpBoy_getTmpDirCommon();
+
 		ZnkStr_addf( msg, "Birdman : download status_code=[%d]\n", status_code );
 		ZnkStr_addf( msg, "修正パッチのダウンロードは完了しました.\n" );
 		ZnkStr_addf( msg, "\n" );
@@ -547,8 +601,8 @@ downloadZip( const char* authentic_key )
 		ZnkStr_addf( msg, "Birdman : Now extract...\n" );
 		writeState( 50, ZnkStr_cstr(msg) );
 
-		ZnkDir_mkdirPath( "tmp", Znk_NPOS, '/', NULL );
-		if( !ZnkZip_extract( ZnkStr_cstr(result_filename), ermsg, progress_func, msg, "tmp" ) ){
+		ZnkDir_mkdirPath( tmpdir_common, Znk_NPOS, '/', NULL );
+		if( !ZnkZip_extract( ZnkStr_cstr(result_filename), ermsg, progress_func, msg, tmpdir_common ) ){
 			ZnkStr_addf( msg, "Birdman : %s\n", ZnkStr_cstr(ermsg) );
 			ZnkStr_addf( msg, "修正パッチの解凍に失敗しました.\n" );
 			ZnkStr_addf( msg, "この修正パッチは壊れているため適用できません.\n" );
@@ -718,7 +772,8 @@ applyFiles( ZnkStr ermsg, const char* platform_id, const char* app_name, const c
 	bool   result = false;
 	ZnkStr patch_basename = ZnkStr_new( "" );
 	ZnkStr apply_list_filename = ZnkStr_new( "" );
-	ZnkFile fp = Znk_fopen( "tmp/patch_basename.dat", "rb" );
+	ZnkFile fp = fopenPatchBasenameFile( "rb" );
+	const char* tmpdir_common = RanoHtpBoy_getTmpDirCommon();
 
 	if( fp == NULL ){
 		writeState( 100, "Cannot open patch_basename.dat" );
@@ -728,7 +783,7 @@ applyFiles( ZnkStr ermsg, const char* platform_id, const char* app_name, const c
 		ZnkStr_chompNL( patch_basename );
 	}
 
-	ZnkStr_setf( apply_list_filename, "tmp/%s/apply_list.myf", ZnkStr_cstr(patch_basename) );
+	ZnkStr_setf( apply_list_filename, "%s/%s/apply_list.myf", tmpdir_common, ZnkStr_cstr(patch_basename) );
 
 	ZnkStr_addf( ermsg, "Birdman : apply_list_filename=[%s]\n", ZnkStr_cstr(apply_list_filename) );
 	writeState( 1, ZnkStr_cstr(ermsg) );
@@ -918,13 +973,27 @@ printUsage( void )
 
 int main( int argc, char** argv )
 {
-	const char* tls_module   = "../libtls-17";
-	const char* cert_pem     = "../cert.pem";
-	bool        is_test_mode = false;
-	bool        is_apk       = false;
-	bool   result  = false;
-	ZnkMyf myf      = ZnkMyf_create();
-	ZnkStr moai_dir = BdmBase_getMoaiDir();
+	const char* tls_module    = "../libtls-17";
+	const char* cert_pem      = "../cert.pem";
+	bool        is_test_mode  = false;
+	bool        is_apk        = false;
+	bool        result        = false;
+	ZnkStr      ermsg         = ZnkStr_new( "" );
+	ZnkMyf      myf           = ZnkMyf_create();
+	size_t      count         = 0;
+	const char* moai_dir      = NULL;
+	const char* tmpdir_common = NULL;
+
+	if( RanoConfUtil_rano_app_initiate( ".", true, ermsg ) ){
+		static const bool is_multi_dir = false;
+		count = RanoCGIUtil_rano_app_init_log( "birdman", is_multi_dir );
+	} else {
+		RanoLog_printf( "Birdman : %s\n", ZnkStr_cstr(ermsg) );
+		goto FUNC_END;
+	}
+
+	moai_dir = RanoConfUtil_moai_dir( NULL );
+	tmpdir_common = RanoHtpBoy_getTmpDirCommon();
 
 	if( !ZnkMyf_load( myf, "birdman.myf" ) ){
 		RanoLog_printf( "Birdman : loading birdman.myf is failure.\n" );
@@ -936,8 +1005,8 @@ int main( int argc, char** argv )
 		const char* opt = argv[ 1 ];
 
 		if( moai_dir ){
-			BdmBase_loadAuthenticKey( authentic_key, sizeof(authentic_key), ZnkStr_cstr(moai_dir) );
-			Znk_snprintf( st_state_dat_path, sizeof(st_state_dat_path), "%sdoc_root/state.dat", ZnkStr_cstr(moai_dir) );
+			BdmBase_loadAuthenticKey( authentic_key, sizeof(authentic_key), moai_dir );
+			Znk_snprintf( st_state_dat_path, sizeof(st_state_dat_path), "%sdoc_root/state.dat", moai_dir );
 		}
 
 		if( ZnkS_eq( opt, "yesno" ) ){
@@ -1020,20 +1089,21 @@ int main( int argc, char** argv )
 
 				if( ZnkStr_empty( cur_vtag_path ) ){
 					/* 自動取得 */
-					ZnkStr_setf( cur_vtag_path, "%svtag", ZnkStr_cstr( moai_dir ) );
+					ZnkStr_setf( cur_vtag_path, "%svtag", moai_dir );
 				}
 
 				RanoLog_printf( "Birdman : cur_vtag_path=[%s]\n", ZnkStr_cstr(cur_vtag_path) );
 
 				/* clean tmp dir */
 				{
-					const char* tmpdir   = "tmp/";
+					//const char* tmpdir   = "tmp/";
+					const char* tmpdir   = tmpdir_common;
 					RanoDirUtil_removeDir( tmpdir,
 							"birdman tmpdir", msg,
 							NULL, NULL );
 				}
 
-				result = upgradeQuery( ZnkStr_cstr(cur_vtag_path), ZnkStr_cstr(moai_dir), authentic_key, is_test_mode, is_apk );
+				result = upgradeQuery( ZnkStr_cstr(cur_vtag_path), moai_dir, authentic_key, is_test_mode, is_apk );
 				ZnkStr_delete( cur_vtag_path );
 				ZnkStr_delete( msg );
 			} else {
@@ -1076,6 +1146,7 @@ int main( int argc, char** argv )
 				const char* dst_dir_prefix = "../";
 				const char* app_name = "moai";
 				const char* main_app_arg = NULL;
+				ZnkStr tmpdir = ZnkStr_newf( "%s/", tmpdir_common );
 
 				if( argc >= 3 ){
 					ZnkStr_set( main_app_file, argv[ 2 ] );
@@ -1083,7 +1154,8 @@ int main( int argc, char** argv )
 				if( argc >= 4 ){
 					platform_id = argv[ 3 ];
 				}
-				RanoVTagUtil_getPatchDir( patch_dir, app_name, false, "birdman", "tmp/" );
+				//RanoVTagUtil_getPatchDir( patch_dir, app_name, false, "birdman", "tmp/" );
+				RanoVTagUtil_getPatchDir( patch_dir, app_name, false, "birdman", ZnkStr_cstr(tmpdir) );
 
 				applyFiles( ermsg, platform_id, app_name, ZnkStr_cstr(patch_dir), dst_dir_prefix );
 
@@ -1118,12 +1190,13 @@ int main( int argc, char** argv )
 				ZnkStr_delete( ermsg );
 				ZnkMyf_destroy( myf );
 
-				runMainAppFile( ZnkStr_cstr(main_app_file), main_app_arg, ZnkStr_cstr(moai_dir) );
+				runMainAppFile( ZnkStr_cstr(main_app_file), main_app_arg, moai_dir );
 				/***
 				 * これ以降は実行されない.
 				 * main_app_file 等のZnkStr(ヒープ文字列)の解放処理を明示的には行っていないが、
 				 * processが終了するため自動的に行われるはずであり、無視してよかろう.
 				 */
+				ZnkStr_delete(tmpdir);
 			} else {
 				RanoLog_printf( "Birdman : Searching parent moai_dir ... Skip( target.myf does not found ).\n" );
 			}
@@ -1168,7 +1241,11 @@ int main( int argc, char** argv )
 	}
 
 FUNC_END:
-	ZnkStr_delete( moai_dir );
 	ZnkMyf_destroy( myf );
+
+	RanoConfUtil_rano_app_finalize();
+	RanoConfUtil_moai_dir_finalize();
+	ZnkStr_delete( ermsg );
+
 	return result ? EXIT_SUCCESS : EXIT_FAILURE;
 }

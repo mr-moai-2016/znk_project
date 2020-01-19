@@ -6,6 +6,8 @@
 
 #include <Znk_str_ex.h>
 #include <Znk_str_ptn.h>
+#include <Znk_str_fio.h>
+#include <Znk_mem_find.h>
 
 static RanoTxtFilterAry
 theRpsc( void )
@@ -358,7 +360,7 @@ on_link( ZnkStr tagname, ZnkVarpAry varp_ary, void* arg, ZnkStr tagend )
 				} else {
 					ZnkStr_set( tagend, " />\n" );
 				}
-				ZnkStr_addf( tagend, "<link href=\"http://%s/cgis/easter/publicbox/futaba.css\" rel=\"stylesheet\" type=\"text/css\" />\n",
+				ZnkStr_addf( tagend, "<link href=\"http://%s/cgis/easter/publicbox/bbs_futaba/futaba.css\" rel=\"stylesheet\" type=\"text/css\" />\n",
 						xhr_auth_host );
 				link_info->css_link_done_ = true;
 			}
@@ -394,11 +396,6 @@ on_other( ZnkStr text, void* arg, const char* landmarking )
 		EstRpsc_exec( ary, text, link_info );
 	}
 
-	/**
-	 * 手書き?
-	 * <span id="oebtnd"></span></td><td><div id="swfContents"><div id="oe3"></div></div>
-	 */
-
 	/* futaba : 除去オブジェクトを覆う div が無駄な空間を開ける場合、そのstyleの幅と高さを0にする */
 	ZnkStrPtn_invokeInQuote( text,
 			"<div ", "</div>",
@@ -424,25 +421,84 @@ on_plane_text( ZnkStr planetxt, void* arg )
 	return 1;
 }
 
+static ZnkStr
+makeText_fromFile( const char* filename )
+{
+	ZnkStr  text = NULL;
+	ZnkFile fp   = Znk_fopen( filename, "rb" );
+	if( fp ){
+		ZnkStr line = ZnkStr_new( "" );
+		text = ZnkStr_new( "" );
+		while( true ){
+			if( !ZnkStrFIO_fgets( line, 0, 4096, fp ) ){
+				break;
+			}
+			ZnkStr_add( text, ZnkStr_cstr(line) );
+		}
+		ZnkStr_delete( line );
+		Znk_fclose( fp );
+	}
+	return text;
+}
 static int
 on_bbs_operation( ZnkStr txt, const char* result_filename, const char* src, ZnkStr console_msg )
 {
+	ZnkStr  require_js = makeText_fromFile( "publicbox/bbs_futaba/require_js.html" );
 	ZnkSRef landmark = { 0 };
+
+	if( require_js == NULL ){
+		ZnkMyf myf = ZnkMyf_create();
+		if( ZnkMyf_load( myf, "publicbox/bbs_futaba/require_js.myf" ) ){
+			size_t numof_sec = ZnkMyf_numOfSection( myf );
+			size_t sec_idx;
+			ZnkMyfSection sec;
+			ZnkVarpAry    vars;
+			ZnkVarp       var;
+			ZnkStr        pattern;
+			size_t        occ_tbl[256];
+			for( sec_idx=0; sec_idx<numof_sec; ++sec_idx ){
+				sec     = ZnkMyf_atSection( myf, sec_idx );
+				vars    = ZnkMyfSection_vars( sec );
+				var     = ZnkVarpAry_findObj_byName_literal( vars, "pattern", false );
+				pattern = ZnkVar_str( var );
+				ZnkMem_getLOccTable_forBMS( occ_tbl, (uint8_t*)ZnkStr_cstr(pattern), ZnkStr_leng(pattern) );
+				if( ZnkStr_empty(pattern) ||
+						ZnkMem_lfind_data_BMS(
+							(uint8_t*)ZnkStr_cstr(txt),     ZnkStr_leng(txt),
+							(uint8_t*)ZnkStr_cstr(pattern), ZnkStr_leng(pattern), 1, occ_tbl ) != Znk_NPOS )
+				{
+					var  = ZnkVarpAry_findObj_byName_literal( vars, "str", false );
+					require_js = ZnkStr_new( ZnkVar_cstr( var ) );
+					break;
+				}
+			}
+		}
+		ZnkMyf_destroy( myf );
+	}
 
 	/* for スレ立て画面、画像掲示板一般 */
 	ZnkSRef_set_literal( &landmark, "</div><!--スレッド終了-->" );
 	if( EstFilter_insertBBSOperation( txt,
-			result_filename, landmark.cstr_, src, "resto", console_msg ) ){
-		return 0;
+			result_filename, landmark.cstr_, src, "resto", console_msg, require_js ) ){
+		goto FUNC_END;
 	}
 
 	/* for トップページ */
 	ZnkSRef_set_literal( &landmark,  "<!-- top banner end-->" );
 	if( EstFilter_insertBBSOperation( txt,
-			result_filename, landmark.cstr_, src, "resto", console_msg ) ){
-		return 0;
+			result_filename, landmark.cstr_, src, "resto", console_msg, require_js ) ){
+		goto FUNC_END;
 	}
 
+	/* その他 */
+	ZnkSRef_set_literal( &landmark,  "<!-- GazouBBS v3.0 -->" );
+	if( EstFilter_insertBBSOperation( txt,
+			result_filename, landmark.cstr_, src, "resto", console_msg, require_js ) ){
+		goto FUNC_END;
+	}
+
+FUNC_END:
+	ZnkStr_delete( require_js );
 	return 0;
 }
 

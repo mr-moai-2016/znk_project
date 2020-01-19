@@ -7,7 +7,7 @@
 Znk_EXTERN_C_BEGIN
 
 void
-MkfSrcDepend_get( ZnkStr text, ZnkStrAry list, const char* obj_sfx, const char* nl, MkfSeekFuncT_isInterestExt is_interest_ext );
+MkfSrcDepend_get( ZnkStr text, ZnkStrAry list, const char* obj_sfx, const char* nl, MkfSeekFuncT_isInterestExt is_interest_ext, char dsp );
 
 Znk_EXTERN_C_END
 

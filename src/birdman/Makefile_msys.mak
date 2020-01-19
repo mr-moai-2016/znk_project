@@ -113,6 +113,7 @@ __mkg_sentinel_target__:
 install_data:
 	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/birdman 
 	for tgt in birdman.myf ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/birdman/ ; fi ; done
+	for tgt in rano_app.myf ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/birdman/ ; fi ; done
 
 # Install exec rule.
 install_exec: $(EXE_FILE0)
@@ -135,5 +136,5 @@ clean:
 	rm -rf $O/ 
 
 # Src and Headers Dependency
-Bdm_base.o: Bdm_base.h
-main.o: Bdm_base.h
+$O/Bdm_base.o: Bdm_base.h
+$O/main.o: Bdm_base.h

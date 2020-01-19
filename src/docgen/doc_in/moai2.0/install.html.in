@@ -3,7 +3,7 @@
 @@V config
 doc_title = ['Moai+Easter ユーザーマニュアル']
 author = { ['Mr.Moai'] }
-update = ['2019/11/22']
+update = ['2020/01/19']
 category_path = { ['moai2_0_user'] }
 urp           = ['/moai2.0/install.html']
 nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
@@ -335,7 +335,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 		moai_profile の位置は？
 	</div>
 	<div class="message-body">
-		初期設定では、Moai 本体のディレクトリより一つ上になっています.
+		初期設定では、Moai本体より一つ上のディレクトリになっています.
 		moai_profile がまだ存在しない場合、Moai はこの位置へ moai_profile を自動的に生成します.
 
 		moai_profile の位置は Moaiエンジンの設定画面で変えることができます.
@@ -357,7 +357,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 	今時の大容量ディスクならさほど問題になるサイズではないとは思いますが、一応この点了承ください.
 	
 	ちなみにこの保存日数は設定で変更することもでき、日数を短くすればその分サイズを減らすことも可能ですが、
-	サイズの上限を直接指定することは現バージョンのEasterではできません.
+	サイズの上限を(MB単位で)直接指定することは現バージョンのEasterではできません.
 @@.
 
 

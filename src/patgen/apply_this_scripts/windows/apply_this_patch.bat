@@ -1,7 +1,5 @@
 @echo off
 
-set old_parent_ver=2.1
-set new_parent_ver=2.2
 if exist set_ver.bat call set_ver.bat
 
 set CP=xcopy /H /C /Y

@@ -6,18 +6,22 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="/msty.css" rel="stylesheet" type="text/css" />
 	<link href="/bulma.css" rel="stylesheet" type="text/css" />
+	<link href="/cgis/easter/publicbox/bbs_futaba/futaba.css" rel="stylesheet" type="text/css" />
 	<title>Easter HyperPost</title>
+
+	<script type="text/javascript"><!--
+	var st_Moai_AuthenticKey = "#[Moai_AuthenticKey]#";
+	var st_func_tbls = [];
+	#[hint_table]#
+	//--></script>
+	<script type="text/javascript" src="/cgis/easter/publicbox/pascua/pascua_event.js"></script>
+	<script type="text/javascript" src="/cgis/easter/publicbox/pascua/pascua_cookie.js"></script>
+	<script type="text/javascript" src="/cgis/easter/publicbox/pascua/pascua_gui.js"></script>
+
+	<script type="text/javascript" src="/cgis/easter/publicbox/hint.js"></script>
+	<script type="text/javascript" src="/cgis/easter/publicbox/assort.js"></script>
+	<script type="text/javascript" src="/cgis/easter/publicbox/preview.js"></script>
 </head>
-
-
-<script type="text/javascript"><!--
-var st_Moai_AuthenticKey = "#[Moai_AuthenticKey]#";
-var st_func_tbls = [];
-#[hint_table]#
-//--></script>
-<script type="text/javascript" src="/cgis/easter/publicbox/hint.js"></script>
-<script type="text/javascript" src="/cgis/easter/publicbox/assort.js"></script>
-<script type="text/javascript" src="/cgis/easter/publicbox/preview.js"></script>
 
 <body bgcolor="#EEFFEE" text="#808000" link="#0000EE" vlink="#0000EE" alink="#FF0000">
 <div class="section" id="section">
@@ -53,8 +57,8 @@ var st_func_tbls = [];
 			#[input_hiddens]#
 			<span class=MstyOnlyIE8>おなまえ</span><input class=input type=text name=name  value="#[name]#"  placeholder="おなまえ"><br>
 			<span class=MstyOnlyIE8>E-mail  </span><input class=input type=text name=email value="#[email]#" placeholder="E-mail"  ><br>
-			<span class=MstyOnlyIE8>題 名   </span><input class=input type=text name=sub   value="#[sub]#"   placeholder="題 名"   ><input type=submit class=MstyWideButton value="#[send_button_name]#"> <a class=MstyElemLink href="/cgis/custom_boy/custom_boy.cgi?cb_target=futaba&cb_type=automatic">VirtualUSERS</a><br>
-			<span class=MstyOnlyIE8>コメント</span><textarea class=textarea name=com cols=48 rows=4 placeholder="コメント">#[com]#</textarea>
+			<span class=MstyOnlyIE8>題 名   </span><input class=input type=text name=sub   value="#[sub]#"   placeholder="題 名"   ><input type=submit class=MstyWideButton value="#[send_button_name]#" onclick="tegakiJs.oeUpdate();"> <a class=MstyElemLink href="/cgis/custom_boy/custom_boy.cgi?cb_target=futaba&cb_type=automatic">VirtualUSERS</a><br>
+			<span class=MstyOnlyIE8>コメント</span><span id="oebtnd"></span><div id="oe3"></div><textarea class=textarea name=com cols=48 rows=4 placeholder="コメント" id="ftxa">#[com]#</textarea>
 			<span class=MstyOnlyIE8>削除キー</span><input style="max-width:200px;" class=input type=text name=pwd size=9 maxlength=12 value="#[pwd]#" placeholder="削除キー"><br>
 			<div class="file"><label class="file-label">
 				<input class="file-input" type="file" name=upfile ><span class="file-cta"><span class="file-label">
@@ -148,6 +152,9 @@ var st_func_tbls = [];
 	<font size=-1 color=#8888ff><div id=msg_console_msg>― 現在非表示です ―</div></font>
 </div>
 
+<script type="text/javascript" src="/cgis/easter/publicbox/bbs_futaba/core.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/bbs_futaba/eqtab.js"></script>
+<script type="text/javascript" src="/cgis/easter/publicbox/bbs_futaba/tegaki.js"></script>
 
 <a class=MstyElemLink href="#user-content-index">一番上へ戻る</a> <a class=MstyElemLink href="/">Moaiトップページ</a>
 <br><br>

@@ -1,0 +1,7 @@
+@def_quote [' ']
+
+@@V config
+tmp_dir=['tmp']
+@@.
+
+

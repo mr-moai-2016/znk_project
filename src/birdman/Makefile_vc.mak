@@ -94,6 +94,7 @@ __mkg_sentinel_target__:
 install_data:
 	@if not exist ..\..\moai-v$(REL_VER)-$(PLATFORM)\birdman @mkdir ..\..\moai-v$(REL_VER)-$(PLATFORM)\birdman 
 	@if exist "birdman.myf" @$(CP) /F "birdman.myf" ..\..\moai-v$(REL_VER)-$(PLATFORM)\birdman\ $(CP_END)
+	@if exist "rano_app.myf" @$(CP) /F "rano_app.myf" ..\..\moai-v$(REL_VER)-$(PLATFORM)\birdman\ $(CP_END)
 
 # Install exec rule.
 install_exec: $(EXE_FILE0)
@@ -116,5 +117,5 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-Bdm_base.obj: Bdm_base.h
-main.obj: Bdm_base.h
+$O\Bdm_base.obj: Bdm_base.h
+$O\main.obj: Bdm_base.h

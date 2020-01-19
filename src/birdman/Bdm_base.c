@@ -7,6 +7,7 @@
 #include <Znk_stdc.h>
 #include <Znk_missing_libc.h>
 
+#if 0
 ZnkStr
 BdmBase_getMoaiDir( void )
 {
@@ -19,6 +20,7 @@ BdmBase_getMoaiDir( void )
 	}
 	return moai_dir;
 }
+#endif
 bool
 BdmBase_loadAuthenticKey( char* authentic_key_buf, size_t authentic_key_buf_size, const char* moai_dir )
 {

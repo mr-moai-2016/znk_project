@@ -138,6 +138,7 @@ public class MainActivity extends Activity {
 
 		copyFromAssets_inDir( assetManager, asset_dst_dir, "bin/" + abi_str );
 		copyFromAssets_inDir( assetManager, asset_dst_dir, "bin/" + abi_str + "/cgi_developers/protected" );
+		copyFromAssets_inDir( assetManager, asset_dst_dir, "bin/" + abi_str + "/plugins" );
 
 		copyFromAssets_inDir( assetManager, asset_dst_dir, "cgis/cgi_developers/protected" );
 		copyFromAssets_inDir( assetManager, asset_dst_dir, "cgis/cgi_developers/publicbox" );
@@ -146,6 +147,9 @@ public class MainActivity extends Activity {
 		copyFromAssets_inDir( assetManager, asset_dst_dir, "cgis/easter/default" );
 		copyFromAssets_inDir( assetManager, asset_dst_dir, "cgis/easter/publicbox" );
 		copyFromAssets_inDir( assetManager, asset_dst_dir, "cgis/easter/publicbox/icons" );
+		copyFromAssets_inDir( assetManager, asset_dst_dir, "cgis/easter/publicbox/bbs_5ch" );
+		copyFromAssets_inDir( assetManager, asset_dst_dir, "cgis/easter/publicbox/bbs_futaba" );
+		copyFromAssets_inDir( assetManager, asset_dst_dir, "cgis/easter/publicbox/pascua" );
 		copyFromAssets_inDir( assetManager, asset_dst_dir, "cgis/easter/alternative/5ch/agree.5ch.net/js/ad.js" );
 		copyFromAssets_inDir( assetManager, asset_dst_dir, "cgis/easter/alternative/5ch/itest.5ch.net/assets/js/android/application.js" );
 		copyFromAssets_inDir( assetManager, asset_dst_dir, "cgis/easter/alternative/5ch/itest.5ch.net/assets/js/iphone/application.js" );
@@ -157,13 +161,17 @@ public class MainActivity extends Activity {
 		copyFromAssets_inDir( assetManager, asset_dst_dir, "cgis/custom_boy/templates" );
 		copyFromAssets_inDir( assetManager, asset_dst_dir, "cgis/custom_boy/UA" );
 
+		copyFromAssets_inDir( assetManager, asset_dst_dir, "cgis/proxy_finder" );
+		copyFromAssets_inDir( assetManager, asset_dst_dir, "cgis/proxy_finder/templates" );
+
 		copyFromAssets_inDir( assetManager, asset_dst_dir, "plugins" );
 
-		this.init(asset_dst_dir, abi_str);
-		
-		//String msg = testFromAssets( assetManager );
 		TextView textView = (TextView)findViewById(R.id.my_label);
-		textView.setText( "Moai Ver2.2\nOK. Start browsing!\n" + "(" + abi_str + " sdk:" + sdk_int + ")" );
+		if( this.init(asset_dst_dir, abi_str) ){
+			textView.setText( "Moai Ver2.2\nOK. Start browsing!\n" + "(" + abi_str + " sdk:" + sdk_int + ")" );
+		} else {
+			textView.setText( "Moai Ver2.2\nNG. init Error.\n" + "See moai_jni.log.\n" );
+		}
 		
 		this.mainLoop(); /* Moai Thread Start */
     }

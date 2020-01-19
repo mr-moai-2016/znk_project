@@ -32,7 +32,7 @@ COMPILER := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc \
 	-MMD -MP \
 	-fpic -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv5te -mtune=xscale -msoft-float -mthumb -Os \
 	-g -DNDEBUG -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 \
-	-DANDROID \
+	-DANDROID -fPIE \
 	-Wa,--noexecstack -Wformat -Werror=format-security -Wall  \
 	-I$(PLATFORMS_LEVEL)/arch-arm/usr/include
 
@@ -197,7 +197,7 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-cgi_helper.o: cgi_helper.h
-main.o: proxy_finder.h cgi_helper.h
-proxy_finder.o: proxy_finder.h proxy_info.h
-proxy_info.o: proxy_info.h
+$O\cgi_helper.o: cgi_helper.h
+$O\main.o: proxy_finder.h cgi_helper.h
+$O\proxy_finder.o: proxy_finder.h proxy_info.h
+$O\proxy_info.o: proxy_info.h

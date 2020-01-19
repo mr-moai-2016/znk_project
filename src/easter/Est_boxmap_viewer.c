@@ -443,15 +443,12 @@ cleanCacheBox( ZnkBird bird,
 	 * 画面を出し、「削除」ボタンを押すとカレントのEstBoxMapViewer画面に戻る.
 	 */
 	ZnkVarp confirm;
-	ZnkVarp varp;
 	ZnkStr  result_view = ZnkStr_new( "" );
 	ZnkStr  assort_ui = ZnkStr_new( "" );
 	ZnkStr  tag_editor_ui = ZnkStr_new( "" );
-	size_t  processed_count = 0;
 	bool    is_confirm = false;
 	const size_t show_file_num = EstConfig_getShowFileNum();
 	const char* style_class_name = "MstyElemLink";
-	const char* favorite_dir = EstConfig_favorite_dir();
 
 	*template_html_file = "templates/boxmap_viewer.html";
 
@@ -497,8 +494,6 @@ cleanCacheBox( ZnkBird bird,
 					authentic_key );
 		}
 	} else {
-		ZnkVarp pwd;
-
 		{
 			ZnkDirId dirid = ZnkDir_openDir( "cachebox" );
 			if( dirid ){

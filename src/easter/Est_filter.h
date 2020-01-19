@@ -41,7 +41,7 @@ EstFilter_replaceToAutolink( ZnkStr planetxt, bool is_append_a_tag );
 
 bool
 EstFilter_insertBBSOperation( ZnkStr text, 
-		const char* result_filename, const char* landmark, const char* src, const char* bbs_id_name, ZnkStr console_msg );
+		const char* result_filename, const char* landmark, const char* src, const char* bbs_id_name, ZnkStr console_msg, ZnkStr require_js );
 
 void
 EstFilter_main( const char* result_file, const char* src, const char* target,

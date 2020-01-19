@@ -1,12 +1,14 @@
 #include "Znk_bfr.h"
 #include "Znk_stdc.h"
 
+#if defined(NDEBUG)
 struct ZnkBfrImpl {
 	void*  data_;
 	size_t size_;
 	size_t capacity_;
 	ZnkCapacityType type_;
 };
+#endif
 
 #define GET_PAD_E2( size, pad ) ( ((size) + (pad)-1 ) & ~((pad)-1) )
 

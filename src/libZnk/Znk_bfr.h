@@ -10,6 +10,16 @@
 
 Znk_EXTERN_C_BEGIN
 
+#if !defined(NDEBUG)
+/* for VC debugger */
+struct ZnkBfrImpl {
+	char*  data_;
+	size_t size_;
+	size_t capacity_;
+	ZnkCapacityType type_;
+};
+#endif
+
 typedef struct ZnkBfrImpl* ZnkBfr;
 
 ZnkBfr

@@ -140,7 +140,7 @@ clean:
 	rm -rf $O/ 
 
 # Src and Headers Dependency
-cgi_helper.o: cgi_helper.h
-main.o: proxy_finder.h cgi_helper.h
-proxy_finder.o: proxy_finder.h proxy_info.h
-proxy_info.o: proxy_info.h
+$O/cgi_helper.o: cgi_helper.h
+$O/main.o: proxy_finder.h cgi_helper.h
+$O/proxy_finder.o: proxy_finder.h proxy_info.h
+$O/proxy_info.o: proxy_info.h

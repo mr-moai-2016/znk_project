@@ -203,6 +203,9 @@ install_data:
 	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/templates 
 	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox 
 	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/icons 
+	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/pascua 
+	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/bbs_futaba 
+	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/bbs_5ch 
 	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/alternative/5ch/itest.5ch.net/assets/js/android 
 	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/alternative/5ch/itest.5ch.net/assets/js/iphone 
 	mkdir -p ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/alternative/5ch/agree.5ch.net/js 
@@ -213,6 +216,15 @@ install_data:
 	for tgt in templates/*.myf ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/templates/ ; fi ; done
 	for tgt in publicbox/* ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/ ; fi ; done
 	for tgt in publicbox/icons/*.png ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/icons/ ; fi ; done
+	for tgt in publicbox/pascua/*.js ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/pascua/ ; fi ; done
+	for tgt in publicbox/bbs_futaba/*.myf ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/bbs_futaba/ ; fi ; done
+	for tgt in publicbox/bbs_futaba/*.html ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/bbs_futaba/ ; fi ; done
+	for tgt in publicbox/bbs_futaba/*.js ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/bbs_futaba/ ; fi ; done
+	for tgt in publicbox/bbs_futaba/*.css ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/bbs_futaba/ ; fi ; done
+	for tgt in publicbox/bbs_5ch/*.myf ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/bbs_5ch/ ; fi ; done
+	for tgt in publicbox/bbs_5ch/*.html ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/bbs_5ch/ ; fi ; done
+	for tgt in publicbox/bbs_5ch/*.js ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/bbs_5ch/ ; fi ; done
+	for tgt in publicbox/bbs_5ch/*.css ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/bbs_5ch/ ; fi ; done
 	for tgt in publicbox/alternative/5ch/itest.5ch.net/assets/js/android/* ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/alternative/5ch/itest.5ch.net/assets/js/android/ ; fi ; done
 	for tgt in publicbox/alternative/5ch/itest.5ch.net/assets/js/iphone/* ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/alternative/5ch/itest.5ch.net/assets/js/iphone/ ; fi ; done
 	for tgt in publicbox/alternative/5ch/agree.5ch.net/js/*.js ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../moai-v$(REL_VER)-$(PLATFORM)/cgis/easter/publicbox/alternative/5ch/agree.5ch.net/js/ ; fi ; done
@@ -238,40 +250,40 @@ clean:
 	rm -rf $O/ 
 
 # Src and Headers Dependency
-cache_task.o: Est_search_manager.h Est_config.h Est_base.h Est_sqi.h Est_recentory.h Est_box.h
-Est_assort.o: Est_assort.h Est_config.h Est_ui.h Est_recentory.h Est_base.h Est_dir_util.h Est_tag.h
-Est_assort_list.o: Est_assort_list.h Est_config.h Est_ui.h Est_box.h Est_base.h Est_assort.h Est_assort_ui.h
-Est_assort_ui.o: Est_assort_ui.h Est_config.h Est_ui_base.h Est_unid.h
-Est_base.o: Est_base.h Est_config.h
-Est_bat_operator.o: Est_bat_operator.h
-Est_box.o: Est_box.h Est_finf.h Est_recentory.h Est_bat_operator.h Est_assort.h Est_dir_util.h Est_tag.h Est_config.h Est_sqi.h Est_search_manager.h
-Est_boxmap_viewer.o: Est_boxmap_viewer.h Est_config.h Est_ui.h Est_base.h Est_dir_util.h Est_assort.h Est_assort_ui.h Est_hint_manager.h Est_tag.h Est_bat_operator.h Est_box.h Est_box_ui.h Est_assort_list.h
-Est_box_base.o: Est_box_base.h Est_config.h Est_base.h
-Est_box_ui.o: Est_box_ui.h Est_config.h Est_ui_base.h Est_cinf_ui.h Est_linf_list.h
-Est_cinf_ui.o: Est_cinf_ui.h Est_base.h
-Est_config.o: Est_config.h Est_base.h Est_hint_manager.h Est_unid.h
-Est_dir_util.o: Est_dir_util.h
-Est_filter.o: Est_filter.h Est_link.h Est_config.h Est_parser.h Est_base.h Est_hint_manager.h Est_filter_default.h Est_filter_futaba.h Est_filter_5ch.h
-Est_filter_5ch.o: Est_filter_5ch.h Est_parser.h Est_link.h Est_config.h Est_rpsc.h
-Est_filter_default.o: Est_filter_default.h Est_parser.h Est_link.h Est_config.h
-Est_filter_futaba.o: Est_filter_futaba.h Est_parser.h Est_link.h Est_config.h Est_rpsc.h
-Est_finf.o: Est_finf.h Est_record.h
-Est_get.o: Est_get.h Est_config.h Est_link.h Est_base.h Est_filter.h Est_img_viewer.h
-Est_hint_manager.o: Est_hint_manager.h
-Est_img_viewer.o: Est_img_viewer.h Est_config.h Est_ui.h Est_ui_base.h Est_base.h Est_dir_util.h Est_assort.h Est_assort_ui.h Est_tag.h Est_finf.h Est_hint_manager.h
-Est_linf_list.o: Est_linf_list.h Est_base.h
-Est_link.o: Est_link.h Est_parser.h Est_config.h
-Est_link_manager.o: Est_link_manager.h Est_config.h Est_ui.h Est_unid.h Est_hint_manager.h Est_base.h Est_linf_list.h Est_box_ui.h
-Est_parser.o: Est_parser.h
-Est_post.o: Est_post.h Est_base.h Est_config.h Est_ui.h Est_hint_manager.h Est_bmp_writer.h
-Est_recentory.o: Est_recentory.h Est_search_manager.h Est_finf.h Est_unid.h
-Est_record.o: Est_record.h Est_base.h
-Est_rpsc.o: Est_rpsc.h Est_parser.h Est_filter.h Est_link.h Est_base.h
-Est_search_manager.o: Est_search_manager.h Est_boxmap_viewer.h Est_ui.h Est_box_ui.h Est_record.h Est_config.h Est_assort.h Est_assort_ui.h Est_hint_manager.h Est_base.h Est_finf.h Est_box_base.h Est_unid.h
-Est_sqi.o: Est_sqi.h Est_tag.h
-Est_tag.o: Est_tag.h Est_unid.h
-Est_tag_manager.o: Est_tag_manager.h Est_config.h Est_ui.h Est_unid.h Est_hint_manager.h Est_assort_ui.h Est_assort.h Est_tag.h Est_base.h
-Est_topic.o: Est_topic.h Est_config.h Est_ui.h Est_ui_base.h Est_box.h Est_box_ui.h Est_base.h Est_assort.h Est_assort_ui.h Est_search_manager.h Est_recentory.h Est_finf.h Est_assort_list.h Est_hint_manager.h
-Est_ui.o: Est_ui.h Est_ui_base.h Est_config.h Est_assort.h Est_base.h Est_box_ui.h
-Est_ui_base.o: Est_ui_base.h Est_box_base.h
-main.o: Est_config.h Est_get.h Est_post.h Est_filter.h Est_link_manager.h Est_boxmap_viewer.h Est_search_manager.h Est_img_viewer.h Est_topic.h Est_tag_manager.h
+$O/cache_task.o: Est_search_manager.h Est_config.h Est_base.h Est_sqi.h Est_recentory.h Est_box.h
+$O/Est_assort.o: Est_assort.h Est_config.h Est_ui.h Est_recentory.h Est_base.h Est_dir_util.h Est_tag.h
+$O/Est_assort_list.o: Est_assort_list.h Est_config.h Est_ui.h Est_box.h Est_base.h Est_assort.h Est_assort_ui.h
+$O/Est_assort_ui.o: Est_assort_ui.h Est_config.h Est_ui_base.h Est_unid.h
+$O/Est_base.o: Est_base.h Est_config.h
+$O/Est_bat_operator.o: Est_bat_operator.h
+$O/Est_box.o: Est_box.h Est_finf.h Est_recentory.h Est_bat_operator.h Est_assort.h Est_dir_util.h Est_tag.h Est_config.h Est_sqi.h Est_search_manager.h
+$O/Est_boxmap_viewer.o: Est_boxmap_viewer.h Est_config.h Est_ui.h Est_base.h Est_dir_util.h Est_assort.h Est_assort_ui.h Est_hint_manager.h Est_tag.h Est_bat_operator.h Est_box.h Est_box_ui.h Est_assort_list.h
+$O/Est_box_base.o: Est_box_base.h Est_config.h Est_base.h
+$O/Est_box_ui.o: Est_box_ui.h Est_config.h Est_ui_base.h Est_cinf_ui.h Est_linf_list.h
+$O/Est_cinf_ui.o: Est_cinf_ui.h Est_base.h
+$O/Est_config.o: Est_config.h Est_base.h Est_hint_manager.h Est_unid.h
+$O/Est_dir_util.o: Est_dir_util.h
+$O/Est_filter.o: Est_filter.h Est_link.h Est_config.h Est_parser.h Est_base.h Est_hint_manager.h Est_filter_default.h Est_filter_futaba.h Est_filter_5ch.h
+$O/Est_filter_5ch.o: Est_filter_5ch.h Est_parser.h Est_link.h Est_config.h Est_rpsc.h
+$O/Est_filter_default.o: Est_filter_default.h Est_parser.h Est_link.h Est_config.h
+$O/Est_filter_futaba.o: Est_filter_futaba.h Est_parser.h Est_link.h Est_config.h Est_rpsc.h
+$O/Est_finf.o: Est_finf.h Est_record.h
+$O/Est_get.o: Est_get.h Est_config.h Est_link.h Est_base.h Est_filter.h Est_img_viewer.h
+$O/Est_hint_manager.o: Est_hint_manager.h
+$O/Est_img_viewer.o: Est_img_viewer.h Est_config.h Est_ui.h Est_ui_base.h Est_base.h Est_dir_util.h Est_assort.h Est_assort_ui.h Est_tag.h Est_finf.h Est_hint_manager.h
+$O/Est_linf_list.o: Est_linf_list.h Est_base.h
+$O/Est_link.o: Est_link.h Est_parser.h Est_config.h
+$O/Est_link_manager.o: Est_link_manager.h Est_config.h Est_ui.h Est_unid.h Est_hint_manager.h Est_base.h Est_linf_list.h Est_box_ui.h
+$O/Est_parser.o: Est_parser.h
+$O/Est_post.o: Est_post.h Est_base.h Est_config.h Est_ui.h Est_hint_manager.h Est_bmp_writer.h
+$O/Est_recentory.o: Est_recentory.h Est_search_manager.h Est_finf.h Est_unid.h
+$O/Est_record.o: Est_record.h Est_base.h
+$O/Est_rpsc.o: Est_rpsc.h Est_parser.h Est_filter.h Est_link.h Est_base.h
+$O/Est_search_manager.o: Est_search_manager.h Est_boxmap_viewer.h Est_ui.h Est_box_ui.h Est_record.h Est_config.h Est_assort.h Est_assort_ui.h Est_hint_manager.h Est_base.h Est_finf.h Est_box_base.h Est_unid.h
+$O/Est_sqi.o: Est_sqi.h Est_tag.h
+$O/Est_tag.o: Est_tag.h Est_unid.h
+$O/Est_tag_manager.o: Est_tag_manager.h Est_config.h Est_ui.h Est_unid.h Est_hint_manager.h Est_assort_ui.h Est_assort.h Est_tag.h Est_base.h
+$O/Est_topic.o: Est_topic.h Est_config.h Est_ui.h Est_ui_base.h Est_box.h Est_box_ui.h Est_base.h Est_assort.h Est_assort_ui.h Est_search_manager.h Est_recentory.h Est_finf.h Est_assort_list.h Est_hint_manager.h
+$O/Est_ui.o: Est_ui.h Est_ui_base.h Est_config.h Est_assort.h Est_base.h Est_box_ui.h
+$O/Est_ui_base.o: Est_ui_base.h Est_box_base.h
+$O/main.o: Est_config.h Est_get.h Est_post.h Est_filter.h Est_link_manager.h Est_boxmap_viewer.h Est_search_manager.h Est_img_viewer.h Est_topic.h Est_tag_manager.h

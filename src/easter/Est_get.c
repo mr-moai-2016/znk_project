@@ -493,7 +493,7 @@ modifyTextForce_onReload( ZnkStr text, void* arg )
 				"var reloaded_state=document.getElementById(\"EasterReloadState\");\n"
 				"if( reloaded_state ){ reloaded_state.innerHTML = \"404 Not found.\"; }\n"
 				"</script>\n"
-				"<script type=\"text/javascript\" src=\"/cgis/easter/publicbox/easter_end.js\"></script>\n"
+				//"<script type=\"text/javascript\" src=\"/cgis/easter/publicbox/easter_end.js\"></script>\n"
 				"</body></html>" );
 		ZnkStrEx_replace_BF( text, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
 	} else if( display_text_info->updated_ ){
@@ -504,7 +504,7 @@ modifyTextForce_onReload( ZnkStr text, void* arg )
 				"var reloaded_state=document.getElementById(\"EasterReloadState\");\n"
 				"if( reloaded_state ){ reloaded_state.innerHTML = \"çXêVÇ≥ÇÍÇ‹ÇµÇΩ\"; }\n"
 				"</script>\n"
-				"<script type=\"text/javascript\" src=\"/cgis/easter/publicbox/easter_end.js\"></script>\n"
+				//"<script type=\"text/javascript\" src=\"/cgis/easter/publicbox/easter_end.js\"></script>\n"
 				"</body></html>" );
 		ZnkStrEx_replace_BF( text, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
 	} else {
@@ -515,7 +515,7 @@ modifyTextForce_onReload( ZnkStr text, void* arg )
 				"var reloaded_state=document.getElementById(\"EasterReloadState\");\n"
 				"if( reloaded_state ){ reloaded_state.innerHTML = \"êVíÖÇ»Çµ\"; }\n"
 				"</script>\n"
-				"<script type=\"text/javascript\" src=\"/cgis/easter/publicbox/easter_end.js\"></script>\n"
+				//"<script type=\"text/javascript\" src=\"/cgis/easter/publicbox/easter_end.js\"></script>\n"
 				"</body></html>" );
 		ZnkStrEx_replace_BF( text, 0, old_ptn.cstr_, old_ptn.leng_, new_ptn.cstr_, new_ptn.leng_, Znk_NPOS, Znk_NPOS ); 
 	}

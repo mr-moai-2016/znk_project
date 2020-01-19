@@ -44,7 +44,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 	</div>
 	<div class="message-body">
 		<ol>
-			<li><a class=MstyWrapLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/download/v2.2/moai-v2.2-android.apk>最新の apk ファイル</a>をダウンロードします.
+			<li><a class=MstyWrapLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/download/v2.2.2/moai-v2.2.2-android.apk> apk ファイル </a>をダウンロードします.
 			<div class=box>
 				この apk ファイルの名前は moai-v{バージョン番号}-android.apk という形式になります.
 			</div>
@@ -311,7 +311,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 	<div class="message-body">
 		Android apk版の場合、データフォルダのファイルマネージャ直下(/sdcard/moai_profile) となります.
 
-		Android Terminal Emulator版の場合、Moai 本体ディレクトリより一つ上です.
+		Android Terminal Emulator版の場合、Moai本体より一つ上のディレクトリです.
 		moai_profile がまだ存在しない場合、Moai はこの位置へ moai_profile を自動的に生成します.
 
 		moai_profile の位置は Moaiエンジンの設定画面で変えることができます.
@@ -336,7 +336,7 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] }
 	今時の大容量ディスクならさほど問題になるサイズではないとは思いますが、一応この点了承ください.
 	
 	ちなみにこの保存日数は設定で変更することもでき、日数を短くすればその分サイズを減らすことも可能ですが、
-	サイズの上限を直接指定することは現バージョンのEasterではできません.
+	サイズの上限を(MB単位で)直接指定することは現バージョンのEasterではできません.
 @@.
 
 

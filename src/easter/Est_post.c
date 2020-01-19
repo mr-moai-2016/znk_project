@@ -230,13 +230,14 @@ saveHBitmap( HBITMAP hBmp, const char* filename, ZnkStr ermsg )
 {
 	bool result = false;
 	BITMAP bmap;
-	int    nBit = GetObject( hBmp, sizeof(bmap), &bmap );
 	int    nBmi = 0;
 	size_t nColorTable = 0;
 	int    nImage = 0;
 	BITMAPINFO* pBmi = NULL;
 	uint8_t* pImage = NULL;
 	size_t rowbytes = 0;
+	int    nBit = GetObject( hBmp, sizeof(bmap), &bmap );
+	Znk_UNUSED( nBit );
 
 	/* パレットエントリ数を判定 */
 	switch( bmap.bmBitsPixel ) {
@@ -331,7 +332,6 @@ static bool
 uploadClipboard( ZnkVarpAry post_vars, const char* upfile_varname, ZnkStr ermsg )
 {
 	bool   result = false;
-	const char* tmpdir_common = RanoHtpBoy_getTmpDirCommon();
 	char filename_path[ 256 ] = "";
 
 	Znk_snprintf( filename_path, sizeof(filename_path), "%s/clipboard_save.bmp" );
@@ -409,7 +409,6 @@ func_proc_post_vars( ZnkVarpAry post_vars, void* arg, const char* content_type, 
 	struct HyperPostInfo* hyper_post_info = Znk_force_ptr_cast( struct HyperPostInfo*, arg );
 	EstPostInfo* post_info = &hyper_post_info->post_info_;
 	ZnkStr       upfile_filename = hyper_post_info->upfile_filename_;
-	RanoCGIEVar* evar                 = post_info->evar_;
 	ZnkHtpHdrs   htp_hdrs             = post_info->htp_hdrs_;
 	RanoModule   mod                  = post_info->mod_;
 	ZnkStr       given_authentick_key = post_info->given_authentick_key_;
@@ -894,6 +893,7 @@ EstHyperPost_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg )
 		ZnkVarp varp = NULL;
 		bool has_binary_attachment = false;
 		bool has_title = false;
+		ZnkStrAry tkns = ZnkStrAry_create( true );
 
 		ZnkStr_add( str, "HTTP Header Confirmation.\n" );
 		RanoCGIUtil_addHdrVarsStr( str, htp_hdrs->vars_ ); /* XSS-safe */
@@ -931,12 +931,25 @@ EstHyperPost_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg )
 			const char* key  = NULL;
 			varp = ZnkVarpAry_at( post_vars, idx );
 			key  = ZnkVar_name_cstr( varp );
-			if( EstConfig_isInputHiddensPostVarNames( target, key ) ){
+			ZnkStrAry_clear( tkns );
+			if( EstConfig_queryInputHiddens( target, key, tkns ) ){
 				/* this is hiddens post var */
 				if( ZnkVar_prim_type( varp ) == ZnkPrim_e_Str ){
 					ZnkStr_set( val, ZnkVar_cstr( varp ) );
 					ZnkHtpURL_negateHtmlTagEffection( val ); /* for XSS */
-					ZnkStr_addf( input_hiddens, "<input type=hidden name=%s value=\"%s\">\n", key, ZnkStr_cstr(val) );
+					/***
+					 * javascript 側から document.getElementById でアクセスしているケースがある.
+					 * 例えばfutabaのtegaki機能でbaseformへ画像データをセットするなど.
+					 * よってここではidの指定も行うモードをつける.
+					 */
+					if( ZnkStrAry_size(tkns) >= 2 ){
+						const char* id = ZnkStrAry_at_cstr( tkns, 1 );
+						ZnkStr_addf( input_hiddens, "<input type=hidden name=%s id=%s value=\"%s\">\n",
+								key, id, ZnkStr_cstr(val) );
+					} else {
+						ZnkStr_addf( input_hiddens, "<input type=hidden name=%s value=\"%s\">\n",
+								key, ZnkStr_cstr(val) );
+					}
 				}
 			} else {
 				/* this is not hiddens post var */
@@ -1008,6 +1021,7 @@ EstHyperPost_main( RanoCGIEVar* evar, ZnkVarpAry post_vars, ZnkStr msg )
 		ZnkStr_delete( input_hiddens );
 		ZnkStr_delete( val );
 		ZnkStr_delete( str );
+		ZnkStrAry_destroy( tkns );
 	}
 
 FUNC_END:

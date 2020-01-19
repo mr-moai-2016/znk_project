@@ -31,7 +31,7 @@
 @@V config
 doc_title     = ['Moai+Easter アナウンスメント']
 author        = { ['Mr.Moai'] }
-update        = ['2019/11/22']
+update        = ['2019/12/08']
 category_path = {}
 urp           = ['/announcement.html']
 nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['article'] }
@@ -62,9 +62,8 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['article'] }
 
 
 @@L NextDevelopment
-現在、Moaiの最新バージョンは2.2です.<br>
-次期バージョンMoai Ver2.3( コードネーム Raraku )のリリースに向け開発中です.
-次回のバージョンでは以下の修正や新機能の導入を予定しています.
+次期バージョンMoai Ver2.3( コードネーム Raraku )のリリースに向け、現在開発中です.
+次回のバージョンでは以下の新機能の導入や修正等を予定しています.
 
 <article class="message is-dark">
 	<div class="message-header">
@@ -89,9 +88,21 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['article'] }
 
 
 @@L WhatIsChanging_latest
+Moai最新版リリース( Ver2.2.1 コードネーム ResponsiveStone ) での
+新機能、仕様ならびに不具合の修正等は以下のようになります.
+
 <article class="message is-dark">
 	<div class="message-header">
-		Androidに関する既存の問題点の大幅な修正
+		ふたばちゃんねるの引用機能追加に関する修正(Ver2.2.1)
+	</div>
+	<div class="message-body">
+		ふたばちゃんねるの新しい機能として引用ポップアップ等が実装されましたが、
+		Easterを介するとこれに関する表示の乱れ等が発生したため、これを修正.
+		また引用部分やEマークをマウスクリックすることにより、Easter独自の引用ポップアップが表示されるようにしました.
+	</div>
+
+	<div class="message-header">
+		Androidに関する既存の問題点の大幅な修正(Ver2.2)
 	</div>
 	<div class="message-body">
 		Moai Ver2.1以前ではAndroid 5.0( Lollipop )以降におけるMoai起動の不具合などが確認されていました.

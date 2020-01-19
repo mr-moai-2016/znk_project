@@ -6,6 +6,7 @@
 
 #include <Znk_str_ex.h>
 #include <Znk_str_ptn.h>
+#include <Znk_str_fio.h>
 
 static RanoTxtFilterAry
 theRpsc( void )
@@ -138,13 +139,34 @@ on_plane_text( ZnkStr planetxt, void* arg )
 	}
 	return 1;
 }
+static ZnkStr
+makeText_fromFile( const char* filename )
+{
+	ZnkStr  text = NULL;
+	ZnkFile fp   = Znk_fopen( filename, "rb" );
+	if( fp ){
+		ZnkStr line = ZnkStr_new( "" );
+		text = ZnkStr_new( "" );
+		while( true ){
+			if( !ZnkStrFIO_fgets( line, 0, 4096, fp ) ){
+				break;
+			}
+			ZnkStr_add( text, ZnkStr_cstr(line) );
+		}
+		ZnkStr_delete( line );
+		Znk_fclose( fp );
+	}
+	return text;
+}
 static int
 on_bbs_operation( ZnkStr txt, const char* result_filename, const char* src, ZnkStr console_msg )
 {
+	ZnkStr  require_js = makeText_fromFile( "publicbox/bbs_5ch/require_js.html" );
 	ZnkSRef landmark = { 0 };
 	ZnkSRef_set_literal( &landmark, "<span class=\"newpostbutton\">" );
 	EstFilter_insertBBSOperation( txt,
-			result_filename, landmark.cstr_, src, "key", console_msg );
+			result_filename, landmark.cstr_, src, "key", console_msg, require_js );
+	ZnkStr_delete( require_js );
 	return 0;
 }
 

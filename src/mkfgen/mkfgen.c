@@ -696,7 +696,6 @@ getAllTargetRule( ZnkStr ans, ZnkStrAry dir_list, const ZnkStrAry submkf_list, c
 		if( ZnkS_eq( dir, "." ) ){
 			ZnkS_copy( obj_dir, sizeof(obj_dir), "$O", Znk_NPOS );
 		} else {
-			//Znk_snprintf( obj_dir, sizeof(obj_dir), "$O%s%s", obj_dsp, dir );
 			getObjDir( obj_dir, sizeof(obj_dir), dir, obj_dsp, dir_tmp );
 		}
 
@@ -758,17 +757,6 @@ getMkdirRule( ZnkStr ans, ZnkMyf tmpl_myf, const char* mkf_id, ZnkStrAry dir_lis
 			if( ZnkS_eq( dir, "." ) ){
 				ZnkS_copy( obj_dir, sizeof(obj_dir), "$O", Znk_NPOS );
 			} else {
-#if 0
-				if( !ZnkS_eq( obj_dsp, "/" ) && Znk_strchr( dir, '/' ) ){
-					ZnkStr_set( dir_tmp, dir );
-					ZnkStrEx_replace_BF( dir_tmp, 0,
-							"/", 1,
-							obj_dsp, Znk_strlen(obj_dsp),
-							Znk_NPOS, Znk_NPOS );
-					dir = ZnkStr_cstr( dir_tmp );
-				}
-				Znk_snprintf( obj_dir, sizeof(obj_dir), "$O%s%s", obj_dsp, dir );
-#endif
 				getObjDir( obj_dir, sizeof(obj_dir), dir, obj_dsp, dir_tmp );
 			}
 
@@ -1748,7 +1736,7 @@ generateMkf( ZnkVarpAry info,
 			ZnkVarpAry_destroy( rlib_pfx_special_vary );
 
 			ZnkStr_addf( text, "# Src and Headers Dependency%s", nl );
-			MkfSrcDepend_get( text, list, obj_sfx, nl, isSrcFileExt );
+			MkfSrcDepend_get( text, list, obj_sfx, nl, isSrcFileExt, dsp[0] );
 		}
 
 	

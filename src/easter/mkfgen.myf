@@ -66,6 +66,15 @@ templates/*.html
 templates/*.myf
 publicbox/*
 publicbox/icons/*.png
+publicbox/pascua/*.js
+publicbox/bbs_futaba/*.myf
+publicbox/bbs_futaba/*.html
+publicbox/bbs_futaba/*.js
+publicbox/bbs_futaba/*.css
+publicbox/bbs_5ch/*.myf
+publicbox/bbs_5ch/*.html
+publicbox/bbs_5ch/*.js
+publicbox/bbs_5ch/*.css
 publicbox/alternative/5ch/itest.5ch.net/assets/js/android/*
 publicbox/alternative/5ch/itest.5ch.net/assets/js/iphone/*
 publicbox/alternative/5ch/agree.5ch.net/js/*.js
