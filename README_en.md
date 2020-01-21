@@ -27,8 +27,8 @@ MinGW, gcc(on linux), android(ndk) and so on.
 Support site: 
 https://mr-moai-2016.github.io
 
-Github repository: 
-https://github.com/mr-moai-2016/znk_project
+Latest source code:
+https://github.com/mr-moai-2016/znk_project/releases/latest
 
 
 ## License
