@@ -704,12 +704,14 @@ RanoHtpBoy_cipher_head( const char* hostname, const char* unesc_req_urp, const c
 	return result;
 }
 
+#if 0
 Znk_INLINE void
 appendBfr_byCStr( ZnkBfr bfr, const char* cstr )
 {
 	const size_t leng = strlen( cstr );
 	ZnkBfr_append_dfr( bfr, (uint8_t*)cstr, leng );
 }
+#endif
 
 bool
 RanoHtpBoy_cipher_post( const char* hostname, const char* unesc_req_urp, const char* target,

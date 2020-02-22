@@ -619,7 +619,8 @@ RanoCGIUtil_rano_app_init_log( const char* app_name, bool is_multi_dir )
 	if( is_multi_dir ){
 		ZnkStr      logdir_basename  = ZnkStr_newf( "%s/log_", tmpdir_common );
 	
-		count = RanoCGIUtil_initMultiDirLog( ZnkStr_cstr(logdir_basename), ZnkStr_cstr(count_filename), 1000, 10, keep_open );
+		//count = RanoCGIUtil_initMultiDirLog( ZnkStr_cstr(logdir_basename), ZnkStr_cstr(count_filename), 1000, 10, keep_open );
+		count = RanoCGIUtil_initMultiDirLog( ZnkStr_cstr(logdir_basename), ZnkStr_cstr(count_filename), 1000, 5, keep_open );
 	
 		ZnkStr_delete( logdir_basename );
 	} else {

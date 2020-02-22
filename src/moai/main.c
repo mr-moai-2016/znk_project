@@ -65,6 +65,39 @@ dumpFile_toBase64( const char* in_filename, const char* out_filename )
 	}
 }
 
+static void
+updateBirdman( void )
+{
+	ZnkStr curdir_save = ZnkStr_new( "" );
+	ZnkDir_getCurrentDir( curdir_save );
+	ZnkDir_changeCurrentDir( "birdman" );
+	{
+		ZnkStr birdman_path = ZnkStr_new( "" );
+		ZnkStr patch_dir    = ZnkStr_new( "" );
+		ZnkStr ermsg        = ZnkStr_new( "" );
+		if( RanoVTagUtil_getPatchDir( patch_dir, "moai", true, "birdman", "tmp/" ) ){
+			/* この辺りの不統一性は美しくないがとりあえず */
+			ZnkStr_setf( birdman_path, "%s/birdman/birdman.exe", ZnkStr_cstr(patch_dir) );
+			if( ZnkDir_getType( ZnkStr_cstr(birdman_path) ) == ZnkDirType_e_File ){
+				if( ZnkDir_copyFile_byForce( ZnkStr_cstr(birdman_path), "birdman.exe", ermsg ) ){
+					/* OK */
+				}
+			}
+			ZnkStr_setf( birdman_path, "%s/birdman/birdman", ZnkStr_cstr(patch_dir) );
+			if( ZnkDir_getType( ZnkStr_cstr(birdman_path) ) == ZnkDirType_e_File ){
+				if( ZnkDir_copyFile_byForce( ZnkStr_cstr(birdman_path), "birdman", ermsg ) ){
+					/* OK */
+				}
+			}
+		}
+		ZnkStr_delete( patch_dir );
+		ZnkStr_delete( birdman_path );
+		ZnkStr_delete( ermsg );
+	}
+	ZnkDir_changeCurrentDir( ZnkStr_cstr(curdir_save) );
+	ZnkStr_delete( curdir_save );
+}
+
 int main( int argc, char** argv )
 {
 	int           result              = EXIT_FAILURE;
@@ -147,32 +180,11 @@ int main( int argc, char** argv )
 	 * (このとき moai 本体をも書き換える状況に対応するため、moaiプロセスを一旦終了する必要がある)
 	 */
 	if( ras_result == MoaiRASResult_e_RestartProcess ){
-		ZnkStr curdir_save = ZnkStr_new( "" );
-		ZnkDir_getCurrentDir( curdir_save );
-		ZnkDir_changeCurrentDir( "birdman" );
-		{
-			ZnkStr birdman_path = ZnkStr_new( "" );
-			ZnkStr ermsg = ZnkStr_new( "" );
-			if( RanoVTagUtil_getPatchDir( birdman_path, "moai", true, "birdman", "tmp/" ) ){
-				/* この辺りの不統一性は美しくないがとりあえず */
-				ZnkStr_add( birdman_path, "/birdman/birdman.exe" );
-				if( ZnkDir_getType( ZnkStr_cstr(birdman_path) ) == ZnkDirType_e_File ){
-					if( ZnkDir_copyFile_byForce( ZnkStr_cstr(birdman_path), "birdman.exe", ermsg ) ){
-						/* OK */
-					}
-				}
-				ZnkStr_add( birdman_path, "/birdman/birdman" );
-				if( ZnkDir_getType( ZnkStr_cstr(birdman_path) ) == ZnkDirType_e_File ){
-					if( ZnkDir_copyFile_byForce( ZnkStr_cstr(birdman_path), "birdman", ermsg ) ){
-						/* OK */
-					}
-				}
-			}
-			ZnkStr_delete( birdman_path );
-			ZnkStr_delete( ermsg );
-		}
-		ZnkDir_changeCurrentDir( ZnkStr_cstr(curdir_save) );
-		ZnkStr_delete( curdir_save );
+		/***
+		 * パッチファイルがダウンロードされたものが存在するなら
+		 * そこより birdman を更新.
+		 */
+		updateBirdman();
 
 		/***
 		 * birdmanに実行権限を付与.

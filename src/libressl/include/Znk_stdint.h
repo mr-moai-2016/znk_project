@@ -115,7 +115,7 @@
 #endif
 
 
-#if __STDC_VERSION__ >= 199901L
+#if __STDC_VERSION__ >= 199901L || defined(__ANDROID__)
 #  ifndef   Znk_C99_SUPPORTED
 #    define Znk_C99_SUPPORTED 1
 #  endif

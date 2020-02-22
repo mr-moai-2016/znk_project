@@ -22,12 +22,26 @@
 #include <errno.h>
 #include <assert.h>
 
+ZnkSocket
+ZnkSocket_getInvalid( void )
+{
+#if defined(Znk_TARGET_WINDOWS)
+	return (ZnkSocket)INVALID_SOCKET;
+#else
+	return (ZnkSocket)(-1);
+#endif
+}
 
 ZnkSocket
 ZnkSocket_open( void )
 {
-	/* Win32/X11 で記述方法は全く同じ */
+#if defined(Znk_TARGET_WINDOWS)
 	return socket(AF_INET, SOCK_STREAM, 0);
+#else
+	//return socket(AF_INET, SOCK_STREAM, 0);
+	const int sock = socket(AF_INET, SOCK_STREAM, 0);
+	return sock < 0 ? ZnkSocket_getInvalid() : (ZnkSocket)sock;
+#endif
 }
 
 void ZnkSocket_close( ZnkSocket sock )

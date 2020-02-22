@@ -140,18 +140,18 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-CB_config.obj: CB_config.h
-CB_custom_automatic.obj: CB_custom_automatic.h
-CB_custom_cookie.obj: CB_custom_cookie.h
-CB_custom_feature.obj: CB_custom_feature.h CB_vars_base.h CB_finger.h
-CB_custom_postvars.obj: CB_custom_postvars.h
-CB_fgp_info.obj: CB_fgp_info.h CB_finger.h CB_wgt_prim.h CB_config.h
-CB_finger.obj: CB_finger.h CB_snippet.h CB_wgt_prim.h CB_ua_conf.h
-CB_snippet.obj: CB_snippet.h
-CB_ua_conf.obj: CB_ua_conf.h CB_wgt_prim_db.h
-CB_ua_info.obj: CB_ua_info.h
-CB_vars_base.obj: CB_vars_base.h
-CB_virtualizer.obj: CB_virtualizer.h CB_config.h CB_fgp_info.h CB_ua_conf.h CB_snippet.h CB_wgt_prim.h CB_finger.h CB_vars_base.h
-CB_wgt_prim.obj: CB_wgt_prim.h
-CB_wgt_prim_db.obj: CB_wgt_prim_db.h
-main.obj: CB_virtualizer.h CB_fgp_info.h CB_ua_info.h CB_config.h CB_custom_automatic.h CB_custom_postvars.h CB_custom_feature.h CB_custom_cookie.h
+$O\CB_config.obj: CB_config.h
+$O\CB_custom_automatic.obj: CB_custom_automatic.h
+$O\CB_custom_cookie.obj: CB_custom_cookie.h
+$O\CB_custom_feature.obj: CB_custom_feature.h CB_vars_base.h CB_finger.h
+$O\CB_custom_postvars.obj: CB_custom_postvars.h
+$O\CB_fgp_info.obj: CB_fgp_info.h CB_finger.h CB_wgt_prim.h CB_config.h
+$O\CB_finger.obj: CB_finger.h CB_snippet.h CB_wgt_prim.h CB_ua_conf.h
+$O\CB_snippet.obj: CB_snippet.h
+$O\CB_ua_conf.obj: CB_ua_conf.h CB_wgt_prim_db.h
+$O\CB_ua_info.obj: CB_ua_info.h
+$O\CB_vars_base.obj: CB_vars_base.h
+$O\CB_virtualizer.obj: CB_virtualizer.h CB_config.h CB_fgp_info.h CB_ua_conf.h CB_snippet.h CB_wgt_prim.h CB_finger.h CB_vars_base.h
+$O\CB_wgt_prim.obj: CB_wgt_prim.h
+$O\CB_wgt_prim_db.obj: CB_wgt_prim_db.h
+$O\main.obj: CB_virtualizer.h CB_fgp_info.h CB_ua_info.h CB_config.h CB_custom_automatic.h CB_custom_postvars.h CB_custom_feature.h CB_custom_cookie.h

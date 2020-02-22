@@ -15,6 +15,20 @@
 
 static char st_moai_authentic_key[ 256 ] = "";
 
+static void
+removeDirModestly( const char* path, ZnkStr ermsg, size_t days_ago, size_t sec_ago )
+{
+	if( ZnkDir_getType( path ) == ZnkDirType_e_Directory ){
+		/***
+		 * ディレクトリ内の古いファイルから消していく.
+		 */
+		EstBase_removeOldFile( path, ermsg, days_ago, sec_ago );
+		/***
+		 * ディレクトリ内が空ならディレクトリそのものも消す
+		 */
+		ZnkDir_rmdir( path );
+	}
+}
 
 int main(int argc, char **argv)
 {
@@ -32,7 +46,7 @@ int main(int argc, char **argv)
 		static const bool additional = false;
 		const char* tmpdir_common = RanoHtpBoy_getTmpDirCommon();
 		char logfile_path[ 256 ] = "";
-		Znk_snprintf( logfile_path, sizeof(logfile_path), "%s/cache_task.log", tmpdir_common );
+		Znk_snprintf( logfile_path, sizeof(logfile_path), "%s/easter_maintainer.log", tmpdir_common );
 		RanoLog_open( logfile_path, keep_open, additional );
 	} else {
 		/* log自体を生成できないため、とりあえず無報告で終わる */
@@ -88,6 +102,38 @@ int main(int argc, char **argv)
 		char searched_dir[ 256 ] = "";
 		Znk_snprintf( searched_dir, sizeof(searched_dir), "%s/tmp/searched", topics_dir );
 		EstBase_removeOldFile( searched_dir, ermsg, days_ago, sec_ago );
+	}
+	/***
+	 * days_ago より前のファイルをtmp/pidから完全削除する.
+	 * tmp/pid内は放っておくと数万というファイル数になり得るので古いものは定期的な削除が必要.
+	 * days_agoの値はかなり小さめでもよい(Easterプロセスが稼動する時間は長くないため).
+	 */
+	{
+		const size_t days_ago = 2;
+		const size_t sec_ago  = 0;
+		EstBase_removeOldFile( "tmp/pid", ermsg, days_ago, sec_ago );
+	}
+	/***
+	 * ログファイルの保持数を減少させるため、RanoCGIUtil_rano_app_init_log の仕様を変更する.
+	 * 旧仕様では log_0 から log_9 までを保持していたが、新仕様ではこれを log_0 から log_4 までとする.
+	 * これに伴い、旧仕様までにあったlog_5からlog_9が残存している可能性があるのでこれを削除する.
+	 */
+	{
+		const size_t days_ago = 3; /* 3日の猶予期間で段階的に削除、新仕様へ移行させる. */
+		const size_t sec_ago  = 0;
+		removeDirModestly( "tmp/log_5", ermsg, days_ago, sec_ago );
+		removeDirModestly( "tmp/log_6", ermsg, days_ago, sec_ago );
+		removeDirModestly( "tmp/log_7", ermsg, days_ago, sec_ago );
+		removeDirModestly( "tmp/log_8", ermsg, days_ago, sec_ago );
+		removeDirModestly( "tmp/log_9", ermsg, days_ago, sec_ago );
+	}
+	/***
+	 * easter_maintainer.cgi は以前は cache_task.cgi という名前であったが、
+	 * その当時に使われていたファイルがまだ残っている場合は削除しておく.
+	 */
+	{
+		ZnkDir_deleteFile_byForce( "tmp/cache_task.log" );
+		ZnkDir_deleteFile_byForce( "tmp/cache_task_lasttime.dat" );
 	}
 
 #if 0

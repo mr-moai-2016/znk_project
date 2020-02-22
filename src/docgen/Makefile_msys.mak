@@ -142,9 +142,9 @@ clean:
 	rm -rf $O/ 
 
 # Src and Headers Dependency
-cgi_helper.o: cgi_helper.h
-docgen.o: Doc_html.h
-Doc_html.o: Doc_html.h Doc_util.h
-Doc_source.o: Doc_source.h Doc_util.h
-Doc_util.o: Doc_util.h
-main.o: cgi_helper.h Doc_html.h Doc_source.h
+$O/cgi_helper.o: cgi_helper.h
+$O/docgen.o: Doc_html.h
+$O/Doc_html.o: Doc_html.h Doc_util.h
+$O/Doc_source.o: Doc_source.h Doc_util.h
+$O/Doc_util.o: Doc_util.h
+$O/main.o: cgi_helper.h Doc_html.h Doc_source.h

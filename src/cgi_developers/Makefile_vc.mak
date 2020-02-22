@@ -249,9 +249,9 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-cgi_util.obj: cgi_util.h
-evar1.obj: cgi_util.h
-hello.obj: cgi_util.h
-post1.obj: cgi_util.h
-query_string1.obj: cgi_util.h
-transfer_chunked.obj: cgi_util.h
+$O\cgi_util.obj: cgi_util.h
+$O\evar1.obj: cgi_util.h
+$O\hello.obj: cgi_util.h
+$O\post1.obj: cgi_util.h
+$O\query_string1.obj: cgi_util.h
+$O\transfer_chunked.obj: cgi_util.h

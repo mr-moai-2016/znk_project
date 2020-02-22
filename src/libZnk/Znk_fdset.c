@@ -46,8 +46,8 @@ bool
 ZnkFdSet_set( ZnkFdSet fdst, const ZnkSocket sock )
 {
 	Fd_int_t s = (Fd_int_t)sock;
-#if defined(__CYGWIN__)
-	if( sock != ZnkSocket_INVALID ){ FD_SET( s, &fdst->fds_ ); }
+#if defined(__CYGWIN__) || defined(__ANDROID__)
+	if( !ZnkSocket_isInvalid(sock) ){ FD_SET( s, &fdst->fds_ ); }
 #else
 	FD_SET( s, &fdst->fds_ );
 #endif
@@ -69,8 +69,8 @@ void
 ZnkFdSet_clr( ZnkFdSet fdst, const ZnkSocket sock )
 {
 	Fd_int_t s = (Fd_int_t)sock;
-#if defined(__CYGWIN__)
-	if( sock != ZnkSocket_INVALID ){ FD_CLR( s, &fdst->fds_ ); }
+#if defined(__CYGWIN__) || defined(__ANDROID__)
+	if( !ZnkSocket_isInvalid(sock) ){ FD_CLR( s, &fdst->fds_ ); }
 #else
 	FD_CLR( s, &fdst->fds_ );
 #endif
@@ -79,8 +79,8 @@ bool
 ZnkFdSet_isset( const ZnkFdSet fdst, const ZnkSocket sock )
 {
 	Fd_int_t s = (Fd_int_t)sock;
-#if defined(__CYGWIN__)
-	if( sock != ZnkSocket_INVALID ){
+#if defined(__CYGWIN__) || defined(__ANDROID__)
+	if( !ZnkSocket_isInvalid(sock) ){
 		return (bool)( FD_ISSET( s, &fdst->fds_ ) );
 	}
 	return false;
@@ -142,7 +142,7 @@ ZnkFdSet_getMaxOfSocket( const ZnkFdSet fdst )
 			max = (long)fdst->fds_.fd_array[ idx ];
 		}
 	}
-	return ( max == -1 ) ? ZnkSocket_INVALID : (ZnkSocket)max;
+	return ( max == -1 ) ? ZnkSocket_getInvalid() : (ZnkSocket)max;
 #else
 	int s = FD_SETSIZE-1;
 	while( s >= 0 ){
@@ -151,7 +151,7 @@ ZnkFdSet_getMaxOfSocket( const ZnkFdSet fdst )
 		}
 		--s;
 	}
-	return ZnkSocket_INVALID;
+	return ZnkSocket_getInvalid();
 #endif
 }
 size_t

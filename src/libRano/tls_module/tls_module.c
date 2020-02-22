@@ -231,6 +231,7 @@ FUNC_END:
 	return result;
 }
 
+#if 0
 static int
 writeFP( void* arg, const uint8_t* buf, size_t buf_size )
 {
@@ -238,6 +239,7 @@ writeFP( void* arg, const uint8_t* buf, size_t buf_size )
 	const size_t result_size = Znk_fwrite( buf, buf_size, fp );
 	return result_size;
 }
+#endif
 
 bool
 TlsModule_getHtpsProcess( const char* cnct_hostname, uint16_t cnct_port,

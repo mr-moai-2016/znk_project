@@ -49,6 +49,7 @@ EstBase_getHostnameAndRequrp_fromEstVal( char* hostname, size_t hostname_size, Z
 	return src;
 }
 
+#if 0
 static void
 initHtpHdr( ZnkHtpHdrs htp_hdrs, const char* hostname, const char* ua, ZnkVarpAry cookie, bool is_https, const char* explicit_referer )
 {
@@ -129,6 +130,7 @@ initHtpHdr( ZnkHtpHdrs htp_hdrs, const char* hostname, const char* ua, ZnkVarpAr
 
 	Znk_UNUSED( varp );
 }
+#endif
 
 bool
 EstBase_download( const char* hostname, const char* unesc_req_urp, const char* target,

@@ -19,7 +19,8 @@ DLIBS_DIR=dlib\$(PLATFORM)
 SLIBS_DIR=slib\$(PLATFORM)
 
 PLATFORMS_LIST=$(wildcard $(ZNK_NDK_DIR)/platforms/android-*)
-PLATFORMS_LEVEL=$(findstring $(ZNK_NDK_DIR)/platforms/android-9, $(PLATFORMS_LIST))
+#PLATFORMS_LEVEL=$(findstring $(ZNK_NDK_DIR)/platforms/android-9, $(PLATFORMS_LIST))
+PLATFORMS_LEVEL=$(findstring $(ZNK_NDK_DIR)/platforms/android-21, $(PLATFORMS_LIST))
 ifndef PLATFORMS_LEVEL
   PLATFORMS_LEVEL=$(word 1, $(PLATFORMS_LIST))
 endif
@@ -40,7 +41,7 @@ LINKER   := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-g++ \
 	--sysroot=$(PLATFORMS_LEVEL)/arch-arm \
 
 RPATH_LINK := -Wl,-rpath-link=$(PLATFORMS_LEVEL)/arch-arm/usr/lib -Wl,-rpath-link=$O
-LINKER_OPT := -no-canonical-prefixes  -Wl,--no-undefined -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -mthumb -fPIE  -lc -lm
+LINKER_OPT := -no-canonical-prefixes  -Wl,--no-undefined -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -mthumb -lc -lm
 STRIP_UNNEEDED := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-strip --strip-unneeded
 LIBAR := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc-ar
 
@@ -64,6 +65,31 @@ RPATH_LINK := -Wl,-rpath-link=$(PLATFORMS_LEVEL)/arch-arm/usr/lib -Wl,-rpath-lin
 LINKER_OPT := -no-canonical-prefixes -march=armv7-a -Wl,--fix-cortex-a8  -Wl,--no-undefined -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -mthumb -fPIE  -lc -lm
 STRIP_UNNEEDED := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-strip --strip-unneeded
 LIBAR := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc-ar
+
+endif
+ifeq ($(MACHINE), arm64-v8a)
+TOOLCHAINS_LIST=$(wildcard $(ZNK_NDK_DIR)/toolchains/aarch64-linux-android-*/prebuilt/windows)
+TOOLCHAINS_DIR=$(word $(words $(TOOLCHAINS_LIST)), $(TOOLCHAINS_LIST) )
+COMPILER := $(ZNK_NDK_DIR)/toolchains/llvm/prebuilt/windows/bin/clang \
+	-gcc-toolchain $(TOOLCHAINS_DIR) -target aarch64-none-linux-android \
+	-fPIC -ffunction-sections -funwind-tables -fstack-protector-strong -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -no-canonical-prefixes \
+	-g -O2 -DNDEBUG \
+	-DANDROID -fPIE \
+	-Wa,--noexecstack -Wformat -Werror=format-security -Wall  --sysroot $(ZNK_NDK_DIR)/platforms/android-21/arch-arm64 \
+	-I$(PLATFORMS_LEVEL)/arch-arm64/usr/include \
+
+LINKER   := $(ZNK_NDK_DIR)/toolchains/llvm/prebuilt/windows/bin/clang++ \
+	--sysroot=$(PLATFORMS_LEVEL)/arch-arm64 \
+	-gcc-toolchain $(TOOLCHAINS_DIR) \
+
+RPATH_LINK := -Wl,-rpath-link=$(PLATFORMS_LEVEL)/arch-arm64/usr/lib -Wl,-rpath-link=$O
+LINKER_OPT := -no-canonical-prefixes -target aarch64-none-linux-android \
+	-Wl,--build-id -Wl,--no-undefined -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now \
+	-Wl,--warn-shared-textrel -Wl,--fatal-warnings -fPIE \
+	-lc -lm
+
+STRIP_UNNEEDED := $(TOOLCHAINS_DIR)/bin/aarch64-linux-android-strip --strip-unneeded 
+LIBAR := $(TOOLCHAINS_DIR)/bin/aarch64-linux-android-gcc-ar
 
 endif
 ifeq ($(MACHINE), x86)
@@ -199,9 +225,9 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-cgi_helper.o: cgi_helper.h
-docgen.o: Doc_html.h
-Doc_html.o: Doc_html.h Doc_util.h
-Doc_source.o: Doc_source.h Doc_util.h
-Doc_util.o: Doc_util.h
-main.o: cgi_helper.h Doc_html.h Doc_source.h
+$O\cgi_helper.o: cgi_helper.h
+$O\docgen.o: Doc_html.h
+$O\Doc_html.o: Doc_html.h Doc_util.h
+$O\Doc_source.o: Doc_source.h Doc_util.h
+$O\Doc_util.o: Doc_util.h
+$O\main.o: cgi_helper.h Doc_html.h Doc_source.h

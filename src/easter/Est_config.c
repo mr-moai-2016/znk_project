@@ -170,21 +170,6 @@ EstConfig_getPreviewStyle( void )
 	return st_preview_style;
 }
 
-#if 0
-ZnkStr
-EstConfig_getMoaiDir( void )
-{
-	const char dsp = '/';
-	size_t depth = 5;
-	ZnkStr moai_dir = ZnkStr_new( "../" );
-	if( !ZnkStrPath_searchParentDir( moai_dir, depth, "target.myf", ZnkDirType_e_File, dsp ) ){
-		RanoLog_printf( "Easter : Searching moai_dir is failure. target.myf does not found.\n" );
-		ZnkStr_delete( moai_dir );
-		return NULL;
-	}
-	return moai_dir;
-}
-#endif
 bool
 EstConfig_loadAuthenticKey( char* authentic_key_buf, size_t authentic_key_buf_size, const char* moai_dir )
 {
@@ -906,6 +891,7 @@ updateBoolVar( ZnkBird bird, ZnkVarpAry post_vars, ZnkVarpAry em_vars,
 	}
 	return result;
 }
+#if 0
 static bool
 updateStrVar( ZnkBird bird, ZnkVarpAry post_vars, ZnkVarpAry em_vars,
 		const char* var_key, char* dst_var, size_t dst_var_size,
@@ -933,6 +919,7 @@ updateStrVar( ZnkBird bird, ZnkVarpAry post_vars, ZnkVarpAry em_vars,
 	}
 	return result;
 }
+#endif
 
 typedef void (*GetSelectUIFuncT)( ZnkStr selui, const char* select_name, const char* select_id );
 

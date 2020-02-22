@@ -122,15 +122,15 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-adler32.obj: zlib.h
-compress.obj: zlib.h
-crc32.obj: zutil.h crc32.h
-deflate.obj: deflate.h
-gzio.obj: zutil.h
-infback.obj: zutil.h inftrees.h inflate.h inffast.h inffixed.h
-inffast.obj: zutil.h inftrees.h inflate.h inffast.h
-inflate.obj: zutil.h inftrees.h inflate.h inffast.h inffixed.h
-inftrees.obj: zutil.h inftrees.h
-trees.obj: deflate.h trees.h
-uncompr.obj: zlib.h
-zutil.obj: zutil.h
+$O\adler32.obj: zlib.h
+$O\compress.obj: zlib.h
+$O\crc32.obj: zutil.h crc32.h
+$O\deflate.obj: deflate.h
+$O\gzio.obj: zutil.h
+$O\infback.obj: zutil.h inftrees.h inflate.h inffast.h inffixed.h
+$O\inffast.obj: zutil.h inftrees.h inflate.h inffast.h
+$O\inflate.obj: zutil.h inftrees.h inflate.h inffast.h inffixed.h
+$O\inftrees.obj: zutil.h inftrees.h
+$O\trees.obj: deflate.h trees.h
+$O\uncompr.obj: zlib.h
+$O\zutil.obj: zutil.h

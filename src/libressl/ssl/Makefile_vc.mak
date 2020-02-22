@@ -178,41 +178,41 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-bio_ssl.obj: ssl_locl.h
-bs_ber.obj: bytestring.h
-bs_cbb.obj: bytestring.h
-bs_cbs.obj: bytestring.h
-d1_both.obj: ssl_locl.h bytestring.h
-d1_clnt.obj: ssl_locl.h bytestring.h
-d1_enc.obj: ssl_locl.h
-d1_lib.obj: ssl_locl.h
-d1_meth.obj: ssl_locl.h
-d1_pkt.obj: ssl_locl.h bytestring.h
-d1_srtp.obj: ssl_locl.h bytestring.h srtp.h
-d1_srvr.obj: ssl_locl.h
-s3_cbc.obj: ssl_locl.h
-s3_lib.obj: ssl_locl.h bytestring.h
-ssl_algs.obj: ssl_locl.h
-ssl_asn1.obj: ssl_locl.h bytestring.h
-ssl_both.obj: ssl_locl.h bytestring.h
-ssl_cert.obj: ssl_locl.h
-ssl_ciph.obj: ssl_locl.h
-ssl_clnt.obj: ssl_locl.h bytestring.h ssl_tlsext.h
-ssl_err.obj: ssl_locl.h
-ssl_init.obj: ssl_locl.h
-ssl_lib.obj: ssl_locl.h bytestring.h
-ssl_packet.obj: ssl_locl.h bytestring.h
-ssl_pkt.obj: ssl_locl.h bytestring.h
-ssl_rsa.obj: ssl_locl.h
-ssl_sess.obj: ssl_locl.h
-ssl_srvr.obj: ssl_locl.h bytestring.h ssl_tlsext.h
-ssl_stat.obj: ssl_locl.h
-ssl_tlsext.obj: ssl_locl.h bytestring.h ssl_tlsext.h
-ssl_txt.obj: ssl_locl.h
-ssl_versions.obj: ssl_locl.h
-t1_clnt.obj: ssl_locl.h
-t1_enc.obj: ssl_locl.h
-t1_hash.obj: ssl_locl.h
-t1_lib.obj: ssl_locl.h bytestring.h ssl_tlsext.h
-t1_meth.obj: ssl_locl.h
-t1_srvr.obj: ssl_locl.h
+$O\bio_ssl.obj: ssl_locl.h
+$O\bs_ber.obj: bytestring.h
+$O\bs_cbb.obj: bytestring.h
+$O\bs_cbs.obj: bytestring.h
+$O\d1_both.obj: ssl_locl.h bytestring.h
+$O\d1_clnt.obj: ssl_locl.h bytestring.h
+$O\d1_enc.obj: ssl_locl.h
+$O\d1_lib.obj: ssl_locl.h
+$O\d1_meth.obj: ssl_locl.h
+$O\d1_pkt.obj: ssl_locl.h bytestring.h
+$O\d1_srtp.obj: ssl_locl.h bytestring.h srtp.h
+$O\d1_srvr.obj: ssl_locl.h
+$O\s3_cbc.obj: ssl_locl.h
+$O\s3_lib.obj: ssl_locl.h bytestring.h
+$O\ssl_algs.obj: ssl_locl.h
+$O\ssl_asn1.obj: ssl_locl.h bytestring.h
+$O\ssl_both.obj: ssl_locl.h bytestring.h
+$O\ssl_cert.obj: ssl_locl.h
+$O\ssl_ciph.obj: ssl_locl.h
+$O\ssl_clnt.obj: ssl_locl.h bytestring.h ssl_tlsext.h
+$O\ssl_err.obj: ssl_locl.h
+$O\ssl_init.obj: ssl_locl.h
+$O\ssl_lib.obj: ssl_locl.h bytestring.h
+$O\ssl_packet.obj: ssl_locl.h bytestring.h
+$O\ssl_pkt.obj: ssl_locl.h bytestring.h
+$O\ssl_rsa.obj: ssl_locl.h
+$O\ssl_sess.obj: ssl_locl.h
+$O\ssl_srvr.obj: ssl_locl.h bytestring.h ssl_tlsext.h
+$O\ssl_stat.obj: ssl_locl.h
+$O\ssl_tlsext.obj: ssl_locl.h bytestring.h ssl_tlsext.h
+$O\ssl_txt.obj: ssl_locl.h
+$O\ssl_versions.obj: ssl_locl.h
+$O\t1_clnt.obj: ssl_locl.h
+$O\t1_enc.obj: ssl_locl.h
+$O\t1_hash.obj: ssl_locl.h
+$O\t1_lib.obj: ssl_locl.h bytestring.h ssl_tlsext.h
+$O\t1_meth.obj: ssl_locl.h
+$O\t1_srvr.obj: ssl_locl.h

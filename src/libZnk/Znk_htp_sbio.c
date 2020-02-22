@@ -75,11 +75,14 @@ appendRecvedData( ZnkStockBIO sbio, ZnkBfr dst, size_t data_size, ZnkStr ermsg )
 				ZnkStr_addf( ermsg, "ZnkHtpSBIO : appendRecvedData end of recv(readed_size=0)\n" );
 			}
 			return false;
-		} else if( readed_size < 0 ){
+		}
+#if 0
+		else if( readed_size < 0 ){
 			/* error of recv */
 			printLastRecvError( ermsg, __LINE__ );
 			return false;
 		}
+#endif
 		data_size -= readed_size;
 		ZnkBfr_append_dfr( dst, buf, readed_size );
 	}
@@ -174,12 +177,14 @@ appendBody( ZnkStockBIO sbio, ZnkBfr body, const HeaderInfo* hdr_info, ZnkStr er
 		 */
 		while( true ){
 			readed_size = ZnkStockBIO_read( sbio, buf, sizeof(buf) );
+#if 0
 			if( readed_size < 0 ){
 				/* error */
 				break;
 			}
+#endif
 			if( readed_size == 0 ){
-				/* ‚±‚ê‚Åˆê‰ž¬Œ÷‚Æ‚Ý‚È‚·... */
+				/* successful-end */
 				break;
 			}
 			ZnkBfr_append_dfr( body, buf, readed_size );
@@ -277,10 +282,12 @@ recvHeader( ZnkStockBIO sbio, ZnkHtpHdrs recv_hdrs, HeaderInfo* hdr_info, ZnkStr
 	}
 
 	readed_size = ZnkStockBIO_getReadedSize( sbio );
+#if 0
 	if( readed_size < 0 ){
 		printLastRecvError( ermsg, __LINE__ );
 		return -1;
 	}
+#endif
 
 	{
 		ZnkVarp     var = NULL;

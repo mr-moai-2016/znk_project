@@ -1,6 +1,6 @@
 @echo off
 
-if exist ..\mkf_triggers cd ..
+REM if exist ..\mkf_triggers cd ..
 if not exist mkf_triggers goto Error_InvalidTrigger
 
 call mkf_triggers\_impl\_detect_bat_utils_dir.bat

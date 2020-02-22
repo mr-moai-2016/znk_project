@@ -12,7 +12,12 @@ Znk_EXTERN_C_BEGIN
 typedef uintptr_t ZnkSocket;
 typedef bool (*ZnkSocketCallback)( int rc, uint32_t sys_errno, size_t waiting_count, void* arg );
 
-#define ZnkSocket_INVALID ((ZnkSocket)(-1))
+ZnkSocket
+ZnkSocket_getInvalid( void );
+Znk_INLINE bool
+ZnkSocket_isInvalid( ZnkSocket socket ){
+	return (bool)( socket == ZnkSocket_getInvalid() );
+}
 
 ZnkSocket
 ZnkSocket_open( void );

@@ -217,41 +217,41 @@ clean:
 	rm -rf $O/ 
 
 # Src and Headers Dependency
-bio_ssl.o: ssl_locl.h
-bs_ber.o: bytestring.h
-bs_cbb.o: bytestring.h
-bs_cbs.o: bytestring.h
-d1_both.o: ssl_locl.h bytestring.h
-d1_clnt.o: ssl_locl.h bytestring.h
-d1_enc.o: ssl_locl.h
-d1_lib.o: ssl_locl.h
-d1_meth.o: ssl_locl.h
-d1_pkt.o: ssl_locl.h bytestring.h
-d1_srtp.o: ssl_locl.h bytestring.h srtp.h
-d1_srvr.o: ssl_locl.h
-s3_cbc.o: ssl_locl.h
-s3_lib.o: ssl_locl.h bytestring.h
-ssl_algs.o: ssl_locl.h
-ssl_asn1.o: ssl_locl.h bytestring.h
-ssl_both.o: ssl_locl.h bytestring.h
-ssl_cert.o: ssl_locl.h
-ssl_ciph.o: ssl_locl.h
-ssl_clnt.o: ssl_locl.h bytestring.h ssl_tlsext.h
-ssl_err.o: ssl_locl.h
-ssl_init.o: ssl_locl.h
-ssl_lib.o: ssl_locl.h bytestring.h
-ssl_packet.o: ssl_locl.h bytestring.h
-ssl_pkt.o: ssl_locl.h bytestring.h
-ssl_rsa.o: ssl_locl.h
-ssl_sess.o: ssl_locl.h
-ssl_srvr.o: ssl_locl.h bytestring.h ssl_tlsext.h
-ssl_stat.o: ssl_locl.h
-ssl_tlsext.o: ssl_locl.h bytestring.h ssl_tlsext.h
-ssl_txt.o: ssl_locl.h
-ssl_versions.o: ssl_locl.h
-t1_clnt.o: ssl_locl.h
-t1_enc.o: ssl_locl.h
-t1_hash.o: ssl_locl.h
-t1_lib.o: ssl_locl.h bytestring.h ssl_tlsext.h
-t1_meth.o: ssl_locl.h
-t1_srvr.o: ssl_locl.h
+$O/bio_ssl.o: ssl_locl.h
+$O/bs_ber.o: bytestring.h
+$O/bs_cbb.o: bytestring.h
+$O/bs_cbs.o: bytestring.h
+$O/d1_both.o: ssl_locl.h bytestring.h
+$O/d1_clnt.o: ssl_locl.h bytestring.h
+$O/d1_enc.o: ssl_locl.h
+$O/d1_lib.o: ssl_locl.h
+$O/d1_meth.o: ssl_locl.h
+$O/d1_pkt.o: ssl_locl.h bytestring.h
+$O/d1_srtp.o: ssl_locl.h bytestring.h srtp.h
+$O/d1_srvr.o: ssl_locl.h
+$O/s3_cbc.o: ssl_locl.h
+$O/s3_lib.o: ssl_locl.h bytestring.h
+$O/ssl_algs.o: ssl_locl.h
+$O/ssl_asn1.o: ssl_locl.h bytestring.h
+$O/ssl_both.o: ssl_locl.h bytestring.h
+$O/ssl_cert.o: ssl_locl.h
+$O/ssl_ciph.o: ssl_locl.h
+$O/ssl_clnt.o: ssl_locl.h bytestring.h ssl_tlsext.h
+$O/ssl_err.o: ssl_locl.h
+$O/ssl_init.o: ssl_locl.h
+$O/ssl_lib.o: ssl_locl.h bytestring.h
+$O/ssl_packet.o: ssl_locl.h bytestring.h
+$O/ssl_pkt.o: ssl_locl.h bytestring.h
+$O/ssl_rsa.o: ssl_locl.h
+$O/ssl_sess.o: ssl_locl.h
+$O/ssl_srvr.o: ssl_locl.h bytestring.h ssl_tlsext.h
+$O/ssl_stat.o: ssl_locl.h
+$O/ssl_tlsext.o: ssl_locl.h bytestring.h ssl_tlsext.h
+$O/ssl_txt.o: ssl_locl.h
+$O/ssl_versions.o: ssl_locl.h
+$O/t1_clnt.o: ssl_locl.h
+$O/t1_enc.o: ssl_locl.h
+$O/t1_hash.o: ssl_locl.h
+$O/t1_lib.o: ssl_locl.h bytestring.h ssl_tlsext.h
+$O/t1_meth.o: ssl_locl.h
+$O/t1_srvr.o: ssl_locl.h

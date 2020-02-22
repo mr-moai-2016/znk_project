@@ -16,7 +16,7 @@ REM set APK_TYPE=release-unsigned
 
 set APK_BASENAME=moai-v%apk_ver%-android
 set CP=xcopy /H /C /Y
-set LIST=armeabi-v7a x86
+set LIST=armeabi-v7a arm64-v8a x86
 for %%a in ( %LIST% ) do rmdir /S /Q app\src\main\jniLibs\%%a\
 for %%a in ( %LIST% ) do mkdir app\src\main\jniLibs\%%a
 REM execute app\ndk_build_by_x86.bat, if libMoai, libRano and libZnk are updated.

@@ -31,7 +31,7 @@
 @@V config
 doc_title     = ['Moai+Easter アナウンスメント']
 author        = { ['Mr.Moai'] }
-update        = ['2019/12/08']
+update        = ['2020/01/21']
 category_path = {}
 urp           = ['/announcement.html']
 nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['article'] }
@@ -88,23 +88,47 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['article'] }
 
 
 @@L WhatIsChanging_latest
-Moai最新版リリース( Ver2.2.1 コードネーム ResponsiveStone ) での
+Moai最新版リリース( Ver2.2.2 コードネーム ResponsiveStone ) での
 新機能、仕様ならびに不具合の修正等は以下のようになります.
 
 <article class="message is-dark">
 	<div class="message-header">
-		ふたばちゃんねるの引用機能追加に関する修正(Ver2.2.1)
+		Ver2.2.2
 	</div>
 	<div class="message-body">
-		ふたばちゃんねるの新しい機能として引用ポップアップ等が実装されましたが、
+		<b>MoaiCGI起動に関する不具合の修正</b>
+
+		Moai Ver2.2.1 Android APK版 において、動的ライブラリのシンボリックリンクの生成処理に誤りがあったため、
+		このライブラリに依存するようなすべてのMoaiCGI(たとえばEasterやVirtualUSERSなど)の起動に失敗する重大な不具合を修正しました.
+		(この不具合は重大なため、旧Ver2.2.1 のapkのリンクも既に不具合のないものへと差し替えてあります).
+
+		<b>ふたばちゃんねるの各種機能に関する不具合の修正</b>
+
+		Easterにおいて、ふたばちゃんねるの「手書き」、「レス削除」、「del」が正常に機能しない不具合がありましたが、
+		これが正常に機能するよう修正しました.
+
+		<b>ふたばちゃんねるのカタログdel機能に関する修正</b>
+
+		Easterにおいて、ふたばちゃんねるの新機能「カタログからのdel」が正常に機能するよう修正しました.
+	</div>
+
+	<div class="message-header">
+		Ver2.2.1 
+	</div>
+	<div class="message-body">
+		<b>ふたばちゃんねるの引用機能追加に関する修正</b>
+
+		ふたばちゃんねるの新機能として引用ポップアップ等が実装されましたが、
 		Easterを介するとこれに関する表示の乱れ等が発生したため、これを修正.
 		また引用部分やEマークをマウスクリックすることにより、Easter独自の引用ポップアップが表示されるようにしました.
 	</div>
 
 	<div class="message-header">
-		Androidに関する既存の問題点の大幅な修正(Ver2.2)
+		Ver2.2 
 	</div>
 	<div class="message-body">
+		<b>Androidに関する既存の問題点の大幅な修正</b>
+
 		Moai Ver2.1以前ではAndroid 5.0( Lollipop )以降におけるMoai起動の不具合などが確認されていました.
 		この不具合が全面修正されています.
 		また Moai Ver2.1以前ではAndroidで使用する場合ターミナルエミュレータを使う必要がありましたが、

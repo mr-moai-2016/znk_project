@@ -70,7 +70,6 @@ Znk_EXTERN_C_BEGIN
 #define ZnkVPod_M_REGIST_BLOCK( bfr, elem_type, idx, new_val, null_val ) { \
 	const size_t size = ZnkVPod_M_SIZE( bfr, elem_type ); \
 	elem_type tmp; \
-	size_t idx; \
 	for( idx=0; idx<size; ++idx ){ \
 		tmp = ZnkVPod_M_AT( bfr, elem_type, idx ); \
 		if( tmp == null_val ){ \

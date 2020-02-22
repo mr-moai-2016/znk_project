@@ -39,6 +39,7 @@ linking_libs_special = ['pthread dl stdc++']
 @@.
 
 @@V info_android
+compiler_option_special = ['-Wno-invalid-source-encoding']
 @@.
 
 @@L mkid_list

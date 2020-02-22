@@ -179,14 +179,14 @@ clean:
 	rm -rf $O/ 
 
 # Src and Headers Dependency
-tls.o: tls_internal.h
-tls_bio_cb.o: tls_internal.h
-tls_client.o: tls_internal.h
-tls_config.o: tls_internal.h
-tls_conninfo.o: tls_internal.h
-tls_keypair.o: tls_internal.h
-tls_ocsp.o: tls_internal.h
-tls_peer.o: tls_internal.h
-tls_server.o: tls_internal.h
-tls_util.o: tls_internal.h
-tls_verify.o: tls_internal.h
+$O/tls.o: tls_internal.h
+$O/tls_bio_cb.o: tls_internal.h
+$O/tls_client.o: tls_internal.h
+$O/tls_config.o: tls_internal.h
+$O/tls_conninfo.o: tls_internal.h
+$O/tls_keypair.o: tls_internal.h
+$O/tls_ocsp.o: tls_internal.h
+$O/tls_peer.o: tls_internal.h
+$O/tls_server.o: tls_internal.h
+$O/tls_util.o: tls_internal.h
+$O/tls_verify.o: tls_internal.h

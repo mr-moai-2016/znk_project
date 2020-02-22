@@ -323,74 +323,74 @@ clean:
 
 
 # Src and Headers Dependency
-gslconv.o: Znk_myf.h Znk_str_ary.h Znk_str_ex.h Znk_str_fio.h Znk_stdc.h Znk_missing_libc.h Znk_dir.h Znk_str_path.h Znk_liba_scan.h Znk_bird.h
-minizip/ioapi.o: minizip/ioapi.h
-minizip/unzip.o: minizip/unzip.h minizip/crypt.h
-Znk_algo_vec.o: Znk_algo_vec.h
-Znk_bfr.o: Znk_bfr.h Znk_stdc.h
-Znk_bfr_ary.o: Znk_bfr_ary.h
-Znk_bfr_bif.o: Znk_bfr_bif.h Znk_bfr.h
-Znk_bird.o: Znk_bird.h Znk_mem_find.h Znk_stdc.h Znk_varp_ary.h Znk_bms_find.h
-Znk_bms_find.o: Znk_bms_find.h Znk_mem_find.h Znk_s_base.h Znk_stdc.h
-Znk_capacity.o: Znk_capacity.h
-Znk_cookie.o: Znk_cookie.h Znk_s_base.h Znk_stdc.h Znk_str_fio.h
-Znk_date.o: Znk_date.h Znk_base.h Znk_str.h Znk_s_base.h
-Znk_dir.o: Znk_dir.h Znk_dir_recursive.h Znk_stdc.h Znk_s_base.h Znk_missing_libc.h Znk_sys_errno.h
-Znk_dirent.o: Znk_dir.h Znk_s_base.h Znk_stdc.h
-Znk_dir_recursive.o: Znk_dir_recursive.h Znk_dir.h Znk_str.h Znk_str_ary.h Znk_err.h Znk_stdc.h
-Znk_dir_type.o: Znk_dir.h Znk_sys_errno.h Znk_stdc.h
-Znk_dlink.o: Znk_dlink.h
-Znk_duple_ary.o: Znk_duple_ary.h Znk_bfr.h Znk_stdc.h Znk_s_base.h Znk_base.h Znk_str.h Znk_obj_ary.h
-Znk_envvar.o: Znk_envvar.h Znk_missing_libc.h Znk_mutex.h
-Znk_err.o: Znk_err.h Znk_mutex.h Znk_str.h
-Znk_fdset.o: Znk_fdset.h Znk_stdc.h
-Znk_htp_hdrs.o: Znk_htp_hdrs.h Znk_s_base.h Znk_varp_ary.h Znk_missing_libc.h
-Znk_htp_post.o: Znk_htp_post.h Znk_str.h Znk_missing_libc.h
-Znk_htp_rar.o: Znk_htp_rar.h Znk_htp_sbio.h Znk_socket.h Znk_cookie.h Znk_s_base.h Znk_str_ary.h Znk_stdc.h Znk_sys_errno.h Znk_stock_bio.h
-Znk_htp_sbio.o: Znk_htp_sbio.h Znk_net_base.h Znk_cookie.h Znk_s_base.h Znk_str_ary.h Znk_stdc.h Znk_mem_find.h Znk_sys_errno.h Znk_stock_bio.h Znk_zlib.h Znk_def_util.h
-Znk_htp_util.o: Znk_htp_util.h Znk_str_ex.h Znk_mem_find.h
-Znk_liba_scan.o: Znk_stdc.h Znk_s_base.h Znk_str.h Znk_str_ary.h Znk_myf.h Znk_bfr.h Znk_vpod.h
-Znk_math.o: Znk_math.h
-Znk_mbc_jp.o: Znk_mbc_jp.h Znk_bfr_bif.h
-Znk_md5.o: Znk_md5.h Znk_stdc.h
-Znk_mem_find.o: Znk_mem_find.h Znk_stdc.h
-Znk_missing_libc.o: Znk_missing_libc.h Znk_vsnprintf.h Znk_s_base.h
-Znk_mutex.o: Znk_mutex.h Znk_bfr.h Znk_stdc.h
-Znk_myf.o: Znk_myf.h Znk_str.h Znk_str_fio.h Znk_str_ary.h Znk_stdc.h Znk_s_base.h Znk_varp_ary.h Znk_primp_ary.h
-Znk_net_base.o: Znk_net_base.h Znk_s_base.h Znk_sys_errno.h Znk_stdc.h Znk_missing_libc.h
-Znk_net_ip.o: Znk_net_ip.h Znk_stdc.h Znk_s_base.h Znk_missing_libc.h
-Znk_nset.o: Znk_nset.h Znk_vpod.h Znk_stdc.h
-Znk_obj_ary.o: Znk_obj_ary.h Znk_bfr.h Znk_stdc.h Znk_vpod.h
-Znk_prim.o: Znk_prim.h Znk_primp_ary.h
-Znk_primp_ary.o: Znk_primp_ary.h Znk_s_base.h
-Znk_process.o: Znk_process.h Znk_str.h Znk_stdc.h
-Znk_rand.o: Znk_rand.h
-Znk_rgx.o: Znk_rgx.h Znk_rgx_tree.h Znk_rgx_nfa.h Znk_rgx_dfa.h Znk_stdc.h Znk_str_fio.h Znk_s_base.h
-Znk_rgx_dfa.o: Znk_rgx_dfa.h Znk_base.h Znk_stdc.h Znk_str.h
-Znk_rgx_nfa.o: Znk_rgx_nfa.h Znk_base.h Znk_stdc.h
-Znk_rgx_tree.o: Znk_rgx_tree.h Znk_base.h Znk_stdc.h Znk_str.h
-Znk_server.o: Znk_server.h Znk_socket.h Znk_stdc.h
-Znk_socket.o: Znk_socket.h Znk_net_base.h Znk_sys_errno.h Znk_stdc.h Znk_thread.h Znk_missing_libc.h
-Znk_stdc.o: Znk_stdc.h Znk_bfr.h Znk_vsnprintf.h
-Znk_stock_bio.o: Znk_stock_bio.h Znk_stdc.h
-Znk_str.o: Znk_str.h Znk_stdc.h Znk_s_base.h Znk_vsnprintf.h
-Znk_str_ary.o: Znk_str_ary.h Znk_stdc.h Znk_s_base.h Znk_algo_vec.h
-Znk_str_ex.o: Znk_str_ex.h Znk_str_ary.h Znk_s_base.h Znk_mem_find.h Znk_def_util.h
-Znk_str_fio.o: Znk_str_fio.h Znk_stdc.h
-Znk_str_path.o: Znk_str_path.h Znk_s_base.h Znk_missing_libc.h Znk_str_ary.h Znk_str_ex.h
-Znk_str_ptn.o: Znk_str_ptn.h Znk_missing_libc.h Znk_stdc.h Znk_s_base.h Znk_mem_find.h Znk_str_ex.h
-Znk_sys_errno.o: Znk_sys_errno.h
-Znk_s_atom.o: Znk_s_atom.h Znk_str_ary.h Znk_stdc.h
-Znk_s_base.o: Znk_s_base.h Znk_mem_find.h Znk_stdc.h Znk_def_util.h Znk_s_posix.h
-Znk_s_posix.o: Znk_s_posix.h Znk_stdc.h
-Znk_thread.o: Znk_thread.h Znk_bfr.h Znk_stdc.h Znk_mutex.h
-Znk_tostr_double.o: Znk_tostr_double.h Znk_def_util.h
-Znk_tostr_int.o: Znk_tostr_int.h Znk_base.h Znk_s_base.h Znk_def_util.h Znk_stdc.h
-Znk_uchar64.o: Znk_uchar64.h Znk_s_base.h
-Znk_var.o: Znk_var.h Znk_stdc.h
-Znk_varp_ary.o: Znk_varp_ary.h Znk_s_base.h
-Znk_vsnprintf.o: Znk_vsnprintf.h Znk_stdc.h Znk_def_util.h Znk_tostr_int.h Znk_tostr_double.h
-Znk_yy_base.o: Znk_yy_base.h
-Znk_zip.o: Znk_zip.h Znk_stdc.h Znk_missing_libc.h Znk_dir.h minizip/unzip.h minizip/iowin32.h
-Znk_zlib.o: Znk_zlib.h Znk_dlhlp.h Znk_stdc.h
-minizip/iowin32.o: minizip/ioapi.h minizip/iowin32.h
+$O\gslconv.o: Znk_myf.h Znk_str_ary.h Znk_str_ex.h Znk_str_fio.h Znk_stdc.h Znk_missing_libc.h Znk_dir.h Znk_str_path.h Znk_liba_scan.h Znk_bird.h
+$O\minizip/ioapi.o: minizip/ioapi.h
+$O\minizip/unzip.o: minizip/unzip.h minizip/crypt.h
+$O\Znk_algo_vec.o: Znk_algo_vec.h
+$O\Znk_bfr.o: Znk_bfr.h Znk_stdc.h
+$O\Znk_bfr_ary.o: Znk_bfr_ary.h
+$O\Znk_bfr_bif.o: Znk_bfr_bif.h Znk_bfr.h
+$O\Znk_bird.o: Znk_bird.h Znk_mem_find.h Znk_stdc.h Znk_varp_ary.h Znk_bms_find.h
+$O\Znk_bms_find.o: Znk_bms_find.h Znk_mem_find.h Znk_s_base.h Znk_stdc.h
+$O\Znk_capacity.o: Znk_capacity.h
+$O\Znk_cookie.o: Znk_cookie.h Znk_s_base.h Znk_stdc.h Znk_str_fio.h
+$O\Znk_date.o: Znk_date.h Znk_base.h Znk_str.h Znk_s_base.h
+$O\Znk_dir.o: Znk_dir.h Znk_dir_recursive.h Znk_stdc.h Znk_s_base.h Znk_missing_libc.h Znk_sys_errno.h
+$O\Znk_dirent.o: Znk_dir.h Znk_s_base.h Znk_stdc.h
+$O\Znk_dir_recursive.o: Znk_dir_recursive.h Znk_dir.h Znk_str.h Znk_str_ary.h Znk_err.h Znk_stdc.h
+$O\Znk_dir_type.o: Znk_dir.h Znk_sys_errno.h Znk_stdc.h
+$O\Znk_dlink.o: Znk_dlink.h
+$O\Znk_duple_ary.o: Znk_duple_ary.h Znk_bfr.h Znk_stdc.h Znk_s_base.h Znk_base.h Znk_str.h Znk_obj_ary.h
+$O\Znk_envvar.o: Znk_envvar.h Znk_missing_libc.h Znk_mutex.h
+$O\Znk_err.o: Znk_err.h Znk_mutex.h Znk_str.h
+$O\Znk_fdset.o: Znk_fdset.h Znk_stdc.h
+$O\Znk_htp_hdrs.o: Znk_htp_hdrs.h Znk_s_base.h Znk_varp_ary.h Znk_missing_libc.h
+$O\Znk_htp_post.o: Znk_htp_post.h Znk_str.h Znk_missing_libc.h
+$O\Znk_htp_rar.o: Znk_htp_rar.h Znk_htp_sbio.h Znk_socket.h Znk_cookie.h Znk_s_base.h Znk_str_ary.h Znk_stdc.h Znk_sys_errno.h Znk_stock_bio.h
+$O\Znk_htp_sbio.o: Znk_htp_sbio.h Znk_net_base.h Znk_cookie.h Znk_s_base.h Znk_str_ary.h Znk_stdc.h Znk_mem_find.h Znk_sys_errno.h Znk_stock_bio.h Znk_zlib.h Znk_def_util.h
+$O\Znk_htp_util.o: Znk_htp_util.h Znk_str_ex.h Znk_mem_find.h
+$O\Znk_liba_scan.o: Znk_stdc.h Znk_s_base.h Znk_str.h Znk_str_ary.h Znk_myf.h Znk_bfr.h Znk_vpod.h
+$O\Znk_math.o: Znk_math.h
+$O\Znk_mbc_jp.o: Znk_mbc_jp.h Znk_bfr_bif.h
+$O\Znk_md5.o: Znk_md5.h Znk_stdc.h
+$O\Znk_mem_find.o: Znk_mem_find.h Znk_stdc.h
+$O\Znk_missing_libc.o: Znk_missing_libc.h Znk_vsnprintf.h Znk_s_base.h
+$O\Znk_mutex.o: Znk_mutex.h Znk_bfr.h Znk_stdc.h
+$O\Znk_myf.o: Znk_myf.h Znk_str.h Znk_str_fio.h Znk_str_ary.h Znk_stdc.h Znk_s_base.h Znk_varp_ary.h Znk_primp_ary.h
+$O\Znk_net_base.o: Znk_net_base.h Znk_s_base.h Znk_sys_errno.h Znk_stdc.h Znk_missing_libc.h
+$O\Znk_net_ip.o: Znk_net_ip.h Znk_stdc.h Znk_s_base.h Znk_missing_libc.h
+$O\Znk_nset.o: Znk_nset.h Znk_vpod.h Znk_stdc.h
+$O\Znk_obj_ary.o: Znk_obj_ary.h Znk_bfr.h Znk_stdc.h Znk_vpod.h
+$O\Znk_prim.o: Znk_prim.h Znk_primp_ary.h
+$O\Znk_primp_ary.o: Znk_primp_ary.h Znk_s_base.h
+$O\Znk_process.o: Znk_process.h Znk_str.h Znk_stdc.h
+$O\Znk_rand.o: Znk_rand.h
+$O\Znk_rgx.o: Znk_rgx.h Znk_rgx_tree.h Znk_rgx_nfa.h Znk_rgx_dfa.h Znk_stdc.h Znk_str_fio.h Znk_s_base.h
+$O\Znk_rgx_dfa.o: Znk_rgx_dfa.h Znk_base.h Znk_stdc.h Znk_str.h
+$O\Znk_rgx_nfa.o: Znk_rgx_nfa.h Znk_base.h Znk_stdc.h
+$O\Znk_rgx_tree.o: Znk_rgx_tree.h Znk_base.h Znk_stdc.h Znk_str.h
+$O\Znk_server.o: Znk_server.h Znk_socket.h Znk_stdc.h
+$O\Znk_socket.o: Znk_socket.h Znk_net_base.h Znk_sys_errno.h Znk_stdc.h Znk_thread.h Znk_missing_libc.h
+$O\Znk_stdc.o: Znk_stdc.h Znk_bfr.h Znk_vsnprintf.h
+$O\Znk_stock_bio.o: Znk_stock_bio.h Znk_stdc.h
+$O\Znk_str.o: Znk_str.h Znk_stdc.h Znk_s_base.h Znk_vsnprintf.h
+$O\Znk_str_ary.o: Znk_str_ary.h Znk_stdc.h Znk_s_base.h Znk_algo_vec.h
+$O\Znk_str_ex.o: Znk_str_ex.h Znk_str_ary.h Znk_s_base.h Znk_mem_find.h Znk_def_util.h
+$O\Znk_str_fio.o: Znk_str_fio.h Znk_stdc.h
+$O\Znk_str_path.o: Znk_str_path.h Znk_s_base.h Znk_missing_libc.h Znk_str_ary.h Znk_str_ex.h
+$O\Znk_str_ptn.o: Znk_str_ptn.h Znk_missing_libc.h Znk_stdc.h Znk_s_base.h Znk_mem_find.h Znk_str_ex.h
+$O\Znk_sys_errno.o: Znk_sys_errno.h
+$O\Znk_s_atom.o: Znk_s_atom.h Znk_str_ary.h Znk_stdc.h
+$O\Znk_s_base.o: Znk_s_base.h Znk_mem_find.h Znk_stdc.h Znk_def_util.h Znk_s_posix.h
+$O\Znk_s_posix.o: Znk_s_posix.h Znk_stdc.h
+$O\Znk_thread.o: Znk_thread.h Znk_bfr.h Znk_stdc.h Znk_mutex.h
+$O\Znk_tostr_double.o: Znk_tostr_double.h Znk_def_util.h
+$O\Znk_tostr_int.o: Znk_tostr_int.h Znk_base.h Znk_s_base.h Znk_def_util.h Znk_stdc.h
+$O\Znk_uchar64.o: Znk_uchar64.h Znk_s_base.h
+$O\Znk_var.o: Znk_var.h Znk_stdc.h
+$O\Znk_varp_ary.o: Znk_varp_ary.h Znk_s_base.h
+$O\Znk_vsnprintf.o: Znk_vsnprintf.h Znk_stdc.h Znk_def_util.h Znk_tostr_int.h Znk_tostr_double.h
+$O\Znk_yy_base.o: Znk_yy_base.h
+$O\Znk_zip.o: Znk_zip.h Znk_stdc.h Znk_missing_libc.h Znk_dir.h minizip/unzip.h minizip/iowin32.h
+$O\Znk_zlib.o: Znk_zlib.h Znk_dlhlp.h Znk_stdc.h
+$O\minizip/iowin32.o: minizip/ioapi.h minizip/iowin32.h

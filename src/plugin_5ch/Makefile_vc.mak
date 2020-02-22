@@ -128,5 +128,5 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-init.obj: Moai_plugin_dev.h
-main.obj: Moai_plugin_dev.h
+$O\init.obj: Moai_plugin_dev.h
+$O\main.obj: Moai_plugin_dev.h

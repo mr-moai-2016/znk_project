@@ -130,32 +130,32 @@ __mkg_sentinel_target__:
 
 # Install data rule.
 install_data:
-	mkdir -p ../../patgen 
-	mkdir -p ../../patgen/apply_this_scripts/android 
-	mkdir -p ../../patgen/apply_this_scripts/cygwin 
-	mkdir -p ../../patgen/apply_this_scripts/linux 
-	mkdir -p ../../patgen/apply_this_scripts/windows 
-	for tgt in cert.pem ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/ ; fi ; done
-	for tgt in patgen.myf ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/ ; fi ; done
-	for tgt in pat_make.bat ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/ ; fi ; done
-	for tgt in pat_make.sh ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/ ; fi ; done
-	for tgt in pat_diff.bat ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/ ; fi ; done
-	for tgt in pat_diff.sh ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/ ; fi ; done
-	for tgt in set_ver.bat ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/ ; fi ; done
-	for tgt in set_ver.sh ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/ ; fi ; done
-	for tgt in _zip_one.bat ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/ ; fi ; done
-	for tgt in kick_zip.bat ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/ ; fi ; done
-	for tgt in to_zip.sh ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/ ; fi ; done
-	for tgt in apply_this_scripts/android/* ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/apply_this_scripts/android/ ; fi ; done
-	for tgt in apply_this_scripts/cygwin/* ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/apply_this_scripts/cygwin/ ; fi ; done
-	for tgt in apply_this_scripts/linux/* ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/apply_this_scripts/linux/ ; fi ; done
-	for tgt in apply_this_scripts/windows/* ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/apply_this_scripts/windows/ ; fi ; done
+	mkdir -p ../../../patgen 
+	mkdir -p ../../../patgen/apply_this_scripts/android 
+	mkdir -p ../../../patgen/apply_this_scripts/cygwin 
+	mkdir -p ../../../patgen/apply_this_scripts/linux 
+	mkdir -p ../../../patgen/apply_this_scripts/windows 
+	for tgt in cert.pem ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../../patgen/ ; fi ; done
+	for tgt in patgen.myf ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../../patgen/ ; fi ; done
+	for tgt in pat_make.bat ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../../patgen/ ; fi ; done
+	for tgt in pat_make.sh ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../../patgen/ ; fi ; done
+	for tgt in pat_diff.bat ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../../patgen/ ; fi ; done
+	for tgt in pat_diff.sh ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../../patgen/ ; fi ; done
+	for tgt in set_ver.bat ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../../patgen/ ; fi ; done
+	for tgt in set_ver.sh ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../../patgen/ ; fi ; done
+	for tgt in _zip_one.bat ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../../patgen/ ; fi ; done
+	for tgt in kick_zip.bat ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../../patgen/ ; fi ; done
+	for tgt in to_zip.sh ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../../patgen/ ; fi ; done
+	for tgt in apply_this_scripts/android/* ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../../patgen/apply_this_scripts/android/ ; fi ; done
+	for tgt in apply_this_scripts/cygwin/* ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../../patgen/apply_this_scripts/cygwin/ ; fi ; done
+	for tgt in apply_this_scripts/linux/* ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../../patgen/apply_this_scripts/linux/ ; fi ; done
+	for tgt in apply_this_scripts/windows/* ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../../patgen/apply_this_scripts/windows/ ; fi ; done
 
 # Install exec rule.
 install_exec: $(EXE_FILE0)
-	mkdir -p ../../patgen/$(PLATFORM) 
-	for tgt in $(EXE_FILE0) ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/$(PLATFORM)/ ; fi ; done
-	@for tgt in $(RUNTIME_FILES) ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../patgen/$(PLATFORM)/ ; fi ; done
+	mkdir -p ../../../znk_release/patgen/$(PLATFORM) 
+	for tgt in $(EXE_FILE0) ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../../znk_release/patgen/$(PLATFORM)/ ; fi ; done
+	@for tgt in $(RUNTIME_FILES) ; do if test -e "$$tgt" ; then $(CP) "$$tgt" ../../../znk_release/patgen/$(PLATFORM)/ ; fi ; done
 
 # Install dlib rule.
 install_dlib:
@@ -172,5 +172,5 @@ clean:
 	rm -rf $O/ 
 
 # Src and Headers Dependency
-main.o: pat_diff.h pat_make.h
-pat_diff.o: pat_diff.h
+$O/main.o: pat_diff.h pat_make.h
+$O/pat_diff.o: pat_diff.h

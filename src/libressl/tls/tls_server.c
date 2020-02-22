@@ -26,6 +26,8 @@
 #include <tls.h>
 #include "tls_internal.h"
 
+#include <rra_portable/inet_conv.h>
+
 struct tls *
 tls_server(void)
 {

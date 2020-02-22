@@ -193,20 +193,20 @@ clean:
 	rm -rf $O/ 
 
 # Src and Headers Dependency
-Rano_cgi_util.o: Rano_cgi_util.h Rano_type.h Rano_log.h Rano_post.h Rano_htp_boy.h
-Rano_conf_util.o: Rano_conf_util.h Rano_htp_boy.h
-Rano_dir_util.o: Rano_dir_util.h Rano_file_info.h
-Rano_file_info.o: Rano_file_info.h
-Rano_hash.o: Rano_hash.h
-Rano_htp_boy.o: Rano_htp_boy.h Rano_log.h Rano_post.h tls_module/tls_module.h
-Rano_htp_modifier.o: Rano_htp_modifier.h
-Rano_htp_util.o: Rano_htp_util.h Rano_htp_boy.h Rano_htp_modifier.h
-Rano_log.o: Rano_log.h
-Rano_module.o: Rano_module.h Rano_module_ary.h Rano_log.h Rano_myf.h Rano_txt_filter.h Rano_plugin_dev.h Rano_parent_proxy.h Rano_file_info.h
-Rano_myf.o: Rano_myf.h Rano_log.h
-Rano_parent_proxy.o: Rano_parent_proxy.h Rano_log.h
-Rano_post.o: Rano_post.h
-Rano_sset.o: Rano_sset.h
-Rano_txt_filter.o: Rano_txt_filter.h
-Rano_vtag_util.o: Rano_vtag_util.h
-tls_module/tls_module.o: tls_module/tls.h
+$O/Rano_cgi_util.o: Rano_cgi_util.h Rano_type.h Rano_log.h Rano_post.h Rano_htp_boy.h
+$O/Rano_conf_util.o: Rano_conf_util.h Rano_htp_boy.h
+$O/Rano_dir_util.o: Rano_dir_util.h Rano_file_info.h
+$O/Rano_file_info.o: Rano_file_info.h
+$O/Rano_hash.o: Rano_hash.h
+$O/Rano_htp_boy.o: Rano_htp_boy.h Rano_log.h Rano_post.h tls_module/tls_module.h
+$O/Rano_htp_modifier.o: Rano_htp_modifier.h
+$O/Rano_htp_util.o: Rano_htp_util.h Rano_htp_boy.h Rano_htp_modifier.h
+$O/Rano_log.o: Rano_log.h
+$O/Rano_module.o: Rano_module.h Rano_module_ary.h Rano_log.h Rano_myf.h Rano_txt_filter.h Rano_plugin_dev.h Rano_parent_proxy.h Rano_file_info.h
+$O/Rano_myf.o: Rano_myf.h Rano_log.h
+$O/Rano_parent_proxy.o: Rano_parent_proxy.h Rano_log.h
+$O/Rano_post.o: Rano_post.h
+$O/Rano_sset.o: Rano_sset.h
+$O/Rano_txt_filter.o: Rano_txt_filter.h
+$O/Rano_vtag_util.o: Rano_vtag_util.h
+$O/tls_module/tls_module.o: tls_module/tls.h

@@ -43,7 +43,8 @@ ZnkServer_create( const char* acceptable_host, int port )
 	server->acceptable_host_ = ( acceptable_host == NULL ) ? NULL : strdup(acceptable_host);
 
 	sock = ZnkSocket_open();
-	if( sock < 0 ){
+	//if( sock < 0 ){
+	if( ZnkSocket_isInvalid( sock ) ){
 		Znk_free(server);
 		return NULL;
 	}

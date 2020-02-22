@@ -140,7 +140,11 @@ ZnkBfr_shrink_to_fit( ZnkBfr zkbfr )
 
 uint8_t*
 ZnkBfr_data( ZnkBfr zkbfr ){
+#if !defined(NDEBUG)
+	return (uint8_t*)zkbfr->data_;
+#else
 	return zkbfr->data_;
+#endif
 }
 size_t
 ZnkBfr_size( const ZnkBfr zkbfr ){

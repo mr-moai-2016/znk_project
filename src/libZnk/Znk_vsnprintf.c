@@ -1483,10 +1483,10 @@ parsePercentFormat( const char* p, ZnkVSNPrintfCtx* vsnp_ctx, VAWrap* vawp )
 bool
 Znk_vsnprintf_general( ZnkVSNPrintfCtx* vsnp_ctx, const char* fmt, va_list ap )
 {
-#if defined(__GNUC__)
-#  pragma GCC diagnostic push
-#  pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-#endif
+//#if defined(__GNUC__)
+//#  pragma GCC diagnostic push
+//#  pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+//#endif
 	/***
 	 * このposの値は最終的にはfmtを展開して作られる文字列が何byteになるかを示すものとなる.
 	 * よってbuf_sizeの制限とは基本的に関係がない.
@@ -1587,9 +1587,9 @@ Znk_vsnprintf_general( ZnkVSNPrintfCtx* vsnp_ctx, const char* fmt, va_list ap )
 	 */
 	//return (int) pos;
 	return true;
-#if defined(__GNUC__)
-#  pragma GCC diagnostic pop
-#endif
+//#if defined(__GNUC__)
+//#  pragma GCC diagnostic pop
+//#endif
 }
 /*
  * endof Znk_vsnprintf_general

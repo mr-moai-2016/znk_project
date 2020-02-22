@@ -94,32 +94,32 @@ __mkg_sentinel_target__:
 
 # Install data rule.
 install_data:
-	@if not exist ..\..\patgen @mkdir ..\..\patgen 
-	@if not exist ..\..\patgen\apply_this_scripts\android @mkdir ..\..\patgen\apply_this_scripts\android 
-	@if not exist ..\..\patgen\apply_this_scripts\cygwin @mkdir ..\..\patgen\apply_this_scripts\cygwin 
-	@if not exist ..\..\patgen\apply_this_scripts\linux @mkdir ..\..\patgen\apply_this_scripts\linux 
-	@if not exist ..\..\patgen\apply_this_scripts\windows @mkdir ..\..\patgen\apply_this_scripts\windows 
-	@if exist "cert.pem" @$(CP) /F "cert.pem" ..\..\patgen\ $(CP_END)
-	@if exist "patgen.myf" @$(CP) /F "patgen.myf" ..\..\patgen\ $(CP_END)
-	@if exist "pat_make.bat" @$(CP) /F "pat_make.bat" ..\..\patgen\ $(CP_END)
-	@if exist "pat_make.sh" @$(CP) /F "pat_make.sh" ..\..\patgen\ $(CP_END)
-	@if exist "pat_diff.bat" @$(CP) /F "pat_diff.bat" ..\..\patgen\ $(CP_END)
-	@if exist "pat_diff.sh" @$(CP) /F "pat_diff.sh" ..\..\patgen\ $(CP_END)
-	@if exist "set_ver.bat" @$(CP) /F "set_ver.bat" ..\..\patgen\ $(CP_END)
-	@if exist "set_ver.sh" @$(CP) /F "set_ver.sh" ..\..\patgen\ $(CP_END)
-	@if exist "_zip_one.bat" @$(CP) /F "_zip_one.bat" ..\..\patgen\ $(CP_END)
-	@if exist "kick_zip.bat" @$(CP) /F "kick_zip.bat" ..\..\patgen\ $(CP_END)
-	@if exist "to_zip.sh" @$(CP) /F "to_zip.sh" ..\..\patgen\ $(CP_END)
-	@if exist "apply_this_scripts\android\*" @$(CP) /F "apply_this_scripts\android\*" ..\..\patgen\apply_this_scripts\android\ $(CP_END)
-	@if exist "apply_this_scripts\cygwin\*" @$(CP) /F "apply_this_scripts\cygwin\*" ..\..\patgen\apply_this_scripts\cygwin\ $(CP_END)
-	@if exist "apply_this_scripts\linux\*" @$(CP) /F "apply_this_scripts\linux\*" ..\..\patgen\apply_this_scripts\linux\ $(CP_END)
-	@if exist "apply_this_scripts\windows\*" @$(CP) /F "apply_this_scripts\windows\*" ..\..\patgen\apply_this_scripts\windows\ $(CP_END)
+	@if not exist ..\..\..\patgen @mkdir ..\..\..\patgen 
+	@if not exist ..\..\..\patgen\apply_this_scripts\android @mkdir ..\..\..\patgen\apply_this_scripts\android 
+	@if not exist ..\..\..\patgen\apply_this_scripts\cygwin @mkdir ..\..\..\patgen\apply_this_scripts\cygwin 
+	@if not exist ..\..\..\patgen\apply_this_scripts\linux @mkdir ..\..\..\patgen\apply_this_scripts\linux 
+	@if not exist ..\..\..\patgen\apply_this_scripts\windows @mkdir ..\..\..\patgen\apply_this_scripts\windows 
+	@if exist "cert.pem" @$(CP) /F "cert.pem" ..\..\..\patgen\ $(CP_END)
+	@if exist "patgen.myf" @$(CP) /F "patgen.myf" ..\..\..\patgen\ $(CP_END)
+	@if exist "pat_make.bat" @$(CP) /F "pat_make.bat" ..\..\..\patgen\ $(CP_END)
+	@if exist "pat_make.sh" @$(CP) /F "pat_make.sh" ..\..\..\patgen\ $(CP_END)
+	@if exist "pat_diff.bat" @$(CP) /F "pat_diff.bat" ..\..\..\patgen\ $(CP_END)
+	@if exist "pat_diff.sh" @$(CP) /F "pat_diff.sh" ..\..\..\patgen\ $(CP_END)
+	@if exist "set_ver.bat" @$(CP) /F "set_ver.bat" ..\..\..\patgen\ $(CP_END)
+	@if exist "set_ver.sh" @$(CP) /F "set_ver.sh" ..\..\..\patgen\ $(CP_END)
+	@if exist "_zip_one.bat" @$(CP) /F "_zip_one.bat" ..\..\..\patgen\ $(CP_END)
+	@if exist "kick_zip.bat" @$(CP) /F "kick_zip.bat" ..\..\..\patgen\ $(CP_END)
+	@if exist "to_zip.sh" @$(CP) /F "to_zip.sh" ..\..\..\patgen\ $(CP_END)
+	@if exist "apply_this_scripts\android\*" @$(CP) /F "apply_this_scripts\android\*" ..\..\..\patgen\apply_this_scripts\android\ $(CP_END)
+	@if exist "apply_this_scripts\cygwin\*" @$(CP) /F "apply_this_scripts\cygwin\*" ..\..\..\patgen\apply_this_scripts\cygwin\ $(CP_END)
+	@if exist "apply_this_scripts\linux\*" @$(CP) /F "apply_this_scripts\linux\*" ..\..\..\patgen\apply_this_scripts\linux\ $(CP_END)
+	@if exist "apply_this_scripts\windows\*" @$(CP) /F "apply_this_scripts\windows\*" ..\..\..\patgen\apply_this_scripts\windows\ $(CP_END)
 
 # Install exec rule.
 install_exec: $(EXE_FILE0)
-	@if not exist ..\..\patgen\$(PLATFORM) @mkdir ..\..\patgen\$(PLATFORM) 
-	@if exist "$(EXE_FILE0)" @$(CP) /F "$(EXE_FILE0)" ..\..\patgen\$(PLATFORM)\ $(CP_END)
-	@for %%a in ( $(RUNTIME_FILES) ) do @if exist "%%a" @$(CP) /F "%%a" ..\..\patgen\$(PLATFORM)\ $(CP_END)
+	@if not exist ..\..\..\znk_release\patgen\$(PLATFORM) @mkdir ..\..\..\znk_release\patgen\$(PLATFORM) 
+	@if exist "$(EXE_FILE0)" @$(CP) /F "$(EXE_FILE0)" ..\..\..\znk_release\patgen\$(PLATFORM)\ $(CP_END)
+	@for %%a in ( $(RUNTIME_FILES) ) do @if exist "%%a" @$(CP) /F "%%a" ..\..\..\znk_release\patgen\$(PLATFORM)\ $(CP_END)
 
 # Install dlib rule.
 install_dlib:
@@ -136,5 +136,5 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-main.obj: pat_diff.h pat_make.h
-pat_diff.obj: pat_diff.h
+$O\main.obj: pat_diff.h pat_make.h
+$O\pat_diff.obj: pat_diff.h

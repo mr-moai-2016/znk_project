@@ -268,9 +268,9 @@ clean:
 	rm -rf $O/ 
 
 # Src and Headers Dependency
-cgi_util.o: cgi_util.h
-evar1.o: cgi_util.h
-hello.o: cgi_util.h
-post1.o: cgi_util.h
-query_string1.o: cgi_util.h
-transfer_chunked.o: cgi_util.h
+$O/cgi_util.o: cgi_util.h
+$O/evar1.o: cgi_util.h
+$O/hello.o: cgi_util.h
+$O/post1.o: cgi_util.h
+$O/query_string1.o: cgi_util.h
+$O/transfer_chunked.o: cgi_util.h

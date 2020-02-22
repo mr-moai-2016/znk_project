@@ -123,11 +123,11 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-mkfgen.obj: Mkf_install.h Mkf_include.h Mkf_seek.h Mkf_src_depend.h Mkf_lib_depend.h Mkf_android.h Mkf_sset.h
-Mkf_android.obj: Mkf_android.h Mkf_seek.h Mkf_lib_depend.h Mkf_include.h
-Mkf_include.obj: Mkf_include.h
-Mkf_install.obj: Mkf_install.h
-Mkf_lib_depend.obj: Mkf_lib_depend.h
-Mkf_seek.obj: Mkf_seek.h
-Mkf_src_depend.obj: Mkf_src_depend.h Mkf_seek.h
-Mkf_sset.obj: Mkf_sset.h
+$O\mkfgen.obj: Mkf_install.h Mkf_include.h Mkf_seek.h Mkf_src_depend.h Mkf_lib_depend.h Mkf_android.h Mkf_sset.h
+$O\Mkf_android.obj: Mkf_android.h Mkf_seek.h Mkf_lib_depend.h Mkf_include.h
+$O\Mkf_include.obj: Mkf_include.h
+$O\Mkf_install.obj: Mkf_install.h
+$O\Mkf_lib_depend.obj: Mkf_lib_depend.h
+$O\Mkf_seek.obj: Mkf_seek.h
+$O\Mkf_src_depend.obj: Mkf_src_depend.h Mkf_seek.h
+$O\Mkf_sset.obj: Mkf_sset.h

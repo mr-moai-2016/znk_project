@@ -209,7 +209,7 @@ const EVP_PKEY_METHOD cmac_pkey_meth = {
 	Znk_DOTINIT( keygen_init, NULL ),
 	Znk_DOTINIT( keygen, pkey_cmac_keygen ),
 
-	Znk_DOTINIT( signctx_init, cmac_signctx_init ),
+	Znk_DOTINIT( sign_init, NULL ),
 	Znk_DOTINIT( sign, NULL ),
 
 	Znk_DOTINIT( verify_init, NULL ),
@@ -217,7 +217,7 @@ const EVP_PKEY_METHOD cmac_pkey_meth = {
 	Znk_DOTINIT( verify_recover_init, NULL ),
 	Znk_DOTINIT( verify_recover, NULL ),
 
-	Znk_DOTINIT( signctx_init, NULL ),
+	Znk_DOTINIT( signctx_init, cmac_signctx_init ),
 	Znk_DOTINIT( signctx, cmac_signctx ),
 	Znk_DOTINIT( verifyctx_init, NULL ),
 	Znk_DOTINIT( verifyctx, NULL ),

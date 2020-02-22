@@ -19,6 +19,8 @@ if "%MKF_ID%" == "android" goto For_Android
 	if exist mkf_triggers\__MACHINE_x64__         set MACHINE=x64
 	if exist mkf_triggers\__MACHINE_armeabi__     set MACHINE=armeabi
 	if exist mkf_triggers\__MACHINE_armeabi-v7a__ set MACHINE=armeabi-v7a
+	if exist mkf_triggers\__MACHINE_arm64-v8a__   set MACHINE=arm64-v8a
+	if exist mkf_triggers\__MACHINE_x86-64__      set MACHINE=x86-64
 	if not "%MACHINE%" == "" goto End
 	REM Default.
 	set MACHINE=armeabi

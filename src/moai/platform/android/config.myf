@@ -1,0 +1,99 @@
+@def_quote [' ']
+
+##
+# parent_proxy:
+#   現在使用中の外部プロキシ(Moaiが次に接続する先)であり、hostname:portという形式で指定する.
+#   外部プロキシを使用せず目的のサイトへ直接接続したい場合はここにNONEまたは:0または空値を設定する.
+#
+# post_confirm:
+#   HTTP POST時において確認画面を出すか否か.
+#   これが on の場合、post_confirm_hosts によって指定されたホストにおいては
+#   POST時に確認画面が出る
+#   offの場合はいかなるホストにおいても確認画面を出さない.
+#
+#   Easterに同様のしかしさらに強力な機能が導入されたため、Moai本体としてのこの機能は非推奨となった.
+#   将来のバージョンでは廃止するかもしれない.
+# 
+# enable_log_file:
+#   これが on の場合、tmpフォルダ内の log ファイルにすべてのログ情報を記録していく.
+#   ( log ファイルは最大10個まで作られ、それを超えた場合は最も古いものからリサイクルされる )
+#   off の場合、初期起動時の最低限のメッセージを除いては log ファイルにログ情報を記録しない.
+#   動画サイトなど、ログ情報が膨大なサイトを閲覧する場合は、ログファイルも大きくなりがちだが、
+#   これが気になる場合などにoffにしておくとよい.
+#
+# enable_log_verbose:
+#   Log情報をさらに詳細に書き出すか否かを切り替える.
+#   チェックボックスをクリックして値を切り替えた上で「Update」を押せば設定が反映される.
+#
+# blocking_mode:
+#   ソケット通信におけるブロッキング接続モードのon/offを切り替える.
+#   onのときブロッキング接続、offのとき非ブロッキング接続となるが、通常後者の方が快適に閲覧が可能であり、
+#   特に問題ない限りはoffでよい.
+#
+# filters_dir:
+#   Moaiが使用するフィルタファイルの置かれているディレクトリを示す.
+#   デフォルトでは filters ディレクトリ配下にこれが置かれているが
+#   その参照先を変更することができる.
+#   これは複数のフィルタを用意して適宜切り替えるなどの用途で便利である.
+#
+# profile_dir:
+#   Moaiが使用するプロファイルの置かれているディレクトリを示す.
+#   デフォルトでは ../moai_profile ディレクトリとなるが
+#   その参照先を変更することができる.
+#   プロファイルの配下にはCGIアプリケーションで使用する固有データや設定ファイルなどを格納することを想定している.
+#
+# acceptable_host:
+#   値として ANY または LOOPBACK を指定する.
+#   ANYを指定した場合、Moaiが起動している自マシン以外からの接続も許可する.
+#   正確に言えば、この場合 hosts.myf 内の access_allow_ips で指定したIPのみを受理し、それ以外からのIPの接続は拒絶する.
+#   LOOPBACKを指定した場合、それを許可せずMoaiが起動している自マシンからの自分自身への接続
+#   (Loopback接続)のみを許可する.
+#   現在のMoaiでは ANYでもなんら問題ないが、他マシンからの接続そのものを一切許可したくないなら
+#   これをLOOPBACKに指定しておいてもよい.
+#
+# server_name:
+#   acceptable_hostとして ANY を指定した場合において
+#   外部マシンからMoaiのWebサーバへアクセスする際にHTML内等で公開されるserver_nameとして使用される.
+#   例えばMoaiのWeb Configuration画面などではMoaiの起動しているサーバへのPOSTの必要があるが、
+#   その際に送信先情報として使われる.
+#
+#   現在のMoaiではこの値の意義は薄れてきており、将来のバージョンでは廃止するかもしれない.
+#
+# moai_port:
+#   Moaiがリッスンするポート番号を指定する.
+#   Moaiのローカルプロキシおよび認証されたウェブアクセスにおいてはこのポートを使用する.
+#   つまりMoaiはこのポートでアクセスしてきたホストをAuthenticHostとみなす.
+#
+#   AuthenticHostでは、より高機能なCGIの実行権限を与える.
+#   またユーザにとって秘匿性の高いファイルアクセスをAuthenticKey等の付属で認める一方、
+#   どのようなXMLHttpRequest(JavascriptからHTTPを発行する機能)が含まれているか一般に予測不能な危険性のあるファイルのアクセスは
+#   AuthenticHostからは認めない.
+#
+# xhr_dmz_port:
+#   MoaiがXhrDMZ(XMLHttpRequest DMZ)として使用するポート番号を指定する.
+#   Moaiはこのポートでアクセスして来たホストをXhrDMZとみなす.
+#   その際に指定するポート番号はmoai_portとは異なるものを指定すること.
+#   これが空の場合はデフォルトで8125となる.
+#   acceptable_hostがANYの場合はプライベートIPアドレスを自動的に取得し、それをXhrDMZとして使う.
+#   acceptable_hostがLOOPBACKの場合は127.0.0.1をXhrDMZとして使う.
+#
+#   XhrDMZでは、CGIの実行がより限定されたものになる.
+#   またユーザにとって秘匿性の高いファイルアクセスを禁止する一方、
+#   どのようなXMLHttpRequest(JavascriptからHTTPを発行する機能)が含まれているか一般に予測不能な危険性のあるファイルのアクセスは
+#   XhrDMZからのみ認める.
+#
+@@V config
+parent_proxy = [':0']
+post_confirm = ['off']
+enable_log_file = ['on']
+enable_log_verbose = ['off']
+blocking_mode = ['off']
+filters_dir = ['/sdcard/moai_profile/filters']
+profile_dir = ['/sdcard/moai_profile']
+
+acceptable_host = ['LOOPBACK']
+server_name = ['']
+moai_port = ['8124']
+xhr_dmz_port = ['8125']
+@@.
+

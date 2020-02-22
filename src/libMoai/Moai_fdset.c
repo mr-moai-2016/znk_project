@@ -166,7 +166,7 @@ MoaiFdSet_procConnectionTimeout( MoaiFdSet mfds )
 		 * erase処理を伴うため、逆順に取り出す.
 		 */
 		cncting_sock = ZnkSocketAry_at( mfds->connecting_socks_, size-1-idx );
-		if( cncting_sock == ZnkSocket_INVALID ){
+		if( ZnkSocket_isInvalid( cncting_sock ) ){
 			MoaiFdSet_removeConnectingSock( mfds, cncting_sock );
 			continue;
 		}
@@ -178,7 +178,7 @@ MoaiFdSet_procConnectionTimeout( MoaiFdSet mfds )
 				ZnkSocket_close( mcn->O_sock_ );
 				RanoLog_printf( "procOnnectionTimeout : [%s:%u] Interrupt connecting by Timeout. close sock=[%d]\n",
 						ZnkStr_cstr(mcn->hostname_), mcn->port_, mcn->O_sock_ );
-				mcn->O_sock_ = ZnkSocket_INVALID;
+				mcn->O_sock_ = ZnkSocket_getInvalid();
 			}
 		}
 	}
@@ -187,6 +187,7 @@ MoaiFdSet_procConnectionTimeout( MoaiFdSet mfds )
 int
 MoaiFdSet_select( MoaiFdSet mfds, bool* req_before_report, MoaiFdSetFuncArg_Report* fnca_report )
 {
+	const ZnkSocket invalid_sock = ZnkSocket_getInvalid();
 	ZnkFdSet fdst_read      = mfds->fdst_read_;
 	ZnkFdSet fdst_write     = mfds->fdst_write_;
 	ZnkFdSet fdst_observe_r = mfds->fdst_observe_r_;
@@ -201,16 +202,16 @@ MoaiFdSet_select( MoaiFdSet mfds, bool* req_before_report, MoaiFdSetFuncArg_Repo
 	ZnkFdSet_copy( fdst_write, fdst_observe_w );
 	
 	/***
-	 * ZnkSocket_INVALID(=-1)の場合は除外するように注意すること.
+	 * INVALID の場合は除外するように注意すること.
 	 * 特にZnkSocketはunsigned 整数として定義してあるので
-	 * この場合、下記のZnk_MAXはZnkSocket_INVALIDを返し、
-	 * maxfdの値が-1としてselectに渡されてしまう.
+	 * この場合、下記のZnk_MAXは INVALID を返し、
+	 * maxfdの値が INVALID としてselectに渡されてしまう.
 	 */
 	maxfd_r = ZnkFdSet_getMaxOfSocket( fdst_read );
 	maxfd_w = ZnkFdSet_getMaxOfSocket( fdst_write );
-	if( maxfd_r != ZnkSocket_INVALID && maxfd_w != ZnkSocket_INVALID ){
+	if( maxfd_r != invalid_sock && maxfd_w != invalid_sock ){
 		maxfd = Znk_MAX( maxfd_r, maxfd_w );
-	} else if( maxfd_r != ZnkSocket_INVALID ){
+	} else if( maxfd_r != invalid_sock ){
 		maxfd = maxfd_r;
 	} else {
 		maxfd = maxfd_w;
@@ -251,6 +252,7 @@ MoaiFdSet_select( MoaiFdSet mfds, bool* req_before_report, MoaiFdSetFuncArg_Repo
 static void
 adoptReserveSocks( ZnkFdSet fdst_observe_r, ZnkSocketAry reserve_socks, ZnkSocketAry wk_sock_ary )
 {
+	const ZnkSocket invalid_sock = ZnkSocket_getInvalid();
 	size_t idx;
 	size_t size;
 	ZnkSocket sock;
@@ -262,7 +264,7 @@ adoptReserveSocks( ZnkFdSet fdst_observe_r, ZnkSocketAry reserve_socks, ZnkSocke
 			/* marking erase */
 			updated = true;
 			RanoLog_printf( "  Moai : adoptReserveSocks [%d] under fdst_observe_r.\n", sock );
-			ZnkSocketAry_set( reserve_socks, idx, ZnkSocket_INVALID );
+			ZnkSocketAry_set( reserve_socks, idx, invalid_sock );
 		}
 	}
 	/* compaction */
@@ -270,7 +272,7 @@ adoptReserveSocks( ZnkFdSet fdst_observe_r, ZnkSocketAry reserve_socks, ZnkSocke
 		ZnkSocketAry_clear( wk_sock_ary );
 		for( idx=0; idx<size; ++idx ){ 
 			sock = ZnkSocketAry_at( reserve_socks, idx );
-			if( sock != ZnkSocket_INVALID ){
+			if( sock != invalid_sock ){
 				ZnkSocketAry_push_bk( wk_sock_ary, sock );
 			}
 		}
@@ -368,9 +370,10 @@ MoaiFdSet_process( MoaiFdSet mfds,
 	 * connectの完了の捕捉などで使用.
 	 */
 	{
+		const ZnkSocket invalid_sock = ZnkSocket_getInvalid();
 		size_t cnt_idx;
 		const size_t cnt_size = ZnkSocketAry_size( mfds->connecting_socks_ );
-		ZnkSocket connecting_sock = ZnkSocket_INVALID;
+		ZnkSocket connecting_sock = invalid_sock;
 
 		/***
 		 * mfds->connecting_socks_は MoaiConnection_invokeCallback( mcn, mfds ) 呼び出しで
@@ -383,7 +386,7 @@ MoaiFdSet_process( MoaiFdSet mfds,
 			if( ZnkFdSet_isset( fdst_write, connecting_sock ) ){
 				/* OK. */
 				MoaiConnection mcn = MoaiConnection_find_byOSock( connecting_sock );
-				ZnkSocketAry_set( mfds->connecting_socks_, cnt_idx, ZnkSocket_INVALID );
+				ZnkSocketAry_set( mfds->connecting_socks_, cnt_idx, invalid_sock );
 				if( mcn ){
 					MoaiConnection_setConnectInprogress( mcn, false );
 					RanoLog_printf( "  Connection Inprogress Completed : sock=[%d]\n", connecting_sock );
@@ -402,7 +405,7 @@ MoaiFdSet_process( MoaiFdSet mfds,
 		if( cnt_size ){
 			for( cnt_idx=cnt_size-1; cnt_idx > 0; --cnt_idx ){
 				connecting_sock = ZnkSocketAry_at( mfds->connecting_socks_, cnt_idx );
-				if( connecting_sock == ZnkSocket_INVALID ){
+				if( connecting_sock == invalid_sock ){
 					ZnkSocketAry_erase_byIdx( mfds->connecting_socks_, cnt_idx );
 				}
 			}

@@ -123,9 +123,9 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-cgi_helper.obj: cgi_helper.h
-docgen.obj: Doc_html.h
-Doc_html.obj: Doc_html.h Doc_util.h
-Doc_source.obj: Doc_source.h Doc_util.h
-Doc_util.obj: Doc_util.h
-main.obj: cgi_helper.h Doc_html.h Doc_source.h
+$O\cgi_helper.obj: cgi_helper.h
+$O\docgen.obj: Doc_html.h
+$O\Doc_html.obj: Doc_html.h Doc_util.h
+$O\Doc_source.obj: Doc_source.h Doc_util.h
+$O\Doc_util.obj: Doc_util.h
+$O\main.obj: cgi_helper.h Doc_html.h Doc_source.h

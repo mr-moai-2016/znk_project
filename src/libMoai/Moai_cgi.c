@@ -548,7 +548,7 @@ appointCGISockAsExile( ZnkSocket sock )
 			 * sock を Exile に戻す.
 			 * 自動抹殺の対象とする.
 			 */
-			mcn->O_sock_ = ZnkSocket_INVALID;
+			mcn->O_sock_ = ZnkSocket_getInvalid();
 		}
 	}
 }
@@ -1077,10 +1077,10 @@ runCGIProcess_forWin32( const char* cmd, const char* curdir_new, ZnkSocket sock,
 		mcn = MoaiConnection_find_byISock( sock );
 		if( mcn ){
 			ZnkSocket O_sock = MoaiConnection_O_sock( mcn );
-			if( O_sock == ZnkSocket_INVALID ){
+			if( ZnkSocket_isInvalid( O_sock ) ){
 				/***
 				 * Exile sockとして自動抹殺されてしまうのを防止するため、
-				 * O_sock に ZnkSocket_INVALID 以外の値を強制的に代入しておく.
+				 * O_sock に INVALID 以外の値を強制的に代入しておく.
 				 * sock と同じ値でよいだろう.
 				 */
 				mcn->O_sock_ = sock;
@@ -1419,10 +1419,10 @@ runCGIProcess_forUNIX( const char* cmd, const char* curdir_new, ZnkSocket sock,
 		mcn = MoaiConnection_find_byISock( sock );
 		if( mcn ){
 			ZnkSocket O_sock = MoaiConnection_O_sock( mcn );
-			if( O_sock == ZnkSocket_INVALID ){
+			if( ZnkSocket_isInvalid( O_sock ) ){
 				/***
 				 * Exile sockとして自動抹殺されてしまうのを防止するため、
-				 * O_sock に ZnkSocket_INVALID 以外の値を強制的に代入しておく.
+				 * O_sock に INVALID 以外の値を強制的に代入しておく.
 				 * sock と同じ値でよいだろう.
 				 */
 				mcn->O_sock_ = sock;

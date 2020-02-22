@@ -82,8 +82,8 @@ OBJS0=\
 	$O\Est_unid.obj \
 	$O\main.obj \
 
-BASENAME1=cache_task
-EXE_FILE1=$O\cache_task.cgi
+BASENAME1=easter_maintainer
+EXE_FILE1=$O\easter_maintainer.cgi
 OBJS1=\
 	$O\Est_assort.obj \
 	$O\Est_assort_list.obj \
@@ -122,7 +122,7 @@ OBJS1=\
 	$O\Est_ui.obj \
 	$O\Est_ui_base.obj \
 	$O\Est_unid.obj \
-	$O\cache_task.obj \
+	$O\easter_maintainer.obj \
 
 SUB_LIBS=\
 
@@ -231,7 +231,7 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-$O\cache_task.obj: Est_search_manager.h Est_config.h Est_base.h Est_sqi.h Est_recentory.h Est_box.h
+$O\easter_maintainer.obj: Est_search_manager.h Est_config.h Est_base.h Est_sqi.h Est_recentory.h Est_box.h
 $O\Est_assort.obj: Est_assort.h Est_config.h Est_ui.h Est_recentory.h Est_base.h Est_dir_util.h Est_tag.h
 $O\Est_assort_list.obj: Est_assort_list.h Est_config.h Est_ui.h Est_box.h Est_base.h Est_assort.h Est_assort_ui.h
 $O\Est_assort_ui.obj: Est_assort_ui.h Est_config.h Est_ui_base.h Est_unid.h

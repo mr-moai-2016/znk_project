@@ -26,10 +26,10 @@ allocConnection( void )
 	 * 仮に0をcloseすると0番が不使用になるため、ZnkSocket_openで値0のsocketが発行されるようになる.
 	 * これがさらにselectに渡されるとselectが EBADF エラーを出し、サーバとしての機能が
 	 * 激しく撹乱される事態に陥る.
-	 * そのため、ここで確実にZnkSocket_INVALIDで初期化しておくことが重要である.
+	 * そのため、ここで確実にINVALIDで初期化しておくことが重要である.
 	 */
-	mcn->I_sock_ = ZnkSocket_INVALID;
-	mcn->O_sock_ = ZnkSocket_INVALID;
+	mcn->I_sock_ = ZnkSocket_getInvalid();
+	mcn->O_sock_ = ZnkSocket_getInvalid();
 	return mcn;
 }
 static void
@@ -111,7 +111,7 @@ MoaiConnection_regist( const char* hostname, uint16_t port,
 	MoaiConnection_initiate();
 	mcn = MoaiConnection_find_byISock( I_sock );
 	if( mcn == NULL ){
-		mcn = MoaiConnection_find_byISock( ZnkSocket_INVALID );
+		mcn = MoaiConnection_find_byISock( ZnkSocket_getInvalid() );
 		if( mcn == NULL ){
 			mcn = allocConnection();
 			ZnkObjAry_push_bk( st_connection_ary, (ZnkObj)mcn );
@@ -134,15 +134,15 @@ MoaiConnection_connectO( const char* goal_hostname, uint16_t goal_port,
 	MoaiConnection_initiate();
 	mcn = MoaiConnection_find_byISock( I_sock );
 	if( mcn == NULL ){
-		mcn = MoaiConnection_find_byISock( ZnkSocket_INVALID );
+		mcn = MoaiConnection_find_byISock( ZnkSocket_getInvalid() );
 		if( mcn == NULL ){
 			mcn = allocConnection();
 			ZnkObjAry_push_bk( st_connection_ary, (ZnkObj)mcn );
 		}
-		mcn->O_sock_ = ZnkSocket_INVALID;
+		mcn->O_sock_ = ZnkSocket_getInvalid();
 	}
 
-	if( mcn->O_sock_ == ZnkSocket_INVALID ){
+	if( ZnkSocket_isInvalid( mcn->O_sock_ ) ){
 		ZnkErr_D( err );
 		if( !ZnkStr_eq( mcn->hostname_, goal_hostname ) ){
 			ZnkStr_set( mcn->hostname_, goal_hostname );
@@ -172,7 +172,7 @@ MoaiConnection_connectO( const char* goal_hostname, uint16_t goal_port,
 			RanoLog_printf( "  MoaiConnection_connectO : Error : cnct_host=[%s:%u] [%s] close O_sock=[%d]\n",
 					cnct_hostname, cnct_port, ZnkErr_cstr(err), mcn->O_sock_ );
 			ZnkSocket_close( mcn->O_sock_ );
-			mcn->O_sock_ = ZnkSocket_INVALID;
+			mcn->O_sock_ = ZnkSocket_getInvalid();
 		} else if( mcn->is_connect_inprogress_ ){
 			mcn->connect_begin_time_ = (uint64_t)getCurrentSec();
 		} else {
@@ -200,7 +200,7 @@ MoaiConnection_connectFromISock( const char* hostname, uint16_t port, ZnkSocket 
 
 	mcn = MoaiConnection_connectO( hostname, port, cnct_hostname, cnct_port, I_sock, mfds );
 	O_sock = MoaiConnection_O_sock( mcn );
-	if( O_sock == ZnkSocket_INVALID ){
+	if( ZnkSocket_isInvalid( O_sock ) ){
 		RanoLog_printf( "  %s : Error connectO : goal_host=[%s:%u] cnct_host=[%s:%u]\n",
 				label, hostname, port, cnct_hostname, cnct_port );
 		return false;
@@ -317,22 +317,23 @@ void
 MoaiConnection_clear( MoaiConnection mcn, MoaiFdSet mfds )
 {
 	if( mcn ){
+		const ZnkSocket invalid_sock = ZnkSocket_getInvalid();
 		ZnkStr_clear( mcn->hostname_ );
-		if( mfds && mcn->I_sock_ != ZnkSocket_INVALID ){
+		if( mfds && mcn->I_sock_ != invalid_sock ){
 			ZnkFdSet fdst_observe_r = MoaiFdSet_fdst_observe_r( mfds );
 			ZnkFdSet_clr( fdst_observe_r, mcn->I_sock_ );
 			ZnkSocket_close( mcn->I_sock_ );
 		}
-		if( mfds && mcn->O_sock_ != ZnkSocket_INVALID ){
+		if( mfds && mcn->O_sock_ != invalid_sock ){
 			ZnkFdSet fdst_observe_r = MoaiFdSet_fdst_observe_r( mfds );
 			MoaiFdSet_removeConnectingSock( mfds, mcn->O_sock_ );
 			ZnkFdSet_clr( fdst_observe_r, mcn->O_sock_ );
 			ZnkSocket_close( mcn->O_sock_ );
 		}
 		mcn->port_            = 0;
-		mcn->I_sock_          = ZnkSocket_INVALID;
+		mcn->I_sock_          = invalid_sock;
 		mcn->I_is_keep_alive_ = false;
-		mcn->O_sock_          = ZnkSocket_INVALID;
+		mcn->O_sock_          = invalid_sock;
 		mcn->req_content_length_remain_ = 0;
 		RanoLog_printf( "  mcn->req_content_length_remain_=0 (MoaiConnection_clear)\n" );
 		mcn->res_content_length_remain_ = 0;

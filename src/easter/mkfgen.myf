@@ -38,6 +38,10 @@ linking_libs_special = ['pthread dl stdc++']
 linking_libs_special = ['pthread dl stdc++']
 @@.
 
+@@V info_android
+compiler_option_special = ['-Wno-invalid-source-encoding']
+@@.
+
 @@L mkid_list
 vc
 mingw
@@ -49,7 +53,7 @@ android
 
 @@L product_list
 exec easter main.c
-exec cache_task cache_task.c
+exec easter_maintainer easter_maintainer.c
 @@.
 
 @@L rc_list

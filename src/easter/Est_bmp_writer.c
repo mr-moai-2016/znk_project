@@ -14,12 +14,14 @@ typedef struct tagRGBQuad {
 	uint8_t rgbReserved;
 } RGBQuad;
 
+#if 0
 Znk_INLINE bool
 fwrite_withCheck( const uint8_t* ptr, size_t size, ZnkFile fp )
 {
 	size_t result = Znk_fwrite( ptr, size, fp );
 	return (bool)( result == size );
 }
+#endif
 Znk_INLINE bool
 isNeedSwap( bool is_LE )
 {

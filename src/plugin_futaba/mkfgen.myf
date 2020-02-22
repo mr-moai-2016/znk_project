@@ -42,6 +42,7 @@ template_lib_file_special = ['cyg$[lib_name]$.$[lib_sfx]$']
 
 @@V info_android
 template_lib_file_special = ['$[lib_name]$.$[lib_sfx]$']
+compiler_option_special = ['-Wno-invalid-source-encoding']
 @@.
 
 @@L mkid_list

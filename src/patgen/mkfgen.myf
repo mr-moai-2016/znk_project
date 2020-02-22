@@ -3,8 +3,8 @@
 @@V config
 my_libs_root = ['..']
 template_dir = ['../../mkfsys/template']
-install_dir = ['../../patgen']
-install_exec_dir = ['../../patgen/$(PLATFORM)']
+install_dir = ['../../../patgen']
+install_exec_dir = ['../../../znk_release/patgen/$(PLATFORM)']
 makefile_version_landmark = ['moai']
 @@.
 

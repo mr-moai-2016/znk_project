@@ -10,6 +10,8 @@ if exist mkf_triggers/__MACHINE_x86__         set MACHINE=x86
 if exist mkf_triggers/__MACHINE_x64__         set MACHINE=x64
 if exist mkf_triggers/__MACHINE_armeabi__     set MACHINE=armeabi
 if exist mkf_triggers/__MACHINE_armeabi-v7a__ set MACHINE=armeabi-v7a
+if exist mkf_triggers/__MACHINE_arm64-v8a__   set MACHINE=arm64-v8a
+if exist mkf_triggers/__MACHINE_x86-64__      set MACHINE=x86-64
 if not exist %MKFSYS_DIR% goto Error_InvalidMkfSysDir
 echo === Welcome to auto_trigger[%~n1] console menu ===
 echo === You can move the cursor by pressing arrow or HJKL key, 

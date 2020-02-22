@@ -19,20 +19,29 @@ DLIBS_DIR=dlib\$(PLATFORM)
 SLIBS_DIR=slib\$(PLATFORM)
 
 PLATFORMS_LIST=$(wildcard $(ZNK_NDK_DIR)/platforms/android-*)
-PLATFORMS_LEVEL=$(findstring $(ZNK_NDK_DIR)/platforms/android-9, $(PLATFORMS_LIST))
-ifndef PLATFORMS_LEVEL
-  PLATFORMS_LEVEL=$(word 1, $(PLATFORMS_LIST))
+
+# Android 4.0
+PLATFORMS_LEVEL4=$(findstring $(ZNK_NDK_DIR)/platforms/android-9, $(PLATFORMS_LIST))
+ifndef PLATFORMS_LEVEL4
+  PLATFORMS_LEVEL4=$(word 1, $(PLATFORMS_LIST))
+endif
+
+# Android 5.0 later
+PLATFORMS_LEVEL5=$(findstring $(ZNK_NDK_DIR)/platforms/android-21, $(PLATFORMS_LIST))
+ifndef PLATFORMS_LEVEL5
+  PLATFORMS_LEVEL5=$(word 1, $(PLATFORMS_LIST))
 endif
 
 ifeq ($(MACHINE), armeabi)
 TOOLCHAINS_LIST=$(wildcard $(ZNK_NDK_DIR)/toolchains/arm-linux-androideabi-*/prebuilt/windows)
 TOOLCHAINS_DIR=$(word $(words $(TOOLCHAINS_LIST)), $(TOOLCHAINS_LIST) )
+PLATFORMS_LEVEL=$(PLATFORMS_LEVEL4)
 
 COMPILER := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc \
 	-MMD -MP \
 	-fpic -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv5te -mtune=xscale -msoft-float -mthumb -Os \
 	-g -DNDEBUG -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 \
-	-DANDROID -fPIE \
+	-DANDROID \
 	-Wa,--noexecstack -Wformat -Werror=format-security -Wall -DLIBRESSL_INTERNAL -D__BEGIN_HIDDEN_DECLS= -D__END_HIDDEN_DECLS= \
 	-DOPENSSL_NO_HW_PADLOCK -DOPENSSL_NO_ASM \
 	-I$(PLATFORMS_LEVEL)/arch-arm/usr/include
@@ -41,14 +50,15 @@ LINKER   := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-g++ \
 	--sysroot=$(PLATFORMS_LEVEL)/arch-arm \
 
 RPATH_LINK := -Wl,-rpath-link=$(PLATFORMS_LEVEL)/arch-arm/usr/lib -Wl,-rpath-link=$O
-LINKER_OPT := -no-canonical-prefixes  -Wl,--no-undefined -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -mthumb -fPIE  -lc -lm
+LINKER_OPT := -no-canonical-prefixes  -Wl,--no-undefined -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -mthumb -lc -lm
 STRIP_UNNEEDED := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-strip --strip-unneeded
 LIBAR := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc-ar
-
 endif
+
 ifeq ($(MACHINE), armeabi-v7a)
 TOOLCHAINS_LIST=$(wildcard $(ZNK_NDK_DIR)/toolchains/arm-linux-androideabi-*/prebuilt/windows)
 TOOLCHAINS_DIR=$(word $(words $(TOOLCHAINS_LIST)), $(TOOLCHAINS_LIST) )
+PLATFORMS_LEVEL=$(PLATFORMS_LEVEL4)
 
 COMPILER := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc \
 	-MMD -MP \
@@ -66,11 +76,12 @@ RPATH_LINK := -Wl,-rpath-link=$(PLATFORMS_LEVEL)/arch-arm/usr/lib -Wl,-rpath-lin
 LINKER_OPT := -no-canonical-prefixes -march=armv7-a -Wl,--fix-cortex-a8  -Wl,--no-undefined -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -mthumb -fPIE  -lc -lm
 STRIP_UNNEEDED := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-strip --strip-unneeded
 LIBAR := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc-ar
-
 endif
+
 ifeq ($(MACHINE), x86)
 TOOLCHAINS_LIST=$(wildcard $(ZNK_NDK_DIR)/toolchains/x86-*/prebuilt/windows)
 TOOLCHAINS_DIR=$(word $(words $(TOOLCHAINS_LIST)), $(TOOLCHAINS_LIST) )
+PLATFORMS_LEVEL=$(PLATFORMS_LEVEL4)
 
 COMPILER := $(TOOLCHAINS_DIR)/bin/i686-linux-android-gcc \
 	-MMD -MP \
@@ -88,8 +99,36 @@ RPATH_LINK := -Wl,-rpath-link=$(PLATFORMS_LEVEL)/arch-x86/usr/lib -Wl,-rpath-lin
 LINKER_OPT := -no-canonical-prefixes  -Wl,--no-undefined -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -fPIE  -lc -lm
 STRIP_UNNEEDED := $(TOOLCHAINS_DIR)/bin/i686-linux-android-strip --strip-unneeded
 LIBAR := $(TOOLCHAINS_DIR)/bin/i686-linux-android-gcc-ar
-
 endif
+
+ifeq ($(MACHINE), arm64-v8a)
+TOOLCHAINS_LIST=$(wildcard $(ZNK_NDK_DIR)/toolchains/aarch64-linux-android-*/prebuilt/windows)
+TOOLCHAINS_DIR=$(word $(words $(TOOLCHAINS_LIST)), $(TOOLCHAINS_LIST) )
+PLATFORMS_LEVEL=$(PLATFORMS_LEVEL5)
+
+COMPILER := $(ZNK_NDK_DIR)/toolchains/llvm/prebuilt/windows/bin/clang \
+	-gcc-toolchain $(TOOLCHAINS_DIR) -target aarch64-none-linux-android \
+	-fPIC -ffunction-sections -funwind-tables -fstack-protector-strong -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -no-canonical-prefixes \
+	-g -O2 -DNDEBUG \
+	-DANDROID -fPIE \
+	-Wa,--noexecstack -Wformat -Werror=format-security -Wall -DLIBRESSL_INTERNAL -D__BEGIN_HIDDEN_DECLS= -D__END_HIDDEN_DECLS= \
+	-DOPENSSL_NO_HW_PADLOCK -DOPENSSL_NO_ASM --sysroot $(ZNK_NDK_DIR)/platforms/android-21/arch-arm64 \
+	-I$(PLATFORMS_LEVEL)/arch-arm64/usr/include \
+
+LINKER   := $(ZNK_NDK_DIR)/toolchains/llvm/prebuilt/windows/bin/clang++ \
+	--sysroot=$(PLATFORMS_LEVEL)/arch-arm64 \
+	-gcc-toolchain $(TOOLCHAINS_DIR) \
+
+RPATH_LINK := -Wl,-rpath-link=$(PLATFORMS_LEVEL)/arch-arm64/usr/lib -Wl,-rpath-link=$O
+LINKER_OPT := -no-canonical-prefixes -target aarch64-none-linux-android \
+	-Wl,--build-id -Wl,--no-undefined -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now \
+	-Wl,--warn-shared-textrel -Wl,--fatal-warnings -fPIE \
+	-lc -lm
+
+STRIP_UNNEEDED := $(TOOLCHAINS_DIR)/bin/aarch64-linux-android-strip --strip-unneeded 
+LIBAR := $(TOOLCHAINS_DIR)/bin/aarch64-linux-android-gcc-ar
+endif
+
 
 CP=xcopy /H /C /Y
 INCLUDE_FLAG+=  \
@@ -258,41 +297,41 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-bio_ssl.o: ssl_locl.h
-bs_ber.o: bytestring.h
-bs_cbb.o: bytestring.h
-bs_cbs.o: bytestring.h
-d1_both.o: ssl_locl.h bytestring.h
-d1_clnt.o: ssl_locl.h bytestring.h
-d1_enc.o: ssl_locl.h
-d1_lib.o: ssl_locl.h
-d1_meth.o: ssl_locl.h
-d1_pkt.o: ssl_locl.h bytestring.h
-d1_srtp.o: ssl_locl.h bytestring.h srtp.h
-d1_srvr.o: ssl_locl.h
-s3_cbc.o: ssl_locl.h
-s3_lib.o: ssl_locl.h bytestring.h
-ssl_algs.o: ssl_locl.h
-ssl_asn1.o: ssl_locl.h bytestring.h
-ssl_both.o: ssl_locl.h bytestring.h
-ssl_cert.o: ssl_locl.h
-ssl_ciph.o: ssl_locl.h
-ssl_clnt.o: ssl_locl.h bytestring.h ssl_tlsext.h
-ssl_err.o: ssl_locl.h
-ssl_init.o: ssl_locl.h
-ssl_lib.o: ssl_locl.h bytestring.h
-ssl_packet.o: ssl_locl.h bytestring.h
-ssl_pkt.o: ssl_locl.h bytestring.h
-ssl_rsa.o: ssl_locl.h
-ssl_sess.o: ssl_locl.h
-ssl_srvr.o: ssl_locl.h bytestring.h ssl_tlsext.h
-ssl_stat.o: ssl_locl.h
-ssl_tlsext.o: ssl_locl.h bytestring.h ssl_tlsext.h
-ssl_txt.o: ssl_locl.h
-ssl_versions.o: ssl_locl.h
-t1_clnt.o: ssl_locl.h
-t1_enc.o: ssl_locl.h
-t1_hash.o: ssl_locl.h
-t1_lib.o: ssl_locl.h bytestring.h ssl_tlsext.h
-t1_meth.o: ssl_locl.h
-t1_srvr.o: ssl_locl.h
+$O\bio_ssl.o: ssl_locl.h
+$O\bs_ber.o: bytestring.h
+$O\bs_cbb.o: bytestring.h
+$O\bs_cbs.o: bytestring.h
+$O\d1_both.o: ssl_locl.h bytestring.h
+$O\d1_clnt.o: ssl_locl.h bytestring.h
+$O\d1_enc.o: ssl_locl.h
+$O\d1_lib.o: ssl_locl.h
+$O\d1_meth.o: ssl_locl.h
+$O\d1_pkt.o: ssl_locl.h bytestring.h
+$O\d1_srtp.o: ssl_locl.h bytestring.h srtp.h
+$O\d1_srvr.o: ssl_locl.h
+$O\s3_cbc.o: ssl_locl.h
+$O\s3_lib.o: ssl_locl.h bytestring.h
+$O\ssl_algs.o: ssl_locl.h
+$O\ssl_asn1.o: ssl_locl.h bytestring.h
+$O\ssl_both.o: ssl_locl.h bytestring.h
+$O\ssl_cert.o: ssl_locl.h
+$O\ssl_ciph.o: ssl_locl.h
+$O\ssl_clnt.o: ssl_locl.h bytestring.h ssl_tlsext.h
+$O\ssl_err.o: ssl_locl.h
+$O\ssl_init.o: ssl_locl.h
+$O\ssl_lib.o: ssl_locl.h bytestring.h
+$O\ssl_packet.o: ssl_locl.h bytestring.h
+$O\ssl_pkt.o: ssl_locl.h bytestring.h
+$O\ssl_rsa.o: ssl_locl.h
+$O\ssl_sess.o: ssl_locl.h
+$O\ssl_srvr.o: ssl_locl.h bytestring.h ssl_tlsext.h
+$O\ssl_stat.o: ssl_locl.h
+$O\ssl_tlsext.o: ssl_locl.h bytestring.h ssl_tlsext.h
+$O\ssl_txt.o: ssl_locl.h
+$O\ssl_versions.o: ssl_locl.h
+$O\t1_clnt.o: ssl_locl.h
+$O\t1_enc.o: ssl_locl.h
+$O\t1_hash.o: ssl_locl.h
+$O\t1_lib.o: ssl_locl.h bytestring.h ssl_tlsext.h
+$O\t1_meth.o: ssl_locl.h
+$O\t1_srvr.o: ssl_locl.h

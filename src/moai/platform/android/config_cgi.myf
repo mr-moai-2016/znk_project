@@ -1,0 +1,192 @@
+@def_quote [' ']
+
+##
+# interpreter_<platform_id> セクション
+#
+# Moaiは以下の指定で左の拡張子を持つファイルのみCGIスクリプトとみなす.
+# それ以外のファイルはCGIスクリプトとはみなされない.
+# また右辺値が空でない場合、その値はそのCGIスクリプトを実行するためのインタープリタのパスとみなされる.
+# 右辺値が空である場合、そのCGIスクリプトはインタープリタなしで自立して実行可能であることを示す.
+#
+# 例. Windowsの場合
+#   php = ['C:\my_interpreters\php-4.4.6-Win32\php.exe']
+# 例. Linuxなどの場合
+#   php = ['/usr/bin/php-cgi -q']
+#
+# しかしLinuxなど、シェル上でテキストなスクリプトファイルが起動可能な環境では
+# 最初の行に #! 指定(これをshebangと呼ぶ)が使えるので
+# そのようにした上で右の値は空値にして自立実行させることも勿論可能である.
+#
+@@V interpreter_windows
+php = ['C:\my_interpreters\php\php-4.4.6-Win32\php.exe']
+rb  = ['C:\my_interpreters\ruby-1.8.4\bin\ruby.exe']
+go  = ['C:\my_interpreters\go\bin\go.exe run']
+cgi = ['']
+@@.
+
+@@V interpreter_linux
+php = ['/usr/bin/php-cgi -q']
+rb  = ['']
+go  = ['/usr/local/bin/go run']
+cgi = ['']
+@@.
+
+@@V interpreter_cygwin
+php = ['/cygdrive/c/my_interpreters/php/php-4.4.6-Win32/php.exe']
+rb  = ['']
+go  = ['/usr/local/bin/go run']
+cgi = ['']
+@@.
+
+@@V interpreter_android
+cgi = ['']
+sh  = ['/system/bin/sh']
+@@.
+
+##
+# urp_alias_list セクション
+#
+# MoaiはURLの第1番目の / から第2番目の / までに続く部分の文字列を別の文字列へ置換することができる.
+# これをMoaiではURPAliasと呼ぶ.
+# これは長いURPを単に簡略化するだけのために導入された機能である.
+#
+# 以下の指定では、左値のパターンを右値のパターンで置換する.
+# (複数指定可能)
+#
+# 例. 
+#     easter = ['cgis/easter/easter.cgi']
+#
+#     /easter     だけの場合は /cgis/easter/easter.cgi
+#     /easter/... と続く場合は /cgis/easter/easter.cgi/...
+#     /easter?... と続く場合は /cgis/easter/easter.cgi?...
+#     /easter#... と続く場合は /cgis/easter/easter.cgi#...
+#     と展開される.
+#
+#     /easter  の後ろに上記以外の文字が続く場合は何も展開されずそのままとなる.
+#
+@@V urp_alias_list
+easter = ['cgis/easter/easter.cgi']
+@@.
+
+##
+# cgi_exec_deny_urp セクション
+#
+# Moaiは cgis/<一つ以上のディレクトリ>/CGIスクリプト というパターンが与えられた場合のみ
+# その実行が許可されている.
+# (その他のパターンでは(aliasを除いては)実行は一切許可されない)
+#
+# しかし上記を満たすディレクトリ配下であっても、一部のパターンで例外的にCGIスクリプトの実行を許可しないようにもできる.
+# 以下ではそのディレクトリのパターンを指定する.
+# (複数指定可能)
+#
+# 例. 以下のように指定した場合、これらのパターンに限り実行は許可されなくなる.
+#     ( * はワイルドカード指定である )
+#   /cgis/easter/cachebox/*
+#   /cgis/custom_boy/cachebox/*
+#   /cgis/easter/tmp/*
+#   /cgis/custom_boy/tmp/*
+#
+# 例えば、あなたがWebクライアントとしての能力を持つCGIを開発したとする.
+# またそれがWebにアクセスした際のキャッシュファイルなどを保存しておくためのディレクトリをcgis配下に用意するものとする.
+# このようなやや特殊な状況で、この指定が必要になることがある.
+# キャッシュファイルの中にcgiスクリプトが含まれている可能性もあり、それがどんな内容であるかは一般的には予測不能である.
+# 従ってそれをローカルで不用意に実行させるのを認めるべきではない.
+#
+@@L cgi_exec_deny_urp
+/cgis/easter/tmp/*
+/cgis/easter/cachebox/*
+/cgis/easter/dustbox/*
+/cgis/easter/favorite/*
+/cgis/easter/stockbox/*
+/cgis/easter/userbox/*
+/cgis/custom_boy/cachebox/*
+/cgis/custom_boy/tmp/*
+/cgis/proxy_finder/cachebox/*
+/cgis/proxy_finder/tmp/*
+/cgis/cgi_developers/publicbox/*
+@@.
+
+##
+# xhrdmz_only_urp セクション
+#
+# Moaiは 下記で指定されたパターンについてはXhrDMZからのアクセスに限りファイル取得を認める.
+# (複数指定可能)
+# また逆に(XhrDMZではない)通常のMoai WebServerを介しては、これらを参照することは不可能であるものとする
+#
+# ここで指定したフォルダ内には、ネット上から取得したファイルのキャッシュなどを格納しておくとよい.
+# (つまり通常のMoai WebServerでは不用意に表示すべきでないものをここに格納するということである).
+# なぜならばそのようなファイルには未知のXMLHttpRequest(JavascriptからHTTPを発行する機能)が含まれている可能性があるためである.
+# このようなファイルをローカルから不用意に正規のMoai WebServerの方で表示させては、
+# (Moai WebServer上の)他のCGI群への危険因子となるため、隔離された仮想ホストであるXhrDMZから表示させることをお勧めする.
+#
+@@L xhrdmz_only_urp
+/cgis/easter/cachebox/*
+/cgis/easter/dustbox/*
+/cgis/easter/favorite/*
+/cgis/easter/stockbox/*
+/cgis/easter/userbox/*
+@@.
+
+##
+# xhrdmz_cgi_urp セクション
+#
+# Moaiは 下記で指定されたパターンについてはXhrDMZからのCGI実行も許可する.
+# (複数指定可能)
+# また逆に言えば、これ以外のパターンについてはXhrDMZからのCGI実行は許可されない.
+#
+@@L xhrdmz_cgi_urp
+/cgis/easter/easter.cgi
+@@.
+
+##
+# public_urp セクション
+#
+# Moaiは下記で指定されたURPのパターンにマッチした場合、いかなる場合もそのURPの中身のファイル取得を認める.
+# (すなわち AuthenticHostやXhrDMZからのアクセスも可能であり、AuthenticKeyも必要としない).
+# また逆に言えば、これ以外のディレクトリ内のファイルは特別な指定がなされていない限り
+# XhrDMZから参照することは不可能であることも意味する.
+#
+# ここで指定したフォルダ内にはネットワーク上の他マシンに公開しても全く問題ないようなファイルのみを格納すべきである.
+#
+@@L public_urp
+/moai.png
+/msty.css
+/cgis/easter/publicbox/*
+/cgis/cgi_developers/publicbox/*
+@@.
+
+##
+# protected_urp セクション
+#
+# Moaiは下記で指定されたURPのパターンにマッチした場合、Moai_AuthenticKeyが正しく指定されている場合のみ
+# URPの中身のファイル取得を認める.
+# URPが意味するものがCGIスクリプトの場合は、Moai_AuthenticKeyが正しく指定されている場合のみ
+# その実行を認める.
+#
+@@L protected_urp
+/protected/*
+/doc_root/protected/*
+/cgis/protected/*
+/cgis/cgi_developers/protected/*
+@@.
+
+##
+# fsys_map_list セクション
+#
+# Moaiは 下記の右辺の文字列リストにおいて第1番目で指定されたURL上のパスへのアクセスについては
+# 第2番目で指定されたファイルシステム上の実ディレクトリに相当するようにする.
+# Moaiではこれを「第1番目が第2番目にマッピングされている」などと呼ぶ.
+# (UNIXシステムなどにおけるマウントと形式的には同じである).
+# 第2番目の文字列には#[profile_dir]#を含めることができ、これはMoai config.myfにおけるprofile_dirの値に変換される.
+#
+# さらに文字列リストにおいて第3番目の文字列が存在する場合、それを環境変数とみなす.
+# そしてその環境変数がOSにおいて定義されている場合、Moaiは第2番目の替わりに第3番目の環境変数の値を
+# 実ディレクトリとしてマッピングする. 定義されていない場合は、第2番目を実ディレクトリとしてマッピングする.
+#
+@@V fsys_map_list
+favorite = { ['/cgis/easter/favorite'] ['#[profile_dir]#/favorite'] ['EST_FAVORITE_DIR'] }
+stockbox = { ['/cgis/easter/stockbox'] ['#[profile_dir]#/stockbox'] ['EST_STOCKBOX_DIR'] }
+userbox  = { ['/cgis/easter/userbox']  ['#[profile_dir]#/userbox']  ['EST_USERBOX_DIR'] }
+mydoc    = { ['/mydoc']    ['#[profile_dir]#/mydoc']    ['EST_MYDOC_DIR'] }
+MathJax  = { ['/MathJax']  ['#[profile_dir]#/MathJax']  ['EST_MATHJAX_DIR'] }
+@@.

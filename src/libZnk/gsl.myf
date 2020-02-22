@@ -376,6 +376,7 @@ ZnkServer_getListenSocket
 ZnkSocket_accept
 ZnkSocket_close
 ZnkSocket_connectToServer
+ZnkSocket_getInvalid
 ZnkSocket_getPeerIPandPort
 ZnkSocket_getPort_byTCPName
 ZnkSocket_open

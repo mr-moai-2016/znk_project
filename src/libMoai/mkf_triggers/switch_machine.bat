@@ -13,6 +13,8 @@ if "%1" == "x86"         goto x86
 if "%1" == "x64"         goto x64
 if "%1" == "armeabi"     goto armeabi
 if "%1" == "armeabi-v7a" goto armeabi_v7a
+if "%1" == "arm64-v8a"   goto arm64_v8a
+if "%1" == "x86-64"      goto x86_64
 
 
 REM
@@ -37,7 +39,9 @@ if "%MKF_ID%" == "android" goto For_Android
 	if exist mkf_triggers\__MACHINE_x86__         goto armeabi
 	if exist mkf_triggers\__MACHINE_x64__         goto x86
 	if exist mkf_triggers\__MACHINE_armeabi__     goto armeabi_v7a
-	if exist mkf_triggers\__MACHINE_armeabi-v7a__ goto x86
+	if exist mkf_triggers\__MACHINE_armeabi-v7a__ goto arm64_v8a
+	if exist mkf_triggers\__MACHINE_arm64-v8a__   goto x86_64
+	if exist mkf_triggers\__MACHINE_x86-64__      goto x86
 	REM default
 	goto armeabi
 
@@ -63,6 +67,16 @@ goto End
 :armeabi_v7a
 	if exist mkf_triggers\__MACHINE_*__ del mkf_triggers\__MACHINE_*__
 	echo armeabi-v7a>mkf_triggers\__MACHINE_armeabi-v7a__
+goto End
+
+:arm64_v8a
+	if exist mkf_triggers\__MACHINE_*__ del mkf_triggers\__MACHINE_*__
+	echo arm64-v8a>mkf_triggers\__MACHINE_arm64-v8a__
+goto End
+
+:x86_64
+	if exist mkf_triggers\__MACHINE_*__ del mkf_triggers\__MACHINE_*__
+	echo x86-64>mkf_triggers\__MACHINE_x86-64__
 goto End
 
 

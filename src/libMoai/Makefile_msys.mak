@@ -168,15 +168,15 @@ clean:
 	rm -rf $O/ 
 
 # Src and Headers Dependency
-Moai_cgi.o: Moai_cgi.h Moai_io_base.h Moai_server_info.h Moai_connection.h
-Moai_cgi_manager.o: Moai_cgi.h
-Moai_connection.o: Moai_connection.h
-Moai_context.o: Moai_context.h
-Moai_fdset.o: Moai_fdset.h Moai_connection.h
-Moai_http.o: Moai_http.h Moai_io_base.h Moai_info.h
-Moai_info.o: Moai_info.h Moai_server_info.h
-Moai_io_base.o: Moai_io_base.h Moai_connection.h
-Moai_post.o: Moai_post.h Moai_io_base.h Moai_server_info.h
-Moai_server.o: Moai_server.h Moai_post.h Moai_context.h Moai_io_base.h Moai_connection.h Moai_info.h Moai_fdset.h Moai_http.h Moai_server_info.h Moai_web_server.h Moai_cgi.h
-Moai_server_info.o: Moai_server_info.h
-Moai_web_server.o: Moai_context.h Moai_io_base.h Moai_connection.h Moai_info.h Moai_fdset.h Moai_post.h Moai_server_info.h Moai_cgi.h
+$O/Moai_cgi.o: Moai_cgi.h Moai_io_base.h Moai_server_info.h Moai_connection.h
+$O/Moai_cgi_manager.o: Moai_cgi.h
+$O/Moai_connection.o: Moai_connection.h
+$O/Moai_context.o: Moai_context.h
+$O/Moai_fdset.o: Moai_fdset.h Moai_connection.h
+$O/Moai_http.o: Moai_http.h Moai_io_base.h Moai_info.h
+$O/Moai_info.o: Moai_info.h Moai_server_info.h
+$O/Moai_io_base.o: Moai_io_base.h Moai_connection.h
+$O/Moai_post.o: Moai_post.h Moai_io_base.h Moai_server_info.h
+$O/Moai_server.o: Moai_server.h Moai_post.h Moai_context.h Moai_io_base.h Moai_connection.h Moai_info.h Moai_fdset.h Moai_http.h Moai_server_info.h Moai_web_server.h Moai_cgi.h
+$O/Moai_server_info.o: Moai_server_info.h
+$O/Moai_web_server.o: Moai_context.h Moai_io_base.h Moai_connection.h Moai_info.h Moai_fdset.h Moai_post.h Moai_server_info.h Moai_cgi.h

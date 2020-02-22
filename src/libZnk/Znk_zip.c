@@ -13,6 +13,7 @@
 #if defined(Znk_TARGET_UNIX)
 #  include <unistd.h>
 #  include <utime.h>
+#  include <sys/stat.h>
 #else
 #  include <direct.h>
 #  include <io.h>

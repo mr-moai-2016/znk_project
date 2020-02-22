@@ -165,14 +165,14 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-tls.obj: tls_internal.h
-tls_bio_cb.obj: tls_internal.h
-tls_client.obj: tls_internal.h
-tls_config.obj: tls_internal.h
-tls_conninfo.obj: tls_internal.h
-tls_keypair.obj: tls_internal.h
-tls_ocsp.obj: tls_internal.h
-tls_peer.obj: tls_internal.h
-tls_server.obj: tls_internal.h
-tls_util.obj: tls_internal.h
-tls_verify.obj: tls_internal.h
+$O\tls.obj: tls_internal.h
+$O\tls_bio_cb.obj: tls_internal.h
+$O\tls_client.obj: tls_internal.h
+$O\tls_config.obj: tls_internal.h
+$O\tls_conninfo.obj: tls_internal.h
+$O\tls_keypair.obj: tls_internal.h
+$O\tls_ocsp.obj: tls_internal.h
+$O\tls_peer.obj: tls_internal.h
+$O\tls_server.obj: tls_internal.h
+$O\tls_util.obj: tls_internal.h
+$O\tls_verify.obj: tls_internal.h

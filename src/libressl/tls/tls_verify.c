@@ -27,6 +27,8 @@
 #include <tls.h>
 #include "tls_internal.h"
 
+#include <rra_portable/inet_conv.h>
+
 static int
 tls_match_name(const char *cert_name, const char *name)
 {

@@ -1,0 +1,7 @@
+@def_quote [' ']
+
+@@V config
+tmp_dir=['/sdcard/Android/data/znkproject.moai/files/moai/tmp']
+@@.
+
+

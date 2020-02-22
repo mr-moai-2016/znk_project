@@ -201,9 +201,9 @@ Znk_JNI_INTERFACE( init )( JNIEnv* env, jobject obj, jstring private_path, jstri
 		result_of_section = true;
 	} while( false );
 	if( result_of_section ){
-		RanoLog_printf( "MoaiJni : setup basic directoris done.\n" );
+		RanoLog_printf( "MoaiJni : setup basic directories done.\n" );
 	} else {
-		RanoLog_printf( "MoaiJni : setup basic directoris failure.\n" );
+		RanoLog_printf( "MoaiJni : setup basic directories failure.\n" );
 		RanoLog_printf( "msg :\n" );
 		RanoLog_printf( "%s\n", ZnkStr_cstr(msg) );
 		result = JNI_FALSE;

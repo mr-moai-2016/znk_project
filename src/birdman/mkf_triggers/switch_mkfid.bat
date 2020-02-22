@@ -72,7 +72,7 @@ REM
 	set MKF_ID=android
 	if exist mkf_triggers\__MKF_ID_*__ del mkf_triggers\__MKF_ID_*__
 	echo android>mkf_triggers\__MKF_ID_android__
-	call mkf_triggers\switch_machine.bat armeabi
+	call mkf_triggers\switch_machine.bat armeabi-v7a
 	goto End
 
 

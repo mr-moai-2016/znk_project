@@ -19,42 +19,52 @@ DLIBS_DIR=dlib\$(PLATFORM)
 SLIBS_DIR=slib\$(PLATFORM)
 
 PLATFORMS_LIST=$(wildcard $(ZNK_NDK_DIR)/platforms/android-*)
-PLATFORMS_LEVEL=$(findstring $(ZNK_NDK_DIR)/platforms/android-9, $(PLATFORMS_LIST))
-ifndef PLATFORMS_LEVEL
-  PLATFORMS_LEVEL=$(word 1, $(PLATFORMS_LIST))
+
+# Android 4.0
+PLATFORMS_LEVEL4=$(findstring $(ZNK_NDK_DIR)/platforms/android-9, $(PLATFORMS_LIST))
+ifndef PLATFORMS_LEVEL4
+  PLATFORMS_LEVEL4=$(word 1, $(PLATFORMS_LIST))
+endif
+
+# Android 5.0 later
+PLATFORMS_LEVEL5=$(findstring $(ZNK_NDK_DIR)/platforms/android-21, $(PLATFORMS_LIST))
+ifndef PLATFORMS_LEVEL5
+  PLATFORMS_LEVEL5=$(word 1, $(PLATFORMS_LIST))
 endif
 
 ifeq ($(MACHINE), armeabi)
 TOOLCHAINS_LIST=$(wildcard $(ZNK_NDK_DIR)/toolchains/arm-linux-androideabi-*/prebuilt/windows)
 TOOLCHAINS_DIR=$(word $(words $(TOOLCHAINS_LIST)), $(TOOLCHAINS_LIST) )
+PLATFORMS_LEVEL=$(PLATFORMS_LEVEL4)
 
 COMPILER := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc \
 	-MMD -MP \
 	-fpic -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv5te -mtune=xscale -msoft-float -mthumb -Os \
 	-g -DNDEBUG -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 \
-	-DANDROID -fPIE \
-	-Wa,--noexecstack -Wformat -Werror=format-security -Wall  \
+	-DANDROID \
+	-Wa,--noexecstack -Wformat -Werror=format-security -Wall -Wno-invalid-source-encoding \
 	-I$(PLATFORMS_LEVEL)/arch-arm/usr/include
 
 LINKER   := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-g++ \
 	--sysroot=$(PLATFORMS_LEVEL)/arch-arm \
 
 RPATH_LINK := -Wl,-rpath-link=$(PLATFORMS_LEVEL)/arch-arm/usr/lib -Wl,-rpath-link=$O
-LINKER_OPT := -no-canonical-prefixes  -Wl,--no-undefined -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -mthumb -fPIE  -lc -lm
+LINKER_OPT := -no-canonical-prefixes  -Wl,--no-undefined -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -mthumb -lc -lm
 STRIP_UNNEEDED := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-strip --strip-unneeded
 LIBAR := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc-ar
-
 endif
+
 ifeq ($(MACHINE), armeabi-v7a)
 TOOLCHAINS_LIST=$(wildcard $(ZNK_NDK_DIR)/toolchains/arm-linux-androideabi-*/prebuilt/windows)
 TOOLCHAINS_DIR=$(word $(words $(TOOLCHAINS_LIST)), $(TOOLCHAINS_LIST) )
+PLATFORMS_LEVEL=$(PLATFORMS_LEVEL4)
 
 COMPILER := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc \
 	-MMD -MP \
 	-fpic -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfpu=vfpv3-d16 -mfloat-abi=softfp -mthumb -Os \
 	-g -DNDEBUG -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 \
 	-DANDROID -fPIE \
-	-Wa,--noexecstack -Wformat -Werror=format-security -Wall  \
+	-Wa,--noexecstack -Wformat -Werror=format-security -Wall -Wno-invalid-source-encoding \
 	-I$(PLATFORMS_LEVEL)/arch-arm/usr/include \
 
 LINKER   := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-g++ \
@@ -64,18 +74,19 @@ RPATH_LINK := -Wl,-rpath-link=$(PLATFORMS_LEVEL)/arch-arm/usr/lib -Wl,-rpath-lin
 LINKER_OPT := -no-canonical-prefixes -march=armv7-a -Wl,--fix-cortex-a8  -Wl,--no-undefined -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -mthumb -fPIE  -lc -lm
 STRIP_UNNEEDED := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-strip --strip-unneeded
 LIBAR := $(TOOLCHAINS_DIR)/bin/arm-linux-androideabi-gcc-ar
-
 endif
+
 ifeq ($(MACHINE), x86)
 TOOLCHAINS_LIST=$(wildcard $(ZNK_NDK_DIR)/toolchains/x86-*/prebuilt/windows)
 TOOLCHAINS_DIR=$(word $(words $(TOOLCHAINS_LIST)), $(TOOLCHAINS_LIST) )
+PLATFORMS_LEVEL=$(PLATFORMS_LEVEL4)
 
 COMPILER := $(TOOLCHAINS_DIR)/bin/i686-linux-android-gcc \
 	-MMD -MP \
 	-ffunction-sections -funwind-tables -no-canonical-prefixes -fstack-protector -O2 \
 	-g -DNDEBUG -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300 \
 	-DANDROID -fPIE \
-	-Wa,--noexecstack -Wformat -Werror=format-security -Wall  \
+	-Wa,--noexecstack -Wformat -Werror=format-security -Wall -Wno-invalid-source-encoding \
 	-I$(PLATFORMS_LEVEL)/arch-x86/usr/include \
 
 LINKER   := $(TOOLCHAINS_DIR)/bin/i686-linux-android-g++ \
@@ -85,8 +96,35 @@ RPATH_LINK := -Wl,-rpath-link=$(PLATFORMS_LEVEL)/arch-x86/usr/lib -Wl,-rpath-lin
 LINKER_OPT := -no-canonical-prefixes  -Wl,--no-undefined -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -fPIE  -lc -lm
 STRIP_UNNEEDED := $(TOOLCHAINS_DIR)/bin/i686-linux-android-strip --strip-unneeded
 LIBAR := $(TOOLCHAINS_DIR)/bin/i686-linux-android-gcc-ar
-
 endif
+
+ifeq ($(MACHINE), arm64-v8a)
+TOOLCHAINS_LIST=$(wildcard $(ZNK_NDK_DIR)/toolchains/aarch64-linux-android-*/prebuilt/windows)
+TOOLCHAINS_DIR=$(word $(words $(TOOLCHAINS_LIST)), $(TOOLCHAINS_LIST) )
+PLATFORMS_LEVEL=$(PLATFORMS_LEVEL5)
+
+COMPILER := $(ZNK_NDK_DIR)/toolchains/llvm/prebuilt/windows/bin/clang \
+	-gcc-toolchain $(TOOLCHAINS_DIR) -target aarch64-none-linux-android \
+	-fPIC -ffunction-sections -funwind-tables -fstack-protector-strong -Wno-invalid-command-line-argument -Wno-unused-command-line-argument -no-canonical-prefixes \
+	-g -O2 -DNDEBUG \
+	-DANDROID -fPIE \
+	-Wa,--noexecstack -Wformat -Werror=format-security -Wall -Wno-invalid-source-encoding --sysroot $(ZNK_NDK_DIR)/platforms/android-21/arch-arm64 \
+	-I$(PLATFORMS_LEVEL)/arch-arm64/usr/include \
+
+LINKER   := $(ZNK_NDK_DIR)/toolchains/llvm/prebuilt/windows/bin/clang++ \
+	--sysroot=$(PLATFORMS_LEVEL)/arch-arm64 \
+	-gcc-toolchain $(TOOLCHAINS_DIR) \
+
+RPATH_LINK := -Wl,-rpath-link=$(PLATFORMS_LEVEL)/arch-arm64/usr/lib -Wl,-rpath-link=$O
+LINKER_OPT := -no-canonical-prefixes -target aarch64-none-linux-android \
+	-Wl,--build-id -Wl,--no-undefined -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now \
+	-Wl,--warn-shared-textrel -Wl,--fatal-warnings -fPIE \
+	-lc -lm
+
+STRIP_UNNEEDED := $(TOOLCHAINS_DIR)/bin/aarch64-linux-android-strip --strip-unneeded 
+LIBAR := $(TOOLCHAINS_DIR)/bin/aarch64-linux-android-gcc-ar
+endif
+
 
 CP=xcopy /H /C /Y
 INCLUDE_FLAG+=  \
@@ -138,8 +176,8 @@ OBJS0=\
 	$O\Est_unid.o \
 	$O\main.o \
 
-BASENAME1=cache_task
-EXE_FILE1=$O\cache_task.cgi
+BASENAME1=easter_maintainer
+EXE_FILE1=$O\easter_maintainer.cgi
 OBJS1=\
 	$O\Est_assort.o \
 	$O\Est_assort_list.o \
@@ -178,7 +216,7 @@ OBJS1=\
 	$O\Est_ui.o \
 	$O\Est_ui_base.o \
 	$O\Est_unid.o \
-	$O\cache_task.o \
+	$O\easter_maintainer.o \
 
 SUB_LIBS=\
 
@@ -309,7 +347,7 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-$O\cache_task.o: Est_search_manager.h Est_config.h Est_base.h Est_sqi.h Est_recentory.h Est_box.h
+$O\easter_maintainer.o: Est_search_manager.h Est_config.h Est_base.h Est_sqi.h Est_recentory.h Est_box.h
 $O\Est_assort.o: Est_assort.h Est_config.h Est_ui.h Est_recentory.h Est_base.h Est_dir_util.h Est_tag.h
 $O\Est_assort_list.o: Est_assort_list.h Est_config.h Est_ui.h Est_box.h Est_base.h Est_assort.h Est_assort_ui.h
 $O\Est_assort_ui.o: Est_assort_ui.h Est_config.h Est_ui_base.h Est_unid.h

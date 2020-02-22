@@ -168,5 +168,5 @@ clean:
 	rm -rf $O/ 
 
 # Src and Headers Dependency
-init.o: Moai_plugin_dev.h
-main.o: Moai_plugin_dev.h
+$O/init.o: Moai_plugin_dev.h
+$O/main.o: Moai_plugin_dev.h

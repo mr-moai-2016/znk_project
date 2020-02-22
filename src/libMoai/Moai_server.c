@@ -888,6 +888,7 @@ sendOnConnected_GET( MoaiConnection mcn, MoaiFdSet mfds, MoaiInfoID info_id )
 static MoaiRASResult
 doLocalProxy( MoaiContext ctx, MoaiConnection mcn, MoaiFdSet mfds, RanoHtpType htp_type, MoaiSockType sock_type )
 {
+	const ZnkSocket invalid_sock = ZnkSocket_getInvalid();
 	ZnkErr_D( err );
 	ZnkSocket   I_sock   = MoaiConnection_I_sock( mcn );
 	ZnkSocket   O_sock   = MoaiConnection_O_sock( mcn );
@@ -1007,7 +1008,7 @@ doLocalProxy( MoaiContext ctx, MoaiConnection mcn, MoaiFdSet mfds, RanoHtpType h
 		info = ctx->draft_info_;
 	}
 
-	if( ctx->recv_executed_ && O_sock != ZnkSocket_INVALID ){
+	if( ctx->recv_executed_ && O_sock != invalid_sock ){
 
 		switch( htp_type ){
 		case RanoHtpType_e_Request:
@@ -1029,11 +1030,11 @@ doLocalProxy( MoaiContext ctx, MoaiConnection mcn, MoaiFdSet mfds, RanoHtpType h
 			 */
 			ZnkSocket sock = ( sock_type == MoaiSockType_e_Inner ) ? O_sock 
 				: ( sock_type == MoaiSockType_e_Outer ) ? I_sock
-				: ZnkSocket_INVALID;
+				: invalid_sock;
 
 			debugInterestGoal( info, mcn, "on doLocalProxy" );
 
-			if( sock == ZnkSocket_INVALID ){
+			if( sock == invalid_sock ){
 				RanoLog_printf( "  sock=[%d] is invalid\n", sock );
 				return MoaiRASResult_e_Ignored;
 			}
@@ -1131,7 +1132,7 @@ static void report_observe( MoaiFdSet mfds, void* arg )
 static void on_accept( MoaiFdSet mfds, ZnkSocket new_accept_sock, void* arg )
 {
 	RanoLog_printf( "Moai : new_accept_sock=[%d]\n", new_accept_sock );
-	MoaiConnection_regist( "", 0, new_accept_sock, ZnkSocket_INVALID, mfds );
+	MoaiConnection_regist( "", 0, new_accept_sock, ZnkSocket_getInvalid(), mfds );
 }
 static MoaiRASResult recv_and_send( MoaiFdSet mfds, ZnkSocket sock, void* arg )
 {
@@ -1240,7 +1241,7 @@ MoaiServer_main( bool first_initiate, bool enable_parent_proxy )
 	const char*   acceptable_host = "127.0.0.1";
 	ZnkServer     moai_srver    = NULL;
 	ZnkServer     xhr_dmz_srver = NULL;
-	ZnkSocket     listen_sock = ZnkSocket_INVALID;
+	ZnkSocket     listen_sock = ZnkSocket_getInvalid();
 	ZnkSocketAry  listen_sockary = ZnkSocketAry_create();
 	MoaiFdSetFuncArg_Report   fnca_report    = { report_observe, NULL };
 	MoaiFdSetFuncArg_OnAccept fnca_on_accept = { on_accept, NULL };

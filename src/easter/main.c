@@ -134,7 +134,7 @@ parseQueryString( RanoCGIEVar* evar )
 static bool
 runCacheTask( const char* lasttime_dat_path )
 {
-	const char* argv[] = { "cache_task.cgi", NULL };
+	const char* argv[] = { "easter_maintainer.cgi", NULL };
 	bool        is_wait = false;
 	ZnkDate date = { 0 };
 	ZnkDate current = { 0 };
@@ -226,7 +226,7 @@ int main( int argc, char** argv )
 	{
 		const char* tmpdir_common = RanoHtpBoy_getTmpDirCommon();
 		char lasttime_dat_path[ 256 ] = "";
-		Znk_snprintf( lasttime_dat_path, sizeof(lasttime_dat_path), "%s/cache_task_lasttime.dat", tmpdir_common );
+		Znk_snprintf( lasttime_dat_path, sizeof(lasttime_dat_path), "%s/easter_maintainer_lasttime.dat", tmpdir_common );
 		runCacheTask( lasttime_dat_path );
 	}
 

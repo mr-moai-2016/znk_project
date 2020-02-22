@@ -168,9 +168,9 @@ public class MainActivity extends Activity {
 
 		TextView textView = (TextView)findViewById(R.id.my_label);
 		if( this.init(asset_dst_dir, abi_str) ){
-			textView.setText( "Moai Ver2.2\nOK. Start browsing!\n" + "(" + abi_str + " sdk:" + sdk_int + ")" );
+			textView.setText( "Moai Ver2.2.3\nOK. Start browsing!\n" + "(" + abi_str + " sdk:" + sdk_int + ")" );
 		} else {
-			textView.setText( "Moai Ver2.2\nNG. init Error.\n" + "See moai_jni.log.\n" );
+			textView.setText( "Moai Ver2.2.3\nNG. init Error.\n" + "See moai_jni.log.\n" );
 		}
 		
 		this.mainLoop(); /* Moai Thread Start */

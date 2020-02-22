@@ -159,11 +159,11 @@ clean:
 	rm -rf $O/ 
 
 # Src and Headers Dependency
-mkfgen.o: Mkf_install.h Mkf_include.h Mkf_seek.h Mkf_src_depend.h Mkf_lib_depend.h Mkf_android.h Mkf_sset.h
-Mkf_android.o: Mkf_android.h Mkf_seek.h Mkf_lib_depend.h Mkf_include.h
-Mkf_include.o: Mkf_include.h
-Mkf_install.o: Mkf_install.h
-Mkf_lib_depend.o: Mkf_lib_depend.h
-Mkf_seek.o: Mkf_seek.h
-Mkf_src_depend.o: Mkf_src_depend.h Mkf_seek.h
-Mkf_sset.o: Mkf_sset.h
+$O/mkfgen.o: Mkf_install.h Mkf_include.h Mkf_seek.h Mkf_src_depend.h Mkf_lib_depend.h Mkf_android.h Mkf_sset.h
+$O/Mkf_android.o: Mkf_android.h Mkf_seek.h Mkf_lib_depend.h Mkf_include.h
+$O/Mkf_include.o: Mkf_include.h
+$O/Mkf_install.o: Mkf_install.h
+$O/Mkf_lib_depend.o: Mkf_lib_depend.h
+$O/Mkf_seek.o: Mkf_seek.h
+$O/Mkf_src_depend.o: Mkf_src_depend.h Mkf_seek.h
+$O/Mkf_sset.o: Mkf_sset.h

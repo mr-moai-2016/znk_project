@@ -1178,28 +1178,28 @@ clean:
 	rmdir /S /Q $O\ 
 
 # Src and Headers Dependency
-asn1/a_time.obj: o_time.h
-asn1/a_time_tm.obj: o_time.h
-bio/b_sock.obj: rra_portable/getaddrinfo.h rra_portable/getnameinfo.h
-bn/bn_exp.obj: constant_time_locl.h
-crypto_init.obj: cryptlib.h
-cversion.obj: cryptlib.h
-engine/eng_all.obj: cryptlib.h
-engine/eng_list.obj: cryptlib.h
-evp/c_all.obj: cryptlib.h
-evp/e_aes.obj: x86_arch.h
-evp/e_aes_cbc_hmac_sha1.obj: constant_time_locl.h x86_arch.h
-evp/e_rc4_hmac_md5.obj: x86_arch.h
-gost/gost2814789.obj: md32_common.h
-gost/gostr341194.obj: md32_common.h
-modes/gcm128.obj: x86_arch.h
-o_time.obj: o_time.h
-rra_portable/getaddrinfo.obj: rra_portable/getaddrinfo.h rra_portable/inet_conv.h
-rra_portable/getnameinfo.obj: rra_portable/getnameinfo.h rra_portable/socket.h rra_portable/snprintf.h
-rra_portable/inet_aton.obj: rra_portable/inet_conv.h
-rra_portable/inet_ntoa.obj: rra_portable/inet_conv.h rra_portable/snprintf.h
-rra_portable/inet_ntop.obj: rra_portable/inet_conv.h rra_portable/snprintf.h rra_portable/socket.h
-rra_portable/snprintf.obj: rra_portable/snprintf.h
-sha/sha256.obj: md32_common.h
-whrlpool/wp_block.obj: x86_arch.h
-x509/x509_def.obj: cryptlib.h
+$O\asn1/a_time.obj: o_time.h
+$O\asn1/a_time_tm.obj: o_time.h
+$O\bio/b_sock.obj: rra_portable/getaddrinfo.h rra_portable/getnameinfo.h
+$O\bn/bn_exp.obj: constant_time_locl.h
+$O\crypto_init.obj: cryptlib.h
+$O\cversion.obj: cryptlib.h
+$O\engine/eng_all.obj: cryptlib.h
+$O\engine/eng_list.obj: cryptlib.h
+$O\evp/c_all.obj: cryptlib.h
+$O\evp/e_aes.obj: x86_arch.h
+$O\evp/e_aes_cbc_hmac_sha1.obj: constant_time_locl.h x86_arch.h
+$O\evp/e_rc4_hmac_md5.obj: x86_arch.h
+$O\gost/gost2814789.obj: md32_common.h
+$O\gost/gostr341194.obj: md32_common.h
+$O\modes/gcm128.obj: x86_arch.h
+$O\o_time.obj: o_time.h
+$O\rra_portable/getaddrinfo.obj: rra_portable/getaddrinfo.h rra_portable/inet_conv.h
+$O\rra_portable/getnameinfo.obj: rra_portable/getnameinfo.h rra_portable/socket.h rra_portable/snprintf.h
+$O\rra_portable/inet_aton.obj: rra_portable/inet_conv.h
+$O\rra_portable/inet_ntoa.obj: rra_portable/inet_conv.h rra_portable/snprintf.h
+$O\rra_portable/inet_ntop.obj: rra_portable/inet_conv.h rra_portable/snprintf.h rra_portable/socket.h
+$O\rra_portable/snprintf.obj: rra_portable/snprintf.h
+$O\sha/sha256.obj: md32_common.h
+$O\whrlpool/wp_block.obj: x86_arch.h
+$O\x509/x509_def.obj: cryptlib.h

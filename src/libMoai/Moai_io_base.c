@@ -267,6 +267,7 @@ MoaiIO_reportFdst( const char* label, ZnkSocketAry sock_ary, ZnkFdSet fdst_obser
 bool
 MoaiIO_procExile( ZnkSocketAry sock_ary, ZnkFdSet fdst, MoaiFdSet mfds )
 {
+	const ZnkSocket invalid_sock = ZnkSocket_getInvalid();
 	size_t    i;
 	size_t    sock_ary_size;
 	ZnkSocket sock;
@@ -282,7 +283,7 @@ MoaiIO_procExile( ZnkSocketAry sock_ary, ZnkFdSet fdst, MoaiFdSet mfds )
 		mcn = MoaiConnection_find_byISock( sock );
 		if( mcn ){
 			ZnkSocket O_sock = MoaiConnection_O_sock( mcn );
-			if( O_sock != ZnkSocket_INVALID ){
+			if( O_sock != invalid_sock ){
 				continue;
 			}
 			/* This is Exile socket */
@@ -311,7 +312,7 @@ MoaiIO_close_ISock( const char* label, ZnkSocket sock, MoaiFdSet mfds )
 			ZnkFdSet fdst_observe_r = MoaiFdSet_fdst_observe_r( mfds );
 			ZnkFdSet_clr( fdst_observe_r,sock );
 			ZnkSocket_close( sock );
-			mcn->I_sock_ = ZnkSocket_INVALID;
+			mcn->I_sock_ = ZnkSocket_getInvalid();
 		}
 	}
 }
@@ -329,7 +330,7 @@ MoaiIO_close_OSock( const char* label, ZnkSocket sock, MoaiFdSet mfds )
 			MoaiFdSet_removeConnectingSock( mfds, sock );
 			ZnkFdSet_clr( fdst_observe_r, sock );
 			ZnkSocket_close( sock );
-			mcn->O_sock_ = ZnkSocket_INVALID;
+			mcn->O_sock_ = ZnkSocket_getInvalid();
 		}
 	}
 }
