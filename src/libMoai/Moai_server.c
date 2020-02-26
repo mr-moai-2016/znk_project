@@ -1200,7 +1200,25 @@ isAccessAllowIP( ZnkSocket new_accept_sock, uint32_t* ipaddr_ans )
 }
 
 static bool
-chmodDir( const char* path, ZnkStr cmd, ZnkStr msg, const char* ext, int mode )
+chmodOne( const char* path, ZnkStr msg, int mode )
+{
+#if defined(Znk_TARGET_UNIX)
+
+	if( chmod( path , mode ) < 0 ){
+		if( msg ){
+			uint32_t sys_errno = ZnkSysErrno_errno();
+			ZnkSysErrnoInfo* errinfo = ZnkSysErrno_getInfo( sys_errno );
+			ZnkStr_addf( msg, "Moai : chmodOne path=[%s] Error : [%s]\n", path, errinfo->sys_errno_msg_ );
+		}
+		return false;
+	}
+	return true;
+#else
+	return true;
+#endif
+}
+static bool
+chmodDirFiles( const char* path, ZnkStr cmd, ZnkStr msg, const char* ext, int mode )
 {
 #if defined(Znk_TARGET_UNIX)
 	int err_count = 0;
@@ -1218,7 +1236,7 @@ chmodDir( const char* path, ZnkStr cmd, ZnkStr msg, const char* ext, int mode )
 			ZnkStr_setf( cmd, "%s/%s", path, name );
 			if( chmod( ZnkStr_cstr(cmd) , mode ) < 0 ){
 				if( msg ){
-					ZnkStr_addf( msg, "Error : %s\n", ZnkStr_cstr(cmd) );
+					ZnkStr_addf( msg, "Cannot chmodDirFiles : %s\n", ZnkStr_cstr(cmd) );
 				}
 				err_count += 1;
 			}
@@ -1229,6 +1247,83 @@ chmodDir( const char* path, ZnkStr cmd, ZnkStr msg, const char* ext, int mode )
 #else
 	return true;
 #endif
+}
+
+static void
+dumpTestFileWriting_forAndroid( ZnkStr cmd, const char* dir )
+{
+	static const char* private_ext_path_cstr = "/sdcard/Android/data/znkproject.moai/files";
+	int state = 0;
+
+	if( ZnkDir_getType( dir ) == ZnkDirType_e_Directory ){ 
+		state = MoaiIO_testFileWriting( dir );
+		ZnkStr_setf( cmd, "echo 'Moai test file writing: dir=[%s] state=[%d]' >> %s/moai/tmp/ls_filters.log 2>&1",
+				dir, state, private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+	} else {
+		ZnkStr_setf( cmd, "echo '%s is not directory.' >> %s/moai/tmp/ls_filters.log 2>&1", dir, private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+	}
+}
+
+static void
+dumpDebugLS_forAndroid(
+		bool mkdir_result_of_profile_dir, bool mkdir_result_of_filters_dir,
+		bool chmod_result_of_profile_dir, bool chmod_result_of_filters_dir,
+		ZnkStr msg )
+{
+	const char* profile_dir = MoaiServerInfo_profile_dir();
+	const char* filters_dir = MoaiServerInfo_filters_dir();
+
+	static const char* private_ext_path_cstr = "/sdcard/Android/data/znkproject.moai/files";
+	ZnkStr  cmd = ZnkStr_new( "" );
+
+	ZnkStr_setf( cmd, "echo '/sdcard:' > %s/moai/tmp/ls_filters.log", private_ext_path_cstr );
+	system( ZnkStr_cstr(cmd) );
+
+	ZnkStr_setf( cmd, "ls -al /sdcard >> %s/moai/tmp/ls_filters.log 2>&1", private_ext_path_cstr );
+	system( ZnkStr_cstr(cmd) );
+
+	ZnkStr_setf( cmd, "echo '/storage:' >> %s/moai/tmp/ls_filters.log", private_ext_path_cstr );
+	system( ZnkStr_cstr(cmd) );
+
+	ZnkStr_setf( cmd, "ls -al /storage >> %s/moai/tmp/ls_filters.log 2>&1", private_ext_path_cstr );
+	system( ZnkStr_cstr(cmd) );
+
+	ZnkStr_setf( cmd, "echo '/mnt:' >> %s/moai/tmp/ls_filters.log", private_ext_path_cstr );
+	system( ZnkStr_cstr(cmd) );
+
+	ZnkStr_setf( cmd, "ls -al /mnt >> %s/moai/tmp/ls_filters.log 2>&1", private_ext_path_cstr );
+	system( ZnkStr_cstr(cmd) );
+
+	ZnkStr_setf( cmd, "echo 'profile_dir=[%s](mkdir=[%d] chmod=[%d])' >> %s/moai/tmp/ls_filters.log",
+			profile_dir, mkdir_result_of_profile_dir, chmod_result_of_profile_dir, private_ext_path_cstr );
+	system( ZnkStr_cstr(cmd) );
+
+	ZnkStr_setf( cmd, "echo 'filters_dir=[%s](mkdir=[%d] chmod=[%d])' >> %s/moai/tmp/ls_filters.log",
+			filters_dir, mkdir_result_of_filters_dir, chmod_result_of_filters_dir, private_ext_path_cstr );
+	system( ZnkStr_cstr(cmd) );
+
+	ZnkStr_setf( cmd, "echo 'msg=[%s]' >> %s/moai/tmp/ls_filters.log", ZnkStr_cstr(msg), private_ext_path_cstr );
+	system( ZnkStr_cstr(cmd) );
+
+	ZnkStr_setf( cmd, "echo 'profile_dir(in engine):' >> %s/moai/tmp/ls_filters.log", private_ext_path_cstr );
+	system( ZnkStr_cstr(cmd) );
+
+	ZnkStr_setf( cmd, "ls -al %s >> %s/moai/tmp/ls_filters.log 2>&1", profile_dir, private_ext_path_cstr );
+	system( ZnkStr_cstr(cmd) );
+
+	ZnkStr_setf( cmd, "echo 'filters_dir(in engine):' >> %s/moai/tmp/ls_filters.log",  private_ext_path_cstr );
+	system( ZnkStr_cstr(cmd) );
+
+	ZnkStr_setf( cmd, "ls -al %s >> %s/moai/tmp/ls_filters.log 2>&1", filters_dir, private_ext_path_cstr );
+	system( ZnkStr_cstr(cmd) );
+
+	dumpTestFileWriting_forAndroid( cmd, profile_dir );
+	dumpTestFileWriting_forAndroid( cmd, filters_dir );
+	dumpTestFileWriting_forAndroid( cmd, "/sdcard/Download" );
+
+	ZnkStr_delete( cmd );
 }
 
 MoaiRASResult
@@ -1448,17 +1543,75 @@ MoaiServer_main( bool first_initiate, bool enable_parent_proxy )
 	}
 
 	{
+		ZnkStr msg = ZnkStr_new( "" );
+		const char* profile_dir = MoaiServerInfo_profile_dir();
+		const char* filters_dir = MoaiServerInfo_filters_dir();
+		bool mkdir_result_of_profile_dir = false;
+		bool mkdir_result_of_filters_dir = false;
+		bool chmod_result_of_profile_dir = false;
+		bool chmod_result_of_filters_dir = false;
+
+		/***
+		 * moai_profileディレクトリがない場合のみ新規作成.
+		 */
+		if( ZnkDir_getType( profile_dir ) == ZnkDirType_e_Directory ){ 
+			/***
+			 * profile_dirのPermission設定.
+			 * (存在する場合においても一応行う)
+			 */
+			mkdir_result_of_profile_dir = true;
+			chmod_result_of_profile_dir = chmodOne( profile_dir, msg, 0777 );
+		} else {
+			ZnkFile fp = NULL;
+			ZnkStr  cmd = ZnkStr_new( "" );
+			ZnkStr  nomedia_file = ZnkStr_newf( "%s/.nomedia", profile_dir );
+
+			/***
+			 * profile_dirの作成およびPermission設定.
+			 */
+			mkdir_result_of_profile_dir = ZnkDir_mkdirPath( profile_dir, Znk_NPOS, '/', NULL );
+			chmod_result_of_profile_dir = chmodOne( profile_dir, msg, 0777 );
+
+			/***
+			 * profile_dir内部のファイル群のPermission設定.
+			 */
+			if( !chmodDirFiles( profile_dir, cmd, msg, "*", 0775 ) ){
+				RanoLog_printf( "Moai : Error [%s].\n", ZnkStr_cstr(msg) );
+			}
+
+			/* 空の.nomediaファイルを作り、メディアスキャンの対象外とさせる */
+			fp = Znk_fopen( ZnkStr_cstr(nomedia_file), "wb" );
+			if( fp ){
+				Znk_fclose( fp );
+			}
+
+			ZnkStr_delete( cmd );
+			ZnkStr_delete( nomedia_file );
+		}
+
 		/***
 		 * filtersディレクトリがない場合のみ新規作成し、
 		 * default/filtersから中身をコピーする.
 		 */
-		const char* filters_dir = MoaiServerInfo_filters_dir();
-		if( ZnkDir_getType( filters_dir ) != ZnkDirType_e_Directory ){ 
+		if( ZnkDir_getType( filters_dir ) == ZnkDirType_e_Directory ){ 
+			/***
+			 * filters_dirのPermission設定.
+			 * (存在する場合においても一応行う)
+			 */
+			mkdir_result_of_filters_dir = true;
+			chmod_result_of_filters_dir = chmodOne( filters_dir, msg, 0777 );
+		} else {
 			ZnkDirId dir = NULL;
 			const char* name;
 			char src_path[ 256 ] = "";
 			char dst_path[ 256 ] = "";
-			ZnkDir_mkdirPath( filters_dir, Znk_NPOS, '/', NULL );
+
+			/***
+			 * filters_dirの作成およびPermission設定.
+			 */
+			mkdir_result_of_filters_dir = ZnkDir_mkdirPath( filters_dir, Znk_NPOS, '/', NULL );
+			chmod_result_of_filters_dir = chmodOne( filters_dir, msg, 0777 );
+
 			dir = ZnkDir_openDir( "default/filters" );
 			if( dir ) while( true ){ /* if-while */
 				name = ZnkDir_readDir( dir );
@@ -1471,41 +1624,26 @@ MoaiServer_main( bool first_initiate, bool enable_parent_proxy )
 			}
 			ZnkDir_closeDir( dir );
 		}
+		/***
+		 * filters_dir内部のファイル群のPermission設定.
+		 */
 		{
 			ZnkStr cmd = ZnkStr_new( "" );
-			ZnkStr msg = ZnkStr_new( "" );
-			if( !chmodDir( filters_dir, cmd, msg, "*", 0666 ) ){
+			if( !chmodDirFiles( filters_dir, cmd, msg, "*", 0666 ) ){
 				RanoLog_printf( "Moai : Error [%s].\n", ZnkStr_cstr(msg) );
 			}
-			ZnkStr_delete( msg );
 			ZnkStr_delete( cmd );
 		}
+#if defined(__ANDROID__)
+		dumpDebugLS_forAndroid(
+				mkdir_result_of_profile_dir, mkdir_result_of_filters_dir,
+				chmod_result_of_profile_dir, chmod_result_of_filters_dir,
+				msg );
+#endif
+
+		ZnkStr_delete( msg );
 	}
-	{
-		/***
-		 * moai_profileディレクトリがない場合のみ新規作成.
-		 */
-		const char* profile_dir = MoaiServerInfo_profile_dir();
-		if( ZnkDir_getType( profile_dir ) != ZnkDirType_e_Directory ){ 
-			ZnkFile fp = NULL;
-			ZnkStr  cmd = ZnkStr_new( "" );
-			ZnkStr  msg = ZnkStr_new( "" );
-			ZnkStr  nomedia_file = ZnkStr_newf( "%s/.nomedia", profile_dir );
-
-			ZnkDir_mkdirPath( profile_dir, Znk_NPOS, '/', NULL );
-			chmodDir( profile_dir, cmd, msg, "*", 0775 );
-
-			/* 空の.nomediaファイルを作り、メディアスキャンの対象外とさせる */
-			fp = Znk_fopen( ZnkStr_cstr(nomedia_file), "wb" );
-			if( fp ){
-				Znk_fclose( fp );
-			}
-
-			ZnkStr_delete( msg );
-			ZnkStr_delete( cmd );
-			ZnkStr_delete( nomedia_file );
-		}
-	}
+	RanoLog_printf( "Moai : dumpDebugLS_forAndroid end.\n" );
 
 
 	/* Rano Modules */

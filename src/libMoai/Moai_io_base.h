@@ -44,6 +44,9 @@ MoaiIO_recvByZero( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, size_t* result
 size_t
 MoaiIO_recvByPtn2( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, const char* ptn );
 
+int
+MoaiIO_testFileWriting( const char* dir_path );
+
 Znk_EXTERN_C_END
 
 #endif /* INCLUDE_GUARD */

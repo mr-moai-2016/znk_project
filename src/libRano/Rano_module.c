@@ -668,6 +668,7 @@ RanoModuleAry_loadAllModules( RanoModuleAry mod_ary, const ZnkMyf mtgt,
 	ZnkMyfSection sec;
 	const char*   name;
 	RanoModule    mod;
+	RanoLog_printf( "Rano : loadAllModules begin filters_dir=[%s] plugins_dir=[%s]\n", filters_dir, plugins_dir );
 	for( idx=0; idx<size; ++idx ){
 		sec  = ZnkMyf_atSection( mtgt, idx );
 		name = ZnkMyfSection_name( sec );

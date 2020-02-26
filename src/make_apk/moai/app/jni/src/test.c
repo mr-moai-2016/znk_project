@@ -10,6 +10,7 @@
 #include <Znk_zlib.h>
 #include <Znk_s_base.h>
 #include <Znk_str_ex.h>
+#include <Znk_str_path.h>
 
 #include <string.h>
 #include <stdlib.h>
@@ -22,6 +23,39 @@
 #include <android/asset_manager_jni.h>
 
 #include <sys/stat.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
+#include <grp.h>
+
+/***
+ * Get Username from UID
+ */
+static void
+getUIDName( ZnkStr ans )
+{
+	uid_t          uid    = getuid();
+	struct passwd* passwd = getpwuid( uid );
+	if( passwd ){
+		ZnkStr_add( ans, passwd->pw_name );
+	} else {
+		ZnkStr_addf( ans, "%d", uid );
+	}
+}
+/***
+ * Get Groupname from GID
+ */
+static void
+getGIDName( ZnkStr ans )
+{
+	gid_t         gid   = getgid();
+	struct group* group = getgrgid( gid );
+	if( group ){
+		ZnkStr_add( ans, group->gr_name );
+	} else {
+		ZnkStr_addf( ans, "%d", gid );
+	}
+}
 
 
 static bool
@@ -95,6 +129,18 @@ makeFileSymbolicLink_forLib(
 	return result;
 }
 static bool
+makeFileSymbolicLink_forNativeLib(
+		const char* native_lib_cpath, const char* filename, const char* here_dir, ZnkStr cmd, ZnkStr msg )
+{
+	bool   result    = true;
+	ZnkStr real_path = ZnkStr_newf( "%s/%s", native_lib_cpath, filename );
+
+	result = makeFileSymbolicLink( ZnkStr_cstr(real_path), filename, here_dir, cmd, msg );
+
+	ZnkStr_delete( real_path );
+	return result;
+}
+static bool
 makeFileSymbolicLink_forBin(
 		const char* private_path_cstr, const char* filename, const char* here_dir, const char* abi_str, ZnkStr cmd, ZnkStr msg )
 {
@@ -141,8 +187,70 @@ convertFullVer_toParentVer( ZnkStr parent_ver, const char* full_ver )
 	return result;
 }
 
+static bool
+getRealLibDir( ZnkStr real_lib_dir, const char* real_pkg_dir, const char* abi_cstr )
+{
+	/***
+	 * 現状報告されているパターンは以下.
+	 *
+	 * /data/app/znkproject.moai-x/lib/arm/libXXX.so
+	 * /data/app/znkproject.moai-x/lib/arm64/libXXX.so
+	 * /data/app-lib/znkproject.moai-x/libXXX.so
+	 */
+
+	if( ZnkS_eq( abi_cstr, "arm64-v8a" ) ){
+		ZnkStr_setf( real_lib_dir, "%s/lib/arm64", real_pkg_dir );
+		if( ZnkDir_getType( ZnkStr_cstr(real_lib_dir) ) == ZnkDirType_e_Directory ){
+			RanoLog_printf( "MoaiJni : [%s] is exist directory.\n", ZnkStr_cstr(real_lib_dir) );
+			return true;
+		} else {
+			RanoLog_printf( "MoaiJni : [%s] is not exist directory.\n", ZnkStr_cstr(real_lib_dir) );
+		}
+
+		ZnkStr_setf( real_lib_dir, "%s/lib/arm", real_pkg_dir );
+		if( ZnkDir_getType( ZnkStr_cstr(real_lib_dir) ) == ZnkDirType_e_Directory ){
+			RanoLog_printf( "MoaiJni : [%s] is exist directory.\n", ZnkStr_cstr(real_lib_dir) );
+			return true;
+		} else {
+			RanoLog_printf( "MoaiJni : [%s] is not exist directory.\n", ZnkStr_cstr(real_lib_dir) );
+		}
+		return false;
+	} else {
+		ZnkStr_setf( real_lib_dir, "%s/lib/arm", real_pkg_dir );
+		if( ZnkDir_getType( ZnkStr_cstr(real_lib_dir) ) == ZnkDirType_e_Directory ){
+			RanoLog_printf( "MoaiJni : [%s] is exist directory.\n", ZnkStr_cstr(real_lib_dir) );
+			return true;
+		} else {
+			RanoLog_printf( "MoaiJni : [%s] is not exist directory.\n", ZnkStr_cstr(real_lib_dir) );
+		}
+		return false;
+	}
+
+}
+
 JNIEXPORT jboolean JNICALL
-Znk_JNI_INTERFACE( init )( JNIEnv* env, jobject obj, jstring private_path, jstring abi_jstr )
+Znk_JNI_INTERFACE( exitIfOldProcessExist )( JNIEnv* env, jobject obj )
+{
+	jboolean result = JNI_TRUE;
+	static bool is_initialized = false;
+	if( is_initialized ){
+		/***
+		 * 驚くようなコードだが、Android JNIの場合これが起こり得る.
+		 * この場合、古いプロセスの値が残っていると考える.
+		 */
+		is_initialized = false;
+		/***
+		 * この後、javaに制御を戻せるのかどうかであるが、
+		 * 現在のところ問題なく戻っているようである.
+		 */
+		exit( 0 );
+	}
+	is_initialized = true;
+	return result;
+}
+
+JNIEXPORT jboolean JNICALL
+Znk_JNI_INTERFACE( init )( JNIEnv* env, jobject obj, jstring private_path, jstring abi_jstr, jstring pkg_jpath, jstring native_lib_jpath )
 {
 	jboolean result    = JNI_TRUE;
 	ZnkStr  cmd        = ZnkStr_new( "" );
@@ -150,10 +258,20 @@ Znk_JNI_INTERFACE( init )( JNIEnv* env, jobject obj, jstring private_path, jstri
 	ZnkStr  path       = ZnkStr_new( "" );
 	ZnkStr  libname    = ZnkStr_new( "" );
 	ZnkStr  parent_ver = ZnkStr_new( "" );
+	ZnkStr  pkg_dir    = ZnkStr_new( "" );
 	const char* private_path_cstr = (*env)->GetStringUTFChars( env, private_path, NULL );
 	const char* private_ext_path_cstr = "/sdcard/Android/data/znkproject.moai/files";
-	const char* abi_cstr = (*env)->GetStringUTFChars( env, abi_jstr, NULL );
+	const char* abi_cstr         = (*env)->GetStringUTFChars( env, abi_jstr,  NULL );
+	const char* pkg_cpath        = (*env)->GetStringUTFChars( env, pkg_jpath, NULL );
+	const char* native_lib_cpath = (*env)->GetStringUTFChars( env, native_lib_jpath, NULL );
 	bool result_of_section = false;
+
+	{
+		const size_t tail_pos = ZnkStrPath_getTailPos( pkg_cpath );
+		ZnkStr_set( pkg_dir, pkg_cpath );
+		ZnkStr_releng( pkg_dir, tail_pos );
+		ZnkStrPath_cutLastDSP( pkg_dir );
+	}
 
 	MoaiServerInfo_setCurrentDirRequest( private_path_cstr );
 	ZnkDir_changeCurrentDir( private_path_cstr );
@@ -177,6 +295,10 @@ Znk_JNI_INTERFACE( init )( JNIEnv* env, jobject obj, jstring private_path, jstri
 		ZnkStr_setf( path, "%s/moai/tmp/moai_jni.log", private_ext_path_cstr );
 		RanoLog_open( ZnkStr_cstr(path), false, false );
 		RanoLog_printf( "MoaiJni : init.\n" );
+		RanoLog_printf( "MoaiJni : abi_str=[%s].\n",  abi_cstr );
+		RanoLog_printf( "MoaiJni : pkg_path=[%s].\n", pkg_cpath );
+		RanoLog_printf( "MoaiJni : pkg_dir=[%s].\n",  ZnkStr_cstr(pkg_dir) );
+		RanoLog_printf( "MoaiJni : native_lib_path=[%s].\n",  native_lib_cpath );
 
 		ZnkStr_setf( path, "%s/cgis/cgi_developers/protected", private_path_cstr );
 		if( !chmodDir( ZnkStr_cstr(path), cmd, msg, "*", 0775 ) ){
@@ -216,6 +338,47 @@ Znk_JNI_INTERFACE( init )( JNIEnv* env, jobject obj, jstring private_path, jstri
 		const char* full_ver = MoaiServerInfo_version( true );
 		convertFullVer_toParentVer( parent_ver, full_ver );
 
+		/***
+		 * Check real_lib existance
+		 */
+#if 0
+		{
+			ZnkStr real_lib_path = ZnkStr_new( "" );
+
+			ZnkStr_setf( libname, "libZnk-%s.so", ZnkStr_cstr(parent_ver) );
+
+			ZnkStr_setf( real_lib_path, "%s/lib/arm", ZnkStr_cstr(pkg_dir) );
+			if( ZnkDir_getType( ZnkStr_cstr(real_lib_path) ) == ZnkDirType_e_Directory ){
+				RanoLog_printf( "MoaiJni : [%s] is exist directory.\n", ZnkStr_cstr(real_lib_path) );
+
+				ZnkStr_setf( real_lib_path, "%s/lib/arm/%s", ZnkStr_cstr(pkg_dir), ZnkStr_cstr(libname) );
+				if( ZnkDir_getType( ZnkStr_cstr(real_lib_path) ) == ZnkDirType_e_File ){
+					RanoLog_printf( "MoaiJni : [%s] is exist file.\n", ZnkStr_cstr(real_lib_path) );
+				} else {
+					RanoLog_printf( "MoaiJni : [%s] is not exist file.\n", ZnkStr_cstr(real_lib_path) );
+				}
+			} else {
+				RanoLog_printf( "MoaiJni : [%s] is not exist directory.\n", ZnkStr_cstr(real_lib_path) );
+			}
+
+
+			ZnkStr_setf( real_lib_path, "%s/lib/arm64", ZnkStr_cstr(pkg_dir) );
+			if( ZnkDir_getType( ZnkStr_cstr(real_lib_path) ) == ZnkDirType_e_Directory ){
+				RanoLog_printf( "MoaiJni : [%s] is exist directory.\n", ZnkStr_cstr(real_lib_path) );
+
+				ZnkStr_setf( real_lib_path, "%s/lib/arm64/%s", ZnkStr_cstr(pkg_dir), ZnkStr_cstr(libname) );
+				if( ZnkDir_getType( ZnkStr_cstr(real_lib_path) ) == ZnkDirType_e_File ){
+					RanoLog_printf( "MoaiJni : [%s] is exist file.\n", ZnkStr_cstr(real_lib_path) );
+				} else {
+					RanoLog_printf( "MoaiJni : [%s] is not exist file.\n", ZnkStr_cstr(real_lib_path) );
+				}
+			} else {
+				RanoLog_printf( "MoaiJni : [%s] is not exist directory.\n", ZnkStr_cstr(real_lib_path) );
+			}
+
+			ZnkStr_delete( real_lib_path );
+		}
+#endif
 
 		/* libs */
 		here_dir = private_path_cstr;
@@ -226,17 +389,20 @@ Znk_JNI_INTERFACE( init )( JNIEnv* env, jobject obj, jstring private_path, jstri
 		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
 
 		ZnkStr_setf( libname, "libZnk-%s.so", ZnkStr_cstr(parent_ver) );
-		if( !makeFileSymbolicLink_forLib( private_path_cstr, ZnkStr_cstr(libname),  private_path_cstr, cmd, msg ) ){
+		//if( !makeFileSymbolicLink_forLib( private_path_cstr, ZnkStr_cstr(libname),  private_path_cstr, cmd, msg ) ){
+		if( !makeFileSymbolicLink_forNativeLib( native_lib_cpath, ZnkStr_cstr(libname),  private_path_cstr, cmd, msg ) ){
 			break;
 		}
 
 		ZnkStr_setf( libname, "libRano-%s.so", ZnkStr_cstr(parent_ver) );
-		if( !makeFileSymbolicLink_forLib( private_path_cstr, ZnkStr_cstr(libname),  private_path_cstr, cmd, msg ) ){
+		//if( !makeFileSymbolicLink_forLib( private_path_cstr, ZnkStr_cstr(libname),  private_path_cstr, cmd, msg ) ){
+		if( !makeFileSymbolicLink_forNativeLib( native_lib_cpath, ZnkStr_cstr(libname),  private_path_cstr, cmd, msg ) ){
 			break;
 		}
 
 		ZnkStr_setf( libname, "libtls-17.so" );
-		if( !makeFileSymbolicLink_forLib( private_path_cstr, ZnkStr_cstr(libname),  private_path_cstr, cmd, msg ) ){
+		//if( !makeFileSymbolicLink_forLib( private_path_cstr, ZnkStr_cstr(libname),  private_path_cstr, cmd, msg ) ){
+		if( !makeFileSymbolicLink_forNativeLib( native_lib_cpath, ZnkStr_cstr(libname),  private_path_cstr, cmd, msg ) ){
 			break;
 		}
 
@@ -245,7 +411,7 @@ Znk_JNI_INTERFACE( init )( JNIEnv* env, jobject obj, jstring private_path, jstri
 		ZnkStr_setf( path, "%s/cgis/easter", private_path_cstr );
 		here_dir = ZnkStr_cstr(path);
 
-		ZnkStr_setf( libname, "cache_task.cgi" );
+		ZnkStr_setf( libname, "easter_maintainer.cgi" );
 		if( !makeFileSymbolicLink_forBin( private_path_cstr, ZnkStr_cstr(libname),  here_dir, abi_cstr, cmd, msg ) ){
 			break;
 		}
@@ -354,6 +520,114 @@ Znk_JNI_INTERFACE( init )( JNIEnv* env, jobject obj, jstring private_path, jstri
 
 	result_of_section = false;
 	do {
+#if 0
+		ZnkStr_setf( cmd, "echo 'symbolic:' > %s/moai/tmp/ls_lib.log", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "ls -al %s/../   >> %s/moai/tmp/ls_lib.log", private_path_cstr, private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "ls -al %s/../lib   >> %s/moai/tmp/ls_lib.log", private_path_cstr, private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "echo '===='        >> %s/moai/tmp/ls_lib.log", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "ls -al %s/../lib/  >> %s/moai/tmp/ls_lib.log", private_path_cstr, private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "echo 'package:' >> %s/moai/tmp/ls_lib.log", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "ls -alR %s          >> %s/moai/tmp/ls_lib.log", ZnkStr_cstr(pkg_dir), private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "echo 'top:' > %s/moai/tmp/ls_top.log", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "ls -al %s  >> %s/moai/tmp/ls_top.log", private_path_cstr, private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+#endif
+
+#if 0
+		ZnkStr_setf( cmd, "echo 'moai-process:' > %s/moai/tmp/ls_filters.log", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+		{
+			ZnkStr name = ZnkStr_new( "" );
+
+			ZnkStr_clear( name ); getUIDName( name );
+			ZnkStr_setf( cmd, "echo 'userid:[%s]'  >> %s/moai/tmp/ls_filters.log", ZnkStr_cstr(name), private_ext_path_cstr );
+			system( ZnkStr_cstr(cmd) );
+			ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+			ZnkStr_clear( name ); getGIDName( name );
+			ZnkStr_setf( cmd, "echo 'groupid:[%s]' >> %s/moai/tmp/ls_filters.log", ZnkStr_cstr(name), private_ext_path_cstr );
+			system( ZnkStr_cstr(cmd) );
+			ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+			ZnkStr_delete( name );
+		}
+
+		ZnkStr_setf( cmd, "echo 'moai_profile:' >> %s/moai/tmp/ls_filters.log", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "ls -al /sdcard/moai_profile >> %s/moai/tmp/ls_filters.log 2>&1", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "echo 'moai_profile/filters:' >> %s/moai/tmp/ls_filters.log 2>&1", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "ls -al /sdcard/moai_profile/filters >> %s/moai/tmp/ls_filters.log 2>&1", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "echo 'files:' >> %s/moai/tmp/ls_filters.log 2>&1", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "ls -al %s >> %s/moai/tmp/ls_filters.log 2>&1", private_ext_path_cstr, private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "echo 'moai/tmp:' >> %s/moai/tmp/ls_filters.log", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "ls -al %s/moai/tmp >> %s/moai/tmp/ls_filters.log 2>&1", private_ext_path_cstr, private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "echo 'custom_boy:' >> %s/moai/tmp/ls_filters.log", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "ls -al %s/custom_boy >> %s/moai/tmp/ls_filters.log 2>&1", private_ext_path_cstr, private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "echo 'custom_boy/tmp:' >> %s/moai/tmp/ls_filters.log", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "ls -al %s/custom_boy/tmp >> %s/moai/tmp/ls_filters.log 2>&1", private_ext_path_cstr, private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+#endif
+
+#if 0
 		ZnkStr_setf( cmd, "ls -al %s/cgis/easter > /sdcard/moai_profile/ls_easter.log", private_path_cstr );
 		system( ZnkStr_cstr(cmd) );
 		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
@@ -369,6 +643,7 @@ Znk_JNI_INTERFACE( init )( JNIEnv* env, jobject obj, jstring private_path, jstri
 		ZnkStr_setf( cmd, "ls -alR %s/bin > /sdcard/moai_profile/ls_bin.log", private_path_cstr );
 		system( ZnkStr_cstr(cmd) );
 		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+#endif
 
 #if 0
 		ZnkStr_setf( cmd, "ls -al %s/cgis/easter > /sdcard/moai_profile/ls_easter.log", private_path_cstr );
@@ -388,14 +663,6 @@ Znk_JNI_INTERFACE( init )( JNIEnv* env, jobject obj, jstring private_path, jstri
 		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
 	
 		ZnkStr_setf( cmd, "ls -al /sdcard/Download/moai_profile > /sdcard/moai_profile/ls_download_profile.log" );
-		system( ZnkStr_cstr(cmd) );
-		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
-	
-		ZnkStr_setf( cmd, "ls -al /sdcard/Android/data/mrmoai2016.helloworld > /sdcard/moai_profile/ls_mr.log" );
-		system( ZnkStr_cstr(cmd) );
-		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
-	
-		ZnkStr_setf( cmd, "ls -al /sdcard/Android/data/mrmoai2016.helloworld/files > /sdcard/moai_profile/ls_mr_files.log" );
 		system( ZnkStr_cstr(cmd) );
 		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
 #endif
@@ -421,6 +688,7 @@ Znk_JNI_INTERFACE( init )( JNIEnv* env, jobject obj, jstring private_path, jstri
 	ZnkStr_delete( msg );
 	ZnkStr_delete( libname );
 	ZnkStr_delete( parent_ver );
+	ZnkStr_delete( pkg_dir );
 	return result;
 }
 

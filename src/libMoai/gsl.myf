@@ -72,6 +72,7 @@ MoaiIO_recvInPtn
 MoaiIO_reportFdst
 MoaiIO_sendResponseFile
 MoaiIO_sendTxtf
+MoaiIO_testFileWriting
 MoaiInfoID_getStr
 MoaiInfoID_scanIDStr
 MoaiInfo_clear

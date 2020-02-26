@@ -5,10 +5,11 @@
 
 #define Znk_JNI_INTERFACE( function )  Java_znkproject_moai_MainActivity_##function
 
-//extern "C" {
-//
 JNIEXPORT jboolean JNICALL
-Znk_JNI_INTERFACE( init )( JNIEnv* env, jobject obj, jstring private_path, jstring abi_str );
+Znk_JNI_INTERFACE( exitIfOldProcessExist )( JNIEnv* env, jobject obj );
+
+JNIEXPORT jboolean JNICALL
+Znk_JNI_INTERFACE( init )( JNIEnv* env, jobject obj, jstring private_path, jstring abi_jstr, jstring pkg_jpath, jstring native_lib_jpath );
 
 JNIEXPORT jboolean JNICALL
 Znk_JNI_INTERFACE( copyFromAssets )( JNIEnv* env, jclass clazz, jobject assetManager,
@@ -16,7 +17,5 @@ Znk_JNI_INTERFACE( copyFromAssets )( JNIEnv* env, jclass clazz, jobject assetMan
 
 JNIEXPORT jstring JNICALL
 Znk_JNI_INTERFACE( mainLoop )( JNIEnv* env, jobject obj );
-
-//}
 
 #endif

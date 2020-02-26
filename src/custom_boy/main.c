@@ -47,6 +47,46 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+#if defined(Znk_TARGET_UNIX)
+#  include <sys/stat.h>
+#  include <unistd.h>
+#  include <sys/types.h>
+#  include <pwd.h>
+#  include <grp.h>
+#endif
+
+
+#if defined(Znk_TARGET_UNIX)
+/***
+ * Get Username from UID
+ */
+static void
+getUIDName( ZnkStr ans )
+{
+	uid_t          uid    = getuid();
+	struct passwd* passwd = getpwuid( uid );
+	if( passwd ){
+		ZnkStr_add( ans, passwd->pw_name );
+	} else {
+		ZnkStr_addf( ans, "%d", uid );
+	}
+}
+/***
+ * Get Groupname from GID
+ */
+static void
+getGIDName( ZnkStr ans )
+{
+	gid_t         gid   = getgid();
+	struct group* group = getgrgid( gid );
+	if( group ){
+		ZnkStr_add( ans, group->gr_name );
+	} else {
+		ZnkStr_addf( ans, "%d", gid );
+	}
+}
+#endif
+
 
 static char st_moai_authentic_key[ 256 ] = "";
 
@@ -345,6 +385,77 @@ int main( int argc, char** argv )
 		RanoCGIUtil_rano_app_print_error( ZnkStr_cstr(ermsg) );
 		goto FUNC_END;
 	}
+
+//#if defined(__ANDROID__)
+#if 0
+	{
+		const char* private_ext_path_cstr = "/sdcard/Android/data/znkproject.moai/files";
+		ZnkStr  cmd        = ZnkStr_new( "" );
+		ZnkStr  msg        = ZnkStr_new( "" );
+
+		ZnkStr_setf( cmd, "echo 'custom_boy-process:' > %s/custom_boy/tmp/ls_cb.log", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+		{
+			ZnkStr name = ZnkStr_new( "" );
+
+			ZnkStr_clear( name ); getUIDName( name );
+			ZnkStr_setf( cmd, "echo 'userid:[%s]'  >> %s/custom_boy/tmp/ls_cb.log", ZnkStr_cstr(name), private_ext_path_cstr );
+			system( ZnkStr_cstr(cmd) );
+			ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+			ZnkStr_clear( name ); getGIDName( name );
+			ZnkStr_setf( cmd, "echo 'groupid:[%s]' >> %s/custom_boy/tmp/ls_cb.log", ZnkStr_cstr(name), private_ext_path_cstr );
+			system( ZnkStr_cstr(cmd) );
+			ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+			ZnkStr_delete( name );
+		}
+
+		ZnkStr_setf( cmd, "echo 'moai_profile:' >> %s/custom_boy/tmp/ls_cb.log", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "ls -al /sdcard/moai_profile >> %s/custom_boy/tmp/ls_cb.log 2>&1", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "echo 'moai_profile/filters:' >> %s/custom_boy/tmp/ls_cb.log 2>&1", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "ls -al /sdcard/moai_profile/filters >> %s/custom_boy/tmp/ls_cb.log 2>&1", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "echo 'files:' >> %s/custom_boy/tmp/ls_cb.log", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "ls -al %s >> %s/custom_boy/tmp/ls_cb.log 2>&1", private_ext_path_cstr, private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "echo 'custom_boy:' >> %s/custom_boy/tmp/ls_cb.log", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "ls -al %s/custom_boy >> %s/custom_boy/tmp/ls_cb.log 2>&1", private_ext_path_cstr, private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "echo 'custom_boy/tmp:' >> %s/custom_boy/tmp/ls_cb.log", private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_setf( cmd, "ls -al %s/custom_boy/tmp >> %s/custom_boy/tmp/ls_cb.log 2>&1", private_ext_path_cstr, private_ext_path_cstr );
+		system( ZnkStr_cstr(cmd) );
+		ZnkStr_addf( msg, "%s\n", ZnkStr_cstr(cmd) );
+
+		ZnkStr_delete( cmd );
+		ZnkStr_delete( msg );
+	}
+#endif
 
 	if( !ZnkZlib_initiate() ){
 		RanoCGIUtil_rano_app_print_error( "ZnkZlib_initiate is failure.\n" );

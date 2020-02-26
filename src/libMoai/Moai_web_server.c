@@ -64,10 +64,11 @@ printInputUI_Text( ZnkStr html,
 	ZnkStr_addf( html,
 			"<tr class=\"%s\">"
 			"<td><b>%s</b></td>"
-			"<td><input class=MstyInputField type=text name=%s value=\"%s\" size=30 %s></td>"
+			"<td><input class=MstyInputField type=text id=%s name=%s value=\"%s\" size=30 %s></td>"
 			"<td><font size=-1>%s</font></td>"
 			"</tr>\n",
 			class_name,
+			varname,
 			varname, varname, new_val, readonly_str, destination );
 	++st_input_ui_idx;
 }
@@ -164,6 +165,119 @@ makeStyleForXhrDMZ( ZnkStr html )
 }
 #endif
 
+static void
+printPPBScript( ZnkStr html )
+{
+	ZnkStr_add( html, "<script type='text/javascript'>\n" );
+	ZnkStr_add( html, "function setProfileDir( dir_path ){\n" );
+	ZnkStr_add( html, "\tdocument.getElementById( 'profile_dir' ).value = dir_path;\n" );
+	ZnkStr_add( html, "}\n" );
+	ZnkStr_add( html, "function setFiltersDir( dir_path ){\n" );
+	ZnkStr_add( html, "\tdocument.getElementById( 'filters_dir' ).value = dir_path;\n" );
+	ZnkStr_add( html, "}\n" );
+	ZnkStr_add( html, "function reportPPB( msg ){\n" );
+	ZnkStr_add( html, "\tdocument.getElementById( 'report_area' ).innerHTML = msg;\n" );
+	ZnkStr_add( html, "}\n" );
+	ZnkStr_add( html, "</script>\n" );
+}
+static void
+printPresumeProperValBtn( ZnkStr html, const char* profile_dir, const char* filters_dir )
+{
+	bool        userdata_dir_ok = false;
+	const char* userdata_dir    = "";
+	ZnkStr      profile_dir_mod = ZnkStr_new( profile_dir );
+	ZnkStr      filters_dir_mod = ZnkStr_new( filters_dir );
+	bool        ok_profile_dir = false;
+	bool        ok_filters_dir = false;
+	ZnkStr      msg = ZnkStr_new( "" );
+
+	/***
+	 * 適切な userdata_dir を探索.
+	 */
+	do {
+		userdata_dir = "/sdcard/Download";
+		if( ZnkDir_getType( userdata_dir ) == ZnkDirType_e_Directory ){ userdata_dir_ok = true; break; }
+
+		userdata_dir = "/storage/emulated/0/Download";
+		if( ZnkDir_getType( userdata_dir ) == ZnkDirType_e_Directory ){ userdata_dir_ok = true; break; }
+
+		userdata_dir = "/storage/emulated/legacy/Download";
+		if( ZnkDir_getType( userdata_dir ) == ZnkDirType_e_Directory ){ userdata_dir_ok = true; break; }
+
+	} while( false );
+
+	/***
+	 * profile_dir が無効な場合、代替値を導出
+	 */
+	if( ZnkDir_getType( profile_dir ) != ZnkDirType_e_Directory ){ 
+		if( userdata_dir_ok ){
+			ZnkStr_setf( profile_dir_mod, "%s/moai_profile", userdata_dir );
+			ZnkDir_mkdirPath( ZnkStr_cstr(profile_dir_mod), Znk_NPOS, '/', NULL );
+		}
+	}
+	/***
+	 * filters_dir が無効な場合、代替値を導出
+	 */
+	if( ZnkDir_getType( filters_dir ) != ZnkDirType_e_Directory ){ 
+		if( userdata_dir_ok ){
+			ZnkStr_setf( filters_dir_mod, "%s/moai_profile/filters", userdata_dir );
+			ZnkDir_mkdirPath( ZnkStr_cstr(filters_dir_mod), Znk_NPOS, '/', NULL );
+		}
+	}
+
+	/***
+	 * 書き込み試験
+	 */
+	if( ZnkDir_getType( ZnkStr_cstr(profile_dir_mod) ) == ZnkDirType_e_Directory ){ 
+		int state = MoaiIO_testFileWriting( ZnkStr_cstr(profile_dir_mod) );
+		if( state == 2 ){
+			/* 合格 */
+			ok_profile_dir = true;
+		}
+	}
+	if( ZnkDir_getType( ZnkStr_cstr(filters_dir_mod) ) == ZnkDirType_e_Directory ){ 
+		int state = MoaiIO_testFileWriting( ZnkStr_cstr(filters_dir_mod) );
+		if( state == 2 ){
+			/* 合格 */
+			ok_filters_dir = true;
+		}
+	}
+
+	/***
+	 * 成功/失敗に関わらず必要.
+	 */
+	ZnkStrPath_replaceDSP( profile_dir_mod, '/' );
+	ZnkStrPath_replaceDSP( filters_dir_mod, '/' );
+
+	if( ok_profile_dir ){
+		ZnkStr_add( msg, "<font color=red>profile成功. 「設定の確定」で確定できます.</font><br>" );
+	} else {
+		ZnkStr_addf( msg, "<font color=red>profile失敗(%s).</font><br>", ZnkStr_cstr(profile_dir_mod) );
+	}
+	if( ok_filters_dir ){
+		ZnkStr_add( msg, "<font color=red>filters成功. 「設定の確定」で確定できます.</font><br>" );
+	} else {
+		ZnkStr_addf( msg, "<font color=red>filters失敗(%s).</font><br>", ZnkStr_cstr(filters_dir_mod) );
+	}
+
+	if( !ok_profile_dir ){
+		/* 元に戻す */
+		ZnkStr_setf( profile_dir_mod, profile_dir );
+	}
+	if( !ok_filters_dir ){
+		/* 元に戻す */
+		ZnkStr_setf( filters_dir_mod, filters_dir );
+	}
+
+	ZnkStr_addf(  html, "<a class=MstyElemLink "
+			"onclick=\"setProfileDir( '%s' ); setFiltersDir( '%s' ); reportPPB( '%s' ); \">スキャン</a>",
+			ZnkStr_cstr(profile_dir_mod), ZnkStr_cstr(filters_dir_mod),
+			ZnkStr_cstr(msg) );
+
+	ZnkStr_delete( msg );
+	ZnkStr_delete( profile_dir_mod );
+	ZnkStr_delete( filters_dir_mod );
+}
 
 static int
 printConfig( ZnkSocket sock, ZnkStrAry result_msgs, uint32_t peer_ipaddr )
@@ -181,7 +295,11 @@ printConfig( ZnkSocket sock, ZnkStrAry result_msgs, uint32_t peer_ipaddr )
 	const char* moai_authentic_key    = MoaiServerInfo_authenticKey();
 
 	MoaiCGIManager_makeHeader( html, "Moai Configuration", false );
+
 	ZnkStr_add( html, "<body>\n" );
+
+	printPPBScript( html );
+
 	ZnkStr_add( html, "<b><img src=\"moai.png\"> Moaiエンジン設定</b><br>\n" );
 	ZnkStr_add( html, "<a class=MstyNowSelectedLink href=/config              >Moai基本設定</a> &nbsp;\n" );
 	ZnkStr_add( html, "<a class=MstyElemLink        href=/config?mode=sys     >Moaiセキュリティ設定</a> &nbsp;\n" );
@@ -241,7 +359,15 @@ printConfig( ZnkSocket sock, ZnkStrAry result_msgs, uint32_t peer_ipaddr )
 			"Connection Blocking Mode(on/off)." );
 #endif
 
-	ZnkStr_add(  html, "<tr colspan=4><td><br>\n" );
+	ZnkStr_add(  html, "<tr class=MstyItemOdd><td><br>\n" );
+	printPresumeProperValBtn( html, profile_dir, filters_dir );
+	ZnkStr_add(  html, "</td>" );
+	ZnkStr_add(  html, "<td>\n" );
+	ZnkStr_addf(  html, "<spin id=report_area></spin>\n" );
+	ZnkStr_add(  html, "</td>\n" );
+	ZnkStr_add(  html, "<td><font size=-1>filtersおよびprofileフォルダとして<br>書き込み可" SJIS_NOU "な場所をスキャンします.</font></td></tr>\n" );
+
+	ZnkStr_add(  html, "<tr><td colspan=3><br>\n" );
 	ZnkStr_add(  html, "<input type=hidden name=Moai_Update       value=\"update\">\n" );
 	ZnkStr_addf( html, "<input type=hidden name=Moai_AuthenticKey value=\"%s\">\n", moai_authentic_key );
 	ZnkStr_add(  html, "<input class=MstyWideButton type=submit value=\"設定の確定\">\n" );

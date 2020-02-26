@@ -4,14 +4,32 @@
     android:layout_height="match_parent"
     tools:context="${relativePackage}.${activityClass}">
 
+	<!--
     <TextView
-        android:text="my_label"
+        android:id="@+id/text_view"
+		android:textSize="24sp"
+        android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+	/>
+	-->
+	<!--
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/my_label"
+        android:id="@+id/text_view"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="176dp"
-        android:textSize="32dp"/>
+		android:textSize="32dp"
+	/>
+	-->
+    <TextView
+        android:id="@+id/text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+		android:textSize="20dp"
+	/>
 
 </RelativeLayout>

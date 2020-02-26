@@ -7,6 +7,7 @@
 #include <Znk_missing_libc.h>
 #include <Znk_str.h>
 #include <Znk_s_base.h>
+#include <Znk_dir.h>
 #include <time.h>
 
 
@@ -561,4 +562,53 @@ MoaiIO_recvByPtn2( ZnkBfr stream, ZnkSocket sock, MoaiFdSet mfds, const char* pt
 	}
 	/* OK */
 	return result_size;
+}
+
+/***
+ * Test file writing.
+ * 0:  cannot create.
+ * 1:  can create or exist.
+ * 2:  can overwrite.
+ * -1: cannot delete old file. 
+ */
+int
+MoaiIO_testFileWriting( const char* dir_path )
+{
+	ZnkStr filename = ZnkStr_newf( "%s/__moai_test_file_writing__.txt", dir_path );
+	int    state    = 0;
+	ZnkFile fp = NULL;
+
+	if( ZnkDir_getType( ZnkStr_cstr(filename) ) == ZnkDirType_e_File ){
+		ZnkDir_deleteFile_byForce( ZnkStr_cstr(filename) );
+	}
+
+	if( ZnkDir_getType( ZnkStr_cstr(filename) ) == ZnkDirType_e_File ){
+		state = -1;
+		goto FUNC_END;
+	}
+
+	/* êVãKçÏê¨ */
+	fp = Znk_fopen( ZnkStr_cstr(filename), "wb" );
+	if( fp ){
+		Znk_fputs( "Test1.\n", fp );
+		Znk_fclose( fp );
+		state = 1;
+	} else {
+		goto FUNC_END;
+	}
+
+	fp = Znk_fopen( ZnkStr_cstr(filename), "wb" );
+	if( fp ){
+		/* è„èëÇ´ */
+		Znk_fputs( "Test2.\n", fp );
+		Znk_fclose( fp );
+		state = 2;
+	} else {
+		goto FUNC_END;
+	}
+
+FUNC_END:
+	ZnkDir_deleteFile_byForce( ZnkStr_cstr(filename) );
+	ZnkStr_delete( filename );
+	return state;
 }
