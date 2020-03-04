@@ -51,7 +51,6 @@
 
 <a name=ForApk></a>
 <h1 class="title">Android APK版の入手およびインストール方法</h1>
-<p>
 <article class="message is-dark"><br>
 	<div class="message-header">
 		apk版について<br>
@@ -73,13 +72,13 @@
 	</div>
 	<div class="message-body">
 		<ol>
-			<li><a class=MstyWrapLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/download/v2.2.2/moai-v2.2.2-android.apk> apk ファイル </a>をダウンロードします.<br>
+			<li><a class=MstyWrapLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/download/v2.2.3/moai-v2.2.3-android.apk> apk ファイル </a>をダウンロードします.<br>
 			<div class=box>
 				この apk ファイルの名前は moai-v{バージョン番号}-android.apk という形式になります.<br>
 			</div>
 			</li>
 <br>
-			<li>ダウンロードした apk ファイルは /sdcard/Download 直下にあると思われますので、Androidのファイルマネージャでこのフォルダを開きましょう.<br>
+			<li>ダウンロードした apk ファイルは、AndroidのファイルマネージャからDownloadフォルダを開くと見つかると思います.<br>
 			</li>
 <br>
 			<li>この apk ファイルをタップして実行すれば Moai をインストールできるのですが、<br>
@@ -100,16 +99,39 @@
 			<li>改めて apk ファイルを実行してみます.<br>
 			無事「インストールされました」と表示されたら、アプリ一覧に「Moai for Android」という項目が登録されていると思います.<br>
 			それを選択すれば Moai が起動します.<br>
-			Moai for Android 起動を意味するシンプルな画面が表示されますので、一旦その画面をクリアします.<br>
-			(画面をクリアしてもMoaiのサーバプロセスはしばらくは生きています)<br>
+			Moai for Android 起動を意味するシンプルな画面が表示されます.<br>
+<br>
+			<div class=MstyComment>
+				<img src=/imgs/moai_for_android.png><br>
+			</div>
+<br>
+			<div class=box>
+				<b><u>ご注意</u></b><br>
+<br>
+				特にAndroid 6.0以降をお使いの方は、「端末内への写真、メディア、ファイルへのアクセスを許可しますか？」<br>
+				といったようなメッセージが表示されると思いますのでこれを許可します.<br>
+<br>
+				moai_profileの配置場所にもよりますが、これを許可しないと moai_profile 内へファイル書き込みが行えない場合があります.<br>
+				これにより、VirtualUSERS実行時におけるフィルターデータや、Easterでのブックマークデータ、お気に入り画像の保存等が<br>
+				失敗する可能性があります(これらのデータはmoai_profileに保存されるためです).<br>
+<br>
+				では、もしもこのメッセージで「許可しない」および「今後確認しない」を選んでしまったとして、<br>
+				後でやっぱり気が変わって許可したいと思った場合、どうすればよいでしょうか？<br>
+				その場合は、まずAndroidのアプリ設定から Moai for Android の設定画面を開きます.<br>
+				「許可」あるいは「権限」といった項目を選ぶと「アプリの権限」画面が表示されると思います.<br>
+				その画面で「ストレージ」の項目を ON にすることで許可することができます.<br>
+			</div>
 			</li>
 <br>
-			<li>お使いのAndroidシステムにあるWebブラウザ(なんでもよいですが)を起動します.<br>
-			http://127.0.0.1:8124にアクセスします.<br>
+			<li>「Moai Top」ボタンを押します.<br>
 			Moaiのトップページが表示されれば成功です.<br>
+			<div class=box>
+				あるいは、一旦Moai for Androidの画面をクリアし、お使いのAndroidシステムにあるWebブラウザ(なんでもよいですが)を起動し、<br>
+				http://127.0.0.1:8124にアクセスしても構いません.<br>
+			</div>
 			</li>
 <br>
-			<li>長時間何もせずに放置すると、そのうちMoaiのサーバプロセスがAndroidシステム(Zygoteプロセス)によって終了させられると思います.<br>
+			<li>長時間何もせずに放置すると、そのうちMoaiのサーバプロセスがAndroidシステム(Zygoteプロセス)によって終了させられる場合があります.<br>
 			こうなるとブラウザから http://127.0.0.1:8124 を開けなくなりますので、再度Moai for Androidを起動してください.<br>
 			</li>
 		</ol>
@@ -132,7 +154,6 @@
 		これについては、<a class=MstyElemLink href=#AboutMoaiProfile>moai_profile</a>を参照してください.<br>
 	</div>
 </article><br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -140,7 +161,6 @@
 
 <a name=ForAndroidTerm></a>
 <h1 class="title">Android Terminal Emulator版の入手およびインストール方法</h1>
-<p>
 <article class="message is-dark"><br>
 	<div class="message-header">
 		Terminal Emulator版について<br>
@@ -266,7 +286,6 @@
 		これについては、<a class=MstyElemLink href=#AboutMoaiProfile>moai_profile</a>を参照してください.<br>
 	</div>
 </article><br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -274,7 +293,6 @@
 
 <a name=TargetVersion></a>
 <h1 class="title">Moaiが動作するAndroidバージョンの詳細</h1>
-<p>
 <article class="message is-dark"><br>
 	<div class="message-header">
 		Moaiが動作するAndroidバージョンの詳細<br>
@@ -310,7 +328,6 @@
 		Terminal Emulator版 Moai では、(古いAndroid環境への救済措置という位置づけで)従来どおり非PIE形式とする形としました.<br>
 	</div>
 </article><br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -318,7 +335,6 @@
 
 <a name=AboutMoaiProfile></a>
 <h1 class="title">moai_profile</h1>
-<p>
 <article class="message is-dark"><br>
 	<div class="message-header">
 		moai_profileとは？<br>
@@ -341,8 +357,10 @@
 		Moaiが不要になった場合、このmoai_profileも削除してよいのか？<br>
 	</div>
 	<div class="message-body">
+		Moai for Android をアンインストールしても、moai_profileディレクトリだけは残るようになっています.<br>
+		(より正確にはアンインストールしても残るような位置にmoai_profileが作成されています)<br>
+<br>
 		Moai 本体が不要になっても、普通は集めた画像や動画は残しておきたいでしょう.<br>
-		よって Moai 本体のディレクトリを削除しても moai_profile だけは残しておくべきです.<br>
 		(必要に応じて中身をサルベージするなどもできるでしょう).<br>
 		しかし、それらの画像や動画さえも不要というなら、moai_profile もまるごと削除してもかまいません.<br>
 	</div>
@@ -353,21 +371,35 @@
 		moai_profile の位置は？<br>
 	</div>
 	<div class="message-body">
-		Android apk版の場合、データフォルダのファイルマネージャ直下(/sdcard/moai_profile) となります.<br>
+		Android apk版の場合、Moai for Androidを一度起動すると、ファイルマネージャーの直下にmoai_profileが作られると思います.<br>
+		(UNIXのパスで言えば /sdcard/moai_profile となります).<br>
 <br>
 		Android Terminal Emulator版の場合、Moai本体より一つ上のディレクトリです.<br>
 		moai_profile がまだ存在しない場合、Moai はこの位置へ moai_profile を自動的に生成します.<br>
 <br>
-		moai_profile の位置は Moaiエンジンの設定画面で変えることができます.<br>
-		例えば現在のディスク容量に余裕がなく、moai_profile のみを他のディスクに移動させたい場合などに柔軟に対応できます.<br>
-		この位置は、環境変数 MOAI_PROFILE_DIR の値としてそのフルパスを設定することで強制的に指定することもでき、<br>
-		これが指定されている場合は Moaiエンジンの設定よりもこれが優先されます.<br>
+		<div class=box>
+			<b><u>moai_profile の位置の確認と変更</u></b><br>
 <br>
-		ただしAndroidではシステムに様々な取り決めがあるため、特にapk版に関しては<br>
-		moai_profileのデフォルトの位置を変えることはあまりお勧めできません.<br>
+			moai_profile の現在の位置は Moaiエンジン設定の画面(Moai Engine Configボタンで開く画面)で確認することができます.<br>
+			設定画面内に profile_dir という項目がありますが、そこの「現在の値」が moai_profile の現在の位置です.<br>
+			ただし、この値はUNIXのパスとなっています.<br>
+<br>
+			Androidではシステムに様々な取り決めがあるため、特にapk版に関しては<br>
+			moai_profileのデフォルトの位置を変えることはあまりお勧めできません.<br>
+			特に問題等がない場合はデフォルトの位置のままでお使いください.<br>
+<br>
+			万一、現在の moai_profile の位置では書き込み不可などの問題が生じる場合、<br>
+			Moaiエンジン設定の下の方にある「スキャン」ボタンを試してみると問題が解消することがあります.<br>
+			「スキャン」ボタンを押すと、Moaiエンジンは、書き込み不可などの問題の発生しない新しい位置を自動的に探索し、<br>
+			その位置をユーザに提案します(filters_dir欄およびprofile_dir欄に一時的に値が代入されます).<br>
+			このとき、すぐ横に赤文字で「成功」または「失敗」を示すメッセージも表示されます.<br>
+			幸いにしてこのメッセージが「成功」であったなら、「設定を確定」ボタンを押し、その提案値で確定させましょう.<br>
+		</div>
+<br>
+		Terminal Emulator版の場合、この位置は、環境変数 MOAI_PROFILE_DIR の値としてそのフルパスを設定することで強制的に指定することもでき、<br>
+		これが指定されている場合は Moaiエンジン設定の値よりも優先されます.<br>
 	</div>
 </article><br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -375,7 +407,6 @@
 
 <a name=AboutDiskSize_ofMoaiEaster></a>
 <h1 class="title">Moai+Easter本体が使うディスク容量について</h1>
-<p>
 	Moai+Easterでは、展開直後の時点での全体のサイズ(15MB程度)に加え、<br>
 	実際にはここからさらにログファイルやキャッシュファイルなどの一時ファイル群が作成されます.<br>
 	従ってその分、ディスク容量の余裕を見ておく必要があります.<br>
@@ -386,7 +417,6 @@
 	<br>
 	ちなみにこの保存日数は設定で変更することもでき、日数を短くすればその分サイズを減らすことも可能ですが、<br>
 	サイズの上限を(MB単位で)直接指定することは現バージョンのEasterではできません.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -407,7 +437,7 @@
 			</div>
 		</div>
 		<div class="content">
-		  <time datetime="2016-1-1">2019/11/22</time>
+		  <time datetime="2016-1-1">2020/03/01</time>
 		</div>
 	</div>
 </div>

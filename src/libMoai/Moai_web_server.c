@@ -204,6 +204,9 @@ printPresumeProperValBtn( ZnkStr html, const char* profile_dir, const char* filt
 		userdata_dir = "/storage/emulated/legacy/Download";
 		if( ZnkDir_getType( userdata_dir ) == ZnkDirType_e_Directory ){ userdata_dir_ok = true; break; }
 
+		userdata_dir = "/storage/self/primary/Download";
+		if( ZnkDir_getType( userdata_dir ) == ZnkDirType_e_Directory ){ userdata_dir_ok = true; break; }
+
 	} while( false );
 
 	/***

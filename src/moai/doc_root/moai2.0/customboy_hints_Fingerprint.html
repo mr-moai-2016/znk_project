@@ -66,15 +66,13 @@
 
 <a name=Fgp_userAgent></a>
 <h1 class="title">Fgp_userAgent</h1>
-<span class=MstyAuthor> (Category: fingerprint)</span><p>
-	<span class=MstyCodeIn>navigator.userAgent</span>より取得されるいわゆるUser-Agent文字列である.<br>
+<span class=MstyAuthor> (Category: fingerprint)</span>	<span class=MstyCodeIn>navigator.userAgent</span>より取得されるいわゆるUser-Agent文字列である.<br>
 	<!--<br>
 	<div class=box>
 		現状のふたばのFingerprintの導出計算においてはこれは加味されていない.<br>
 		しかしUser-Agentの情報自体が参照されていないというわけではない.<br>
 	</div>
 	--><br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -82,8 +80,7 @@
 
 <a name=Fgp_language></a>
 <h1 class="title">Fgp_language</h1>
-<span class=MstyAuthor> (Category: fingerprint)</span><p>
-	<span class=MstyCodeIn>navigator.language</span>より取得されるいわゆるBrouserの言語情報を示す文字列である.<br>
+<span class=MstyAuthor> (Category: fingerprint)</span>	<span class=MstyCodeIn>navigator.language</span>より取得されるいわゆるBrouserの言語情報を示す文字列である.<br>
 	日本語環境のBrowserの場合、ja、ja-JP、ja-jp、ja-JP-macなどの値を取るが、実際どのような値になるかはBrowserやその設定、システムのlocale設定などによっても様々となる.<br>
 	<br>
 	勿論例外もあるがおおよそ以下が目安である.<br>
@@ -94,7 +91,6 @@
 		<li>Mac safari: ja-jp</li>
 		<li>その他: ja</li>
 	</ul>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -102,10 +98,8 @@
 
 <a name=Fgp_colorDepth></a>
 <h1 class="title">Fgp_colorDepth</h1>
-<span class=MstyAuthor> (Category: fingerprint)</span><p>
-	<span class=MstyCodeIn>screen.colorDepth</span>より取得されるBrowserの色深度bit数を示す文字列である.<br>
+<span class=MstyAuthor> (Category: fingerprint)</span>	<span class=MstyCodeIn>screen.colorDepth</span>より取得されるBrowserの色深度bit数を示す文字列である.<br>
 	32、24、16などの値を取るが、実際どのような値になるかはBrowserやその設定などによっても様々となる.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -113,8 +107,7 @@
 
 <a name=Fgp_ScreenResolution></a>
 <h1 class="title">Fgp_ScreenResolution</h1>
-<span class=MstyAuthor> (Category: fingerprint)</span><p>
-	<span class=MstyCodeIn>screen.width, screen.height</span>より取得されるモニタの解像度を示す二つの数字を文字xで連結した文字列である.<br>
+<span class=MstyAuthor> (Category: fingerprint)</span>	<span class=MstyCodeIn>screen.width, screen.height</span>より取得されるモニタの解像度を示す二つの数字を文字xで連結した文字列である.<br>
 	順番はこれとは逆順になることもある.<br>
 	<!--<br>
 	<div class=box>
@@ -123,7 +116,6 @@
 		Fingerprintとは別にscszというPost変数が存在しており、そちらを介して参照される.<br>
 	</div>
 	--><br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -131,10 +123,8 @@
 
 <a name=Fgp_TimezoneOffset></a>
 <h1 class="title">Fgp_TimezoneOffset</h1>
-<span class=MstyAuthor> (Category: fingerprint)</span><p>
-	<span class=MstyCodeIn>new Date().getTimezoneOffset()</span> により取得されるタイムゾーンを意味する(世界標準時からの)オフセット値を示す文字列である.<br>
+<span class=MstyAuthor> (Category: fingerprint)</span>	<span class=MstyCodeIn>new Date().getTimezoneOffset()</span> により取得されるタイムゾーンを意味する(世界標準時からの)オフセット値を示す文字列である.<br>
 	日本ではこの値は必ず -540 になると考えてよい.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -142,8 +132,7 @@
 
 <a name=Fgp_SessionStorage></a>
 <h1 class="title">Fgp_SessionStorage</h1>
-<span class=MstyAuthor> (Category: fingerprint)</span><p>
-	<span class=MstyCodeIn>!!window.sessionStorage</span> というコードSnippetを実行した結果を示し、trueまたはfalseという文字列となる.<br>
+<span class=MstyAuthor> (Category: fingerprint)</span>	<span class=MstyCodeIn>!!window.sessionStorage</span> というコードSnippetを実行した結果を示し、trueまたはfalseという文字列となる.<br>
 	そのBrowserにsessionStorage機構が存在するか否かを示す.<br>
 	Browserの対応状況は以下が目安である(MDNによる).<br>
 	<ul>
@@ -156,7 +145,6 @@
 		<li>Opera Mobile: 11以上</li>
 		<li>Safari Mobile: iOS 3.2以上</li>
 	</ul>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -164,8 +152,7 @@
 
 <a name=Fgp_LocalStorage></a>
 <h1 class="title">Fgp_LocalStorage</h1>
-<span class=MstyAuthor> (Category: fingerprint)</span><p>
-	<span class=MstyCodeIn>!!window.localStorage</span> というコードSnippetを実行した結果を示し、trueまたはfalseという文字列となる.<br>
+<span class=MstyAuthor> (Category: fingerprint)</span>	<span class=MstyCodeIn>!!window.localStorage</span> というコードSnippetを実行した結果を示し、trueまたはfalseという文字列となる.<br>
 	そのBrowserにlocalStorage機構が存在するか否かを示す.<br>
 	Browserの対応状況は以下が目安である(MDNによる).<br>
 	<ul>
@@ -178,7 +165,6 @@
 		<li>Opera Mobile: 11以上</li>
 		<li>Safari Mobile: iOS 3.2以上</li>
 	</ul>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -186,8 +172,7 @@
 
 <a name=Fgp_IndexedDB></a>
 <h1 class="title">Fgp_IndexedDB</h1>
-<span class=MstyAuthor> (Category: fingerprint)</span><p>
-	<span class=MstyCodeIn>!!window.indexedDB</span> というコードSnippetを実行した結果を示し、trueまたはfalseという文字列となる.<br>
+<span class=MstyAuthor> (Category: fingerprint)</span>	<span class=MstyCodeIn>!!window.indexedDB</span> というコードSnippetを実行した結果を示し、trueまたはfalseという文字列となる.<br>
 	そのBrowserにindexedDB機構が存在するか否かを示す.<br>
 	Browserの対応状況は以下が目安である(MDNによる).<br>
 	<ul>
@@ -203,7 +188,6 @@
 		<li>Opera Mobile: 22以上</li>
 		<li>Safari Mobile: 8以上</li>
 	</ul>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -211,8 +195,7 @@
 
 <a name=Fgp_BodyAddBehavior></a>
 <h1 class="title">Fgp_BodyAddBehavior</h1>
-<span class=MstyAuthor> (Category: fingerprint)</span><p>
-	<span class=MstyCodeIn>typeof(document.body.addBehavior)</span> というコードSnippetを実行した結果を示し、functionまたはobjectまたはundefinedという文字列となる.<br>
+<span class=MstyAuthor> (Category: fingerprint)</span>	<span class=MstyCodeIn>typeof(document.body.addBehavior)</span> というコードSnippetを実行した結果を示し、functionまたはobjectまたはundefinedという文字列となる.<br>
 	そのBrowserに<span class=MstyCodeIn>document.body.addBehavior</span> メソッドが存在するか否かを示す.<br>
 	これはおそらくIE10以上にしか存在しない.<br>
 	<ul>
@@ -220,7 +203,6 @@
 		<li>IE9以下: objectを返す.</li>
 		<li>その他: undefinedを返す.</li>
 	</ul>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -228,8 +210,7 @@
 
 <a name=Fgp_OpenDatabase></a>
 <h1 class="title">Fgp_OpenDatabase</h1>
-<span class=MstyAuthor> (Category: fingerprint)</span><p>
-	<span class=MstyCodeIn>typeof(window.openDatabase)</span> というコードSnippetを実行した結果を示し、functionまたはundefinedという文字列となる.<br>
+<span class=MstyAuthor> (Category: fingerprint)</span>	<span class=MstyCodeIn>typeof(window.openDatabase)</span> というコードSnippetを実行した結果を示し、functionまたはundefinedという文字列となる.<br>
 	そのBrowserにHTML5 WebSQL Databaseがサポートされているか否かを示す.<br>
 	<ul>
 		<li>Chrome: 8以上か?</li>
@@ -239,7 +220,6 @@
 		<li>Safari: 3.1以上</li>
 		<li>Android: 2.1以上</li>
 	</ul>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -247,10 +227,8 @@
 
 <a name=Fgp_CpuClass></a>
 <h1 class="title">Fgp_CpuClass</h1>
-<span class=MstyAuthor> (Category: fingerprint)</span><p>
-	<span class=MstyCodeIn>navigator.cpuClass</span> より取得されるこのBrowserの動作しているMachineのCPU情報を示す文字列である.<br>
+<span class=MstyAuthor> (Category: fingerprint)</span>	<span class=MstyCodeIn>navigator.cpuClass</span> より取得されるこのBrowserの動作しているMachineのCPU情報を示す文字列である.<br>
 	x86、PPC などを返すと言われているが、実際のところほとんどのケースで空値となっている.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -258,8 +236,7 @@
 
 <a name=Fgp_Platform></a>
 <h1 class="title">Fgp_Platform</h1>
-<span class=MstyAuthor> (Category: fingerprint)</span><p>
-	<span class=MstyCodeIn>navigator.platform</span> より取得されるこのBrowserの動作しているOS環境を示す文字列である.<br>
+<span class=MstyAuthor> (Category: fingerprint)</span>	<span class=MstyCodeIn>navigator.platform</span> より取得されるこのBrowserの動作しているOS環境を示す文字列である.<br>
 	おおよそ以下が目安である.<br>
 	<ul>
 		<li>Windows32/WOW : Win32</li>
@@ -270,7 +247,6 @@
 		<li>iPhone    : iPhone</li>
 		<li>Mac       : MacIntel</li>
 	</ul>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -278,13 +254,11 @@
 
 <a name=Fgp_doNotTrack></a>
 <h1 class="title">Fgp_doNotTrack</h1>
-<span class=MstyAuthor> (Category: fingerprint)</span><p>
-	<span class=MstyCodeIn>navigator.doNotTrack</span> より取得されるこのBrowserがTrackingを拒否しているか否か(DNT機能がOnか否か)を示す文字列である.<br>
+<span class=MstyAuthor> (Category: fingerprint)</span>	<span class=MstyCodeIn>navigator.doNotTrack</span> より取得されるこのBrowserがTrackingを拒否しているか否か(DNT機能がOnか否か)を示す文字列である.<br>
 	Firefox9以降より導入された.<br>
 	Firefox9以降の場合、プライバシーの設定画面において「トラッキングの拒否をサイトに通知する」にチェックを入れるとこれが有効になり、この値は 1 となる.<br>
 	チェックがOFFの場合 unspecified という値となる。<br>
 	それ以外の環境では空値を返すとみなしてよい.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -292,11 +266,9 @@
 
 <a name=Fgp_PluginsString></a>
 <h1 class="title">Fgp_PluginsString</h1>
-<span class=MstyAuthor> (Category: fingerprint)</span><p>
-	<span class=MstyCodeIn>navigator.plugins</span> の値を元に取得されるこのBrowserにインストールされているPlugin群を示す文字列である.<br>
+<span class=MstyAuthor> (Category: fingerprint)</span>	<span class=MstyCodeIn>navigator.plugins</span> の値を元に取得されるこのBrowserにインストールされているPlugin群を示す文字列である.<br>
 	環境によって様々なPluginやそのVersionがインストールされており、従ってほぼ自由文字列と考えてよく、リアルに偽装したところであまり意味がないと思われる.<br>
 	ただしIEの場合はこれは空値である.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -304,15 +276,13 @@
 
 <a name=Fgp_Canvas></a>
 <h1 class="title">Fgp_Canvas</h1>
-<span class=MstyAuthor> (Category: fingerprint)</span><p>
-	いわゆるCanvas Fingerprintと呼ばれる値である.<br>
+<span class=MstyAuthor> (Category: fingerprint)</span>	いわゆるCanvas Fingerprintと呼ばれる値である.<br>
 	この値は fp.js における getCanvasFingerprint関数によって取得される文字列である.<br>
 	getCanvasFingerprintでは HTML5のCanvas APIを使い図形や文字などを描き、次にその結果をPNG画像とし、最後にそのPNG画像全体のFile ImageをBASE64 Encodingした結果がその値となる.<br>
 	<br>
 	この画像の出力結果は使用するRendering EngineやシステムにインストールされているGraphics system(GDI,X11 etc)、Graphics cardなどのハードウェアにも依存することが考えられる.<br>
 	それを考慮すると全体としてそこそこ自由度の高い文字列とみなすこともできる.<br>
 	よって、実のところ単純にデタラメな値を設定しても偽装か否かを見破るのはそこそこ困難であると考えられるが、このあたりをどう評価するかは人によって判断が分れるところであろう.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>

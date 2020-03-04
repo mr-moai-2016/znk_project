@@ -478,6 +478,54 @@ checkCBVars( const ZnkVarpAry cb_vars, const char* target, ZnkStr msg, ZnkStr la
 	return true;
 }
 
+/***
+ * Test file writing.
+ * 0:  cannot create.
+ * 1:  can create or exist.
+ * 2:  can overwrite.
+ * -1: cannot delete old file. 
+ */
+int
+CB_testFileWriting( const char* label, const char* dir_path )
+{
+	ZnkStr filename = ZnkStr_newf( "%s/__%s_test_file_writing__.txt", dir_path, label );
+	int    state    = 0;
+	ZnkFile fp = NULL;
+
+	if( ZnkDir_getType( ZnkStr_cstr(filename) ) == ZnkDirType_e_File ){
+		ZnkDir_deleteFile_byForce( ZnkStr_cstr(filename) );
+	}
+
+	if( ZnkDir_getType( ZnkStr_cstr(filename) ) == ZnkDirType_e_File ){
+		state = -1;
+		goto FUNC_END;
+	}
+
+	/* V‹Kì¬ */
+	fp = Znk_fopen( ZnkStr_cstr(filename), "wb" );
+	if( fp ){
+		Znk_fputs( "Test1.\n", fp );
+		Znk_fclose( fp );
+		state = 1;
+	} else {
+		goto FUNC_END;
+	}
+
+	fp = Znk_fopen( ZnkStr_cstr(filename), "wb" );
+	if( fp ){
+		/* ã‘‚« */
+		Znk_fputs( "Test2.\n", fp );
+		Znk_fclose( fp );
+		state = 2;
+	} else {
+		goto FUNC_END;
+	}
+
+FUNC_END:
+	ZnkDir_deleteFile_byForce( ZnkStr_cstr(filename) );
+	ZnkStr_delete( filename );
+	return state;
+}
 
 bool
 CBVirtualizer_initiateAndSave( RanoCGIEVar* evar, const ZnkVarpAry cb_vars,
@@ -623,7 +671,9 @@ CBVirtualizer_initiateAndSave( RanoCGIEVar* evar, const ZnkVarpAry cb_vars,
 			//Znk_snprintf( path, sizeof(path), "%s%s/%s", moai_dir, st_filters_dir, info->send_myf_filename_ );
 			Znk_snprintf( path, sizeof(path), "%s/%s", st_filters_dir, info->send_myf_filename_ );
 
-			ZnkMyf_load( send_myf, path );
+			if( !ZnkMyf_load( send_myf, path ) ){
+				ZnkStr_addf( msg, "&nbsp;&nbsp;Loading your %s failure.<br>", path );
+			}
 
 			vars = ZnkMyf_find_vars( send_myf, "header_vars" );
 			if( vars ){
@@ -690,6 +740,10 @@ CBVirtualizer_initiateAndSave( RanoCGIEVar* evar, const ZnkVarpAry cb_vars,
 				ZnkStr_addf( msg, "&nbsp;&nbsp;Saving your %s<br>", path );
 			} else {
 				ZnkStr_addf( msg, "&nbsp;&nbsp;Cannot saving your %s<br>", path );
+				{
+					int state = CB_testFileWriting( "custom_boy", st_filters_dir );
+					ZnkStr_addf( msg, "&nbsp;&nbsp;Test File Writing : path=[%s] state=[%d]<br>", st_filters_dir, state );
+				}
 				result = false;
 			}
 			ZnkMyf_destroy( send_myf );

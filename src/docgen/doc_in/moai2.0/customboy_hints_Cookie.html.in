@@ -7,7 +7,7 @@ update = ['2019/07/29']
 category_path = { ['moai2_0_exp'] ['customboy'] }
 urp           = ['/moai2.0/customboy_hints_Cookie.html']
 nb_tags = { ['div'] ['ul'] ['li'] }
-title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span>']
+title_attr_fmt = ['<span class=MstyAuthor> (Category: %s)</span><br>']
 @@.
 
 @@L AtFirst

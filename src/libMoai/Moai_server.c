@@ -1278,6 +1278,7 @@ dumpDebugLS_forAndroid(
 	static const char* private_ext_path_cstr = "/sdcard/Android/data/znkproject.moai/files";
 	ZnkStr  cmd = ZnkStr_new( "" );
 
+#if 0
 	ZnkStr_setf( cmd, "echo '/sdcard:' > %s/moai/tmp/ls_filters.log", private_ext_path_cstr );
 	system( ZnkStr_cstr(cmd) );
 
@@ -1295,6 +1296,7 @@ dumpDebugLS_forAndroid(
 
 	ZnkStr_setf( cmd, "ls -al /mnt >> %s/moai/tmp/ls_filters.log 2>&1", private_ext_path_cstr );
 	system( ZnkStr_cstr(cmd) );
+#endif
 
 	ZnkStr_setf( cmd, "echo 'profile_dir=[%s](mkdir=[%d] chmod=[%d])' >> %s/moai/tmp/ls_filters.log",
 			profile_dir, mkdir_result_of_profile_dir, chmod_result_of_profile_dir, private_ext_path_cstr );

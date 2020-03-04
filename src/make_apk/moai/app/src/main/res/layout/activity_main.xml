@@ -1,35 +1,61 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="${relativePackage}.${activityClass}">
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools  ="http://schemas.android.com/tools"
+	android:layout_width ="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical" >
 
-	<!--
-    <TextView
-        android:id="@+id/text_view"
-		android:textSize="24sp"
-        android:layout_width="wrap_content"
+	<Button
+		android:id="@+id/open_top"
+		android:layout_width ="match_parent"
 		android:layout_height="wrap_content"
-	/>
-	-->
-	<!--
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/text_view"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="176dp"
-		android:textSize="32dp"
-	/>
-	-->
-    <TextView
-        android:id="@+id/text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-		android:textSize="20dp"
-	/>
+		android:layout_centerHorizontal="true"
+		android:text="Moai Top">
+	</Button>
+	<Button
+		android:id="@+id/open_engine_config"
+		android:layout_width ="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:text="Moai Engine Config">
+	</Button>
+	<Button
+		android:id="@+id/open_easter"
+		android:layout_width ="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:text="Easter">
+	</Button>
+	<Button
+		android:id="@+id/open_virtual_users"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:text="VirtualUSERS">
+	</Button>
+	<Button
+		android:id="@+id/copy_log_to_clipboard"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:text="Copy log to clipboard">
+	</Button>
 
-</RelativeLayout>
+	<ScrollView
+		android:layout_width ="match_parent"
+		android:layout_height="match_parent"
+		android:padding="10dp"
+		android:id="@+id/scroll_view">
+		<TextView
+			android:id="@+id/text_view"
+			android:layout_width ="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:padding="10dp"
+			android:textSize="20dp"
+			android:textColor ="#cccccc"
+			android:background="#555555"
+		/>
+	</ScrollView>
+
+</LinearLayout>

@@ -54,7 +54,6 @@
 
 <a name=NextDevelopment></a>
 <h1 class="title">Moai 次期バージョンの開発状況</h1>
-<p>
 次期バージョンMoai Ver2.3( コードネーム Raraku )のリリースに向け、現在開発中です.<br>
 次回のバージョンでは以下の新機能の導入や修正等を予定しています.<br>
 <br>
@@ -77,7 +76,6 @@
 	</div>
 </article>
 <br><br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -85,11 +83,31 @@
 
 <a name=WhatIsChanging_latest></a>
 <h1 class="title">Moai 最新バージョンの新機能および修正内容</h1>
-<p>
-Moai最新版リリース( Ver2.2.2 コードネーム ResponsiveStone ) での<br>
+Moai最新版リリース( Ver2.2.3 コードネーム ResponsiveStone ) での<br>
 新機能、仕様ならびに不具合の修正等は以下のようになります.<br>
 <br>
 <article class="message is-dark">
+	<div class="message-header">
+		Ver2.2.3(Android APK版のみ提供となります)<br>
+	</div>
+	<div class="message-body">
+		<b>Android AArch64アーキテクチャ環境(arm64-v8a)およびAndroid 6.0以降(Runtime Permission)への対応</b><br>
+<br>
+		この環境において、Moaiシステム全体が未対応であったためにEasterやVirtualUSERSの起動に失敗する不具合が発生していました.<br>
+		また、moai_profileディレクトリの生成に失敗したり、あるいはディレクトリ内への書き込みが許可されないことが原因で、<br>
+		VirtualUSERSで生成されたフィルターデータの保存に失敗する不具合が発生していました.<br>
+		この不具合を修正しました.<br>
+		<div class=box>
+			この問題(Issues 1)の解決にあたっては daikaimon 様に不具合報告と動作確認等をご協力頂きました. この場を借りてお礼申し上げます.<br>
+		</div>
+<br>
+		<b>Moai for Androidの起動画面において、Moai TopやEaster、VirtualUSERSなどを直接ブラウザで開くボタンを追加</b><br>
+<br>
+		今まで通り Moai for Android の画面を隠してからブラウザを開き、127.0.0.1:8124 へアクセスすることでも動作するのですが、<br>
+		ユーザへの利便性を若干改善すべく、画面内にMoai TopやEaster、VirtualUSERSをブラウザで直接開けるボタンを配置しました.<br>
+		このボタンを押すだけで自動的にブラウザが起動し、127.0.0.1:8124 へアクセスできます.<br>
+	</div>
+<br>
 	<div class="message-header">
 		Ver2.2.2<br>
 	</div>
@@ -139,7 +157,6 @@ Moai最新版リリース( Ver2.2.2 コードネーム ResponsiveStone ) での<
 	</div>
 </article>
 <br><br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -147,7 +164,6 @@ Moai最新版リリース( Ver2.2.2 コードネーム ResponsiveStone ) での<
 
 <a name=MoaiFeature></a>
 <h1 class="title">Moai の全般的な特徴</h1>
-<p>
 	Moaiの基本的な特徴については<a class=MstyElemLink href=/moai2.0/moai_feature.html>こちら</a>を参照してください.<br><br>
 <br>
 	moaiが起動中は、あなたのマシンはローカルなプロキシサーバとウェブサーバとして同時に機能します.<br>
@@ -159,7 +175,6 @@ Moai最新版リリース( Ver2.2.2 コードネーム ResponsiveStone ) での<
 	二つ目は、ブラウザからURL指定を行うことにより、アクセス先のサーバ内に置かれたCGIスクリプトなどを実行させ、その結果をブラウザへ送信することです.<br>
 	Moaiの場合でもこれが可能で、これを Moai CGI と呼び、Moaiとは独立した単独のWebアプリケーションとして機能します.<br>
 	また、その気になればあなたがCGIスクリプトを独自に開発し、それをMoai CGI上で実行させることもできます.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -167,7 +182,6 @@ Moai最新版リリース( Ver2.2.2 コードネーム ResponsiveStone ) での<
 
 <a name=WhatIsChanging_v2_0></a>
 <h1 class="title">旧バージョン1.1.8をご使用の方へ</h1>
-<p>
 	古くよりこのツールにお付き合い頂きありがとうございます.<br>
 	Moai Ver2.0以降は、基本的に<b>旧バージョン1.1.8とは全く互換性がない別のアプリケーション</b>とお考え下さい.<br>
 	以下では、1.1.8から2.0以降でMoaiがどのように変わったのか、その概略を説明します.<br>
@@ -202,7 +216,6 @@ Moai最新版リリース( Ver2.2.2 コードネーム ResponsiveStone ) での<
 		一方、バージョン2.0で導入されたEasterを使って仮想環境を実現する場合、<br>
 		その適用範囲はEasterがサポートするサイトに限られます.<br>
 	</div>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -210,7 +223,6 @@ Moai最新版リリース( Ver2.2.2 コードネーム ResponsiveStone ) での<
 
 <a name=license></a>
 <h1 class="title">ライセンス</h1>
-<p>
 	Moai本体およびそれに付随するシステムのうち、我々Moai開発チームが開発したものに関しては、そのライセンスはすべて<a class=MstyElemLink href=http://www.kmonos.net/nysl target=_blank>NYSL</a>(煮るなり焼くなり好きにしろ)とします.<br>
 	厳密に言えば、このシステムに含まれるzlib、libresslについてはそれぞれが規定したライセンスに従うものとなりますが、これらのライセンスもNYSLと基本的に競合せず、その主張に大差はないとは思います.<br>
 <br>
@@ -218,7 +230,6 @@ Moai最新版リリース( Ver2.2.2 コードネーム ResponsiveStone ) での<
 	また将来のバージョンにおいてもそのようなものを含める予定はありません.<br>
 <br>
 	現時点での公式のソースリポジトリは https://github.com/mr-moai-2016/znk_project ですが再配布はご自由にどうぞ.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -226,14 +237,12 @@ Moai最新版リリース( Ver2.2.2 コードネーム ResponsiveStone ) での<
 
 <a name=as_is></a>
 <h1 class="title">免責事項</h1>
-<p>
 	本ソフトウェアは「現状のまま」で、明示であるか暗黙であるかを問わず、何らの保証もなく提供されます.<br>
 	本ソフトウェアの使用によって生じるいかなる損害についても、作者は一切の責任を負わないものとします.<br>
 		<br>
 	This software is provided 'as-is', without any express or implied warranty.<br>
 	In no event will the authors be held liable for any damages arising<br>
 	from the use of this software.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -241,13 +250,11 @@ Moai最新版リリース( Ver2.2.2 コードネーム ResponsiveStone ) での<
 
 <a name=acknowledge></a>
 <h1 class="title">謝辞</h1>
-<p>
 	Moai開発にあたっては、勿論参考としたツールがあります.<br>
 	Polipoというツールがそれにあたりますが、これもCで記述されたオープンソースです.<br>
 	Polipoは非常に優れたローカルプロキシであり、多くの部分を参考にさせてもらいました.<br>
 	この場を借りてJuliusz Chroboczek氏には感謝致します.<br>
 	ポート番号8123はPolipoで使われていたものであり、それに敬意を表しMoaiではこれに続く後輩という意味で8124をデフォルトポートとしました.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -268,7 +275,7 @@ Moai最新版リリース( Ver2.2.2 コードネーム ResponsiveStone ) での<
 			</div>
 		</div>
 		<div class="content">
-		  <time datetime="2016-1-1">2020/01/21</time>
+		  <time datetime="2016-1-1">2020/03/01</time>
 		</div>
 	</div>
 </div>

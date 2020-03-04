@@ -4,18 +4,26 @@ import android.app.Activity;
 import android.Manifest;
 import android.os.Bundle;
 import android.os.Build;
+import android.os.Environment;
+import android.graphics.Color;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.TextView;
 import android.content.res.AssetManager;
 import android.content.pm.PackageManager;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.ClipboardManager;
+import android.content.ClipData;
+import android.content.ClipDescription;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Button;
+import android.text.Html;
+import android.net.Uri;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -23,6 +31,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
+import java.io.File;
 import java.io.IOException;
 
 public class MainActivity extends Activity
@@ -32,6 +41,7 @@ public class MainActivity extends Activity
 
 	static AssetManager   assetManager;
 	static PackageManager packageManager;
+	static TextView       textView;
 
 	static {
 		System.loadLibrary("main");
@@ -124,7 +134,7 @@ public class MainActivity extends Activity
 		}
 		return true;
 	}
-	protected void confirmPermission(){
+	private void confirmPermission(){
 		String[] perm_ary = new String[]{
 			Manifest.permission.READ_EXTERNAL_STORAGE,
 			Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -187,6 +197,32 @@ public class MainActivity extends Activity
 		super.onRequestPermissionsResult( requestCode, perm_ary, grantResults );
 	}
 
+
+	private void openUri( String uri_str ){
+		Uri uri = Uri.parse( uri_str );
+		Intent intent = new Intent( Intent.ACTION_VIEW, uri );
+		startActivity(intent);
+	}
+	private boolean mkdirAndSetRW( String dir, StringBuilder ermsg ){
+		File file_obj = new File( dir );
+		if( !file_obj.exists() ){
+			file_obj.mkdirs();
+		}
+		if( file_obj.exists() ){
+			file_obj.setReadable( true, true );
+			file_obj.setWritable( true, true );
+			if( !file_obj.canWrite() ){
+				ermsg.append( "[<font color=\"#ffff00\">FYI</font>] " + dir + " cannot write.<br>" );
+				return false;
+			}
+			ermsg.append( "[<font color=\"#00ff00\">OK</font>] " + dir + " auto-detected.<br>" );
+			return true;
+		} else {
+			ermsg.append( "[<font color=\"#ffff00\">FYI</font>] " + dir + " cannot mkdir.<br>" );
+		}
+		return false;
+	}
+
     @Override
 	protected void onCreate( Bundle savedInstanceState ){
 
@@ -195,7 +231,7 @@ public class MainActivity extends Activity
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_main);
 			String private_path = getFilesDir().getPath();
-			String private_external_path = getExternalFilesDir(null).getPath();
+			//String private_external_path = getExternalFilesDir(null).getPath();
 			String asset_dst_dir = private_path; 
 			/**
 			 * TODO:
@@ -219,6 +255,7 @@ public class MainActivity extends Activity
 			String abi_str = "";
 			String pkg_path = "";
 			String nativ_lib_path = "";
+			StringBuilder ermsg = new StringBuilder( "" );
 
 			if( sdk_int >= 21 ){
 				/**
@@ -314,15 +351,116 @@ public class MainActivity extends Activity
 				confirmPermission();
 			}
 
-			TextView textView = (TextView)findViewById( R.id.text_view );
+			{
+				/**
+				 * ext_storage_dir:
+				 *   exam: /storage/emulated/0
+				 * download_dir:
+				 *   exam: /storage/emulated/0/Download
+				 */
+				boolean success = false;
+				if( !success ){
+					String ext_storage_dir = Environment.getExternalStorageDirectory().getAbsolutePath();
+					String profile_dir     = ext_storage_dir + "/moai_profile";
+					success = mkdirAndSetRW( profile_dir, ermsg );
+				}
+				if( !success ){
+					String download_dir = Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DOWNLOADS ).getAbsolutePath();
+					String profile_dir  = download_dir + "/moai_profile";
+					success = mkdirAndSetRW( profile_dir, ermsg );
+				}
+				if( !success ){
+					ermsg.append( "[<font color=\"#ff0000\">NG</font>] " + " moai_profile auto-detection.<br>" );
+				}
+			}
+
+			textView = (TextView)findViewById( R.id.text_view );
+			//textView.setTextIsSelectable( true );
+			//textView.setHorizontallyScrolling( true );
+			textView.setText( "Moai Ver2.2.3(prototype8)\n" + "(" + abi_str + " sdk:" + sdk_int + ")\n" );
 			if( this.init(asset_dst_dir, abi_str, pkg_path, nativ_lib_path) ){
-				textView.setText( "Moai Ver2.2.3(prototype7)\nOK. Start browsing!\n" + "(" + abi_str + " sdk:" + sdk_int + ")" );
+				textView.append( Html.fromHtml("[<font color=\"#00ff00\">OK</font>] init.<br>") );
 			} else {
-				textView.setText( "Moai Ver2.2.3(prototype7)\nError.(" + abi_str + ").\n" + "See moai_jni.log.\n" );
+				textView.append( Html.fromHtml("[<font color=\"#ff0000\">NG</font>] init Error. See moai_jni.log.<br>") );
 			}
 			
 			this.mainLoop(); /* Moai Thread Start */
+
 			Toast.makeText( this, "Moai Thread Start.", Toast.LENGTH_LONG ).show();
+			textView.append( Html.fromHtml(ermsg.toString()) );
+
+			/**
+			 * ボタンopen_top
+			 */
+			{
+				Button button = (Button)findViewById( R.id.open_top );
+				button.setAllCaps( false );
+				button.setOnClickListener( new View.OnClickListener(){
+					@Override
+					public void onClick( View v ){
+						openUri( "http://127.0.0.1:8124" );
+					}
+				} );
+			}
+			/**
+			 * ボタンopen_easter
+			 */
+			{
+				Button button = (Button)findViewById( R.id.open_easter );
+				button.setAllCaps( false );
+				button.setOnClickListener( new View.OnClickListener(){
+					@Override
+					public void onClick( View v ){
+						openUri( "http://127.0.0.1:8124/easter" );
+					}
+				} );
+			}
+			/**
+			 * ボタンopen_virtual_users
+			 */
+			{
+				Button button = (Button)findViewById( R.id.open_virtual_users );
+				button.setAllCaps( false );
+				button.setOnClickListener( new View.OnClickListener(){
+					@Override
+					public void onClick( View v ){
+						openUri( "http://127.0.0.1:8124/cgis/custom_boy/custom_boy.cgi?cb_target=futaba&cb_type=automatic" );
+					}
+				} );
+			}
+			/**
+			 * ボタンopen_engine_config
+			 */
+			{
+				Button button = (Button)findViewById( R.id.open_engine_config );
+				button.setAllCaps( false );
+				button.setOnClickListener( new View.OnClickListener(){
+					@Override
+					public void onClick( View v ){
+						openUri( "http://127.0.0.1:8124/config" );
+					}
+				} );
+			}
+			/**
+			 * ボタンcopy_log_to_clipboard
+			 */
+			{
+				Button button = (Button)findViewById( R.id.copy_log_to_clipboard );
+				button.setAllCaps( false );
+				button.setOnClickListener( new View.OnClickListener(){
+					@Override
+					public void onClick( View v ){
+						ClipData.Item item = new ClipData.Item( textView.getText() );
+						String[] mimeType = new String[1];
+						mimeType[0] = ClipDescription.MIMETYPE_TEXT_PLAIN;
+						 
+						ClipData cd = new ClipData(new ClipDescription("moai_log_data", mimeType), item);
+						ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+						cm.setPrimaryClip(cd);
+					}
+				} );
+			}
+			
 
 		}catch( Exception ex ){
 			//ex.printStackTrace();

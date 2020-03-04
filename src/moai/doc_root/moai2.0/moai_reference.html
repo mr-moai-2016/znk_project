@@ -75,7 +75,6 @@
 
 <a name=RunMoai></a>
 <h1 class="title">Moaiの起動</h1>
-<p>
 Moaiはサーバプログラムの一種ですから、これを機能させるためにはMoaiを起動しておかなければなりません.<br>
 moai(Windowsならmoai.exe)を実行しましょう.<br>
 もしインストールがまだならインストールガイドを参照してください.<br>
@@ -85,7 +84,6 @@ moai(Windowsならmoai.exe)を実行しましょう.<br>
 	Moaiが使用(リッスン)するポート番号はデフォルトで8124となります.<br>
 	お使いのOSでなんらかのFirewall機能が存在する場合、このポートへの接続が行えるよう設定しておく必要があるかもしれません.<br>
 </div>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -93,7 +91,6 @@ moai(Windowsならmoai.exe)を実行しましょう.<br>
 
 <a name=AsWebSeaver></a>
 <h1 class="title">MoaiをWebサーバとして使う</h1>
-<p>
 Moaiを起動したら、あなたが普段使っているブラウザから普通に<a href=http://127.0.0.1:8124 class=MstyElemLink>http://127.0.0.1:8124</a> へアクセスしてみましょう.<br>
 <b>Welcome to Moai+Easter World</b>と書かれたページが表示されたでしょうか？<br>
 表示されたならばMoaiはWebサーバとして機能しています.<br>
@@ -115,7 +112,6 @@ Moaiはいわばローカルウェブサーバとしての使い方をメイン�
 	これについては<a class=MstyElemLink href=/moai2.0/moai_cgi_developers.html target=_blank>Moai CGI Developers</a>を参照してください.<br>
 	</li>
 </ol><br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -123,7 +119,6 @@ Moaiはいわばローカルウェブサーバとしての使い方をメイン�
 
 <a name=AsLocalProxy></a>
 <h1 class="title">Moaiをローカルプロキシとして使う</h1>
-<p>
 Moaiの極初期の古いバージョン(1.1.8 より以前)では Moai は<b>ローカルプロキシ</b>と呼ばれるツールでした.<br>
 そして Moai のフィルタリング機能によりネット掲示板などで仮想環境を実現するには、ブラウザにて「プロキシの設定」を行っておく必要がありました.<br>
 <br>
@@ -136,7 +131,6 @@ Moai Ver2.0以降、Moai は<b>ポータブルウェブサーバシステム</b>
 一方、バージョン2.0で導入されたEasterを使って仮想環境を実現する場合、その適用範囲はEasterがサポートするサイトに限られます.<br>
 <br>
 ローカルプロキシとして使う方法の詳細については<a class=MstyElemLink href=/moai2.0/moai_local_proxy.html target=_blank>ローカルプロキシ</a>を参照してください.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -144,7 +138,6 @@ Moai Ver2.0以降、Moai は<b>ポータブルウェブサーバシステム</b>
 
 <a name=Config></a>
 <h1 class="title">Moaiエンジンの設定</h1>
-<p>
 Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの基本的な設定ができる画面を表示させることができます.<br>
 あるいはブラウザのURL指定欄に http://127.0.0.1:8124/config と指定しても表示できます.<br>
 <br>
@@ -256,7 +249,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 		</ul>
 	</div>
 </article><br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -264,7 +256,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 
 <a name=target></a>
 <h1 class="title">ターゲット</h1>
-<p>
 	ターゲットとは、一つの短いキーワード(ターゲット名)により、いくつかのホストの集合を示すためのものです.<br>
 	一つのターゲットにはいくつかのホスト名を列挙して、そのターゲット名によりグループ分けする形になります.<br>
 	以下に例を示しましょう.<br>
@@ -302,7 +293,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 	<br>
 	myfというファイルはこのプロジェクト全般において設定ファイルなどを記述するのに用いる汎用のフォーマットです.<br>
 	これの仕様について知りたい方は<a class=MstyElemLink href=/common/myf_spec.html target=_blank>myf_spec</a>を参照してください.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -310,13 +300,11 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 
 <a name=filter_recv></a>
 <h1 class="title">受信フィルタについて</h1>
-<p>
 	Moaiでは、HTTPにおけるGETにて受信されるHTMLやJavascriptやCSSにおいてその受信文字列を自由に置換(replace)したり、加工できるフィルター機能を備えています.  <br>
 	これを指定しているのが、filters/<b>TARGET_NAME</b>_recv.myf ファイルになります.<br>
 	<b>TARGET_NAME</b>の部分にはtarget.myfにおいて定義したターゲット名となる必要があります.<br>
 	<br>
 	<b>TARGET_NAME</b>_recv.myfの詳細については<a class=MstyElemLink href=/moai2.0/moai_filter.html>フィルターの詳細</a>を参照してください.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -324,7 +312,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 
 <a name=filter_send></a>
 <h1 class="title">送信フィルタについて</h1>
-<p>
 	Moaiでは、HTTPにおけるPOSTにて送信されるヘッダやPOST変数、クッキーの値においてその値の内容をある程度自由に置換(replace)できるフィルター機能を備えています.<br>
 	これを指定しているのが、filters/<b>TARGET_NAME</b>_send.myf になります.<br>
 	<b>TARGET_NAME</b>の部分にはtarget.myfにおいて定義したターゲット名となる必要があります.<br>
@@ -347,7 +334,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 	この場合、フィルタ処理においてその変数は単に無視されます.<br>
 	<br>
 	<b>TARGET_NAME</b>_send.myfの詳細については<a class=MstyElemLink href=/moai2.0/moai_filter.html>フィルターの詳細</a>を参照してください.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -355,7 +341,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 
 <a name=MoaiAuthentication></a>
 <h1 class="title">Moai認証</h1>
-<p>
 	万一ユーザの意図しない何らかのスクリプトが裏で実行された場合、CGIの仕様上、正規のUIを介さなくてもリクエストを発行することができてしまいます.<br>
 	リクエストに含まれるMoai_AuthenticKeyの値を調べることで、このリクエストが確かにこのCGIアプリケーションの正規のUIを介してユーザ自らが発行したものであることを実証することができます.<br>
 	<br>
@@ -385,7 +370,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 	</div></div>
 	<br>
 	後述するXhrDMZ側でブラウザにて実行されるJavascriptは、このUIのHTMLに対してXHtmlRequestを発行することができず、従ってMoai_AuthenticKeyの値をユーザ以外が自動的には読むことができないという仕組みになっています.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -393,7 +377,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 
 <a name=XhrDMZ></a>
 <h1 class="title">XhrDMZ</h1>
-<p>
 	ユーザにとって秘匿性の高いファイルにアクセスするなど重要なCGIを実行する場合、確かに正規のUIからの要求であることを保証するために正規のUI内にMoai_AuthenticKeyを埋め込み、その値で認証を行うべきです.<br>
 	これをMoai認証と呼ぶことは前述しました.<br>
 	<br>
@@ -438,7 +421,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 	このようにやや特殊な用途ではこのような状況が発生し得るため、XhrDMZがその効力を発揮することでしょう.<br>
 	Easterはこの種のタイプのツールの一例となっています.<br>
 	実のところ、MoaiでXhrDMZという機構を開発導入した背景もEasterからの要請を受けてのものです.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -446,7 +428,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 
 <a name=config_cgi_myf></a>
 <h1 class="title">config_cgi.myfについて</h1>
-<p>
 <article class="message is-dark"><br>
 	<div class="message-header">
 		interpreter_{platform}セクション<br>
@@ -703,7 +684,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 		</div>
 	</div>
 </article><br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -711,7 +691,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 
 <a name=ignore_hosts></a>
 <h1 class="title">無用なホストへの接続をブロックする(ignore_hosts機能)</h1>
-<p>
 	hosts.myf 内の ignore_hosts に記載されているホストへブラウザが接続しようとした場合Moaiはその通信そのものをブロックします.<br>
 	<br>
 	例えばあなたがいつも見ているサイト内に大量の広告があり、それらのバナーなどが外部サイトにある場合このままではそれらの外部サイトすべてに対して「TCPコネクションの確立」を行わなければなりません.<br>
@@ -742,7 +721,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 	<b>blocked_hostname</b>の部分には、どのホストへのアクセスをブロックしたかが表示されます.<br>
 	つまり上記で指定したホストのいずれかが表示されるはずです.<br>
 	sockの部分は気にする必要はありませんが、接続の際に使ったソケットの番号を示しています.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -750,7 +728,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 
 <a name=post_confirm></a>
 <h1 class="title">POST時の確認メッセージ表示(post_confirm機能)</h1>
-<p>
 	POSTとは掲示板などへスレ立てやレス投稿をする際に行われるHTTPリクエストのことです.<br>
 	そしてこのときHTTPヘッダやサーバが定義した変数(POST変数と呼ぶ)、クッキーの値などが送信されます.<br>
 	<br>
@@ -773,7 +750,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 		もっともこの確認画面表示は今となっては解析用に使用するくらいであり普通は必要ないものであるため、バージョン1.0よりこの指定はデフォルトではoffとしてあります.<br>
 		どうしても確認画面を出したい場合はアドオンの方を一時的に無効にしてレス投稿しましょう.<br>
 	</div></div>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -781,7 +757,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 
 <a name=acceptable_host></a>
 <h1 class="title">他のマシンからの接続を許可/制限する</h1>
-<p>
 	Moaiは他のマシンからの接続の受付もサポートします.<br>
 	<br>
 	これはご家庭にある２台目３代目のマシン等から、Moaiの起動している１台目のマシンへ接続してMoaiの提供する機能を利用するといったような用途を想定しています.<br>
@@ -827,7 +802,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 	</div></div>
 	<br>
 	勿論、ルータやOSなどにあるファイアウォール機能でWAN(外部インターネット)からのポート8124への不要な接続を防止するのもセキュリティ上基本的な対策となります.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -835,7 +809,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 
 <a name=proxy1></a>
 <h1 class="title">外部プロキシを使いたい場合どうするのか？</h1>
-<p>
 	Moaiでは次の接続仲介先として外部プロキシ(parent proxy, 親プロキシなどとも呼ばれる)を設定することができます.<br>
 	MoaiをローカルウェブサーバとしてEasterを使用している場合は、概念的に次のような接続になります.<br>
 	<br>
@@ -883,7 +856,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 	<br>
 	ところでIPアドレスを変えるだけなら通常はルータリセットで十分ですし、有効な外部プロキシを見つけるのもそう簡単ではありません.<br>
 	というわけでルータリセット等が使える状況ならばそちらの使用をお勧めします.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -891,7 +863,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 
 <a name=proxy2></a>
 <h1 class="title">外部プロキシの適用を一部のサイトのみに限定する</h1>
-<p>
 	例えば、あるサイトdanger.netを見る場合だけ外部プロキシを使用するものとします.<br>
 	そしてその他すべてのサイトでは外部プロキシを使用しないものとします.<br>
 	外部プロキシを介すると表示が遅くなったりするので、使う必要がないサイトならば使わない方が快適です.<br>
@@ -944,7 +915,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 	次にproxy_exceptにより、そこから例外的に使用が除外されるサイトが指定される形になります.<br>
 	この例では、最終的にアクセスする目的のサイトがsafe.netまたはlocalhostや127.0.0.1、あるいはIPが 192.168.* のLAN上のマシンの場合、外部プロキシは使われません.<br>
 	その他の一般サイトにアクセスする場合は現在の外部プロキシが使われることになります.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -952,7 +922,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 
 <a name=proxy3></a>
 <h1 class="title">その他のローカルプロキシにチェーンする場合</h1>
-<p>
 	Moaiはその他のローカルプロキシと直列に繋げることもできます. 例えばPolipoとのコラボも可能であることを確認しています.<br>
 	これによってPolipoとMoaiの恩恵を同時に享受できます. 概念的に次のような接続になります.<br>
 	<br>
@@ -973,7 +942,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 	<br>
 	この場合はPolipo側の設定ファイルを変更し、Moai(ポート8124)へ接続するようにしなければなりません.<br>
 	すなわちPolipoのconfig.cfgにおいて parentProxyをlocalhost:8124とする形になるでしょう.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -981,7 +949,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 
 <a name=plugin></a>
 <h1 class="title">プラグイン機能について</h1>
-<p>
 	Moaiのプラグインでは現バージョンでは次のような拡張処理を実現できます.<br>
 	<ul>
 		<li><b>initiate :</b><br>
@@ -1003,7 +970,6 @@ Moaiトップページで「Moaiエンジンの設定」を選ぶと、Moaiの�
 	pluginの実体はpluginsフォルダ内の<b>TARGET_NAME</b>.dll(Linuxなどの場合<b>TARGET_NAME</b>.so)というファイルです.<br>
 	これらの独自に作ってみたいというC言語プログラマの方は<a class=MstyElemLink href="/moai2.0/hacking.html#plugin">こちら</a>にそのヒントを記述しておいたので<br>
 	興味があれば参照してください.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>

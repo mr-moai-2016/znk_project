@@ -69,7 +69,6 @@
 
 <a name=ProjectModel></a>
 <h1 class="title">mkfgenが扱うプロジェクトモデル</h1>
-<p>
 	あなたが開発を進めているツール my_tool では、hello.c と utils.c があるとものとします.<br>
 	hello.c 内には main関数があり、その他のCファイル( この例では utils.c しかありませんが )は、<br>
 	hello.c から使うサブルーチンなどが格納された補助的なCファイル群とします.<br>
@@ -250,7 +249,6 @@
 		それをダウンロードできるようなツールを作ると便利かもしれません.<br>
 		Moaiの将来のバージョンではそのようなツールを提供するかもしれません.<br>
 	</div>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -258,8 +256,7 @@
 
 <a name=config></a>
 <h1 class="title">configセクション</h1>
-<span class=MstyAuthor> (Section Type: @@V 変数リスト)</span><p>
-	このセクションでは基本的なパスの指定など、この mkfgen.myf全体に関わる設定を行います.<br>
+<span class=MstyAuthor> (Section Type: @@V 変数リスト)</span>	このセクションでは基本的なパスの指定など、この mkfgen.myf全体に関わる設定を行います.<br>
 	ディレクトリ区切り文字(以降これをDSPと呼びます)は、Windowsにおいても / を使用して構いません.<br>
 	<ul>
 		<li><b>my_libs_root</b>(String型)<br>
@@ -412,7 +409,6 @@
 		gslconvであれば、32bit/64bitライブラリ双方をこれ一つで認識します.<br>
 		またライセンスは mkfgen と同じく<a class=MstyElemLink href=http://www.kmonos.net/nysl target=_blank>NYSL</a>であり、使用や同梱するにあたっての制限は何もありません.<br>
 	</div>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -420,8 +416,7 @@
 
 <a name=include_paths_common></a>
 <h1 class="title">include_paths_commonセクション</h1>
-<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><p>
-	ここではヘッダをインクルードするためのパス群を一行につき一つずつ指定します.<br>
+<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span>	ここではヘッダをインクルードするためのパス群を一行につき一つずつ指定します.<br>
 	この指定では、シンタクスシュガーとして以下のような<b>@記法</b>を使うことができます.<br>
 	<br>
 	<div class=MstyComment>
@@ -452,7 +447,6 @@
 	<div class=MstyComment>
 		-I../include<br>
 	</div>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -460,8 +454,7 @@
 
 <a name=dependency_libs_common></a>
 <h1 class="title">dependency_libs_commonセクション</h1>
-<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><p>
-	ここでは依存ライブラリのリストを一行につき一つずつ指定します.<br>
+<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span>	ここでは依存ライブラリのリストを一行につき一つずつ指定します.<br>
 	この指定では、シンタクスシュガーとして以下のような<b>@記法</b>を使うことができます.<br>
 	<br>
 	<div class=MstyComment>
@@ -571,7 +564,6 @@
 		@記法を使わない例も挙げておきます.<br>
 		この例では $(MY_LIBS_ROOT)/$(SLIBS_DIR)/libcrypto という静的ライブラリを指定したことになります.<br>
 	</div>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -579,8 +571,7 @@
 
 <a name=runtime_additional></a>
 <h1 class="title">runtime_additionalセクション</h1>
-<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><p>
-	ここでは、動的にロードしたい依存ライブラリのリストをdependency_libs_commonと同様の形式で追加指定します.<br>
+<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span>	ここでは、動的にロードしたい依存ライブラリのリストをdependency_libs_commonと同様の形式で追加指定します.<br>
 	dependency_libs_commonと違い、ここに指定されたものはこのMakefileでのコンパイルおよびリンクでの直接の対象とはなりません.<br>
 	(つまり仮にここに指定したものが存在しなくとも、とりあえずそれらの処理に直接支障は及ばないないということです).<br>
 	<br>
@@ -640,7 +631,6 @@
 		特殊な指定が加えられています).<br>
 		Linuxでは $(MY_LIBS_ROOT)/$(DLIBS_DIR)/libtls-17.soとなります.<br>
 	</div>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -648,8 +638,7 @@
 
 <a name=info_COMPILER></a>
 <h1 class="title">info_{COMPILER}セクション</h1>
-<span class=MstyAuthor> (Section Type: @@V 変数リスト)</span><p>
-	{COMPILER}にはmkid_listで列挙したコンパイル環境を示すidを指定します.<br>
+<span class=MstyAuthor> (Section Type: @@V 変数リスト)</span>	{COMPILER}にはmkid_listで列挙したコンパイル環境を示すidを指定します.<br>
 	このセクションにはコンパイル環境ごとにそれぞれ以下を指定できます.<br>
 	<br>
 	<ul>
@@ -776,7 +765,6 @@
 		</div>
 		</li>
 	</ul>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -784,14 +772,12 @@
 
 <a name=mkid_list></a>
 <h1 class="title">mkid_listセクション</h1>
-<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><p>
-	このセクションには有効にしたいコンパイル環境を示すidを列挙します.<br>
+<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span>	このセクションには有効にしたいコンパイル環境を示すidを列挙します.<br>
 	( 現在サポートするidは vc mingw msys cygwin linux android です ).<br>
 	mkfgen ではこのセクションで列挙されたidについてのみ、Makefileが作成されます.<br>
 	(逆に言えばここで列挙されなかったidについては作成されません)<br>
 	例えば、linux専用のツールの場合などでは vc mingw などWindows系専用のMakefileを生成しても明らかにムダです.<br>
 	そのような場合にここで linux のみを指定しておけば余計なMakefileを生成せずに済みます.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -799,8 +785,7 @@
 
 <a name=product_list></a>
 <h1 class="title">product_listセクション</h1>
-<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><p>
-	このセクションにはこのmkfgenによって生成するプロダクトとその種類を列挙します.<br>
+<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span>	このセクションにはこのmkfgenによって生成するプロダクトとその種類を列挙します.<br>
 	複数指定可能であり、以下のような記法になります.<br>
 	<br>
 	<div class=MstyComment>
@@ -836,7 +821,6 @@
 		<br>
 		zlibというslibファイルを作り、その代表となるソースファイル(何でもよい一つを指定)はzutil.cであることを示す.<br>
 	</div>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -844,15 +828,13 @@
 
 <a name=rc_list></a>
 <h1 class="title">rc_listセクション</h1>
-<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><p>
-	このセクションではこのmkfgenによって扱うrcファイル(Windowsのリソースファイル)の名前を明示的に列挙できます.<br>
+<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span>	このセクションではこのmkfgenによって扱うrcファイル(Windowsのリソースファイル)の名前を明示的に列挙できます.<br>
 	しかしこれが空でもmkfgenは自動的にrcファイルを認識して、この情報を生成されるMakefileに補充します.<br>
 	万一この自動認識がうまくいかないケースが発生した場合はこのセクションで明示的に指定してください.<br>
 <br>
 	特にproduct_list においてexec指定された実行ファイル名とrc名が一致する場合、これらは自動的に関連付けられます.<br>
 	例えば product_list において exec player main.cpp と指定された場合、rcファイルの名前が player.rc の場合は<br>
 	特に何も指定せずとも player.rc は playerに自動的にリンクされるということです.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -860,8 +842,7 @@
 
 <a name=sublibs_list></a>
 <h1 class="title">sublibs_listセクション</h1>
-<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><p>
-	このセクションはサブディレクトリにサブライブラリがある場合にのみ使用します.<br>
+<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span>	このセクションはサブディレクトリにサブライブラリがある場合にのみ使用します.<br>
 	(このサブライブラリとは、例えばlibZnkが内包するzlibのようなものです).<br>
 	<br>
 	サブディレクトリおよびサブライブラリの名前を指定することでそれらのビルドとリンクをすることができます.<br>
@@ -882,7 +863,6 @@
 		mkfgenでは、このtarget名を submkf_{X} という形式でMakefile内に作り出すルールとなっています.<br>
 		このXに相当する部分としてsubmkf_dirが使われます.<br>
 	</div>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -890,8 +870,7 @@
 
 <a name=install_data_list></a>
 <h1 class="title">install_data_listセクション</h1>
-<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><p>
-	単にコピーしてインストールするデータファイル群を指定できます.<br>
+<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span>	単にコピーしてインストールするデータファイル群を指定できます.<br>
 	次のようにサブディレクトリやワイルドカードを指定することもできます.<br>
 	<br>
 	<div class=MstyComment>
@@ -909,7 +888,6 @@
 	<br>
 	このときinstall_dir配下に(templateディレクトリではなく)shareディレクトリが自動的に生成され、<br>
 	拡張子がmakの全ファイルがそこへコピーインストールされます.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -917,8 +895,7 @@
 
 <a name=ignore_list></a>
 <h1 class="title">ignore_listセクション</h1>
-<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><p>
-	自動認識において無視するディレクトリまたはファイルを指定します.<br>
+<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span>	自動認識において無視するディレクトリまたはファイルを指定します.<br>
 	例えば名前が example.c というファイル、および ignores ディレクトリとobsoleteディレクトリ内に含まれるソースファイルを無視したい場合は、<br>
 	次のように指定します.<br>
 	<br>
@@ -930,7 +907,6 @@
 <br>
 	これにより、たとえignoresディレクトリやobsoleteディレクトリ内に拡張子が c のファイルがあったとしても、<br>
 	それはコンパイル対象として無視されます.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -938,8 +914,7 @@
 
 <a name=only_list></a>
 <h1 class="title">only_list_{COMPILER}セクション</h1>
-<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><p>
-	このコンパイラにおいてのみ使用するソースファイルまたはディレクトリを指定します.<br>
+<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span>	このコンパイラにおいてのみ使用するソースファイルまたはディレクトリを指定します.<br>
 <br>
 	例えば名前が example_win.c と thread_win.c というソースファイルについてはvcとmingwにおいてのみ、<br>
 	名前が example_unix.c と thread_pthread.c というソースファイルについてはlinuxとcygwinにおいてのみとして<br>
@@ -1007,7 +982,6 @@
 		ignore_listの指定が優先されます.<br>
 		すなわち only_list での指定は無視されてコンパイル対象に含まれません.<br>
 	</div>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -1015,15 +989,13 @@
 
 <a name=src_suffix_list></a>
 <h1 class="title">src_suffix_listセクション</h1>
-<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span><p>
-	srcファイルとして使われる拡張子を列挙しておきます.<br>
+<span class=MstyAuthor> (Section Type: @@L ラインリスト)</span>	srcファイルとして使われる拡張子を列挙しておきます.<br>
 	例えば、c と cpp が混在している環境なら次のように指定します.<br>
 	<br>
 	<div class=MstyComment>
 		c<br>
 		cpp<br>
 	</div>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>

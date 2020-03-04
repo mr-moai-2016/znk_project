@@ -56,7 +56,6 @@
 
 <a name=lang></a>
 <h1 class="title">開発言語について</h1>
-<p>
 Moaiでは開発言語としてCを使います.<br>
 そして基本的に実行効率より確実性を最優先します.<br>
 C++を使っていない理由も簡単に述べておきます.<br>
@@ -109,7 +108,6 @@ C++を使っていない理由も簡単に述べておきます.<br>
 また、バグとまではいかないまでも、アンドキュメントなある種の癖に由来した挙動が発生した場合、<br>
 言語処理系に付属した膨大なライブラリから原因を分析する必要が生じるかもしれません.<br>
 <b>こんなのやってらんない</b>ので現時点の Moai では不採用としました.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -117,11 +115,9 @@ C++を使っていない理由も簡単に述べておきます.<br>
 
 <a name=message></a>
 <h1 class="title">改造に挑戦される方へ</h1>
-<p>
 あなたが開発したプラグインは公開してもらっても勿論構いません.<br>
 我々がPolipoを参考に新しくMoaiを開発したように、今度はあなたがMoaiのpluginを作られてみるのもまた一興ではないでしょうか？<br>
 Moaiのライセンスは<a class=MstyElemLink href=http://www.kmonos.net/nysl target=_blank>NYSL</a>であり、某ライセンスのようなソースコード開示の義務はありません.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -129,7 +125,6 @@ Moaiのライセンスは<a class=MstyElemLink href=http://www.kmonos.net/nysl t
 
 <a name=dependency></a>
 <h1 class="title">ライブラリの依存関係について</h1>
-<p>
 まずMoaiシステム全体において、各ツールおよびライブラリの依存関係を以下に簡単に示しておきます.<br>
 <ul>
 	<li><b>libZnk</b><br>
@@ -174,7 +169,6 @@ Moaiのライセンスは<a class=MstyElemLink href=http://www.kmonos.net/nysl t
 	libZnk<br>
 	</li>
 </ul>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -182,7 +176,6 @@ Moaiのライセンスは<a class=MstyElemLink href=http://www.kmonos.net/nysl t
 
 <a name=moai_src></a>
 <h1 class="title">moai本体のソースコードの構成について</h1>
-<p>
 このセクションではMoaiエンジンのソースを分析したい方のために、そのソースを構成するファイルの概要を示します.<br>
 <br>
 <article class="message is-dark"><br>
@@ -323,7 +316,6 @@ Moaiのライセンスは<a class=MstyElemLink href=http://www.kmonos.net/nysl t
 		mainが存在するエントリー部である.<br>
 	</div>
 </article><br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -331,7 +323,6 @@ Moaiのライセンスは<a class=MstyElemLink href=http://www.kmonos.net/nysl t
 
 <a name=libZnk></a>
 <h1 class="title">libZnkについて</h1>
-<p>
 	基本ライブラリ libZnk はこのプロジェクトに存在する全てのツールの開発において使われています.<br>
 	よってこれの解説を抜きにするわけにはいかないのですが、このライブラリの仕様を詳しく解説していたらそれこそ紙面と時間がいくらあっても足らないので、
 	とりあえず<a class=MstyElemLink href=https://github.com/mr-moai-2016/znk_project/blob/master/src/libZnk/README.md target=_blank>こちら</a>に
@@ -339,7 +330,6 @@ Moaiのライセンスは<a class=MstyElemLink href=http://www.kmonos.net/nysl t
 	<br>
 	あとはlibZnkのソースコードやコメントなどを適宜参照して下さい.<br>
 	時間があればそのうち詳細なドキュメントも用意したいところですが、いつになるかは未定です.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -347,7 +337,6 @@ Moaiのライセンスは<a class=MstyElemLink href=http://www.kmonos.net/nysl t
 
 <a name=plugin></a>
 <h1 class="title">プラグインインターフェース</h1>
-<p>
 Moaiプラグインでは以下のダイナミックロード可能なグローバル関数をC言語により実装します.<br>
 このバージョンにおいてサポートされる関数は以下です.<br>
 	<br>
@@ -463,7 +452,6 @@ Moaiプラグインでは以下のダイナミックロード可能なグロー�
 		</div>
 	</div>
 </article><br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -471,7 +459,6 @@ Moaiプラグインでは以下のダイナミックロード可能なグロー�
 
 <a name=Znk_in_plugin></a>
 <h1 class="title">プラグインインターフェースで登場するlibZnk</h1>
-<p>
 plugin開発において出現するlibZnk特有の型に関して、以下に極一部を紹介します.<br>
 (libZnk Ver2.2に準拠するものとします).<br>
 <br>
@@ -575,7 +562,6 @@ plugin開発において出現するlibZnk特有の型に関して、以下に�
 		実装にあたってはZnkObjAry(Znk_obj_ary.h)というさらに基本的なポインタ型汎用配列を利用している.<br>
 	</div>
 </article><br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>

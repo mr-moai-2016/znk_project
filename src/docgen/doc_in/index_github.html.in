@@ -31,7 +31,7 @@
 @@V config
 doc_title     = ['インフォメーション']
 author        = { ['Mr.Moai'] }
-update        = ['2020/01/19']
+update        = ['2020/03/01']
 category_path = {}
 urp           = ['/']
 nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['article'] }
@@ -54,7 +54,38 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['article'] }
 @@L WhatsNew
 <article class="message is-dark">
 	<div class="message-header">
-		2020/01/21: Moai Ver2.2.2 リリース. New!
+		2020/03/01: Moai Ver2.2.3 リリース(Android APK版のみ). New!
+	</div>
+	<div class="message-body">
+		マイナーバージョンアップとなります.
+		またこのリリースは Moai Android APK版だけの更新となりますので
+		Moai PC版を使われる方は関係ありません.
+
+		<div class=MstyComment>
+			<img src=/imgs/moai_for_android.png>
+		</div>
+		
+		<ul>
+			<li>Moai PC 版を使われる方
+			
+			バージョン2.2.2が最新版となりますのでそちらをご覧ください.
+			</li>
+
+			<li>Moai Android 版を使われる方
+
+			<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/download/v2.2.3/moai-v2.2.3-android.apk>moai-v2.2.3-android.apk</a>をダウンロードしてインストールを行ってください.
+			詳しくは<a class=MstyElemLink target=_blank href=/moai2.0/install_android.html>Android版のインストール方法</a>をご参照ください.
+
+			Android版に関しては、現時点では Moai アップグレードをサポートしていません.
+			</li>
+		</ul>
+		このバージョンで追加された新機能については<a class=MstyElemLink href="/announcement.html#WhatIsChanging_latest">こちら</a>にまとめてあります.
+	</div>
+</article>
+
+<article class="message is-dark">
+	<div class="message-header">
+		2020/01/21: Moai Ver2.2.2 リリース.
 	</div>
 	<div class="message-body">
 		マイナーバージョンアップとなります.
@@ -77,24 +108,11 @@ nb_tags = { ['div'] ['ul'] ['ol'] ['li'] ['article'] }
 
 			<li>Moai Android 版を使われる方
 
-			<a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/download/v2.2.2/moai-v2.2.2-android.apk>moai-v2.2.2-android.apk</a>をダウンロードしてインストールを行ってください.
-			詳しくは<a class=MstyElemLink target=_blank href=/moai2.0/install_android.html>Android版のインストール方法</a>をご参照ください.
-
+			バージョン2.2.3が最新版となりますのでそちらをご覧ください.
 			Android版に関しては、現時点では Moai アップグレードをサポートしていません.
 			</li>
 		</ul>
 		このバージョンで追加された新機能については<a class=MstyElemLink href="/announcement.html#WhatIsChanging_latest">こちら</a>にまとめてあります.
-	</div>
-</article>
-
-<article class="message is-dark">
-	<div class="message-header">
-		2020/01/19: Moai Ver2.2.1 Android APK版にある不具合について. New!
-	</div>
-	<div class="message-body">
-		<b>Moai Ver2.2.1 Android APK版</b>に<b>EasterやVirtualUSERSを起動できない</b>という重大な不具合がありました.
-		取り急ぎ <a class=MstyElemLink target=_blank href=https://github.com/mr-moai-2016/znk_project/releases/download/v2.2.1/moai-v2.2.1-android.apk>moai-v2.2.1-android.apk</a> を修正版と差し替えましたのでご連絡いたします.
-		このapkにてインストールされた方はお手数ですが、再度これをダウンロードしてインストールを行ってください.
 	</div>
 </article>
 

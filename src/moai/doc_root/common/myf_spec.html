@@ -44,7 +44,6 @@
 
 <a name=def_quote></a>
 <h1 class="title">クォーティング文字列の定義</h1>
-<p>
 	ファイルの一番初めの行に <b>@def_quote</b>で始まる行を記述することでクォーティング文字列を宣言できる.<br>
 	この指定がない場合、以下が指定されたのと同等とみなす.<br>
 <br>
@@ -74,7 +73,6 @@
 <br>
 	この宣言はファイルの最初の行において一度だけ行うことができる.<br>
 	仮に２行目以降宣言してもそれは単に読み飛ばされる.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -82,7 +80,6 @@
 
 <a name=section_lines></a>
 <h1 class="title">行配列セクション(SectionLines)について</h1>
-<p>
 	行頭の<b>@@L name</b>は行配列セクションの開始を意味する.<br>
 	以降簡潔のため、これをSectionLinesと呼ぶ.<br>
 	nameの部分には、このSectionLinesの名前を記述する.<br>
@@ -117,7 +114,6 @@
 	ただしこのようなコメントは transientである.<br>
 	つまり一度myfをloadしてそれを同ファイルへsaveするようなプログラムでは跡形もなく消去される.<br>
 	上の例ではsaveしたmyf内では # で始まる行は消えてしまうことだろう.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -125,7 +121,6 @@
 
 <a name=section_vars></a>
 <h1 class="title">変数セクション(SectionVars)について</h1>
-<p>
 	行頭の<b>@@V name</b>は変数セクションの開始を意味する.<br>
 	以降簡潔のため、これをSectionVarsと呼ぶ.<br>
 	nameの部分にはSectionVarsの名前を記述する.<br>
@@ -177,7 +172,6 @@
 	ただしこのようなコメントは transientである.<br>
 	つまり一度myfをloadしてそれを同ファイルへsaveするようなプログラムでは跡形もなく消去される.<br>
 	上の例ではsaveしたmyf内では # で始まる行は消えてしまうことだろう.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -185,7 +179,6 @@
 
 <a name=section_prims></a>
 <h1 class="title">プリミティブセクション(SectionPrims)について</h1>
-<p>
 	行頭の<b>@@P name</b>はプリミティブセクションの開始を意味する.<br>
 	以降簡潔のため、これをSectionPrimsと呼ぶ.<br>
 	nameの部分にはSectionPrimsの名前を記述する.<br>
@@ -239,7 +232,6 @@
 	ただしこのようなコメントは transientである.<br>
 	つまり一度myfをloadしてそれを同ファイルへsaveするようなプログラムでは跡形もなく消去される.<br>
 	上の例ではsaveしたmyf内では # で始まる行は消えてしまうことだろう.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -247,7 +239,6 @@
 
 <a name=outof_section></a>
 <h1 class="title">セクション外領域(OutOfSection)について</h1>
-<p>
 	SectionLines、SectionVars、SectionPrims、これら３つ以外の領域においては、myfパーサは基本的に無視する.<br>
 	この部分をOutOfSectionと呼ぶ.<br>
 	従って、この部分にはコメントなどを記述しておくこともできる.<br>
@@ -257,7 +248,6 @@
 	<br>
 	OutOfSection領域であっても、<b>@def_quote</b>で始まる最初の行は特別な意味を持つ.<br>
 	これについては、上で述べたとおりである.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -265,7 +255,6 @@
 
 <a name=special_empty></a>
 <h1 class="title">特殊空文字について</h1>
-<p>
 	これは滅多に登場しない例外的な場合に備えた仕様である.<br>
 	<br>
 	行頭が<b>@@^</b>の場合、myfの字句解析器はクォーティングされている場合を除きこれを無条件に空文字とみなす.<br>
@@ -296,7 +285,6 @@
 	尚、行頭以外に<b>@@^</b>が出現した場合は、空文字ではなくそのまま扱われる.<br>
 <br>
 	以上<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>

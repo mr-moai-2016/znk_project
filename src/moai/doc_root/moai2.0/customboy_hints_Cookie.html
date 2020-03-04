@@ -59,13 +59,11 @@
 
 <a name=ck_posttime></a>
 <h1 class="title">Cookie posttime</h1>
-<span class=MstyAuthor> (Category: futaba)</span><p>
-	この値はfutaba.phpに初アクセスした時間(およびそれに類した値)である.<br>
+<span class=MstyAuthor> (Category: futaba)</span><br>	この値はfutaba.phpに初アクセスした時間(およびそれに類した値)である.<br>
 	現状ではカタログに初めてアクセスするか、または初めてレス投稿した際に設定されるようである.<br>
 	あるいは /bin/cachemt7.php にアクセスしたときにそれに類した値が生成される形となる.<br>
 	一旦設定されると、CookieおよびBrowser CacheおよびlocalStorage これら全てを消去しない限り同じ値が残り続ける.<br>
 	この値はPOST変数 pthb, pthc (pthd)とCookieのposttime値として送信される.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -73,13 +71,11 @@
 
 <a name=ck___cfduid></a>
 <h1 class="title">Cookie __cfduid</h1>
-<span class=MstyAuthor> (Category: futaba 5ch)</span><p>
-	この値はBBSに初アクセスしたときに未設定である場合は新たに設定される.<br>
+<span class=MstyAuthor> (Category: futaba 5ch)</span><br>	この値はBBSに初アクセスしたときに未設定である場合は新たに設定される.<br>
 	BBSが導入しているCloudflareが発行するものであると思われる.<br>
 	一旦設定されると、Cookieを消去しない限り同じ値が残り続ける.<br>
 	またBrowser等の環境を変えない限り、同様の値が再発行される可能性もある.<br>
 	この値はCookieの__cfduid値としてBBSへも送信される.  <br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -87,8 +83,7 @@
 
 <a name=ck_cxyl></a>
 <h1 class="title">Cookie cxyl</h1>
-<span class=MstyAuthor> (Category: futaba)</span><p>
-	この値はカタログのフォーマットを指定するために存在する.<br>
+<span class=MstyAuthor> (Category: futaba)</span><br>	この値はカタログのフォーマットを指定するために存在する.<br>
 	これが示す内容の意味はカタログの「設定」画面から行える指定そのものである.<br>
 	<br>
 	<div class=box><div class=MstyCode>
@@ -99,7 +94,6 @@
 	<br>
 	デフォルトではこの値は指定されておらず、その場合futaba.phpは '14x6x4x0x0' という値が指定されたものとみなすようである.<br>
 	基本的にはユーザが自由に設定するものであるからユーザ識別とは関係がないと思われる.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -107,14 +101,12 @@
 
 <a name=ck_namec></a>
 <h1 class="title">Cookie namec</h1>
-<span class=MstyAuthor> (Category: futaba)</span><p>
-	この値は最後のレスにおいて使用した「お名前欄」の内容を示す.<br>
+<span class=MstyAuthor> (Category: futaba)</span><br>	この値は最後のレスにおいて使用した「お名前欄」の内容を示す.<br>
 	値は全角文字などを含む可能性があり、URL Encodingされる.<br>
 	何のために使われるものかは不明であるが、コテ対策で導入したものである可能性もある.<br>
 	いずれにせよ空値以外の値を設定していても何一つ良いことはないので、基本的には消去しておくことが望ましい.<br>
 	futaba_send.myf の cookie_force において namec = [''] (空値)を指定しておくことをお勧めする.<br>
 	(futaba_send.myfのデフォルトではそうなっている).<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -122,15 +114,13 @@
 
 <a name=ck_pwdc></a>
 <h1 class="title">Cookie pwdc</h1>
-<span class=MstyAuthor> (Category: futaba)</span><p>
-	名前の由来は PassWorD Cookie と思われる.<br>
+<span class=MstyAuthor> (Category: futaba)</span><br>	名前の由来は PassWorD Cookie と思われる.<br>
 	<br>
 	この値は、レス投稿時のいわゆる「削除キー」に相当するものである.<br>
 	ユーザが明示的に指定してもよいが、空にしておけば適当な削除キー値が自動的に割り当てられる.<br>
 	このときCookieのpwdc変数にその値が格納され、レス投稿時においてはJavascriptを介してこの値がさらにPost変数pwdへセットされる.<br>
 	通常は自動的に割り当てられた値をそのまま使えばよい.<br>
 	ユーザ情報をリセットしたい場合は、Cookieのpwdc値を一旦空にしておくとよい.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -138,8 +128,7 @@
 
 <a name=ck_verifyc></a>
 <h1 class="title">Cookie verifyc</h1>
-<span class=MstyAuthor> (Category: futaba)</span><p>
-	このCookie変数は今となってはレアな変数の一つであり、大半の方は表示されないであろう.<br>
+<span class=MstyAuthor> (Category: futaba)</span><br>	このCookie変数は今となってはレアな変数の一つであり、大半の方は表示されないであろう.<br>
 	<br>
 	この値は筆者の知る限り、現在では「時限式の規制」において使われているようである.<br>
 	(かつては別の用途で使用されていたこともあったと記憶している).<br>
@@ -162,7 +151,6 @@
 	これは割と凝った規制であり、規制コレクター+マニアの筆者としては<b>面白い部類の仕組み</b>かと思うのだがいかがであろうか？<br>
 	<br>
 	ちなみにこの実験において元のverifycをbackupしておき、一旦初期化された後に再び元の値を復元すると、残り１時間後にレスが可能になる状態に復元できるケースもあるようである.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
@@ -170,8 +158,7 @@
 
 <a name=ck_unknown_cookie_var></a>
 <h1 class="title">Unknown Cookie value</h1>
-<span class=MstyAuthor> (Category: futaba)</span><p>
-	CustomCookieにおいて、一番右の本来「Hint」と表記されるべき位置に「Unknown」と表記されている変数が表示される場合がある.<br>
+<span class=MstyAuthor> (Category: futaba)</span><br>	CustomCookieにおいて、一番右の本来「Hint」と表記されるべき位置に「Unknown」と表記されている変数が表示される場合がある.<br>
 	これはCustomBoyが知らない、あるいは把握していない変数であることを意味する.<br>
 	掲示板の仕様変更による新規変数の導入、あるいはある種の特別な規制にのみ発現するレアな変数などが存在する可能性があり、<br>
 	そのようなCookie変数が検出された場合、この表示がなされる.<br>
@@ -190,7 +177,6 @@
 	色々吟味を重ねた結果、これが自動的に削除するCookie変数はいかなる場合でも問題の発生し得ないことがわかっている変数群にとりあえずは限定してある.<br>
 	例えば上記で述べたverifycは現状自動的には削除されないようにしてある. <br>
 	大抵の場合、これで何ら問題ないと思うが、必要ならCustomCookieから手動でこれを消去していただきたい.<br>
-</p>
 	<br>
 	<b><a class=MstyElemLink href=#Index>目次に戻る</a></b><br>
 <br>
