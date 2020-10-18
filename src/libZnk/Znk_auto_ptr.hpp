@@ -7,107 +7,123 @@
 
 /**
  * @brief
- *   deleter関数/ファンクタを自由に設定可能なauto_ptr.
- *   以下はよくあるポインタ型オブジェクトとdeleter関数/ファンクタをユーザ指定することにより
- *   これを自動的に破棄するようにしたものである.
+ *   auto_ptr. which allows you to set the deleter function/functor in any way you like.
+ *   The following is an class to discard it automatically by specifying a typical pointer type
+ *   object and a deleter function/functor for the user.
  *
  * @exam
  *   ...
  *   test(){
- *     // MyObj は Data* のように * が付加されているものでもよいし、
- *     // typedef Data* MyData のように typedefされたものでもよい.
+ *     // MyObj can be pointer type suffixed with *, as in Data*
+ *     // or can be typedef object as in MyData by 'typedef Data* MyData'.
  *     Znk_AutoPtr<MyObj> obj_ap( MyObj_create("MyName",...), MyObj_destroy );
  *     MyObj obj = obj_ap.get();
  *
- *     ... obj(MyObj型)を使用する処理 ...
+ *     ... Processing using obj(MyObj type) ...
  *
- *     // 例外発生時または関数の終了で obj は MyObj_destroy( obj ) の自動呼び出しにより
- *     // 解放される.
+ *     // Upon an exception or the exit of a function, obj is released by an automatic call
+ *     // to MyObj_destroy( obj ).
  *   }
  *
  * @note
- *   既に数多くのスマートポインタが世に存在する中、敢えてこれを導入した背景を一応述べておく.
+ *   There are already many smart pointers in the world, but I dare to state the background of this
+ *   introduction.
  *
- *   最初に言っておくが、我々は特に大規模開発においてこの種のスマートポインタの使用には
- *   (このZnk_AutoPtrも含め)否定的である.
+ *   First of all, we are against the use of smart pointers of this kind (including this Znk_AutoPtr),
+ *   especially in large scale developments. The best option is to not use C++, but that's not going
+ *   to happen. And since we are using C++, it is almost unpredictable when and where an exception
+ *   will occur, and in that case, we need to wrap the dynamically allocated pointer object in this
+ *   kind of class or else it will leak when an exception occurs. As I had to do, I reluctantly
+ *   provided such a class in libZnk. 
  *
- *   さらに最も良い選択はC++を使わないことだが、実際そうもいかない. そしてC++を使う以上、
- *   いつどこで例外が発生するかは殆ど予測不能であり、その場合動的確保したポインタ
- *   オブジェクトをこの種のクラスでラップしておかないと例外発生時にリークしてしまう.
- *   仕方がないのでこのlibZnkでも渋々このようなクラスを提供した. 
+ *   The main motivation for using this kind of class is frankly just that. The often-quoted hype
+ *   about not having to make the last release function call or not having to worry about forgetting
+ *   to call the last function is not really a labor-saver or a relief at all. This is a minor issue
+ *   compared to the more nefarious problems that exist with the existing smart pointers. I will
+ *   briefly explain about this as well.
  *
- *   この種のクラスを使う主たる動機はぶっちゃげそれだけであって、よく言われる最後の
- *   解放関数呼び出しを行わなくても済むので楽だとか忘れても大丈夫なので安心などという
- *   宣伝文句は、実際のところ巷で騒ぐほどの労力の節約でもないし別に安心でもなんでもない.
- *   そんなことは、既存のスマートポインタに存在するもっと邪悪な問題と比べれば微々たる
- *   事項である. では面倒だがこれについても一応ざっくりと説明しておく.
  *
- *   std::auto_ptr ではdelete用関数/ファンクタなどが独自に設定できない( operator deleteを
- *   オーバーライドして強引に設定することはできるが、グローバルなoperator deleteを上書き
- *   すべきではない. 仮にそうするとしても色々と憂慮する事項を増やすだけである. コンパイラ
- *   毎に存在する癖の問題もある).
+ *   std::auto_ptr:
  *
- *   boost::shared_ptrでは当然boostを導入しなければならないが、それを嫌ってboostから
- *   その実装部分のみを抽出することも実は可能なのだが、Windows/Linuxだけに環境を絞っても
- *   最低5,6ファイルほど必要になり、これはこの機能だけを実現するファイル数としては少々多い.
- *   しかもそれらはすべてヘッダである. 特にマルチスレッドにおける代入処理に対応するための
- *   lock/unlockに関する実装( boost/smart_ptr/detail/spinlock.hpp を参照 )やatomic operation
- *   に関する処理が隠蔽されず、一応namespaceで囲ってあるとは言え、グローバル領域にばら撒かれ
- *   shared_ptrを利用するすべてのコードからこれらの実装の詳細が見えている状況である.
+ *   This can't set its own functions/functors etc. for delete. ( We can override operator 'delete'
+ *   to force it, but we should not override the global operator 'delete'.  This would only add to
+ *   the list of things to worry about.  In addition, there can be some quirks and even glitches
+ *   between the different compilers. )
  *
- *   実装は極力隠蔽すべきである. それが複雑で上記のような処理系依存なものならば尚更である.
- *   複雑過ぎる実装が表に見えているということは作者達ですら予期しない未知の不具合の
- *   混入するリスクをそれだけ高めるということでもある. 特にこの種のインフラ的なクラスで
- *   このリスクが高いのは無視できない不安要素であり、その導入にはそれだけに慎重でなければ
- *   ならない. 例えば boost1.38以前では bcc 5.5.1 において以下の典型的なコードが実際に
- *   コンパイルエラーとなる問題があった.
  *
- *   if( sp && flag ){ ...spを使う処理... } // ここで sp は shared_ptr, flag は bool 型
+ *   boost::shared_ptr:
  *
- *   spの替わりにsp.get() と書けばよいのだが、その他のコンパイラでは上記が何のエラーもなく
- *   コンパイルできてしまうのが実のところさらに厄介である. boostの作者達のような優秀な
- *   プログラマ達でさえ、長い間この問題に気づくことができなかったのもそのためである.
+ *   This of course requires boost to be installed. It is possible to extract only the implementation
+ *   from boost, but even if you focus on Windows/Linux only, you will need at least 5 or 6 files,
+ *   which is a little too many for this function alone. And they are all headers. In particular,
+ *   the implementation of lock/unlock(see boost/smart_ptr/detail/spinlock.hpp) and atomic operations
+ *   ( for multi-threaded assignment processing) are not hidden.  Although it is enclosed in namespace,
+ *   we don't like to have these implementation details visible to all the code that uses shared_ptr
+ *   scattered around the global area.
  *
- *   少し詳しく書けばこの問題はboost::shared_ptr内において unspecified_bool_type という
- *   ややトリッキーな仕掛けを導入していることが元凶であった. これを削除すればよいと思わ
- *   れるかもしれないが、そうすると今度は別の環境において問題を誘発する.
- *   尚 1.39以降では以下の型変換演算子オーバライドが追加され、これに対する対策がなされている.
+ *   The implementation should be hidden as much as possible, especially if it is complex and
+ *   processor-dependent as described above. Also, the widespread proliferation of complex
+ *   implementations over a wide range of compilations increases the risk of the widespread spread of
+ *   errors due to unknown bugs in code that even the authors did not anticipate. Especially in this
+ *   kind of infrastructural class, we have to be that much more cautious about that risk. For example,
+ *   prior to boost v1.38, the following typical code actually had a compile error on bcc 5.5.1.
  *
- *   operator bool () const { return px != 0; }
+ *     // where sp is shared_ptr and flag is of type bool
+ *     if( sp && flag ){ ...Processing usisng sp... }
  *
- *   仮に楽観的な見方をし、予期しない未知の不具合はもう存在しないと仮定しても、クラスの
- *   持つある種の癖とその使い方の相性が合わず、ローカルな問題が偶発するというのはよくある
- *   話である. このような時、その原因を追跡するのは他ならぬそれを使う我々である. ましてや
- *   一見してコード上に現れない多くの自動処理が裏で行われるスマートポインタのようなクラス
- *   の場合、その作業は幾何級数的に困難になり、尚更に邪悪な事態へと容易に陥る.
+ *   We can write sp.get() instead of sp, but it is even more troublesome because other compilers can
+ *   compile the above without any error. That's probably why even good programmers like the authors of
+ *   boost couldn't see this problem for a long time. To be more specific, this problem was caused by
+ *   a rather tricky trick called unspecified_bool_type in boost::shared_ptr. You might think that you
+ *   can just remove it, but doing so will cause problems in a different environment. Since v1.39, the
+ *   following type conversion operator overrides have been added and countermeasures are taken.
  *
- *   さらにその他のreference counter型GC全般に言えることであるがdeleterが起動するタイミング
- *   の予測が難しいといった問題もある. ある種のリアルタイム系プログラムの開発においては
- *   これが問題になることがある. というわけで、ここではこの種のGC型スマートポインタも
- *   基本的に用いない. ポインタオブジェクトの寿命が関数単位での管理スキームを逸脱し、
- *   これを準グローバルに延長する必要があるケースは実際にはそうはない. 仮にそのようなことが
- *   一見して必要に思える場合でも大抵はその設計が甘いことが殆どであり、まずそれを見直す
- *   べきである.
+ *     operator bool () const { return px != 0; }
  *
- *   過度な機能をたった一つのもので提供することは、それが持つ複雑性がために結局はその
- *   メリット以上の皺寄せが後で押し寄せるというのは当たり前の話である. どんなライブラリ
- *   であれ、クラスであれこの種の問題は存在するが、その実装が複雑であるほどその作業は
- *   困難になる. その中にあって、これをできるだけ緩和するにはその入り口においてその複雑性
- *   を極力排除すべく最初に制限やエラーチェックを設けて防衛するか、さもなくばその複雑性を
- *   一箇所に集中させず分散させた上で隠蔽することが重要となる.
+ *   Even if we take an optimistic view and assume that unexpected and unknown defects no longer exist, 
+ *   It often happens that certain quirks of a class and its usage are incompatible, and local problems
+ *   are accidental. When this happens, it is OUR SIDE that uses it that must track the cause. And in
+ *   the case of a class such as smart pointers, where there is a lot of automation going on behind the
+ *   scenes that does not appear in the code at first glance, the cause analysis becomes extremely more
+ *   difficult and even more so because it's easy to fall into wicked situations.
  *
- *   Znk_AutoPtr は、そこらのプロジェクトで良く見られる説明の必要もないくらいシンプルな
- *   実装である. std::auto_ptr のようなオーナーという概念はなく、余計な処理は悉くサポート
- *   しない. Znk_AutoPtrどうしの代入処理すら完全禁止である. 関数の最初に宣言して初期化する
- *   だけという用途と割り切る. 
+ *   
+ *   General reference-counter GC:
  *
- *   これによる対価は当然その実装がこれ以上ないほどにシンプルとなることである. これにより
- *   バグの可能性を心配する必要はまずないし、仮に問題発生しても追跡は容易である. とはいえ
- *   ここまでシンプルでも尚、デストラクタの自動呼出しにより、デバッガで追跡し難い状況などが
- *   起こり得る. 伝統的な C のように最後に明示的に解放関数を呼ぶようにするスタイルがコード
- *   記述時には面倒なようでも、いざ問題が発生して追跡する段になった場合にはやはり最も確実
- *   であり問題解決を迅速に導く. だからこそ大規模な開発には逆にこの種のラッパーを使う選択に
- *   我々は否定的である.
+ *   This is not really a case where the lifetime of a pointer object deviates from the per-function
+ *   management scheme and this needs to be extended quasi-global. Even if such a thing seems necessary
+ *   at first glance, it is often the case that it is poorly designed and should be reviewed first.
+ *
+ *   There are fewer cases than you might think where the lifetime of a pointer object is forced to
+ *   deviate from the per-function management scheme. Even if such a thing is seemingly necessary,
+ *   it can usually be avoided by its design. We should review that first.
+ *
+ *
+ *   Znk_AutoPtr:
+ *
+ *   It's no surprise that providing excessive functionality in a single product will eventually
+ *   cause more wrinkles than it's merits due to the complexity of the product. This kind of problem
+ *   exists in any library or class, but the more complex the implementation, the more difficult
+ *   the task becomes. In order to mitigate it as much as possible, it is important to defend against
+ *   the complexity at the entrance by setting restrictions and error checks to eliminate it as much
+ *   as possible, or else the complexity should be distributed and hidden instead of being
+ *   concentrated in one place.
+ *
+ *   Now, after describing it at great length so far, Znk_AutoPtr is a simple enough implementation
+ *   that it doesn't need to be explained, and it's the type of class we often see scattered about.
+ *   There is no concept of ownership like std::auto_ptr, and it does not support any extra
+ *   processing.  Even the assignment process between Znk_AutoPtr and Znk_AutoPtr is completely
+ *   prohibited.  We can assume that it is only for initialization at the beginning of the function. 
+ *
+ *   The benefit of this is of course that its implementation is THE SIMPLEST. This means that you
+ *   don't have to worry about potential bugs, and if they do occur, they are easy to track. 
+ *   However, even if it is this simple, automatic calls to the destructor can cause situations that
+ *   are difficult to track in the debugger. While the traditional C style of explicitly calling a
+ *   release function at the end may seem cumbersome when writing code, it is still the most reliable
+ *   and quickest way to solve a problem when it comes time to track down a problem.
+ *
+ *   That's why we disagree with the choice to use this kind of rapper for large scale development. 
+ *   ( It may go against your intuition, though. )
  */
 template< typename PtrT >
 class Znk_AutoPtr{
@@ -127,37 +143,40 @@ public:
 private:
 	PtrT m_ptr;
 	DelT m_del;
-	/* 代入は全面禁止 */
+	/* Assignment operator are forbidden. */
 	Znk_AutoPtr( const Znk_AutoPtr& ); Znk_AutoPtr& operator=( const Znk_AutoPtr& );
 };
 
 /**
  * @brief
- *   引数を二つとり、第1引数で解放すべきポインタ、第2引数に任意の型(ただし生成時に値が確定
- *   されるもの)をとるタイプのdeleter関数/ファンクタを自由に設定可能なZnk_AutoPtr.
+ *   Takes two arguments, the first one being a pointer to be released and the second one being of
+ *   an arbitrary type (whose value is determined at the time of creation).
+ *   Deleter functions/functors can be set freely.
  *
- *   メインとなるポインタ型を第1引数にとり、第2引数には補助となる値を指定するタイプの
- *   解放関数が使用されるケースが多々ある.
- *   これは、そのようなタイプのオブジェクト解放関数に対応したZnk_AutoPtrである.
+ *   This is a case of a release function that takes a main pointer type as its first argument and
+ *   specifies an auxiliary value as its second argument. These cases are also common, and this is
+ *   a Znk_AutoPtr for such a case.
  *
  * @exam
- *   登録するdeleterは、戻り値がなく、第1引数には解放すべきポインタ型、第2引数には
- *   任意の型の引数を受け取って解放するタイプであればなんでもよい. 関数終了時に自動で
- *   これを呼び出し、ポインタを解放する.
+ *   The deleter to be registered must be the function which the return value is of void type,
+ *   the first argument is of a pointer type to be released and the second argument is of an
+ *   arbitrary type. When the function exits, deleter will be called automatically and it
+ *   releases the pointer.
  *
  *   test1(){
  *     Znk_AutoPtrArg<Obj> obj_ap( Obj_create_null(), Obj_destroy, true );
  *     Obj obj = obj_ap.get();
  *
- *     ... obj(Obj型)を使用する処理 ...
+ *     ... Processing using obj(Obj type) ...
  *
- *     // 関数の終了で obj はObj_destroy( obj, true ) という呼び出しにより自動的に解放される.
- *     // AutoPtrArgのコンストラクタの第3引数で指定した値が、そのまま del で指定した deleterの
- *     // 第2引数として使われる.
+ *     // Upon an exception or the exit of a function, obj is released by an automatic call
+ *     // to Obj_destroy( obj, true ).
+ *     // The value specified in the third argument of the constructor of AutoPtrArg is used as
+ *     // it is as the second argument of the deleter specified by del.
  *   }
  *
  * @note
- *   基本的には Znk_AutoPtr と同じ注意点がある.
+ *   Basically the same caveats as Znk_AutoPtr.
  */
 template< typename PtrT, typename ArgT >
 class Znk_AutoPtrArg{
@@ -183,16 +202,17 @@ private:
 	PtrT m_ptr;
 	DelT m_del;
 	ArgT m_arg;
-	/* 代入は全面禁止 */
+	/* Assignment operator are forbidden. */
 	Znk_AutoPtrArg( const Znk_AutoPtrArg& ); Znk_AutoPtrArg& operator=( const Znk_AutoPtrArg& );
 };
 
 
 /**
  * @brief
- *   PtrT型を保持するAutoPtr または AutoPtrArgと同時にnameという名前のPtrT型ポインタ変数を
- *   宣言し、さらに変数nameを、このAutoPtrのgetより取得した値で初期化する.
- *   これは、AutoPtr/AutoPtrArgでよく使用されるパターンをマクロ化したものである.
+ *   Declares AutoPtr or AutoPtrArg that holds type PtrT.
+ *   At the same time declares a PtrT type pointer variable named 'name' and furthermore initializes
+ *   the variable 'name' with the value obtained from the get() of this AutoPtr.
+ *   This is a macro version of the patterns commonly used in AutoPtr/AutoPtrArg.
  */
 #define Znk_AUTO_PTR( PtrT, name, ptr, del ) \
 	Znk_AutoPtr< PtrT > name##__ap__( ptr, del ); \
